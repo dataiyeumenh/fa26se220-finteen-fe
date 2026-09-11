@@ -1,6 +1,9 @@
 import { Button } from '@/components/ui/button'
+import { useNavigate } from 'react-router-dom'
 
 export function CTA({ onTryDemo }) {
+  const navigate = useNavigate()
+
   return (
     <section className="relative py-24 md:py-28 gradient-primary text-center overflow-hidden">
       <div className="absolute inset-0 pointer-events-none">
@@ -29,7 +32,7 @@ export function CTA({ onTryDemo }) {
         <div className="flex flex-wrap justify-center gap-4">
           <Button
             size="xl"
-            onClick={onTryDemo}
+            onClick={() => navigate('/register')}
             className="bg-white text-[#2d1b4e] font-extrabold hover:bg-[#fff8f0] border-0 shadow-[0_8px_24px_rgba(0,0,0,0.15)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.25)] hover:-translate-y-0.5"
           >
             Bắt đầu miễn phí 🚀

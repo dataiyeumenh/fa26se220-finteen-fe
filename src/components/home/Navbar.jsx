@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { Menu } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 
 const navLinks = [
   { label: 'Tính năng', href: '#features' },
@@ -9,6 +10,8 @@ const navLinks = [
 ]
 
 export function Navbar() {
+  const navigate = useNavigate()
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-[#fff8f0]/85 backdrop-blur-xl border-b-2 border-[#2d1b4e]/8">
       <div className="container mx-auto max-w-[1200px] px-6 h-16 flex items-center justify-between">
@@ -32,10 +35,19 @@ export function Navbar() {
         </nav>
 
         <div className="flex items-center gap-3">
-          <Button variant="ghost" size="sm" className="hidden sm:inline-flex text-[#2d1b4e] hover:bg-[#2d1b4e]/8 hover:text-[#2d1b4e]">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => navigate('/login')}
+            className="hidden sm:inline-flex text-[#2d1b4e] hover:bg-[#2d1b4e]/8 hover:text-[#2d1b4e]"
+          >
             Đăng nhập
           </Button>
-          <Button size="sm" className="hidden sm:inline-flex gradient-accent text-[#2d1b4e] hover:opacity-90 shadow-[0_4px_14px_rgba(184,255,61,0.4)]">
+          <Button
+            size="sm"
+            onClick={() => navigate('/register')}
+            className="hidden sm:inline-flex gradient-accent text-[#2d1b4e] hover:opacity-90 shadow-[0_4px_14px_rgba(184,255,61,0.4)]"
+          >
             Bắt đầu ngay
           </Button>
           <button className="md:hidden p-2 text-[#2d1b4e]" aria-label="Menu">

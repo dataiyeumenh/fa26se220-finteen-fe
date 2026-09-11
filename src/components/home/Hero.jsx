@@ -1,8 +1,11 @@
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { ArrowRight, Coins, PartyPopper, Star } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 
 export function Hero({ onTryDemo }) {
+  const navigate = useNavigate()
+
   return (
     <section className="relative min-h-screen flex items-center pt-24 pb-20 overflow-hidden gradient-sunny">
       {/* Decorative blobs */}
@@ -33,7 +36,7 @@ export function Hero({ onTryDemo }) {
             </p>
 
             <div className="flex flex-wrap gap-4">
-              <Button size="xl" onClick={onTryDemo} className="gradient-primary text-white border-0 shadow-[0_8px_24px_rgba(168,85,247,0.4)] hover:opacity-90">
+              <Button size="xl" onClick={() => navigate('/register')} className="gradient-primary text-white border-0 shadow-[0_8px_24px_rgba(168,85,247,0.4)] hover:opacity-90">
                 Bắt đầu miễn phí 🚀
               </Button>
               <Button size="xl" variant="outline" asChild className="border-2 border-[#2d1b4e] text-[#2d1b4e] hover:bg-[#2d1b4e] hover:text-white">
