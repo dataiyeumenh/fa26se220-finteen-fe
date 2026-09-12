@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Mail, Lock, Eye, EyeOff, User, GraduationCap } from 'lucide-react'
+import { Mail, Lock, Eye, EyeOff, User, GraduationCap, PartyPopper } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 
@@ -27,31 +27,35 @@ export default function Register() {
   }
 
   return (
-    <div className="bg-white rounded-3xl border-2 border-[#2d1b4e]/8 shadow-finteen-lg p-8 md:p-10">
+    <div className="bg-white rounded-3xl border-2 border-[#22c55e]/15 shadow-[0_20px_60px_rgba(34,197,94,0.18)] p-8 md:p-10 relative overflow-hidden">
+      {/* Top color stripe */}
+      <div className="absolute top-0 left-0 right-0 h-1 bg-[#22c55e]" aria-hidden="true" />
+
       <div className="text-center mb-8">
-        <div className="inline-flex items-center gap-2 bg-[#fff8f0] border-2 border-[#ff6b9d]/40 rounded-full px-4 py-1.5 text-xs font-bold text-[#2d1b4e] mb-4">
-          🎉 Hoàn toàn miễn phí
+        <div className="inline-flex items-center gap-2 bg-[#fefce8] border-2 border-[#fbbf24]/40 rounded-full px-4 py-1.5 text-xs font-bold text-[#1a3a1a] mb-4">
+          <PartyPopper className="w-3 h-3 text-[#fb923c]" aria-hidden="true" />
+          Hoàn toàn miễn phí
         </div>
-        <h1 className="text-3xl md:text-4xl font-black text-[#2d1b4e] mb-2 tracking-tight">
-          Tạo tài khoản <span className="text-gradient-primary">mới</span>
+        <h1 className="text-3xl md:text-4xl font-black text-[#1a3a1a] mb-2 tracking-tight">
+          Tạo tài khoản <span className="text-[#22c55e]">mới</span>
         </h1>
-        <p className="text-sm text-[#2d1b4e]/65">
-          Cùng nhau làm chủ đồng tiền, bắt đầu từ hôm nay 🚀
+        <p className="text-sm text-[#1a3a1a]/65">
+          Cùng nhau làm chủ đồng tiền, bắt đầu từ hôm nay
         </p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-sm font-bold text-[#2d1b4e] mb-2">
-            👤 Tên hiển thị
+          <label className="block text-sm font-bold text-[#1a3a1a] mb-2">
+            Tên hiển thị
           </label>
           <div className="relative">
-            <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#2d1b4e]/40 pointer-events-none" />
+            <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#fb923c] pointer-events-none" />
             <Input
               type="text"
               required
               placeholder="VD: Minh Tuấn"
-              className="pl-11"
+              className="pl-11 border-[#22c55e]/15 focus-visible:border-[#22c55e]"
               value={form.name}
               onChange={e => setForm({ ...form, name: e.target.value })}
             />
@@ -59,16 +63,16 @@ export default function Register() {
         </div>
 
         <div>
-          <label className="block text-sm font-bold text-[#2d1b4e] mb-2">
-            📧 Email
+          <label className="block text-sm font-bold text-[#1a3a1a] mb-2">
+            Email
           </label>
           <div className="relative">
-            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#2d1b4e]/40 pointer-events-none" />
+            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#22c55e] pointer-events-none" />
             <Input
               type="email"
               required
               placeholder="ban@email.com"
-              className="pl-11"
+              className="pl-11 border-[#22c55e]/15 focus-visible:border-[#22c55e]"
               value={form.email}
               onChange={e => setForm({ ...form, email: e.target.value })}
             />
@@ -76,16 +80,16 @@ export default function Register() {
         </div>
 
         <div>
-          <label className="block text-sm font-bold text-[#2d1b4e] mb-2">
-            🎓 Bạn đang học lớp mấy?
+          <label className="block text-sm font-bold text-[#1a3a1a] mb-2">
+            Bạn đang học lớp mấy?
           </label>
           <div className="relative">
-            <GraduationCap className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#2d1b4e]/40 pointer-events-none" />
+            <GraduationCap className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#38bdf8] pointer-events-none" />
             <select
               required
               value={form.grade}
               onChange={e => setForm({ ...form, grade: e.target.value })}
-              className="flex h-12 w-full rounded-2xl border-2 border-slate-200 bg-white pl-11 pr-4 py-2 text-base font-semibold text-[#2d1b4e] focus-visible:outline-none focus-visible:border-[#a855f7] focus-visible:ring-2 focus-visible:ring-[#a855f7]/20 transition-colors"
+              className="flex h-12 w-full rounded-2xl border-2 border-[#22c55e]/15 bg-white pl-11 pr-4 py-2 text-base font-semibold text-[#1a3a1a] focus-visible:outline-none focus-visible:border-[#22c55e] focus-visible:ring-2 focus-visible:ring-[#22c55e]/20 transition-colors"
             >
               {grades.map(g => (
                 <option key={g} value={g}>
@@ -97,47 +101,47 @@ export default function Register() {
         </div>
 
         <div>
-          <label className="block text-sm font-bold text-[#2d1b4e] mb-2">
-            🔒 Mật khẩu
+          <label className="block text-sm font-bold text-[#1a3a1a] mb-2">
+            Mật khẩu
           </label>
           <div className="relative">
-            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#2d1b4e]/40 pointer-events-none" />
+            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#84cc16] pointer-events-none" />
             <Input
               type={showPwd ? 'text' : 'password'}
               required
               minLength={6}
               placeholder="Tối thiểu 6 ký tự"
-              className="pl-11 pr-11"
+              className="pl-11 pr-11 border-[#22c55e]/15 focus-visible:border-[#22c55e]"
               value={form.password}
               onChange={e => setForm({ ...form, password: e.target.value })}
             />
             <button
               type="button"
               onClick={() => setShowPwd(!showPwd)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-[#2d1b4e]/40 hover:text-[#2d1b4e]"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-[#1a3a1a]/40 hover:text-[#22c55e]"
               aria-label="Toggle password"
             >
               {showPwd ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             </button>
           </div>
-          <p className="text-xs text-[#2d1b4e]/50 mt-1.5">
-            💡 Mẹo: dùng cả chữ + số cho dễ nhớ
+          <p className="text-xs text-[#1a3a1a]/50 mt-1.5">
+            Mẹo: dùng cả chữ + số cho dễ nhớ
           </p>
         </div>
 
-        <label className="flex items-start gap-2 text-sm text-[#2d1b4e]/70 cursor-pointer">
+        <label className="flex items-start gap-2 text-sm text-[#1a3a1a]/70 cursor-pointer">
           <input
             type="checkbox"
             required
-            className="mt-0.5 w-4 h-4 rounded border-2 border-[#2d1b4e]/20 text-[#b8ff3d] focus:ring-[#b8ff3d]"
+            className="mt-0.5 w-4 h-4 rounded border-2 border-[#22c55e]/30 text-[#22c55e] focus:ring-[#22c55e]"
           />
           <span>
             Tôi đồng ý với{' '}
-            <a href="#" className="font-bold text-[#a855f7] hover:underline">
+            <a href="#" className="font-bold text-[#16a34a] hover:text-[#22c55e] hover:underline">
               Điều khoản
             </a>{' '}
             và{' '}
-            <a href="#" className="font-bold text-[#a855f7] hover:underline">
+            <a href="#" className="font-bold text-[#16a34a] hover:text-[#22c55e] hover:underline">
               Chính sách bảo mật
             </a>{' '}
             của FinTeen
@@ -148,24 +152,24 @@ export default function Register() {
           type="submit"
           size="lg"
           disabled={loading}
-          className="w-full gradient-primary text-white font-extrabold border-0 shadow-finteen-md hover:opacity-95"
+          className="w-full bg-[#22c55e] text-white font-extrabold border-0 shadow-[0_8px_24px_rgba(34,197,94,0.3)] hover:bg-[#16a34a]"
         >
-          {loading ? 'Đang tạo tài khoản...' : 'Tạo tài khoản miễn phí 🎉'}
+          {loading ? 'Đang tạo tài khoản...' : 'Tạo tài khoản miễn phí'}
         </Button>
       </form>
 
       {/* Divider */}
       <div className="flex items-center gap-3 my-6">
-        <div className="flex-1 h-px bg-[#2d1b4e]/10" />
-        <span className="text-xs font-bold text-[#2d1b4e]/40">HOẶC</span>
-        <div className="flex-1 h-px bg-[#2d1b4e]/10" />
+        <div className="flex-1 h-px bg-[#22c55e]/10" />
+        <span className="text-xs font-bold text-[#1a3a1a]/40">HOẶC</span>
+        <div className="flex-1 h-px bg-[#22c55e]/10" />
       </div>
 
       <Button
         type="button"
         variant="outline"
         size="lg"
-        className="w-full border-2 border-[#2d1b4e]/15 text-[#2d1b4e] hover:bg-[#fff8f0] font-bold"
+        className="w-full border-2 border-[#1a3a1a]/15 text-[#1a3a1a] hover:bg-[#faf8f5] hover:border-[#1a3a1a] font-bold"
       >
         <svg className="w-5 h-5" viewBox="0 0 24 24">
           <path
@@ -178,7 +182,7 @@ export default function Register() {
           />
           <path
             fill="#FBBC05"
-            d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+            d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
           />
           <path
             fill="#EA4335"
@@ -188,9 +192,9 @@ export default function Register() {
         Đăng ký với Google
       </Button>
 
-      <p className="text-center text-sm text-[#2d1b4e]/70 mt-8">
+      <p className="text-center text-sm text-[#1a3a1a]/70 mt-8">
         Đã có tài khoản?{' '}
-        <Link to="/login" className="font-extrabold text-[#a855f7] hover:underline">
+        <Link to="/login" className="font-extrabold text-[#16a34a] hover:text-[#22c55e] hover:underline">
           Đăng nhập ngay →
         </Link>
       </p>

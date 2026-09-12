@@ -1,59 +1,61 @@
+import { Zap, Gamepad2, BookOpen, Coins, LifeBuoy, Mail, HelpCircle, Bug, Eye, PenTool, Rocket, Newspaper } from 'lucide-react'
+
 const footerLinks = [
   {
     title: 'Sản phẩm',
     links: [
-      { label: 'Tính năng', emoji: '⚡' },
-      { label: 'Trò chơi', emoji: '🎮' },
-      { label: 'Bài học', emoji: '📚' },
-      { label: 'Giá', emoji: '💰' },
+      { label: 'Tính năng', Icon: Zap, color: '#22c55e' },
+      { label: 'Trò chơi', Icon: Gamepad2, color: '#fbbf24' },
+      { label: 'Bài học', Icon: BookOpen, color: '#38bdf8' },
+      { label: 'Giá', Icon: Coins, color: '#fb923c' },
     ],
   },
   {
     title: 'Hỗ trợ',
     links: [
-      { label: 'Trung tâm trợ giúp', emoji: '🆘' },
-      { label: 'Liên hệ', emoji: '💬' },
-      { label: 'Câu hỏi thường gặp', emoji: '❓' },
-      { label: 'Báo lỗi', emoji: '🐞' },
+      { label: 'Trung tâm trợ giúp', Icon: LifeBuoy, color: '#22c55e' },
+      { label: 'Liên hệ', Icon: Mail, color: '#38bdf8' },
+      { label: 'Câu hỏi thường gặp', Icon: HelpCircle, color: '#fbbf24' },
+      { label: 'Báo lỗi', Icon: Bug, color: '#f87171' },
     ],
   },
   {
     title: 'Công ty',
     links: [
-      { label: 'Về chúng tôi', emoji: '👀' },
-      { label: 'Blog', emoji: '✍️' },
-      { label: 'Tuyển dụng', emoji: '🚀' },
-      { label: 'Báo chí', emoji: '📰' },
+      { label: 'Về chúng tôi', Icon: Eye, color: '#84cc16' },
+      { label: 'Blog', Icon: PenTool, color: '#a78bfa' },
+      { label: 'Tuyển dụng', Icon: Rocket, color: '#fb923c' },
+      { label: 'Báo chí', Icon: Newspaper, color: '#38bdf8' },
     ],
   },
 ]
 
 const socialIcons = [
-  { label: 'Facebook', text: 'f', color: 'hover:bg-[#4dabff]' },
-  { label: 'LinkedIn', text: 'in', color: 'hover:bg-[#4dabff]' },
-  { label: 'Twitter', text: '𝕏', color: 'hover:bg-[#a855f7]' },
-  { label: 'YouTube', text: '▶', color: 'hover:bg-[#ff6b9d]' },
+  { label: 'Facebook', text: 'f', color: 'hover:bg-[#22c55e]' },
+  { label: 'LinkedIn', text: 'in', color: 'hover:bg-[#38bdf8]' },
+  { label: 'Twitter', text: 'X', color: 'hover:bg-[#1a3a1a]' },
+  { label: 'YouTube', text: '▶', color: 'hover:bg-[#f87171]' },
 ]
 
 export function Footer() {
   return (
-    <footer className="bg-[#2d1b4e] text-white pt-16 pb-8 relative overflow-hidden">
+    <footer className="bg-[#1a3a1a] text-white pt-16 pb-8 relative overflow-hidden">
       {/* Decorative blobs */}
-      <div className="absolute top-0 left-1/4 w-64 h-64 rounded-full bg-[#a855f7] opacity-20 blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 right-1/4 w-72 h-72 rounded-full bg-[#ff6b9d] opacity-15 blur-3xl pointer-events-none" />
+      <div className="absolute top-0 left-1/4 w-64 h-64 rounded-full bg-[#22c55e] opacity-15 blur-3xl pointer-events-none" aria-hidden="true" />
+      <div className="absolute top-1/3 right-1/4 w-48 h-48 rounded-full bg-[#fbbf24] opacity-10 blur-3xl pointer-events-none" aria-hidden="true" />
+      <div className="absolute bottom-0 right-1/4 w-72 h-72 rounded-full bg-[#84cc16] opacity-10 blur-3xl pointer-events-none" aria-hidden="true" />
 
       <div className="container mx-auto max-w-[1200px] px-6 relative">
         <div className="grid sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr] gap-10 lg:gap-12 mb-12">
           <div>
             <a href="#" className="flex items-center gap-2.5 text-white font-extrabold text-lg mb-4">
-              <div className="w-10 h-10 rounded-xl gradient-accent flex items-center justify-center text-[#2d1b4e] font-extrabold text-base shadow-[0_4px_14px_rgba(184,255,61,0.5)]">
+              <div className="w-10 h-10 rounded-xl bg-[#22c55e] flex items-center justify-center text-white font-extrabold text-base shadow-[0_4px_14px_rgba(34,197,94,0.4)]">
                 F
               </div>
-              <span className="text-gradient-accent">FinTeen</span>
+              <span className="text-[#84cc16]">FinTeen</span>
             </a>
             <p className="text-sm text-white/70 leading-relaxed max-w-[300px]">
-              Nền tảng học tài chính dành cho Gen Z Việt — qua trò chơi, thử thách và mô phỏng.
-              Học để <span className="text-[#b8ff3d] font-bold">"à ha"</span>, không phải để đi thi 😉.
+              Nền tảng học tài chính cho học sinh Việt Nam — qua trò chơi, thử thách và mô phỏng thực tế.
             </p>
           </div>
 
@@ -61,17 +63,21 @@ export function Footer() {
             <div key={group.title}>
               <h4 className="text-base font-extrabold mb-5 text-white">{group.title}</h4>
               <ul className="space-y-3">
-                {group.links.map(link => (
-                  <li key={link.label}>
-                    <a
-                      href="#"
-                      className="text-sm text-white/70 hover:text-[#b8ff3d] transition-colors inline-flex items-center gap-2"
-                    >
-                      <span>{link.emoji}</span>
-                      <span>{link.label}</span>
-                    </a>
-                  </li>
-                ))}
+                {group.links.map(({ label, Icon, color }) => (
+                    <li key={label}>
+                      <a
+                        href="#"
+                        className="text-sm text-white/70 hover:text-white transition-colors inline-flex items-center gap-2 group"
+                      >
+                        <Icon
+                          className="w-4 h-4 transition-colors"
+                          style={{ color: color }}
+                          aria-hidden="true"
+                        />
+                        <span className="group-hover:translate-x-0.5 transition-transform">{label}</span>
+                      </a>
+                    </li>
+                  ))}
               </ul>
             </div>
           ))}
@@ -79,7 +85,7 @@ export function Footer() {
 
         <div className="pt-8 border-t border-white/10 flex flex-col sm:flex-row justify-between items-center gap-5">
           <p className="text-sm text-white/60">
-            © 2026 FinTeen · Đồ án SE. Made with 💜 by Gen Z
+            © 2026 FinTeen · Đồ án SE
           </p>
           <div className="flex gap-3">
             {socialIcons.map(icon => (

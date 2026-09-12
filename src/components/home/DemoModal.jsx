@@ -9,7 +9,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { formatVND, cn } from '@/lib/utils'
-import { Sparkles, Lightbulb } from 'lucide-react'
+import { Sparkles, Lightbulb, Target } from 'lucide-react'
 
 const PRINCIPAL = 10_000_000
 const RATE = 0.08
@@ -42,20 +42,23 @@ export function DemoModal({ open, onOpenChange }) {
   }
 
   const toneColors = {
-    success: { bg: 'bg-[#00d4aa]/15', text: 'text-[#00b894]', label: 'Xuất sắc!' },
-    warn: { bg: 'bg-[#fbbf24]/15', text: 'text-[#fbbf24]', label: 'Khá gần!' },
-    error: { bg: 'bg-[#ff6b6b]/15', text: 'text-[#ff6b6b]', label: 'Còn lệch nhiều' },
+    success: { bg: 'bg-[#22c55e]/15', text: 'text-[#16a34a]', label: 'Xuất sắc!', accent: '#16a34a' },
+    warn: { bg: 'bg-[#fbbf24]/15', text: 'text-[#b45309]', label: 'Khá gần!', accent: '#b45309' },
+    error: { bg: 'bg-[#f87171]/15', text: 'text-[#dc2626]', label: 'Còn lệch nhiều', accent: '#dc2626' },
   }
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-[420px]">
         <DialogHeader>
-          <div className="flex items-center justify-center gap-2 text-[#00d4aa] mb-1">
-            <Sparkles className="w-5 h-5" />
-            <span className="text-sm font-semibold">Cơ chế đoán-trước</span>
+          <div className="flex items-center justify-center gap-2 text-[#fbbf24] mb-1">
+            <Target className="w-5 h-5" />
+            <span className="text-sm font-semibold text-[#16a34a]">Cơ chế đoán-trước</span>
           </div>
-          <DialogTitle className="text-center">💰 Bài học: Lãi kép</DialogTitle>
+          <DialogTitle className="text-center flex items-center justify-center gap-2">
+            <Sparkles className="w-6 h-6 text-[#fbbf24]" aria-hidden="true" />
+            Bài học: Lãi kép
+          </DialogTitle>
           <DialogDescription className="text-center text-balance">
             Nếu bạn gửi <strong>10 triệu VNĐ</strong> với lãi suất <strong>8%/năm</strong>,
             sau <strong>40 năm</strong> bạn sẽ có bao nhiêu?
@@ -83,9 +86,16 @@ export function DemoModal({ open, onOpenChange }) {
             className={cn(
               'mt-4 p-5 rounded-2xl space-y-3',
               toneColors[result.tone].bg,
-              'animate-fade-up'
+              'animate-fade-up relative overflow-hidden'
             )}
           >
+            {/* Top color stripe */}
+            <div
+              className="absolute top-0 left-0 right-0 h-1"
+              style={{ backgroundColor: toneColors[result.tone].accent }}
+              aria-hidden="true"
+            />
+
             <div className="flex items-center gap-2 text-sm font-bold">
               <Lightbulb className={cn('w-4 h-4', toneColors[result.tone].text)} />
               <span className={toneColors[result.tone].text}>{toneColors[result.tone].label}</span>
@@ -94,13 +104,13 @@ export function DemoModal({ open, onOpenChange }) {
             <div className="space-y-2 text-sm">
               <div className="flex justify-between items-center py-2 border-b border-slate-200/50">
                 <span className="text-slate-500">Số của bạn:</span>
-                <span className="font-mono font-bold text-[#1a1a2e]">
+                <span className="font-mono font-bold text-[#1a3a1a]">
                   {formatVND(result.guess)}
                 </span>
               </div>
               <div className="flex justify-between items-center py-2 border-b border-slate-200/50">
                 <span className="text-slate-500">Đáp án thật:</span>
-                <span className="font-mono font-bold text-[#00b894]">
+                <span className="font-mono font-bold text-[#16a34a]">
                   {formatVND(ACTUAL)}
                 </span>
               </div>

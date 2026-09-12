@@ -2,13 +2,17 @@ import { Home, BookOpen, Gamepad2, Trophy, MessageCircle, User as UserIcon } fro
 import { DashboardLayout } from '@/components/dashboard/DashboardLayout'
 import useUserDashboard from '../Dashboard/hooks/useUserDashboard.js'
 
+// Học sinh → Modern Gold (vàng ánh kim fintech)
 const role = {
   id: 'user',
   label: 'Học sinh',
-  emoji: '🎓',
-  gradient: 'from-[#a855f7] to-[#ff6b9d]',
-  activeBg: 'bg-[#ff6b9d]/10',
-  activeText: 'text-[#ff6b9d]',
+  emoji: 'GraduationCap', // Lucide icon — thay vì emoji
+  accent: '#fbbf24',
+  accentText: '#92400e',
+  accentBg: '#fbbf2415',
+  accentHover: '#fbbf2410',
+  accentDeep: '#d97706',
+  onAccent: '#ffffff',
 }
 
 const navItems = [

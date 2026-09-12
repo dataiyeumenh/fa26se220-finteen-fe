@@ -7,13 +7,17 @@ import ContinueLearning from './components/ContinueLearning.jsx'
 import Achievements from './components/Achievements.jsx'
 import AiSuggestionCard from './components/AiSuggestionCard.jsx'
 
+// Học sinh → Modern Gold (vàng ánh kim fintech)
 const role = {
   id: 'user',
   label: 'Học sinh',
-  emoji: '🎓',
-  gradient: 'from-[#a855f7] to-[#ff6b9d]',
-  activeBg: 'bg-[#ff6b9d]/10',
-  activeText: 'text-[#ff6b9d]',
+  emoji: 'GraduationCap', // Lucide icon — thay vì emoji 🎓
+  accent: '#fbbf24',
+  accentText: '#92400e',
+  accentBg: '#fbbf2415',
+  accentHover: '#fbbf2410',
+  accentDeep: '#d97706',
+  onAccent: '#ffffff',
 }
 
 const navItems = [
@@ -31,11 +35,18 @@ export default function UserDashboard() {
   return (
     <DashboardLayout role={role} navItems={navItems} user={dashboard.user}>
       {dashboard.loading && (
-        <div className="text-center text-sm text-[#2d1b4e]/60 py-12">Đang tải dữ liệu...</div>
+        <div className="text-center text-sm text-[#1a3a1a]/60 py-12">Đang tải dữ liệu...</div>
       )}
 
       {dashboard.error && (
-        <div className="bg-[#ff6b9d]/10 border-2 border-[#ff6b9d]/40 rounded-2xl p-4 mb-6 text-sm text-[#ff6b9d] font-bold">
+        <div
+          className="border-2 rounded-2xl p-4 mb-6 text-sm font-bold"
+          style={{
+            backgroundColor: '#f8717115',
+            borderColor: '#f87171',
+            color: '#dc2626',
+          }}
+        >
           {dashboard.error}
         </div>
       )}
@@ -48,7 +59,7 @@ export default function UserDashboard() {
             lessonsThisWeek={dashboard.lessonsThisWeek}
             lessonsTarget={dashboard.lessonsTarget}
           />
-          <StatsGrid stats={dashboard.stats} />
+          <StatsGrid stats={dashboard.stats} accentColor={role.accent} accentText={role.accentText} />
           <ContinueLearning lessons={dashboard.continueLessons} />
           <Achievements items={dashboard.achievements} />
           <AiSuggestionCard />

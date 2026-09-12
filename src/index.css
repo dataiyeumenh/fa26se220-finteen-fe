@@ -6,28 +6,43 @@
   --font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
   --font-mono: 'Space Grotesk', ui-monospace, monospace;
 
-  /* FinTeen brand colors — playful palette */
-  --color-ink: #2d1b4e;
-  --color-ink-soft: #4a3b6b;
+  /* FinTeen brand colors — Green & Cream base with rich accent palette */
+  --color-ink: #1a3a1a;
+  --color-ink-soft: #2d5a2d;
   --color-canvas: #ffffff;
-  --color-canvas-soft: #fff8f0;
-  --color-accent: #b8ff3d;
-  --color-accent-dark: #9eea1f;
-  --color-coral: #ff6b9d;
-  --color-purple: #a855f7;
-  --color-blue: #4dabff;
-  --color-yellow: #ffd93d;
-  --color-pink: #ffb3d9;
-  --color-text-muted: #64748b;
+  --color-canvas-soft: #faf8f5;
+  --color-cream: #fefce8;
+  --color-beige: #f5f0e6;
+
+  /* Greens */
+  --color-green-primary: #22c55e;
+  --color-green-light: #4ade80;
+  --color-green-dark: #16a34a;
+  --color-green-lime: #84cc16;
+  --color-green-mint: #6ee7b7;
+  --color-green-deep: #14532d;
+  --color-moss: #365314;
+
+  /* Accent colors (cho depth & hierarchy) */
+  --color-yellow: #fbbf24;
+  --color-yellow-soft: #fde68a;
+  --color-orange: #fb923c;
+  --color-coral: #f87171;
+  --color-pink: #ec4899;
+  --color-blue: #38bdf8;
+  --color-blue-deep: #0284c7;
+  --color-purple: #a78bfa;
+
+  --color-muted: #64748b;
 
   --radius-sm: 12px;
   --radius-md: 20px;
   --radius-lg: 28px;
   --radius-full: 9999px;
 
-  --shadow-finteen-sm: 0 2px 8px rgba(168, 85, 247, 0.08);
-  --shadow-finteen-md: 0 8px 30px rgba(168, 85, 247, 0.15);
-  --shadow-finteen-lg: 0 20px 60px rgba(168, 85, 247, 0.22);
+  --shadow-sm: 0 2px 8px rgba(34, 197, 94, 0.08);
+  --shadow-md: 0 8px 30px rgba(34, 197, 94, 0.12);
+  --shadow-lg: 0 20px 60px rgba(34, 197, 94, 0.18);
 }
 
 @layer base {
@@ -54,40 +69,36 @@
     text-wrap: balance;
   }
 
-  .gradient-primary {
-    background: linear-gradient(135deg, #ffd93d 0%, #ff6b9d 50%, #a855f7 100%);
+  .bg-primary {
+    background-color: var(--color-green-primary);
   }
 
-  .gradient-accent {
-    background: linear-gradient(135deg, #b8ff3d 0%, #4dabff 100%);
+  .bg-accent {
+    background-color: var(--color-green-lime);
   }
 
-  .gradient-coral {
-    background: linear-gradient(135deg, #ff6b9d 0%, #ff8e53 100%);
+  .bg-cream {
+    background-color: var(--color-cream);
   }
 
-  .gradient-purple {
-    background: linear-gradient(135deg, #c084fc 0%, #ec4899 100%);
+  .text-primary {
+    color: var(--color-green-primary);
   }
 
-  .gradient-sunny {
-    background: linear-gradient(135deg, #fff8f0 0%, #ffe5ec 100%);
+  .text-accent {
+    color: var(--color-green-lime);
   }
 
-  .text-gradient-primary {
-    background: linear-gradient(135deg, #ff6b9d 0%, #a855f7 50%, #4dabff 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
+  .text-ink {
+    color: var(--color-ink);
   }
 
-  .text-gradient-accent {
-    background: linear-gradient(135deg, #b8ff3d 0%, #4dabff 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
+  .border-primary {
+    border-color: var(--color-green-primary);
+  }
+
+  .border-accent {
+    border-color: var(--color-green-lime);
   }
 
   @keyframes float {

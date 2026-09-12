@@ -1,7 +1,13 @@
 import { Button } from '@/components/ui/button'
 import { SectionHeader } from '@/components/dashboard/StatCard'
 
-export default function ContinueLearning({ lessons }) {
+const progressColors = ['#fbbf24', '#f59e0b', '#d97706', '#38bdf8', '#22c55e']
+
+export default function ContinueLearning({
+  lessons,
+  accent = '#fbbf24',
+  accentText = '#92400e',
+}) {
   return (
     <div className="mb-8">
       <SectionHeader
@@ -12,34 +18,68 @@ export default function ContinueLearning({ lessons }) {
           <Button
             variant="outline"
             size="sm"
-            className="border-2 border-[#2d1b4e] text-[#2d1b4e] hover:bg-[#2d1b4e] hover:text-white"
+            className="border-2 hover:text-[#1a3a1a]"
+            style={{
+              borderColor: accent,
+              color: accentText,
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.backgroundColor = accent
+              e.currentTarget.style.color = '#1a3a1a'
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.backgroundColor = 'transparent'
+              e.currentTarget.style.color = accentText
+            }}
           >
             Xem tất cả
           </Button>
         }
       />
       <div className="grid md:grid-cols-3 gap-4">
-        {lessons.map(l => (
-          <div
-            key={l.id}
-            className="bg-white rounded-2xl border-2 border-[#2d1b4e]/8 p-5 hover:-translate-y-0.5 hover:shadow-finteen-md hover:border-[#ff6b9d] transition-all cursor-pointer"
-          >
-            <div className="text-3xl mb-3">{l.emoji}</div>
-            <div className="text-xs font-bold text-[#a855f7] uppercase tracking-wider mb-1">
-              {l.subject}
-            </div>
-            <div className="text-base font-extrabold text-[#2d1b4e] mb-3">{l.title}</div>
-            <div className="h-2 bg-[#fff8f0] rounded-full overflow-hidden">
+        {lessons.map((l, idx) => {
+          const color = progressColors[idx % progressColors.length]
+          return (
+            <div
+              key={l.id}
+              className="bg-white rounded-2xl border-2 border-[#fbbf24]/30 p-5 hover:-translate-y-0.5 hover:shadow-[0_8px_30px_rgba(251,191,36,0.3)] hover:border-[#fbbf24] transition-all cursor-pointer relative overflow-hidden"
+            >
+              {/* Top color stripe */}
               <div
-                className="h-full gradient-primary rounded-full transition-all"
-                style={{ width: `${l.progress}%` }}
+                className="absolute top-0 left-0 right-0 h-1"
+                style={{ backgroundColor: color }}
+                aria-hidden="true"
               />
+
+              <div className="flex items-start justify-between mb-3">
+                <div className="text-3xl" aria-hidden="true">{l.emoji}</div>
+                <span
+                  className="text-[10px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider"
+                  style={{
+                    color: color,
+                    backgroundColor: `${color}15`,
+                  }}
+                >
+                  {l.subject}
+                </span>
+              </div>
+
+              <div className="text-base font-extrabold text-[#1a3a1a] mb-3">{l.title}</div>
+              <div className="h-2 bg-[#faf8f5] rounded-full overflow-hidden">
+                <div
+                  className="h-full rounded-full transition-all"
+                  style={{
+                    width: `${l.progress}%`,
+                    backgroundColor: color,
+                  }}
+                />
+              </div>
+              <div className="text-xs text-[#1a3a1a]/60 mt-1.5 font-medium">
+                {l.progress}% hoàn thành
+              </div>
             </div>
-            <div className="text-xs text-[#2d1b4e]/60 mt-1.5 font-medium">
-              {l.progress}% hoàn thành
-            </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
     </div>
   )

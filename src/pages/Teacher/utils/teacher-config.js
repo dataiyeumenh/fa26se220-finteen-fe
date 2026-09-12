@@ -1,12 +1,17 @@
 import { Home, Users, FileText, BarChart3, MessageCircle, Settings } from 'lucide-react'
 
+// Giáo viên → Blue (chuyên nghiệp, tin cậy)
+// onAccent = white vì accent là deep blue
 export const teacherRole = {
   id: 'teacher',
   label: 'Giáo viên',
-  emoji: '👩‍🏫',
-  gradient: 'from-[#fbbf24] to-[#ff8e53]',
-  activeBg: 'bg-[#ff8e53]/10',
-  activeText: 'text-[#ff8e53]',
+  emoji: 'GraduationCap',
+  accent: '#0284c7',
+  accentText: '#0369a1',
+  accentBg: '#38bdf815',
+  accentHover: '#38bdf810',
+  accentDeep: '#0284c7',
+  onAccent: '#ffffff',
 }
 
 export const teacherNavItems = [

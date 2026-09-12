@@ -1,21 +1,30 @@
-// Predefined admin action tiles — separated so it can be moved to data file later
+// Predefined admin action tiles — Admin theme (purple pastel + accents)
 export const adminActionTiles = [
   {
     title: '3 báo cáo lỗi',
     desc: 'Cần xử lý trong hôm nay',
     emoji: '🚨',
-    borderClass: 'border-[#ff6b9d]/30',
+    borderClass: 'border-[#fecaca]/50',
+    stripeColor: '#f87171',
+    bgIcon: '#fecaca50',
+    iconColor: '#b91c1c',
   },
   {
     title: '7 yêu cầu duyệt',
     desc: 'Nội dung mới từ giáo viên',
     emoji: '📨',
-    borderClass: 'border-[#fbbf24]/30',
+    borderClass: 'border-[#fde68a]/50',
+    stripeColor: '#fbbf24',
+    bgIcon: '#fde68a50',
+    iconColor: '#a16207',
   },
   {
     title: 'Backup tự động',
     desc: 'Lần cuối: 14:30 hôm nay',
     emoji: '📦',
-    borderClass: 'border-[#4dabff]/30',
+    borderClass: 'border-[#c4b5fd]/50',
+    stripeColor: '#c4b5fd',
+    bgIcon: '#c4b5fd50',
+    iconColor: '#5b21b6',
   },
 ]

@@ -11,17 +11,20 @@ export default function ParentDashboard() {
   const dashboard = useParentDashboard()
 
   return (
-    <DashboardLayout
-      role={parentRole}
-      navItems={parentNavItems}
-      user={dashboard.user}
-    >
+    <DashboardLayout role={parentRole} navItems={parentNavItems} user={dashboard.user}>
       {dashboard.loading && (
-        <div className="text-center text-sm text-[#2d1b4e]/60 py-12">Đang tải dữ liệu...</div>
+        <div className="text-center text-sm text-[#1a3a1a]/60 py-12">Đang tải dữ liệu...</div>
       )}
 
       {dashboard.error && (
-        <div className="bg-[#ff6b9d]/10 border-2 border-[#ff6b9d]/40 rounded-2xl p-4 mb-6 text-sm text-[#ff6b9d] font-bold">
+        <div
+          className="border-2 rounded-2xl p-4 mb-6 text-sm font-bold"
+          style={{
+            backgroundColor: '#f8717115',
+            borderColor: '#f87171',
+            color: '#dc2626',
+          }}
+        >
           {dashboard.error}
         </div>
       )}
@@ -33,7 +36,7 @@ export default function ParentDashboard() {
             weeklyGrowth={dashboard.weeklyGrowth}
             streakChild={dashboard.streakChild}
           />
-          <StatsGrid stats={dashboard.stats} />
+          <StatsGrid stats={dashboard.stats} accentColor={parentRole.accent} accentText={parentRole.accentText} />
           <ChildrenCards children={dashboard.children} />
           <ActivityFeed items={dashboard.activities} />
           <WeeklyReportCTA />
