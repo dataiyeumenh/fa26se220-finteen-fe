@@ -7,6 +7,7 @@ import {
   User as UserIcon,
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Link, useSearchParams } from "react-router-dom";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import useUserDashboard from "./hooks/useUserDashboard";
 import { VisualNovelPlayer } from "./components/game/VisualNovelPlayer";
@@ -45,6 +46,9 @@ const navItems = [
 ];
 
 export default function UserGames() {
+  const [searchParams] = useSearchParams();
+  const chapterId = searchParams.get("chapter") || "1";
+  const isChapterOne = chapterId === "1";
   const { user, loading, error } = useUserDashboard();
   const [gameData, setGameData] = useState(chapter1GameData);
   const [runtimeError, setRuntimeError] = useState("");
@@ -69,11 +73,11 @@ export default function UserGames() {
       }
     };
 
-    loadRuntime();
+    if (isChapterOne) loadRuntime();
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [isChapterOne]);
 
   return (
     <DashboardLayout role={role} navItems={navItems} user={user}>
@@ -96,7 +100,7 @@ export default function UserGames() {
         </div>
       )}
 
-      {!loading && !error && runtimeError && (
+      {!loading && !error && isChapterOne && runtimeError && (
         <div
           className="border-2 rounded-2xl p-4 mb-6 text-sm font-bold"
           style={{
@@ -109,7 +113,15 @@ export default function UserGames() {
         </div>
       )}
 
-      {!loading && !error && <VisualNovelPlayer data={gameData} />}
+      {!loading && !error && isChapterOne && <VisualNovelPlayer data={gameData} />}
+      {!loading && !error && !isChapterOne && (
+        <div className="mx-auto max-w-xl rounded-3xl border border-amber-200 bg-white p-8 text-center">
+          <Gamepad2 className="mx-auto mb-4 h-12 w-12 text-amber-500" />
+          <h1 className="text-2xl font-bold text-gray-800">{ /^[2-8]$/.test(chapterId) ? `Chương ${chapterId}` : "Không tìm thấy chương" }</h1>
+          <p className="mt-3 text-gray-600">{ /^[2-8]$/.test(chapterId) ? "Nội dung trò chơi của chương này đang được chuẩn bị." : "Vui lòng chọn một chương trên bản đồ hành trình." }</p>
+          <Link to="/dashboard/user/lessons" className="mt-6 inline-flex rounded-xl bg-amber-400 px-5 py-3 font-bold text-amber-950">Về bản đồ chương</Link>
+        </div>
+      )}
     </DashboardLayout>
   );
 }

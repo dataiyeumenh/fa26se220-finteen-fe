@@ -1,5 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ImageOff, Maximize2, Minimize2, RotateCcw } from "lucide-react";
+import { ArrowLeft, ChartNoAxesColumn, Coins, ImageOff, Maximize2, Menu, Minimize2, RotateCcw } from "lucide-react";
+import { createPortal } from "react-dom";
+import { Link } from "react-router-dom";
+import "./visual-novel.css";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { NeedWantMiniGame } from "./NeedWantMiniGame";
@@ -52,7 +55,6 @@ function CharacterSprite({
   alt,
   position,
   dimmed = false,
-  isFullscreen = false,
 }) {
   const [broken, setBroken] = useState(false);
 
@@ -66,9 +68,7 @@ function CharacterSprite({
     <div
       className={cn(
         "absolute z-20 transition-opacity",
-        isFullscreen
-          ? "bottom-32 md:bottom-36 w-[51%] max-w-[450px]"
-          : "bottom-36 md:bottom-40 w-[34%] max-w-[300px]",
+        "vn-character",
         positionClass,
       )}
     >
@@ -113,9 +113,10 @@ function SceneBackground({ src, showMissingHint = true }) {
         src={src}
         alt="scene background"
         onError={() => setBroken(true)}
-        className="absolute inset-0 w-full h-full object-cover"
+        onLoad={(event) => { const img = event.currentTarget; img.parentElement.style.setProperty("--scene-ratio", img.naturalWidth / img.naturalHeight); }}
+        className="absolute inset-0 w-full h-full object-contain"
       />
-      <div className="absolute inset-0 bg-black/30" />
+      <div className="absolute inset-0 bg-black/5 pointer-events-none" />
     </>
   );
 }
@@ -124,7 +125,7 @@ function SpeakerTag({ scene }) {
   if (scene.type !== "dialogue") return null;
 
   return (
-    <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-bold bg-[#22c55e]/20 text-[#dcfce7] border border-[#22c55e]/40 mb-2">
+    <div className="vn-speaker">
       {scene.speaker || "Nhân vật"}
     </div>
   );
@@ -149,7 +150,7 @@ function StatsPanel({ stats, statFxByKey }) {
             {label}
           </div>
           <div className="text-base font-black text-[#1a3a1a]">
-            {stats[key] ?? 0}
+            {Number(stats[key] ?? 0).toLocaleString("vi-VN")}
           </div>
           {statFxByKey[key] ? (
             <span
@@ -169,6 +170,8 @@ function StatsPanel({ stats, statFxByKey }) {
 
 export function VisualNovelPlayer({ data }) {
   const gameContainerRef = useRef(null);
+  const stageRef = useRef(null);
+  const dialogueRef = useRef(null);
   const pendingTransitionRef = useRef(null);
   const statFxTimerRef = useRef(null);
 
@@ -347,6 +350,12 @@ export function VisualNovelPlayer({ data }) {
   };
 
   useEffect(() => {
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = previousOverflow; };
+  }, []);
+
+  useEffect(() => {
     const handleFullscreenChange = () => {
       setIsFullscreen(document.fullscreenElement === gameContainerRef.current);
     };
@@ -365,6 +374,29 @@ export function VisualNovelPlayer({ data }) {
     };
   }, []);
 
+  useEffect(() => {
+    const stage = stageRef.current;
+    const dialogue = dialogueRef.current;
+    if (!stage) return;
+    const updateClearance = () => {
+      const stageBounds = stage.getBoundingClientRect();
+      const dialogueBounds = dialogue?.getBoundingClientRect();
+      const clearance = dialogueBounds?.height
+        ? Math.max(0, stageBounds.bottom - dialogueBounds.top + 12)
+        : 0;
+      stage.style.setProperty("--dialogue-clearance", `${clearance}px`);
+    };
+    const observer = new ResizeObserver(updateClearance);
+    observer.observe(stage);
+    if (dialogue) observer.observe(dialogue);
+    window.addEventListener("resize", updateClearance);
+    updateClearance();
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", updateClearance);
+    };
+  }, [scene.id]);
+
   const toggleFullscreen = async () => {
     try {
       if (!document.fullscreenElement) {
@@ -377,75 +409,54 @@ export function VisualNovelPlayer({ data }) {
     }
   };
 
-  return (
-    <div className="space-y-4">
-      <div className="bg-white rounded-3xl border-2 border-[#22c55e]/15 p-4 md:p-5">
-        <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
-          <div>
-            <h1 className="text-xl md:text-2xl font-black text-[#1a3a1a]">
-              {data.title}
-            </h1>
-            <p className="text-sm text-[#1a3a1a]/65">{data.subtitle}</p>
+  return createPortal(
+    <div ref={gameContainerRef} className="vn-player">
+      <header className="vn-toolbar">
+        <details className="vn-details vn-menu">
+          <summary className="vn-icon-button" aria-label="Menu trò chơi" title="Menu trò chơi"><Menu size={20} /></summary>
+          <div className="vn-popover vn-menu-panel">
+            <div className="vn-heading"><span className="vn-eyebrow">HÀNH TRÌNH FINTEEN</span><h1>{data.title}</h1></div>
+            <p className="vn-menu-progress">Cảnh {sceneIndex + 1} / {totalScenes}</p>
+            <div className="vn-progress" role="progressbar" aria-label="Tiến độ chương" aria-valuenow={sceneIndex + 1} aria-valuemin={0} aria-valuemax={totalScenes}><div style={{ width: progress + "%" }} /></div>
+            <StatsPanel stats={stats} statFxByKey={statFxByKey} />
+            <div className="vn-menu-actions">
+        <Link to="/dashboard/user/lessons" className="vn-icon-button" aria-label="Về bản đồ chương" title="Về bản đồ chương"><ArrowLeft size={18} /></Link>
+        <button type="button" onClick={toggleFullscreen} className="vn-icon-button" aria-label={isFullscreen ? "Thu nhỏ" : "Toàn màn hình"}>{isFullscreen ? <Minimize2 size={18} /> : <Maximize2 size={18} />}</button>
+        <details className="vn-restart-confirm">
+          <summary><RotateCcw size={16} /> Chơi lại</summary>
+          <p>Đặt lại tiến độ và chỉ số của lượt chơi này?</p>
+          <button type="button" onClick={(event) => { restart(); event.currentTarget.closest("details").open = false; }}>Bắt đầu lại chương</button>
+        </details>
+            </div>
           </div>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={restart}
-            className="border-[#1a3a1a]/20 text-[#1a3a1a]"
-          >
-            <RotateCcw className="w-4 h-4" /> Chơi lại
-          </Button>
-        </div>
-
-        <div className="h-2 bg-[#f1f5f9] rounded-full overflow-hidden">
-          <div
-            className="h-full bg-[#22c55e] transition-all"
-            style={{ width: `${progress}%` }}
-          />
-        </div>
-        <div className="mt-1.5 text-xs font-semibold text-[#1a3a1a]/65">
-          Cảnh {sceneIndex + 1}/{totalScenes}
-        </div>
-        <StatsPanel stats={stats} statFxByKey={statFxByKey} />
-      </div>
-
-      <div
-        ref={gameContainerRef}
-        className={cn(
-          "relative overflow-hidden border-2 border-[#22c55e]/15 bg-[#0f172a]",
-          isFullscreen
-            ? "min-h-screen rounded-none"
-            : "min-h-[560px] md:min-h-[620px] rounded-3xl",
-          canGoNext &&
-            !hasChoiceOptions &&
-            !isSceneOnlyScreen &&
-            "cursor-pointer",
-        )}
-        onClick={canGoNext && isSceneOnlyScreen ? goNext : undefined}
+        </details>
+        {!isSceneOnlyScreen && scene.type !== "minigame" && <div className="vn-hud-right">
+        <div className="vn-wallet"><Coins size={17} /><span>{Number(stats.WEALTH || 0).toLocaleString("vi-VN")}<small> đ</small></span></div>
+        <details className="vn-details">
+          <summary className="vn-icon-button" aria-label="Xem chỉ số" title="Chỉ số"><ChartNoAxesColumn size={18} /><span className="vn-control-label">Chỉ số</span></summary>
+          <div className="vn-popover"><h2>Hành trình của bạn</h2><StatsPanel stats={stats} statFxByKey={statFxByKey} /></div>
+        </details>
+        <button type="button" onClick={toggleFullscreen} className="vn-icon-button" aria-label={isFullscreen ? "Thu nhỏ" : "Toàn màn hình"} title={isFullscreen ? "Thu nhỏ" : "Toàn màn hình"}>{isFullscreen ? <Minimize2 size={18} /> : <Maximize2 size={18} />}</button>
+        </div>}
+      </header>
+      <main
+        className="vn-play-area"
+        onClick={(event) => {
+          if (
+            !canGoNext ||
+            pendingEffects ||
+            hasChoiceOptions ||
+            scene.type === "minigame" ||
+            event.target.closest("button, a, input, select, textarea, summary, details, .vn-dialogue-dock") ||
+            window.getSelection()?.toString()
+          ) return;
+          goNext();
+        }}
       >
-        <SceneBackground
-          src={scene.background}
-          showMissingHint={scene.type !== "minigame"}
-        />
-
-        <button
-          type="button"
-          onMouseDown={(event) => event.stopPropagation()}
-          onClick={(event) => {
-            event.stopPropagation();
-            toggleFullscreen();
-          }}
-          className="absolute top-4 right-4 z-40 inline-flex items-center justify-center rounded-full border border-white/30 bg-black/25 text-white p-2 hover:bg-black/40 transition-colors"
-          aria-label={isFullscreen ? "Thu nhỏ" : "Toàn màn hình"}
-          title={isFullscreen ? "Thu nhỏ" : "Toàn màn hình"}
-        >
-          {isFullscreen ? (
-            <Minimize2 className="w-4 h-4" />
-          ) : (
-            <Maximize2 className="w-4 h-4" />
-          )}
-        </button>
-
+        <div className="vn-stage-space">
+          {scene.background && <img key={`ambient-${scene.background}`} src={scene.background} alt="" aria-hidden="true" className="vn-ambient" onError={(event) => { event.currentTarget.style.display = "none"; }} />}
+          <div ref={stageRef} className="vn-stage">
+            <SceneBackground key={scene.background} src={scene.background} showMissingHint={scene.type !== "minigame"} />
         {scene.type === "dialogue" && (
           <>
             {sceneCharacters.map((character) => (
@@ -459,39 +470,60 @@ export function VisualNovelPlayer({ data }) {
                   scene.speakerId &&
                   scene.speakerId !== character.id
                 }
-                isFullscreen={isFullscreen}
               />
             ))}
           </>
         )}
 
+          {isSceneOnlyScreen && canGoNext && <button className="vn-scene-next" onClick={(event) => { event.stopPropagation(); goNext(); }}>Tiếp tục câu chuyện <span>→</span></button>}
+          </div>
+        </div>
         {scene.type === "minigame" ? (
-          <div className="absolute inset-0 z-30 p-3 md:p-4">
+          <div className="vn-minigame-host">
             <NeedWantMiniGame
+              key={scene.id}
               game={scene.game}
               onComplete={handleMiniGameComplete}
               className="h-full"
               immersive
             />
           </div>
+        ) : hasChoiceOptions ? (
+          <div className="vn-choice-overlay" key={scene.id}>
+            <section className="vn-choice-panel" aria-labelledby="vn-choice-question">
+              <span className="vn-choice-eyebrow">ĐẾN LƯỢT BẠN QUYẾT ĐỊNH</span>
+              {scene.text && scene.prompt && scene.text !== scene.prompt && <p className="vn-choice-context">{scene.text}</p>}
+              <h2 id="vn-choice-question">{scene.prompt || scene.text || "Bạn sẽ chọn điều gì?"}</h2>
+              <div className="vn-choices">
+                {scene.options.map((option, index) => (
+                  <button key={option.id} type="button" className="vn-choice-option" onClick={() => selectChoice(option)} disabled={Boolean(pendingEffects)}>
+                    <span className="vn-choice-letter" aria-hidden="true">{String.fromCharCode(65 + index)}</span>
+                    <span>{option.label}</span>
+                    <span className="vn-choice-arrow" aria-hidden="true">→</span>
+                  </button>
+                ))}
+              </div>
+              <p className="vn-choice-hint">Mỗi lựa chọn viết tiếp câu chuyện của bạn.</p>
+            </section>
+          </div>
         ) : (
-          <div className="absolute bottom-0 left-0 right-0 z-30 p-4 md:p-5">
+          <div ref={dialogueRef} className={cn("vn-dialogue-dock", isSceneOnlyScreen && "hidden")}>
             {isSceneOnlyScreen ? null : scene.type === "summary" ? (
               <div
                 className={cn(
-                  "rounded-3xl bg-[#0b1723]/88 backdrop-blur border border-white/20 p-4 md:p-5",
+                  "vn-dialogue",
                   canGoNext && "cursor-pointer",
                 )}
                 onClick={canGoNext ? goNext : undefined}
               >
-                <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-bold bg-[#22c55e]/20 text-[#dcfce7] border border-[#22c55e]/40 mb-2">
+                <div className="vn-speaker">
                   Tổng kết chương
                 </div>
-                <p className="text-xl font-black text-white mb-2">
+                <p className="vn-summary-title">
                   {scene.title || "Hoàn thành chương"}
                 </p>
                 {scene.nextChapter && (
-                  <p className="text-sm text-white/85">
+                  <p className="text-sm">
                     Chương tiếp theo: {scene.nextChapter.toUpperCase()}
                   </p>
                 )}
@@ -499,44 +531,27 @@ export function VisualNovelPlayer({ data }) {
             ) : (
               <div
                 className={cn(
-                  "rounded-3xl bg-[#0b1723]/88 backdrop-blur border border-white/20 p-4 md:p-5",
+                  "vn-dialogue",
                   canGoNext && "cursor-pointer",
                 )}
                 onClick={canGoNext ? goNext : undefined}
               >
                 {scene.type === "dialogue" && <SpeakerTag scene={scene} />}
-                <p className="text-sm md:text-base leading-relaxed text-white/95">
+                <p className="vn-dialogue-text">
                   {scene.text || scene.prompt}
                 </p>
 
-                {hasChoiceOptions && (
-                  <div className="space-y-2 mt-3">
-                    {scene.options.map((option) => (
-                      <button
-                        key={option.id}
-                        type="button"
-                        onClick={(event) => {
-                          event.stopPropagation();
-                          selectChoice(option);
-                        }}
-                        className="w-full text-left rounded-2xl border border-white/20 bg-white/10 px-4 py-3 text-sm font-bold text-white hover:bg-white/20 transition-colors"
-                      >
-                        {option.label}
-                      </button>
-                    ))}
-                  </div>
-                )}
-
                 {canGoNext && !hasChoiceOptions && scene.type !== "summary" && (
-                  <p className="text-[11px] md:text-xs text-white/65 mt-3">
-                    Nhấn vào khung thoại để tiếp tục
-                  </p>
+                  <button type="button" className="vn-dialogue-next" onClick={(event) => { event.stopPropagation(); goNext(); }}>
+                    Tiếp tục <span aria-hidden="true">→</span>
+                  </button>
                 )}
               </div>
             )}
           </div>
         )}
 
+      </main>
         {pendingEffects && (
           <div className="absolute inset-0 z-[60] bg-black/45 backdrop-blur-sm flex items-center justify-center p-4">
             <div className="w-full max-w-md rounded-3xl border border-white/25 bg-[#0b1723] text-white p-5 shadow-2xl">
@@ -575,7 +590,7 @@ export function VisualNovelPlayer({ data }) {
             </div>
           </div>
         )}
-      </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

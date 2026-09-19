@@ -518,6 +518,42 @@ realistic Vietnamese adult face, child proportions (must look exactly 16)
 
 ---
 
+## 📍 SCENE 2B — PHÒNG TRỌ TÍ: TÍ TẮT ĐIỆN THOẠI, QUAY LẠI LÀM BÀI, BỎ 100K VÀO ỐNG HEO (NHÁNH TỐT MISSION 2.2)
+
+### 📄 `c2_bg_dorm_flash_sale_RESIST.png`
+**Loại**: SCENE (composite, có nhân vật) — **phiên bản KHÁNG CỰ** (delayed gratification)
+**Dùng cho**: `narrator` — Cutscene hậu quả Mission 2.2 nhánh B — Tí tắt điện thoại, quay lại làm bài tập Toán, rồi chủ động trích 100k vào ống heo tiết kiệm trên bàn. Khoảnh khắc kỷ luật tài chính — Tí chọn trì hoãn sung sướng thay vì mua sắm cảm xúc.
+**Nhân vật trong ảnh**: Tí (1 người)
+**Aspect**: 16:9
+
+**📍 BỐI CẢNH CỐT TRUYỆN**: Chương 2 — Mission 2.2 nhánh B: Flash Sale 11/11 — Mua sắm cảm xúc. Đang ngồi bấm đề toán, điện thoại rung thông báo Flash Sale giày sneaker. Tí nhìn đôi giày mòn gót, rất muốn mua, nhưng **chọn tắt màn hình điện thoại, quay lại làm bài tập**. Cuối cảnh, Tí đứng dậy đi lấy ống heo đất (ống sành sứ truyền thống, hồng nhạt) đặt trên bàn, **tự tay nhét tờ 100.000đ** vào khe heo đất — quyết định tiết kiệm chủ động. Tone: NGHIÊM TÚC, TRƯỞNG THÀNH, MỘT MÌNH.
+
+**🔗 CROSS-REFERENCE (upload ảnh kèm prompt trong Gemini)**:
+- **Tí**: upload `c2_ti_dorm_neutral.png` làm reference (giữ y hệt khuôn mặt + tóc + da + style từ ảnh reference 16t; **CHỈ** thay đồ casual ở nhà)
+
+---
+
+> **⭐ BẮT ĐẦU PROMPT COPY-PASTE ⭐**
+>
+> Kawaii 2D cartoon style, **Studio Ghibli x Takashi Yamashita x Makoto Shinkai x Slice-of-Life manga-inspired EARNEST TEEN PROPORTIONS** (NOT Doraemon/Sanrio baby-cute, NOT baby-face, NOT toddler proportions, NOT chibi-3-head-body). **head-to-body ratio 1:4 to 1:5** (MEDIUM head, NATURAL teenage body proportions — KHÔNG đầu khổng lồ 1:2.5, KHÔNG thân hình tí hon baby), **NATURAL-LOOKING medium-sized eyes** (eyes nhỏ-vừa hơi to, đơn giản, có một white highlight nhỏ — **KHÔNG phải "huge round sparkly eyes with two large white circle highlights", KHÔNG mắt tròn xoe Doraemon/Sanrio, KHÔNG ẩu-ni-mê giant eyes**), **MEDIUM-thickness outlines** (vừa phải, KHÔNG thick black chibi outline), **soft flat cel-shading with gentle gradients** (chuyển sắc nhẹ ở mặt + áo — không flat 100%), **VERY SUBTLE natural teen skin shading, NO kawaii blush circles on cheeks** (KHÔNG có 2 vòng tròn hồng đậm trên má — chỉ shading nhẹ tự nhiên như reference; reference 16t có da sạch mịn KHÔNG blush kiểu kawaii), **warm natural soft lighting** (không warm-cozy-cute quá mức), **gentle earnest wholesome everyday vibe — phong cách thanh tú ổn định chững chạc như reference 16t**, manga/illustration style with Ghibli character consistency, **no text, no watermark**. NOT realistic, NOT semi-realistic, NOT chibi-3-head-body, NOT Doraemon-baby-cute, NOT Sanrio-cuteness-overload, NOT baby-face, NOT toddler-face, NOT inflated-cheeks, NOT big-head-tiny-body, NOT Pixar, NOT creepy, NOT scary, NOT hyper-cute-kawaii. **CRITICAL: face must look like a 16-YEAR-OLD TEENAGER — natural facial proportions, not a 13-year-old kid, not a 10-year-old child, not a baby. The face MUST closely follow the uploaded reference `c2_ti_dorm_neutral.png` — copy face shape, eye size, eye style, eyebrow shape, nose style, lip style, face proportions 1:1 from the reference.** **CRITICAL anti-distortion: face proportions stay NORMAL** **CRITICAL framing rule: the FULL CHARACTER must fit entirely inside the image frame — top of head AND both feet AND both hands all visible — character occupies roughly 55–70% of vertical frame height, NOT zoomed-in, NOT close-up, NOT bust shot, NOT cropped, NOT portrait crop, NOT tight framing, NOT bust, NOT shoulders-up, NOT waist-up. Plenty of white negative space above head and below feet.**
+>
+> **Setting (kawaii cartoon environment + 1 character — WARM COZY NIGHT IN TÍ'S RENTAL DORM ROOM, SELF-DISCIPLINE + DELAYED GRATIFICATION MOMENT, Studio Ghibli dorm aesthetic)**:
+> Same small rental dorm room as `c2_bg_dorm_room_empty.png` (BG1), **rendered in kawaii cartoon style with WARM SELF-DISCIPLINE EVENING aesthetic**. The single warm bare bulb hanging from the ceiling casting a warm golden-amber circle of light down onto the small rental desk. The metal-frame bed with pale-blue blanket and pale-blue mosquito net visible in the background. The small rental desk with the **small reading lamp** ON, casting a small bright pool of warm light on the desk. A few stacked high school textbooks (Toán, Lý, Hóa) and an open notebook with a kawaii cartoon pencil on it.
+>
+> **A 16-year-old Vietnamese boy (Tí)** — **PHẢI GIỐNG Y HỆT ẢNH REFERENCE 16t `c2_ti_dorm_neutral.png`** (copy 1:1): height 168cm, **lean slender teenage build** (gầy thanh mảnh), **clean warm fair skin** (#f0e0d0, trắng sáng sạch mịn, KHÔNG ngăm, KHÔNG mụn), **short neat pitch-black hair** (tóc đen tuyền gọn gàng vuốt nhẹ sang bên — KHÔNG rối bù, KHÔNG xù, KHÔNG dài), **longer slim face shape** (mặt dài thanh, cằm nhọn, KHÔNG tròn xoe), **simple natural black thin eyebrows** (lông mày mỏng cong nhẹ), clean face with NO acne, NO blemishes, NO facial hair. **Wearing casual home clothes** — a **plain white cotton t-shirt** (hex color #f0f0f0, simple clean white tee, slightly loose fit), **dark navy cotton shorts** (hex #2a3344, knee-length casual shorts), **simple white sneakers** (hex #f0f0f0, clean white casual shoes), red canvas backpack (hex #c83b3b) dropped on the floor next to the chair. **NO kawaii blush circles on cheeks** (chỉ shading nhẹ tự nhiên như reference 16t).
+>
+> **⭐ KEY POSE — STANDING UPRIGHT NEXT TO THE DESK (NOT sitting, NOT kneeling)**. **His LEFT HAND is gently placing a SYMBOLIC GREEN CARTOON PAPER BILL** (generic stylized 100k bill, NOT real Vietnamese dong, NO real numbers, NO real flag — just a small green rectangle in cartoon style) into the **slot of a TRADITIONAL PINK-COLORED VIETNAMESE PIGGY BANK (ống heo đất sành sứ truyền thống, hex #f0c0d0)** sitting prominently on the desk corner next to the lamp. **His RIGHT HAND is at his side**, fingers loosely open. His body is angled slightly toward the piggy bank, weight on his right foot, **left foot slightly forward**. **The smartphone is LYING FACE-DOWN on the desk** (screen hidden — Tí has turned off the temptation). **His worn old pair of school shoes** (đôi giày da đen mòn gót) is still on the floor under the desk — a small visual reminder of what he CHOSE NOT to buy. A small **electric rice cooker** on the floor next to the desk. The **folded note from Mẹ** with the tiny kawaii heart is visible on the desk corner. **Expression**: **calm small content smile**, eyes looking DOWN at the piggy bank with gentle satisfaction (NOT sparkly, NOT bug-eyed, NOT dramatic — just a quiet small smile of "I'm doing the right thing"). Eyebrows relaxed, small closed smile with one corner slightly up. NO blush circles. The overall pose reads: **"A 16-year-old who just resisted temptation and chose savings."** NO DOORWAY, NO DOORFRAME BORDER, NO WINDOW FRAME BORDER, NO ARCH.
+>
+> **Lighting**: warm bare bulb glow from ceiling + small warm yellow reading lamp pool on the desk + cool blue moonlight through the window — **warm self-discipline late-evening dorm atmosphere in kawaii cartoon style**. A soft warm spotlight on the piggy bank from the lamp, making it the visual focal point of the scene (the symbolic "money is being saved").
+>
+> **Aspect ratio**: 16:9 cinematic, **scene includes Tí STANDING in action — FULL CHARACTER FROM HEAD TO TOE VISIBLE (55–70% of vertical frame height)**.
+>
+> **⭐ CRITICAL CHARACTER IDENTITY RULE**: Tí MUST closely match the uploaded reference photo `c2_ti_dorm_neutral.png` (face shape, eye style, hair color, hair style, skin tone, blush). Do NOT redesign the face. Do NOT change eye color. Do NOT change hair color to brown or blonde. Do NOT add messy/wild hair. Do NOT add acne. Do NOT change skin tone to tan/dark. Do NOT wear different clothes from what is described above. **⭐ DO NOT MAKE TÍ INTO A 13-YEAR-OLD KID: face must look like a 16-year-old teen — natural facial proportions, NOT baby-face, NOT toddler-face, NOT huge round kawaii eyes, NOT thick chibi outline, NOT 2 kawaii blush circles on cheeks. Copy face 1:1 from reference `c2_ti_dorm_neutral.png`.** Kawaii 2D cartoon style but FACE MUST REMAIN RECOGNIZABLE FROM REFERENCE.
+>
+> **⭐ KẾT THÚC PROMPT COPY-PASTE ⭐**
+
+---
+
 ## 📍 SCENE 3 — SÂN TRƯỜNG CẤP 3: HÙNG RỦ TÍ ĐI XEM PHIM
 
 ### 📄 `c2_bg_highschool_yard_movie_invite.png`
@@ -548,6 +584,45 @@ realistic Vietnamese adult face, child proportions (must look exactly 16)
 > **Lighting**: warm bright tropical midday sunlight — warm yellow-white light, soft warm dappled shadows under the mango tree, vivid cheerful blue sky — **cozy lively warm high school yard friendship-invitation atmosphere in kawaii cartoon style**.
 >
 > **Aspect ratio**: 16:9 cinematic, **scene includes Tí + Hùng in action — BOTH CHARACTERS FULLY VISIBLE FROM HEAD TO TOE**.
+>
+> **⭐ CRITICAL CHARACTER IDENTITY RULE**: Both characters MUST closely match the uploaded reference photos (face shape, eye style, hair color, hair style, skin tone, blush). Do NOT redesign the face. Do NOT change eye color. Do NOT change hair color to brown or blonde. Do NOT add messy/wild hair to Tí. Do NOT add acne to Tí. Do NOT change Tí's skin tone to tan/dark. Do NOT wear different clothes from what is described above. **⭐ DO NOT MAKE TÍ INTO A 13-YEAR-OLD KID: face must look like a 16-year-old teen — natural facial proportions, NOT baby-face, NOT toddler-face, NOT huge round kawaii eyes, NOT thick chibi outline, NOT 2 kawaii blush circles on cheeks. Copy face 1:1 from reference `c2_ti_dorm_neutral.png`.** Kawaii 2D cartoon style but FACES MUST REMAIN RECOGNIZABLE FROM REFERENCE.
+>
+> **⭐ KẾT THÚC PROMPT COPY-PASTE ⭐**
+
+---
+
+## 📍 SCENE 3B — SÂN TRƯỜNG CẤP 3: TÍ TỪ CHỐI HÙNG (NHÁNH TỐT MISSION 2.3)
+
+### 📄 `c2_bg_highschool_yard_Ti_declines.png`
+**Loại**: SCENE (composite, có nhân vật) — **phiên bản TỪ CHỐI** (delayed gratification + budgeting)
+**Dùng cho**: `narrator` — Cutscene hậu quả Mission 2.3 nhánh B — Tí cười lắc đầu từ chối lời rủ đi xem phim của Hùng, vẫy tay chào tạm biệt vui vẻ. Khoảnh khắc kỷ luật tài chính — Tí chọn giữ tiền cho quỹ lớp + tiền điện nước với mẹ thay vì vung tay.
+**Nhân vật trong ảnh**: Tí + Hùng (2 người)
+**Aspect**: 16:9
+
+**📍 BỐI CẢNH CỐT TRUYỆN**: Chương 2 — Mission 2.3 nhánh B: Từ chối rủ rê. Sân trường cấp 3 giờ ra chơi. Hùng vỗ vai Tí rủ đi xem phim cuối tuần (250k vé + bắp nước). Tí nhớ lịch tuần sau phải nộp 150k tiền quỹ lớp + tiền điện nước → chọn **cười lắc đầu, từ chối khéo, vẫy tay chào**. Tone: HƠI CÔ ĐƠN nhưng BẢN LĨNH — Tí từ chối đúng lúc để bảo vệ ngân sách.
+
+**🔗 CROSS-REFERENCE (upload ảnh kèm prompt trong Gemini)**:
+- **Tí**: upload `c2_ti_dorm_neutral.png` làm reference (giữ y hệt khuôn mặt + tóc + da + style từ ảnh reference 16t; **CHỈ** thay đồng phục cấp 3)
+- **Hùng**: upload `c1_hung_neutral.png` làm reference (giữ mặt + slicked hair, chỉ thay đồng phục cấp 3 + tăng chiều cao 172cm + thêm Honda Vision scooter mới)
+
+---
+
+> **⭐ BẮT ĐẦU PROMPT COPY-PASTE ⭐**
+>
+> Kawaii 2D cartoon style, **Studio Ghibli x Takashi Yamashita x Makoto Shinkai x Slice-of-Life manga-inspired EARNEST TEEN PROPORTIONS** (NOT Doraemon/Sanrio baby-cute, NOT baby-face, NOT toddler proportions, NOT chibi-3-head-body). **head-to-body ratio 1:4 to 1:5** (MEDIUM head, NATURAL teenage body proportions — KHÔNG đầu khổng lồ 1:2.5, KHÔNG thân hình tí hon baby), **NATURAL-LOOKING medium-sized eyes** (eyes nhỏ-vừa hơi to, đơn giản, có một white highlight nhỏ — **KHÔNG phải "huge round sparkly eyes with two large white circle highlights", KHÔNG mắt tròn xoe Doraemon/Sanrio, KHÔNG ẩu-ni-mê giant eyes**), **MEDIUM-thickness outlines** (vừa phải, KHÔNG thick black chibi outline), **soft flat cel-shading with gentle gradients** (chuyển sắc nhẹ ở mặt + áo — không flat 100%), **VERY SUBTLE natural teen skin shading, NO kawaii blush circles on cheeks** (KHÔNG có 2 vòng tròn hồng đậm trên má — chỉ shading nhẹ tự nhiên như reference; reference 16t có da sạch mịn KHÔNG blush kiểu kawaii), **warm natural soft lighting** (không warm-cozy-cute quá mức), **gentle earnest wholesome everyday vibe — phong cách thanh tú ổn định chững chạc như reference 16t**, manga/illustration style with Ghibli character consistency, **no text, no watermark**. NOT realistic, NOT semi-realistic, NOT chibi-3-head-body, NOT Doraemon-baby-cute, NOT Sanrio-cuteness-overload, NOT baby-face, NOT toddler-face, NOT inflated-cheeks, NOT big-head-tiny-body, NOT Pixar, NOT creepy, NOT scary, NOT hyper-cute-kawaii. **CRITICAL: face must look like a 16-YEAR-OLD TEENAGER — natural facial proportions, not a 13-year-old kid, not a 10-year-old child, not a baby. The face MUST closely follow the uploaded reference `c2_ti_dorm_neutral.png` — copy face shape, eye size, eye style, eyebrow shape, nose style, lip style, face proportions 1:1 from the reference.** **CRITICAL anti-distortion: face proportions stay NORMAL.** **CRITICAL framing rule: the FULL CHARACTER must fit entirely inside the image frame — top of head AND both feet AND both hands all visible — character occupies roughly 55–70% of vertical frame height, NOT zoomed-in, NOT close-up, NOT bust shot, NOT cropped, NOT portrait crop, NOT tight framing, NOT bust, NOT shoulders-up, NOT waist-up. Plenty of white negative space above head and below feet.**
+>
+> **Setting (kawaii cartoon environment + 2 characters — WARM SUNNY SMALL-TOWN HIGH SCHOOL YARD, FRIENDLY DECLINE MOMENT, Studio Ghibli school aesthetic)**:
+> Same small-town high school yard as `c2_bg_highschool_yard_empty.png` (BG5), **rendered in kawaii cartoon style with WARM FRIENDLY DECLINE aesthetic**. Bright cheerful blue sky with soft white clouds. Warm concrete yard with dappled shadows under the mango tree. The 3-story school building in warm cream-yellow on the right with rows of pale-blue-curtained windows. A few **tiny blurred background students** walking to class in the far distance.
+>
+> **⭐ KEY COMPOSITION — TÍ IS WALKING AWAY (turning his back to viewer + Hùng), WAVING GOODBYE OVER HIS SHOULDER. Hùng IS STANDING STILL WATCHING TÍ LEAVE WITH A SLIGHTLY-PUZZLED BUT-OKAY EXPRESSION.**
+>
+> **Character 1 — Tí (LEFT side of frame, mid-walk AWAY from Hùng, BACK angled toward viewer)**: **16-year-old Vietnamese boy (Tí, age-locked 16, Vietnamese nationality)** — **PHẢI GIỐNG Y HỆT ẢNH REFERENCE 16t `c2_ti_dorm_neutral.png`** (copy 1:1): height 168cm, **lean slender teenage build**, **clean warm fair skin** (#f0e0d0), **short neat pitch-black hair**, **longer slim face shape** (mặt dài thanh, cằm nhọn), **simple natural black thin eyebrows**, clean face with NO acne. Outfit: white button-up high school shirt (hex #FFFFFF) tucked into navy blue school pants (hex #1a2b4a), red-and-blue striped tie (hex #c83b3b + #1a2b4a), **worn black leather school shoes** (hex #1a1a1a), red canvas backpack (hex #c83b3b) on his back. **POSING**: **WALKING AWAY from Hùng with one foot stepping forward** (mid-stride), **body angled AWAY from viewer (~3/4 back view)**, **HEAD TURNED 90° BACK OVER HIS RIGHT SHOULDER** to look at Hùng, **right hand raised high in a friendly goodbye wave** (5 fingers spread, palm facing Hùng), **left hand gripping the backpack strap** on his shoulder. Expression: **gentle small reassuring smile** (eyes soft kind, eyebrows relaxed, small closed-mouth smile — NOT big grin, NOT crying, NOT dramatic — a quiet "thanks but no thanks" smile), small wave-line "bye!" motion lines around the waving hand. Face proportions STAY NORMAL kawaii size — do NOT distort.
+>
+> **Character 2 — Hùng (RIGHT side of frame, standing still watching Tí leave)**: **16-year-old Vietnamese boy (Hùng, age-locked 16, Vietnamese nationality)**, height 172cm, well-built teenage build, fairer skin than Tí, glossy black slicked-back hair, sharp confident teenage eyes. Outfit: white button-up high school shirt (hex #FFFFFF) neatly tucked into navy blue school pants (hex #1a2b4a), school tie worn properly, **brand-new white sneakers** (hex #FFFFFF) instead of old ones. Behind him is parked his **brand-new silver Honda Vision scooter** (small chunky kawaii cartoon scooter in cream-white hex #f0e8d8 with cute round headlight). **POSING**: **STANDING UPRIGHT** facing the direction Tí is walking away, one hand hanging at his side, the other hand half-raised in a small "huh?" confused wave back. Expression: **slightly-puzzled but-accepting** — one eyebrow slightly raised, mouth in a small "oh..." half-open expression (NOT angry, NOT offended — just a tiny "well ok then" reaction), a small question-mark cartoon symbol "?" floating near his head. Face proportions STAY NORMAL.
+>
+> **Lighting**: warm bright tropical midday sunlight — warm yellow-white light, soft warm dappled shadows under the mango tree, vivid cheerful blue sky — **cozy slightly-lonely-but-brave warm high school yard farewell atmosphere in kawaii cartoon style**.
+>
+> **Aspect ratio**: 16:9 cinematic, **scene includes Tí + Hùng in action — BOTH CHARACTERS FULLY VISIBLE FROM HEAD TO TOE, Tí mid-walk-away on LEFT, Hùng standing still on RIGHT**.
 >
 > **⭐ CRITICAL CHARACTER IDENTITY RULE**: Both characters MUST closely match the uploaded reference photos (face shape, eye style, hair color, hair style, skin tone, blush). Do NOT redesign the face. Do NOT change eye color. Do NOT change hair color to brown or blonde. Do NOT add messy/wild hair to Tí. Do NOT add acne to Tí. Do NOT change Tí's skin tone to tan/dark. Do NOT wear different clothes from what is described above. **⭐ DO NOT MAKE TÍ INTO A 13-YEAR-OLD KID: face must look like a 16-year-old teen — natural facial proportions, NOT baby-face, NOT toddler-face, NOT huge round kawaii eyes, NOT thick chibi outline, NOT 2 kawaii blush circles on cheeks. Copy face 1:1 from reference `c2_ti_dorm_neutral.png`.** Kawaii 2D cartoon style but FACES MUST REMAIN RECOGNIZABLE FROM REFERENCE.
 >
@@ -593,6 +668,56 @@ realistic Vietnamese adult face, child proportions (must look exactly 16)
 > **Aspect ratio**: 16:9 cinematic widescreen — **FULL BG VISIBLE (curtains + banner + podium + spotlights + characters + audience), NO CROPPING, characters occupy 35-50% of frame height**.
 >
 > **⭐ CRITICAL CHARACTER IDENTITY + STAGING RULE**: Both characters MUST closely match the uploaded reference photos. Tí MUST match `c2_ti_dorm_neutral.png` exactly — copy face, hair, skin, body 1:1. Do NOT redesign the face. Do NOT change hair to messy/wild. Do NOT add acne. Do NOT change skin tone to tan/dark. Do NOT put blush circles on cheeks. Do NOT wear t-shirt or round-collar — Tí wears POINTED-COLLAR button-up school shirt. **⭐ STAGING: both characters MUST stand CENTER-STAGE in front of the PODIUM (microphone stand behind/between them), with the red velvet CURTAINS + "LỄ TỔNG KẾT NĂM HỌC" BANNER backdrop DIRECTLY BEHIND them, and the polished wooden STAGE FLOOR with warm SPOTLIGHT pools DIRECTLY UNDER their feet. Camera is at AUDIENCE LEVEL (front row) looking slightly UP at the stage. The audience seating area with small blurred heads of students MUST be visible at the bottom 20-25% of frame to confirm the perspective. They are NOT in audience seating area, NOT on floor level, NOT in hallway, NOT in classroom.** Cô Hiệu trưởng is a NEW character without reference — keep her MATURE ADULT 50-year-old face (NOT kawaii giant eyes, NOT teen face, NOT 70-year-old granny, hair PITCH-BLACK with only 2-3 silver strands, NOT grey hair, NOT silver hair). **Cô Hiệu trưởng's hair MUST be primarily PITCH-BLACK (#1a1a1a), with ONLY 2-3 thin silver strands mixed in for realism — NOT grey, NOT white, NOT silver hair dominant.** **⭐ DO NOT MAKE TÍ INTO A 13-YEAR-OLD KID: Tí's face must look like a 16-year-old teen — natural facial proportions, NOT baby-face, NOT toddler-face, NOT huge round kawaii eyes, NOT thick chibi outline, NOT 2 kawaii blush circles on cheeks. Copy face 1:1 from reference `c2_ti_dorm_neutral.png`.** **⭐ SCALE: characters occupy 35-50% of frame height (NOT oversized dominating the frame). FULL BG composition visible — curtains, banner, podium, spotlight rig, audience. NO CROPPING.** **⭐⭐ PODIUM SCALE FIX: The wooden podium is ~120cm tall — it reaches only the characters' CHEST/UPPER-TORSO level. The characters' HEADS extend at least 3 head-heights ABOVE the podium top. The podium looks like a small accessory in the scene (<15% of frame height); the characters DOMINATE the frame.** Kawaii 2D cartoon style but FACES MUST REMAIN RECOGNIZABLE.
+>
+> **⭐ KẾT THÚC PROMPT COPY-PASTE ⭐**
+
+---
+
+## 📍 SCENE 4B — PHÒNG TRỌ TÍ: TÍ CÂN NHẮC 3 LỰA CHỌN TIỀN THƯỞNG (DECISION MOMENT MISSION 2.4)
+
+### 📄 `c2_bg_dorm_award_decision.png`
+**Loại**: SCENE (composite, có nhân vật) — **quyết định 3 lựa chọn**
+**Dùng cho**: `narrator` — Cutscene hệ quả Mission 2.4 — Tí vừa bước vào phòng trọ sau lễ tổng kết, tay vẫn cầm phong bì tiền thưởng 2 triệu. Tí đứng giữa phòng, cân nhắc 3 lựa chọn: bao bạn đi ăn (A) / bỏ ống heo (B) / mua khóa học + tiết kiệm (C). Khoảnh khắc quan trọng của kỷ luật tài chính.
+**Nhân vật trong ảnh**: Tí (1 người)
+**Aspect**: 16:9
+
+**📍 BỐI CẢNH CỐT TRUYỆN**: Chương 2 — Mission 2.4: Tiền thưởng học sinh giỏi. Tí vừa nhận giấy khen + phong bì 2 triệu từ sân khấu, giờ đã về phòng trọ. Cô chủ nhiệm hỏi "Em tính dùng số tiền này thế nào?". Tí đứng giữa phòng, trên bàn có **3 vật phẩm tượng trưng** cho 3 lựa chọn:
+- **Bên trái**: một **tập thực đơn nhà hàng** đang mở + ảnh nhóm bạn — tượng trưng cho Chọn A (bao bạn đi ăn)
+- **Giữa bàn**: **ống heo đất sành sứ truyền thống màu hồng** — tượng trưng cho Chọn B (bỏ hết vào ống heo)
+- **Bên phải**: **một chiếc laptop nhỏ đang mở hiển thị khóa học tiếng Anh online** + một cuốn sổ tiết kiệm — tượng trưng cho Chọn C (đầu tư tương lai)
+
+Tí đứng giữa phòng, tay trái cầm phong bì đỏ, tay phải chống cằm suy nghĩ. Tone: NGHIÊM TÚC, TRƯỞNG THÀNH.
+
+**🔗 CROSS-REFERENCE (upload ảnh kèm prompt trong Gemini)**:
+- **Tí**: upload `c2_ti_dorm_neutral.png` làm reference (giữ y hệt khuôn mặt + tóc + da + style từ ảnh reference 16t; **CHỈ** thay đồ casual ở nhà)
+
+---
+
+> **⭐ BẮT ĐẦU PROMPT COPY-PASTE ⭐**
+>
+> Kawaii 2D cartoon style, **Studio Ghibli x Takashi Yamashita x Makoto Shinkai x Slice-of-Life manga-inspired EARNEST TEEN PROPORTIONS** (NOT Doraemon/Sanrio baby-cute, NOT baby-face, NOT toddler proportions, NOT chibi-3-head-body). **head-to-body ratio 1:4 to 1:5** (MEDIUM head, NATURAL teenage body proportions — KHÔNG đầu khổng lồ 1:2.5, KHÔNG thân hình tí hon baby), **NATURAL-LOOKING medium-sized eyes** (eyes nhỏ-vừa hơi to, đơn giản, có một white highlight nhỏ — **KHÔNG phải "huge round sparkly eyes with two large white circle highlights", KHÔNG mắt tròn xoe Doraemon/Sanrio, KHÔNG ẩu-ni-mê giant eyes**), **MEDIUM-thickness outlines** (vừa phải, KHÔNG thick black chibi outline), **soft flat cel-shading with gentle gradients** (chuyển sắc nhẹ ở mặt + áo — không flat 100%), **VERY SUBTLE natural teen skin shading, NO kawaii blush circles on cheeks** (KHÔNG có 2 vòng tròn hồng đậm trên má — chỉ shading nhẹ tự nhiên như reference; reference 16t có da sạch mịn KHÔNG blush kiểu kawaii), **warm natural soft lighting** (không warm-cozy-cute quá mức), **gentle earnest wholesome everyday vibe — phong cách thanh tú ổn định chững chạc như reference 16t**, manga/illustration style with Ghibli character consistency, **no text, no watermark**. NOT realistic, NOT semi-realistic, NOT chibi-3-head-body, NOT Doraemon-baby-cute, NOT Sanrio-cuteness-overload, NOT baby-face, NOT toddler-face, NOT inflated-cheeks, NOT big-head-tiny-body, NOT Pixar, NOT creepy, NOT scary, NOT hyper-cute-kawaii. **CRITICAL: face must look like a 16-YEAR-OLD TEENAGER — natural facial proportions, not a 13-year-old kid, not a 10-year-old child, not a baby. The face MUST closely follow the uploaded reference `c2_ti_dorm_neutral.png` — copy face shape, eye size, eye style, eyebrow shape, nose style, lip style, face proportions 1:1 from the reference.** **CRITICAL anti-distortion: face proportions stay NORMAL.** **CRITICAL framing rule: the FULL CHARACTER must fit entirely inside the image frame — top of head AND both feet AND both hands all visible — character occupies roughly 55–70% of vertical frame height, NOT zoomed-in, NOT close-up, NOT bust shot, NOT cropped, NOT portrait crop, NOT tight framing, NOT bust, NOT shoulders-up, NOT waist-up. Plenty of white negative space above head and below feet.**
+>
+> **Setting (kawaii cartoon environment + 1 character — WARM INTIMATE EVENING IN TÍ'S RENTAL DORM ROOM, FINANCIAL DECISION MOMENT, Studio Ghibli dorm aesthetic)**:
+> Same small rental dorm room as `c2_bg_dorm_room_empty.png` (BG1), **rendered in kawaii cartoon style with WARM INTIMATE THINKING MOMENT aesthetic**. The single warm bare bulb hanging from the ceiling casting a warm golden-amber circle of light down onto the small rental desk. The metal-frame bed with pale-blue blanket and pale-blue mosquito net visible in the background. The small rental desk with the **small reading lamp** ON, casting a small bright pool of warm light on the desk — the lamp pool illuminates **3 symbolic items laid out on the desk**:
+>
+> **⭐ 3 ITEMS ON THE DESK (TELLING THE 3-CHOICES STORY — IMPORTANT VISUAL FOCUS)**:
+> - **LEFT side of desk (Chọn A — Spend on friends)**: a small open **cartoon restaurant menu** (generic, NO real brand, NO real restaurant name — just chunky cartoon menu pages with cartoon food icons like bún bò / phở / cơm tấm) + a small **photo strip of friends** (generic cartoon photos of 4-5 cute teen heads with happy smiles — NOT real people, NOT copyrighted characters — generic high-school-friend-group cartoon photos, this represents "bao bạn đi ăn liên hoan"). The visual cue: **a small "🍔" / "🍜" cartoon icon hovering above** (or a small thought bubble with a happy cartoon dinner scene).
+> - **CENTER of desk (Chọn B — Save it all)**: a **traditional pink Vietnamese ceramic piggy bank (ống heo đất sành sứ truyền thống, hex #f0c0d0)** with a small coin slot on top. The visual cue: **a small "🐷" / "💰" cartoon icon hovering above**.
+> - **RIGHT side of desk (Chọn C — Invest + Save)**: a small **open laptop cartoon** (small chunky cartoon laptop with a glowing screen showing a **generic "KHÓA HỌC TIẾNG ANH ONLINE" cartoon banner in cartoon letters** — generic educational style banner, NOT real brand, NOT real course name) + a **small brown savings passbook (sổ tiết kiệm, hex #8b4513)** standing upright next to it. The visual cue: **a small "📚" / "📈" cartoon icon hovering above**.
+>
+> **A 16-year-old Vietnamese boy (Tí)** — **PHẢI GIỐNG Y HỆT ẢNH REFERENCE 16t `c2_ti_dorm_neutral.png`** (copy 1:1): height 168cm, **lean slender teenage build**, **clean warm fair skin** (#f0e0d0), **short neat pitch-black hair**, **longer slim face shape**, **simple natural black thin eyebrows**, clean face with NO acne, NO blemishes, NO facial hair. **Wearing casual home clothes** — a **plain white cotton t-shirt** (hex color #f0f0f0, round crew neckline), **dark navy cotton shorts** (hex #2a3344), **simple white sneakers** (hex #f0f0f0), red canvas backpack (hex #c83b3b) dropped on the floor next to him.
+>
+> **⭐ KEY POSE — STANDING UPRIGHT IN THE CENTER OF THE ROOM, FACING THE DESK (back slightly toward viewer, ~3/4 back view)**: **his LEFT HAND holds a RED CARTOON ENVELOPE (phong bì tiền thưởng — generic stylized red-yellow envelope, NO real Vietnamese dong, NO real numbers, just a chunky red envelope with gold cartoon decorations, the same envelope he just received from SC4 stage)** held at chest level. **His RIGHT HAND is raised to his chin in the classic "thinking" gesture** — index finger resting on his cheek/chin, other fingers curled. **His body is angled slightly toward the desk**, weight on his left foot, **right foot slightly back** (the classic "weighing options" stance). His head is tilted slightly to one side, eyes looking DOWN at the 3 items on the desk, eyebrows slightly furrowed in genuine thinking (NOT angry, NOT sad — thoughtful).
+>
+> **Expression**: **DEEP THOUGHTFUL CONSIDERATION** — eyes narrowed slightly in focus (NOT closed, NOT squinted, just focused on the items below), eyebrows drawn together at the inner corner (thinker pinch, NOT angry furrow), mouth in a small neutral line (NOT smiling, NOT frowning, NOT smirking — neutral contemplation). The **3 cartoon thought icons above the desk items are also reflected in his mind** — Tí is literally weighing all 3 options. A few small **"..." thought dots** floating near his head (classic cartoon "thinking" symbol). NO blush circles (chỉ shading nhẹ tự nhiên như reference 16t). Face proportions STAY NORMAL kawaii size — do NOT distort.
+>
+> **NO DOORWAY, NO DOORFRAME BORDER, NO WINDOW FRAME BORDER, NO ARCH, NO RECTANGULAR FRAMING anywhere.**
+>
+> **Lighting**: warm bare bulb glow from ceiling + small warm yellow reading lamp pool on the desk + the 3 items softly lit by the lamp + cool blue moonlight starting through the window — **warm intimate contemplative late-afternoon-to-evening dorm atmosphere in kawaii cartoon style**. The desk with 3 items is the brightest spot in the frame (warm focal light).
+>
+> **Aspect ratio**: 16:9 cinematic, **scene includes Tí STANDING in the center of the room, the desk with 3 symbolic items in the foreground, the bed in the background — FULL CHARACTER FROM HEAD TO TOE VISIBLE (55-70% of vertical frame height)**.
+>
+> **⭐ CRITICAL CHARACTER IDENTITY RULE**: Tí MUST closely match the uploaded reference photo `c2_ti_dorm_neutral.png` (face shape, eye style, hair color, hair style, skin tone, blush). Do NOT redesign the face. Do NOT change eye color. Do NOT change hair color to brown or blonde. Do NOT add messy/wild hair. Do NOT add acne. Do NOT change skin tone to tan/dark. Do NOT wear different clothes from what is described above. **⭐ DO NOT MAKE TÍ INTO A 13-YEAR-OLD KID: face must look like a 16-year-old teen — natural facial proportions, NOT baby-face, NOT toddler-face, NOT huge round kawaii eyes, NOT thick chibi outline, NOT 2 kawaii blush circles on cheeks. Copy face 1:1 from reference `c2_ti_dorm_neutral.png`.** Kawaii 2D cartoon style but FACE MUST REMAIN RECOGNIZABLE FROM REFERENCE.
 >
 > **⭐ KẾT THÚC PROMPT COPY-PASTE ⭐**
 
@@ -751,19 +876,22 @@ realistic Vietnamese adult face, child proportions (must look exactly 16)
 | BG9 | `c2_bg_shoe_store_empty.png` | Cửa hàng giày sneaker | Trưa | `dialogue` | Mission 2.2 (cám dỗ mua giày) | 16:9 |
 | BG10 | `c2_bg_town_street_bike_stolen_empty.png` | Đường phố thị trấn (xe mất) | Tối | `narrator` tĩnh | Life Event 2 (nhận ra xe mất) | 16:9 |
 
-## Tất cả SCENE (có nhân vật) — 7 file
+## Tất cả SCENE (có nhân vật) — 10 file
 
 | # | Filename | Địa điểm | Nhân vật | Loại scene VN | Dùng cho cốt truyện | Aspect |
 |---|---|---|---|---|---|---|
 | SC1 | `c2_bg_mom_stall_handover.png` | Sạp hàng Mẹ (chiều tà) | Mẹ + Tí | `narrator` | Mission 2.1 (mở đầu — giao sạp) | 16:9 |
 | SC2 | `c2_bg_dorm_flash_sale.png` | Phòng trọ Tí (tối) | Tí | `narrator` | Mission 2.2 (Flash Sale cám dỗ) | 16:9 |
+| SC2B | `c2_bg_dorm_flash_sale_RESIST.png` | Phòng trọ Tí (tối) | Tí | `narrator` | Mission 2.2 — Chọn B (Tí tắt điện thoại, bỏ 100k vào ống heo — nhánh tốt) | 16:9 |
 | SC3 | `c2_bg_highschool_yard_movie_invite.png` | Sân trường cấp 3 (trưa) | Tí + Hùng | `narrator` | Mission 2.3 (Hùng rủ xem phim) | 16:9 |
+| SC3B | `c2_bg_highschool_yard_Ti_declines.png` | Sân trường cấp 3 (trưa) | Tí + Hùng | `narrator` | Mission 2.3 — Chọn B (Tí từ chối Hùng — nhánh tốt) | 16:9 |
 | SC4 | `c2_bg_stage_ti_award.png` | Sân khấu lễ tổng kết (trưa) | Tí + Cô Hiệu trưởng | `narrator` | Mission 2.4 (nhận giấy khen) | 16:9 |
+| SC4B | `c2_bg_dorm_award_decision.png` | Phòng trọ Tí (chiều tối) | Tí | `narrator` | Mission 2.4 — Decision moment (Tí cân nhắc 3 lựa chọn tiền thưởng) | 16:9 |
 | SC5 | `c2_bg_internet_cafe_bike_stolen.png` | Đường phố thị trấn (tối) | Tí | `narrator` | Life Event 2 (xe bị mất) | 16:9 |
 | SC6a | `c2_bg_mom_stall_busy_SUCCESS.png` | Sạp hàng Mẹ (chiều tà) | Tí + crowd | `narrator` | Mission 2.1 — Chọn A (thành công) | 16:9 |
 | SC6b | `c2_bg_mom_stall_busy_FAIL.png` | Sạp hàng Mẹ (chiều tà) | Tí | `narrator` | Mission 2.1 — Chọn B (thất bại) | 16:9 |
 
-## Tổng: 17 prompts (10 BG + 7 SCENE — bao gồm 2 phiên bản SC6)
+## Tổng: 20 prompts (10 BG + 10 SCENE — thêm 3 scene mới: SC2B tắt Flash Sale, SC3B từ chối Hùng, SC4B cân nhắc tiền thưởng)
 
 ---
 
@@ -852,16 +980,66 @@ realistic Vietnamese adult face, child proportions (must look exactly 16)
   - [ ] `c2_bg_town_street_bike_stolen_empty.png` (đường phố trống, xe mất)
 - [ ] BG này KHÔNG xóa nền, lưu PNG đầy đủ 16:9
 
-### Phase 2 — Gen 7 BG COMPOSITE (cho narrator cinematic có nhân vật)
+### Phase 2 — Gen 10 BG COMPOSITE (cho narrator cinematic có nhân vật)
 - [ ] **Dùng STYLE TOKEN: BG COMPOSITE** (16:9, có nhân vật trong ảnh đang hành động)
 - [ ] Gen các file:
   - [ ] `c2_bg_mom_stall_handover.png` (Mẹ giao sạp cho Tí)
   - [ ] `c2_bg_dorm_flash_sale.png` (Tí ngồi phòng trọ thấy Flash Sale)
+  - [ ] `c2_bg_dorm_flash_sale_RESIST.png` (Tí tắt điện thoại, bỏ 100k vào ống heo — nhánh tốt Mission 2.2)
   - [ ] `c2_bg_highschool_yard_movie_invite.png` (Hùng rủ Tí đi xem phim)
+  - [ ] `c2_bg_highschool_yard_Ti_declines.png` (Tí từ chối Hùng, vẫy tay chào — nhánh tốt Mission 2.3)
   - [ ] `c2_bg_stage_ti_award.png` (Tí nhận giấy khen + phong bì)
+  - [ ] `c2_bg_dorm_award_decision.png` (Tí đứng giữa phòng trọ cân nhắc 3 lựa chọn tiền thưởng — Decision moment Mission 2.4)
   - [ ] `c2_bg_internet_cafe_bike_stolen.png` (Tí bước ra, chỗ để xe trống)
   - [ ] `c2_bg_mom_stall_busy_SUCCESS.png` (sạp đông khách, Tí vui)
   - [ ] `c2_bg_mom_stall_busy_FAIL.png` (sạp bị đình chỉ, Tí buồn)
 - [ ] **LƯU Ý**: Khi gen Tí/Tèo/Hùng trong SCENE, dùng **character reference CHƯƠNG 2** (16 tuổi, school uniform, etc.) — KHÔNG dùng reference 13 tuổi từ chương 1
 - [ ] **LƯU Ý**: Khi gen Mẹ/Cô Hiệu trưởng, dùng **character reference mới** (Mẹ 38t áo bà ba, Cô Hiệu trưởng 50t áo dài)
 - [ ] **MỖI PROMPT SCENE copy nguyên khối ⭐⭐⭐ là dùng được** — không cần tra cứu block character reference ở đâu khác
+
+
+---
+
+## 🪧 TỔNG KẾT CHƯƠNG 2 — CHI TIÊU CÓ KẾ HOẠCH
+
+**Output**: `images/chuong-2/bg_tong_ket_chuong.png`
+**Loại**: Tranh tổng kết biểu tượng, không nhân vật, 16:9 — 1920 × 1080.
+**Dùng cho**: Nhìn lại ý nghĩa cả chương, dùng chung cho các nhánh.
+**Ý nghĩa cần gợi**: Kinh doanh nhỏ; kiểm soát mua sắm cảm xúc; lập ngân sách; tiết kiệm và đầu tư học tập; dự phòng khi mất tài sản.
+**Thiết kế mới**: Chi tiêu có kế hoạch. Tiêu đề và câu chốt ý đặt trên khoảng giấy sáng ở giữa; các cụm đồ vật kể lại bài học nằm quanh rìa. Không dùng bảng gỗ lớn che gần hết cảnh. Đây là tranh hồi tưởng mang tính biểu tượng, không phải cảnh mới xảy ra sau nhiệm vụ cuối.
+
+```text
+Create ONE beautifully composed 16:9 full-bleed illustrated chapter-recap card, target 1920 x 1080. This is a finished visual-novel chapter reflection illustration, not a slide template or a literal continuation of the last scene.
+
+STYLE: Hand-drawn 2D Vietnamese everyday-life storybook illustration, consistent with the established earnest slice-of-life game art: medium-thickness softly colored outlines, soft flat cel-shading with gentle gradients, subtle watercolor-paper grain, carefully simplified tangible objects, restrained warm natural light. Delicate edges, readable silhouettes, atmospheric depth, polished art direction. No photorealism, 3D, glossy vector clipart, giant cartoon faces or hyper-cute styling. NO people, character sprites, silhouettes, hands or human reflections.
+
+CHAPTER MEANING: A student planning desk becomes a quiet illustrated memory of learning to save, resist impulse spending and invest in oneself. The lesson is: Kinh doanh nhỏ; kiểm soát mua sắm cảm xúc; lập ngân sách; tiết kiệm và đầu tư học tập; dự phòng khi mất tài sản. This meaning is visual direction; do not render that explanatory sentence as text.
+
+COLOR STORY: soft ivory #f5eddf, youthful sage #8eaa91, dusty coral #cf8c7c and muted school blue #6789a5. Use cream for most of the image, two main supporting hues, and only small warm accents. Richer colors belong to the outer object groups; central text sits against a quiet light field.
+
+CUSTOM ILLUSTRATED MOTIFS AND PLACEMENT: LOWER LEFT: a small clean snack-stall tray, two ingredient jars and an unmarked cost notebook, showing a small business and responsible purchasing. UPPER LEFT: a plain phone with its screen dark beside a worn but intact sneaker, evoking the flash-sale temptation without displaying a discount or purchased new shoes. LOWER RIGHT: a closed ceramic savings pig beside a language-study book and a plain award envelope, representing the three uses of prize money without showing which option was chosen. UPPER RIGHT: a simple blue bicycle wheel silhouette paired with a small empty bicycle rack and an ordinary lock; small and symbolic, remembering the loss event without drawing an active theft. One small unprinted cinema ticket tucked beside the planning notebook hints at social spending.
+
+BACKGROUND AND ATMOSPHERE: Faint distant school roof and a few soft green leaves along the upper outer corners; a gently curved strip of pale wooden desktop anchors the bottom third. Morning-like editorial light, not a new chronological story event.
+
+COMPOSITION: One coherent illustration, not a grid or a set of cards. Arrange the specified object groups as an asymmetrical but balanced open wreath around a large central breathing space. Keep ALL objects outside the central text zone, approximately x=20-80% and y=28-65% of the canvas. Let the lower objects anchor the image, with lighter smaller accents above. Objects have consistent perspective and gentle contact shadows; no floating dashboard icons. Keep secondary details sparse, three depth levels at most. The light center has a soft irregular paper wash integrated into the artwork, NOT a rectangular parchment plaque, wooden sign, bordered box, ribbon banner or physical board. No hard frame around the image.
+
+TEXT HIERARCHY AND EXACT VIETNAMESE COPY: Center-align the following three lines as one group, vertically centered around 46% of canvas height.
+Line 1, modest chapter eyebrow, approximately 40 px at 1920 x 1080:
+Tổng kết chương 2
+Line 2, main meaning title, approximately 76 px, the largest text:
+Chi tiêu có kế hoạch
+Line 3, supporting reflection, approximately 34 px:
+Dành tiền cho điều thật sự quan trọng.
+
+TYPOGRAPHY: Elegant bold readable storybook serif for the meaning title, simple clear medium-weight lettering for the chapter line and reflection. All text dark warm brown #3b3028 with strong contrast on light cream. Full accurate Vietnamese diacritics, no decorative strokes colliding with accents. Keep generous vertical gaps, at least 10% canvas-edge safety margin, no text touching objects. Main title must fit the central width; reduce it slightly only if needed, never crop it. These THREE specified lines are the ONLY readable text. All bills, books, screens, cards and calendars remain unmarked or abstract. No extra lesson labels or microtext.
+
+NARRATIVE RULE: A thematic recap of learning, NOT a declared player achievement. No success badge, failure stamp, stars, grades, scores, balances, invented rates, selected choices, completed transaction or guaranteed outcome. Symbols show concepts explored in the chapter regardless of the chosen branches. 
+
+ASPECT AND DELIVERY: ONE rectangular 16:9 PNG, 1920 x 1080, full bleed, no black margins. Artwork already includes the three specified text lines. No sprite or dialogue box should be layered over the finished card. If gameplay needs scores or detailed recap text, show them on a subsequent UI screen instead of covering this illustration.
+
+NEGATIVE: huge wooden title panel, boxed parchment, generic last-room screenshot, slide deck, infographic grid, collage of screenshots, split-screen rooms, icon stickers, money rain, giant coin piles, glitter explosion, victory trophy, neon finance dashboard, upward profit arrow, confirmed outcome, people, faces, hands, silhouettes, readable prop labels, extra text, misspelled Vietnamese, missing accents, tiny captions, crowded center, overlapping lettering, cropped title, illegible calligraphy, watermark, logo, photorealism, 3D render, heavy black outlines, black borders.
+```
+
+**Kiểm tra riêng ảnh tổng kết**: Đủ 3 dòng chữ đúng dấu; bài học được gợi qua đồ vật; trung tâm thoáng; không có bảng gỗ che tranh; không thể hiện người chơi đã thắng/thua. Giữ màu sắc và nét vẽ đồng bộ cả bộ, nhưng bố cục đồ vật đúng riêng chương 2.
+
+**Bổ sung danh mục ảnh**: 1 ảnh tổng kết theo đường dẫn trên; các bảng đếm BG/scene cũ chỉ tính ảnh gameplay, chưa gồm ảnh tổng kết này.

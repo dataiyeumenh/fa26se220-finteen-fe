@@ -1,0 +1,793 @@
+﻿[
+    {
+        "chapter":  "4",
+        "path":  "D:\\DO-AN\\chuong-4\\background\\cửa-hang-điện-tử.png",
+        "width":  2752,
+        "height":  1536,
+        "kind":  "land"
+    },
+    {
+        "chapter":  "4",
+        "path":  "D:\\DO-AN\\chuong-4\\background\\giảng đường.png",
+        "width":  2752,
+        "height":  1536,
+        "kind":  "land"
+    },
+    {
+        "chapter":  "4",
+        "path":  "D:\\DO-AN\\chuong-4\\background\\phong-IT.png",
+        "width":  2752,
+        "height":  1536,
+        "kind":  "land"
+    },
+    {
+        "chapter":  "4",
+        "path":  "D:\\DO-AN\\chuong-4\\background\\quán-cafe.png",
+        "width":  2752,
+        "height":  1536,
+        "kind":  "land"
+    },
+    {
+        "chapter":  "4",
+        "path":  "D:\\DO-AN\\chuong-4\\giảng-viên\\an-ủi.png",
+        "width":  1792,
+        "height":  2400,
+        "kind":  "portrait"
+    },
+    {
+        "chapter":  "4",
+        "path":  "D:\\DO-AN\\chuong-4\\giảng-viên\\bình-tường.png",
+        "width":  1792,
+        "height":  2400,
+        "kind":  "portrait"
+    },
+    {
+        "chapter":  "4",
+        "path":  "D:\\DO-AN\\chuong-4\\giảng-viên\\trả-bài-thi-rot.png",
+        "width":  1792,
+        "height":  2400,
+        "kind":  "portrait"
+    },
+    {
+        "chapter":  "4",
+        "path":  "D:\\DO-AN\\chuong-4\\nhan-vien-ngan-hang\\bình-thường.png",
+        "width":  1792,
+        "height":  2400,
+        "kind":  "portrait"
+    },
+    {
+        "chapter":  "4",
+        "path":  "D:\\DO-AN\\chuong-4\\nhan-vien-ngan-hang\\giục-tí-ký.png",
+        "width":  1792,
+        "height":  2400,
+        "kind":  "portrait"
+    },
+    {
+        "chapter":  "4",
+        "path":  "D:\\DO-AN\\chuong-4\\nhan-vien-ngan-hang\\mời-chào-tí.png",
+        "width":  1792,
+        "height":  2400,
+        "kind":  "portrait"
+    },
+    {
+        "chapter":  "4",
+        "path":  "D:\\DO-AN\\chuong-4\\scamer\\chào-tí.png",
+        "width":  1792,
+        "height":  2400,
+        "kind":  "portrait"
+    },
+    {
+        "chapter":  "4",
+        "path":  "D:\\DO-AN\\chuong-4\\scamer\\nhìn-mồi.png",
+        "width":  1792,
+        "height":  2400,
+        "kind":  "portrait"
+    },
+    {
+        "chapter":  "4",
+        "path":  "D:\\DO-AN\\chuong-4\\scamer\\thuyết-phục.png",
+        "width":  1792,
+        "height":  2400,
+        "kind":  "portrait"
+    },
+    {
+        "chapter":  "4",
+        "path":  "D:\\DO-AN\\chuong-4\\scene\\gặp-scammer.png",
+        "width":  1376,
+        "height":  768,
+        "kind":  "land"
+    },
+    {
+        "chapter":  "4",
+        "path":  "D:\\DO-AN\\chuong-4\\scene\\ký-hơp-đồng-trả-góp.png",
+        "width":  2752,
+        "height":  1536,
+        "kind":  "land"
+    },
+    {
+        "chapter":  "4",
+        "path":  "D:\\DO-AN\\chuong-4\\scene\\nhận-điểm -kém.png",
+        "width":  2752,
+        "height":  1536,
+        "kind":  "land"
+    },
+    {
+        "chapter":  "4",
+        "path":  "D:\\DO-AN\\chuong-4\\scene\\tí-nhận-điện-thoại.png",
+        "width":  1376,
+        "height":  768,
+        "kind":  "land"
+    },
+    {
+        "chapter":  "4",
+        "path":  "D:\\DO-AN\\chuong-4\\Ti\\bị-cám-dỗ.png",
+        "width":  1792,
+        "height":  2400,
+        "kind":  "portrait"
+    },
+    {
+        "chapter":  "4",
+        "path":  "D:\\DO-AN\\chuong-4\\Ti\\bình-thường.png",
+        "width":  1792,
+        "height":  2400,
+        "kind":  "portrait"
+    },
+    {
+        "chapter":  "4",
+        "path":  "D:\\DO-AN\\chuong-4\\Ti\\hopefull.png",
+        "width":  1792,
+        "height":  2400,
+        "kind":  "portrait"
+    },
+    {
+        "chapter":  "4",
+        "path":  "D:\\DO-AN\\chuong-4\\Ti\\lo-lắng.png",
+        "width":  1792,
+        "height":  2400,
+        "kind":  "portrait"
+    },
+    {
+        "chapter":  "4",
+        "path":  "D:\\DO-AN\\chuong-4\\Ti\\tí defeat.png",
+        "width":  1792,
+        "height":  2400,
+        "kind":  "portrait"
+    },
+    {
+        "chapter":  "5",
+        "path":  "D:\\DO-AN\\chuong-5\\background\\bệnh-viện.png",
+        "width":  2752,
+        "height":  1536,
+        "kind":  "land"
+    },
+    {
+        "chapter":  "5",
+        "path":  "D:\\DO-AN\\chuong-5\\background\\nhà-hàng.png",
+        "width":  2752,
+        "height":  1536,
+        "kind":  "land"
+    },
+    {
+        "chapter":  "5",
+        "path":  "D:\\DO-AN\\chuong-5\\background\\office-cũ.png",
+        "width":  2752,
+        "height":  1536,
+        "kind":  "land"
+    },
+    {
+        "chapter":  "5",
+        "path":  "D:\\DO-AN\\chuong-5\\background\\phòng-trọ-của-tí.png",
+        "width":  2752,
+        "height":  1536,
+        "kind":  "land"
+    },
+    {
+        "chapter":  "5",
+        "path":  "D:\\DO-AN\\chuong-5\\background\\quán-cafe.png",
+        "width":  2752,
+        "height":  1536,
+        "kind":  "land"
+    },
+    {
+        "chapter":  "5",
+        "path":  "D:\\DO-AN\\chuong-5\\bac-sĩ\\bình-thường.png",
+        "width":  1792,
+        "height":  2400,
+        "kind":  "portrait"
+    },
+    {
+        "chapter":  "5",
+        "path":  "D:\\DO-AN\\chuong-5\\bac-sĩ\\lo-lắng-cho-bệnh-nhân.png",
+        "width":  1792,
+        "height":  2400,
+        "kind":  "portrait"
+    },
+    {
+        "chapter":  "5",
+        "path":  "D:\\DO-AN\\chuong-5\\bac-sĩ\\trấn-an-bệnh-nhân.png",
+        "width":  1792,
+        "height":  2398,
+        "kind":  "portrait"
+    },
+    {
+        "chapter":  "5",
+        "path":  "D:\\DO-AN\\chuong-5\\bạn-đại-học\\bình-thường.png",
+        "width":  1792,
+        "height":  2400,
+        "kind":  "portrait"
+    },
+    {
+        "chapter":  "5",
+        "path":  "D:\\DO-AN\\chuong-5\\bạn-đại-học\\đòng-cảm-cho-tí.png",
+        "width":  1792,
+        "height":  2400,
+        "kind":  "portrait"
+    },
+    {
+        "chapter":  "5",
+        "path":  "D:\\DO-AN\\chuong-5\\bạn-đại-học\\vui -vẻ.png",
+        "width":  1792,
+        "height":  2400,
+        "kind":  "portrait"
+    },
+    {
+        "chapter":  "5",
+        "path":  "D:\\DO-AN\\chuong-5\\chủ-trọ\\bình-thường.png",
+        "width":  1792,
+        "height":  2400,
+        "kind":  "portrait"
+    },
+    {
+        "chapter":  "5",
+        "path":  "D:\\DO-AN\\chuong-5\\chủ-trọ\\đòi-tiền.png",
+        "width":  1792,
+        "height":  2398,
+        "kind":  "portrait"
+    },
+    {
+        "chapter":  "5",
+        "path":  "D:\\DO-AN\\chuong-5\\chủ-trọ\\mất-kiên-nhẫn.png",
+        "width":  1792,
+        "height":  2400,
+        "kind":  "portrait"
+    },
+    {
+        "chapter":  "5",
+        "path":  "D:\\DO-AN\\chuong-5\\cô-HR\\bình-thường.png",
+        "width":  1792,
+        "height":  2400,
+        "kind":  "portrait"
+    },
+    {
+        "chapter":  "5",
+        "path":  "D:\\DO-AN\\chuong-5\\cô-HR\\thương-hại.png",
+        "width":  1792,
+        "height":  2400,
+        "kind":  "portrait"
+    },
+    {
+        "chapter":  "5",
+        "path":  "D:\\DO-AN\\chuong-5\\cô-HR\\thuyết-phục-tí.png",
+        "width":  1792,
+        "height":  2400,
+        "kind":  "portrait"
+    },
+    {
+        "chapter":  "5",
+        "path":  "D:\\DO-AN\\chuong-5\\nhiệm-vụ\\Gemini_Generated_Image_1pf4391pf4391pf4.png",
+        "width":  2752,
+        "height":  1536,
+        "kind":  "land"
+    },
+    {
+        "chapter":  "5",
+        "path":  "D:\\DO-AN\\chuong-5\\nhiệm-vụ\\Gemini_Generated_Image_a9o8eba9o8eba9o8.png",
+        "width":  1376,
+        "height":  768,
+        "kind":  "land"
+    },
+    {
+        "chapter":  "5",
+        "path":  "D:\\DO-AN\\chuong-5\\nhiệm-vụ\\Gemini_Generated_Image_fy4hecfy4hecfy4h.png",
+        "width":  2752,
+        "height":  1536,
+        "kind":  "land"
+    },
+    {
+        "chapter":  "5",
+        "path":  "D:\\DO-AN\\chuong-5\\nhiệm-vụ\\Gemini_Generated_Image_s9f1l7s9f1l7s9f1.png",
+        "width":  2752,
+        "height":  1536,
+        "kind":  "land"
+    },
+    {
+        "chapter":  "5",
+        "path":  "D:\\DO-AN\\chuong-5\\nhiệm-vụ\\Gemini_Generated_Image_xw53erxw53erxw53.png",
+        "width":  2752,
+        "height":  1536,
+        "kind":  "land"
+    },
+    {
+        "chapter":  "5",
+        "path":  "D:\\DO-AN\\chuong-5\\scene\\chủ-trọ-đòi-tiền.png",
+        "width":  2752,
+        "height":  1536,
+        "kind":  "land"
+    },
+    {
+        "chapter":  "5",
+        "path":  "D:\\DO-AN\\chuong-5\\scene\\ký-hợp-đồng-lương-thấp.png",
+        "width":  2752,
+        "height":  1536,
+        "kind":  "land"
+    },
+    {
+        "chapter":  "5",
+        "path":  "D:\\DO-AN\\chuong-5\\scene\\tí-ở-nhà-hàng-với-minh.png",
+        "width":  2752,
+        "height":  1536,
+        "kind":  "land"
+    },
+    {
+        "chapter":  "5",
+        "path":  "D:\\DO-AN\\chuong-5\\Ti\\bình-thường.png",
+        "width":  1792,
+        "height":  2400,
+        "kind":  "portrait"
+    },
+    {
+        "chapter":  "5",
+        "path":  "D:\\DO-AN\\chuong-5\\Ti\\cam-chịu.png",
+        "width":  1792,
+        "height":  2400,
+        "kind":  "portrait"
+    },
+    {
+        "chapter":  "5",
+        "path":  "D:\\DO-AN\\chuong-5\\Ti\\defeat.png",
+        "width":  1792,
+        "height":  2400,
+        "kind":  "portrait"
+    },
+    {
+        "chapter":  "5",
+        "path":  "D:\\DO-AN\\chuong-5\\Ti\\hổ-thẹn.png",
+        "width":  1792,
+        "height":  2400,
+        "kind":  "portrait"
+    },
+    {
+        "chapter":  "5",
+        "path":  "D:\\DO-AN\\chuong-5\\Ti\\thát-vong.png",
+        "width":  1792,
+        "height":  2400,
+        "kind":  "portrait"
+    },
+    {
+        "chapter":  "6",
+        "path":  "D:\\DO-AN\\chuong-6\\background\\bàn-làm-việc-công-ty.png",
+        "width":  2752,
+        "height":  1536,
+        "kind":  "land"
+    },
+    {
+        "chapter":  "6",
+        "path":  "D:\\DO-AN\\chuong-6\\background\\khu-tư-vấn.png",
+        "width":  2752,
+        "height":  1536,
+        "kind":  "land"
+    },
+    {
+        "chapter":  "6",
+        "path":  "D:\\DO-AN\\chuong-6\\background\\phong-của-tí-ban-đêm.png",
+        "width":  2752,
+        "height":  1536,
+        "kind":  "land"
+    },
+    {
+        "chapter":  "6",
+        "path":  "D:\\DO-AN\\chuong-6\\background\\phòng-của-tí-chiều.png",
+        "width":  2752,
+        "height":  1536,
+        "kind":  "land"
+    },
+    {
+        "chapter":  "6",
+        "path":  "D:\\DO-AN\\chuong-6\\cô-chuyên-viên-ngân-hàng\\chuyên-nghiệp.png",
+        "width":  1792,
+        "height":  2400,
+        "kind":  "portrait"
+    },
+    {
+        "chapter":  "6",
+        "path":  "D:\\DO-AN\\chuong-6\\cô-chuyên-viên-ngân-hàng\\giải-thích.png",
+        "width":  1792,
+        "height":  2398,
+        "kind":  "portrait"
+    },
+    {
+        "chapter":  "6",
+        "path":  "D:\\DO-AN\\chuong-6\\cô-chuyên-viên-ngân-hàng\\trấn-an.png",
+        "width":  1792,
+        "height":  2400,
+        "kind":  "portrait"
+    },
+    {
+        "chapter":  "6",
+        "path":  "D:\\DO-AN\\chuong-6\\nhiệm-vụ\\Gemini_Generated_Image_2nn7a2nn7a2nn7a2.png",
+        "width":  2752,
+        "height":  1536,
+        "kind":  "land"
+    },
+    {
+        "chapter":  "6",
+        "path":  "D:\\DO-AN\\chuong-6\\nhiệm-vụ\\Gemini_Generated_Image_68cbyf68cbyf68cb.png",
+        "width":  2752,
+        "height":  1536,
+        "kind":  "land"
+    },
+    {
+        "chapter":  "6",
+        "path":  "D:\\DO-AN\\chuong-6\\nhiệm-vụ\\Gemini_Generated_Image_b92i2ab92i2ab92i.png",
+        "width":  2752,
+        "height":  1536,
+        "kind":  "land"
+    },
+    {
+        "chapter":  "6",
+        "path":  "D:\\DO-AN\\chuong-6\\nhiệm-vụ\\Gemini_Generated_Image_sm4hnsm4hnsm4hns.png",
+        "width":  2752,
+        "height":  1536,
+        "kind":  "land"
+    },
+    {
+        "chapter":  "6",
+        "path":  "D:\\DO-AN\\chuong-6\\scene\\bẫy-thanh-tôans-tối-thiểu.png",
+        "width":  2752,
+        "height":  1536,
+        "kind":  "land"
+    },
+    {
+        "chapter":  "6",
+        "path":  "D:\\DO-AN\\chuong-6\\scene\\cuộc-gọi-tư-vấn-phía-chuyên-viên.png",
+        "width":  2752,
+        "height":  1536,
+        "kind":  "land"
+    },
+    {
+        "chapter":  "6",
+        "path":  "D:\\DO-AN\\chuong-6\\scene\\cuộc-gọi-tư-vấn-phía-tí.png",
+        "width":  2752,
+        "height":  1536,
+        "kind":  "land"
+    },
+    {
+        "chapter":  "6",
+        "path":  "D:\\DO-AN\\chuong-6\\scene\\cú-sốc-gross-và-net.png",
+        "width":  2752,
+        "height":  1536,
+        "kind":  "land"
+    },
+    {
+        "chapter":  "6",
+        "path":  "D:\\DO-AN\\chuong-6\\Ti\\bất-ngờ.png",
+        "width":  1792,
+        "height":  2400,
+        "kind":  "portrait"
+    },
+    {
+        "chapter":  "6",
+        "path":  "D:\\DO-AN\\chuong-6\\Ti\\chăm-chú.png",
+        "width":  1792,
+        "height":  2400,
+        "kind":  "portrait"
+    },
+    {
+        "chapter":  "6",
+        "path":  "D:\\DO-AN\\chuong-6\\Ti\\dao-động.png",
+        "width":  1792,
+        "height":  2398,
+        "kind":  "portrait"
+    },
+    {
+        "chapter":  "6",
+        "path":  "D:\\DO-AN\\chuong-6\\Ti\\hope-hy-vọng.png",
+        "width":  1792,
+        "height":  2400,
+        "kind":  "portrait"
+    },
+    {
+        "chapter":  "6",
+        "path":  "D:\\DO-AN\\chuong-6\\Ti\\lo-lắng.png",
+        "width":  1792,
+        "height":  2400,
+        "kind":  "portrait"
+    },
+    {
+        "chapter":  "6",
+        "path":  "D:\\DO-AN\\chuong-6\\Ti\\quyết-tâm.png",
+        "width":  1792,
+        "height":  2400,
+        "kind":  "portrait"
+    },
+    {
+        "chapter":  "7",
+        "path":  "D:\\DO-AN\\chương-7\\background\\bàn-đầu-tư.png",
+        "width":  2752,
+        "height":  1536,
+        "kind":  "land"
+    },
+    {
+        "chapter":  "7",
+        "path":  "D:\\DO-AN\\chương-7\\background\\đêm-trước-ngày-cưới.png",
+        "width":  2752,
+        "height":  1536,
+        "kind":  "land"
+    },
+    {
+        "chapter":  "7",
+        "path":  "D:\\DO-AN\\chương-7\\background\\phân-tích-khoản-vay.png",
+        "width":  2752,
+        "height":  1536,
+        "kind":  "land"
+    },
+    {
+        "chapter":  "7",
+        "path":  "D:\\DO-AN\\chương-7\\nhiệm-vụ\\Gemini_Generated_Image_gasfrgasfrgasfrg.png",
+        "width":  2752,
+        "height":  1536,
+        "kind":  "land"
+    },
+    {
+        "chapter":  "7",
+        "path":  "D:\\DO-AN\\chương-7\\nhiệm-vụ\\Gemini_Generated_Image_hmj76shmj76shmj7.png",
+        "width":  2752,
+        "height":  1536,
+        "kind":  "land"
+    },
+    {
+        "chapter":  "7",
+        "path":  "D:\\DO-AN\\chương-7\\nhiệm-vụ\\Gemini_Generated_Image_sl164osl164osl16.png",
+        "width":  2752,
+        "height":  1536,
+        "kind":  "land"
+    },
+    {
+        "chapter":  "7",
+        "path":  "D:\\DO-AN\\chương-7\\nhiệm-vụ\\Gemini_Generated_Image_xiqu0fxiqu0fxiqu.png",
+        "width":  2752,
+        "height":  1536,
+        "kind":  "land"
+    },
+    {
+        "chapter":  "7",
+        "path":  "D:\\DO-AN\\chương-7\\scene\\cân-nhắc-khoản-vay.png",
+        "width":  2752,
+        "height":  1536,
+        "kind":  "land"
+    },
+    {
+        "chapter":  "7",
+        "path":  "D:\\DO-AN\\chương-7\\scene\\đồng-thuận-dòng-tiền.png",
+        "width":  2752,
+        "height":  1536,
+        "kind":  "land"
+    },
+    {
+        "chapter":  "7",
+        "path":  "D:\\DO-AN\\chương-7\\scene\\thảo-luận-đầu-tư.png",
+        "width":  2752,
+        "height":  1536,
+        "kind":  "land"
+    },
+    {
+        "chapter":  "7",
+        "path":  "D:\\DO-AN\\chương-7\\Ti\\ấm-áp.png",
+        "width":  1792,
+        "height":  2400,
+        "kind":  "portrait"
+    },
+    {
+        "chapter":  "7",
+        "path":  "D:\\DO-AN\\chương-7\\Ti\\dao-động.png",
+        "width":  1792,
+        "height":  2400,
+        "kind":  "portrait"
+    },
+    {
+        "chapter":  "7",
+        "path":  "D:\\DO-AN\\chương-7\\Ti\\lo-lắng.png",
+        "width":  1792,
+        "height":  2400,
+        "kind":  "portrait"
+    },
+    {
+        "chapter":  "7",
+        "path":  "D:\\DO-AN\\chương-7\\Ti\\quyết-tâm.png",
+        "width":  1792,
+        "height":  2400,
+        "kind":  "portrait"
+    },
+    {
+        "chapter":  "7",
+        "path":  "D:\\DO-AN\\chương-7\\Ti\\trầm-ngâm.png",
+        "width":  1792,
+        "height":  2400,
+        "kind":  "portrait"
+    },
+    {
+        "chapter":  "7",
+        "path":  "D:\\DO-AN\\chương-7\\Ti\\trao-đổi.png",
+        "width":  1792,
+        "height":  2400,
+        "kind":  "portrait"
+    },
+    {
+        "chapter":  "7",
+        "path":  "D:\\DO-AN\\chương-7\\vợ-tương-lai\\ấm-áp.png",
+        "width":  1792,
+        "height":  2400,
+        "kind":  "portrait"
+    },
+    {
+        "chapter":  "7",
+        "path":  "D:\\DO-AN\\chương-7\\vợ-tương-lai\\băn-khoăn.png",
+        "width":  1792,
+        "height":  2400,
+        "kind":  "portrait"
+    },
+    {
+        "chapter":  "7",
+        "path":  "D:\\DO-AN\\chương-7\\vợ-tương-lai\\đề-xuất.png",
+        "width":  1792,
+        "height":  2400,
+        "kind":  "portrait"
+    },
+    {
+        "chapter":  "7",
+        "path":  "D:\\DO-AN\\chương-7\\vợ-tương-lai\\đồng-hành.png",
+        "width":  1792,
+        "height":  2400,
+        "kind":  "portrait"
+    },
+    {
+        "chapter":  "8",
+        "path":  "D:\\DO-AN\\chương-8\\background\\đọc-bài-báo-ban-đêm.png",
+        "width":  2752,
+        "height":  1536,
+        "kind":  "land"
+    },
+    {
+        "chapter":  "8",
+        "path":  "D:\\DO-AN\\chương-8\\background\\ổn-đinh-an-nhiên.png",
+        "width":  2752,
+        "height":  1536,
+        "kind":  "land"
+    },
+    {
+        "chapter":  "8",
+        "path":  "D:\\DO-AN\\chương-8\\background\\quỹ-giáo-dục.png",
+        "width":  2752,
+        "height":  1536,
+        "kind":  "land"
+    },
+    {
+        "chapter":  "8",
+        "path":  "D:\\DO-AN\\chương-8\\nhiệm-vụ\\nhiệm-vụ-1.png",
+        "width":  1376,
+        "height":  768,
+        "kind":  "land"
+    },
+    {
+        "chapter":  "8",
+        "path":  "D:\\DO-AN\\chương-8\\nhiệm-vụ\\nhiệm-vụ-2.png",
+        "width":  1376,
+        "height":  768,
+        "kind":  "land"
+    },
+    {
+        "chapter":  "8",
+        "path":  "D:\\DO-AN\\chương-8\\nhiệm-vụ\\nhiệm-vụ-3.png",
+        "width":  1376,
+        "height":  768,
+        "kind":  "land"
+    },
+    {
+        "chapter":  "8",
+        "path":  "D:\\DO-AN\\chương-8\\nhiệm-vụ\\tổng-kết.png",
+        "width":  1376,
+        "height":  768,
+        "kind":  "land"
+    },
+    {
+        "chapter":  "8",
+        "path":  "D:\\DO-AN\\chương-8\\scene\\an-nhiên-endingA.png",
+        "width":  1376,
+        "height":  768,
+        "kind":  "land"
+    },
+    {
+        "chapter":  "8",
+        "path":  "D:\\DO-AN\\chương-8\\scene\\chật-vật-mưu-sinh-endingB.png",
+        "width":  1376,
+        "height":  768,
+        "kind":  "land"
+    },
+    {
+        "chapter":  "8",
+        "path":  "D:\\DO-AN\\chương-8\\scene\\khủng-hoảng-endingC.png",
+        "width":  1376,
+        "height":  768,
+        "kind":  "land"
+    },
+    {
+        "chapter":  "8",
+        "path":  "D:\\DO-AN\\chương-8\\scene\\nhìn-con-và-suy-nghĩ.png",
+        "width":  1376,
+        "height":  768,
+        "kind":  "land"
+    },
+    {
+        "chapter":  "8",
+        "path":  "D:\\DO-AN\\chương-8\\scene\\suy-nghĩ-bài-báo.png",
+        "width":  1376,
+        "height":  768,
+        "kind":  "land"
+    },
+    {
+        "chapter":  "8",
+        "path":  "D:\\DO-AN\\chương-8\\scene\\tí-nhìn-lại.png",
+        "width":  1376,
+        "height":  768,
+        "kind":  "land"
+    },
+    {
+        "chapter":  "8",
+        "path":  "D:\\DO-AN\\chương-8\\scene\\tự-do-tài-chính-và-viên-mãn-endingS.png",
+        "width":  1376,
+        "height":  768,
+        "kind":  "land"
+    },
+    {
+        "chapter":  "8",
+        "path":  "D:\\DO-AN\\chương-8\\Ti\\an-nhiên (1).png",
+        "width":  1792,
+        "height":  2400,
+        "kind":  "portrait"
+    },
+    {
+        "chapter":  "8",
+        "path":  "D:\\DO-AN\\chương-8\\Ti\\áp-lực (1).png",
+        "width":  1792,
+        "height":  2400,
+        "kind":  "portrait"
+    },
+    {
+        "chapter":  "8",
+        "path":  "D:\\DO-AN\\chương-8\\Ti\\con-1-tuổi (1).png",
+        "width":  1792,
+        "height":  2400,
+        "kind":  "portrait"
+    },
+    {
+        "chapter":  "8",
+        "path":  "D:\\DO-AN\\chương-8\\Ti\\mệt-nhưng-ráng-gượng (1).png",
+        "width":  1792,
+        "height":  2400,
+        "kind":  "portrait"
+    },
+    {
+        "chapter":  "8",
+        "path":  "D:\\DO-AN\\chương-8\\Ti\\nhìn-lại (1).png",
+        "width":  1792,
+        "height":  2400,
+        "kind":  "portrait"
+    },
+    {
+        "chapter":  "8",
+        "path":  "D:\\DO-AN\\chương-8\\Ti\\thảnh-thơi (1).png",
+        "width":  1792,
+        "height":  2400,
+        "kind":  "portrait"
+    }
+]
