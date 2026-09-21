@@ -1,0 +1,22 @@
+/* Preserve the original home layout; keep the new colors flat and restrained. */
+.public-home { color: #25263d; }
+.public-home .home-phone-scene { isolation: isolate; }
+.public-home .home-phone-scene::before {
+  content: ''; position: absolute; inset: 22px 5%; z-index: -1;
+  background: #dcefff; border-radius: 48px;
+}
+.public-home [class*="blur-3xl"] { display: none; }
+.public-home > header { background: #fff; border-bottom: 1px solid #eeeae1; backdrop-filter: none; }
+.public-home .border-2 { border-width: 1px; }
+.public-home [class*="shadow-"] { box-shadow: 0 8px 28px rgb(37 38 61 / 6%); }
+.public-home .animate-bounce-subtle { animation: none; }
+.public-home [id] { scroll-margin-top: 80px; }
+.public-home input:focus-visible,
+.public-home-demo input:focus-visible { border-color: #a48012; outline-color: #a48012; --tw-ring-color: #fff0b2; }
+.public-home a:focus-visible,
+.public-home button:focus-visible { outline: 3px solid #9b7200; outline-offset: 4px; }
+.public-home-demo { border: 1px solid #ece8dc; color: #25263d; }
+.public-home [class~="bg-[#ffe43b]"][class~="text-white"] { color: #25263d; }
+@media (prefers-reduced-motion: reduce) {
+  .public-home *, .public-home *::before, .public-home *::after { animation: none; transition: none; }
+}

@@ -1,0 +1,69 @@
+/* Guest and Kid share the yellow palette, including portaled dialogs. */
+.ws[data-ws-role], .ws-modal[data-ws-role] {
+  --role-color: #ffe43b;
+  --role-hover: #f5d51f;
+  --role-ink: #433c12;
+  --role-link: #806000;
+  --role-soft: #fff8cb;
+  --role-canvas: #fffdf4;
+  --role-border: #ebde93;
+}
+.ws[data-ws-role="parent"], .ws-modal[data-ws-role="parent"] {
+  --role-color: #67dbb0;
+  --role-hover: #50cda0;
+  --role-ink: #124b3b;
+  --role-link: #206c53;
+  --role-soft: #e4f8ef;
+  --role-canvas: #f6fcf9;
+  --role-border: #b8e6d2;
+}
+.ws[data-ws-role="teacher"], .ws-modal[data-ws-role="teacher"] {
+  --role-color: #ab8bfa;
+  --role-hover: #9b79ed;
+  --role-ink: #352258;
+  --role-link: #6944a3;
+  --role-soft: #f0e9ff;
+  --role-canvas: #faf8ff;
+  --role-border: #dac9f5;
+}
+
+@media screen {
+  .ws[data-ws-role] { background: var(--role-canvas); }
+  .ws[data-ws-role] .ws-brand>span,
+  .ws[data-ws-role] .ws-sidebar nav a.active {
+    background: var(--role-color); color: var(--role-ink);
+  }
+  .ws[data-ws-role] .ws-sidebar nav a svg { color: var(--role-link); }
+  .ws[data-ws-role] .ws-sidebar nav a.active svg { color: var(--role-ink); }
+  .ws[data-ws-role] .ws-sidebar nav a:hover:not(.active) { background: var(--role-soft); }
+  .ws[data-ws-role] .ws-identity { background: var(--role-soft); border: 1px solid var(--role-border); }
+  .ws[data-ws-role] .ws-identity svg,
+  .ws[data-ws-role] .ws-identity small,
+  .ws[data-ws-role] .ws-heading small { color: var(--role-link); }
+  .ws[data-ws-role] .ws-top { border-top: 3px solid var(--role-color); }
+  .ws[data-ws-role] .ws-top .ws-pill { background: var(--role-soft); border-color: var(--role-border); color: var(--role-link); }
+  .ws[data-ws-role] .ws-hero { background: var(--role-soft); border-color: var(--role-border); }
+  .ws[data-ws-role] .ws-hero-art { background: var(--role-color); color: var(--role-ink); }
+  .ws[data-ws-role] .ws-hero .ws-pill { color: var(--role-link); border-color: var(--role-border); }
+  :is(.ws, .ws-modal)[data-ws-role] .ws-btn.primary {
+    background: var(--role-color); border-color: var(--role-color); color: var(--role-ink);
+  }
+  :is(.ws, .ws-modal)[data-ws-role] .ws-btn.primary:hover:not(:disabled) { background: var(--role-hover); border-color: var(--role-hover); }
+  :is(.ws, .ws-modal)[data-ws-role] .ws-text-link { color: var(--role-link); }
+  .ws[data-ws-role] .ws-slot.inactive .ws-btn { background: var(--role-soft); color: var(--role-link); border-color: var(--role-border); }
+  .ws[data-ws-role] .ws-slot.inactive .ws-btn:hover { background: var(--role-color); color: var(--role-ink); }
+  .ws[data-ws-role] .ws-code { background: var(--role-soft); }
+  .ws[data-ws-role] .ws-code button { color: var(--role-link); }
+  .ws[data-ws-role] .ws-empty { background: var(--role-soft); border-color: var(--role-border); }
+  .ws[data-ws-role] th { background: var(--role-soft); color: var(--role-link); }
+  .ws[data-ws-role] .ws-plan:not(.featured) { background: #e4f8ef; border-color: #b8e6d2; }
+  .ws[data-ws-role] .ws-plan:not(.featured) .ws-plan-number { color: #206c53; }
+  .ws[data-ws-role] .ws-plan:not(.featured) .ws-pill { background: #cff1e2; border-color: #b8e6d2; color: #206c53; }
+  :is(.ws, .ws-modal)[data-ws-role] :focus-visible { outline-color: var(--role-link); }
+  .ws-modal[data-ws-role] { border-color: var(--role-border); border-top: 4px solid var(--role-color); }
+  .ws-modal[data-ws-role] .ws-question { background: var(--role-soft); border-color: var(--role-border); }
+  :is(.ws, .ws-modal)[data-ws-role] .ws-checks label:has(input:checked) { background: var(--role-soft); border-color: var(--role-link); color: var(--role-ink); }
+  :is(.ws, .ws-modal)[data-ws-role] input:is([type="radio"], [type="checkbox"]) { accent-color: var(--role-link); }
+  .ws[data-ws-role] .atlas-resume { background: var(--role-color); color: var(--role-ink); border-color: var(--role-border); }
+  .ws[data-ws-role] .atlas-tabs button[aria-pressed="true"] { background: var(--role-soft); color: var(--role-ink); }
+}

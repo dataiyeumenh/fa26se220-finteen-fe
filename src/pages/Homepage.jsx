@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import '@/components/home/home-colors.css'
 import { Navbar } from '@/components/home/Navbar'
 import { Hero } from '@/components/home/Hero'
 import { Problems } from '@/components/home/Problems'
@@ -16,7 +17,7 @@ export default function Homepage() {
   const openDemo = () => setDemoOpen(true)
 
   return (
-    <div className="min-h-screen bg-white overflow-x-hidden">
+    <div className="public-home min-h-screen bg-white overflow-x-hidden">
       <Navbar />
       <main>
         <Hero onTryDemo={openDemo} />
