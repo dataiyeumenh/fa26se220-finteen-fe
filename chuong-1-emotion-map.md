@@ -962,6 +962,23 @@ Ví dụ:
 
 ---
 
+### 📄 `c1_bg_garden_lazy_Ti.png` — Tí nằm đọc truyện dưới gốc cây, bỏ mặc vườn (DÙNG CHO NARRATOR hành động)
+**Loại BG**: 🎬 BG COMPOSITE — có nhân vật trong ảnh → dùng cho **NARRATOR scene**
+**Dùng ở đoạn**: Hệ quả Mission 1.2 nhánh B — Tí từ chối làm vườn: "Thôi bố làm đi, con buồn ngủ lắm." Cắt cảnh sang Tí nằm dưới gốc cây đọc truyện tranh Conan, mặc quần đùi, áo thun, mắt hí híp lười biếng. Vườn vẫn đầy lá rụng, gà vẫn đói kêu quang quác phía sau. Tí không nhận 30k tiền công → HAPPINESS +10 (lười thoải mái) nhưng RISK +5 (mất cơ hội rèn luyện tính kỷ luật tài chính).
+
+> (Style token BG COMPOSITE + Setting: Same Vietnamese countryside vegetable garden in late afternoon, but viewed from a different angle — under a large mango tree (cây xoài) at the edge of the garden. A 13-year-old Vietnamese boy (Tí, mustard yellow oversized t-shirt (hex color #e5aa46), navy blue shorts (hex color #424a61), white rubber sandals, NO backpack) LYING FLAT ON HIS BACK on a woven bamboo mat (chiếu), one hand behind his head as a pillow, the other hand holding open a manga comic book (generic cartoon manga volume — generic "QUÁI THÚ" cover in bright colors, NO real Conan brand, NO real text except generic cartoon letters, NO real brand) held above his face, reading with lazy half-lidded eyes, a small silly content smile on his face. Soft warm light beige cute-friendly skin, soft pink blush circles on cheeks. A small cartoon sweat drop on his temple from the afternoon heat. **The garden in the BACKGROUND is UNTOUCHED — overgrown with weeds, leaves scattered everywhere, chickens (gà) pecking at the dirt near an empty feeder, a wooden hoe leaning UNUSED against the bamboo fence**. The Vietnamese countryside house with red tile roof (máy ngói đỏ) visible in the soft golden-distance. Warm late-afternoon golden hour sunlight filtering through mango leaves creating dappled shadows on Tí and the mat. A few cartoon flies buzzing lazily. The contrast: lazy Tí in foreground vs. neglected garden in background tells the story "Tí chose comfort over earning money". 16:9 cinematic lazy-afternoon aesthetic.)
+
+> Kawaii 2D cartoon style, Studio Ghibli x Sanrio x Doraemon-inspired cute proportions, head-to-body ratio 1:2.5 (very large head, tiny body), very short stubby limbs, huge round sparkly eyes with two large white circle highlights, thick dark outlines, flat cel-shading with minimal gradients, soft pink blush circles on cheeks, soft cozy warm lighting, kid-friendly wholesome adorable vibe, cute Japanese kawaii illustration styleVietnamese rural setting, no text, no watermark. NOT realistic, NOT semi-realistic, NOT anime teen face, NOT mature face, NOT high-detail realistic skin, NOT 3D, NOT Pixar, NOT creepy, NOT scary. **CRITICAL anti-distortion: face proportions stay NORMAL across ALL emotions — do NOT enlarge the head, do NOT widen the mouth, do NOT stretch the face, do NOT distort facial features even when the character is screaming, shocked, angry, or laughing. Head size and facial proportions stay consistent with the canonical reference in every emotion sprite.** **CRITICAL framing rule: the FULL CHARACTER must fit entirely inside the image frame — top of head AND both feet AND both hands all visible — character occupies roughly 55–70% of vertical frame height, NOT zoomed-in, NOT close-up, NOT bust shot, NOT cropped, NOT portrait crop, NOT tight framing, NOT bust, NOT shoulders-up, NOT waist-up. Plenty of white negative space above head and below feet.**
+>
+> **Setting**: A Vietnamese countryside vegetable garden in late afternoon (rural Vietnam, 2010s), under a large mango tree (cây xoài) at the edge of the garden. Rows of morning glory (rau muống) and tomato plants (cà chua) in the background — UNTOUCHED, overgrown with weeds. A wooden hoe leaning UNUSED against the bamboo fence. A few chickens (gà) pecking at the dirt near an empty feeder. The Vietnamese countryside house with red tile roof (máy ngói đỏ) visible in soft golden-distance. Bamboo fence and distant rice paddies.
+> **CÓ nhân vật**: A 13-year-old Vietnamese boy (Tí, mustard yellow t-shirt (hex color #e5aa46), soft warm light beige cute-friendly skin, soft pink blush circles, NO backpack) LYING FLAT ON HIS BACK on a woven bamboo mat (chiếu), one hand behind his head as a pillow, the other hand holding open a cartoon manga book above his face, reading with lazy half-lidded eyes and a small silly content smile. A small cartoon sweat drop on his temple from heat.
+>
+> **Lighting**: warm late-afternoon golden hour sunlight filtering through mango leaves creating dappled shadows on Tí and the mat, soft warm golden glow on the neglected garden background.
+>
+> **Aspect ratio**: 16:9 cinematic.
+
+---
+
 ## 📍 ĐỊA ĐIỂM 4 — SÂN TRƯỜNG
 
 ### 📄 `c1_bg_schoolyard_empty.png` — Sân trường, BG trống (DÙNG CHO DIALOGUE)
@@ -1008,6 +1025,27 @@ Ví dụ:
 > **Lighting**: warm late-afternoon golden hour sun from behind, rim lighting on subject, dust particles.
 >
 > **Aspect ratio**: 16:9 cinematic.
+
+---
+
+### 📄 `c1_bg_road_Ti_rides_old_bike_save.png` — Tí cưỡi xe đạp cũ rỉ sét quyết định tiết kiệm (DÙNG CHO NARRATOR hành động)
+**Loại BG**: 🎬 BG COMPOSITE — có nhân vật trong ảnh → dùng cho **NARRATOR scene**
+**Dùng ở đoạn**: Hệ quả Mission 1.4 nhánh B — Tí bỏ qua lời chọc của Hùng, quyết định KHÔNG độ xe, để dành 500k tiền tiết kiệm mua điện thoại. Cắt cảnh Tí đạp chiếc xe cũ rỉ sét một mình trên đường làng về nhà, tay cầm chặt tay lái, mặt kiên quyết, miệng lẩm bẩm "Cố lên Tí ơi, mày sẽ mua được điện thoại xịn hơn." Tone: TÍCH CỰC, TRƯỞNG THÀNH SỚM.
+
+> (Style token BG COMPOSITE + Setting: **SIDE-VIEW SHOT** — A picturesque narrow Vietnamese countryside asphalt road stretching LEFT-TO-RIGHT across the frame (the road goes horizontally, NOT receding into the distance — this avoids the duplicate-bike problem of front-view). **EXACTLY ONE single bicycle in the entire image** (CRITICAL: only ONE bicycle — Tí's old rusty bike, NO second bike, NO bike on the ground, NO bike parts lying around, NO bike wheel separately, NO shadow that looks like a bike). A 13-year-old Vietnamese boy (Tí, mustard yellow oversized t-shirt (hex color #e5aa46), navy blue shorts (hex color #424a61), white rubber sandals, red canvas school backpack (hex color #c83b3b) on his back) is SITTING ON THE SADDLE of his **EXACTLY ONE** rusty old black single-speed bicycle, PEDALING FORWARD along the road (moving from the LEFT side of frame toward the RIGHT side of frame, in profile view — viewer sees Tí's right side profile, NOT front view). Tí's HANDS GRIP THE HANDLEBAR TIGHTLY, his LEGS are in mid-pedal motion (one foot up, one foot down at different positions on the pedal — this is the pedaling action, NOT a second bike). The **EXACTLY ONE** bicycle has VISIBLY RUSTY CHAIN, WORN TIRES with smooth tread, a small patched-up brown leather seat (NO second saddle, NO bike parked next to him, NO bike lying on the ground — ONLY this ONE bike that Tí is currently riding). Tí's face shows a SMALL DETERMINED FROWN (eyebrows slightly drawn together, mouth in a small firm line, NOT smiling but NOT angry — committed expression), soft warm light beige cute-friendly skin, soft pink blush circles on cheeks, eyes looking FORWARD (in the direction he's riding — to the right of frame — NOT at viewer, NOT down — focused on the road ahead, on the future). His TONGUE is poking out slightly from the corner of his mouth in concentration (the classic cartoon "trying hard" detail). A tiny cartoon sweat drop on his temple from pedaling effort.
+>
+> **THE FULL BACKGROUND STRETCHES BEYOND THE ROAD** — both above the road (sky) and below the road (foreground + landscape) must be FULLY VISIBLE in 16:9: **Above the road** — a wide open **bright blue sky with soft white cumulus clouds** taking up the upper 30-35% of the frame, with **3-4 tall coconut palm trees (cây dừa)** standing tall at different distances on the horizon line, their long curved trunks and frond tops clearly visible against the sky. **Below the road + on both sides** — **lush green rice paddies (ruộng lúa)** stretching to the horizon on BOTH sides of the road (visible on the left side AND right side of the road), with **bamboo fences (hàng rào tre)** running along the edges of the paddies, a few scattered small bushes, a small wooden farm shed in the far distance. **The road itself** is gray asphalt with a thin yellow center line, stretching from the left edge of frame to the right edge of frame (horizontal, NOT perspective), with Tí + his ONE bicycle positioned roughly in the CENTER of the frame (50% along the horizontal axis). The BG is COMPLETE countryside — sky + palms + paddies + fences + shed all visible, NO crop, NO empty white edges, NO missing horizon. NO Hùng visible anywhere (Hùng has gone ahead on his new bike long ago).
+>
+> Late afternoon golden hour sun from the upper-right of frame casting warm rim-lighting on Tí's back/right-side and a long soft shadow on the road surface. Warm golden glow on the rice paddies, soft orange-tint on the clouds. Dust particles floating in golden air. 16:9 cinematic side-view aesthetic emphasizing determination.)
+
+> Kawaii 2D cartoon style, Studio Ghibli x Sanrio x Doraemon-inspired cute proportions, head-to-body ratio 1:2.5 (very large head, tiny body), very short stubby limbs, huge round sparkly eyes with two large white circle highlights, thick dark outlines, flat cel-shading with minimal gradients, soft pink blush circles on cheeks, soft cozy warm lighting, kid-friendly wholesome adorable vibe, cute Japanese kawaii illustration styleVietnamese rural setting, no text, no watermark. NOT realistic, NOT semi-realistic, NOT anime teen face, NOT mature face, NOT high-detail realistic skin, NOT 3D, NOT Pixar, NOT creepy, NOT scary. **CRITICAL anti-distortion: face proportions stay NORMAL across ALL emotions — do NOT enlarge the head, do NOT widen the mouth, do NOT stretch the face, do NOT distort facial features even when the character is screaming, shocked, angry, or laughing. Head size and facial proportions stay consistent with the canonical reference in every emotion sprite.** **CRITICAL framing rule: the FULL CHARACTER must fit entirely inside the image frame — top of head AND both feet AND both hands all visible — character occupies roughly 55–70% of vertical frame height, NOT zoomed-in, NOT close-up, NOT bust shot, NOT cropped, NOT portrait crop, NOT tight framing, NOT bust, NOT shoulders-up, NOT waist-up. Plenty of white negative space above head and below feet.** **⭐⭐⭐ CRITICAL: ONLY ONE BICYCLE in the ENTIRE IMAGE — Tí's ONE rusty old bike that he is CURRENTLY RIDING. NO second bike, NO bike parked anywhere, NO bike lying on the ground, NO bike wheel separately, NO bike parts on the ground, NO bike shadow that resembles a bike shape. ONLY THE SINGLE BIKE TÍ IS RIDING.**
+>
+> **Setting**: A picturesque narrow Vietnamese countryside asphalt road stretching LEFT-TO-RIGHT horizontally across the frame (SIDE-VIEW, NOT perspective). **FULL BACKGROUND VISIBLE 16:9**: bright blue sky with soft white cumulus clouds (upper 30-35% of frame) + 3-4 tall coconut palm trees (cây dừa) at the horizon line + lush green rice paddies (ruộng lúa) stretching on BOTH sides of the road to horizon + bamboo fences (hàng rào tre) along the paddy edges + a small wooden farm shed in far distance. Road has gray asphalt + thin yellow center line, stretching from left edge to right edge of frame. NO crop, NO missing horizon, NO empty white edges.
+> **CÓ nhân vật**: A 13-year-old Vietnamese boy (Tí, mustard yellow t-shirt (hex color #e5aa46), soft warm light beige cute-friendly skin, soft pink blush circles, red canvas school backpack on his back) is SITTING ON THE SADDLE of his **EXACTLY ONE** rusty old black single-speed bicycle, PEDALING FORWARD in profile view (moving from LEFT to RIGHT of frame). Hands grip handlebar tightly. Legs mid-pedal motion (one up, one down). Face shows SMALL DETERMINED FROWN — eyebrows slightly drawn together, mouth small firm line, tongue poking out slightly in concentration, eyes looking FORWARD at the road (NOT at viewer). Tiny cartoon sweat drop on temple.
+>
+> **Lighting**: warm late-afternoon golden hour sun from upper-right, warm rim-lighting on Tí's back/right-side, long soft shadow on road surface, warm golden glow on rice paddies, soft orange-tint on clouds. Dust particles floating in golden air.
+>
+> **Aspect ratio**: 16:9 cinematic side-view.
 
 ---
 
@@ -1142,8 +1180,10 @@ Ví dụ:
 | 39 | `c1_bg_piggybank_moment.png` | 🇻🇳 VN | BG composite | `narrator` | Cutscene mở đầu — Tí phá heo | 16:9 |
 | 40 | `c1_bg_shop_counter_composite.png` | 🇻🇳 VN | BG composite | `narrator` | Cutscene Tí đưa tiền, Cô Tư ghi sổ | 16:9 |
 | 41 | `c1_bg_garden_father_working.png` | 🇻🇳 VN | BG composite | `narrator` | Cutscene Bố + Tí làm vườn | 16:9 |
+| 41a | `c1_bg_garden_lazy_Ti.png` | 🇻🇳 VN | BG composite | `narrator` | Cutscene Tí nằm dưới gốc cây đọc truyện — nhánh lười Mission 1.2 | 16:9 |
 | 42 | `c1_bg_schoolyard_trade.png` | 🇻🇳 VN | BG composite | `narrator` | Cutscene Tí + Tèo buôn thẻ | 16:9 |
 | 43 | `c1_bg_road_bike_race.png` | 🇻🇳 VN | BG composite | `narrator` | Cutscene Tí đua Hùng | 16:9 |
+| 43a | `c1_bg_road_Ti_rides_old_bike_save.png` | 🇻🇳 VN | BG composite | `narrator` | Cutscene Tí đạp xe cũ về nhà, quyết tiết kiệm — nhánh tốt Mission 1.4 | 16:9 |
 | 44 | `c1_bg_bridge_crash.png` | 🇻🇳 VN | BG composite | `narrator` | Cutscene tai nạn đứt phanh | 16:9 |
 | 45 | `c1_bg_sickbed_ti_bedridden.png` | 🇻🇳 VN | BG composite | `narrator` | Cutscene kết — Tí nằm liệt giường | 16:9 |
 
@@ -1152,11 +1192,11 @@ Ví dụ:
 |---|---|---|---|---|---|---|
 | 46 | `c1_ui_needs_vs_wants.png` | UI mockup | — | `choice` overlay | Mini-game | 1:1 |
 
-**Tổng: 46 prompts** cho riêng Chương 1:
+**Tổng: 48 prompts** cho riêng Chương 1:
 - **6 neutral states** (Portrait sprite — gen đầu tiên → làm reference cho emotion)
 - **24 specific emotions** (Portrait sprite — gen sau neutral)
 - **7 BG trống** (BG cho dialogue + narrator tĩnh)
-- **7 BG composite** (Cinematic cho narrator cinematic có nhân vật)
+- **9 BG composite** (Cinematic cho narrator cinematic có nhân vật — thêm 2 nhánh mới: 1.2B garden_lazy_Ti + 1.4B road_Ti_rides_old_bike_save)
 - **1 UI mockup** (mini-game)
 
 ### 🔑 Mapping BG ↔ scene VN (dùng trong React data)
@@ -1230,14 +1270,16 @@ Ví dụ:
   - [ ] `c1_bg_sickbed_empty.png` (phòng bệnh trống)
 - [ ] BG này KHÔNG xóa nền, lưu PNG đầy đủ 16:9
 
-#### Phase 3b — Gen 7 BG COMPOSITE (cho narrator cinematic có nhân vật)
+#### Phase 3b — Gen 9 BG COMPOSITE (cho narrator cinematic có nhân vật)
 - [ ] **Dùng STYLE TOKEN: BG COMPOSITE** (16:9, có nhân vật trong ảnh đang hành động)
 - [ ] Gen các file:
   - [ ] `c1_bg_piggybank_moment.png` (Tí phá heo đất)
   - [ ] `c1_bg_shop_counter_composite.png` (Cô Tư ghi sổ, Tí đưa tiền)
   - [ ] `c1_bg_garden_father_working.png` (Bố + Tí làm vườn)
+  - [ ] `c1_bg_garden_lazy_Ti.png` (Tí nằm đọc truyện dưới gốc cây — nhánh B Mission 1.2)
   - [ ] `c1_bg_schoolyard_trade.png` (Tí + Tèo buôn thẻ bài)
   - [ ] `c1_bg_road_bike_race.png` (Tí + Hùng đua xe đạp)
+  - [ ] `c1_bg_road_Ti_rides_old_bike_save.png` (Tí đạp xe cũ về nhà, quyết tiết kiệm — nhánh B Mission 1.4)
   - [ ] `c1_bg_bridge_crash.png` (Tí bay khỏi xe đạp)
   - [ ] `c1_bg_sickbed_ti_bedridden.png` (Tí nằm liệt giường)
 - [ ] BG composite KHÔNG xóa nền, lưu PNG đầy đủ 16:9

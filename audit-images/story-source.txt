@@ -1,0 +1,357 @@
+﻿LIFE BEYOND CHOICES
+HỆ THỐNG CHỈ SỐ NHÂN VẬT (BASE STATS):
+Mỗi quyết định của người chơi sẽ tác động đến 6 chỉ số cốt lõi:
+WEALTH (Tài sản): Tổng giá trị tài sản đang có (tiền mặt, đồ đạc giá trị).
+SAVINGS (Tiết kiệm): Khoản tiền mặt để dành phòng thân hoặc đầu tư.
+FINANCIAL IQ (Kiến thức tài chính): Tăng khi người chơi chọn tìm hiểu kỹ, đọc thông tin hoặc rút kinh nghiệm từ sai lầm.
+HAPPINESS (Mức độ hài lòng): Trạng thái tâm lý, sức khỏe tinh thần.
+RISK (Rủi ro tài chính): Tỉ lệ gặp "biến cố" tiêu cực hoặc nguy cơ mất tiền.
+GOAL (Khả năng đạt mục tiêu): Điều kiện Thắng Game: Điểm tích lũy khi hoàn thành các cột mốc quan trọng (Thi đỗ Đại học, Mua xe, Đám cưới, Nuôi con thành tài). Quyết định danh hiệu End-Game.
+Các chỉ số này ảnh hưởng ra sao?
+Trong quá trình chơi (Gameplay Impact): Các chỉ số đóng vai trò như điều kiện mở khóa (Unlock Conditions). Ví dụ: Nếu SAVINGS quá thấp, ở Chặng 6 bạn sẽ không có lựa chọn "Đầu tư vào quỹ mở". Nếu HAPPINESS giảm xuống 0, nhân vật sẽ rơi vào trạng thái "Burnout" (Kiệt sức) và tự động bỏ lỡ các cơ hội thăng tiến, hoặc bị ép buộc phải chi một khoản tiền lớn cho y tế (Sự kiện ngẫu nhiên). RISK càng cao, hệ thống càng dễ tung ra các Life Events tiêu cực như "Bị lừa đảo" hay "Mất việc".
+Khi kết thúc game (End-game Evaluation): Dựa trên cấu trúc phân bổ của 6 chỉ số này, hệ thống sẽ tổng hợp thành Financial Personality (Tính cách tài chính) của người chơi (ví dụ: The Saver nếu SAVINGS cao; The Spender nếu HAPPINESS cao, SAVINGS thấp; The Investor nếu WEALTH và FINANCIAL IQ cao).
+
+GAME MAP - 8 GIAI ĐOẠN CUỘC ĐỜI
+Hành trình nhân vật sẽ đi qua 8 giai đoạn, bám sát các khái niệm tài chính:
+Chương 1 (Học sinh Cấp 2 - Làng quê/Nền tảng): Needs vs Wants, Nguồn gốc của tiền.
+Chương 2 (Học sinh Cấp 3 - Thị trấn/Mở rộng): Tiết kiệm, Quỹ ước mơ, Ngân sách cá nhân.
+Chương 3 (Sinh viên ĐH - Chuyến xe lên thành phố): Chi phí sinh hoạt, Đổi chác (Trade-off) giữa thời gian học & làm thêm.
+Chương 4 (Thực tập sinh - Bước đầu tự lập): Thẻ tín dụng, Mua trước trả sau (BNPL), Đầu tư vào bản thân.
+Chương 5 (Vừa ra trường, chưa có việc - Khủng hoảng): Quỹ khẩn cấp (Emergency Fund), Quản lý nợ, Vượt qua cám dỗ vay tiêu dùng.
+Chương 6 (Có việc làm - Thế giới tài chính): Thu nhập Gross/Net, Thuế, Lãi kép, Bắt đầu phân bổ tài sản.
+Chương 7 (Lập gia đình trước sinh con - Quản trị rủi ro): Cổ phiếu/Trái phiếu, Quản lý tài chính cặp đôi, Mua nhà/xe.
+Chương 8 (Sau khi sinh con - Tương lai): Bảo hiểm, Quỹ giáo dục cho con, Kế hoạch hưu trí, Tự do tài chính.
+
+THIẾT KẾ CHƯƠNG
+Hệ thống chỉ số khởi tạo:
+WEALTH: 0 VNĐ
+SAVINGS: 0 VNĐ
+FIQ: 10/100
+HAPPINESS: 50/100
+RISK: 0/100
+GOAL: 0%
+CHƯƠNG 1 - KHÁM PHÁ TIỀN TỆ:
+[Bối cảnh]: Mùa hè năm lớp 7 tại một vùng quê yên bình. Bạn bắt đầu nhận thức về thế giới vật chất xung quanh.
+Mission 1.1: Tạp hóa cô Tư (Needs vs Wants)
+[Mẹ] (Đưa tờ 200.000đ, vẻ mặt dặn dò): "Cu Tí, cầm 200 nghìn này ra tiệm tạp hóa cô Tư mua cho mẹ 1 ký gạo với thùng nước suối nhé. Phần tiền dư mẹ cho con, thích mua gì thì mua, nhưng phải biết phân biệt cái gì ĐANG CẦN, cái gì CHỈ LÀ THÍCH thôi nhé!"
+[Hệ thống]: 💰 WEALTH +200.000.
+[MC - Main Character] (Mắt sáng rực, nghĩ thầm): "Á à, dư được một khúc luôn! Phải chốt ngay cái thẻ game mới được."
+[Bối cảnh]: Chuyển sang tiệm tạp hóa bạt ngàn đồ ăn vặt.
+[Cô Tư] (Cười niềm nở): "Tí qua mua đồ cho mẹ hả? Đồ của mẹ con cô để góc kia, còn trên kệ này là đồ mới về. Lựa đi rồi cô tính tiền một thể."
+[Hệ thống - Mini-game Kéo Thả]: Bàn tính tiền chia làm 2 ô [NEEDS - Nhu cầu sống] và [WANTS - Sở thích]. Trên kệ có 6 món: 1. Gạo; 2. Nước suối; 3. Bút vở mới; 4. Thẻ nạp game; 5. Bim bim khổng lồ; 6. Truyện tranh Conan.
+[Logic Mini-game]:
+Người chơi kéo đúng: (Gạo, Nước, Bút vở -> NEEDS; Thẻ, Bim bim, Truyện -> WANTS).
+[Hệ thống]: "Chính xác! Bạn đã hiểu rõ Nhu cầu và Mong muốn." 
+ 💰 WEALTH -100.000, 🧠 FIQ +10, 😊 HAP +5.
+Người chơi kéo sai (Ví dụ: Thẻ game -> NEEDS):
+[Cô Tư] (Đập bàn cái rầm, nhăn mặt): "Cái thằng này! Thẻ game mà mày tính ăn thay cơm à? Cái đó là mua vui thôi con ạ!" 
+ 💰 WEALTH -150.000, 🧠 FIQ +5, 😊 HAP -10.
+Mission 1.2: Việc nhà có giá (Tiền từ sức lao động)
+[Bối cảnh]: Sân nhà buổi chiều, bố đang hì hục sửa xe, sân vườn đầy lá rụng.
+[Bố] (Quệt mồ hôi): "Tí ra dọn cái vườn, tiện thể cho đàn gà ăn giúp bố. Bố trả công 30 nghìn để bỏ heo đất."
+[MC] (Nhăn mặt): "Trời đang nắng thế này... Mình tính vô phòng nằm điều hòa đọc truyện cơ..."
+[Lựa chọn & Logic]:
+[Chọn A]: "Dạ để con làm luôn cho!" (Chăm chỉ)
+(Thoại) [Bố]: "Thế mới là con trai bố chứ! Cầm lấy 30 nghìn này."
+(Chỉ số): 💰 WEALTH +30.000, 😊 HAP -5, 🧠 FIQ +5.
+[Chọn B]: "Thôi bố làm đi, con buồn ngủ lắm."
+(Thoại) [Bố]: (Thở dài) "Thế thì thôi, không có tiền tiêu vặt tuần này đâu nhé."
+(Chỉ số): 💰 WEALTH +0, 😊 HAP +10, ⚠️ RISK +5.
+Mission 1.3: Phi vụ Thẻ bài (Doanh thu & Chi phí)
+[Bối cảnh]: Giờ ra chơi tại trường cấp 2.
+[Thằng Tèo]: "Ê Tí, dạo này xóm dưới đang sốt thẻ bài Quái thú. Tao biết chỗ đổ sỉ 200k là mỗi đứa 100k. Mày hùn vốn với tao bán lại cho tụi thằng Hùng không?"
+[MC]: "Nghe bùi tai đấy. Tao có 100k vốn đây."
+(Chỉ số): 💰 WEALTH -100.000
+[Hệ thống]: Đặt giá bán lẻ thẻ bài. Vốn: 2k/thẻ.
+[Lựa chọn & Logic]:
+[Chọn A]: Bán 3k/thẻ (Lãi mỏng, đi hàng nhanh).
+(Hệ quả): Bạn bè xúm lại mua sạch.
+(Chỉ số): 💰 WEALTH +150.000 (Lợi nhuận 50.000), 🧠 FIQ +10, 😊 HAP +15.
+[Chọn B]: Bán 10k/thẻ (Ăn dày).
+(Hệ quả): Tụi bạn chửi mắc, đi mua chỗ khác. Tồn kho một đống.
+(Chỉ số): 💰 WEALTH +0 (Vốn kẹt trong đống thẻ), 😊 HAP -15, ⚠️ RISK +15.
+Mission 1.4: Xe đạp mới (Chi phí cơ hội)
+[Bối cảnh]: Giờ tan trường. Thằng Hùng đạp chiếc Martin 107 mới cáu lượn lờ chọc tức MC.
+[Thằng Hùng]: "Xe cọc cạch thế Tí! Coi xe tao này, phanh đĩa phuộc nhún đàng hoàng."
+[MC] (Nắm chặt tay lái rỉ sét, nghĩ thầm): "Tức quá! Mình có 500k tiền để dành, hay là ra tiệm tút lại nguyên dàn áo và mua đồ chơi gắn lên xe cho nó lác mắt?"
+[Lựa chọn & Logic]:
+[Chọn A]: Rút 100k độ xe ngay lập tức (Xài tiền vì sĩ diện).
+(Chỉ số): 💰 WEALTH -100.000, 😊 HAP +10, 🧠 FIQ -15, ⚠️ RISK +15.
+[Chọn B]: Kệ nó, xe còn chạy được, tiền để mua cái điện thoại xịn hơn. (Trì hoãn sung sướng)
+(Chỉ số): 💰 WEALTH -100.000, 🐷 SAVINGS +100.000, 😊 HAP -10, 🧠 FIQ +20.
+Life Event 1: Tai nạn Đứt phanh
+[Bối cảnh]: Đang đổ dốc cầu, bóp phanh xe đạp cái "Bép". Đứt phanh! MC lao thẳng xuống ruộng.
+[Hệ thống]: Xe hỏng nặng. Tiền sửa hết 50k.
+[Logic xử lý]:
+Nếu 💰 WEALTH > 50k (Hệ quả của việc nhịn độ xe ở Mission 1.4): Bạn tự lấy tiền tiết kiệm ra sửa. Mọi chuyện êm xuôi. (💰  WEALTH -50.000, 😊 HAP -5, 🧠 FIQ +15).
+Nếu 💰 WEALTH < 50k (Đã ném hết vào thẻ bài hoặc độ xe): Phải rút từ tiền tiết kiệm. (🐷 SAVINGS -50.000, 😊 HAP -30, ⚠️ RISK +20).
+CHƯƠNG 2: HỌC SINH CẤP 3 - QUẢN LÝ CHI TIÊU
+[Bối cảnh]: Chân ướt chân ráo bước vào trường cấp 3 huyện. Bạn bắt đầu có hội nhóm bạn bè, những buổi la cà quán xá và những áp lực vật chất đầu tiên.
+Mission 2.1: Phụ mẹ bán hàng (Kinh doanh nhỏ & Dòng tiền)
+[Bối cảnh]: Mẹ mở một sạp hàng nhỏ bán đồ ăn vặt cổng trường cấp 3 để kiếm thêm.
+[Mẹ] (Đưa 200.000đ): "Tí à, hôm nay mẹ bận việc ở hợp tác xã. Mẹ giao cho con toàn quyền quản lý sạp hàng chiều nay. Đây là 200 cành tiền vốn, con tự đi chợ mua nguyên liệu, định giá rồi bán sao cho có lãi nhé."
+[MC] (Nghĩ thầm): "Hơi căng đây, nhưng đây là lúc thể hiện bản lĩnh kinh doanh rồi!"
+[Hệ thống]: 💰 WEALTH +200.000 (Nhận tiền vốn).
+[Lựa chọn & Logic]:
+[Chọn A]: Nhập nguyên liệu sạch, giá vừa phải (Kinh doanh chân chính).
+(Thoại) [MC]: "Thôi, bán cho học sinh thì phải an toàn là trên hết. Lãi mỏng chút nhưng khách đông."
+(Hệ quả): Đồ ăn hợp vệ sinh, học sinh bu kín sạp. Bán hết veo trong 1 tiếng.
+(Chỉ số): 💰 WEALTH -200.000 (Vốn)  +280.000 (Thu về), 🧠 FIQ +15, 😊 HAP +10, 🎯 GOAL +5.
+[Chọn B]: Nhập loại bột trôi nổi giá siêu rẻ để ăn dày.
+(Thoại) [MC]: "Nhập loại này rẻ bèo, bán giá cũ thì lời đậm gấp đôi chứ giỡn!"
+(Hệ quả): Vài đứa ăn xong bị đau bụng. Đội quản lý học sinh và thị thực kiểm tra, sạp hàng bị đình chỉ.
+(Chỉ số): 💰 WEALTH -200.000 (Vốn)  +50.000 (Bị tịch thu hàng), ⚠️ RISK +30, 😊 HAP -25, 🧠 FIQ +5.
+Mission 2.2: Flash Sale 11/11 (Mua sắm cảm xúc)
+[Bối cảnh]: Đang ngồi bấm đề toán, điện thoại trên bàn rung liên hồi.
+[Thông báo App]: "FLASH SALE 70%! Đôi giày Sneaker hãng Z hot nhất năm nay giảm từ 1 triệu xuống còn 300.000đ! Chỉ còn 2 suất cuối cùng!"
+[MC] (Nhìn đôi giày mòn gót dưới gầm bàn): "Trời ơi! Rẻ thế này không mua thì phí nửa cuộc đời."
+[Lựa chọn & Logic]:
+[Chọn A]: Chớp thời gian, bấm thanh toán ngay lập tức.
+(Thoại) [MC]: "Phải tự thưởng cho bản thân chứ, đằng nào cũng đang giảm giá sâu mà!"
+(Chỉ số): 💰 WEALTH -300.000, 😊 HAP +25, 🧠 FIQ -15.
+[Chọn B]: Tắt màn hình điện thoại, quay lại giải bài tập (Trì hoãn).
+(Thoại) [MC]: "Giày cũ vẫn chạy thể dục tốt. Tiền này để dành đóng quỹ lớp và mua sách thì có ích hơn."
+(Chỉ số): 💰 WEALTH -100.000, 😊 HAP -10, 🧠 FIQ +20, 🐷 SAVINGS +100.000 (Chủ động trích tiền dư vào ống heo).
+Mission 2.3: Bạn rủ đi xem phim (Lập ngân sách & Đánh đổi)
+[Bối cảnh]: Sân trường giờ ra chơi. Thằng Hùng vỗ vai bạn cười hô hớ.
+[Thằng Hùng]: "Ê Tí, cuối tuần rạp chiếu phim huyện có chiếu phim siêu anh hùng mới ra. Cả nhóm đi xem đi, vé với bắp nước tổng cộng hết 250k nhé!"
+[MC] (Nhớ lịch): "Chết dở... Tuần sau là hạn nộp 150k tiền quỹ lớp và tiền điện nước với mẹ rồi. Mà tiền trong ví chỉ còn 300k..."
+[Lựa chọn & Logic]:
+[Chọn A]: "Đi chứ sợ gì, tính sau!" (Vung tay quá trán).
+(Thoại) [MC]: "Sống phải biết tận hưởng hiện tại chứ, lo xa làm gì cho già."
+(Chỉ số): 💰 WEALTH -250k, 😊 HAP +20 (Vui lúc đi) -> Về nhà khóc thét vì tuần sau không có tiền đóng quỹ, ⚠️ RISK +30.
+[Chọn B]: "Thôi tao kẹt lắm, tụi mày đi vui vẻ." (Biết từ chối đúng lúc).
+(Thoại) [MC]: "Tớ phải để dành tiền đóng quỹ lớp đã, hẹn dịp khác nhé."
+(Chỉ số): 💰 WEALTH giữ nguyên, 😊 HAP -10 (Hơi cô đơn), 🧠 FIQ +25 (Lập ngân sách thành công).
+Mission 2.4: Tiền thưởng học sinh giỏi (Quyết định tài chính)
+[Bối cảnh]: Lễ tổng kết năm học, cô hiệu trưởng xướng tên bạn lên nhận giấy khen và phong bì tiền thưởng.
+[Hệ thống]: Nhận 2.000.000 VNĐ tiền thưởng học sinh giỏi. 💰 WEALTH +2.000k.
+[Cô chủ nhiệm]: "Em tính dùng số tiền này thế nào? Đừng có mua quà vặt hết đấy nhé."
+[Lựa chọn & Logic]:
+[Chọn A]: Bao cả đám bạn đi ăn liên hoan xả láng (Sĩ diện bạn bè).
+(Chỉ số): 💰 WEALTH -2.000k, 😊 HAP +30, 🧠 FIQ -20, 🎯 GOAL +0.
+[Chọn B]: Bỏ hết vào ống heo (Tiết kiệm thuần túy).
+(Chỉ số): 💰 WEALTH -2.000k, 🐷 SAVINGS +2.000k, 😊 HAP +5, 🎯 GOAL +5.
+[Chọn C]: Dùng 1 triệu mua khóa học tiếng Anh online, 1 triệu bỏ tiết kiệm (Đầu tư tương lai).
+(Chỉ số): 💰 WEALTH -2.000k, 🐷 SAVINGS +1.000k, 🧠 FIQ +40, 🎯 GOAL +10.
+Life Event 2: Mất xe đạp
+[Bối cảnh]: Ghé vào quán net gần nhà chơi game 30 phút, bước ra thì chiếc xe đạp màu xanh da trời đã không còn cánh nào.
+[Hệ thống]: Xe bị trộm. Cần 1.200.000 VNĐ để mua lại một chiếc xe cũ đi học.
+[Logic xử lý]:
+Nếu 🐷 SAVINGS >= 1.200k: Rút tiền tiết kiệm ra mua xe. SAVINGS -1.200k, 😊 HAP -20 (Xót ruột), 🧠 FIQ +10 (Học bài học bảo quản tài sản).
+Nếu 🐷 SAVINGS < 1.200k: Không đủ tiền. Bị bố mắng một trận mỏi cổ, phải nhận hình phạt ký giấy nợ trừ vào tiền tiêu vặt. 😊 HAP -50, ⚠️ RISK +40.
+
+CHƯƠNG 3: SINH VIÊN ĐẠI HỌC - CHI PHÍ SINH HOẠT & TRADE-OFF
+[Bối cảnh]: Chuyến xe khách đưa bạn rời quê lên thành phố lớn nhập học. Cảm giác tự do đi kèm với những hóa đơn dồn dập.
+Mission 3.1: Chọn vị trí sinh sống (Mức sống)
+[Bối cảnh]: Bạn đang đứng trước hai tờ rơi tìm phòng trọ tại bàn tư vấn tân sinh viên.
+[Tình huống]:
+Lựa chọn A: Phòng trọ ngay sát cổng trường Đại học ở trung tâm (Tiện đi lại, ít tốn thời gian nhưng giá thuê 3 triệu/tháng).
+Lựa chọn B: Phòng trọ vùng ven ngoại ô thành phố (Giá rẻ 1,5 triệu/tháng, nhưng mỗi ngày phải mất 1 tiếng rưỡi đi xe buýt đến trường).
+[Lựa chọn & Logic]:
+[Chọn A]: Thuê phòng trung tâm.
+(Chỉ số): 💰 WEALTH -3.000k (Tiền trọ tháng đầu), 😊 HAP +15, 🎯 GOAL +10.
+[Chọn B]: Thuê phòng ngoại ô.
+(Chỉ số): 💰 WEALTH -1.500k (Tiết kiệm được 1.5 triệu), 😊 HAP -20 (Kiệt sức vì kẹt xe, bụi bặm), 🐷 SAVINGS +1.5k.
+Mission 3.2: Bài toán 20 giờ (Trade-off thời gian học & làm)
+[Bối cảnh]: Bước vào năm hai, tiền chuộc hàng tháng của bố mẹ bắt đầu eo hẹp. Bạn có 20 tiếng rảnh mỗi tuần.
+[Lựa chọn & Logic]:
+[Chọn A]: Cày full 20 tiếng làm nhân viên quán cà phê (Kiếm tiền trước mắt).
+(Thoại) [MC]: "Phải tự túc tài chính thôi, kiếm tiền mặt cầm cho chắc tay."
+(Chỉ số): 💰 WEALTH +2.500k/tháng, 😊 HAP -15 (Đuối sức), 🎯 GOAL -5.
+[Chọn B]: Dành 10 tiếng đi dạy gia sư lương cao, 10 tiếng tự học lập trình/ngoại ngữ (Đầu tư Human Capital).
+(Thoại) [MC]: "Làm ít giờ nhưng đổi lại giá trị tri thức cao hơn về lâu dài."
+(Chỉ số): 💰 WEALTH +1.500k/tháng, 🧠 FIQ +35, 🎯 GOAL +15.
+Mission 3.3: Trò chơi Lọ thủy tinh (Kế hoạch ngân sách)
+[Bối cảnh]: Đầu tháng, bạn nhận được 4.000.000 VNĐ từ gia đình. 💰 WEALTH +4.000k.
+[Hệ thống - Mini-game]: Phân bổ số tiền này vào 4 lọ: [Tiền trọ], [Ăn uống], [Đi lại], [Giải trí].
+[Logic]:
+Nếu phân bổ đúng tỷ lệ (Ví dụ: Ăn uống đủ sống tối thiểu 1.5 triệu): 🧠 FIQ +15, 🎯 GOAL +5.
+Nếu cắt xén tiền ăn xuống còn 500k để dồn tiền đi chơi game: Trò chơi báo động đỏ! Sức khỏe nhân vật giảm, 😊 HAP -30, ⚠️ RISK +25.
+Mission 3.4: Bão giá cuối tháng (Quản lý dòng tiền)
+[Bối cảnh]: Hôm nay là ngày 23. Trong ví (WEALTH) chỉ vỏn vẹn 120.000 VNĐ, mà 7 ngày nữa mới đến kỳ sinh hoạt phí tiếp theo.
+[MC] (Kêu trời): "Hết sạch tiền rồi! 120 cành này sao sống nổi một tuần đây?"
+[Lựa chọn & Logic]:
+[Chọn A]: Mua 1 thùng mì tôm 80k, cắn răng ăn qua ngày (Tự lực).
+(Chỉ số): 💰 WEALTH -80k, 😊 HAP -25 (Nóng trong người, ngán đến cổ), 🧠 FIQ +20 (Rút kinh nghiệm sâu sắc về phân bổ dòng tiền).
+[Chọn B]: Mượn tiền thằng bạn thân cùng phòng (Dùng nợ ngắn hạn).
+(Chỉ số): 💰 WEALTH +200k (Tiền mượn), ⚠️ RISK +15, 😊 HAP -10 (Ngại ngùng khi chưa trả được).
+Life Event 3: Hóa đơn điện nước "trên trời"
+[Bối cảnh]: Cuối tháng, chủ trọ đưa hóa đơn tiền điện tăng gấp ba lần vì điều hòa chạy suốt mùa nóng. Phải đóng thêm 400.000đ ngoài dự kiến.
+[Logic xử lý]: Trừ thẳng vào WEALTH. Nếu không đủ tiền mặt, hệ thống tự động trừ sang SAVINGS hoặc đẩy vào RISK.
+
+CHƯƠNG 4: THỰC TẬP SINH - BƯỚC ĐẦU TỰ LẬP
+[Bối cảnh]: Đã là sinh viên năm cuối, bạn chính thức bước chân vào môi trường công sở dưới danh nghĩa Thực tập sinh.
+Mission 4.1: Chiếc Laptop "Cứu tinh" (Tín dụng vs Tiết kiệm)
+[Bối cảnh]: Máy tính cũ lăn đùng ra hỏng đúng ngày nhận đồ án tốt nghiệp. Bạn cần một chiếc laptop mới trị giá 18 triệu đồng.
+[Nhân viên ngân hàng tại cửa hàng]: "Em không có đủ tiền mặt à? Đơn giản lắm, dùng dịch vụ Trả góp 0%, chỉ cần đưa căn cước công dân, mỗi tháng trả 1,5 triệu trong 12 tháng là xong!"
+[Lựa chọn & Logic]:
+[Chọn A]: Đồng ý ký hợp đồng trả góp ngay lập tức.
+(Thoại) [MC]: "Mỗi tháng có 1,5 triệu thì nhẹ nhàng quá, lấy máy luôn khỏi nghĩ!"
+(Chỉ số): Nhận Laptop, ⚠️ RISK +20 (Bắt đầu gánh nợ cố định hàng tháng), 😊 HAP +20, 🧠 FIQ -10 (Không đọc kỹ điều khoản phụ phí).
+[Chọn B]: Từ chối, lấy 5 triệu tiền tiết kiệm mua tạm máy cũ cấu hình vừa đủ (Trì hoãn).
+(Thoại) [MC]: "Máy cũ hơi giật một chút nhưng không làm mình vướng vào nợ nần."
+(Chỉ số): 🐷 SAVINGS -5.000k, ⚠️ RISK giữ nguyên, 🧠 FIQ +25.
+Mission 4.2: Buy Now Pay Later - BNPL (Bẫy tiêu dùng)
+[Bối cảnh]: Thấy đồng nghiệp xài điện thoại đời mới chụp ảnh nét căng, app tài chính gửi thông báo duyệt hạn mức 10 triệu hình thức "Mua trước trả sau".
+
+[MC]: "Chỉ cần bấm một nút là có đồ xịn xài trước, trả sau không lãi suất cơ mà..."
+[Lựa chọn & Logic]:
+[Chọn A]: Kích hoạt hạn mức BNPL mua điện thoại mới.
+(Chỉ số): 😊 HAP +30, nhưng ⚠️ RISK +25. (Hệ quả ẩn: Nếu tháng sau quên thanh toán đúng hạn, phí phạt sẽ tăng phi mã).
+[Chọn B]: Xóa app tài chính, không quan tâm.
+(Chỉ số): 🧠 FIQ +30, ⚠️ RISK giảm về 0.
+Mission 4.3: Cạm bẫy "Làm giàu không khó" (Scam)
+[Bối cảnh]: Bạn cấp ba cũ đột nhiên nhắn tin mời cà phê, sau đó giới thiệu mô hình đầu tư tài chính quốc tế "cam kết lợi nhuận 30%/tháng".
+[Lựa chọn & Logic]:
+[Chọn A]: Tin tưởng bạn thân, ném hết 5 triệu vốn ít ỏi vào đó.
+(Chỉ số): 💰 WEALTH -5.000k (Mất trắng sau 1 đêm), 😊 HAP -30, ⚠️ RISK +30.
+[Chọn B]: Từ chối thẳng thừng vì biết nguyên lý tài chính cơ bản: Lợi nhuận cao luôn đi kèm rủi ro lớn.
+(Chỉ số): 🧠 FIQ +40, 😊 HAP +5.
+Life Event 4: Rớt môn chuyên ngành
+[Bối cảnh]: Do quá sa đà vào việc chạy deadline làm thêm kiếm tiền ở Mission 3.2, bạn lơ đễnh đồ án và bị rớt môn. Phải đóng 1.800.000đ tiền học lại.
+[Logic xử lý]: Trừ tiền trực tiếp vào WEALTH. Nếu không có, gánh thêm nợ. 🎯 -10.
+
+
+CHƯƠNG 5: VỪA RA TRƯỜNG - KHỦNG HOẢNG TÀI CHÍNH
+[Bối cảnh]: cầm tấm bằng trên tay, đời không như là mơ. Hai tháng rưỡi rải CV mà chưa một lời hồi đáp, trong khi tiền trọ vẫn đến hạn.
+Mission 5.1: Chiếc khiên cuối cùng (Quỹ khẩn cấp)
+[Bối cảnh]: Chủ trọ đứng chống nạnh trước cửa phòng: "Hôm nay là hạn chót, không có 3 triệu tiền nhà là dọn đồ đi ngay lập tức!"
+[Hệ thống]: Kiểm tra biến số SAVINGS của người chơi.
+[Logic xử lý & Lựa chọn]:
+Trường hợp có tích lũy (SAVINGS >= 3 triệu):
+(Thoại) [MC]: "May quá, mình còn khoản quỹ khẩn cấp từ hồi đi làm thêm." -> Trút bỏ gánh nặng. 🐷 SAVINGS -3.000k, 😊 HAP +10, 🧠 FIQ +30.
+Trường hợp trắng tay (SAVINGS = 0):
+(Thoại) [MC]: "Tiêu rồi... Trong ví không còn một xu, ống heo thì rỗng tuếch."
+(Lựa chọn bắt buộc): Phải bấm bụng vay nóng qua app tín dụng đen với lãi suất cắt cổ. 💰 WEALTH +3.000k (Nhưng ghi nhận Nợ 6 triệu), ⚠️ RISK max 100, 😊 HAP -60 (Trầm cảm nặng).
+
+Mission 5.2: Bữa tiệc họp lớp (Áp lực đồng trang lứa & Sĩ diện)
+[Bối cảnh]: Nhóm bạn đại học rủ họp mặt cuối năm tại nhà hàng sang trọng. Ai nấy đều khoe đã mua xe máy riêng, làm việc công ty nước ngoài.
+[Thằng Minh]: "Ơ thế Tí vẫn chưa ổn định à? Thôi không sao, bữa nay tụi tao hào phóng bao mày chén rượu, cứ xõa đi!"
+[MC] (Tự ái nổi lên): "Mình không thể thua kém chúng nó được..."
+[Lựa chọn & Logic]:
+[Chọn A]: "Ai thèm được chúng mày thương hại! Để tao mời ngược lại bữa này!" (Vung tiền sĩ diện).
+(Chỉ số): Quẹt thẻ tín dụng thanh toán hóa đơn 2 triệu -> 💰 WEALTH âm, ⚠️ RISK +40, 😊 HAP -30 (Về nhà hối hận tột cùng).
+[Chọn B]: Cười trừ: "Ừ, tớ đang trong giai đoạn chuyển giao sự nghiệp, cảm ơn lòng tốt của các cậu." (Bản lĩnh tâm lý).
+(Chỉ số): 🧠 FIQ +25, 😊 HAP +10 (Sống thật với chính mình), ⚠️ RISK giữ nguyên.
+Mission 5.3: Lời đề nghị rẻ mạt (Định giá bản thân)
+[Bối cảnh]: Nhận được email trúng tuyển từ một công ty nhỏ sau nhiều lần rải CV.
+[HR]: "Công ty thấy em vừa ra trường chưa có kinh nghiệm, nên mức lương thử việc là 4,5 triệu/tháng, không có bảo hiểm, yêu cầu tăng ca tối không tính phí."
+[Lựa chọn & Logic]:
+[Chọn A]: Chấp nhận ký hợp đồng ngay lập tức vì quá đói kém.
+(Chỉ số): 💰 WEALTH +4.500k/tháng, 😊 HAP -30 (Cảm giác bị bóc lột sức lao động), 🧠 FIQ -10.
+[Chọn B]: Từ chối, tiếp tục dùng thời gian tự học chứng chỉ chuyên môn và ở ẩn chờ cơ hội xứng đáng.
+(Chỉ số): 🧠 FIQ +40, 🎯 GOAL +15.
+fLife Event 5: Đau dạ dày cấp cứu
+[Bối cảnh]: Áp lực thất nghiệp và ăn mì tôm dài ngày khiến bạn ngất xỉu tại phòng trọ, phải đi cấp cứu đêm. Viện phí hết 3 triệu đồng.
+[Logic xử lý]: Trừ thẳng vào tiền mặt hoặc quỹ khẩn cấp. Nếu kiệt quệ tài chính, nhân vật rơi vào trạng thái khủng hoảng toàn diện.
+
+
+CHƯƠNG 6: CÓ VIỆC LÀM - THẾ GIỚI TÀI CHÍNH
+[Bối cảnh]: Sau bao nỗ lực, bạn chính thức nhận được offer công việc chính thức với thu nhập tốt. Thế giới tài chính mở ra trước mắt.
+Mission 6.1: Cú sốc Gross và Net (Thuế & Bảo hiểm)
+[Bối cảnh]: Hợp đồng ghi rõ mức lương Gross là 18.000.000 VNĐ. Bạn khấp khởi mừng thầm.
+
+[Hệ thống - Thông báo ngân hàng]: "Ting ting! Tài khoản của bạn đã nhận: 15.250.000 VNĐ."
+[MC]: "Khoan đã! Sao lại hụt mất gần 3 triệu thế này? Công ty lừa mình à?"
+[Mini-game tương tác]: Mở bảng chi tiết phiếu lương (Payslip). Người chơi phải tương tác kéo xem các khoản trừ bắt buộc gồm: Bảo hiểm xã hội (8%), Bảo hiểm y tế (1.5%), Bảo hiểm thất nghiệp (1%) và Thuế thu nhập cá nhân.
+[Hệ quả]: Hiểu rõ bản chất lương Gross vs Net -> 🧠 FIQ +30.
+Mission 6.2: Quy tắc "Pay Yourself First" (Thiết lập tiết kiệm tự động)
+[Bối cảnh]: Ngân hàng gọi điện tư vấn tài chính cá nhân cho khách hàng mới đi làm.
+[Chuyên viên ngân hàng]: "Anh/chị khuyên em nên cài đặt tính năng trích tự động 20% tiền lương vào tài khoản tiết kiệm ngay ngày lương về, trước khi đem đi chi tiêu những việc khác."
+[Lựa chọn & Logic]:
+[Chọn A]: Bật tính năng trích tự động 3 triệu/tháng vào quỹ tiết kiệm (Pay Yourself First).
+(Chỉ số): 🐷 SAVINGS +3.000k (Đều đặn mỗi tháng), 🧠 FIQ +25, 🎯 GOAL +15.
+[Chọn B]: "Thôi để dư đồng nào hay đồng đấy, tiêu trước tính sau."
+(Chỉ số): 🐷 SAVINGS không đổi (Cuối tháng luôn nhẵn túi vì thói quen mua sắm theo cảm xúc), ⚠️ RISK +15.
+Mission 6.3: Bẫy thanh toán tối thiểu thẻ tín dụng (Minimum Payment Trap)
+[Bối cảnh]: Bạn đã mở một chiếc thẻ tín dụng và quẹt mua sắm quá tay. Kỳ sao kê đến hạn: Dư nợ 6.000.000 VNĐ.
+[Giao diện App ngân hàng]: "Bạn có thể chọn thanh toán số tiền tối thiểu tháng này là 300.000 VNĐ để giữ lịch sử tín dụng sạch."
+[Lựa chọn & Logic]:
+[Chọn A]: Chọn thanh toán mức tối thiểu 300k cho nhẹ ví.
+(Thoại) [MC]: "Ôi nhẹ cả người, tháng này chỉ mất có 300k thôi á!" -> (Bẫy nợ kích hoạt: 5.7 triệu tiền gốc còn lại sẽ đẻ lãi suất khủng khiếp 30%/năm).
+(Chỉ số): ⚠️ RISK +50, 🧠 FIQ -20.
+[Chọn B]: Cắn răng thanh toán toàn bộ 6.000.000 VNĐ (Paying in Full).
+(Thoại) [MC]: "Xót ruột thật đấy, nhưng thà đau một lần còn hơn nuôi cục nợ."
+(Chỉ số): 💰 WEALTH -6.000k, ⚠️ RISK giảm về 0, 🧠 FIQ +30 (Nắm trọn bản chất thẻ tín dụng).
+
+
+CHƯƠNG 7: LẬP GIA ĐÌNH - QUẢN TRỊ RỦI RO & TÀI SẢN
+[Bối cảnh]: Bạn và người yêu lâu năm quyết định về chung một nhà. Hai dòng tiền độc lập giờ đây chính thức gộp lại làm một.
+Mission 7.1: Quản lý tài chính cặp đôi (Đồng thuận dòng tiền)
+[Bối cảnh]: Đêm trước lễ cưới, hai vợ chồng ngồi đếm phong bì và bàn chuyện quản lý tài chính tương lai.
+[Vợ/Chồng tương lai]: "Hay là từ nay đưa hết lương cho em/anh giữ nhé, một người quản lý cho dễ mua nhà."
+[Lựa chọn & Logic]:
+[Chọn A]: Gộp 100% tài chính vào một mối (Quản lý tập trung).
+(Chỉ số): 🐷 SAVINGS tăng tốc nhanh chóng, nhưng 😊 HAP -10 (Cảm giác mất sự tự do cá nhân trong chi tiêu).
+[Chọn B]: Thiết lập quỹ chung 70% lo chi phí gia đình, 30% quỹ độc lập tự do cho mỗi người (Quản lý linh hoạt).
+(Chỉ số): 😊 HAP +20, 🧠 FIQ +25, 🎯 GOAL +5.
+Mission 7.2: Mua nhà & Đòn bẩy tài chính (Debt-to-Income Ratio)
+[Bối cảnh]: Hai vợ chồng có tích lũy 600 triệu, muốn mua một căn hộ chung cư trị giá 2 tỷ đồng. Cần vay ngân hàng 1,4 tỷ.
+[Hệ thống - Phân tích DTI]: "Tổng thu nhập hai vợ chồng là 30 triệu/tháng. Nếu vay 1,4 tỷ trong 20 năm, trả góp hàng tháng là 14 triệu (chiếm gần 47% thu nhập)."
+[Lựa chọn & Logic]:
+[Chọn A]: Vợ chồng quyết tâm mua luôn, vay 1,4 tỷ (Đòn bẩy quá sức).
+(Chỉ số): Sở hữu nhà, nhưng ⚠️ RISK +70 (Áp lực trả góp đè nặng, chỉ cần một người mất việc là vỡ nợ).
+[Chọn B]: Chọn mua căn hộ nhỏ hơn hoặc tiếp tục thuê nhà tích lũy thêm vốn để khoản vay chỉ chiếm dưới 30% thu nhập (An toàn tài chính).
+(Chỉ số): 🧠 FIQ +35, ⚠️ RISK +10, 🎯 GOAL +5.
+Mission 7.3: Phân bổ danh mục đầu tư (Risk vs Return)
+[Bối cảnh]: Sau khi ổn định chỗ ở, có số vốn nhàn rỗi 200 triệu, hai vợ chồng bàn chuyện đầu tư sinh lời.
+[Lựa chọn & Logic]:
+[Chọn A]: Nghe chuyên gia mạng "All-in" toàn bộ tiền vào một mã cổ phiếu nóng (High Risk - High Return).
+(Chỉ số): ⚠️ RISK max 90, tài sản biến động thót tim theo từng phiên giao dịch.
+[Chọn B]: Đa dạng hóa danh mục đầu tư: 50% Trái phiếu an toàn, 30% Quỹ ETF chỉ số, 20% Cổ phiếu tăng trưởng (Diversification).
+(Chỉ số): 🧠 FIQ +40, ⚠️ RISK +15, tài sản tăng trưởng ổn định dài hạn.
+
+
+CHƯƠNG 8: TƯƠNG LAI - SAU KHI SINH CON & TỰ DO TÀI CHÍNH
+[Bối cảnh]: Thành viên mới chào đời. Bạn chính thức bước vào giai đoạn gánh vác trách nhiệm lớn nhất cuộc đời: Trụ cột gia đình.
+Mission 8.1: Chiếc khiên bảo vệ tài chính (Bảo hiểm nhân thọ)
+[Bối cảnh]: Bạn đọc một bài báo về việc trụ cột gia đình gặp rủi ro bất ngờ khiến vợ con khốnốn. Bạn ngồi suy ngẫm về các khái niệm: Phí bảo hiểm (Premium) và Mức khấu trừ (Deductible). 
+[Lựa chọn & Logic]:
+[Chọn A]: Trích một phần thu nhập mua gói bảo hiểm sức khỏe và bảo vệ thu nhập toàn diện cho bản thân.
+(Chỉ số): 💰 WEALTH giảm nhẹ tiền phí hàng năm, nhưng ⚠️ RISK giảm tuyệt đối về 0, 😊 HAP +30 (An tâm tuyệt đối vì gia đình có điểm tựa).
+[Chọn B]: Tiếc tiền bảo hiểm, dùng tiền đó đi đầu tư lướt sóng mạo hiểm hơn.
+(Chỉ số): ⚠️ RISK +80 (Lơ lửng mối nguy hiểm tài chính nếu có sự cố xảy ra).
+Mission 8.2: Quỹ giáo dục tương lai (Quy tắc 72 & Lãi kép)
+[Bối cảnh]: Nhìn đứa con 1 tuổi cười toe toét, bạn bắt đầu tính toán tiền học đại học cho con sau 17 năm nữa. Lạm phát làm chi phí tăng phi mã.
+[Nhiệm vụ]: Áp dụng "Quy tắc 72" để tính toán thời gian dòng tiền đầu tư nhân đôi, thiết lập lệnh tự động trích quỹ học vấn mỗi tháng. 
+[Hệ quả]: 🧠 FIQ +40, 🎯 GOAL +10.
+Mission 8.3: Đích đến Tự do Tài chính - FIRE (End Game)
+[Bối cảnh]: Ở độ tuổi 50, nhìn lại biểu đồ tài chính suốt cuộc đời qua 8 chương game.
+
+
+[Hệ thống chấm điểm Tổng kết]:
+Hệ thống quét toàn bộ các biến số cuối cùng: 💰 WEALTH, 🐷 SAVINGS, 🧠 FIQ, 😊 HAP, ⚠️ RISK và thành quả các mốc 🎯 GOAL.
+[Phân loại Kết thúc & Tính cách Tài chính - Financial Personality]:
+Trường hợp 1 (The Investor / Triệu phú tự thân): Quản lý rủi ro tốt, đầu tư sớm, không sập bẫy tín dụng -> Ending S-Tier: Tự do tài chính hoàn toàn, nghỉ hưu sớm an nhàn du lịch thế giới.
+Trường hợp 2 (The Saver / Người tiết kiệm thận trọng): Ít mạo hiểm, tích lũy đều đặn -> Ending A-Tier: Tài chính vững vàng, tuổi già an yên bên con cháu.
+Trường hợp 3 (The Spender / Nạn nhân của tiêu dùng cảm xúc): Mua sắm sĩ diện, vướng nợ nần qua nhiều chương -> Ending C-Tier: Còng lưng trả nợ nửa đời người, chật vật lo toan tuổi xế chiều.
+
+CƠ CHẾ BURN-OUT TỰ ĐỘNG (KHI HAPPINESS = 0)
+Dựa vào kịch bản tồi tệ nhất (The Spender/Debt Slave), Burn-out không nên chỉ là một thông báo suông. Khi HAPPINESS chạm đáy (0/100), nhân vật rơi vào trạng thái "Kiệt sức tâm lý". Lúc này, lý trí (FIQ) không thể điều khiển hành vi, và người chơi bị tước quyền lựa chọn, hệ thống sẽ tự động ép (Force-lock) người chơi vào các Option mang tính "chữa lành độc hại" để phục hồi HAPPINESS tức thời nhưng gánh hậu quả tài chính.  
+Quy tắc vận hành của Burn-out (dựa trên các option có sẵn trong file của bạn):
+Nếu HAP = 0 khi vào Mission 2.2 (Flash Sale):
+Người chơi KHÔNG THỂ chọn B. Nút B bị khóa (mờ đi kèm dòng chữ: "Bạn quá căng thẳng và cần một liều dopamine mua sắm"). Hệ thống tự ép chọn A: Chốt Flash Sale -> Tiền mất, bù lại HAP hồi lên mức 15 để tiếp tục chơi.  
+Nếu HAP = 0 khi vào Mission 3.4 (Bão giá cuối tháng):
+Người chơi không đủ sức chịu đựng việc ăn mì tôm (Option A). Hệ thống ép chọn B: Bấm bụng mượn nợ bạn thân -> HAP hồi lên một chút nhưng RISK tăng.  
+Nếu HAP = 0 khi vào Mission 4.2 (Buy Now Pay Later):
+Vì gánh nặng áp lực quá lớn, bạn cần đồ xịn để "bù đắp" cho bản thân. Hệ thống tự động khóa Option B (Xóa app), ép chọn A (Kích hoạt BNPL mua điện thoại) -> Rủi ro bùng nổ.  
+Nếu HAP = 0 khi vào Mission 5.3 (Lời đề nghị rẻ mạt):
+Nhân vật đã hoàn toàn trầm cảm vì thất nghiệp dài hạn. Không còn sức lực để "tự học chứng chỉ" (Option B). Nút B bị khóa (Dòng chữ: "Bạn đã quá mệt mỏi để cố gắng tiếp"). Bắt buộc phải chọn A: Ký hợp đồng bóc lột.
+
+HỆ THỐNG KẾT CỤC (ENDING SYSTEM) DỰA TRÊN GOAL VÀ CHỈ SỐ CUỐI CÙNG
+Khi bước vào Chương 8 (End Game), hệ thống sẽ tính tổng điểm GOAL tích lũy kết hợp với các chỉ số phụ để phân loại Ending:
+S-TIER (GOAL từ 85 - 100 điểm): "Tự do Tài chính & Viên mãn"
+Điều kiện: GOAL cao, FIQ > 70, RISK < 20, WEALTH/SAVINGS dư dả.
+Danh hiệu: The Master Investor (Nhà đầu tư lỗi lạc) - Nghỉ hưu sớm, sống an nhàn, tài sản đẻ ra tiền.
+A-TIER (GOAL từ 60 - 84 điểm): "Ổn định & An yên"
+Điều kiện: GOAL khá, FIQ > 50, RISK kiểm soát tốt.
+Danh hiệu: The Smart Saver (Người quản lý tài chính khôn ngoan) - Vượt qua mọi biến cố, con cái thành tài, tuổi già thảnh thơi.
+B-TIER (GOAL từ 35 - 59 điểm): "Chật vật mưu sinh"
+Điều kiện: GOAL trung bình, từng sập bẫy nợ nhưng gượng dậy muộn, thiếu hụt tích lũy.
+Danh hiệu: The Survivor (Người sống sót kiên cường) - Còng lưng làm việc đến sát tuổi nghỉ hưu, tài chính bấp bênh.
+C-TIER (GOAL dưới 35 điểm): "Khủng hoảng toàn diện"
+Điều kiện: GOAL thấp do bỏ lỡ/thất bại nhiều cột mốc, RISK max, nợ nần bủa vây.
+Danh hiệu: The Debt Slave (Nô lệ nợ nần) - Phụ thuộc hoàn toàn vào con cháu, đối mặt áp lực tuổi già không có quỹ dự phòng.
+
+

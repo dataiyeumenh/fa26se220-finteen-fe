@@ -469,3 +469,50 @@
 - Tất cả **BG**: 16:9 widescreen
 - Tất cả **SCENE**: 16:9 cinematic
 - **KHÔNG BAO GIỜ** dùng 3:4, 4:3, 1:1 cho BG/SCENE
+
+
+---
+
+## 🪧 TỔNG KẾT CHƯƠNG 1 — HIỂU GIÁ TRỊ ĐỒNG TIỀN
+
+**Output**: `images/chuong-1/bg_tong_ket_chuong.png`
+**Loại**: Tranh tổng kết biểu tượng, không nhân vật, 16:9 — 1920 × 1080.
+**Dùng cho**: Nhìn lại ý nghĩa cả chương, dùng chung cho các nhánh.
+**Ý nghĩa cần gợi**: Nhu cầu và mong muốn; tiền từ lao động; doanh thu và chi phí; chi phí cơ hội và khoản sửa xe bất ngờ.
+**Thiết kế mới**: Hiểu giá trị đồng tiền. Tiêu đề và câu chốt ý đặt trên khoảng giấy sáng ở giữa; các cụm đồ vật kể lại bài học nằm quanh rìa. Không dùng bảng gỗ lớn che gần hết cảnh. Đây là tranh hồi tưởng mang tính biểu tượng, không phải cảnh mới xảy ra sau nhiệm vụ cuối.
+
+```text
+Create ONE beautifully composed 16:9 full-bleed illustrated chapter-recap card, target 1920 x 1080. This is a finished visual-novel chapter reflection illustration, not a slide template or a literal continuation of the last scene.
+
+STYLE: Hand-drawn 2D Vietnamese everyday-life storybook illustration, consistent with the established earnest slice-of-life game art: medium-thickness softly colored outlines, soft flat cel-shading with gentle gradients, subtle watercolor-paper grain, carefully simplified tangible objects, restrained warm natural light. Delicate edges, readable silhouettes, atmospheric depth, polished art direction. No photorealism, 3D, glossy vector clipart, giant cartoon faces or hyper-cute styling. NO people, character sprites, silhouettes, hands or human reflections.
+
+CHAPTER MEANING: A small countryside world gathered around a winding earthen path, evoking the first discovery of money through daily life. The lesson is: Nhu cầu và mong muốn; tiền từ lao động; doanh thu và chi phí; chi phí cơ hội và khoản sửa xe bất ngờ. This meaning is visual direction; do not render that explanatory sentence as text.
+
+COLOR STORY: warm rice-cream #f5edd9, fresh rice-leaf green #80996a, terracotta #bd7859 and restrained honey-gold #d5b370. Use cream for most of the image, two main supporting hues, and only small warm accents. Richer colors belong to the outer object groups; central text sits against a quiet light field.
+
+CUSTOM ILLUSTRATED MOTIFS AND PLACEMENT: LOWER LEFT: a small woven market basket holding a cloth rice sack, reusable water bottle and two plain school notebooks; next to it, one small unmarked toy card partly behind the basket, secondary to necessities. UPPER LEFT: a bamboo broom leaning against a low garden fence, a modest feed bowl and a few scattered grains, representing work rather than free money. LOWER RIGHT: a tidy little set of blank trading cards beside a modest closed coin pouch and an unmarked ledger, representing revenue and cost without asserting a profitable result. UPPER RIGHT: a simple blue everyday bicycle and a small repair spanner beside its rear wheel, echoing choices, maintenance and the broken-brake event without showing a crash.
+
+BACKGROUND AND ATMOSPHERE: Only a faint rural roofline, rice-field horizon and leafy branch at the outer edges. Warm late-afternoon light. A gently curving earth-colored path joins the objects around the outer lower arc; it never crosses the title.
+
+COMPOSITION: One coherent illustration, not a grid or a set of cards. Arrange the specified object groups as an asymmetrical but balanced open wreath around a large central breathing space. Keep ALL objects outside the central text zone, approximately x=20-80% and y=28-65% of the canvas. Let the lower objects anchor the image, with lighter smaller accents above. Objects have consistent perspective and gentle contact shadows; no floating dashboard icons. Keep secondary details sparse, three depth levels at most. The light center has a soft irregular paper wash integrated into the artwork, NOT a rectangular parchment plaque, wooden sign, bordered box, ribbon banner or physical board. No hard frame around the image.
+
+TEXT HIERARCHY AND EXACT VIETNAMESE COPY: Center-align the following three lines as one group, vertically centered around 46% of canvas height.
+Line 1, modest chapter eyebrow, approximately 40 px at 1920 x 1080:
+Tổng kết chương 1
+Line 2, main meaning title, approximately 76 px, the largest text:
+Hiểu giá trị đồng tiền
+Line 3, supporting reflection, approximately 34 px:
+Biết cần gì, hiểu tiền từ đâu.
+
+TYPOGRAPHY: Elegant bold readable storybook serif for the meaning title, simple clear medium-weight lettering for the chapter line and reflection. All text dark warm brown #3b3028 with strong contrast on light cream. Full accurate Vietnamese diacritics, no decorative strokes colliding with accents. Keep generous vertical gaps, at least 10% canvas-edge safety margin, no text touching objects. Main title must fit the central width; reduce it slightly only if needed, never crop it. These THREE specified lines are the ONLY readable text. All bills, books, screens, cards and calendars remain unmarked or abstract. No extra lesson labels or microtext.
+
+NARRATIVE RULE: A thematic recap of learning, NOT a declared player achievement. No success badge, failure stamp, stars, grades, scores, balances, invented rates, selected choices, completed transaction or guaranteed outcome. Symbols show concepts explored in the chapter regardless of the chosen branches. 
+
+ASPECT AND DELIVERY: ONE rectangular 16:9 PNG, 1920 x 1080, full bleed, no black margins. Artwork already includes the three specified text lines. No sprite or dialogue box should be layered over the finished card. If gameplay needs scores or detailed recap text, show them on a subsequent UI screen instead of covering this illustration.
+
+NEGATIVE: huge wooden title panel, boxed parchment, generic last-room screenshot, slide deck, infographic grid, collage of screenshots, split-screen rooms, icon stickers, money rain, giant coin piles, glitter explosion, victory trophy, neon finance dashboard, upward profit arrow, confirmed outcome, people, faces, hands, silhouettes, readable prop labels, extra text, misspelled Vietnamese, missing accents, tiny captions, crowded center, overlapping lettering, cropped title, illegible calligraphy, watermark, logo, photorealism, 3D render, heavy black outlines, black borders.
+```
+
+**Kiểm tra riêng ảnh tổng kết**: Đủ 3 dòng chữ đúng dấu; bài học được gợi qua đồ vật; trung tâm thoáng; không có bảng gỗ che tranh; không thể hiện người chơi đã thắng/thua. Giữ màu sắc và nét vẽ đồng bộ cả bộ, nhưng bố cục đồ vật đúng riêng chương 1.
+
+**Bổ sung danh mục ảnh**: 1 ảnh tổng kết theo đường dẫn trên; các bảng đếm BG/scene cũ chỉ tính ảnh gameplay, chưa gồm ảnh tổng kết này.

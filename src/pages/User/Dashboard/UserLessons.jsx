@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { ArrowLeft, Sparkles } from 'lucide-react'
 import { DashboardLayout } from '@/components/dashboard/DashboardLayout'
 import { useUserLessons } from './hooks/useUserLessons'
@@ -35,13 +35,12 @@ const navItems = [
 ]
 
 export default function UserLessons() {
+  const navigate = useNavigate()
   const { user } = useUserDashboard()
   const { chapters, loading, error } = useUserLessons()
 
   const handleChapterClick = (chapter) => {
-    console.log('Chapter clicked:', chapter)
-    // TODO: Navigate to chapter detail page
-    // navigate(`/dashboard/user/lessons/${chapter.id}`)
+    navigate(`/dashboard/user/games?chapter=${chapter.id}`)
   }
 
   if (loading) {
@@ -73,7 +72,7 @@ export default function UserLessons() {
 
   // Quick stats (compact)
   const completedCount = chapters.filter((c) => c.status === 'completed').length
-  const currentChapter = chapters.find((c) => c.status === 'current')
+
   const totalLessonsCompleted = chapters.reduce((sum, c) => sum + c.lessonsCompleted, 0)
   const totalLessons = chapters.reduce((sum, c) => sum + c.totalLessons, 0)
   const overallProgress = Math.round((totalLessonsCompleted / totalLessons) * 100)
@@ -92,7 +91,7 @@ export default function UserLessons() {
               <ArrowLeft className="w-5 h-5 text-gray-700" />
             </Link>
             <div>
-              <h1 className="text-xl md:text-2xl font-extrabold text-gray-800 flex items-center gap-2">
+              <h1 className="journey-page-heading text-2xl md:text-3xl font-extrabold flex items-center gap-2">
                 <Sparkles className="w-5 h-5 text-amber-500" />
                 Hành trình của bạn
               </h1>
@@ -102,25 +101,11 @@ export default function UserLessons() {
             </div>
           </div>
 
-          {/* Mini stats pill */}
-          <div className="flex items-center gap-2 text-[11px] md:text-xs font-bold">
-            <span className="px-2.5 py-1 rounded-full bg-white border-2 border-[#22c55e] text-[#166534]">
-              ✓ {completedCount}/8 chương
-            </span>
-            <span className="px-2.5 py-1 rounded-full bg-white border-2 border-[#3b82f6] text-[#1e40af]">
-              📚 {totalLessonsCompleted}/{totalLessons} bài
-            </span>
-            {currentChapter && (
-              <span
-                className="px-2.5 py-1 rounded-full text-white animate-pulse"
-                style={{ backgroundColor: currentChapter.color }}
-              >
-                ▶ {currentChapter.title}
-              </span>
-            )}
+          <div className="journey-overall">
+            <span><span>{completedCount}/8 chương hoàn thành</span><strong>{overallProgress}%</strong></span>
+            <div className="journey-overall-track" role="progressbar" aria-label="Tiến độ hành trình" aria-valuenow={overallProgress} aria-valuemin={0} aria-valuemax={100}><i style={{ width: `${overallProgress}%` }} /></div>
           </div>
         </div>
-
         {/* ADVENTURE MAP */}
         <GameMap chapters={chapters} onChapterClick={handleChapterClick} />
       </div>
