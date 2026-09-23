@@ -42,21 +42,21 @@ export function DemoModal({ open, onOpenChange }) {
   }
 
   const toneColors = {
-    success: { bg: 'bg-[#22c55e]/15', text: 'text-[#16a34a]', label: 'Xuất sắc!', accent: '#16a34a' },
-    warn: { bg: 'bg-[#fbbf24]/15', text: 'text-[#b45309]', label: 'Khá gần!', accent: '#b45309' },
-    error: { bg: 'bg-[#f87171]/15', text: 'text-[#dc2626]', label: 'Còn lệch nhiều', accent: '#dc2626' },
+    success: { bg: 'bg-[#ffe43b]/15', text: 'text-[#51428b]', label: 'Xuất sắc!', accent: '#f5d51f' },
+    warn: { bg: 'bg-[#ffe43b]/15', text: 'text-[#b45309]', label: 'Khá gần!', accent: '#b45309' },
+    error: { bg: 'bg-[#e57787]/15', text: 'text-[#dc2626]', label: 'Còn lệch nhiều', accent: '#dc2626' },
   }
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-[420px]">
+      <DialogContent className="public-home-demo sm:max-w-[420px]">
         <DialogHeader>
-          <div className="flex items-center justify-center gap-2 text-[#fbbf24] mb-1">
+          <div className="flex items-center justify-center gap-2 text-[#ffe43b] mb-1">
             <Target className="w-5 h-5" />
-            <span className="text-sm font-semibold text-[#16a34a]">Cơ chế đoán-trước</span>
+            <span className="text-sm font-semibold text-[#51428b]">Cơ chế đoán-trước</span>
           </div>
           <DialogTitle className="text-center flex items-center justify-center gap-2">
-            <Sparkles className="w-6 h-6 text-[#fbbf24]" aria-hidden="true" />
+            <Sparkles className="w-6 h-6 text-[#ffe43b]" aria-hidden="true" />
             Bài học: Lãi kép
           </DialogTitle>
           <DialogDescription className="text-center text-balance">
@@ -76,7 +76,7 @@ export function DemoModal({ open, onOpenChange }) {
               if (e.key === 'Enter') handleCalculate()
             }}
           />
-          <Button onClick={handleCalculate} className="w-full" size="lg">
+          <Button onClick={handleCalculate} className="w-full bg-[#ffe43b] text-[#25263d] hover:bg-[#f5d51f]" size="lg">
             Xem kết quả của bạn
           </Button>
         </div>
@@ -104,13 +104,13 @@ export function DemoModal({ open, onOpenChange }) {
             <div className="space-y-2 text-sm">
               <div className="flex justify-between items-center py-2 border-b border-slate-200/50">
                 <span className="text-slate-500">Số của bạn:</span>
-                <span className="font-mono font-bold text-[#1a3a1a]">
+                <span className="font-mono font-bold text-[#25263d]">
                   {formatVND(result.guess)}
                 </span>
               </div>
               <div className="flex justify-between items-center py-2 border-b border-slate-200/50">
                 <span className="text-slate-500">Đáp án thật:</span>
-                <span className="font-mono font-bold text-[#16a34a]">
+                <span className="font-mono font-bold text-[#51428b]">
                   {formatVND(ACTUAL)}
                 </span>
               </div>

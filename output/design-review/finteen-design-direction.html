@@ -1,0 +1,125 @@
+﻿<div id="finteen-design-direction">
+  <style>
+    #finteen-design-direction{--ft-brand:#176B52;--ft-honey:#F4C75B;--ft-radius:20px;font-family:'Be Vietnam Pro',system-ui,sans-serif}
+    #finteen-design-direction .ft-window{--ft-paper:light-dark(#F7F8F2,#14251F);--ft-surface:light-dark(#FFFFFF,#20382F);--ft-ink:light-dark(#203B32,#EEF6F0);--ft-muted:light-dark(#63746C,#B4C7BC);--ft-line:light-dark(#DFE7DE,#395347);--ft-mint:light-dark(#E8F3EC,#284A3C);color:var(--ft-ink);background:var(--ft-paper);border:1px solid var(--ft-line);border-radius:16px;overflow:hidden;margin-top:16px;font-size:14px;line-height:1.6}
+    #finteen-design-direction .ft-window *{box-sizing:border-box}
+    #finteen-design-direction .ft-header{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:18px 24px;background:var(--ft-surface);border-bottom:1px solid var(--ft-line);flex-wrap:wrap}
+    #finteen-design-direction .ft-logo{font-weight:800;font-size:21px;display:flex;align-items:center;gap:9px;letter-spacing:-.8px}
+    #finteen-design-direction .ft-logo b{display:grid;place-items:center;background:var(--ft-honey);color:#3A311B;width:34px;height:34px;border-radius:10px;font-size:20px}
+    #finteen-design-direction .ft-header small{font-size:12px;color:var(--ft-muted)}
+    #finteen-design-direction .ft-user{display:flex;gap:10px;align-items:center;font-size:13px}
+    #finteen-design-direction .ft-avatar{width:35px;height:35px;border-radius:50%;display:grid;place-items:center;background:var(--ft-mint);font-weight:700}
+    #finteen-design-direction .ft-kid-nav{display:flex;gap:6px;flex-wrap:wrap;padding:12px 24px;background:var(--ft-surface);border-bottom:1px solid var(--ft-line)}
+    #finteen-design-direction .ft-nav-item{display:flex;gap:7px;align-items:center;border-radius:12px;padding:9px 14px;color:var(--ft-muted);font-weight:600;font-size:13px}
+    #finteen-design-direction .ft-nav-item.active{background:var(--ft-honey);color:#3A311B}
+    #finteen-design-direction .ft-kid-content{padding:32px 36px 40px;max-width:850px;margin:auto}
+    #finteen-design-direction .ft-eyebrow{font-size:11px;letter-spacing:1.3px;font-weight:700;color:var(--ft-muted)}
+    #finteen-design-direction .ft-window h1{font-size:30px;letter-spacing:-.7px;line-height:1.25;font-weight:800;margin:8px 0 24px}
+    #finteen-design-direction .ft-window h2{font-size:20px;font-weight:700;line-height:1.5;margin:12px 0 20px}
+    #finteen-design-direction .ft-kid-content h1{font-family:'Baloo 2','Be Vietnam Pro',sans-serif;font-size:34px}
+    #finteen-design-direction .ft-question{padding:28px;border:1px solid var(--ft-line);border-radius:var(--ft-radius);background:var(--ft-surface);box-shadow:0 7px 22px #163d2410}
+    #finteen-design-direction .ft-question-meta{display:flex;justify-content:space-between;gap:10px;align-items:center;color:var(--ft-muted);font-size:12px}
+    #finteen-design-direction .ft-pill{padding:4px 10px;border-radius:20px;background:var(--ft-mint);color:var(--ft-ink);font-size:12px}
+    #finteen-design-direction .ft-options{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    #finteen-design-direction .ft-option{display:flex;align-items:center;gap:12px;min-height:68px;padding:14px;border:1px solid var(--ft-line);background:var(--ft-surface);color:var(--ft-ink);border-radius:14px;font-size:16px;text-align:left;cursor:pointer}
+    #finteen-design-direction .ft-option b{display:grid;place-items:center;flex-shrink:0;width:32px;height:32px;border-radius:9px;background:var(--ft-paper);font-size:14px}
+    #finteen-design-direction .ft-option[aria-pressed=true]{border:2px solid var(--ft-brand);padding:13px;background:var(--ft-mint)}
+    #finteen-design-direction .ft-option[aria-pressed=true] b{background:var(--ft-brand);color:#fff}
+    #finteen-design-direction .ft-option:focus-visible,#finteen-design-direction .ft-action:focus-visible{outline:3px solid var(--ft-honey);outline-offset:3px}
+    #finteen-design-direction .ft-bottom{display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap;margin-top:22px}
+    #finteen-design-direction .ft-hint{color:var(--ft-muted);font-size:13px}
+    #finteen-design-direction .ft-action{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 20px;border:0;background:var(--ft-brand);color:#fff;font-size:14px;font-weight:700;border-radius:12px;cursor:pointer;min-height:46px}
+    #finteen-design-direction .ft-action:disabled{background:var(--ft-line);color:var(--ft-muted);cursor:default}
+    #finteen-design-direction .ft-action.kid{background:var(--ft-honey);color:#3A311B;box-shadow:0 3px 0 #C39A3A}
+    #finteen-design-direction .ft-action.kid:disabled{background:var(--ft-line);color:var(--ft-muted);box-shadow:none}
+    #finteen-design-direction .ft-result{font-size:14px;color:var(--ft-ink);background:var(--ft-mint);padding:14px;border-radius:12px;margin-top:18px}
+    #finteen-design-direction .ft-layout{display:grid;grid-template-columns:190px 1fr}
+    #finteen-design-direction .ft-sidebar{padding:24px 12px;background:var(--ft-surface);border-right:1px solid var(--ft-line)}
+    #finteen-design-direction .ft-sidebar .ft-nav-item{margin-bottom:5px;padding:11px 12px}
+    #finteen-design-direction .ft-sidebar .ft-nav-item.active{background:var(--ft-brand);color:#fff}
+    #finteen-design-direction .ft-sidebar small{display:block;padding:8px 12px;color:var(--ft-muted);font-size:11px;letter-spacing:1px}
+    #finteen-design-direction .ft-adult-content{padding:30px 28px;min-width:0}
+    #finteen-design-direction .ft-title-row{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:26px}
+    #finteen-design-direction .ft-title-row h1{margin-bottom:5px;font-size:25px}
+    #finteen-design-direction .ft-title-row p{margin:0;color:var(--ft-muted);font-size:13px}
+    #finteen-design-direction .ft-info{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center;background:var(--ft-mint);padding:17px 20px;border-radius:14px;margin-bottom:22px}
+    #finteen-design-direction .ft-info span{font-size:12px;color:var(--ft-muted)}
+    #finteen-design-direction .ft-tablebox{background:var(--ft-surface);border:1px solid var(--ft-line);border-radius:var(--ft-radius);overflow:hidden}
+    #finteen-design-direction .ft-tablebox table{width:100%;border-collapse:collapse;text-align:left;font-size:13px}
+    #finteen-design-direction .ft-tablebox th{padding:14px 18px;color:var(--ft-muted);font-size:11px;font-weight:600;background:var(--ft-paper)}
+    #finteen-design-direction .ft-tablebox td{padding:16px 18px;border-top:1px solid var(--ft-line)}
+    #finteen-design-direction .ft-tablebox td:first-child{font-weight:700;white-space:nowrap}
+    #finteen-design-direction .ft-empty-name{color:var(--ft-muted)}
+    #finteen-design-direction .ft-dormant{font-size:11px;display:inline-block;background:var(--ft-paper);border:1px solid var(--ft-line);padding:3px 8px;border-radius:20px;white-space:nowrap}
+    #finteen-design-direction .ft-footer{margin-top:18px;font-size:12px;color:var(--ft-muted);display:flex;justify-content:space-between;gap:12px}
+    #finteen-design-direction .ft-new-account{margin-top:18px;background:var(--ft-surface);padding:20px;border:1px solid var(--ft-line);border-radius:var(--ft-radius)}
+    #finteen-design-direction .ft-new-account label{display:block;font-size:13px;font-weight:600;margin-bottom:14px}
+    #finteen-design-direction .ft-new-account input{display:block;width:100%;border:1px solid var(--ft-line);border-radius:10px;padding:10px;background:var(--ft-paper);color:var(--ft-ink);font-size:16px;margin-top:5px}
+    #finteen-design-direction [hidden]{display:none!important}
+    @media(max-width:700px){#finteen-design-direction .ft-layout{grid-template-columns:1fr}#finteen-design-direction .ft-sidebar{display:none}#finteen-design-direction .ft-kid-content,#finteen-design-direction .ft-adult-content{padding:22px 16px}#finteen-design-direction .ft-question{padding:20px}#finteen-design-direction .ft-options{grid-template-columns:1fr}#finteen-design-direction .ft-header{padding:15px 16px}#finteen-design-direction .ft-header small{display:none}#finteen-design-direction .ft-kid-nav{padding:10px}#finteen-design-direction .ft-nav-item{padding:8px 10px;font-size:12px}#finteen-design-direction .ft-tablebox th,#finteen-design-direction .ft-tablebox td{padding:12px 8px}#finteen-design-direction .ft-tablebox .ft-name-col{display:none}#finteen-design-direction .ft-window h1{font-size:26px}}
+  </style>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&amp;family=Baloo+2:wght@700;800&amp;display=swap">
+  <div class="nav nav-pills" role="tablist" aria-label="So sánh bố cục theo vai trò">
+    <button class="nav-link active" id="ft-kid-tab" role="tab" aria-controls="ft-kid-panel" aria-selected="true" type="button">Kid · Làm Quiz</button>
+    <button class="nav-link" id="ft-adult-tab" role="tab" aria-controls="ft-adult-panel" aria-selected="false" type="button">Teacher · Quản lý</button>
+  </div>
+  <div id="ft-kid-panel" role="tabpanel" aria-labelledby="ft-kid-tab">
+    <div class="ft-window" aria-label="Đề xuất giao diện Kid">
+      <header class="ft-header"><div class="ft-logo"><b>F</b> FinTeen</div><small>Học điều nhỏ. Vững bước lớn.</small><div class="ft-user"><span class="ft-avatar">A</span> Bạn An</div></header>
+      <div class="ft-kid-nav" aria-label="Menu Kid minh họa"><span class="ft-nav-item"><i data-lucide="house" aria-hidden="true"></i>Góc học tập</span><span class="ft-nav-item"><i data-lucide="book-open" aria-hidden="true"></i>Bài học</span><span class="ft-nav-item"><i data-lucide="gamepad-2" aria-hidden="true"></i>Trò chơi</span><span class="ft-nav-item"><i data-lucide="store" aria-hidden="true"></i>Cửa hàng</span><span class="ft-nav-item active"><i data-lucide="clipboard-list" aria-hidden="true"></i>Quiz</span></div>
+      <main class="ft-kid-content"><div class="ft-eyebrow">QUIZ · KHÁM PHÁ TIỀN TỆ</div><h1>Thử tài chọn điều cần thiết</h1>
+        <section class="ft-question"><div class="ft-question-meta"><span class="ft-pill">Nhu cầu & mong muốn</span><span>1 câu hỏi minh họa</span></div><h2>Khi chuẩn bị bữa ăn cho gia đình, món nào là một nhu cầu thiết yếu?</h2>
+          <div class="ft-options" role="group" aria-label="Chọn một đáp án"><button class="ft-option" data-answer="0" aria-pressed="false"><b>A</b>Gạo</button><button class="ft-option" data-answer="1" aria-pressed="false"><b>B</b>Thẻ nạp game</button><button class="ft-option" data-answer="2" aria-pressed="false"><b>C</b>Truyện tranh</button><button class="ft-option" data-answer="3" aria-pressed="false"><b>D</b>Đồ chơi</button></div>
+          <div class="ft-bottom"><span class="ft-hint">Chọn một đáp án bạn cho là đúng.</span><button class="ft-action kid" id="ft-submit" disabled>Nộp bài <i data-lucide="arrow-right" aria-hidden="true"></i></button></div><div class="ft-result" id="ft-result" hidden role="status"></div>
+        </section>
+      </main>
+    </div>
+  </div>
+  <div id="ft-adult-panel" role="tabpanel" aria-labelledby="ft-adult-tab" hidden>
+    <div class="ft-window" aria-label="Đề xuất giao diện quản lý Teacher"><header class="ft-header"><div class="ft-logo"><b>F</b> FinTeen</div><small>Không gian đồng hành</small><div class="ft-user"><span class="ft-avatar">L</span> Cô Linh</div></header>
+      <div class="ft-layout"><aside class="ft-sidebar"><small>LỚP HỌC CỦA BẠN</small><span class="ft-nav-item"><i data-lucide="house" aria-hidden="true"></i>Tổng quan</span><span class="ft-nav-item active"><i data-lucide="users" aria-hidden="true"></i>Học sinh</span><span class="ft-nav-item"><i data-lucide="layers" aria-hidden="true"></i>Nhóm học sinh</span><span class="ft-nav-item"><i data-lucide="clipboard-list" aria-hidden="true"></i>Quản lý Quiz</span><span class="ft-nav-item"><i data-lucide="chart-no-axes-column" aria-hidden="true"></i>Báo cáo</span><small>TÀI KHOẢN</small><span class="ft-nav-item"><i data-lucide="package" aria-hidden="true"></i>Gói học tập</span><span class="ft-nav-item"><i data-lucide="settings" aria-hidden="true"></i>Cài đặt</span></aside>
+        <main class="ft-adult-content"><div class="ft-title-row"><div><div class="ft-eyebrow">QUẢN LÝ LỚP HỌC</div><h1>Học sinh của bạn</h1><p>Mỗi tài khoản là một hành trình riêng.</p></div><button class="ft-action" id="ft-create"><i data-lucide="plus" aria-hidden="true"></i>Tạo học sinh</button></div>
+          <div class="ft-info"><div><strong>Gói Giáo viên</strong><br><span>Mở khóa không thời hạn</span></div><strong>0 / 40 slot hoạt động</strong></div>
+          <div class="ft-tablebox"><table><thead><tr><th>Slot</th><th class="ft-name-col">Học sinh</th><th>Trạng thái</th></tr></thead><tbody><tr><td>01</td><td class="ft-empty-name ft-name-col">Chưa tạo tài khoản</td><td><span class="ft-dormant">Chưa kích hoạt</span></td></tr><tr><td>02</td><td class="ft-empty-name ft-name-col">Chưa tạo tài khoản</td><td><span class="ft-dormant">Chưa kích hoạt</span></td></tr><tr><td>03</td><td class="ft-empty-name ft-name-col">Chưa tạo tài khoản</td><td><span class="ft-dormant">Chưa kích hoạt</span></td></tr><tr><td>04</td><td class="ft-empty-name ft-name-col">Chưa tạo tài khoản</td><td><span class="ft-dormant">Chưa kích hoạt</span></td></tr></tbody></table></div><div class="ft-footer"><span>Minh họa 4 slot đầu</span><span>40 slot sẵn sàng</span></div>
+          <section id="ft-account-form" class="ft-new-account" hidden><h2>Tạo học sinh · Slot 01</h2><label>Tên học sinh<input placeholder="Ví dụ: Nguyễn Minh An" autocomplete="off"></label><label>PIN<input placeholder="4–6 chữ số" type="password" inputmode="numeric" autocomplete="off"></label><span class="ft-hint">Bản xem bố cục — không lưu tài khoản.</span></section>
+        </main>
+      </div>
+    </div>
+  </div>
+  <script>
+    (() => {
+      const root = document.getElementById('finteen-design-direction');
+      const submit = root.querySelector('#ft-submit');
+      const result = root.querySelector('#ft-result');
+      let selected = null;
+      root.querySelectorAll('[data-answer]').forEach(button => button.addEventListener('click', () => {
+        selected = Number(button.dataset.answer);
+        root.querySelectorAll('[data-answer]').forEach(option => option.setAttribute('aria-pressed', String(option === button)));
+        submit.disabled = false;
+        result.hidden = true;
+      }));
+      submit.addEventListener('click', () => {
+        result.textContent = selected === 0 ? 'Chính xác! Gạo là thực phẩm phục vụ nhu cầu ăn uống của gia đình.' : 'Đáp án đúng là gạo. Hãy phân biệt điều cần cho sinh hoạt với điều mình thích nhé.';
+        result.hidden = false;
+      });
+      root.querySelector('#ft-create').addEventListener('click', () => {
+        const form = root.querySelector('#ft-account-form');
+        form.hidden = !form.hidden;
+        if (!form.hidden) form.querySelector('input').focus();
+      });
+      const state = { palette: 'emerald', rounded: 20 };
+      function renderDesign() {
+        const palettes = { emerald: ['#176B52','#F4C75B'], blue: ['#365FB3','#F5CB70'] };
+        const pair = palettes[state.palette] || palettes.emerald;
+        root.style.setProperty('--ft-brand',pair[0]); root.style.setProperty('--ft-honey',pair[1]);
+        root.style.setProperty('--ft-radius',state.rounded+'px');
+      }
+      renderDesign();
+      if (globalThis.Tweak) {
+        const tweak = new Tweak({ container: root, onChange: renderDesign });
+        tweak.addSelect(state,'palette',{ label:'Màu thương hiệu', options:[{label:'Xanh ngọc & vàng mật ong',value:'emerald'},{label:'Xanh dương & vàng ấm',value:'blue'}] });
+        tweak.addSlider(state,'rounded',{ label:'Độ bo góc',min:12,max:28,step:2,unit:'px' });
+      }
+    })();
+  </script>
+</div>

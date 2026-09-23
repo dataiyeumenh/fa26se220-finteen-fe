@@ -1,56 +1,30 @@
-import { Outlet, Link } from 'react-router-dom'
-import { ArrowLeft, Wallet, Lightbulb, Coins } from 'lucide-react'
+﻿import { Outlet, Link } from 'react-router-dom'
+import { ArrowLeft, BookOpen, Gamepad2, Sprout, ArrowUpRight } from 'lucide-react'
+import { PublicBrand } from '@/components/public/PublicBrand'
+import '@/components/public/public.css'
 
 export function AuthLayout() {
-  return (
-    <div className="min-h-screen bg-[#faf8f5] relative overflow-hidden flex items-center justify-center p-4">
-      {/* Decorative blobs — multi-color */}
-      <div className="absolute top-0 left-0 w-[480px] h-[480px] rounded-full bg-[#22c55e]/15 blur-3xl pointer-events-none animate-float" aria-hidden="true" />
-      <div
-        className="absolute bottom-0 right-0 w-[420px] h-[420px] rounded-full bg-[#fbbf24]/15 blur-3xl pointer-events-none animate-float"
-        style={{ animationDelay: '2s' }}
-        aria-hidden="true"
-      />
-      <div
-        className="absolute top-1/3 right-1/4 w-[300px] h-[300px] rounded-full bg-[#38bdf8]/12 blur-3xl pointer-events-none animate-float"
-        style={{ animationDelay: '4s' }}
-        aria-hidden="true"
-      />
-      <div
-        className="absolute bottom-1/4 left-1/3 w-[260px] h-[260px] rounded-full bg-[#84cc16]/15 blur-3xl pointer-events-none animate-float"
-        style={{ animationDelay: '1s' }}
-        aria-hidden="true"
-      />
-
-      {/* Floating icons ngữ nghĩa (Wallet, Coins, Lightbulb) — không phải sparkle decor */}
-      <Coins className="absolute top-24 right-20 w-7 h-7 text-[#fbbf24]/40 animate-bounce-subtle" style={{ animationDelay: '1s' }} aria-hidden="true" />
-      <Wallet className="absolute bottom-20 left-20 w-7 h-7 text-[#38bdf8]/40 animate-bounce-subtle" style={{ animationDelay: '0.6s' }} aria-hidden="true" />
-      <Lightbulb className="absolute bottom-32 right-12 w-8 h-8 text-[#84cc16]/40 animate-bounce-subtle" style={{ animationDelay: '1.4s' }} aria-hidden="true" />
-
-      {/* Back to home */}
-      <Link
-        to="/"
-        className="absolute top-6 left-6 z-20 inline-flex items-center gap-2 text-sm font-bold text-[#1a3a1a]/70 hover:text-[#16a34a] transition-colors"
-      >
-        <ArrowLeft className="w-4 h-4" />
-        Về trang chủ
-      </Link>
-
-      {/* Logo top-right */}
-      <Link to="/" className="absolute top-6 right-6 z-20 flex items-center gap-2 text-[#1a3a1a] font-extrabold text-lg">
-        <div className="w-9 h-9 rounded-xl bg-[#22c55e] flex items-center justify-center text-white font-extrabold text-base shadow-[0_4px_14px_rgba(34,197,94,0.4)]">
-          F
+  return <div className="ft-public ft-auth-page">
+    <header className="ft-auth-header">
+      <Link to="/" className="ft-back-link"><ArrowLeft size={17} aria-hidden="true" /> Về trang chủ</Link>
+      <PublicBrand />
+    </header>
+    <main className="ft-auth-center">
+      <aside className="ft-auth-story" aria-label="Khám phá FinTeen">
+        <span className="ft-story-kicker"><Sprout size={17} aria-hidden="true" /> LỚN LÊN CÙNG FINTEEN</span>
+        <h2>Hiểu tiền hôm nay.<br /><span>Tự tin ngày mai.</span></h2>
+        <p>Từ những khoản tiết kiệm đầu tiên đến những lựa chọn cho tương lai. Mỗi chương là một bước trưởng thành.</p>
+        <div className="ft-story-preview">
+          <img src="/images/map/journey-v2/finteen-map-01-home.png" alt="Con đường khám phá FinTeen bắt đầu từ một ngôi làng nhỏ" width="2752" height="1536" />
+          <div className="ft-story-caption"><span><small>HÀNH TRÌNH CỦA BẠN</small><strong>Bắt đầu từ những điều nhỏ</strong></span><span className="ft-story-arrow" aria-hidden="true"><ArrowUpRight size={22} /></span></div>
         </div>
-        <span>
-          <span className="text-[#22c55e]">Fin</span>
-          <span className="text-[#1a3a1a]">Teen</span>
-        </span>
-      </Link>
-
-      {/* Auth content */}
-      <div className="relative z-10 w-full max-w-md animate-fade-up">
-        <Outlet />
-      </div>
-    </div>
-  )
+        <div className="ft-story-details">
+          <span><BookOpen size={19} aria-hidden="true" /><span><strong>8 chương</strong><small>Một hành trình trưởng thành</small></span></span>
+          <span><Gamepad2 size={20} aria-hidden="true" /><span><strong>Học qua trò chơi</strong><small>Khám phá từ mỗi lựa chọn</small></span></span>
+        </div>
+      </aside>
+      <div className="ft-auth-form-side"><Outlet /></div>
+    </main>
+    <footer className="ft-auth-footer">FinTeen · Hiểu tiền hôm nay. Tự tin ngày mai.</footer>
+  </div>
 }
