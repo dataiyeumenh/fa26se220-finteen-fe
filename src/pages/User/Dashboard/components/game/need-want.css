@@ -1,5 +1,5 @@
 ﻿.nw-game { height: 100%; min-height: 0; display: flex; flex-direction: column; gap: 16px; color: #543b28; font-family: 'Be Vietnam Pro', sans-serif; }
-.nw-immersive { width: min(1500px, 100%); margin-inline: auto; padding: 22px 28px; border: 2px solid #c7a575; border-radius: 26px; background: linear-gradient(130deg, #fff9ecf7, #f0e2c9f7); box-shadow: 0 20px 70px #2c190b50, inset 0 0 0 6px #fffaf066; }
+.nw-immersive { width: 100%; height: 100%; min-height: 0; margin-inline: auto; padding: 16px; border: 0; border-radius: 0; background: linear-gradient(130deg, #fff9ecf2, #f0e2c9f2); box-shadow: none; }
 .nw-header { display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-shrink: 0; }
 .nw-eyebrow { display: inline-flex; align-items: center; gap: 7px; color: #98703f; font-size: 11px; letter-spacing: 2px; font-weight: 700; }
 .nw-header h2 { font-family: 'Baloo 2', sans-serif; font-weight: 800; font-size: clamp(30px, 3vw, 42px); line-height: 1.15; margin-top: 4px; }
@@ -47,10 +47,10 @@
 .nw-item.is-correct { border-color: #7b995a; }
 .nw-item.is-incorrect { border-color: #c78156; background: #fff0e2; }
 .nw-item-feedback { font-size: 12px; margin-top: 4px; color: #86582e; }
-.vn-minigame-host { position: absolute; inset: 0; z-index: 30; padding: 76px 24px 22px; overflow: auto; background: #43301c40; backdrop-filter: blur(5px); }
+.vn-minigame-host { position: absolute; inset: 0; z-index: 30; padding: 0; overflow: hidden; background: #43301c24; backdrop-filter: blur(2px); }
 @media (max-width: 900px), (max-height: 620px) {
   .nw-game { height: auto; min-height: 100%; }
-  .nw-immersive { padding: 18px; }
+  .nw-immersive { padding: 12px; }
   .nw-board { min-height: 360px; }
   .nw-items { max-height: 430px; }
   .nw-header p { font-size: 15px; }
@@ -61,7 +61,7 @@
   .nw-footer { flex-wrap: wrap; }
 }
 @media (max-width: 640px) {
-  .vn-minigame-host { padding: 64px 10px 12px; }
+  .vn-minigame-host { padding: 0; }
   .nw-header { align-items: flex-start; gap: 12px; }
   .nw-progress { width: 110px; font-size: 12px; }
   .nw-board { grid-template-columns: 1fr; }

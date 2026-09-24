@@ -6,6 +6,7 @@ import "./visual-novel.css";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { NeedWantMiniGame } from "./NeedWantMiniGame";
+import { ServeCustomerMiniGame } from "./ServeCustomerMiniGame";
 
 const statLabels = {
   WEALTH: "Tài sản",
@@ -26,6 +27,24 @@ function applyStatEffects(current, effects = {}) {
 }
 
 function evaluateCondition(stats, condition) {
+  if (condition?.check || condition?.expression || condition?.formula) {
+    const expression = String(
+      condition.check || condition.expression || condition.formula || "",
+    ).trim();
+
+    if (!expression) return false;
+
+    try {
+      const evaluator = new Function(
+        "stats",
+        `const { WEALTH = 0, SAVINGS = 0, FIQ = 0, HAPPINESS = 0, RISK = 0, GOAL = 0 } = stats || {}; return Boolean(${expression});`,
+      );
+      return evaluator(stats || {});
+    } catch {
+      return false;
+    }
+  }
+
   if (!condition?.field) return false;
 
   const left = Number(stats?.[condition.field] ?? 0);
@@ -480,13 +499,23 @@ export function VisualNovelPlayer({ data }) {
         </div>
         {scene.type === "minigame" ? (
           <div className="vn-minigame-host">
-            <NeedWantMiniGame
-              key={scene.id}
-              game={scene.game}
-              onComplete={handleMiniGameComplete}
-              className="h-full"
-              immersive
-            />
+            {scene.game?.id === "STALL_SERVE_MINIGAME" ? (
+              <ServeCustomerMiniGame
+                key={scene.id}
+                game={scene.game}
+                onComplete={handleMiniGameComplete}
+                className="h-full"
+                immersive
+              />
+            ) : (
+              <NeedWantMiniGame
+                key={scene.id}
+                game={scene.game}
+                onComplete={handleMiniGameComplete}
+                className="h-full"
+                immersive
+              />
+            )}
           </div>
         ) : hasChoiceOptions ? (
           <div className="vn-choice-overlay" key={scene.id}>
