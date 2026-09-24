@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Store, BookOpen } from 'lucide-react'
+import { Store, BookOpen, BadgeDollarSign } from 'lucide-react'
 import { CHAPTERS } from './model'
 import { Heading } from './ui'
 
@@ -34,12 +34,19 @@ export function KidShop() {
 export function GuestDemo() {
   return <>
     <Heading title="Dùng thử chương 1" description="Trải nghiệm chương học đầu tiên trước khi chọn gói cho gia đình hoặc lớp học." />
-    <section className="ws-hero"><div>
+    <div className="ws-grid two">
+      <section className="ws-hero"><div>
       <span className="ws-pill">BẢN DEMO MIỄN PHÍ</span>
-      <h2>Khám phá tiền tệ</h2>
+      <h2>Chương 1: Khám phá tiền tệ</h2>
       <p>Làm quen với nhu cầu, mong muốn và giá trị của đồng tiền qua câu chuyện đầu tiên.</p>
       <Link className="ws-btn primary" to="/dashboard/demo/play">Bắt đầu dùng thử →</Link>
-      </div><BookOpen className="ws-hero-art" aria-hidden="true" />
-    </section>
+      </div><BookOpen className="ws-hero-art" aria-hidden="true" /></section>
+      <section className="ws-hero ws-shop-intro"><div>
+        <span className="ws-pill">CHƯƠNG MỚI</span>
+        <h2>Chương 2: Học sinh cấp 3 - Quản lý chi tiêu</h2>
+        <p>Tiếp tục hành trình bằng câu chuyện trọ học, chi tiêu, flash sale và bài học về tiết kiệm.</p>
+        <Link className="ws-btn primary" to="/dashboard/demo/play?chapter=2">Bắt đầu Chapter 2 →</Link>
+      </div><BadgeDollarSign className="ws-hero-art" aria-hidden="true" /></section>
+    </div>
   </>
 }

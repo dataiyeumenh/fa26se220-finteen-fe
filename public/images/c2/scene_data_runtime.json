@@ -1,0 +1,419 @@
+{
+  "chapter": 2,
+  "title": "Chương 2: Học Sinh Cấp 3 - Quản Lý Chi Tiêu",
+  "assets": {
+    "backgrounds": {
+      "school_gate": "c2_bg_school_gate_empty.png",
+      "town_street_night": "c2_bg_town_street_at_night.png",
+      "stage_award": "c2_bg_stage_award_empty.png",
+      "shoe_store": "c2_bg_shoe_store_empty.png",
+      "classroom": "c2_bg_classroom_empty.png",
+      "dorm_room": "c2_bg_dorm_room_empty.png",
+      "mom_stall": "c2_bg_mom_stall_empty.png",
+      "internet_cafe": "c2_bg_internet_cafe_empty.png",
+      "cinema_lobby": "c2_bg_cinema_lobby_empty.png",
+      "school_yard": "c2_bg_highschool_yard_empty.png"
+    },
+    "sprites": {
+      "ti": {
+        "school_neutral": "c2_ti_school_neutral.png",
+        "casual_neutral": "c2_ti_casual_neutral.png",
+        "tempted": "c2_ti_tempted.png",
+        "hesitant": "c2_ti_hesitant.png",
+        "casual_tired": "c2_ti_casual_tired.png",
+        "relieved": "c2_ti_relieved.png",
+        "shocked": "c2_ti_shocked.png",
+        "proud": "c2_ti_proud.png"
+      },
+      "hung": {
+        "neutral": "c2_hung_neutral.png",
+        "invite": "c2_hung_invite.png",
+        "friendly": "c2_hung_friendly.png",
+        "disappointed": "c2_hung_disappointed.png"
+      },
+      "principal": {
+        "neutral": "c2_principal_neutral.png",
+        "speaking": "c2_principal_speaking.png",
+        "award": "c2_principal_award.png"
+      }
+    },
+    "cutscenes": {
+      "bo_tien_heo": "c2_scene_bo_tien_vao_heo_option_b.png",
+      "hau_qua_an_voi_ban": "c2_scene_hau_qua_an_voi_ban_option_a.png",
+      "mat_xe_truoc_tiem_net": "c2_scene_mat_xe_truoc_tiem_net.png",
+      "mua_ban_bi_phat": "c2_scene_mua_ban_bi_phat.png",
+      "mua_ban_thuan_loi": "c2_scene_mua_ban_thuan_loi.png",
+      "mua_khoa_hoc": "c2_scene_mua_khoa_hoc_option_c.png",
+      "nhan_bang_khen": "c2_scene_nhan_bang_khen.png",
+      "quan_ly_hang_cho_me": "c2_scene_quan_ly_hang_cho_me.png",
+      "ru_di_xem_phim": "c2_scene_ru_di_xem_phim.png",
+      "tat_dt_bo_tien_heo": "c2_scene_tat_dt_bo_tien_vao_heo.png",
+      "tu_choi_hung": "c2_scene_tu_choi_hung.png",
+      "xem_flashsale": "c2_scene_xem_flashsale_o_phong_tro.png"
+    },
+    "minigame_2_1": {
+      "stall_desk": "c2_mg_stall_desk.png",
+      "bubble_default": "c2_mg_bubble_default.png",
+      "bubble_correct": "c2_mg_bubble_correct.png",
+      "bubble_wrong": "c2_mg_bubble_wrong.png",
+      "items": {
+        "banh_trang_tron": "c2_mg_item_banh_trang_tron.png",
+        "ca_vien": "c2_mg_item_ca_vien.png",
+        "sam_lanh": "c2_mg_item_sam_lanh.png",
+        "tra_sua": "c2_mg_item_tra_sua.png"
+      },
+      "customers": {
+        "c1": {
+          "ordering": "c2_mg_customer1_ordering.png",
+          "correct": "c2_mg_customer1_correct.png",
+          "wrong": "c2_mg_customer1_wrong.png"
+        },
+        "c2": {
+          "ordering": "c2_mg_customer2_ordering.png",
+          "correct": "c2_mg_customer2_correct.png",
+          "wrong": "c2_mg_customer2_wrong.png"
+        },
+        "c3": {
+          "ordering": "c2_mg_customer3_ordering.png",
+          "correct": "c2_mg_customer3_correct.png",
+          "wrong": "c2_mg_customer3_wrong.png"
+        },
+        "c4": {
+          "ordering": "c2_mg_customer4_ordering.png",
+          "correct": "c2_mg_customer4_correct.png",
+          "wrong": "c2_mg_customer4_wrong.png"
+        }
+      }
+    }
+  },
+  "initial_state": {
+    "WEALTH": 0,
+    "SAVINGS": 500000,
+    "FIQ": 20,
+    "HAPPINESS": 70,
+    "RISK": 10,
+    "GOAL": 2000000
+  },
+  "scenes": [
+    {
+      "id": "C2_START",
+      "type": "dialogue",
+      "background": "c2_bg_dorm_room_empty.png",
+      "speaker": "Tí",
+      "sprite": "c2_ti_casual_neutral.png",
+      "text": "Đã lên cấp 3 rồi! Lên thành phố trọ học, mình phải tự quản lý tiền bạc nghiêm túc hơn.",
+      "next": "C2_M2_1_INTRO"
+    },
+    {
+      "id": "C2_M2_1_INTRO",
+      "type": "cutscene",
+      "cutscene_image": "c2_scene_quan_ly_hang_cho_me.png",
+      "speaker": "Tí",
+      "text": "Cuối tuần này mẹ bận việc nên nhờ mình đứng ra quán ăn vặt phụ mẹ bán hàng. Phải phục vụ đúng món cho khách mới thu được dòng tiền tốt!",
+      "next": "C2_M2_1_MINIGAME"
+    },
+    {
+      "id": "C2_M2_1_MINIGAME",
+      "type": "minigame",
+      "minigame_id": "STALL_SERVE_MINIGAME",
+      "config": {
+        "desk_bg": "c2_mg_stall_desk.png",
+        "target_customers": 4,
+        "time_limit": 60,
+        "items": [
+          { "id": "banh_trang_tron", "name": "Bánh Tráng Trộn", "price": 15000, "sprite": "c2_mg_item_banh_trang_tron.png" },
+          { "id": "ca_vien", "name": "Cá Viên Chiên", "price": 20000, "sprite": "c2_mg_item_ca_vien.png" },
+          { "id": "sam_lanh", "name": "Sâm Lạnh", "price": 10000, "sprite": "c2_mg_item_sam_lanh.png" },
+          { "id": "tra_sua", "name": "Trà Sữa", "price": 25000, "sprite": "c2_mg_item_tra_sua.png" }
+        ],
+        "customers": [
+          { "id": "c1", "order": "banh_trang_tron", "sprites": { "ordering": "c2_mg_customer1_ordering.png", "correct": "c2_mg_customer1_correct.png", "wrong": "c2_mg_customer1_wrong.png" } },
+          { "id": "c2", "order": "tra_sua", "sprites": { "ordering": "c2_mg_customer2_ordering.png", "correct": "c2_mg_customer2_correct.png", "wrong": "c2_mg_customer2_wrong.png" } },
+          { "id": "c3", "order": "ca_vien", "sprites": { "ordering": "c2_mg_customer3_ordering.png", "correct": "c2_mg_customer3_correct.png", "wrong": "c2_mg_customer3_wrong.png" } },
+          { "id": "c4", "order": "sam_lanh", "sprites": { "ordering": "c2_mg_customer4_ordering.png", "correct": "c2_mg_customer4_correct.png", "wrong": "c2_mg_customer4_wrong.png" } }
+        ]
+      },
+      "on_success": {
+        "effects": { "SAVINGS": "+200000", "FIQ": "+10", "HAPPINESS": "+5" },
+        "next": "C2_M2_1_SUCCESS_CG"
+      },
+      "on_failure": {
+        "effects": { "SAVINGS": "-50000", "FIQ": "-5", "HAPPINESS": "-10" },
+        "next": "C2_M2_1_FAIL_CG"
+      }
+    },
+    {
+      "id": "C2_M2_1_SUCCESS_CG",
+      "type": "cutscene",
+      "cutscene_image": "c2_scene_mua_ban_thuan_loi.png",
+      "speaker": "Tí",
+      "text": "Bán sạch hàng trong hôm nay rồi! Mẹ khen mình nhanh nhạy, dòng tiền hôm nay thu về rất thuận lợi.",
+      "next": "C2_M2_2_INTRO"
+    },
+    {
+      "id": "C2_M2_1_FAIL_CG",
+      "type": "cutscene",
+      "cutscene_image": "c2_scene_mua_ban_bi_phat.png",
+      "speaker": "Tí",
+      "text": "Chán thật, vì lúng túng làm sai order và lấn chiếm lòng đường nên bị nhắc nhở phạt tiền. Đúng là kinh doanh không hề dễ dàng.",
+      "next": "C2_M2_2_INTRO"
+    },
+    {
+      "id": "C2_M2_2_INTRO",
+      "type": "cutscene",
+      "cutscene_image": "c2_scene_xem_flashsale_o_phong_tro.png",
+      "speaker": "Tí",
+      "text": "Tối nay lướt điện thoại thấy sự kiện Flash Sale 11/11. Đôi giày thể thao mình thích bấy lâu đang giảm giá tới 70%, chỉ còn 300.000đ!",
+      "next": "C2_M2_2_CHOICE"
+    },
+    {
+      "id": "C2_M2_2_CHOICE",
+      "type": "choice",
+      "background": "c2_bg_dorm_room_empty.png",
+      "speaker": "Tí",
+      "sprite": "c2_ti_tempted.png",
+      "text": "Đôi giày cũ vẫn còn đi tốt, nhưng giá Flash Sale này quá hời... Mình nên làm gì?",
+      "options": [
+        {
+          "text": "A. Mua ngay đôi giày sale (Tiêu 300.000đ)",
+          "effects": { "SAVINGS": "-300000", "HAPPINESS": "+15", "FIQ": "-5" },
+          "next": "C2_M2_2_BUY"
+        },
+        {
+          "text": "B. Tắt điện thoại, nhét 300.000đ vào heo đất",
+          "effects": { "SAVINGS": "+300000", "HAPPINESS": "-5", "FIQ": "+10" },
+          "next": "C2_M2_2_SAVE_CG"
+        }
+      ]
+    },
+    {
+      "id": "C2_M2_2_BUY",
+      "type": "dialogue",
+      "background": "c2_bg_shoe_store_empty.png",
+      "speaker": "Tí",
+      "sprite": "c2_ti_casual_neutral.png",
+      "text": "Sắm được đôi giày mới cảm giác thật đã! Dù tiết kiệm bị giảm một khoản nhưng vui là chính.",
+      "next": "C2_M2_3_INTRO"
+    },
+    {
+      "id": "C2_M2_2_SAVE_CG",
+      "type": "cutscene",
+      "cutscene_image": "c2_scene_tat_dt_bo_tien_vao_heo.png",
+      "speaker": "Tí",
+      "text": "Thôi, kiềm chế cảm xúc! Đôi giày cũ vẫn xài tốt. Tắt máy cất tiền vào heo đất để bảo toàn mục tiêu tài chính.",
+      "next": "C2_M2_3_INTRO"
+    },
+    {
+      "id": "C2_M2_3_INTRO",
+      "type": "cutscene",
+      "cutscene_image": "c2_scene_ru_di_xem_phim.png",
+      "speaker": "Hùng",
+      "text": "Tí ơi! Cuối tuần này rạp chiếu phim có bom tấn mới đỉnh lắm, đi xem với tớ không? Vé với bắp nước khoảng 150k thôi!",
+      "next": "C2_M2_3_CHOICE"
+    },
+    {
+      "id": "C2_M2_3_CHOICE",
+      "type": "choice",
+      "background": "c2_bg_highschool_yard_empty.png",
+      "speaker": "Tí",
+      "sprite": "c2_ti_hesitant.png",
+      "text": "Đi thì vui và không phụ lòng bạn, nhưng khoản chi này không nằm trong ngân sách tuần này...",
+      "options": [
+        {
+          "text": "A. Đồng ý đi xem phim cùng Hùng (Tiêu 150.000đ)",
+          "effects": { "SAVINGS": "-150000", "HAPPINESS": "+15", "FIQ": "-5" },
+          "next": "C2_M2_3_ACCEPT"
+        },
+        {
+          "text": "B. Từ chối khéo Hùng để tiết kiệm tiền",
+          "effects": { "HAPPINESS": "-10", "FIQ": "+10" },
+          "next": "C2_M2_3_REFUSE_CG"
+        }
+      ]
+    },
+    {
+      "id": "C2_M2_3_ACCEPT",
+      "type": "dialogue",
+      "background": "c2_bg_cinema_lobby_empty.png",
+      "speaker": "Hùng",
+      "sprite": "c2_hung_friendly.png",
+      "text": "Tuyệt vời! Phim hay cực kỳ, đi cùng bạn bè thế này giải tỏa căng thẳng hẳn.",
+      "next": "C2_M2_4_INTRO"
+    },
+    {
+      "id": "C2_M2_3_REFUSE_CG",
+      "type": "cutscene",
+      "cutscene_image": "c2_scene_tu_choi_hung.png",
+      "speaker": "Tí",
+      "text": "Cảm ơn Hùng nhé, nhưng tuần này tớ phải thắt chặt chi tiêu rồi. Hẹn cậu dịp khác nhé!",
+      "next": "C2_M2_4_INTRO"
+    },
+    {
+      "id": "C2_M2_4_INTRO",
+      "type": "cutscene",
+      "cutscene_image": "c2_scene_nhan_bang_khen.png",
+      "speaker": "Cô Hiệu Trưởng",
+      "text": "Tuyên dương em Tí đã đạt danh hiệu Học sinh giỏi xuất sắc! Nhà trường trao tặng em bằng khen và phần thưởng 1.000.000đ tiền mặt.",
+      "next": "C2_M2_4_CHOICE"
+    },
+    {
+      "id": "C2_M2_4_CHOICE",
+      "type": "choice",
+      "background": "c2_bg_stage_award_empty.png",
+      "speaker": "Tí",
+      "sprite": "c2_ti_proud.png",
+      "text": "Cầm 1.000.000đ tiền thưởng trong tay, mình sẽ sử dụng khoản tiền bất ngờ này thế nào?",
+      "options": [
+        {
+          "text": "A. Khao bạn bè một chầu ăn uống hoành tráng (Dùng hết 1tr)",
+          "effects": { "SAVINGS": "+0", "HAPPINESS": "+25", "FIQ": "-10" },
+          "next": "C2_M2_4_OPTION_A"
+        },
+        {
+          "text": "B. Bỏ toàn bộ 1.000.000đ vào heo đất tích lũy",
+          "effects": { "SAVINGS": "+1000000", "HAPPINESS": "+5", "FIQ": "+15" },
+          "next": "C2_M2_4_OPTION_B"
+        },
+        {
+          "text": "C. Mua khóa học kỹ năng/tiếng Anh online (Đầu tư bản thân)",
+          "effects": { "SAVINGS": "+300000", "FIQ": "+25", "HAPPINESS": "+10" },
+          "next": "C2_M2_4_OPTION_C"
+        }
+      ]
+    },
+    {
+      "id": "C2_M2_4_OPTION_A",
+      "type": "cutscene",
+      "cutscene_image": "c2_scene_hau_qua_an_voi_ban_option_a.png",
+      "speaker": "Tí",
+      "text": "Cả nhóm ăn uống rất vui vẻ, nhưng sau đó số tiền thưởng đã hết sạch mà mình không tích lũy thêm được đồng nào.",
+      "next": "C2_CHECK_BURN_OUT"
+    },
+    {
+      "id": "C2_M2_4_OPTION_B",
+      "type": "cutscene",
+      "cutscene_image": "c2_scene_bo_tien_vao_heo_option_b.png",
+      "speaker": "Tí",
+      "text": "Một khoản tích lũy tuyệt vời! Số tiền trong heo đất tăng lên đáng kể, tiến gần hơn tới mục tiêu mua xe đạp mới.",
+      "next": "C2_CHECK_BURN_OUT"
+    },
+    {
+      "id": "C2_M2_4_OPTION_C",
+      "type": "cutscene",
+      "cutscene_image": "c2_scene_mua_khoa_hoc_option_c.png",
+      "speaker": "Tí",
+      "text": "Đầu tư vào tri thức là khoản đầu tư sinh lời nhất! Vừa học thêm kiến thức hữu ích vừa dư ra một ít bỏ tiết kiệm.",
+      "next": "C2_CHECK_BURN_OUT"
+    },
+    {
+      "id": "C2_CHECK_BURN_OUT",
+      "type": "condition",
+      "conditions": [
+        {
+          "check": "HAPPINESS <= 0",
+          "next": "C2_FORCE_LOCK_BURNOUT"
+        }
+      ],
+      "default_next": "C2_LIFE_EVENT_2"
+    },
+    {
+      "id": "C2_FORCE_LOCK_BURNOUT",
+      "type": "dialogue",
+      "background": "c2_bg_dorm_room_empty.png",
+      "speaker": "Tí",
+      "sprite": "c2_ti_casual_tired.png",
+      "text": "Vì thắt chặt chi tiêu quá mức và không dành thời gian chăm sóc tinh thần, mình đã rơi vào trạng thái kiệt sức (Burn-out)...",
+      "next": "C2_END_TIER_C"
+    },
+    {
+      "id": "C2_LIFE_EVENT_2",
+      "type": "cutscene",
+      "cutscene_image": "c2_scene_mat_xe_truoc_tiem_net.png",
+      "speaker": "Tí",
+      "text": "Xui xẻo rồi! Tối nay dựng xe sơ hở đã bị kẻ gian cắt khóa trộm mất chiếc xe đạp. Chi phí mua xe cũ để đi học lại là 1.200.000đ!",
+      "next": "C2_LIFE_EVENT_CHECK"
+    },
+    {
+      "id": "C2_LIFE_EVENT_CHECK",
+      "type": "condition",
+      "conditions": [
+        {
+          "check": "SAVINGS >= 1200000",
+          "next": "C2_EVENT_SOLVED"
+        }
+      ],
+      "default_next": "C2_EVENT_FAILED"
+    },
+    {
+      "id": "C2_EVENT_SOLVED",
+      "type": "dialogue",
+      "background": "c2_bg_dorm_room_empty.png",
+      "speaker": "Tí",
+      "sprite": "c2_ti_relieved.png",
+      "text": "May mà thời gian qua mình chăm chỉ tích lũy, khoản tiết kiệm khẩn cấp đủ 1.200.000đ để mua ngay xe mới mà không phải xin mẹ!",
+      "effects": { "SAVINGS": "-1200000", "FIQ": "+15" },
+      "next": "C2_EVALUATE_ENDING"
+    },
+    {
+      "id": "C2_EVENT_FAILED",
+      "type": "dialogue",
+      "background": "c2_bg_dorm_room_empty.png",
+      "speaker": "Tí",
+      "sprite": "c2_ti_casual_tired.png",
+      "text": "Số tiền tiết kiệm không đủ 1.200.000đ... Mình đành phải gọi điện nhờ mẹ viện trợ trong ngậm ngùi và cằn nhằn.",
+      "effects": { "SAVINGS": "0", "HAPPINESS": "-20", "FIQ": "-10" },
+      "next": "C2_EVALUATE_ENDING"
+    },
+    {
+      "id": "C2_EVALUATE_ENDING",
+      "type": "condition",
+      "conditions": [
+        {
+          "check": "SAVINGS >= 1500000 && FIQ >= 45 && HAPPINESS >= 50",
+          "next": "C2_END_TIER_S"
+        },
+        {
+          "check": "SAVINGS >= 1000000 && FIQ >= 35",
+          "next": "C2_END_TIER_A"
+        },
+        {
+          "check": "SAVINGS >= 500000",
+          "next": "C2_END_TIER_B"
+        }
+      ],
+      "default_next": "C2_END_TIER_C"
+    },
+    {
+      "id": "C2_END_TIER_S",
+      "type": "dialogue",
+      "background": "c2_bg_dorm_room_empty.png",
+      "speaker": "Hệ thống",
+      "text": "Xếp loại S-Tier: Bậc Thầy Quản Lý Chi Tiêu Tuổi Teen! Bạn đã cân bằng hoàn hảo giữa tiết kiệm, đầu tư bản thân và giữ niềm vui cuộc sống.",
+      "next": null
+    },
+    {
+      "id": "C2_END_TIER_A",
+      "type": "dialogue",
+      "background": "c2_bg_dorm_room_empty.png",
+      "speaker": "Hệ thống",
+      "text": "Xếp loại A-Tier: Học Sinh Tích Lũy Giỏi! Bạn quản lý tài chính rất chắc chắn và vượt qua biến cố an toàn.",
+      "next": null
+    },
+    {
+      "id": "C2_END_TIER_B",
+      "type": "dialogue",
+      "background": "c2_bg_dorm_room_empty.png",
+      "speaker": "Hệ thống",
+      "text": "Xếp loại B-Tier: Hoàn Thành Chi Tiêu Cơ Bản. Dù chưa dư dả nhiều nhưng bạn đã có ý thức tự lập.",
+      "next": null
+    },
+    {
+      "id": "C2_END_TIER_C",
+      "type": "dialogue",
+      "background": "c2_bg_dorm_room_empty.png",
+      "speaker": "Hệ thống",
+      "text": "Xếp loại C-Tier: Cần Rút Kinh Nghiệm. Việc quản lý thu chi chưa hiệu quả khiến bạn gặp áp lực tài chính lớn.",
+      "next": null
+    }
+  ]
+}

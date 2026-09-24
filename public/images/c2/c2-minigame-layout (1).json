@@ -1,0 +1,51 @@
+{
+  "version": 1,
+  "key": "finteen.c2.minigame.layout.v1",
+  "exportedAt": "2026-09-23T16:46:24.927Z",
+  "layout": {
+    "customer": {
+      "left": 70.5,
+      "top": 27.5,
+      "width": 16.2,
+      "height": 34
+    },
+    "bubble": {
+      "left": 62.8,
+      "top": 0,
+      "width": 24.8,
+      "height": 49.6
+    },
+    "checkout": {
+      "left": 71.2,
+      "top": 29.3,
+      "width": 16,
+      "height": 49
+    },
+    "items": [
+      {
+        "left": 12.8,
+        "top": 39.1,
+        "width": 15.9,
+        "height": 34.5
+      },
+      {
+        "left": 27.3,
+        "top": 40.3,
+        "width": 15.7,
+        "height": 29.7
+      },
+      {
+        "left": 42.2,
+        "top": 38.2,
+        "width": 14.9,
+        "height": 29.3
+      },
+      {
+        "left": 56.3,
+        "top": 36.6,
+        "width": 16.1,
+        "height": 32.9
+      }
+    ]
+  }
+}

@@ -21,7 +21,7 @@ export function resolveSession(db, session) {
 }
 export function canAccessChapter(actor, chapter) {
   return Boolean(actor && Number.isInteger(chapter) && (
-    (actor.role === 'guest' && chapter === 1) ||
+    (actor.role === 'guest' && [1, 2].includes(chapter)) ||
     (actor.role === 'kid' && PLANS[actor.plan]?.chapters.includes(chapter))
   ))
 }
