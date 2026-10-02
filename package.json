@@ -8,6 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "test:workspace": "node --test tests/workspace-*.test.mjs",
+    "test:internal": "node --test tests/internal-*.test.mjs",
     "preview": "vite preview"
   },
   "dependencies": {

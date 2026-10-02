@@ -1,6 +1,16 @@
 # Luồng tài khoản và dashboard FinTeen — bản thử frontend
 
+> Rà soát 01/10/2026: đây là tài liệu bản thử, không phải đặc tả backend. `UserGames.jsx` hiện đã nối cả chương 1 và chương 2, nên các đoạn bên dưới nói chương 2–8 đều chưa chơi được đã lỗi thời. Yêu cầu mới về Parent/Teacher, PIN và quyền nội bộ xem `finteen-project-context.md`; không coi hành vi bản thử là yêu cầu đã chốt.
+
 ## Phạm vi
+
+### Cập nhật Parent/Teacher ngày 01/10/2026
+
+- Một tài khoản kích hoạt được cả gói Gia đình và Giáo viên; mỗi gói chỉ cấp slot một lần, tổng cộng 4 slot gia đình và 40 slot lớp học.
+- Đăng nhập người lớn có radio Phụ huynh/Giáo viên. Dùng cùng email/mật khẩu, chọn vai đã mua gói; vai được lưu trong phiên của tab. Để đổi vai, đăng xuất rồi chọn radio tương ứng khi đăng nhập lại. Tài khoản chưa có gói vẫn đăng nhập dưới vai Guest.
+- Mua thêm gói không tự đổi vai đang sử dụng. Slot, danh sách người học, trang chi tiết, báo cáo/xuất file, nhóm và Quiz được giới hạn theo vai. Teacher không giao quiz cho Child của phạm vi Parent dù cùng chủ tài khoản.
+- Dữ liệu lưu cũ chỉ có `account.plan` vẫn đọc được; slot/người học cũ tiếp tục thuộc gói ban đầu. `account.plans` lưu danh sách gói; `session.role` chọn vai, còn `actor.plan` là gói của vai hiện tại. Người học giữ gói của slot, không đổi theo phiên đăng nhập của người lớn.
+- Đây vẫn là mô phỏng frontend/localStorage, chưa có thanh toán hoặc xác thực server. Chưa thay luồng PIN/QR hay triển khai các vai nhân sự nội bộ trong lần sửa này.
 
 Đã nối giao diện đăng ký, đăng nhập, dashboard chung, gói, slot, nhóm, Quiz và báo cáo bằng dữ liệu lưu trên trình duyệt. Không sửa player, cốt truyện, lựa chọn hay mini-game.
 
@@ -70,7 +80,7 @@ Các mặc định này có thể chỉnh khi nhóm chốt yêu cầu nghiệp v
 3. API học sinh/slot, sinh mã duy nhất toàn hệ thống, PIN, thu hồi phiên và lưu lịch sử.
 4. API nhóm, đề, giao bài, chấm bài phía server. Không gửi đáp án đúng cho học sinh trước khi nộp.
 5. Sự kiện học tập từ gameplay và lưu tiến độ theo learner ID; báo cáo tổng hợp trên server. Hiện chưa sửa gameplay để phát các sự kiện này.
-6. Quy tắc mua nhiều gói/chuyển Parent ↔ Teacher chưa chốt, nên bản thử không cho mua thêm/chuyển gói trên cùng tài khoản đã có gói.
+6. Backend cần hỗ trợ một tài khoản sở hữu cả hai gói, kiểm tra vai đã mua khi đăng nhập và giới hạn dữ liệu theo owner + phạm vi Parent/Teacher. Quy tắc này đã được chốt và triển khai trong bản thử frontend ngày 01/10/2026.
 
 ## Kiểm tra
 

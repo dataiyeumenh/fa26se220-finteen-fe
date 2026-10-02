@@ -1,5 +1,8 @@
 ﻿import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 
+import { lazy, Suspense } from 'react'
+const InternalApp = lazy(() => import('@/features/internal/InternalApp'))
+
 // Trang công khai và xác thực
 import Homepage from '@/pages/Homepage'
 import Login from '@/pages/auth/Login'
@@ -38,6 +41,11 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/internal/*" element={<Suspense fallback={<p role="status">Đang tải không gian nội bộ…</p>}><InternalApp/></Suspense>} />
+        <Route path="/dashboard/editor/*" element={<Navigate to="/internal" replace />} />
+        <Route path="/dashboard/reviewer/*" element={<Navigate to="/internal" replace />} />
+        <Route path="/dashboard/manager/*" element={<Navigate to="/internal" replace />} />
+        <Route path="/dashboard/admin/*" element={<Navigate to="/internal" replace />} />
         {/* 1. CÔNG KHAI */}
         <Route path="/" element={<Homepage />} />
         <Route element={<AuthLayout />}>
@@ -113,7 +121,6 @@ function App() {
           <Route path="/dashboard/user/shop" element={<Navigate to="/dashboard/kid/shop" replace />} />
           <Route path="/dashboard/parent/*" element={<AccountHome />} />
           <Route path="/dashboard/teacher/*" element={<AccountHome />} />
-          <Route path="/dashboard/admin/*" element={<AccountHome />} />
           <Route path="/dashboard/*" element={<NotFound />} />
         </Route>
 

@@ -26,6 +26,7 @@ export default function AuthForm({ registration = false }) {
   const [params, setParams] = useSearchParams()
   const kind = !registration && params.get('as') === 'kid' ? 'learner' : 'adult'
   const kid = kind === 'learner'
+  const [adultRole, setAdultRole] = useState('parent')
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
   const chooseKind = next => {
@@ -42,7 +43,7 @@ export default function AuthForm({ registration = false }) {
       if (registration) {
         if (form.get('secret') !== form.get('confirm')) throw new Error('Mật khẩu xác nhận chưa khớp. Bạn kiểm tra lại nhé.')
         await register({ name: form.get('name'), email: form.get('identifier'), password: form.get('secret') })
-      } else await login({ kind, identifier: form.get('identifier'), secret: form.get('secret') })
+      } else await login({ kind, role: kid ? undefined : adultRole, identifier: form.get('identifier'), secret: form.get('secret') })
       navigate(kid ? '/dashboard/kid' : '/dashboard', { replace: true })
     } catch (err) { setError(err.message) } finally { setBusy(false) }
   }
@@ -58,6 +59,7 @@ export default function AuthForm({ registration = false }) {
     {registration && <div className="ft-register-note"><span className="ft-icon-circle ft-lime"><GraduationCap size={20} aria-hidden="true" /></span><p>Các bạn học sinh đã có mã?<br /><Link to="/login?as=kid">Đăng nhập Kid tại đây <ArrowRight size={14} aria-hidden="true" /></Link></p></div>}
     <form key={`${kind}-${registration}`} className="ft-account-fields" onSubmit={onSubmit} aria-busy={busy} aria-describedby={error ? 'ft-auth-error' : undefined}>
       <fieldset disabled={busy}>
+        {!registration && !kid && <fieldset className="ft-role-options"><legend>Đăng nhập với vai trò</legend><div>{[['parent', 'Phụ huynh'], ['teacher', 'Giáo viên']].map(([value, label]) => <label key={value}><input type="radio" name="adultRole" value={value} checked={adultRole === value} onChange={() => { setAdultRole(value); setError('') }} />{label}</label>)}</div><small>Mua cả hai gói? Dùng cùng tài khoản và chọn vai muốn sử dụng. Chưa mua gói vẫn có thể đăng nhập dùng thử.</small></fieldset>}
         {registration && <label htmlFor="ft-name">Họ và tên<input id="ft-name" name="name" placeholder="Nhập họ và tên của bạn" autoComplete="name" required maxLength={80} /></label>}
         <label htmlFor="ft-identifier">{kid ? 'Mã đăng nhập' : 'Địa chỉ email'}<input id="ft-identifier" name="identifier" type={kid ? 'text' : 'email'} autoComplete="username" autoCapitalize="none" spellCheck={false} placeholder={kid ? 'VD: FT-XXXXXXXXXX' : 'ban@example.com'} required /></label>
         <PasswordField id="ft-secret" label={kid ? 'Mã PIN' : 'Mật khẩu'} name="secret" placeholder={kid ? 'Nhập PIN 4–6 chữ số' : 'Nhập mật khẩu của bạn'} autoComplete={registration ? 'new-password' : 'current-password'} minLength={kid ? 4 : 8} maxLength={kid ? 6 : undefined} pattern={kid ? '[0-9]{4,6}' : undefined} inputMode={kid ? 'numeric' : undefined} hint={registration ? 'Sử dụng ít nhất 8 ký tự.' : undefined} required />
@@ -70,5 +72,6 @@ export default function AuthForm({ registration = false }) {
     {registration && <p className="ft-free-note">Bắt đầu với chương 1 dùng thử. Chọn gói khi bạn sẵn sàng.</p>}
     <p className="ft-auth-switch">{registration ? 'Bạn đã có tài khoản?' : 'Bạn là phụ huynh hoặc giáo viên mới?'} <Link to={registration ? '/login' : '/register'}>{registration ? 'Đăng nhập' : 'Đăng ký ngay'} <ArrowUpRight size={15} aria-hidden="true" /></Link></p>
     <details className="ft-demo-disclosure"><summary>Đang sử dụng bản thử nghiệm</summary><p>Tài khoản và dữ liệu chỉ lưu trên trình duyệt này, chưa kết nối API đăng nhập.</p></details>
+    {!registration && <p className="ft-auth-switch"><Link to="/internal/login">Đăng nhập nhân sự nội bộ →</Link></p>}
   </section>
 }

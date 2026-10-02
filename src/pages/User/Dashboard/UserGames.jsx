@@ -6,7 +6,7 @@ import {
   MessageCircle,
   User as UserIcon,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import useUserDashboard from "./hooks/useUserDashboard";
@@ -14,6 +14,9 @@ import { VisualNovelPlayer } from "./components/game/VisualNovelPlayer";
 import { chapter1GameData } from "./data/chapter1VisualNovel";
 import { loadChapter1RuntimeData } from "./data/runtimeAdapter";
 import { loadChapter2RuntimeData } from "./data/chapter2RuntimeAdapter";
+import { usePublishedChapters } from "@/features/internal/hooks";
+
+const StoryPlayer = lazy(() => import('@/features/internal/StoryPlayer'));
 
 const role = {
   id: "user",
@@ -51,6 +54,7 @@ export default function UserGames() {
   const chapterId = searchParams.get("chapter") || "1";
   const isChapterOne = chapterId === "1";
   const isChapterTwo = chapterId === "2";
+  const published = usePublishedChapters().find(chapter => chapter.number === Number(chapterId));
   const { user, loading, error } = useUserDashboard();
   const [gameData, setGameData] = useState(chapter1GameData);
   const [runtimeError, setRuntimeError] = useState("");
@@ -108,7 +112,7 @@ export default function UserGames() {
         </div>
       )}
 
-      {!loading && !error && isChapterOne && runtimeError && (
+      {!loading && !error && !published && isChapterOne && runtimeError && (
         <div
           className="border-2 rounded-2xl p-4 mb-6 text-sm font-bold"
           style={{
@@ -121,9 +125,10 @@ export default function UserGames() {
         </div>
       )}
 
-      {!loading && !error && (isChapterOne || isChapterTwo) && <VisualNovelPlayer data={gameData} />}
+      {!loading && !error && published && <Suspense fallback={<p role="status">Đang tải chương đã phát hành…</p>}><StoryPlayer key={`${published.id}-${published.version.number}`} version={published.version}/></Suspense>}
+      {!loading && !error && !published && (isChapterOne || isChapterTwo) && <VisualNovelPlayer data={gameData} />}
 
-      {!loading && !error && !isChapterOne && !isChapterTwo && (
+      {!loading && !error && !published && !isChapterOne && !isChapterTwo && (
         <div className="mx-auto max-w-5xl space-y-4">
           <div className="rounded-3xl border border-amber-200 bg-white p-8 text-center">
             <Gamepad2 className="mx-auto mb-4 h-12 w-12 text-amber-500" />

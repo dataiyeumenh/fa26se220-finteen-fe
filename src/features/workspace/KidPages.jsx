@@ -2,8 +2,10 @@ import { Link } from 'react-router-dom'
 import { Store, BookOpen, BadgeDollarSign } from 'lucide-react'
 import { CHAPTERS } from './model'
 import { Heading } from './ui'
+import { usePublishedChapters } from '../internal/hooks'
 
 export function KidGames() {
+  const published = usePublishedChapters()
   return <>
     <Heading title="Trò chơi của bạn" description="Chọn một chương để khám phá câu chuyện và thử thách tài chính." />
     <div className="ws-grid two">
@@ -12,10 +14,10 @@ export function KidGames() {
           <span className="ws-chapter-number">{String(i + 1).padStart(2, '0')}</span>
           <div>
             <small>CHƯƠNG {i + 1}</small>
-            <h2>{title}</h2>
-            <p>{i === 0 ? 'Có thể trải nghiệm ngay' : 'Nội dung trò chơi đang được chuẩn bị'}</p>
+            <h2>{published.find(c => c.number === i + 1)?.version.title || title}</h2>
+            <p>{i < 2 || published.some(c => c.number === i + 1) ? 'Có thể trải nghiệm ngay' : 'Nội dung trò chơi đang được chuẩn bị'}</p>
             <Link className="ws-text-link" to={`/dashboard/kid/play?chapter=${i + 1}`}>
-              {i === 0 ? 'Vào chơi →' : 'Xem chương →'}
+              {i < 2 || published.some(c => c.number === i + 1) ? 'Vào chơi →' : 'Xem chương →'}
             </Link>
           </div>
         </article>

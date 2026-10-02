@@ -1,4 +1,4 @@
-import { applyAction, emptyDatabase, resolveSession } from './model.js'
+import { accountPlans, applyAction, emptyDatabase, resolveSession } from './model.js'
 
 const DB_KEY = 'finteen.workspace.demo.v1'
 const SESSION_KEY = 'finteen.workspace.session.v1'
@@ -43,7 +43,9 @@ export async function register({ name, email, password }) {
   dispatch('REGISTER', { id, name, email, credential: await credential(password) })
   setSession({ kind: 'adult', id })
 }
-export async function login({ kind, identifier, secret }) {
+export async function login({ kind, identifier, secret, role }) {
+  if (!['adult', 'learner'].includes(kind)) throw new Error('Loại tài khoản không hợp lệ.')
+  if (kind === 'adult' && role !== undefined && !['parent', 'teacher'].includes(role)) throw new Error('Vai đăng nhập không hợp lệ.')
   const db = read(localStorage, DB_KEY, emptyDatabase())
   const record = kind === 'adult'
     ? db.accounts.find(a => a.email === identifier.trim().toLowerCase())
@@ -53,7 +55,10 @@ export async function login({ kind, identifier, secret }) {
   const latestRecord = (kind === 'adult' ? latest.accounts : latest.learners).find(r => r.id === record.id)
   if (latestRecord?.credential?.hash !== record.credential.hash || (kind === 'learner' && latestRecord.authVersion !== record.authVersion)) throw new Error('Tài khoản vừa được cập nhật. Vui lòng đăng nhập lại.')
   snapshot = { ...snapshot, db: latest }
-  const session = { kind, id: record.id, ...(kind === 'learner' ? { authVersion: record.authVersion } : {}) }
+  const plans = kind === 'adult' ? accountPlans(latestRecord) : []
+  if (kind === 'adult' && plans.length > 1 && !role) throw new Error('Vui lòng chọn vai Phụ huynh hoặc Giáo viên.')
+  if (kind === 'adult' && plans.length && role && !plans.includes(role)) throw new Error(`Tài khoản chưa có gói ${role === 'teacher' ? 'Giáo viên' : 'Gia đình'}. Hãy chọn vai của gói đã mua.`)
+  const session = { kind, id: record.id, ...(kind === 'learner' ? { authVersion: record.authVersion } : plans.length ? { role: role || plans[0] } : {}) }
   if (!resolveSession(latest, session)) throw new Error('Tài khoản chưa được kích hoạt.')
   setSession(session)
 }
