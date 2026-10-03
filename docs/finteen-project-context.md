@@ -1,5 +1,9 @@
 # FinTeen — Bối cảnh dự án
 
+## Cập nhật cốt truyện và hình ảnh ngày 03/10/2026
+
+Người dùng xác nhận các chương trong cốt truyện mới là những câu chuyện riêng. Đã đối chiếu `Document v2/FinTeen_Game_Design_Document_GDD_v2.docx`: **8 chapter độc lập**, An đại diện từng tình huống, Minh là bạn cùng tuổi. Tuổi chương 1–8 lần lượt **14, 16, 17, 16, 16, 18, 17, 18**. Khi làm bộ art `public/images/finteen-v2`, dùng bản này thay cho tuyến Tí 8 giai đoạn cuộc đời hoặc tuyến Minh 10 chương trong context cũ. Xem [quy tắc độ tuổi nhân vật](finteen-v2-character-ages.md). Đây không phải xác nhận toàn bộ gameplay main đã chuyển sang GDD v2.
+
 ## Cập nhật tài khoản nhiều vai ngày 01/10/2026
 
 ### Trạng thái triển khai nội bộ

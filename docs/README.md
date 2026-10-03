@@ -1,5 +1,7 @@
 # Tài liệu FinTeen sau đợt dọn 01/10/2026
 
+> Cập nhật 03/10/2026 cho bộ art `public/images/finteen-v2`: dùng **GDD v2, 8 chapter độc lập**, với An/Minh có tuổi riêng theo tình huống. Xem [bảng tuổi và nguồn v2](finteen-v2-character-ages.md). Các ghi chú tuyến Minh 10 chương và tuyến Tí bên dưới là lịch sử/phạm vi code cũ, không phải chuẩn độ tuổi của bộ art v2.
+
 ## Phạm vi đã xác nhận
 
 - Giữ nguyên mini game chương 1–2 trên main.

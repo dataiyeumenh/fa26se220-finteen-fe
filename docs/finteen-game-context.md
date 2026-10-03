@@ -1,5 +1,7 @@
 # FinTeen — Context mới cho game và mini-game
 
+> Cập nhật 03/10/2026: GDD **v2** trong `Downloads/FinTeen_Game_Document/Document v2` là nguồn mới hơn cho bộ ảnh `public/images/finteen-v2`. Bản này có **8 chapter độc lập**, An đại diện từng tình huống, Minh cùng tuổi; tuổi được đặt lại theo chapter, không phải tuyến Minh 10 chương mô tả bên dưới. Xem [độ tuổi theo GDD v2](finteen-v2-character-ages.md). Khi làm bộ ảnh v2, ưu tiên GDD v2 và xác nhận của người dùng rằng các chapter là câu chuyện riêng.
+
 > Rà soát 01/10/2026: tài liệu này mô tả tuyến Minh, 10 chương; code main và `cot_truyen_text.txt` vẫn có tuyến Tí, 8 chương. Người dùng xác nhận giữ mini game chương 1–2 trên main và bản Minh chọn lịch học/ca làm của chương 4. Không suy diễn rằng toàn bộ main đã chuyển sang thiết kế này. Xem `README.md` trong thư mục docs để biết phạm vi được giữ.
 
 Cập nhật 28/09/2026 theo yêu cầu người dùng đọc kỹ và ghi nhớ ba tài liệu Word. Đây là mốc thiết kế mới cho công việc game/mini-game; chưa phải xác nhận mã nguồn hiện tại đã triển khai các nội dung này.

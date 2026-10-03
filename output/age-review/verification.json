@@ -1,0 +1,266 @@
+﻿[
+    {
+        "ID":  "14-an-neutral",
+        "Kind":  "sprite",
+        "Width":  1024,
+        "Height":  1536,
+        "CornerAlpha":  "0,0,0,0",
+        "Status":  "draft-ready"
+    },
+    {
+        "ID":  "14-an-relieved",
+        "Kind":  "sprite",
+        "Width":  1024,
+        "Height":  1536,
+        "CornerAlpha":  "0,0,0,0",
+        "Status":  "draft-ready"
+    },
+    {
+        "ID":  "14-an-thinking",
+        "Kind":  "sprite",
+        "Width":  1024,
+        "Height":  1536,
+        "CornerAlpha":  "0,0,0,0",
+        "Status":  "draft-ready"
+    },
+    {
+        "ID":  "14-an-worried-money",
+        "Kind":  "sprite",
+        "Width":  1024,
+        "Height":  1536,
+        "CornerAlpha":  "0,0,0,0",
+        "Status":  "draft-ready"
+    },
+    {
+        "ID":  "14-minh-inviting",
+        "Kind":  "sprite",
+        "Width":  1024,
+        "Height":  1536,
+        "CornerAlpha":  "0,0,0,0",
+        "Status":  "draft-ready"
+    },
+    {
+        "ID":  "14-minh-neutral",
+        "Kind":  "sprite",
+        "Width":  1024,
+        "Height":  1536,
+        "CornerAlpha":  "0,0,0,0",
+        "Status":  "draft-ready"
+    },
+    {
+        "ID":  "chapter-01/scene/sc01-receiving-allowance.png",
+        "Kind":  "scene",
+        "Width":  1672,
+        "Height":  941,
+        "CornerAlpha":  "255,255,255,255",
+        "Status":  "draft-ready"
+    },
+    {
+        "ID":  "chapter-01/scene/sc02-headphone-temptation.png",
+        "Kind":  "scene",
+        "Width":  1672,
+        "Height":  941,
+        "CornerAlpha":  "255,255,255,255",
+        "Status":  "draft-ready"
+    },
+    {
+        "ID":  "chapter-01/scene/sc03-checking-priorities.png",
+        "Kind":  "scene",
+        "Width":  1672,
+        "Height":  941,
+        "CornerAlpha":  "255,255,255,255",
+        "Status":  "draft-ready"
+    },
+    {
+        "ID":  "16-an-neutral",
+        "Kind":  "sprite",
+        "Width":  1024,
+        "Height":  1536,
+        "CornerAlpha":  "0,0,0,0",
+        "Status":  "draft-ready"
+    },
+    {
+        "ID":  "16-an-relieved",
+        "Kind":  "sprite",
+        "Width":  1024,
+        "Height":  1536,
+        "CornerAlpha":  "0,0,0,0",
+        "Status":  "draft-ready"
+    },
+    {
+        "ID":  "16-an-thinking",
+        "Kind":  "sprite",
+        "Width":  1024,
+        "Height":  1536,
+        "CornerAlpha":  "0,0,0,0",
+        "Status":  "draft-ready"
+    },
+    {
+        "ID":  "16-an-worried-money",
+        "Kind":  "sprite",
+        "Width":  1024,
+        "Height":  1536,
+        "CornerAlpha":  "0,0,0,0",
+        "Status":  "draft-ready"
+    },
+    {
+        "ID":  "16-minh-inviting",
+        "Kind":  "sprite",
+        "Width":  1024,
+        "Height":  1536,
+        "CornerAlpha":  "0,0,0,0",
+        "Status":  "draft-ready"
+    },
+    {
+        "ID":  "16-minh-neutral",
+        "Kind":  "sprite",
+        "Width":  1024,
+        "Height":  1536,
+        "CornerAlpha":  "0,0,0,0",
+        "Status":  "draft-ready"
+    },
+    {
+        "ID":  "chapter-02/scene/sc01-camp-budget-briefing.png",
+        "Kind":  "scene",
+        "Width":  1672,
+        "Height":  941,
+        "CornerAlpha":  "255,255,255,255",
+        "Status":  "draft-ready"
+    },
+    {
+        "ID":  "chapter-02/scene/sc02-dividing-envelopes.png",
+        "Kind":  "scene",
+        "Width":  1672,
+        "Height":  941,
+        "CornerAlpha":  "255,255,255,255",
+        "Status":  "draft-ready"
+    },
+    {
+        "ID":  "chapter-02/scene/sc03-laptop-goal-planning.png",
+        "Kind":  "scene",
+        "Width":  1672,
+        "Height":  941,
+        "CornerAlpha":  "255,255,255,255",
+        "Status":  "draft-ready"
+    },
+    {
+        "ID":  "chapter-02/scene/sc04-bicycle-surprise.png",
+        "Kind":  "scene",
+        "Width":  1672,
+        "Height":  941,
+        "CornerAlpha":  "255,255,255,255",
+        "Status":  "draft-ready"
+    },
+    {
+        "ID":  "chapter-02/scene/sc05-revising-budget.png",
+        "Kind":  "scene",
+        "Width":  1672,
+        "Height":  941,
+        "CornerAlpha":  "255,255,255,255",
+        "Status":  "draft-ready"
+    },
+    {
+        "ID":  "17-an-neutral",
+        "Kind":  "sprite",
+        "Width":  1024,
+        "Height":  1536,
+        "CornerAlpha":  "0,0,0,0",
+        "Status":  "draft-ready"
+    },
+    {
+        "ID":  "17-an-relieved",
+        "Kind":  "sprite",
+        "Width":  1024,
+        "Height":  1536,
+        "CornerAlpha":  "0,0,0,0",
+        "Status":  "draft-ready"
+    },
+    {
+        "ID":  "17-an-thinking",
+        "Kind":  "sprite",
+        "Width":  1024,
+        "Height":  1536,
+        "CornerAlpha":  "0,0,0,0",
+        "Status":  "draft-ready"
+    },
+    {
+        "ID":  "17-an-worried-money",
+        "Kind":  "sprite",
+        "Width":  1024,
+        "Height":  1536,
+        "CornerAlpha":  "0,0,0,0",
+        "Status":  "draft-ready"
+    },
+    {
+        "ID":  "17-minh-inviting",
+        "Kind":  "sprite",
+        "Width":  1024,
+        "Height":  1536,
+        "CornerAlpha":  "0,0,0,0",
+        "Status":  "draft-ready"
+    },
+    {
+        "ID":  "17-minh-neutral",
+        "Kind":  "sprite",
+        "Width":  1024,
+        "Height":  1536,
+        "CornerAlpha":  "0,0,0,0",
+        "Status":  "draft-ready"
+    },
+    {
+        "ID":  "18-an-neutral",
+        "Kind":  "sprite",
+        "Width":  1024,
+        "Height":  1536,
+        "CornerAlpha":  "0,0,0,0",
+        "Status":  "draft-ready"
+    },
+    {
+        "ID":  "18-an-relieved",
+        "Kind":  "sprite",
+        "Width":  1024,
+        "Height":  1536,
+        "CornerAlpha":  "0,0,0,0",
+        "Status":  "draft-ready"
+    },
+    {
+        "ID":  "18-an-thinking",
+        "Kind":  "sprite",
+        "Width":  1024,
+        "Height":  1536,
+        "CornerAlpha":  "0,0,0,0",
+        "Status":  "draft-ready"
+    },
+    {
+        "ID":  "18-an-worried-money",
+        "Kind":  "sprite",
+        "Width":  1024,
+        "Height":  1536,
+        "CornerAlpha":  "0,0,0,0",
+        "Status":  "draft-ready"
+    },
+    {
+        "ID":  "18-minh-inviting",
+        "Kind":  "sprite",
+        "Width":  1024,
+        "Height":  1536,
+        "CornerAlpha":  "0,0,0,0",
+        "Status":  "draft-ready"
+    },
+    {
+        "ID":  "18-minh-neutral",
+        "Kind":  "sprite",
+        "Width":  1024,
+        "Height":  1536,
+        "CornerAlpha":  "0,0,0,0",
+        "Status":  "draft-ready"
+    },
+    {
+        "ID":  "chapter-06/scene/sc02-comparing-loan-offers.png",
+        "Kind":  "scene",
+        "Width":  1672,
+        "Height":  941,
+        "CornerAlpha":  "255,255,255,255",
+        "Status":  "draft-ready"
+    }
+]
