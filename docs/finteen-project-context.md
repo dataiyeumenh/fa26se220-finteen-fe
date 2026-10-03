@@ -2,6 +2,8 @@
 
 ## Cập nhật cốt truyện và hình ảnh ngày 03/10/2026
 
+**Chốt tạo hình cuối:** tất cả nhân vật dùng chibi; khác tuổi chỉ thể hiện qua quần áo và nét mặt. Không kéo cao cơ thể theo tuổi, không làm mẹ/cô cao thêm. Đã thay 84 ảnh nhân vật/tranh cảnh trong sáu chương của bộ art v2 và giữ mẫu người lớn cố định giữa các chương. Xem `public/images/finteen-v2/README.md` và `output/age-review/README.md`.
+
 Người dùng xác nhận các chương trong cốt truyện mới là những câu chuyện riêng. Đã đối chiếu `Document v2/FinTeen_Game_Design_Document_GDD_v2.docx`: **8 chapter độc lập**, An đại diện từng tình huống, Minh là bạn cùng tuổi. Tuổi chương 1–8 lần lượt **14, 16, 17, 16, 16, 18, 17, 18**. Khi làm bộ art `public/images/finteen-v2`, dùng bản này thay cho tuyến Tí 8 giai đoạn cuộc đời hoặc tuyến Minh 10 chương trong context cũ. Xem [quy tắc độ tuổi nhân vật](finteen-v2-character-ages.md). Đây không phải xác nhận toàn bộ gameplay main đã chuyển sang GDD v2.
 
 ## Cập nhật tài khoản nhiều vai ngày 01/10/2026

@@ -1,5 +1,7 @@
 # Hướng sửa chibi theo phản hồi người dùng
 
+**Chốt cuối ngày 03/10/2026:** toàn bộ nhân vật dùng chibi, giữ tỷ lệ cơ thể nhất quán. Tuổi chỉ phân biệt bằng trang phục và nét mặt; bỏ đề xuất tăng chiều cao/đổi vóc dáng theo tuổi bên dưới. Mẹ/cô có một mẫu chibi người lớn cố định, dùng xuyên các tình huống.
+
 Ngày 03/10/2026: người dùng yêu cầu giữ vóc dáng người lớn ổn định, tránh kéo dài hình thể mất cân đối, và thay đổi trang phục phù hợp tuổi. Phong cách chibi được chấp nhận nếu thể hiện được độ tuổi.
 
 - An/Minh: 14 tuổi ở chương 1; 16 ở chương 2, 4, 5; 17 ở chương 3; 18 ở chương 6. Đây là các tình huống độc lập.

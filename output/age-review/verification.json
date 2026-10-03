@@ -5,7 +5,7 @@
         "Width":  1024,
         "Height":  1536,
         "CornerAlpha":  "0,0,0,0",
-        "Status":  "draft-ready"
+        "Status":  "installed"
     },
     {
         "ID":  "14-an-relieved",
@@ -13,7 +13,7 @@
         "Width":  1024,
         "Height":  1536,
         "CornerAlpha":  "0,0,0,0",
-        "Status":  "draft-ready"
+        "Status":  "installed"
     },
     {
         "ID":  "14-an-thinking",
@@ -21,7 +21,7 @@
         "Width":  1024,
         "Height":  1536,
         "CornerAlpha":  "0,0,0,0",
-        "Status":  "draft-ready"
+        "Status":  "installed"
     },
     {
         "ID":  "14-an-worried-money",
@@ -29,7 +29,31 @@
         "Width":  1024,
         "Height":  1536,
         "CornerAlpha":  "0,0,0,0",
-        "Status":  "draft-ready"
+        "Status":  "installed"
+    },
+    {
+        "ID":  "adult-me-concerned",
+        "Kind":  "sprite",
+        "Width":  1145,
+        "Height":  1374,
+        "CornerAlpha":  "0,0,0,0",
+        "Status":  "installed"
+    },
+    {
+        "ID":  "adult-me-explaining",
+        "Kind":  "sprite",
+        "Width":  1145,
+        "Height":  1374,
+        "CornerAlpha":  "0,0,0,0",
+        "Status":  "installed"
+    },
+    {
+        "ID":  "adult-me-neutral",
+        "Kind":  "sprite",
+        "Width":  1145,
+        "Height":  1374,
+        "CornerAlpha":  "0,0,0,0",
+        "Status":  "installed"
     },
     {
         "ID":  "14-minh-inviting",
@@ -37,7 +61,7 @@
         "Width":  1024,
         "Height":  1536,
         "CornerAlpha":  "0,0,0,0",
-        "Status":  "draft-ready"
+        "Status":  "installed"
     },
     {
         "ID":  "14-minh-neutral",
@@ -45,7 +69,7 @@
         "Width":  1024,
         "Height":  1536,
         "CornerAlpha":  "0,0,0,0",
-        "Status":  "draft-ready"
+        "Status":  "installed"
     },
     {
         "ID":  "chapter-01/scene/sc01-receiving-allowance.png",
@@ -53,7 +77,7 @@
         "Width":  1672,
         "Height":  941,
         "CornerAlpha":  "255,255,255,255",
-        "Status":  "draft-ready"
+        "Status":  "installed"
     },
     {
         "ID":  "chapter-01/scene/sc02-headphone-temptation.png",
@@ -61,7 +85,7 @@
         "Width":  1672,
         "Height":  941,
         "CornerAlpha":  "255,255,255,255",
-        "Status":  "draft-ready"
+        "Status":  "installed"
     },
     {
         "ID":  "chapter-01/scene/sc03-checking-priorities.png",
@@ -69,7 +93,7 @@
         "Width":  1672,
         "Height":  941,
         "CornerAlpha":  "255,255,255,255",
-        "Status":  "draft-ready"
+        "Status":  "installed"
     },
     {
         "ID":  "16-an-neutral",
@@ -77,7 +101,7 @@
         "Width":  1024,
         "Height":  1536,
         "CornerAlpha":  "0,0,0,0",
-        "Status":  "draft-ready"
+        "Status":  "installed"
     },
     {
         "ID":  "16-an-relieved",
@@ -85,7 +109,7 @@
         "Width":  1024,
         "Height":  1536,
         "CornerAlpha":  "0,0,0,0",
-        "Status":  "draft-ready"
+        "Status":  "installed"
     },
     {
         "ID":  "16-an-thinking",
@@ -93,7 +117,7 @@
         "Width":  1024,
         "Height":  1536,
         "CornerAlpha":  "0,0,0,0",
-        "Status":  "draft-ready"
+        "Status":  "installed"
     },
     {
         "ID":  "16-an-worried-money",
@@ -101,7 +125,31 @@
         "Width":  1024,
         "Height":  1536,
         "CornerAlpha":  "0,0,0,0",
-        "Status":  "draft-ready"
+        "Status":  "installed"
+    },
+    {
+        "ID":  "adult-co-linh-encouraging",
+        "Kind":  "sprite",
+        "Width":  1024,
+        "Height":  1536,
+        "CornerAlpha":  "0,0,0,0",
+        "Status":  "installed"
+    },
+    {
+        "ID":  "adult-co-linh-explaining",
+        "Kind":  "sprite",
+        "Width":  1024,
+        "Height":  1536,
+        "CornerAlpha":  "0,0,0,0",
+        "Status":  "installed"
+    },
+    {
+        "ID":  "adult-co-linh-neutral",
+        "Kind":  "sprite",
+        "Width":  1024,
+        "Height":  1536,
+        "CornerAlpha":  "0,0,0,0",
+        "Status":  "installed"
     },
     {
         "ID":  "16-minh-inviting",
@@ -109,7 +157,7 @@
         "Width":  1024,
         "Height":  1536,
         "CornerAlpha":  "0,0,0,0",
-        "Status":  "draft-ready"
+        "Status":  "installed"
     },
     {
         "ID":  "16-minh-neutral",
@@ -117,7 +165,7 @@
         "Width":  1024,
         "Height":  1536,
         "CornerAlpha":  "0,0,0,0",
-        "Status":  "draft-ready"
+        "Status":  "installed"
     },
     {
         "ID":  "chapter-02/scene/sc01-camp-budget-briefing.png",
@@ -125,7 +173,7 @@
         "Width":  1672,
         "Height":  941,
         "CornerAlpha":  "255,255,255,255",
-        "Status":  "draft-ready"
+        "Status":  "installed"
     },
     {
         "ID":  "chapter-02/scene/sc02-dividing-envelopes.png",
@@ -133,7 +181,7 @@
         "Width":  1672,
         "Height":  941,
         "CornerAlpha":  "255,255,255,255",
-        "Status":  "draft-ready"
+        "Status":  "installed"
     },
     {
         "ID":  "chapter-02/scene/sc03-laptop-goal-planning.png",
@@ -141,7 +189,7 @@
         "Width":  1672,
         "Height":  941,
         "CornerAlpha":  "255,255,255,255",
-        "Status":  "draft-ready"
+        "Status":  "installed"
     },
     {
         "ID":  "chapter-02/scene/sc04-bicycle-surprise.png",
@@ -149,7 +197,7 @@
         "Width":  1672,
         "Height":  941,
         "CornerAlpha":  "255,255,255,255",
-        "Status":  "draft-ready"
+        "Status":  "installed"
     },
     {
         "ID":  "chapter-02/scene/sc05-revising-budget.png",
@@ -157,7 +205,7 @@
         "Width":  1672,
         "Height":  941,
         "CornerAlpha":  "255,255,255,255",
-        "Status":  "draft-ready"
+        "Status":  "installed"
     },
     {
         "ID":  "17-an-neutral",
@@ -165,7 +213,7 @@
         "Width":  1024,
         "Height":  1536,
         "CornerAlpha":  "0,0,0,0",
-        "Status":  "draft-ready"
+        "Status":  "installed"
     },
     {
         "ID":  "17-an-relieved",
@@ -173,7 +221,7 @@
         "Width":  1024,
         "Height":  1536,
         "CornerAlpha":  "0,0,0,0",
-        "Status":  "draft-ready"
+        "Status":  "installed"
     },
     {
         "ID":  "17-an-thinking",
@@ -181,7 +229,7 @@
         "Width":  1024,
         "Height":  1536,
         "CornerAlpha":  "0,0,0,0",
-        "Status":  "draft-ready"
+        "Status":  "installed"
     },
     {
         "ID":  "17-an-worried-money",
@@ -189,7 +237,7 @@
         "Width":  1024,
         "Height":  1536,
         "CornerAlpha":  "0,0,0,0",
-        "Status":  "draft-ready"
+        "Status":  "installed"
     },
     {
         "ID":  "17-minh-inviting",
@@ -197,7 +245,7 @@
         "Width":  1024,
         "Height":  1536,
         "CornerAlpha":  "0,0,0,0",
-        "Status":  "draft-ready"
+        "Status":  "installed"
     },
     {
         "ID":  "17-minh-neutral",
@@ -205,7 +253,151 @@
         "Width":  1024,
         "Height":  1536,
         "CornerAlpha":  "0,0,0,0",
-        "Status":  "draft-ready"
+        "Status":  "installed"
+    },
+    {
+        "ID":  "adult-tu-van-neutral",
+        "Kind":  "sprite",
+        "Width":  1024,
+        "Height":  1536,
+        "CornerAlpha":  "0,0,0,0",
+        "Status":  "installed"
+    },
+    {
+        "ID":  "adult-tu-van-presenting",
+        "Kind":  "sprite",
+        "Width":  1024,
+        "Height":  1536,
+        "CornerAlpha":  "0,0,0,0",
+        "Status":  "installed"
+    },
+    {
+        "ID":  "chapter-03/scene/sc01-three-career-offers.png",
+        "Kind":  "scene",
+        "Width":  1672,
+        "Height":  941,
+        "CornerAlpha":  "255,255,255,255",
+        "Status":  "installed"
+    },
+    {
+        "ID":  "chapter-03/scene/sc02-checking-course-source.png",
+        "Kind":  "scene",
+        "Width":  1672,
+        "Height":  941,
+        "CornerAlpha":  "255,255,255,255",
+        "Status":  "installed"
+    },
+    {
+        "ID":  "chapter-03/scene/sc03-weekly-career-plan.png",
+        "Kind":  "scene",
+        "Width":  1672,
+        "Height":  941,
+        "CornerAlpha":  "255,255,255,255",
+        "Status":  "installed"
+    },
+    {
+        "ID":  "chapter-03/scene/sc04-career-report.png",
+        "Kind":  "scene",
+        "Width":  1672,
+        "Height":  941,
+        "CornerAlpha":  "255,255,255,255",
+        "Status":  "installed"
+    },
+    {
+        "ID":  "adult-shop-assistant-explaining",
+        "Kind":  "sprite",
+        "Width":  1024,
+        "Height":  1536,
+        "CornerAlpha":  "0,0,0,0",
+        "Status":  "installed"
+    },
+    {
+        "ID":  "adult-shop-assistant-neutral",
+        "Kind":  "sprite",
+        "Width":  1024,
+        "Height":  1536,
+        "CornerAlpha":  "0,0,0,0",
+        "Status":  "installed"
+    },
+    {
+        "ID":  "chapter-04/scene/sc01-phone-needs.png",
+        "Kind":  "scene",
+        "Width":  1672,
+        "Height":  941,
+        "CornerAlpha":  "255,255,255,255",
+        "Status":  "installed"
+    },
+    {
+        "ID":  "chapter-04/scene/sc02-comparing-three-phones.png",
+        "Kind":  "scene",
+        "Width":  1672,
+        "Height":  941,
+        "CornerAlpha":  "255,255,255,255",
+        "Status":  "installed"
+    },
+    {
+        "ID":  "chapter-04/scene/sc03-questioning-receipt.png",
+        "Kind":  "scene",
+        "Width":  1672,
+        "Height":  941,
+        "CornerAlpha":  "255,255,255,255",
+        "Status":  "installed"
+    },
+    {
+        "ID":  "chapter-04/scene/sc04-following-renewal.png",
+        "Kind":  "scene",
+        "Width":  1672,
+        "Height":  941,
+        "CornerAlpha":  "255,255,255,255",
+        "Status":  "installed"
+    },
+    {
+        "ID":  "adult-bank-guide-explaining",
+        "Kind":  "sprite",
+        "Width":  1024,
+        "Height":  1536,
+        "CornerAlpha":  "0,0,0,0",
+        "Status":  "installed"
+    },
+    {
+        "ID":  "adult-bank-guide-neutral",
+        "Kind":  "sprite",
+        "Width":  1024,
+        "Height":  1536,
+        "CornerAlpha":  "0,0,0,0",
+        "Status":  "installed"
+    },
+    {
+        "ID":  "chapter-05/scene/sc01-two-accounts.png",
+        "Kind":  "scene",
+        "Width":  1672,
+        "Height":  941,
+        "CornerAlpha":  "255,255,255,255",
+        "Status":  "installed"
+    },
+    {
+        "ID":  "chapter-05/scene/sc02-investigating-provider.png",
+        "Kind":  "scene",
+        "Width":  1672,
+        "Height":  941,
+        "CornerAlpha":  "255,255,255,255",
+        "Status":  "installed"
+    },
+    {
+        "ID":  "chapter-05/scene/sc03-money-and-purchasing-power.png",
+        "Kind":  "scene",
+        "Width":  1672,
+        "Height":  941,
+        "CornerAlpha":  "255,255,255,255",
+        "Status":  "installed"
+    },
+    {
+        "ID":  "chapter-05/scene/sc04-planning-for-deadline.png",
+        "Kind":  "scene",
+        "Width":  1672,
+        "Height":  941,
+        "CornerAlpha":  "255,255,255,255",
+        "Status":  "installed"
     },
     {
         "ID":  "18-an-neutral",
@@ -213,7 +405,7 @@
         "Width":  1024,
         "Height":  1536,
         "CornerAlpha":  "0,0,0,0",
-        "Status":  "draft-ready"
+        "Status":  "installed"
     },
     {
         "ID":  "18-an-relieved",
@@ -221,7 +413,7 @@
         "Width":  1024,
         "Height":  1536,
         "CornerAlpha":  "0,0,0,0",
-        "Status":  "draft-ready"
+        "Status":  "installed"
     },
     {
         "ID":  "18-an-thinking",
@@ -229,7 +421,7 @@
         "Width":  1024,
         "Height":  1536,
         "CornerAlpha":  "0,0,0,0",
-        "Status":  "draft-ready"
+        "Status":  "installed"
     },
     {
         "ID":  "18-an-worried-money",
@@ -237,7 +429,7 @@
         "Width":  1024,
         "Height":  1536,
         "CornerAlpha":  "0,0,0,0",
-        "Status":  "draft-ready"
+        "Status":  "installed"
     },
     {
         "ID":  "18-minh-inviting",
@@ -245,7 +437,7 @@
         "Width":  1024,
         "Height":  1536,
         "CornerAlpha":  "0,0,0,0",
-        "Status":  "draft-ready"
+        "Status":  "installed"
     },
     {
         "ID":  "18-minh-neutral",
@@ -253,7 +445,15 @@
         "Width":  1024,
         "Height":  1536,
         "CornerAlpha":  "0,0,0,0",
-        "Status":  "draft-ready"
+        "Status":  "installed"
+    },
+    {
+        "ID":  "chapter-06/scene/sc01-school-computer-or-laptop.png",
+        "Kind":  "scene",
+        "Width":  1672,
+        "Height":  941,
+        "CornerAlpha":  "255,255,255,255",
+        "Status":  "installed"
     },
     {
         "ID":  "chapter-06/scene/sc02-comparing-loan-offers.png",
@@ -261,6 +461,22 @@
         "Width":  1672,
         "Height":  941,
         "CornerAlpha":  "255,255,255,255",
-        "Status":  "draft-ready"
+        "Status":  "installed"
+    },
+    {
+        "ID":  "chapter-06/scene/sc03-bnpl-and-minimum-payment.png",
+        "Kind":  "scene",
+        "Width":  1672,
+        "Height":  941,
+        "CornerAlpha":  "255,255,255,255",
+        "Status":  "installed"
+    },
+    {
+        "ID":  "chapter-06/scene/sc04-realistic-repayment-plan.png",
+        "Kind":  "scene",
+        "Width":  1672,
+        "Height":  941,
+        "CornerAlpha":  "255,255,255,255",
+        "Status":  "installed"
     }
 ]

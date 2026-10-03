@@ -1,0 +1,1187 @@
+[
+  {
+    "id": "14-an-neutral",
+    "kind": "sprite",
+    "chapter": 1,
+    "age": 14,
+    "who": "an",
+    "pose": "an-neutral",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-01/char/an/an-neutral.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-01/char/an/an-neutral.png"
+    ],
+    "status": "draft-ready",
+    "previousDraft": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-7c3cd2b4-d21c-4bb4-a1ea-fb9628170e0b.png",
+    "outfit": "yellow T-shirt, navy shorts, white slide sandals",
+    "prompt": "Use case: identity-preserve. Produce ONE full-body transparent chibi visual-novel sprite of An aged 14. Reference 1 is the NEW APPROVED DIRECTION age design sheet: take the character labeled 'An · 14' with its exact new outfit, identity and compact chibi style. Reference 2 is the original sprite for identity and neutral pose only, not for outfit or age. Outfit: yellow T-shirt, navy shorts, white slide sandals. Keep recognizable brown tousled side-swept hair and mustard yellow identity. Balanced CHIBI proportions, head and short body harmonious, about 3.5 heads tall, no long skinny legs or stretched anime anatomy, no tiny head. Face reads as a young adolescent, youthful but not a toddler. Neutral relaxed stance with arms resting naturally, friendly closed-mouth smile. Keep warm brown linework, soft pastel shading and polished 2D cartoon style of the sheet. Single character, full body and feet entirely visible, centered with transparent margins. No title, labels, text, other characters, background, ground ellipse, glow or cast shadow. Genuinely transparent background.",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/chibi-age-design.png",
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-01/char/an/an-neutral.png"
+    ],
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-9de5163d-8ddc-48ad-aff0-3cb34b77fa65.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/14-an-neutral.png"
+  },
+  {
+    "id": "14-an-relieved",
+    "kind": "sprite",
+    "chapter": 1,
+    "age": 14,
+    "who": "an",
+    "pose": "an-relieved",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-01/char/an/an-relieved.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-01/char/an/an-relieved.png"
+    ],
+    "status": "draft-ready",
+    "outfit": "yellow T-shirt, navy shorts, white slide sandals",
+    "prompt": "Use case: identity-preserve. Edit ONE full-body transparent chibi visual novel sprite. Reference1 supplies ONLY the pose, expression and props. Reference2 is the corrected 14-year-old An and is the strict design authority for face, hair, age, compact CHIBI anatomy, exact outfit, body proportions and rendering. Recreate reference2 in this expression/pose: relieved expression, soft reassuring smile and one hand resting over the chest. Outfit MUST remain yellow T-shirt, navy shorts, white slide sandals; do not copy the old clothes from reference1. Match reference2 closely: cute balanced short chibi limbs and harmonious large head, no elongated anime legs/torso or tiny head. Keep same face age and recognizable identity. Preserve all original gesture props, natural correct hands, no new props. Warm brown outlines, soft pastel 2D cel shading. Entire body and feet within frame with transparent margins, single character. Genuinely transparent background; no text, labels, other characters, background, ground ellipse, glow or shadow.",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-01/char/an/an-relieved.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/14-an-neutral.png"
+    ],
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-da418c79-6df5-4191-b5ee-34048c0f731b.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/14-an-relieved.png"
+  },
+  {
+    "id": "14-an-thinking",
+    "kind": "sprite",
+    "chapter": 1,
+    "age": 14,
+    "who": "an",
+    "pose": "an-thinking",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-01/char/an/an-thinking.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-01/char/an/an-thinking.png"
+    ],
+    "status": "draft-ready",
+    "outfit": "yellow T-shirt, navy shorts, white slide sandals",
+    "prompt": "Use case: identity-preserve. Edit ONE full-body transparent chibi visual novel sprite. Reference1 supplies ONLY the pose, expression and props. Reference2 is the corrected 14-year-old An and is the strict design authority for face, hair, age, compact CHIBI anatomy, exact outfit, body proportions and rendering. Recreate reference2 in this expression/pose: thoughtful expression, one hand gently at chin, eyebrows reflecting consideration. Outfit MUST remain yellow T-shirt, navy shorts, white slide sandals; do not copy the old clothes from reference1. Match reference2 closely: cute balanced short chibi limbs and harmonious large head, no elongated anime legs/torso or tiny head. Keep same face age and recognizable identity. Preserve all original gesture props, natural correct hands, no new props. Warm brown outlines, soft pastel 2D cel shading. Entire body and feet within frame with transparent margins, single character. Genuinely transparent background; no text, labels, other characters, background, ground ellipse, glow or shadow.",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-01/char/an/an-thinking.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/14-an-neutral.png"
+    ],
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-9d955d23-09bf-4ea0-922c-6876afbf4882.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/14-an-thinking.png"
+  },
+  {
+    "id": "14-an-worried-money",
+    "kind": "sprite",
+    "chapter": 1,
+    "age": 14,
+    "who": "an",
+    "pose": "an-worried-money",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-01/char/an/an-worried-money.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-01/char/an/an-worried-money.png"
+    ],
+    "status": "draft-ready",
+    "outfit": "yellow T-shirt, navy shorts, white slide sandals",
+    "prompt": "Use case: identity-preserve. Edit ONE full-body transparent chibi visual novel sprite. Reference1 supplies ONLY the pose, expression and props. Reference2 is the corrected 14-year-old An and is the strict design authority for face, hair, age, compact CHIBI anatomy, exact outfit, body proportions and rendering. Recreate reference2 in this expression/pose: worried expression with slightly raised inward eyebrows and small open mouth, holding the original small green banknotes with both hands at chest level. Outfit MUST remain yellow T-shirt, navy shorts, white slide sandals; do not copy the old clothes from reference1. Match reference2 closely: cute balanced short chibi limbs and harmonious large head, no elongated anime legs/torso or tiny head. Keep same face age and recognizable identity. Preserve all original gesture props, natural correct hands, no new props. Warm brown outlines, soft pastel 2D cel shading. Entire body and feet within frame with transparent margins, single character. Genuinely transparent background; no text, labels, other characters, background, ground ellipse, glow or shadow.",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-01/char/an/an-worried-money.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/14-an-neutral.png"
+    ],
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-0a120a9f-4bf4-4d95-8f1c-da7dd6398890.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/14-an-worried-money.png"
+  },
+  {
+    "id": "adult-me-concerned",
+    "kind": "sprite",
+    "chapter": 1,
+    "age": 14,
+    "who": "me",
+    "pose": "me-concerned",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-01/char/me/me-concerned.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-01/char/me/me-concerned.png"
+    ],
+    "status": "keep-original"
+  },
+  {
+    "id": "adult-me-explaining",
+    "kind": "sprite",
+    "chapter": 1,
+    "age": 14,
+    "who": "me",
+    "pose": "me-explaining",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-01/char/me/me-explaining.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-01/char/me/me-explaining.png"
+    ],
+    "status": "keep-original"
+  },
+  {
+    "id": "adult-me-neutral",
+    "kind": "sprite",
+    "chapter": 1,
+    "age": 14,
+    "who": "me",
+    "pose": "me-neutral",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-01/char/me/me-neutral.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-01/char/me/me-neutral.png"
+    ],
+    "status": "keep-original",
+    "previousDraft": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-f4b93596-240a-4f5c-8304-bc880223a20d.png"
+  },
+  {
+    "id": "14-minh-inviting",
+    "kind": "sprite",
+    "chapter": 1,
+    "age": 14,
+    "who": "minh",
+    "pose": "minh-inviting",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-01/char/minh/minh-inviting.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-01/char/minh/minh-inviting.png"
+    ],
+    "status": "draft-ready",
+    "outfit": "navy polo, beige shorts, white sneakers, his existing watch",
+    "prompt": "Use case: identity-preserve. Edit ONE full-body transparent chibi visual novel sprite. Reference1 supplies ONLY the pose, expression and props. Reference2 is the corrected 14-year-old Minh and is the strict design authority for face, hair, age, compact CHIBI anatomy, exact outfit, body proportions and rendering. Recreate reference2 in this expression/pose: friendly inviting expression, one hand on hip and the other gesturing with a thumb over the shoulder as in reference1. Outfit MUST remain navy polo, beige shorts, white sneakers, his existing watch; do not copy the old clothes from reference1. Match reference2 closely: cute balanced short chibi limbs and harmonious large head, no elongated anime legs/torso or tiny head. Keep same face age and recognizable identity. Preserve all original gesture props, natural correct hands, no new props. Warm brown outlines, soft pastel 2D cel shading. Entire body and feet within frame with transparent margins, single character. Genuinely transparent background; no text, labels, other characters, background, ground ellipse, glow or shadow.",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-01/char/minh/minh-inviting.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/14-minh-neutral.png"
+    ],
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-2dc2d378-a0af-430f-9249-55eb508e7032.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/14-minh-inviting.png"
+  },
+  {
+    "id": "14-minh-neutral",
+    "kind": "sprite",
+    "chapter": 1,
+    "age": 14,
+    "who": "minh",
+    "pose": "minh-neutral",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-01/char/minh/minh-neutral.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-01/char/minh/minh-neutral.png"
+    ],
+    "status": "draft-ready",
+    "previousDraft": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-c57e56b9-126b-4015-b4a3-d9014313295f.png",
+    "outfit": "navy polo, beige shorts, white sneakers, his existing watch",
+    "prompt": "Use case: identity-preserve. Produce ONE full-body transparent chibi visual-novel sprite of Minh aged 14. Reference 1 is the NEW APPROVED DIRECTION age design sheet: take the character labeled 'Minh · 14' with its exact new outfit, identity and compact chibi style. Reference 2 is the original sprite for identity and neutral pose only, not for outfit or age. Outfit: navy polo, beige shorts, white sneakers, his existing watch. Keep recognizable neat swept black hair and navy identity. Balanced CHIBI proportions, head and short body harmonious, about 3.5 heads tall, no long skinny legs or stretched anime anatomy, no tiny head. Face reads as a young adolescent, youthful but not a toddler. Neutral relaxed stance with arms resting naturally, friendly closed-mouth smile. Keep warm brown linework, soft pastel shading and polished 2D cartoon style of the sheet. Single character, full body and feet entirely visible, centered with transparent margins. No title, labels, text, other characters, background, ground ellipse, glow or cast shadow. Genuinely transparent background.",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/chibi-age-design.png",
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-01/char/minh/minh-neutral.png"
+    ],
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-9cc76b44-28eb-4a64-aa30-71cceb14a9e8.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/14-minh-neutral.png"
+  },
+  {
+    "id": "chapter-01/scene/sc01-receiving-allowance.png",
+    "kind": "scene",
+    "chapter": 1,
+    "age": 14,
+    "who": "scene",
+    "pose": "sc01-receiving-allowance",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-01/scene/sc01-receiving-allowance.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-01/scene/sc01-receiving-allowance.png"
+    ],
+    "status": "draft-ready",
+    "companion": "me",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-01/scene/sc01-receiving-allowance.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/14-an-neutral.png",
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-01/char/me/me-neutral.png"
+    ],
+    "prompt": "Use case: identity-preserve. Edit this ONE existing 16:9 landscape full-bleed visual-novel scene, chapter 1, sc01-receiving-allowance. Reference1 is the original scene and is the strict authority for environment, camera, character count, positions, facial expressions, actions, hands interacting with props and the moment in the story. Reference2 is corrected AN at age14; reference3 is the ORIGINAL ADULT companion and must stay visually stable.\nReplace ONLY the age design and clothing of An with the corrected compact CHIBI designs from the sprite references. An outfit: yellow T-shirt, navy shorts, white slide sandals. Use new sprite face/hair/body proportions and exact new clothes, but retain original scene expression, pose and action. Keep chibi rendering: harmonious large heads and compact balanced limbs, no stretched anime bodies or elongated skinny legs. \nCRITICAL SCALE: adult mother/teacher/staff retain their ORIGINAL adult size, face, clothes and body proportions from reference1; do NOT make adults taller, bigger, longer-legged or older as teenagers become older. An and Minh are same-age peers with comparable standing heights. At age14, teenagers should be noticeably shorter than an adult (roughly85% at the same depth). Do not depict late teens as small primary-school children. Respect seated vs standing pose and perspective rather than scaling adults. Keep the adult head and body in the original scene position and scale.\nPreserve the background architecture, furniture, lighting, palette and all existing learning props. Keep the original number of people and original story action; no extra objects, no new outcome, no money transaction that was not in original. Do not neutralize expressive original scene faces. Maintain warm kawaii 2D cartoon with brown outlines and soft pastel shading. Full-bleed landscape16:9, no border, no panels, no labels, no speech bubbles, no readable text, no logos/watermarks. Existing papers/screens stay blank for UI. Coherent anatomy, hands, occlusion and perspective.",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-675f70d2-b2fd-4bbd-9a69-5eb48107f245.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-scenes/chapter-01-sc01-receiving-allowance.png"
+  },
+  {
+    "id": "chapter-01/scene/sc02-headphone-temptation.png",
+    "kind": "scene",
+    "chapter": 1,
+    "age": 14,
+    "who": "scene",
+    "pose": "sc02-headphone-temptation",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-01/scene/sc02-headphone-temptation.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-01/scene/sc02-headphone-temptation.png"
+    ],
+    "status": "draft-ready",
+    "companion": "minh",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-01/scene/sc02-headphone-temptation.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/14-an-neutral.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/14-minh-neutral.png"
+    ],
+    "prompt": "Use case: identity-preserve. Edit this ONE existing 16:9 landscape full-bleed visual-novel scene, chapter 1, sc02-headphone-temptation. Reference1 is the original scene and is the strict authority for environment, camera, character count, positions, facial expressions, actions, hands interacting with props and the moment in the story. Reference2 is corrected AN at age14; reference3 is corrected MINH of the SAME age.\nReplace ONLY the age design and clothing of An and Minh with the corrected compact CHIBI designs from the sprite references. An outfit: yellow T-shirt, navy shorts, white slide sandals. Minh outfit: navy polo, beige shorts, white sneakers, his existing watch. Use new sprite face/hair/body proportions and exact new clothes, but retain original scene expression, pose and action. Keep chibi rendering: harmonious large heads and compact balanced limbs, no stretched anime bodies or elongated skinny legs. \nCRITICAL SCALE: adult mother/teacher/staff retain their ORIGINAL adult size, face, clothes and body proportions from reference1; do NOT make adults taller, bigger, longer-legged or older as teenagers become older. An and Minh are same-age peers with comparable standing heights. At age14, teenagers should be noticeably shorter than an adult (roughly85% at the same depth). Do not depict late teens as small primary-school children. Respect seated vs standing pose and perspective rather than scaling adults. Keep the adult head and body in the original scene position and scale.\nPreserve the background architecture, furniture, lighting, palette and all existing learning props. Keep the original number of people and original story action; no extra objects, no new outcome, no money transaction that was not in original. Do not neutralize expressive original scene faces. Maintain warm kawaii 2D cartoon with brown outlines and soft pastel shading. Full-bleed landscape16:9, no border, no panels, no labels, no speech bubbles, no readable text, no logos/watermarks. Existing papers/screens stay blank for UI. Coherent anatomy, hands, occlusion and perspective.",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-14aafa92-bad1-4784-be45-3ffbcb0c793e.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-scenes/chapter-01-sc02-headphone-temptation.png"
+  },
+  {
+    "id": "chapter-01/scene/sc03-checking-priorities.png",
+    "kind": "scene",
+    "chapter": 1,
+    "age": 14,
+    "who": "scene",
+    "pose": "sc03-checking-priorities",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-01/scene/sc03-checking-priorities.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-01/scene/sc03-checking-priorities.png"
+    ],
+    "status": "draft-ready",
+    "companion": "me",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-01/scene/sc03-checking-priorities.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/14-an-neutral.png",
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-01/char/me/me-neutral.png"
+    ],
+    "prompt": "Use case: identity-preserve. Edit this ONE existing 16:9 landscape full-bleed visual-novel scene, chapter 1, sc03-checking-priorities. Reference1 is the original scene and is the strict authority for environment, camera, character count, positions, facial expressions, actions, hands interacting with props and the moment in the story. Reference2 is corrected AN at age14; reference3 is the ORIGINAL ADULT companion and must stay visually stable.\nReplace ONLY the age design and clothing of An with the corrected compact CHIBI designs from the sprite references. An outfit: yellow T-shirt, navy shorts, white slide sandals. Use new sprite face/hair/body proportions and exact new clothes, but retain original scene expression, pose and action. Keep chibi rendering: harmonious large heads and compact balanced limbs, no stretched anime bodies or elongated skinny legs. \nCRITICAL SCALE: adult mother/teacher/staff retain their ORIGINAL adult size, face, clothes and body proportions from reference1; do NOT make adults taller, bigger, longer-legged or older as teenagers become older. An and Minh are same-age peers with comparable standing heights. At age14, teenagers should be noticeably shorter than an adult (roughly85% at the same depth). Do not depict late teens as small primary-school children. Respect seated vs standing pose and perspective rather than scaling adults. Keep the adult head and body in the original scene position and scale.\nPreserve the background architecture, furniture, lighting, palette and all existing learning props. Keep the original number of people and original story action; no extra objects, no new outcome, no money transaction that was not in original. Do not neutralize expressive original scene faces. Maintain warm kawaii 2D cartoon with brown outlines and soft pastel shading. Full-bleed landscape16:9, no border, no panels, no labels, no speech bubbles, no readable text, no logos/watermarks. Existing papers/screens stay blank for UI. Coherent anatomy, hands, occlusion and perspective.",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-62be1f58-8dad-44dd-bf38-a1771deb8ff1.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-scenes/chapter-01-sc03-checking-priorities.png"
+  },
+  {
+    "id": "16-an-neutral",
+    "kind": "sprite",
+    "chapter": 2,
+    "age": 16,
+    "who": "an",
+    "pose": "an-neutral",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/char/an/an-neutral.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-02/char/an/an-neutral.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-04/char/an/an-neutral.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-05/char/an/an-neutral.png"
+    ],
+    "status": "draft-ready",
+    "previousDraft": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-14a8eefb-97d3-4293-9690-5bdbcf0d2153.png",
+    "outfit": "mustard short-sleeved overshirt over a white T-shirt, dark blue straight jeans, simple white sneakers",
+    "prompt": "Use case: identity-preserve. Produce ONE full-body transparent chibi visual-novel sprite of An aged 16. Reference 1 is the NEW APPROVED DIRECTION age design sheet: take the character labeled 'An · 16' with its exact new outfit, identity and compact chibi style. Reference 2 is the original sprite for identity and neutral pose only, not for outfit or age. Outfit: mustard short-sleeved overshirt over a white T-shirt, dark blue straight jeans, simple white sneakers. Keep recognizable brown tousled side-swept hair and mustard yellow identity. Balanced CHIBI proportions, head and short body harmonious, about 3.5 heads tall, no long skinny legs or stretched anime anatomy, no tiny head. Face reads as a high-school teenager, slightly less round face and a little broader shoulders than the 14-year-old design. Neutral relaxed stance with arms resting naturally, friendly closed-mouth smile. Keep warm brown linework, soft pastel shading and polished 2D cartoon style of the sheet. Single character, full body and feet entirely visible, centered with transparent margins. No title, labels, text, other characters, background, ground ellipse, glow or cast shadow. Genuinely transparent background.",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/chibi-age-design.png",
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/char/an/an-neutral.png"
+    ],
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-cbb33142-40e0-447e-aec9-a0acd6781747.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/16-an-neutral.png"
+  },
+  {
+    "id": "16-an-relieved",
+    "kind": "sprite",
+    "chapter": 2,
+    "age": 16,
+    "who": "an",
+    "pose": "an-relieved",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/char/an/an-relieved.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-02/char/an/an-relieved.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-04/char/an/an-relieved.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-05/char/an/an-relieved.png"
+    ],
+    "status": "draft-ready",
+    "outfit": "mustard short-sleeved overshirt over a white T-shirt, dark blue straight jeans, simple white sneakers",
+    "prompt": "Use case: identity-preserve. Edit ONE full-body transparent chibi visual novel sprite. Reference1 supplies ONLY the pose, expression and props. Reference2 is the corrected 16-year-old An and is the strict design authority for face, hair, age, compact CHIBI anatomy, exact outfit, body proportions and rendering. Recreate reference2 in this expression/pose: relieved expression, soft reassuring smile and one hand resting over the chest. Outfit MUST remain mustard short-sleeved overshirt over a white T-shirt, dark blue straight jeans, simple white sneakers; do not copy the old clothes from reference1. Match reference2 closely: cute balanced short chibi limbs and harmonious large head, no elongated anime legs/torso or tiny head. Keep same face age and recognizable identity. Preserve all original gesture props, natural correct hands, no new props. Warm brown outlines, soft pastel 2D cel shading. Entire body and feet within frame with transparent margins, single character. Genuinely transparent background; no text, labels, other characters, background, ground ellipse, glow or shadow.",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/char/an/an-relieved.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/16-an-neutral.png"
+    ],
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-cb87f966-3b88-4021-95b0-fccf7cfc7732.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/16-an-relieved.png"
+  },
+  {
+    "id": "16-an-thinking",
+    "kind": "sprite",
+    "chapter": 2,
+    "age": 16,
+    "who": "an",
+    "pose": "an-thinking",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/char/an/an-thinking.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-02/char/an/an-thinking.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-04/char/an/an-thinking.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-05/char/an/an-thinking.png"
+    ],
+    "status": "draft-ready",
+    "outfit": "mustard short-sleeved overshirt over a white T-shirt, dark blue straight jeans, simple white sneakers",
+    "prompt": "Use case: identity-preserve. Edit ONE full-body transparent chibi visual novel sprite. Reference1 supplies ONLY the pose, expression and props. Reference2 is the corrected 16-year-old An and is the strict design authority for face, hair, age, compact CHIBI anatomy, exact outfit, body proportions and rendering. Recreate reference2 in this expression/pose: thoughtful expression, one hand gently at chin, eyebrows reflecting consideration. Outfit MUST remain mustard short-sleeved overshirt over a white T-shirt, dark blue straight jeans, simple white sneakers; do not copy the old clothes from reference1. Match reference2 closely: cute balanced short chibi limbs and harmonious large head, no elongated anime legs/torso or tiny head. Keep same face age and recognizable identity. Preserve all original gesture props, natural correct hands, no new props. Warm brown outlines, soft pastel 2D cel shading. Entire body and feet within frame with transparent margins, single character. Genuinely transparent background; no text, labels, other characters, background, ground ellipse, glow or shadow.",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/char/an/an-thinking.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/16-an-neutral.png"
+    ],
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-42954c8d-dc46-4cb1-8510-646661cec0fe.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/16-an-thinking.png"
+  },
+  {
+    "id": "16-an-worried-money",
+    "kind": "sprite",
+    "chapter": 2,
+    "age": 16,
+    "who": "an",
+    "pose": "an-worried-money",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/char/an/an-worried-money.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-02/char/an/an-worried-money.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-04/char/an/an-worried-money.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-05/char/an/an-worried-money.png"
+    ],
+    "status": "draft-ready",
+    "outfit": "mustard short-sleeved overshirt over a white T-shirt, dark blue straight jeans, simple white sneakers",
+    "prompt": "Use case: identity-preserve. Edit ONE full-body transparent chibi visual novel sprite. Reference1 supplies ONLY the pose, expression and props. Reference2 is the corrected 16-year-old An and is the strict design authority for face, hair, age, compact CHIBI anatomy, exact outfit, body proportions and rendering. Recreate reference2 in this expression/pose: worried expression with slightly raised inward eyebrows and small open mouth, holding the original small green banknotes with both hands at chest level. Outfit MUST remain mustard short-sleeved overshirt over a white T-shirt, dark blue straight jeans, simple white sneakers; do not copy the old clothes from reference1. Match reference2 closely: cute balanced short chibi limbs and harmonious large head, no elongated anime legs/torso or tiny head. Keep same face age and recognizable identity. Preserve all original gesture props, natural correct hands, no new props. Warm brown outlines, soft pastel 2D cel shading. Entire body and feet within frame with transparent margins, single character. Genuinely transparent background; no text, labels, other characters, background, ground ellipse, glow or shadow.",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/char/an/an-worried-money.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/16-an-neutral.png"
+    ],
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-152ea11a-1bc3-4ee3-a1b7-48a224a8cde5.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/16-an-worried-money.png"
+  },
+  {
+    "id": "adult-co-linh-encouraging",
+    "kind": "sprite",
+    "chapter": 2,
+    "age": 16,
+    "who": "co-linh",
+    "pose": "co-linh-encouraging",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/char/co-linh/co-linh-encouraging.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-02/char/co-linh/co-linh-encouraging.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-03/char/co-linh/co-linh-encouraging.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-04/char/co-linh/co-linh-encouraging.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-05/char/co-linh/co-linh-encouraging.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-06/char/co-linh/co-linh-encouraging.png"
+    ],
+    "status": "keep-original"
+  },
+  {
+    "id": "adult-co-linh-explaining",
+    "kind": "sprite",
+    "chapter": 2,
+    "age": 16,
+    "who": "co-linh",
+    "pose": "co-linh-explaining",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/char/co-linh/co-linh-explaining.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-02/char/co-linh/co-linh-explaining.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-03/char/co-linh/co-linh-explaining.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-04/char/co-linh/co-linh-explaining.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-05/char/co-linh/co-linh-explaining.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-06/char/co-linh/co-linh-explaining.png"
+    ],
+    "status": "keep-original"
+  },
+  {
+    "id": "adult-co-linh-neutral",
+    "kind": "sprite",
+    "chapter": 2,
+    "age": 16,
+    "who": "co-linh",
+    "pose": "co-linh-neutral",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/char/co-linh/co-linh-neutral.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-02/char/co-linh/co-linh-neutral.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-03/char/co-linh/co-linh-neutral.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-04/char/co-linh/co-linh-neutral.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-05/char/co-linh/co-linh-neutral.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-06/char/co-linh/co-linh-neutral.png"
+    ],
+    "status": "keep-original",
+    "previousDraft": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-de522659-9f77-4d31-9d88-bb3afb969807.png"
+  },
+  {
+    "id": "16-minh-inviting",
+    "kind": "sprite",
+    "chapter": 2,
+    "age": 16,
+    "who": "minh",
+    "pose": "minh-inviting",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/char/minh/minh-inviting.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-02/char/minh/minh-inviting.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-04/char/minh/minh-inviting.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-05/char/minh/minh-inviting.png"
+    ],
+    "status": "draft-ready",
+    "outfit": "navy short-sleeved overshirt over a light tee, beige straight trousers, white sneakers, his existing watch",
+    "prompt": "Use case: identity-preserve. Edit ONE full-body transparent chibi visual novel sprite. Reference1 supplies ONLY the pose, expression and props. Reference2 is the corrected 16-year-old Minh and is the strict design authority for face, hair, age, compact CHIBI anatomy, exact outfit, body proportions and rendering. Recreate reference2 in this expression/pose: friendly inviting expression, one hand on hip and the other gesturing with a thumb over the shoulder as in reference1. Outfit MUST remain navy short-sleeved overshirt over a light tee, beige straight trousers, white sneakers, his existing watch; do not copy the old clothes from reference1. Match reference2 closely: cute balanced short chibi limbs and harmonious large head, no elongated anime legs/torso or tiny head. Keep same face age and recognizable identity. Preserve all original gesture props, natural correct hands, no new props. Warm brown outlines, soft pastel 2D cel shading. Entire body and feet within frame with transparent margins, single character. Genuinely transparent background; no text, labels, other characters, background, ground ellipse, glow or shadow.",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/char/minh/minh-inviting.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/16-minh-neutral.png"
+    ],
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-c6cccfc9-23df-4a18-a83d-60816e3da6dd.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/16-minh-inviting.png"
+  },
+  {
+    "id": "16-minh-neutral",
+    "kind": "sprite",
+    "chapter": 2,
+    "age": 16,
+    "who": "minh",
+    "pose": "minh-neutral",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/char/minh/minh-neutral.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-02/char/minh/minh-neutral.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-04/char/minh/minh-neutral.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-05/char/minh/minh-neutral.png"
+    ],
+    "status": "draft-ready",
+    "previousDraft": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-188a8cba-6cfd-4fc0-ba1e-3de1b0b5fcc9.png",
+    "outfit": "navy short-sleeved overshirt over a light tee, beige straight trousers, white sneakers, his existing watch",
+    "prompt": "Use case: identity-preserve. Produce ONE full-body transparent chibi visual-novel sprite of Minh aged 16. Reference 1 is the NEW APPROVED DIRECTION age design sheet: take the character labeled 'Minh · 16' with its exact new outfit, identity and compact chibi style. Reference 2 is the original sprite for identity and neutral pose only, not for outfit or age. Outfit: navy short-sleeved overshirt over a light tee, beige straight trousers, white sneakers, his existing watch. Keep recognizable neat swept black hair and navy identity. Balanced CHIBI proportions, head and short body harmonious, about 3.5 heads tall, no long skinny legs or stretched anime anatomy, no tiny head. Face reads as a high-school teenager, slightly less round face and a little broader shoulders than the 14-year-old design. Neutral relaxed stance with arms resting naturally, friendly closed-mouth smile. Keep warm brown linework, soft pastel shading and polished 2D cartoon style of the sheet. Single character, full body and feet entirely visible, centered with transparent margins. No title, labels, text, other characters, background, ground ellipse, glow or cast shadow. Genuinely transparent background.",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/chibi-age-design.png",
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/char/minh/minh-neutral.png"
+    ],
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-11a509ef-a438-4f0a-8ba2-9e34e12313ee.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/16-minh-neutral.png"
+  },
+  {
+    "id": "chapter-02/scene/sc01-camp-budget-briefing.png",
+    "kind": "scene",
+    "chapter": 2,
+    "age": 16,
+    "who": "scene",
+    "pose": "sc01-camp-budget-briefing",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/scene/sc01-camp-budget-briefing.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-02/scene/sc01-camp-budget-briefing.png"
+    ],
+    "status": "draft-ready",
+    "companion": "co-linh",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/scene/sc01-camp-budget-briefing.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/16-an-neutral.png",
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/char/co-linh/co-linh-neutral.png"
+    ],
+    "prompt": "Use case: identity-preserve. Edit this ONE existing 16:9 landscape full-bleed visual-novel scene, chapter 2, sc01-camp-budget-briefing. Reference1 is the original scene and is the strict authority for environment, camera, character count, positions, facial expressions, actions, hands interacting with props and the moment in the story. Reference2 is corrected AN at age16; reference3 is the ORIGINAL ADULT companion and must stay visually stable.\nReplace ONLY the age design and clothing of An with the corrected compact CHIBI designs from the sprite references. An outfit: mustard short-sleeved overshirt over a white T-shirt, dark blue straight jeans, simple white sneakers. Use new sprite face/hair/body proportions and exact new clothes, but retain original scene expression, pose and action. Keep chibi rendering: harmonious large heads and compact balanced limbs, no stretched anime bodies or elongated skinny legs. \nCRITICAL SCALE: adult mother/teacher/staff retain their ORIGINAL adult size, face, clothes and body proportions from reference1; do NOT make adults taller, bigger, longer-legged or older as teenagers become older. An and Minh are same-age peers with comparable standing heights. At age16, teenagers should be slightly shorter than an adult (roughly95% at the same depth). Do not depict late teens as small primary-school children. Respect seated vs standing pose and perspective rather than scaling adults. Keep the adult head and body in the original scene position and scale.\nPreserve the background architecture, furniture, lighting, palette and all existing learning props. Keep the original number of people and original story action; no extra objects, no new outcome, no money transaction that was not in original. Do not neutralize expressive original scene faces. Maintain warm kawaii 2D cartoon with brown outlines and soft pastel shading. Full-bleed landscape16:9, no border, no panels, no labels, no speech bubbles, no readable text, no logos/watermarks. Existing papers/screens stay blank for UI. Coherent anatomy, hands, occlusion and perspective.",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-1c690f29-d0f2-4d81-9456-dc4b5bdf6f67.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-scenes/chapter-02-sc01-camp-budget-briefing.png"
+  },
+  {
+    "id": "chapter-02/scene/sc02-dividing-envelopes.png",
+    "kind": "scene",
+    "chapter": 2,
+    "age": 16,
+    "who": "scene",
+    "pose": "sc02-dividing-envelopes",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/scene/sc02-dividing-envelopes.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-02/scene/sc02-dividing-envelopes.png"
+    ],
+    "status": "draft-ready",
+    "companion": "minh",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/scene/sc02-dividing-envelopes.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/16-an-neutral.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/16-minh-neutral.png"
+    ],
+    "prompt": "Use case: identity-preserve. Edit this ONE existing 16:9 landscape full-bleed visual-novel scene, chapter 2, sc02-dividing-envelopes. Reference1 is the original scene and is the strict authority for environment, camera, character count, positions, facial expressions, actions, hands interacting with props and the moment in the story. Reference2 is corrected AN at age16; reference3 is corrected MINH of the SAME age.\nReplace ONLY the age design and clothing of An and Minh with the corrected compact CHIBI designs from the sprite references. An outfit: mustard short-sleeved overshirt over a white T-shirt, dark blue straight jeans, simple white sneakers. Minh outfit: navy short-sleeved overshirt over a light tee, beige straight trousers, white sneakers, his existing watch. Use new sprite face/hair/body proportions and exact new clothes, but retain original scene expression, pose and action. Keep chibi rendering: harmonious large heads and compact balanced limbs, no stretched anime bodies or elongated skinny legs. \nCRITICAL SCALE: adult mother/teacher/staff retain their ORIGINAL adult size, face, clothes and body proportions from reference1; do NOT make adults taller, bigger, longer-legged or older as teenagers become older. An and Minh are same-age peers with comparable standing heights. At age16, teenagers should be slightly shorter than an adult (roughly95% at the same depth). Do not depict late teens as small primary-school children. Respect seated vs standing pose and perspective rather than scaling adults. Keep the adult head and body in the original scene position and scale.\nPreserve the background architecture, furniture, lighting, palette and all existing learning props. Keep the original number of people and original story action; no extra objects, no new outcome, no money transaction that was not in original. Do not neutralize expressive original scene faces. Maintain warm kawaii 2D cartoon with brown outlines and soft pastel shading. Full-bleed landscape16:9, no border, no panels, no labels, no speech bubbles, no readable text, no logos/watermarks. Existing papers/screens stay blank for UI. Coherent anatomy, hands, occlusion and perspective.",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-acb0ae08-4de6-4008-b963-1395212cfd08.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-scenes/chapter-02-sc02-dividing-envelopes.png"
+  },
+  {
+    "id": "chapter-02/scene/sc03-laptop-goal-planning.png",
+    "kind": "scene",
+    "chapter": 2,
+    "age": 16,
+    "who": "scene",
+    "pose": "sc03-laptop-goal-planning",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/scene/sc03-laptop-goal-planning.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-02/scene/sc03-laptop-goal-planning.png"
+    ],
+    "status": "draft-ready",
+    "companion": "co-linh",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/scene/sc03-laptop-goal-planning.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/16-an-neutral.png",
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/char/co-linh/co-linh-neutral.png"
+    ],
+    "prompt": "Use case: identity-preserve. Edit this ONE existing 16:9 landscape full-bleed visual-novel scene, chapter 2, sc03-laptop-goal-planning. Reference1 is the original scene and is the strict authority for environment, camera, character count, positions, facial expressions, actions, hands interacting with props and the moment in the story. Reference2 is corrected AN at age16; reference3 is the ORIGINAL ADULT companion and must stay visually stable.\nReplace ONLY the age design and clothing of An with the corrected compact CHIBI designs from the sprite references. An outfit: mustard short-sleeved overshirt over a white T-shirt, dark blue straight jeans, simple white sneakers. Use new sprite face/hair/body proportions and exact new clothes, but retain original scene expression, pose and action. Keep chibi rendering: harmonious large heads and compact balanced limbs, no stretched anime bodies or elongated skinny legs. \nCRITICAL SCALE: adult mother/teacher/staff retain their ORIGINAL adult size, face, clothes and body proportions from reference1; do NOT make adults taller, bigger, longer-legged or older as teenagers become older. An and Minh are same-age peers with comparable standing heights. At age16, teenagers should be slightly shorter than an adult (roughly95% at the same depth). Do not depict late teens as small primary-school children. Respect seated vs standing pose and perspective rather than scaling adults. Keep the adult head and body in the original scene position and scale.\nPreserve the background architecture, furniture, lighting, palette and all existing learning props. Keep the original number of people and original story action; no extra objects, no new outcome, no money transaction that was not in original. Do not neutralize expressive original scene faces. Maintain warm kawaii 2D cartoon with brown outlines and soft pastel shading. Full-bleed landscape16:9, no border, no panels, no labels, no speech bubbles, no readable text, no logos/watermarks. Existing papers/screens stay blank for UI. Coherent anatomy, hands, occlusion and perspective.",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-de0aade5-7f38-4dca-a14a-2b52d74b7320.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-scenes/chapter-02-sc03-laptop-goal-planning.png"
+  },
+  {
+    "id": "chapter-02/scene/sc04-bicycle-surprise.png",
+    "kind": "scene",
+    "chapter": 2,
+    "age": 16,
+    "who": "scene",
+    "pose": "sc04-bicycle-surprise",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/scene/sc04-bicycle-surprise.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-02/scene/sc04-bicycle-surprise.png"
+    ],
+    "status": "draft-ready",
+    "companion": "minh",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/scene/sc04-bicycle-surprise.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/16-an-neutral.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/16-minh-neutral.png"
+    ],
+    "prompt": "Use case: identity-preserve. Edit this ONE existing 16:9 landscape full-bleed visual-novel scene, chapter 2, sc04-bicycle-surprise. Reference1 is the original scene and is the strict authority for environment, camera, character count, positions, facial expressions, actions, hands interacting with props and the moment in the story. Reference2 is corrected AN at age16; reference3 is corrected MINH of the SAME age.\nReplace ONLY the age design and clothing of An and Minh with the corrected compact CHIBI designs from the sprite references. An outfit: mustard short-sleeved overshirt over a white T-shirt, dark blue straight jeans, simple white sneakers. Minh outfit: navy short-sleeved overshirt over a light tee, beige straight trousers, white sneakers, his existing watch. Use new sprite face/hair/body proportions and exact new clothes, but retain original scene expression, pose and action. Keep chibi rendering: harmonious large heads and compact balanced limbs, no stretched anime bodies or elongated skinny legs. \nCRITICAL SCALE: adult mother/teacher/staff retain their ORIGINAL adult size, face, clothes and body proportions from reference1; do NOT make adults taller, bigger, longer-legged or older as teenagers become older. An and Minh are same-age peers with comparable standing heights. At age16, teenagers should be slightly shorter than an adult (roughly95% at the same depth). Do not depict late teens as small primary-school children. Respect seated vs standing pose and perspective rather than scaling adults. Keep the adult head and body in the original scene position and scale.\nPreserve the background architecture, furniture, lighting, palette and all existing learning props. Keep the original number of people and original story action; no extra objects, no new outcome, no money transaction that was not in original. Do not neutralize expressive original scene faces. Maintain warm kawaii 2D cartoon with brown outlines and soft pastel shading. Full-bleed landscape16:9, no border, no panels, no labels, no speech bubbles, no readable text, no logos/watermarks. Existing papers/screens stay blank for UI. Coherent anatomy, hands, occlusion and perspective.",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-647df0f3-f82f-450e-86e9-a80195504eec.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-scenes/chapter-02-sc04-bicycle-surprise.png"
+  },
+  {
+    "id": "chapter-02/scene/sc05-revising-budget.png",
+    "kind": "scene",
+    "chapter": 2,
+    "age": 16,
+    "who": "scene",
+    "pose": "sc05-revising-budget",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/scene/sc05-revising-budget.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-02/scene/sc05-revising-budget.png"
+    ],
+    "status": "draft-ready",
+    "companion": "co-linh",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/scene/sc05-revising-budget.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/16-an-neutral.png",
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/char/co-linh/co-linh-neutral.png"
+    ],
+    "prompt": "Use case: identity-preserve. Edit this ONE existing 16:9 landscape full-bleed visual-novel scene, chapter 2, sc05-revising-budget. Reference1 is the original scene and is the strict authority for environment, camera, character count, positions, facial expressions, actions, hands interacting with props and the moment in the story. Reference2 is corrected AN at age16; reference3 is the ORIGINAL ADULT companion and must stay visually stable.\nReplace ONLY the age design and clothing of An with the corrected compact CHIBI designs from the sprite references. An outfit: mustard short-sleeved overshirt over a white T-shirt, dark blue straight jeans, simple white sneakers. Use new sprite face/hair/body proportions and exact new clothes, but retain original scene expression, pose and action. Keep chibi rendering: harmonious large heads and compact balanced limbs, no stretched anime bodies or elongated skinny legs. \nCRITICAL SCALE: adult mother/teacher/staff retain their ORIGINAL adult size, face, clothes and body proportions from reference1; do NOT make adults taller, bigger, longer-legged or older as teenagers become older. An and Minh are same-age peers with comparable standing heights. At age16, teenagers should be slightly shorter than an adult (roughly95% at the same depth). Do not depict late teens as small primary-school children. Respect seated vs standing pose and perspective rather than scaling adults. Keep the adult head and body in the original scene position and scale.\nPreserve the background architecture, furniture, lighting, palette and all existing learning props. Keep the original number of people and original story action; no extra objects, no new outcome, no money transaction that was not in original. Do not neutralize expressive original scene faces. Maintain warm kawaii 2D cartoon with brown outlines and soft pastel shading. Full-bleed landscape16:9, no border, no panels, no labels, no speech bubbles, no readable text, no logos/watermarks. Existing papers/screens stay blank for UI. Coherent anatomy, hands, occlusion and perspective.",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-b23561d7-2c24-4cd6-bcad-a16d61a10322.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-scenes/chapter-02-sc05-revising-budget.png"
+  },
+  {
+    "id": "17-an-neutral",
+    "kind": "sprite",
+    "chapter": 3,
+    "age": 17,
+    "who": "an",
+    "pose": "an-neutral",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-03/char/an/an-neutral.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-03/char/an/an-neutral.png"
+    ],
+    "status": "draft-ready",
+    "previousDraft": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-d0363b37-421b-4b9b-a52b-3974334e3d69.png",
+    "outfit": "muted yellow polo, dark blue straight trousers, white sneakers",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/17-an-neutral.png",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-4a3682e7-2c3f-458b-ab64-45434cec76cd.png"
+  },
+  {
+    "id": "17-an-relieved",
+    "kind": "sprite",
+    "chapter": 3,
+    "age": 17,
+    "who": "an",
+    "pose": "an-relieved",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-03/char/an/an-relieved.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-03/char/an/an-relieved.png"
+    ],
+    "status": "draft-ready",
+    "outfit": "muted yellow polo, dark blue straight trousers, white sneakers",
+    "prompt": "Use case: identity-preserve. Edit ONE full-body transparent chibi visual novel sprite. Reference1 supplies ONLY the pose, expression and props. Reference2 is the corrected 17-year-old An and is the strict design authority for face, hair, age, compact CHIBI anatomy, exact outfit, body proportions and rendering. Recreate reference2 in this expression/pose: relieved expression, soft reassuring smile and one hand resting over the chest. Outfit MUST remain muted yellow polo, dark blue straight trousers, white sneakers; do not copy the old clothes from reference1. Match reference2 closely: cute balanced short chibi limbs and harmonious large head, no elongated anime legs/torso or tiny head. Keep same face age and recognizable identity. Preserve all original gesture props, natural correct hands, no new props. Warm brown outlines, soft pastel 2D cel shading. Entire body and feet within frame with transparent margins, single character. Genuinely transparent background; no text, labels, other characters, background, ground ellipse, glow or shadow.",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-03/char/an/an-relieved.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/17-an-neutral.png"
+    ],
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-7aacebad-425e-444d-baf8-6c69c50d562d.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/17-an-relieved.png"
+  },
+  {
+    "id": "17-an-thinking",
+    "kind": "sprite",
+    "chapter": 3,
+    "age": 17,
+    "who": "an",
+    "pose": "an-thinking",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-03/char/an/an-thinking.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-03/char/an/an-thinking.png"
+    ],
+    "status": "draft-ready",
+    "outfit": "muted yellow polo, dark blue straight trousers, white sneakers",
+    "prompt": "Use case: identity-preserve. Edit ONE full-body transparent chibi visual novel sprite. Reference1 supplies ONLY the pose, expression and props. Reference2 is the corrected 17-year-old An and is the strict design authority for face, hair, age, compact CHIBI anatomy, exact outfit, body proportions and rendering. Recreate reference2 in this expression/pose: thoughtful expression, one hand gently at chin, eyebrows reflecting consideration. Outfit MUST remain muted yellow polo, dark blue straight trousers, white sneakers; do not copy the old clothes from reference1. Match reference2 closely: cute balanced short chibi limbs and harmonious large head, no elongated anime legs/torso or tiny head. Keep same face age and recognizable identity. Preserve all original gesture props, natural correct hands, no new props. Warm brown outlines, soft pastel 2D cel shading. Entire body and feet within frame with transparent margins, single character. Genuinely transparent background; no text, labels, other characters, background, ground ellipse, glow or shadow.",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-03/char/an/an-thinking.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/17-an-neutral.png"
+    ],
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-3ce45ee2-e0d1-45b5-ac21-225892c4cb17.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/17-an-thinking.png"
+  },
+  {
+    "id": "17-an-worried-money",
+    "kind": "sprite",
+    "chapter": 3,
+    "age": 17,
+    "who": "an",
+    "pose": "an-worried-money",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-03/char/an/an-worried-money.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-03/char/an/an-worried-money.png"
+    ],
+    "status": "draft-ready",
+    "outfit": "muted yellow polo, dark blue straight trousers, white sneakers",
+    "prompt": "Use case: identity-preserve. Edit ONE full-body transparent chibi visual novel sprite. Reference1 supplies ONLY the pose, expression and props. Reference2 is the corrected 17-year-old An and is the strict design authority for face, hair, age, compact CHIBI anatomy, exact outfit, body proportions and rendering. Recreate reference2 in this expression/pose: worried expression with slightly raised inward eyebrows and small open mouth, holding the original small green banknotes with both hands at chest level. Outfit MUST remain muted yellow polo, dark blue straight trousers, white sneakers; do not copy the old clothes from reference1. Match reference2 closely: cute balanced short chibi limbs and harmonious large head, no elongated anime legs/torso or tiny head. Keep same face age and recognizable identity. Preserve all original gesture props, natural correct hands, no new props. Warm brown outlines, soft pastel 2D cel shading. Entire body and feet within frame with transparent margins, single character. Genuinely transparent background; no text, labels, other characters, background, ground ellipse, glow or shadow.",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-03/char/an/an-worried-money.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/17-an-neutral.png"
+    ],
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-4d24a60e-b106-4a68-a111-2e880ff3f8c7.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/17-an-worried-money.png"
+  },
+  {
+    "id": "17-minh-inviting",
+    "kind": "sprite",
+    "chapter": 3,
+    "age": 17,
+    "who": "minh",
+    "pose": "minh-inviting",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-03/char/minh/minh-inviting.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-03/char/minh/minh-inviting.png"
+    ],
+    "status": "draft-ready",
+    "outfit": "navy polo, beige straight trousers, white sneakers, his existing watch",
+    "prompt": "Use case: identity-preserve. Edit ONE full-body transparent chibi visual novel sprite. Reference1 supplies ONLY the pose, expression and props. Reference2 is the corrected 17-year-old Minh and is the strict design authority for face, hair, age, compact CHIBI anatomy, exact outfit, body proportions and rendering. Recreate reference2 in this expression/pose: friendly inviting expression, one hand on hip and the other gesturing with a thumb over the shoulder as in reference1. Outfit MUST remain navy polo, beige straight trousers, white sneakers, his existing watch; do not copy the old clothes from reference1. Match reference2 closely: cute balanced short chibi limbs and harmonious large head, no elongated anime legs/torso or tiny head. Keep same face age and recognizable identity. Preserve all original gesture props, natural correct hands, no new props. Warm brown outlines, soft pastel 2D cel shading. Entire body and feet within frame with transparent margins, single character. Genuinely transparent background; no text, labels, other characters, background, ground ellipse, glow or shadow.",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-03/char/minh/minh-inviting.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/17-minh-neutral.png"
+    ],
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-63ebc071-95b0-45b7-bdcd-48aea67c449b.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/17-minh-inviting.png"
+  },
+  {
+    "id": "17-minh-neutral",
+    "kind": "sprite",
+    "chapter": 3,
+    "age": 17,
+    "who": "minh",
+    "pose": "minh-neutral",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-03/char/minh/minh-neutral.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-03/char/minh/minh-neutral.png"
+    ],
+    "status": "draft-ready",
+    "previousDraft": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-d1136944-d81c-4089-a314-fb08280992d5.png",
+    "outfit": "navy polo, beige straight trousers, white sneakers, his existing watch",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/17-minh-neutral.png",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-650e2691-f275-4b2b-a911-6cb598a79c89.png",
+    "prompt": "Use case: identity-preserve. Create ONE transparent full-body CHIBI sprite of Minh at age 17. Reference1 shows his navy-shirt age outfits; take Minh 17 (bottom row, third column). Reference2 is the new Minh16 sprite and sets the compact chibi style. Outfit at17: navy polo, beige straight long trousers, white sneakers and wristwatch. Keep black swept hair and navy identity. Mildly less rounded cheeks, a slightly more defined jaw and shoulders than Minh16 while staying cute compact CHIBI, about3.5 heads tall with balanced short limbs. No stretched anime body or long skinny legs. Full body including feet, relaxed neutral standing pose, friendly smile. Warm brown outlines and soft pastel 2D shading. Single isolated character, no other people, labels, text, scene, ground ellipse, shadow or glow. Genuinely transparent background."
+  },
+  {
+    "id": "adult-tu-van-neutral",
+    "kind": "sprite",
+    "chapter": 3,
+    "age": 17,
+    "who": "tu-van",
+    "pose": "tu-van-neutral",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-03/char/tu-van/tu-van-neutral.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-03/char/tu-van/tu-van-neutral.png"
+    ],
+    "status": "keep-original",
+    "previousDraft": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-349fe2a3-0bce-480c-b1fa-701201890176.png"
+  },
+  {
+    "id": "adult-tu-van-presenting",
+    "kind": "sprite",
+    "chapter": 3,
+    "age": 17,
+    "who": "tu-van",
+    "pose": "tu-van-presenting",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-03/char/tu-van/tu-van-presenting.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-03/char/tu-van/tu-van-presenting.png"
+    ],
+    "status": "keep-original"
+  },
+  {
+    "id": "chapter-03/scene/sc01-three-career-offers.png",
+    "kind": "scene",
+    "chapter": 3,
+    "age": 17,
+    "who": "scene",
+    "pose": "sc01-three-career-offers",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-03/scene/sc01-three-career-offers.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-03/scene/sc01-three-career-offers.png"
+    ],
+    "status": "pending",
+    "companion": "minh",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-03/scene/sc01-three-career-offers.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/17-an-neutral.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/17-minh-neutral.png"
+    ],
+    "prompt": "Use case: identity-preserve. Edit this ONE existing 16:9 landscape full-bleed visual-novel scene, chapter 3, sc01-three-career-offers. Reference1 is the original scene and is the strict authority for environment, camera, character count, positions, facial expressions, actions, hands interacting with props and the moment in the story. Reference2 is corrected AN at age17; reference3 is corrected MINH of the SAME age.\nReplace ONLY the age design and clothing of An and Minh with the corrected compact CHIBI designs from the sprite references. An outfit: muted yellow polo, dark blue straight trousers, white sneakers. Minh outfit: navy polo, beige straight trousers, white sneakers, his existing watch. Use new sprite face/hair/body proportions and exact new clothes, but retain original scene expression, pose and action. Keep chibi rendering: harmonious large heads and compact balanced limbs, no stretched anime bodies or elongated skinny legs. Older-teen faces are a little less baby-round and shoulders a little firmer, still cute chibi.\nCRITICAL SCALE: adult mother/teacher/staff retain their ORIGINAL adult size, face, clothes and body proportions from reference1; do NOT make adults taller, bigger, longer-legged or older as teenagers become older. An and Minh are same-age peers with comparable standing heights. At age17, teenagers should be near adult height at the same depth. Do not depict late teens as small primary-school children. Respect seated vs standing pose and perspective rather than scaling adults. Keep the adult head and body in the original scene position and scale.\nPreserve the background architecture, furniture, lighting, palette and all existing learning props. Keep the original number of people and original story action; no extra objects, no new outcome, no money transaction that was not in original. Do not neutralize expressive original scene faces. Maintain warm kawaii 2D cartoon with brown outlines and soft pastel shading. Full-bleed landscape16:9, no border, no panels, no labels, no speech bubbles, no readable text, no logos/watermarks. Existing papers/screens stay blank for UI. Coherent anatomy, hands, occlusion and perspective."
+  },
+  {
+    "id": "chapter-03/scene/sc02-checking-course-source.png",
+    "kind": "scene",
+    "chapter": 3,
+    "age": 17,
+    "who": "scene",
+    "pose": "sc02-checking-course-source",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-03/scene/sc02-checking-course-source.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-03/scene/sc02-checking-course-source.png"
+    ],
+    "status": "pending",
+    "companion": "tu-van",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-03/scene/sc02-checking-course-source.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/17-an-neutral.png",
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-03/char/tu-van/tu-van-neutral.png"
+    ],
+    "prompt": "Use case: identity-preserve. Edit this ONE existing 16:9 landscape full-bleed visual-novel scene, chapter 3, sc02-checking-course-source. Reference1 is the original scene and is the strict authority for environment, camera, character count, positions, facial expressions, actions, hands interacting with props and the moment in the story. Reference2 is corrected AN at age17; reference3 is the ORIGINAL ADULT companion and must stay visually stable.\nReplace ONLY the age design and clothing of An with the corrected compact CHIBI designs from the sprite references. An outfit: muted yellow polo, dark blue straight trousers, white sneakers. Use new sprite face/hair/body proportions and exact new clothes, but retain original scene expression, pose and action. Keep chibi rendering: harmonious large heads and compact balanced limbs, no stretched anime bodies or elongated skinny legs. Older-teen faces are a little less baby-round and shoulders a little firmer, still cute chibi.\nCRITICAL SCALE: adult mother/teacher/staff retain their ORIGINAL adult size, face, clothes and body proportions from reference1; do NOT make adults taller, bigger, longer-legged or older as teenagers become older. An and Minh are same-age peers with comparable standing heights. At age17, teenagers should be near adult height at the same depth. Do not depict late teens as small primary-school children. Respect seated vs standing pose and perspective rather than scaling adults. Keep the adult head and body in the original scene position and scale.\nPreserve the background architecture, furniture, lighting, palette and all existing learning props. Keep the original number of people and original story action; no extra objects, no new outcome, no money transaction that was not in original. Do not neutralize expressive original scene faces. Maintain warm kawaii 2D cartoon with brown outlines and soft pastel shading. Full-bleed landscape16:9, no border, no panels, no labels, no speech bubbles, no readable text, no logos/watermarks. Existing papers/screens stay blank for UI. Coherent anatomy, hands, occlusion and perspective."
+  },
+  {
+    "id": "chapter-03/scene/sc03-weekly-career-plan.png",
+    "kind": "scene",
+    "chapter": 3,
+    "age": 17,
+    "who": "scene",
+    "pose": "sc03-weekly-career-plan",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-03/scene/sc03-weekly-career-plan.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-03/scene/sc03-weekly-career-plan.png"
+    ],
+    "status": "pending",
+    "companion": null,
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-03/scene/sc03-weekly-career-plan.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/17-an-neutral.png"
+    ],
+    "prompt": "Use case: identity-preserve. Edit this ONE existing 16:9 landscape full-bleed visual-novel scene, chapter 3, sc03-weekly-career-plan. Reference1 is the original scene and is the strict authority for environment, camera, character count, positions, facial expressions, actions, hands interacting with props and the moment in the story. Reference2 is corrected AN at age17; An is the only person; do not add anyone.\nReplace ONLY the age design and clothing of An with the corrected compact CHIBI designs from the sprite references. An outfit: muted yellow polo, dark blue straight trousers, white sneakers. Use new sprite face/hair/body proportions and exact new clothes, but retain original scene expression, pose and action. Keep chibi rendering: harmonious large heads and compact balanced limbs, no stretched anime bodies or elongated skinny legs. Older-teen faces are a little less baby-round and shoulders a little firmer, still cute chibi.\nCRITICAL SCALE: adult mother/teacher/staff retain their ORIGINAL adult size, face, clothes and body proportions from reference1; do NOT make adults taller, bigger, longer-legged or older as teenagers become older. An and Minh are same-age peers with comparable standing heights. At age17, teenagers should be near adult height at the same depth. Do not depict late teens as small primary-school children. Respect seated vs standing pose and perspective rather than scaling adults. Keep the adult head and body in the original scene position and scale.\nPreserve the background architecture, furniture, lighting, palette and all existing learning props. Keep the original number of people and original story action; no extra objects, no new outcome, no money transaction that was not in original. Do not neutralize expressive original scene faces. Maintain warm kawaii 2D cartoon with brown outlines and soft pastel shading. Full-bleed landscape16:9, no border, no panels, no labels, no speech bubbles, no readable text, no logos/watermarks. Existing papers/screens stay blank for UI. Coherent anatomy, hands, occlusion and perspective."
+  },
+  {
+    "id": "chapter-03/scene/sc04-career-report.png",
+    "kind": "scene",
+    "chapter": 3,
+    "age": 17,
+    "who": "scene",
+    "pose": "sc04-career-report",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-03/scene/sc04-career-report.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-03/scene/sc04-career-report.png"
+    ],
+    "status": "pending",
+    "companion": "co-linh",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-03/scene/sc04-career-report.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/17-an-neutral.png",
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/char/co-linh/co-linh-neutral.png"
+    ],
+    "prompt": "Use case: identity-preserve. Edit this ONE existing 16:9 landscape full-bleed visual-novel scene, chapter 3, sc04-career-report. Reference1 is the original scene and is the strict authority for environment, camera, character count, positions, facial expressions, actions, hands interacting with props and the moment in the story. Reference2 is corrected AN at age17; reference3 is the ORIGINAL ADULT companion and must stay visually stable.\nReplace ONLY the age design and clothing of An with the corrected compact CHIBI designs from the sprite references. An outfit: muted yellow polo, dark blue straight trousers, white sneakers. Use new sprite face/hair/body proportions and exact new clothes, but retain original scene expression, pose and action. Keep chibi rendering: harmonious large heads and compact balanced limbs, no stretched anime bodies or elongated skinny legs. Older-teen faces are a little less baby-round and shoulders a little firmer, still cute chibi.\nCRITICAL SCALE: adult mother/teacher/staff retain their ORIGINAL adult size, face, clothes and body proportions from reference1; do NOT make adults taller, bigger, longer-legged or older as teenagers become older. An and Minh are same-age peers with comparable standing heights. At age17, teenagers should be near adult height at the same depth. Do not depict late teens as small primary-school children. Respect seated vs standing pose and perspective rather than scaling adults. Keep the adult head and body in the original scene position and scale.\nPreserve the background architecture, furniture, lighting, palette and all existing learning props. Keep the original number of people and original story action; no extra objects, no new outcome, no money transaction that was not in original. Do not neutralize expressive original scene faces. Maintain warm kawaii 2D cartoon with brown outlines and soft pastel shading. Full-bleed landscape16:9, no border, no panels, no labels, no speech bubbles, no readable text, no logos/watermarks. Existing papers/screens stay blank for UI. Coherent anatomy, hands, occlusion and perspective."
+  },
+  {
+    "id": "adult-shop-assistant-explaining",
+    "kind": "sprite",
+    "chapter": 4,
+    "age": 16,
+    "who": "shop-assistant",
+    "pose": "shop-assistant-explaining",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-04/char/shop-assistant/shop-assistant-explaining.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-04/char/shop-assistant/shop-assistant-explaining.png"
+    ],
+    "status": "keep-original"
+  },
+  {
+    "id": "adult-shop-assistant-neutral",
+    "kind": "sprite",
+    "chapter": 4,
+    "age": 16,
+    "who": "shop-assistant",
+    "pose": "shop-assistant-neutral",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-04/char/shop-assistant/shop-assistant-neutral.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-04/char/shop-assistant/shop-assistant-neutral.png"
+    ],
+    "status": "keep-original",
+    "previousDraft": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-9d4b6597-4ad5-4c24-a1f3-9fa48f01c8de.png"
+  },
+  {
+    "id": "chapter-04/scene/sc01-phone-needs.png",
+    "kind": "scene",
+    "chapter": 4,
+    "age": 16,
+    "who": "scene",
+    "pose": "sc01-phone-needs",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-04/scene/sc01-phone-needs.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-04/scene/sc01-phone-needs.png"
+    ],
+    "status": "pending",
+    "companion": "minh",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-04/scene/sc01-phone-needs.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/16-an-neutral.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/16-minh-neutral.png"
+    ],
+    "prompt": "Use case: identity-preserve. Edit this ONE existing 16:9 landscape full-bleed visual-novel scene, chapter 4, sc01-phone-needs. Reference1 is the original scene and is the strict authority for environment, camera, character count, positions, facial expressions, actions, hands interacting with props and the moment in the story. Reference2 is corrected AN at age16; reference3 is corrected MINH of the SAME age.\nReplace ONLY the age design and clothing of An and Minh with the corrected compact CHIBI designs from the sprite references. An outfit: mustard short-sleeved overshirt over a white T-shirt, dark blue straight jeans, simple white sneakers. Minh outfit: navy short-sleeved overshirt over a light tee, beige straight trousers, white sneakers, his existing watch. Use new sprite face/hair/body proportions and exact new clothes, but retain original scene expression, pose and action. Keep chibi rendering: harmonious large heads and compact balanced limbs, no stretched anime bodies or elongated skinny legs. \nCRITICAL SCALE: adult mother/teacher/staff retain their ORIGINAL adult size, face, clothes and body proportions from reference1; do NOT make adults taller, bigger, longer-legged or older as teenagers become older. An and Minh are same-age peers with comparable standing heights. At age16, teenagers should be slightly shorter than an adult (roughly95% at the same depth). Do not depict late teens as small primary-school children. Respect seated vs standing pose and perspective rather than scaling adults. Keep the adult head and body in the original scene position and scale.\nPreserve the background architecture, furniture, lighting, palette and all existing learning props. Keep the original number of people and original story action; no extra objects, no new outcome, no money transaction that was not in original. Do not neutralize expressive original scene faces. Maintain warm kawaii 2D cartoon with brown outlines and soft pastel shading. Full-bleed landscape16:9, no border, no panels, no labels, no speech bubbles, no readable text, no logos/watermarks. Existing papers/screens stay blank for UI. Coherent anatomy, hands, occlusion and perspective."
+  },
+  {
+    "id": "chapter-04/scene/sc02-comparing-three-phones.png",
+    "kind": "scene",
+    "chapter": 4,
+    "age": 16,
+    "who": "scene",
+    "pose": "sc02-comparing-three-phones",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-04/scene/sc02-comparing-three-phones.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-04/scene/sc02-comparing-three-phones.png"
+    ],
+    "status": "pending",
+    "companion": "shop-assistant",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-04/scene/sc02-comparing-three-phones.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/16-an-neutral.png",
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-04/char/shop-assistant/shop-assistant-neutral.png"
+    ],
+    "prompt": "Use case: identity-preserve. Edit this ONE existing 16:9 landscape full-bleed visual-novel scene, chapter 4, sc02-comparing-three-phones. Reference1 is the original scene and is the strict authority for environment, camera, character count, positions, facial expressions, actions, hands interacting with props and the moment in the story. Reference2 is corrected AN at age16; reference3 is the ORIGINAL ADULT companion and must stay visually stable.\nReplace ONLY the age design and clothing of An with the corrected compact CHIBI designs from the sprite references. An outfit: mustard short-sleeved overshirt over a white T-shirt, dark blue straight jeans, simple white sneakers. Use new sprite face/hair/body proportions and exact new clothes, but retain original scene expression, pose and action. Keep chibi rendering: harmonious large heads and compact balanced limbs, no stretched anime bodies or elongated skinny legs. \nCRITICAL SCALE: adult mother/teacher/staff retain their ORIGINAL adult size, face, clothes and body proportions from reference1; do NOT make adults taller, bigger, longer-legged or older as teenagers become older. An and Minh are same-age peers with comparable standing heights. At age16, teenagers should be slightly shorter than an adult (roughly95% at the same depth). Do not depict late teens as small primary-school children. Respect seated vs standing pose and perspective rather than scaling adults. Keep the adult head and body in the original scene position and scale.\nPreserve the background architecture, furniture, lighting, palette and all existing learning props. Keep the original number of people and original story action; no extra objects, no new outcome, no money transaction that was not in original. Do not neutralize expressive original scene faces. Maintain warm kawaii 2D cartoon with brown outlines and soft pastel shading. Full-bleed landscape16:9, no border, no panels, no labels, no speech bubbles, no readable text, no logos/watermarks. Existing papers/screens stay blank for UI. Coherent anatomy, hands, occlusion and perspective."
+  },
+  {
+    "id": "chapter-04/scene/sc03-questioning-receipt.png",
+    "kind": "scene",
+    "chapter": 4,
+    "age": 16,
+    "who": "scene",
+    "pose": "sc03-questioning-receipt",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-04/scene/sc03-questioning-receipt.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-04/scene/sc03-questioning-receipt.png"
+    ],
+    "status": "pending",
+    "companion": "shop-assistant",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-04/scene/sc03-questioning-receipt.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/16-an-neutral.png",
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-04/char/shop-assistant/shop-assistant-neutral.png"
+    ],
+    "prompt": "Use case: identity-preserve. Edit this ONE existing 16:9 landscape full-bleed visual-novel scene, chapter 4, sc03-questioning-receipt. Reference1 is the original scene and is the strict authority for environment, camera, character count, positions, facial expressions, actions, hands interacting with props and the moment in the story. Reference2 is corrected AN at age16; reference3 is the ORIGINAL ADULT companion and must stay visually stable.\nReplace ONLY the age design and clothing of An with the corrected compact CHIBI designs from the sprite references. An outfit: mustard short-sleeved overshirt over a white T-shirt, dark blue straight jeans, simple white sneakers. Use new sprite face/hair/body proportions and exact new clothes, but retain original scene expression, pose and action. Keep chibi rendering: harmonious large heads and compact balanced limbs, no stretched anime bodies or elongated skinny legs. \nCRITICAL SCALE: adult mother/teacher/staff retain their ORIGINAL adult size, face, clothes and body proportions from reference1; do NOT make adults taller, bigger, longer-legged or older as teenagers become older. An and Minh are same-age peers with comparable standing heights. At age16, teenagers should be slightly shorter than an adult (roughly95% at the same depth). Do not depict late teens as small primary-school children. Respect seated vs standing pose and perspective rather than scaling adults. Keep the adult head and body in the original scene position and scale.\nPreserve the background architecture, furniture, lighting, palette and all existing learning props. Keep the original number of people and original story action; no extra objects, no new outcome, no money transaction that was not in original. Do not neutralize expressive original scene faces. Maintain warm kawaii 2D cartoon with brown outlines and soft pastel shading. Full-bleed landscape16:9, no border, no panels, no labels, no speech bubbles, no readable text, no logos/watermarks. Existing papers/screens stay blank for UI. Coherent anatomy, hands, occlusion and perspective."
+  },
+  {
+    "id": "chapter-04/scene/sc04-following-renewal.png",
+    "kind": "scene",
+    "chapter": 4,
+    "age": 16,
+    "who": "scene",
+    "pose": "sc04-following-renewal",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-04/scene/sc04-following-renewal.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-04/scene/sc04-following-renewal.png"
+    ],
+    "status": "pending",
+    "companion": "co-linh",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-04/scene/sc04-following-renewal.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/16-an-neutral.png",
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/char/co-linh/co-linh-neutral.png"
+    ],
+    "prompt": "Use case: identity-preserve. Edit this ONE existing 16:9 landscape full-bleed visual-novel scene, chapter 4, sc04-following-renewal. Reference1 is the original scene and is the strict authority for environment, camera, character count, positions, facial expressions, actions, hands interacting with props and the moment in the story. Reference2 is corrected AN at age16; reference3 is the ORIGINAL ADULT companion and must stay visually stable.\nReplace ONLY the age design and clothing of An with the corrected compact CHIBI designs from the sprite references. An outfit: mustard short-sleeved overshirt over a white T-shirt, dark blue straight jeans, simple white sneakers. Use new sprite face/hair/body proportions and exact new clothes, but retain original scene expression, pose and action. Keep chibi rendering: harmonious large heads and compact balanced limbs, no stretched anime bodies or elongated skinny legs. \nCRITICAL SCALE: adult mother/teacher/staff retain their ORIGINAL adult size, face, clothes and body proportions from reference1; do NOT make adults taller, bigger, longer-legged or older as teenagers become older. An and Minh are same-age peers with comparable standing heights. At age16, teenagers should be slightly shorter than an adult (roughly95% at the same depth). Do not depict late teens as small primary-school children. Respect seated vs standing pose and perspective rather than scaling adults. Keep the adult head and body in the original scene position and scale.\nPreserve the background architecture, furniture, lighting, palette and all existing learning props. Keep the original number of people and original story action; no extra objects, no new outcome, no money transaction that was not in original. Do not neutralize expressive original scene faces. Maintain warm kawaii 2D cartoon with brown outlines and soft pastel shading. Full-bleed landscape16:9, no border, no panels, no labels, no speech bubbles, no readable text, no logos/watermarks. Existing papers/screens stay blank for UI. Coherent anatomy, hands, occlusion and perspective."
+  },
+  {
+    "id": "adult-bank-guide-explaining",
+    "kind": "sprite",
+    "chapter": 5,
+    "age": 16,
+    "who": "bank-guide",
+    "pose": "bank-guide-explaining",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-05/char/bank-guide/bank-guide-explaining.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-05/char/bank-guide/bank-guide-explaining.png"
+    ],
+    "status": "keep-original"
+  },
+  {
+    "id": "adult-bank-guide-neutral",
+    "kind": "sprite",
+    "chapter": 5,
+    "age": 16,
+    "who": "bank-guide",
+    "pose": "bank-guide-neutral",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-05/char/bank-guide/bank-guide-neutral.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-05/char/bank-guide/bank-guide-neutral.png"
+    ],
+    "status": "keep-original",
+    "previousDraft": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-79923255-2bfa-432b-bd35-e0ddefc518d0.png"
+  },
+  {
+    "id": "chapter-05/scene/sc01-two-accounts.png",
+    "kind": "scene",
+    "chapter": 5,
+    "age": 16,
+    "who": "scene",
+    "pose": "sc01-two-accounts",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-05/scene/sc01-two-accounts.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-05/scene/sc01-two-accounts.png"
+    ],
+    "status": "pending",
+    "companion": "bank-guide",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-05/scene/sc01-two-accounts.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/16-an-neutral.png",
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-05/char/bank-guide/bank-guide-neutral.png"
+    ],
+    "prompt": "Use case: identity-preserve. Edit this ONE existing 16:9 landscape full-bleed visual-novel scene, chapter 5, sc01-two-accounts. Reference1 is the original scene and is the strict authority for environment, camera, character count, positions, facial expressions, actions, hands interacting with props and the moment in the story. Reference2 is corrected AN at age16; reference3 is the ORIGINAL ADULT companion and must stay visually stable.\nReplace ONLY the age design and clothing of An with the corrected compact CHIBI designs from the sprite references. An outfit: mustard short-sleeved overshirt over a white T-shirt, dark blue straight jeans, simple white sneakers. Use new sprite face/hair/body proportions and exact new clothes, but retain original scene expression, pose and action. Keep chibi rendering: harmonious large heads and compact balanced limbs, no stretched anime bodies or elongated skinny legs. \nCRITICAL SCALE: adult mother/teacher/staff retain their ORIGINAL adult size, face, clothes and body proportions from reference1; do NOT make adults taller, bigger, longer-legged or older as teenagers become older. An and Minh are same-age peers with comparable standing heights. At age16, teenagers should be slightly shorter than an adult (roughly95% at the same depth). Do not depict late teens as small primary-school children. Respect seated vs standing pose and perspective rather than scaling adults. Keep the adult head and body in the original scene position and scale.\nPreserve the background architecture, furniture, lighting, palette and all existing learning props. Keep the original number of people and original story action; no extra objects, no new outcome, no money transaction that was not in original. Do not neutralize expressive original scene faces. Maintain warm kawaii 2D cartoon with brown outlines and soft pastel shading. Full-bleed landscape16:9, no border, no panels, no labels, no speech bubbles, no readable text, no logos/watermarks. Existing papers/screens stay blank for UI. Coherent anatomy, hands, occlusion and perspective."
+  },
+  {
+    "id": "chapter-05/scene/sc02-investigating-provider.png",
+    "kind": "scene",
+    "chapter": 5,
+    "age": 16,
+    "who": "scene",
+    "pose": "sc02-investigating-provider",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-05/scene/sc02-investigating-provider.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-05/scene/sc02-investigating-provider.png"
+    ],
+    "status": "pending",
+    "companion": "minh",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-05/scene/sc02-investigating-provider.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/16-an-neutral.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/16-minh-neutral.png"
+    ],
+    "prompt": "Use case: identity-preserve. Edit this ONE existing 16:9 landscape full-bleed visual-novel scene, chapter 5, sc02-investigating-provider. Reference1 is the original scene and is the strict authority for environment, camera, character count, positions, facial expressions, actions, hands interacting with props and the moment in the story. Reference2 is corrected AN at age16; reference3 is corrected MINH of the SAME age.\nReplace ONLY the age design and clothing of An and Minh with the corrected compact CHIBI designs from the sprite references. An outfit: mustard short-sleeved overshirt over a white T-shirt, dark blue straight jeans, simple white sneakers. Minh outfit: navy short-sleeved overshirt over a light tee, beige straight trousers, white sneakers, his existing watch. Use new sprite face/hair/body proportions and exact new clothes, but retain original scene expression, pose and action. Keep chibi rendering: harmonious large heads and compact balanced limbs, no stretched anime bodies or elongated skinny legs. \nCRITICAL SCALE: adult mother/teacher/staff retain their ORIGINAL adult size, face, clothes and body proportions from reference1; do NOT make adults taller, bigger, longer-legged or older as teenagers become older. An and Minh are same-age peers with comparable standing heights. At age16, teenagers should be slightly shorter than an adult (roughly95% at the same depth). Do not depict late teens as small primary-school children. Respect seated vs standing pose and perspective rather than scaling adults. Keep the adult head and body in the original scene position and scale.\nPreserve the background architecture, furniture, lighting, palette and all existing learning props. Keep the original number of people and original story action; no extra objects, no new outcome, no money transaction that was not in original. Do not neutralize expressive original scene faces. Maintain warm kawaii 2D cartoon with brown outlines and soft pastel shading. Full-bleed landscape16:9, no border, no panels, no labels, no speech bubbles, no readable text, no logos/watermarks. Existing papers/screens stay blank for UI. Coherent anatomy, hands, occlusion and perspective."
+  },
+  {
+    "id": "chapter-05/scene/sc03-money-and-purchasing-power.png",
+    "kind": "scene",
+    "chapter": 5,
+    "age": 16,
+    "who": "scene",
+    "pose": "sc03-money-and-purchasing-power",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-05/scene/sc03-money-and-purchasing-power.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-05/scene/sc03-money-and-purchasing-power.png"
+    ],
+    "status": "pending",
+    "companion": "co-linh",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-05/scene/sc03-money-and-purchasing-power.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/16-an-neutral.png",
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/char/co-linh/co-linh-neutral.png"
+    ],
+    "prompt": "Use case: identity-preserve. Edit this ONE existing 16:9 landscape full-bleed visual-novel scene, chapter 5, sc03-money-and-purchasing-power. Reference1 is the original scene and is the strict authority for environment, camera, character count, positions, facial expressions, actions, hands interacting with props and the moment in the story. Reference2 is corrected AN at age16; reference3 is the ORIGINAL ADULT companion and must stay visually stable.\nReplace ONLY the age design and clothing of An with the corrected compact CHIBI designs from the sprite references. An outfit: mustard short-sleeved overshirt over a white T-shirt, dark blue straight jeans, simple white sneakers. Use new sprite face/hair/body proportions and exact new clothes, but retain original scene expression, pose and action. Keep chibi rendering: harmonious large heads and compact balanced limbs, no stretched anime bodies or elongated skinny legs. \nCRITICAL SCALE: adult mother/teacher/staff retain their ORIGINAL adult size, face, clothes and body proportions from reference1; do NOT make adults taller, bigger, longer-legged or older as teenagers become older. An and Minh are same-age peers with comparable standing heights. At age16, teenagers should be slightly shorter than an adult (roughly95% at the same depth). Do not depict late teens as small primary-school children. Respect seated vs standing pose and perspective rather than scaling adults. Keep the adult head and body in the original scene position and scale.\nPreserve the background architecture, furniture, lighting, palette and all existing learning props. Keep the original number of people and original story action; no extra objects, no new outcome, no money transaction that was not in original. Do not neutralize expressive original scene faces. Maintain warm kawaii 2D cartoon with brown outlines and soft pastel shading. Full-bleed landscape16:9, no border, no panels, no labels, no speech bubbles, no readable text, no logos/watermarks. Existing papers/screens stay blank for UI. Coherent anatomy, hands, occlusion and perspective."
+  },
+  {
+    "id": "chapter-05/scene/sc04-planning-for-deadline.png",
+    "kind": "scene",
+    "chapter": 5,
+    "age": 16,
+    "who": "scene",
+    "pose": "sc04-planning-for-deadline",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-05/scene/sc04-planning-for-deadline.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-05/scene/sc04-planning-for-deadline.png"
+    ],
+    "status": "pending",
+    "companion": "bank-guide",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-05/scene/sc04-planning-for-deadline.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/16-an-neutral.png",
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-05/char/bank-guide/bank-guide-neutral.png"
+    ],
+    "prompt": "Use case: identity-preserve. Edit this ONE existing 16:9 landscape full-bleed visual-novel scene, chapter 5, sc04-planning-for-deadline. Reference1 is the original scene and is the strict authority for environment, camera, character count, positions, facial expressions, actions, hands interacting with props and the moment in the story. Reference2 is corrected AN at age16; reference3 is the ORIGINAL ADULT companion and must stay visually stable.\nReplace ONLY the age design and clothing of An with the corrected compact CHIBI designs from the sprite references. An outfit: mustard short-sleeved overshirt over a white T-shirt, dark blue straight jeans, simple white sneakers. Use new sprite face/hair/body proportions and exact new clothes, but retain original scene expression, pose and action. Keep chibi rendering: harmonious large heads and compact balanced limbs, no stretched anime bodies or elongated skinny legs. \nCRITICAL SCALE: adult mother/teacher/staff retain their ORIGINAL adult size, face, clothes and body proportions from reference1; do NOT make adults taller, bigger, longer-legged or older as teenagers become older. An and Minh are same-age peers with comparable standing heights. At age16, teenagers should be slightly shorter than an adult (roughly95% at the same depth). Do not depict late teens as small primary-school children. Respect seated vs standing pose and perspective rather than scaling adults. Keep the adult head and body in the original scene position and scale.\nPreserve the background architecture, furniture, lighting, palette and all existing learning props. Keep the original number of people and original story action; no extra objects, no new outcome, no money transaction that was not in original. Do not neutralize expressive original scene faces. Maintain warm kawaii 2D cartoon with brown outlines and soft pastel shading. Full-bleed landscape16:9, no border, no panels, no labels, no speech bubbles, no readable text, no logos/watermarks. Existing papers/screens stay blank for UI. Coherent anatomy, hands, occlusion and perspective."
+  },
+  {
+    "id": "18-an-neutral",
+    "kind": "sprite",
+    "chapter": 6,
+    "age": 18,
+    "who": "an",
+    "pose": "an-neutral",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-06/char/an/an-neutral.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-06/char/an/an-neutral.png"
+    ],
+    "status": "draft-ready",
+    "previousDraft": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-81648615-294b-4f40-a506-dc40db1e5fb5.png",
+    "outfit": "mustard overshirt over cream tee with casually rolled sleeves, dark navy straight trousers, white sneakers",
+    "prompt": "Use case: identity-preserve. ONE transparent full-body CHIBI sprite of An age18. Reference1 is the age design sheet; use this person's outfit labeled18. Reference2 is their finished age17 sprite: keep the same compact harmonious chibi anatomy and identity, with only a subtle more composed late-teen expression. Outfit: mustard overshirt over cream tee with casually rolled sleeves, dark navy straight trousers, white sneakers. Recognizable hair, face, signature colors. Cute balanced 3.5-head CHIBI, broad enough shoulders, short harmonious limbs, no stretched thin anime anatomy, no oversized shoes or tiny head. Age18 remains youthful but not a toddler: slightly firmer cheek/jaw contour and less baby blush than reference2. Neutral relaxed standing pose, soft friendly smile. Entire body and feet visible with margins, warm brown outlines and pastel cel shading matching references. Single character on genuinely transparent background. No text, labels, extra people, background, ground ellipse, glow or shadows.",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/chibi-age-design.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/17-an-neutral.png"
+    ],
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-a8addfde-d3ce-4344-883e-beca6760aa66.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/18-an-neutral.png"
+  },
+  {
+    "id": "18-an-relieved",
+    "kind": "sprite",
+    "chapter": 6,
+    "age": 18,
+    "who": "an",
+    "pose": "an-relieved",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-06/char/an/an-relieved.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-06/char/an/an-relieved.png"
+    ],
+    "status": "draft-ready",
+    "outfit": "mustard overshirt over cream tee with casually rolled sleeves, dark navy straight trousers, white sneakers",
+    "prompt": "Use case: identity-preserve. Edit ONE full-body transparent chibi visual novel sprite. Reference1 supplies ONLY the pose, expression and props. Reference2 is the corrected 18-year-old An and is the strict design authority for face, hair, age, compact CHIBI anatomy, exact outfit, body proportions and rendering. Recreate reference2 in this expression/pose: relieved expression, soft reassuring smile and one hand resting over the chest. Outfit MUST remain mustard overshirt over cream tee with casually rolled sleeves, dark navy straight trousers, white sneakers; do not copy the old clothes from reference1. Match reference2 closely: cute balanced short chibi limbs and harmonious large head, no elongated anime legs/torso or tiny head. Keep same face age and recognizable identity. Preserve all original gesture props, natural correct hands, no new props. Warm brown outlines, soft pastel 2D cel shading. Entire body and feet within frame with transparent margins, single character. Genuinely transparent background; no text, labels, other characters, background, ground ellipse, glow or shadow.",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-06/char/an/an-relieved.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/18-an-neutral.png"
+    ],
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-51f9c2a5-2a0a-423c-bf0f-b89a978d8d0b.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/18-an-relieved.png"
+  },
+  {
+    "id": "18-an-thinking",
+    "kind": "sprite",
+    "chapter": 6,
+    "age": 18,
+    "who": "an",
+    "pose": "an-thinking",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-06/char/an/an-thinking.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-06/char/an/an-thinking.png"
+    ],
+    "status": "draft-ready",
+    "outfit": "mustard overshirt over cream tee with casually rolled sleeves, dark navy straight trousers, white sneakers",
+    "prompt": "Use case: identity-preserve. Edit ONE full-body transparent chibi visual novel sprite. Reference1 supplies ONLY the pose, expression and props. Reference2 is the corrected 18-year-old An and is the strict design authority for face, hair, age, compact CHIBI anatomy, exact outfit, body proportions and rendering. Recreate reference2 in this expression/pose: thoughtful expression, one hand gently at chin, eyebrows reflecting consideration. Outfit MUST remain mustard overshirt over cream tee with casually rolled sleeves, dark navy straight trousers, white sneakers; do not copy the old clothes from reference1. Match reference2 closely: cute balanced short chibi limbs and harmonious large head, no elongated anime legs/torso or tiny head. Keep same face age and recognizable identity. Preserve all original gesture props, natural correct hands, no new props. Warm brown outlines, soft pastel 2D cel shading. Entire body and feet within frame with transparent margins, single character. Genuinely transparent background; no text, labels, other characters, background, ground ellipse, glow or shadow.",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-06/char/an/an-thinking.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/18-an-neutral.png"
+    ],
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-b16aca4a-b22e-4491-8a56-c0f308998bee.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/18-an-thinking.png"
+  },
+  {
+    "id": "18-an-worried-money",
+    "kind": "sprite",
+    "chapter": 6,
+    "age": 18,
+    "who": "an",
+    "pose": "an-worried-money",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-06/char/an/an-worried-money.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-06/char/an/an-worried-money.png"
+    ],
+    "status": "draft-ready",
+    "outfit": "mustard overshirt over cream tee with casually rolled sleeves, dark navy straight trousers, white sneakers",
+    "prompt": "Use case: identity-preserve. Edit ONE full-body transparent chibi visual novel sprite. Reference1 supplies ONLY the pose, expression and props. Reference2 is the corrected 18-year-old An and is the strict design authority for face, hair, age, compact CHIBI anatomy, exact outfit, body proportions and rendering. Recreate reference2 in this expression/pose: worried expression with slightly raised inward eyebrows and small open mouth, holding the original small green banknotes with both hands at chest level. Outfit MUST remain mustard overshirt over cream tee with casually rolled sleeves, dark navy straight trousers, white sneakers; do not copy the old clothes from reference1. Match reference2 closely: cute balanced short chibi limbs and harmonious large head, no elongated anime legs/torso or tiny head. Keep same face age and recognizable identity. Preserve all original gesture props, natural correct hands, no new props. Warm brown outlines, soft pastel 2D cel shading. Entire body and feet within frame with transparent margins, single character. Genuinely transparent background; no text, labels, other characters, background, ground ellipse, glow or shadow.",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-06/char/an/an-worried-money.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/18-an-neutral.png"
+    ],
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-12723b65-ce1d-42e2-b54d-3817d6d5b0d2.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/18-an-worried-money.png"
+  },
+  {
+    "id": "18-minh-inviting",
+    "kind": "sprite",
+    "chapter": 6,
+    "age": 18,
+    "who": "minh",
+    "pose": "minh-inviting",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-06/char/minh/minh-inviting.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-06/char/minh/minh-inviting.png"
+    ],
+    "status": "draft-ready",
+    "outfit": "navy casual button-up shirt with rolled sleeves, beige straight trousers, white sneakers, his existing watch",
+    "prompt": "Use case: identity-preserve. Edit ONE full-body transparent chibi visual novel sprite. Reference1 supplies ONLY the pose, expression and props. Reference2 is the corrected 18-year-old Minh and is the strict design authority for face, hair, age, compact CHIBI anatomy, exact outfit, body proportions and rendering. Recreate reference2 in this expression/pose: friendly inviting expression, one hand on hip and the other gesturing with a thumb over the shoulder as in reference1. Outfit MUST remain navy casual button-up shirt with rolled sleeves, beige straight trousers, white sneakers, his existing watch; do not copy the old clothes from reference1. Match reference2 closely: cute balanced short chibi limbs and harmonious large head, no elongated anime legs/torso or tiny head. Keep same face age and recognizable identity. Preserve all original gesture props, natural correct hands, no new props. Warm brown outlines, soft pastel 2D cel shading. Entire body and feet within frame with transparent margins, single character. Genuinely transparent background; no text, labels, other characters, background, ground ellipse, glow or shadow.",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-06/char/minh/minh-inviting.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/18-minh-neutral.png"
+    ],
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-4928387f-9812-4499-bb30-3ae123a01cfb.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/18-minh-inviting.png"
+  },
+  {
+    "id": "18-minh-neutral",
+    "kind": "sprite",
+    "chapter": 6,
+    "age": 18,
+    "who": "minh",
+    "pose": "minh-neutral",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-06/char/minh/minh-neutral.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-06/char/minh/minh-neutral.png"
+    ],
+    "status": "draft-ready",
+    "previousDraft": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-734998d4-632a-476c-8d3d-7acc0ecf69ad.png",
+    "outfit": "navy casual button-up shirt with rolled sleeves, beige straight trousers, white sneakers, his existing watch",
+    "prompt": "Use case: identity-preserve. ONE transparent full-body CHIBI sprite of Minh age18. Reference1 is the age design sheet; use this person's outfit labeled18. Reference2 is their finished age17 sprite: keep the same compact harmonious chibi anatomy and identity, with only a subtle more composed late-teen expression. Outfit: navy casual button-up shirt with rolled sleeves, beige straight trousers, white sneakers, his existing watch. Recognizable hair, face, signature colors. Cute balanced 3.5-head CHIBI, broad enough shoulders, short harmonious limbs, no stretched thin anime anatomy, no oversized shoes or tiny head. Age18 remains youthful but not a toddler: slightly firmer cheek/jaw contour and less baby blush than reference2. Neutral relaxed standing pose, soft friendly smile. Entire body and feet visible with margins, warm brown outlines and pastel cel shading matching references. Single character on genuinely transparent background. No text, labels, extra people, background, ground ellipse, glow or shadows.",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/chibi-age-design.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/17-minh-neutral.png"
+    ],
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-83cd16eb-9724-4852-aa9c-eeb4780fce14.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/18-minh-neutral.png"
+  },
+  {
+    "id": "chapter-06/scene/sc01-school-computer-or-laptop.png",
+    "kind": "scene",
+    "chapter": 6,
+    "age": 18,
+    "who": "scene",
+    "pose": "sc01-school-computer-or-laptop",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-06/scene/sc01-school-computer-or-laptop.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-06/scene/sc01-school-computer-or-laptop.png"
+    ],
+    "status": "pending",
+    "companion": "minh",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-06/scene/sc01-school-computer-or-laptop.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/18-an-neutral.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/18-minh-neutral.png"
+    ],
+    "prompt": "Use case: identity-preserve. Edit this ONE existing 16:9 landscape full-bleed visual-novel scene, chapter 6, sc01-school-computer-or-laptop. Reference1 is the original scene and is the strict authority for environment, camera, character count, positions, facial expressions, actions, hands interacting with props and the moment in the story. Reference2 is corrected AN at age18; reference3 is corrected MINH of the SAME age.\nReplace ONLY the age design and clothing of An and Minh with the corrected compact CHIBI designs from the sprite references. An outfit: mustard overshirt over cream tee with casually rolled sleeves, dark navy straight trousers, white sneakers. Minh outfit: navy casual button-up shirt with rolled sleeves, beige straight trousers, white sneakers, his existing watch. Use new sprite face/hair/body proportions and exact new clothes, but retain original scene expression, pose and action. Keep chibi rendering: harmonious large heads and compact balanced limbs, no stretched anime bodies or elongated skinny legs. Older-teen faces are a little less baby-round and shoulders a little firmer, still cute chibi.\nCRITICAL SCALE: adult mother/teacher/staff retain their ORIGINAL adult size, face, clothes and body proportions from reference1; do NOT make adults taller, bigger, longer-legged or older as teenagers become older. An and Minh are same-age peers with comparable standing heights. At age18, teenagers should be near adult height at the same depth. Do not depict late teens as small primary-school children. Respect seated vs standing pose and perspective rather than scaling adults. Keep the adult head and body in the original scene position and scale.\nPreserve the background architecture, furniture, lighting, palette and all existing learning props. Keep the original number of people and original story action; no extra objects, no new outcome, no money transaction that was not in original. Do not neutralize expressive original scene faces. Maintain warm kawaii 2D cartoon with brown outlines and soft pastel shading. Full-bleed landscape16:9, no border, no panels, no labels, no speech bubbles, no readable text, no logos/watermarks. Existing papers/screens stay blank for UI. Coherent anatomy, hands, occlusion and perspective."
+  },
+  {
+    "id": "chapter-06/scene/sc02-comparing-loan-offers.png",
+    "kind": "scene",
+    "chapter": 6,
+    "age": 18,
+    "who": "scene",
+    "pose": "sc02-comparing-loan-offers",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-06/scene/sc02-comparing-loan-offers.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-06/scene/sc02-comparing-loan-offers.png"
+    ],
+    "status": "draft-ready",
+    "companion": "co-linh",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-06/scene/sc02-comparing-loan-offers.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/18-an-neutral.png",
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/char/co-linh/co-linh-neutral.png"
+    ],
+    "prompt": "Use case: identity-preserve. Edit this ONE existing 16:9 landscape full-bleed visual-novel scene, chapter 6, sc02-comparing-loan-offers. Reference1 is the original scene and is the strict authority for environment, camera, character count, positions, facial expressions, actions, hands interacting with props and the moment in the story. Reference2 is corrected AN at age18; reference3 is the ORIGINAL ADULT companion and must stay visually stable.\nReplace ONLY the age design and clothing of An with the corrected compact CHIBI designs from the sprite references. An outfit: mustard overshirt over cream tee with casually rolled sleeves, dark navy straight trousers, white sneakers. Use new sprite face/hair/body proportions and exact new clothes, but retain original scene expression, pose and action. Keep chibi rendering: harmonious large heads and compact balanced limbs, no stretched anime bodies or elongated skinny legs. Older-teen faces are a little less baby-round and shoulders a little firmer, still cute chibi.\nCRITICAL SCALE: adult mother/teacher/staff retain their ORIGINAL adult size, face, clothes and body proportions from reference1; do NOT make adults taller, bigger, longer-legged or older as teenagers become older. An and Minh are same-age peers with comparable standing heights. At age18, teenagers should be near adult height at the same depth. Do not depict late teens as small primary-school children. Respect seated vs standing pose and perspective rather than scaling adults. Keep the adult head and body in the original scene position and scale.\nPreserve the background architecture, furniture, lighting, palette and all existing learning props. Keep the original number of people and original story action; no extra objects, no new outcome, no money transaction that was not in original. Do not neutralize expressive original scene faces. Maintain warm kawaii 2D cartoon with brown outlines and soft pastel shading. Full-bleed landscape16:9, no border, no panels, no labels, no speech bubbles, no readable text, no logos/watermarks. Existing papers/screens stay blank for UI. Coherent anatomy, hands, occlusion and perspective.",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-49170ec3-491d-441b-84f3-04d6b99ecf6d.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-scenes/chapter-06-sc02-comparing-loan-offers.png"
+  },
+  {
+    "id": "chapter-06/scene/sc03-bnpl-and-minimum-payment.png",
+    "kind": "scene",
+    "chapter": 6,
+    "age": 18,
+    "who": "scene",
+    "pose": "sc03-bnpl-and-minimum-payment",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-06/scene/sc03-bnpl-and-minimum-payment.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-06/scene/sc03-bnpl-and-minimum-payment.png"
+    ],
+    "status": "pending",
+    "companion": "minh",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-06/scene/sc03-bnpl-and-minimum-payment.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/18-an-neutral.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/18-minh-neutral.png"
+    ],
+    "prompt": "Use case: identity-preserve. Edit this ONE existing 16:9 landscape full-bleed visual-novel scene, chapter 6, sc03-bnpl-and-minimum-payment. Reference1 is the original scene and is the strict authority for environment, camera, character count, positions, facial expressions, actions, hands interacting with props and the moment in the story. Reference2 is corrected AN at age18; reference3 is corrected MINH of the SAME age.\nReplace ONLY the age design and clothing of An and Minh with the corrected compact CHIBI designs from the sprite references. An outfit: mustard overshirt over cream tee with casually rolled sleeves, dark navy straight trousers, white sneakers. Minh outfit: navy casual button-up shirt with rolled sleeves, beige straight trousers, white sneakers, his existing watch. Use new sprite face/hair/body proportions and exact new clothes, but retain original scene expression, pose and action. Keep chibi rendering: harmonious large heads and compact balanced limbs, no stretched anime bodies or elongated skinny legs. Older-teen faces are a little less baby-round and shoulders a little firmer, still cute chibi.\nCRITICAL SCALE: adult mother/teacher/staff retain their ORIGINAL adult size, face, clothes and body proportions from reference1; do NOT make adults taller, bigger, longer-legged or older as teenagers become older. An and Minh are same-age peers with comparable standing heights. At age18, teenagers should be near adult height at the same depth. Do not depict late teens as small primary-school children. Respect seated vs standing pose and perspective rather than scaling adults. Keep the adult head and body in the original scene position and scale.\nPreserve the background architecture, furniture, lighting, palette and all existing learning props. Keep the original number of people and original story action; no extra objects, no new outcome, no money transaction that was not in original. Do not neutralize expressive original scene faces. Maintain warm kawaii 2D cartoon with brown outlines and soft pastel shading. Full-bleed landscape16:9, no border, no panels, no labels, no speech bubbles, no readable text, no logos/watermarks. Existing papers/screens stay blank for UI. Coherent anatomy, hands, occlusion and perspective."
+  },
+  {
+    "id": "chapter-06/scene/sc04-realistic-repayment-plan.png",
+    "kind": "scene",
+    "chapter": 6,
+    "age": 18,
+    "who": "scene",
+    "pose": "sc04-realistic-repayment-plan",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-06/scene/sc04-realistic-repayment-plan.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-06/scene/sc04-realistic-repayment-plan.png"
+    ],
+    "status": "pending",
+    "companion": "co-linh",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-06/scene/sc04-realistic-repayment-plan.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/18-an-neutral.png",
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/char/co-linh/co-linh-neutral.png"
+    ],
+    "prompt": "Use case: identity-preserve. Edit this ONE existing 16:9 landscape full-bleed visual-novel scene, chapter 6, sc04-realistic-repayment-plan. Reference1 is the original scene and is the strict authority for environment, camera, character count, positions, facial expressions, actions, hands interacting with props and the moment in the story. Reference2 is corrected AN at age18; reference3 is the ORIGINAL ADULT companion and must stay visually stable.\nReplace ONLY the age design and clothing of An with the corrected compact CHIBI designs from the sprite references. An outfit: mustard overshirt over cream tee with casually rolled sleeves, dark navy straight trousers, white sneakers. Use new sprite face/hair/body proportions and exact new clothes, but retain original scene expression, pose and action. Keep chibi rendering: harmonious large heads and compact balanced limbs, no stretched anime bodies or elongated skinny legs. Older-teen faces are a little less baby-round and shoulders a little firmer, still cute chibi.\nCRITICAL SCALE: adult mother/teacher/staff retain their ORIGINAL adult size, face, clothes and body proportions from reference1; do NOT make adults taller, bigger, longer-legged or older as teenagers become older. An and Minh are same-age peers with comparable standing heights. At age18, teenagers should be near adult height at the same depth. Do not depict late teens as small primary-school children. Respect seated vs standing pose and perspective rather than scaling adults. Keep the adult head and body in the original scene position and scale.\nPreserve the background architecture, furniture, lighting, palette and all existing learning props. Keep the original number of people and original story action; no extra objects, no new outcome, no money transaction that was not in original. Do not neutralize expressive original scene faces. Maintain warm kawaii 2D cartoon with brown outlines and soft pastel shading. Full-bleed landscape16:9, no border, no panels, no labels, no speech bubbles, no readable text, no logos/watermarks. Existing papers/screens stay blank for UI. Coherent anatomy, hands, occlusion and perspective."
+  }
+]

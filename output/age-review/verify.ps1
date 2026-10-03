@@ -26,4 +26,4 @@ foreach($job in $jobs) {
   }
 }
 $results | ConvertTo-Json -Depth 4 | Set-Content -Encoding utf8 "$PSScriptRoot/verification.json"
-[pscustomobject]@{Verified=$results.Count;AdultsUnchanged=@($jobs | Where-Object {$_.status -eq 'keep-original'}).Count;Remaining=@($jobs | Where-Object {$_.status -eq 'pending'}).Count} | ConvertTo-Json
+[pscustomobject]@{VerifiedUniqueImages=$results.Count;AdultModels=@($jobs | Where-Object {$_.adult}).Count;InstalledCopies=($jobs | Where-Object {$_.status -eq 'installed'} | ForEach-Object {$_.targets.Count} | Measure-Object -Sum).Sum;Remaining=@($jobs | Where-Object {$_.status -eq 'pending'}).Count} | ConvertTo-Json

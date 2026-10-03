@@ -19,11 +19,11 @@ Mẹ, cô Linh, tư vấn viên, nhân viên cửa hàng và hướng dẫn viê
 
 ## Quy tắc sửa hình
 
-Theo phản hồi trực tiếp của người dùng ngày 03/10/2026: **giữ phong cách chibi cân đối**, không kéo dài chân/thân sang kiểu anime. Phân biệt tuổi An/Minh bằng nét mặt, vai, tư thế, trang phục phù hợp tình huống và chiều cao tương đối. Mẹ và cô là người trưởng thành khoảng 30 tuổi theo định hướng người dùng, giữ vóc dáng/chiều cao ổn định; không tăng chiều cao khi An/Minh lớn hơn. Tuổi người lớn ở đây là định hướng tạo hình, không phải con số trích từ GDD v2.
+Theo chốt mới nhất của người dùng ngày 03/10/2026: **tất cả nhân vật đều chibi; chỉ thay quần áo và nét mặt để thể hiện khác tuổi**. Giữ tỷ lệ cơ thể chibi nhất quán, không kéo dài chân/thân và không dùng tăng chiều cao để phân biệt tuổi. Mẹ/cô dùng cùng một tạo hình người lớn chibi ổn định giữa các chương. Định hướng khoảng 30 tuổi cho mẹ/cô là góp ý tạo hình của người dùng, không phải con số trích từ GDD v2.
 
 Giữ nhận diện tóc và màu chủ đạo, nhưng trang phục cần thay đổi hợp lý giữa nhóm tuổi; không dùng nguyên áo/quần trẻ nhỏ rồi chỉ kéo dài tay chân. An và Minh cùng nhóm tuổi trong mỗi chapter. Chương 2, 4 và 5 có thể dùng chung bộ 16 tuổi; chương 3 là 17 và chương 6 là 18. Chênh lệch 17–18 có thể nhẹ; không phóng đại để ép mỗi tuổi thành một vóc dáng khác hẳn.
 
-### Đề xuất trang phục chibi
+### Trang phục chibi đã áp dụng
 
 | Tuổi | An | Minh |
 | --- | --- | --- |
@@ -32,10 +32,12 @@ Giữ nhận diện tóc và màu chủ đạo, nhưng trang phục cần thay �
 | 17 | Polo vàng, quần xanh dài | Polo navy, quần be dài |
 | 18 | Sơ mi khoác vàng xắn tay, áo kem, quần xanh dài | Sơ mi navy xắn tay, quần be dài, đồng hồ |
 
-Màu tóc/màu áo chủ đạo là dấu hiệu nhận diện. Bảng trang phục là đề xuất mỹ thuật, không phải chi tiết bắt buộc được ghi trong GDD. Khi ghép cảnh phải dùng cùng mốc chiều cao cho mỗi người lớn; chỉ thay tương quan vóc dáng của nhóm An/Minh theo tình huống. Góc máy/phối cảnh có thể đổi, nhưng không tăng kích thước người lớn để luôn cao hơn An/Minh.
+Màu tóc/màu áo chủ đạo là dấu hiệu nhận diện. Bảng trang phục là đề xuất mỹ thuật, không phải chi tiết bắt buộc được ghi trong GDD. Khi ghép cảnh dùng tỷ lệ chibi cố định cho mỗi nhân vật; chỉ góc máy, tư thế và phối cảnh làm thay đổi kích thước hiển thị. Không tăng kích thước người lớn để luôn cao hơn An/Minh, không lập thang chiều cao theo tuổi.
 
-Bảng mẫu: `output/age-review/chibi-age-design.png`. Đây là mẫu kiểm tra tạo hình, chưa thay thế tất cả sprite/tranh cảnh.
+Bảng kiểm tra cuối: `output/age-review/final-sprites-review.png` và `output/age-review/final-scenes-review.png`. Bảng mẫu ban đầu `chibi-age-design.png` là lịch sử; không dùng nó để suy ra thang chiều cao theo tuổi.
 
 ## Trạng thái rà soát
 
-Bộ ảnh `public/images/finteen-v2` hiện có sáu chapter. Kiểm tra hash cho thấy sáu bộ sprite An/Minh ban đầu giống nhau hoàn toàn; chưa phân biệt 14/16/17/18 tuổi. Lượt sửa tỷ lệ cao dài đã dừng theo phản hồi người dùng và được chuyển thành bản nháp trong `output/age-review/tall-drafts`. Đã khôi phục bộ ảnh đang dùng về bản gốc. Bước tiếp theo là bảng mẫu chibi có trang phục và chiều cao tương đối phù hợp; chưa hoàn tất thay toàn bộ ảnh.
+Đã hoàn tất thay **84 PNG của sáu chapter: 60 sprite và 24 tranh cảnh**, tại đúng đường dẫn trong `public/images/finteen-v2`. Có 36 sprite riêng biệt và 24 cảnh; sprite 16 tuổi dùng lại ở chương 2/4/5, cô Linh dùng cùng bộ ở chương 2–6. Toàn bộ nhân vật chibi theo chốt mới nhất; phân biệt tuổi bằng quần áo và nét mặt. Đã kiểm tra trực quan, alpha và checksum các bản sao. Dùng imagegen tích hợp; xem `output/age-review/final-prompt-set.md` và manifest trong thư mục art.
+
+Lượt sửa vóc dáng cao dài đã bị loại, giữ riêng trong `output/age-review/tall-drafts`; bản gốc được lưu trong `output/age-review/originals`. Đây là thay bộ asset, chưa tích hợp thêm gameplay mới.

@@ -1,5 +1,15 @@
 # Chương 6 — Mượn tiền có dễ không?
 
+<!-- chibi-age-update -->
+## Cập nhật tạo hình ngày 03/10/2026
+
+**Tất cả nhân vật đều chibi.** An/Minh trong tình huống này là **18 tuổi** theo GDD v2. Khác tuổi thể hiện qua quần áo và nét mặt; giữ tỷ lệ cơ thể chibi nhất quán, không dùng tăng chiều cao để phân biệt tuổi. Mẹ/cô/NPC dùng mẫu người lớn chibi cố định giữa các chương.
+
+Đã thay **9 sprite và 4 tranh scene** bằng imagegen tích hợp tại đúng đường dẫn cũ. Các sprite giữ nền trong suốt. Xem [manifest kích thước và checksum hiện tại](../character-age-manifest.json), [quy tắc tạo hình](../README.md) và [nguồn độ tuổi](../../../../docs/finteen-v2-character-ages.md).
+
+Thông tin nguồn tái sử dụng, kích thước và prompt cũ bên dưới là lịch sử của đợt tạo trước, được cập nhật này thay thế đối với **nhân vật và tranh scene**. Các hướng dẫn bối cảnh, đạo cụ, mini-game và tình huống vẫn dùng được. Bộ art này chưa được tích hợp thêm vào gameplay trong đợt sửa hình.
+<!-- /chibi-age-update -->
+
 Bộ art theo GDD v2, hoàn thành ngày 03/10/2026. Phong cách kawaii cartoon 2D, bảng màu mint–kem–coral, đồng bộ An, Minh và cô Linh của các chương trước.
 
 Có **22 PNG**: 4 background, 4 scene, 9 sprite nhân vật, 4 asset mini game, 1 prop. **10 ảnh tạo mới bằng imagegen tích hợp; 12 ảnh tái sử dụng nguyên bản.** Đây là bộ tài nguyên hình ảnh, chưa tích hợp vào luồng chơi.

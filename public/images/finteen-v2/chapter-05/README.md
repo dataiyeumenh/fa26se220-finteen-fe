@@ -1,5 +1,15 @@
 # Chương 5 — Ngân hàng và lãi
 
+<!-- chibi-age-update -->
+## Cập nhật tạo hình ngày 03/10/2026
+
+**Tất cả nhân vật đều chibi.** An/Minh trong tình huống này là **16 tuổi** theo GDD v2. Khác tuổi thể hiện qua quần áo và nét mặt; giữ tỷ lệ cơ thể chibi nhất quán, không dùng tăng chiều cao để phân biệt tuổi. Mẹ/cô/NPC dùng mẫu người lớn chibi cố định giữa các chương.
+
+Đã thay **11 sprite và 4 tranh scene** bằng imagegen tích hợp tại đúng đường dẫn cũ. Các sprite giữ nền trong suốt. Xem [manifest kích thước và checksum hiện tại](../character-age-manifest.json), [quy tắc tạo hình](../README.md) và [nguồn độ tuổi](../../../../docs/finteen-v2-character-ages.md).
+
+Thông tin nguồn tái sử dụng, kích thước và prompt cũ bên dưới là lịch sử của đợt tạo trước, được cập nhật này thay thế đối với **nhân vật và tranh scene**. Các hướng dẫn bối cảnh, đạo cụ, mini-game và tình huống vẫn dùng được. Bộ art này chưa được tích hợp thêm vào gameplay trong đợt sửa hình.
+<!-- /chibi-age-update -->
+
 Bộ ảnh theo GDD v2, phong cách kawaii cartoon 2D. **Hiện có 27 PNG: 4 background, 4 tranh scene hoàn chỉnh và 19 ảnh nhân vật/mini-game/đạo cụ.** Đợt bổ sung này thêm 3 góc nền và 4 tranh kể chuyện bằng imagegen tích hợp, giữ nguyên các ảnh đã có.
 
 ## Background và scene bổ sung — hướng dẫn sử dụng hiện tại
