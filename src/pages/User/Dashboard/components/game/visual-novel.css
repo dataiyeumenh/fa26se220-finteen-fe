@@ -92,7 +92,7 @@
 .vn-choice-option { display: flex; align-items: center; gap: 14px; width: 100%; padding: 15px 18px; text-align: left; font-size: 22px; font-weight: 600; line-height: 1.5; color: #493224; background: #fffdf6; border: 2px solid #d9c39e; border-radius: 15px; cursor: pointer; transition: background .15s, border-color .15s, transform .15s; }
 .vn-choice-option:hover:not(:disabled), .vn-choice-option:focus-visible { background: #ffe7a8; border-color: #b7802d; outline: 3px solid #e6b45455; outline-offset: 2px; transform: translateY(-2px); }
 .vn-choice-option:disabled { opacity: .65; cursor: default; }
-.vn-choice-letter { flex-shrink: 0; width: 38px; height: 38px; display: grid; place-items: center; border-radius: 10px; background: #f4e3c3; color: #875521; font-family: 'Baloo 2', sans-serif; font-size: 23px; font-weight: 800; }
+.vn-choice-letter { display: none; }
 .vn-choice-arrow { margin-left: auto; color: #a87532; }
 .vn-choice-hint { margin-top: 20px; text-align: center; font-size: 12px; color: #8b765c; }
 @media (max-width: 640px) {
@@ -131,4 +131,34 @@
 @media (max-height: 500px) and (orientation: landscape) {
   .vn-dialogue-dock { max-height: 44%; }
   .vn-dialogue { padding-top: 8px; }
+}
+
+/* Inspect button - customize width, height, top, and left positioning here */
+.vn-inspect-button {
+  position: absolute;
+  left: 49.5%;
+  top: 60%;
+  transform: translate(-50%, -50%);
+  width: 225px;
+  height: 156px;
+  cursor: pointer;
+  border: 4px dashed rgba(255, 255, 255, 0.4);
+  border-radius: 16px;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  font-size: 24px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.6);
+  text-align: center;
+  padding: 20px;
+  line-height: 1.4;
+}
+
+.vn-inspect-button:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.8);
 }

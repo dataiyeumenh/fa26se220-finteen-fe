@@ -5,8 +5,8 @@ import "./need-want.css";
 
 const zones = [
   { id: "inventory", title: "Quầy hàng", hint: "Chọn một món, rồi chọn giỏ", icon: "✦" },
-  { id: "need", title: "Giỏ Cần", hint: "Thiết yếu cho cuộc sống", icon: "✓" },
-  { id: "want", title: "Giỏ Muốn", hint: "Những điều làm bạn vui", icon: "♡" },
+  { id: "NEEDS", title: "Giỏ Cần", hint: "Thiết yếu cho cuộc sống", icon: "✓" },
+  { id: "WANTS", title: "Giỏ Muốn", hint: "Những điều làm bạn vui", icon: "♡" },
 ];
 
 function Item({ item, selected, onSelect, onDragStart, checked, correct }) {
@@ -33,7 +33,7 @@ export function NeedWantMiniGame({ game, onComplete, className, immersive = fals
   const grouped = Object.fromEntries(zones.map(zone => [zone.id, game.items.filter(item => (placements[item.id] || "inventory") === zone.id)]));
   const placed = game.items.length - grouped.inventory.length;
   const correct = game.items.filter(item => placements[item.id] === item.category).length;
-  const passed = correct === game.items.length;
+  const passed = correct >= game.items.length * 0.5; // 50% hoặc cao hơn là pass
   const selectedItem = game.items.find(item => item.id === selected);
 
   const moveItem = (id, zone) => {
@@ -79,10 +79,20 @@ export function NeedWantMiniGame({ game, onComplete, className, immersive = fals
       </div>
       <footer className="nw-footer">
         <div className="nw-status" aria-live="polite">
-          {submitted ? <><strong>{passed ? "Tuyệt vời! Bạn đã xếp đúng tất cả." : `Bạn đã xếp đúng ${correct}/${game.items.length} món.`}</strong><span>{passed ? "Sẵn sàng tiếp tục câu chuyện!" : "Bạn có thể sửa lại các món được đánh dấu hoặc tiếp tục để xem kết quả."}</span></> : <><strong>{selectedItem ? `Đang chọn: ${selectedItem.label}` : "Kéo thả hoặc bấm để chọn"}</strong><span>{selectedItem ? "Bấm nút dưới giỏ để chuyển vật phẩm." : "Chọn vật phẩm, sau đó bấm nút dưới giỏ Cần hoặc Muốn."}</span></>}
+          {submitted ? <><strong>{passed ? "Tuyệt vời!" : `Bạn xếp đúng ${correct}/${game.items.length} món.`}</strong><span>{passed ? "Sẵn sàng tiếp tục!" : "Có thể cần chỉnh lại một chút."}</span></> : <><strong>{selectedItem ? `Đang chọn: ${selectedItem.label}` : "Kéo thả hoặc bấm để chọn"}</strong><span>{selectedItem ? "Bấm nút dưới giỏ để chuyển vật phẩm." : "Chọn vật phẩm, sau đó bấm nút dưới giỏ Cần hoặc Muốn."}</span></>}
         </div>
         <div className="nw-actions"><button type="button" className="nw-reset" onClick={reset}><RotateCcw size={17} /> Xếp lại</button>
-          {submitted ? <button type="button" className="nw-submit" disabled={finished} onClick={finish}>Tiếp tục →</button> : <button type="button" className="nw-submit" disabled={placed !== game.items.length || !game.items.length} onClick={() => { setSubmitted(true); setSelected(null); }}>Kiểm tra <Check size={19} /></button>}
+          {submitted ? (
+            <>
+              {passed ? (
+                <button type="button" className="nw-submit" disabled={finished} onClick={finish}>Tiếp tục →</button>
+              ) : (
+                <button type="button" className="nw-submit" onClick={() => { setSubmitted(false); setSelected(null); }} style={{ background: '#b67c30' }}>Xếp lại <RotateCcw size={17} /></button>
+              )}
+            </>
+          ) : (
+            <button type="button" className="nw-submit" disabled={placed !== game.items.length || !game.items.length} onClick={() => { setSubmitted(true); setSelected(null); }}>Kiểm tra <Check size={19} /></button>
+          )}
         </div>
       </footer>
     </section>

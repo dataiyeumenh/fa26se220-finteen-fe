@@ -12,13 +12,13 @@
 .nw-tip svg { flex-shrink: 0; }
 .nw-board { display: grid; grid-template-columns: 1.12fr 1fr 1fr; gap: 18px; flex: 1; min-height: 0; }
 .nw-zone { display: flex; flex-direction: column; min-width: 0; min-height: 0; padding: 16px; border: 2px solid #d5bd98; border-radius: 20px; background: #fffaf0; box-shadow: 0 5px 0 #b5997320; transition: border-color .15s, background .15s; }
-.nw-need { background: #f2f4e6; border-color: #a3b28b; }
-.nw-want { background: #fcf0dd; border-color: #d6ac70; }
+.nw-need, .nw-NEEDS { background: #f2f4e6; border-color: #a3b28b; }
+.nw-want, .nw-WANTS { background: #fcf0dd; border-color: #d6ac70; }
 .nw-zone.is-over { border-color: #966226; background: #ffebbc; outline: 3px solid #dcae6755; }
 .nw-zone-heading { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
 .nw-zone-icon { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 13px; background: #e9d7b7; font-size: 26px; flex-shrink: 0; }
-.nw-need .nw-zone-icon { background: #d7e0c6; color: #50683b; }
-.nw-want .nw-zone-icon { background: #f0d6ac; color: #9d6429; }
+.nw-need .nw-zone-icon, .nw-NEEDS .nw-zone-icon { background: #d7e0c6; color: #50683b; }
+.nw-want .nw-zone-icon, .nw-WANTS .nw-zone-icon { background: #f0d6ac; color: #9d6429; }
 .nw-zone h3 { font-family: 'Baloo 2', sans-serif; font-size: 27px; font-weight: 800; line-height: 1.2; }
 .nw-zone-heading p { font-size: 12px; margin-top: 3px; color: #88765f; }
 .nw-count { margin-left: auto; font-size: 15px; font-weight: 700; color: #8c7453; }

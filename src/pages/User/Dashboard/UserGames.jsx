@@ -13,7 +13,9 @@ import useUserDashboard from "./hooks/useUserDashboard";
 import { VisualNovelPlayer } from "./components/game/VisualNovelPlayer";
 import { chapter1GameData } from "./data/chapter1VisualNovel";
 import { loadChapter1RuntimeData } from "./data/runtimeAdapter";
+import { loadChapter1V2RuntimeData } from "./data/chapter1V2RuntimeAdapter";
 import { loadChapter2RuntimeData } from "./data/chapter2RuntimeAdapter";
+import { loadChapter2V2RuntimeData } from "./data/chapter2V2RuntimeAdapter";
 import { usePublishedChapters } from "@/features/internal/hooks";
 
 const StoryPlayer = lazy(() => import('@/features/internal/StoryPlayer'));
@@ -52,6 +54,7 @@ const navItems = [
 export default function UserGames() {
   const [searchParams] = useSearchParams();
   const chapterId = searchParams.get("chapter") || "1";
+  const useV2 = searchParams.get("v") === "2";
   const isChapterOne = chapterId === "1";
   const isChapterTwo = chapterId === "2";
   const published = usePublishedChapters().find(chapter => chapter.number === Number(chapterId));
@@ -65,9 +68,13 @@ export default function UserGames() {
     const loadRuntime = async () => {
       try {
         const runtimeData = isChapterOne
-          ? await loadChapter1RuntimeData()
+          ? useV2
+            ? await loadChapter1V2RuntimeData()
+            : await loadChapter1RuntimeData()
           : isChapterTwo
-            ? await loadChapter2RuntimeData()
+            ? useV2
+              ? await loadChapter2V2RuntimeData()
+              : await loadChapter2RuntimeData()
             : null;
         if (mounted) {
           if (runtimeData) {
@@ -89,7 +96,7 @@ export default function UserGames() {
     return () => {
       mounted = false;
     };
-  }, [isChapterOne, isChapterTwo]);
+  }, [isChapterOne, isChapterTwo, useV2]);
 
   return (
     <DashboardLayout role={role} navItems={navItems} user={user}>
