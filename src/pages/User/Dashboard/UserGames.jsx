@@ -11,10 +11,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import useUserDashboard from "./hooks/useUserDashboard";
 import { VisualNovelPlayer } from "./components/game/VisualNovelPlayer";
-import { chapter1GameData } from "./data/chapter1VisualNovel";
-import { loadChapter1RuntimeData } from "./data/runtimeAdapter";
 import { loadChapter1V2RuntimeData } from "./data/chapter1V2RuntimeAdapter";
-import { loadChapter2RuntimeData } from "./data/chapter2RuntimeAdapter";
 import { loadChapter2V2RuntimeData } from "./data/chapter2V2RuntimeAdapter";
 import { usePublishedChapters } from "@/features/internal/hooks";
 
@@ -54,12 +51,11 @@ const navItems = [
 export default function UserGames() {
   const [searchParams] = useSearchParams();
   const chapterId = searchParams.get("chapter") || "1";
-  const useV2 = searchParams.get("v") === "2";
   const isChapterOne = chapterId === "1";
   const isChapterTwo = chapterId === "2";
   const published = usePublishedChapters().find(chapter => chapter.number === Number(chapterId));
   const { user, loading, error } = useUserDashboard();
-  const [gameData, setGameData] = useState(chapter1GameData);
+  const [gameData, setGameData] = useState(null);
   const [runtimeError, setRuntimeError] = useState("");
 
   useEffect(() => {
@@ -68,13 +64,9 @@ export default function UserGames() {
     const loadRuntime = async () => {
       try {
         const runtimeData = isChapterOne
-          ? useV2
-            ? await loadChapter1V2RuntimeData()
-            : await loadChapter1RuntimeData()
+          ? await loadChapter1V2RuntimeData()
           : isChapterTwo
-            ? useV2
-              ? await loadChapter2V2RuntimeData()
-              : await loadChapter2RuntimeData()
+            ? await loadChapter2V2RuntimeData()
             : null;
         if (mounted) {
           if (runtimeData) {
@@ -96,7 +88,7 @@ export default function UserGames() {
     return () => {
       mounted = false;
     };
-  }, [isChapterOne, isChapterTwo, useV2]);
+  }, [isChapterOne, isChapterTwo]);
 
   return (
     <DashboardLayout role={role} navItems={navItems} user={user}>
@@ -133,7 +125,7 @@ export default function UserGames() {
       )}
 
       {!loading && !error && published && <Suspense fallback={<p role="status">Đang tải chương đã phát hành…</p>}><StoryPlayer key={`${published.id}-${published.version.number}`} version={published.version}/></Suspense>}
-      {!loading && !error && !published && (isChapterOne || isChapterTwo) && <VisualNovelPlayer data={gameData} />}
+      {!loading && !error && !published && gameData && (isChapterOne || isChapterTwo) && <VisualNovelPlayer key={gameData.id} data={gameData} />}
 
       {!loading && !error && !published && !isChapterOne && !isChapterTwo && (
         <div className="mx-auto max-w-5xl space-y-4">

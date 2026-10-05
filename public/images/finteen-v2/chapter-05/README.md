@@ -239,6 +239,27 @@ Tất cả 1254 × 1254, alpha trong suốt.
 
 ## Prompt tạo ảnh
 
+## Công thức lắp cảnh hoàn chỉnh cho AI
+
+Khởi tạo độc lập: `principal=1000000`, `goal=1000000`, `horizonMonths=3`. Bài so tài khoản ba tháng và bài lãi kép theo năm là hai exercise khác nhau, không gộp timeline.
+
+| Beat | Chế độ và lớp ảnh | Nội dung/điểm chuyển |
+| --- | --- | --- |
+| SC01 | tranh `sc01-two-accounts` → BG09 + An `neutral/thinking` + bank-guide `explaining` | Hai thẻ dùng `flexible-account` và `term-account`; UI hiện lãi/phí/rút sớm. Chưa mở tài khoản thật. |
+| SC02 | tranh `sc02-investigating-provider` → `bg09b-provider-research-station` + An `thinking` + Minh `inviting`/bank-guide | Laptop mở checklist nhà cung cấp và phạm vi bảo vệ. Quảng cáo lãi cao là lời mời cần kiểm chứng. |
+| SC03 | tranh `sc03-money-and-purchasing-power` → `bg09c-timeline-teaching-wall` + An + cô Linh `explaining` | Mini-game dùng `nominal-money`, `purchasing-power-basket`, `time-calendar`; chạy phép tính năm riêng, không sửa số dư bài ba tháng. |
+| SC04 | tranh `sc04-planning-for-deadline` → `bg09d-plan-confirmation-counter` + An `thinking/relieved` + bank-guide | So kế hoạch với hạn ba tháng; phương án thiếu nguồn bù phải vào recovery/pending. |
+| Reflection | BG09 + An/cô Linh theo state | Tóm tắt lãi, phí, thanh khoản, bảo vệ và sức mua. Đây là beat kết, không tự sáng tác thêm “scene 5”. |
+
+Kết quả chuẩn: A sau ba tháng là 992.500đ; B rút sớm là 1.000.500đ theo giả định README. Bài năm: 1.050.000đ rồi 1.102.500đ; giỏ tăng 8% thành 1.080.000đ. Lưu `exerciseId` cùng mọi kết quả để không dùng nhầm công thức.
+
+### Kiểm thử bắt buộc
+
+- Phí A là 5.000đ/tháng × 3; B rút sớm dùng 0,2%/năm, không dùng 6%.
+- Xem số dư dự kiến không cộng lãi vào ví thật.
+- Provider chưa xác minh không được gắn bảo đảm; logo/luật thực tế không tự thêm.
+- Recovery của A chỉ đạt khi nguồn bù cụ thể và hợp lệ được xác nhận.
+
 <details>
 <summary>bg/bg09-banking-practice-room.png</summary>
 

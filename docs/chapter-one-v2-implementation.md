@@ -23,23 +23,19 @@
 import { loadChapter1V2RuntimeData } from "./data/chapter1V2RuntimeAdapter";
 ```
 
-### 2. Thêm flag để chọn version
-
-Thêm vào `UserGames.jsx` (xung quanh line 60):
+### 2. Dùng V2 làm phiên bản duy nhất
 
 ```jsx
-const useV2 = searchParams.get("v") === "2"; // ?v=2 để dùng v2
 const isChapterOne = chapterId === "1";
+const isChapterTwo = chapterId === "2";
 
 useEffect(() => {
   const loadRuntime = async () => {
     try {
       const runtimeData = isChapterOne
-        ? useV2
-          ? await loadChapter1V2RuntimeData()        // ← mới
-          : await loadChapter1RuntimeData()          // ← cũ
+        ? await loadChapter1V2RuntimeData()
         : isChapterTwo
-          ? await loadChapter2RuntimeData()
+          ? await loadChapter2V2RuntimeData()
           : null;
       
       setGameData(runtimeData);
@@ -49,13 +45,12 @@ useEffect(() => {
   };
 
   if (isChapterOne || isChapterTwo) loadRuntime();
-}, [isChapterOne, isChapterTwo, useV2]);
+}, [isChapterOne, isChapterTwo]);
 ```
 
 ### 3. Test
 
-- URL hiện tại: `/dashboard/demo/play?chapter=1` → dùng Chapter 1 cũ
-- URL mới: `/dashboard/demo/play?chapter=1&v=2` → dùng Chapter 1 v2
+- URL chính: `/dashboard/demo/play?chapter=1` → dùng Chapter 1 v2
 
 ---
 
@@ -164,8 +159,8 @@ Ví dụ:
 ## Checklist triển khai
 
 - [ ] Import `loadChapter1V2RuntimeData` vào UserGames.jsx
-- [ ] Thêm flag `useV2` để chọn version
-- [ ] Test URL `/dashboard/demo/play?chapter=1&v=2`
+- [x] Dùng Chapter 1 v2 làm phiên bản duy nhất
+- [ ] Test URL `/dashboard/demo/play?chapter=1`
 - [ ] Kiểm tra 3 nhánh lựa chọn
 - [ ] Kiểm tra mini-game "needs-or-wants"
 - [ ] Kiểm tra 3 endings

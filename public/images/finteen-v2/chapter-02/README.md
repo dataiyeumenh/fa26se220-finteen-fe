@@ -260,6 +260,27 @@ Chỉ bàn giao bộ ảnh chương 2 và tài liệu này; chưa thay gameplay 
 
 ## Prompt tạo ảnh
 
+## Công thức lắp cảnh hoàn chỉnh cho AI
+
+Khởi tạo độc lập: `income=3000000`, `laptopGoal=6000000`, `repairCost=200000`. Không giữ 500.000đ/lớp vẽ của chương 1. Budget Builder là kế hoạch, không phải giao dịch.
+
+| Beat | Chế độ và lớp ảnh | Nội dung/điểm chuyển |
+| --- | --- | --- |
+| SC01 | tranh `sc01-camp-budget-briefing` → BG03 + An `neutral` + cô Linh `explaining` + phong bì | Giới thiệu trại và thu nhập mô phỏng; UI mới hiển thị 3.000.000đ. |
+| SC02 | tranh `sc02-dividing-envelopes` → `bg03b-budget-table` + An `thinking`; Minh `inviting` chỉ lúc đề xuất giải trí | Budget Builder dùng 5 thẻ nhóm chi và `laptop-goal`; tổng phải cập nhật trực tiếp, không trừ ví. |
+| SC03 | tranh `sc03-laptop-goal-planning` → BG04 + An `thinking` + cô Linh `explaining` | Savings Race render lại `month-calendar`: 1.000.000×6 hoặc 800.000×8; 7 tháng của phương án 800.000 chưa đủ. |
+| SC04 | tranh `sc04-bicycle-surprise` → `bg05b-bicycle-corner` + An `worried-money`/`thinking` + Minh `neutral` + prop xe | UI báo sửa 200.000đ; chọn lấy từ buffer hoặc sửa kế hoạch. Không coi xe trong tranh là đã sửa. |
+| SC05 | tranh `sc05-revising-budget` → `bg03b-budget-table` + An/cô Linh theo kết quả | Tính lại ngân sách và thời hạn; feedback nêu khoản nào thay đổi. Ending chỉ chốt sau khi tổng không vượt 3.000.000đ. |
+
+Lưu riêng `budgetDraft`, `confirmedBudget`, `monthsToGoal`, `unexpectedExpenses` và `recoveryChoice`. Chỉ `confirmedBudget` tham gia chấm; kéo thẻ chưa xác nhận không tạo effect.
+
+### Kiểm thử bắt buộc
+
+- Tổng nhóm chi + mục tiêu + buffer không vượt thu nhập khi chốt.
+- Kế hoạch 800.000đ cần 8 tháng; phát sinh 200.000đ làm timeline thay đổi đúng theo nguồn xử lý.
+- Reload giữ các thẻ đã đặt nhưng không cộng tiền tiết kiệm dự kiến vào ví.
+- Không hiển thị mẹ; cô Linh là người hướng dẫn của chương này.
+
 Các prompt nguyên văn được lưu bên dưới để tái tạo / chỉnh sửa khi cần. Công cụ: imagegen tích hợp. Bản xe đạp cuối đã qua bước tách nền bổ sung.
 
 <details>

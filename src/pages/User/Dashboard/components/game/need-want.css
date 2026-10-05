@@ -47,6 +47,7 @@
 .nw-item.is-correct { border-color: #7b995a; }
 .nw-item.is-incorrect { border-color: #c78156; background: #fff0e2; }
 .nw-item-feedback { font-size: 12px; margin-top: 4px; color: #86582e; }
+.nw-item-explanation { display: block; margin-top: 5px; color: #6f604d; font-size: 11px; line-height: 1.35; }
 .vn-minigame-host { position: absolute; inset: 0; z-index: 30; padding: 0; overflow: hidden; background: #43301c24; backdrop-filter: blur(2px); }
 @media (max-width: 900px), (max-height: 620px) {
   .nw-game { height: auto; min-height: 100%; }

@@ -20,6 +20,7 @@ function Item({ item, selected, onSelect, onDragStart, checked, correct }) {
       <span className="nw-item-label">{item.label}</span>
       {selected && <span className="nw-selected-mark"><Check size={14} /></span>}
       {checked && <span className="nw-item-feedback">{correct ? "Đúng rồi" : "Thử xem lại nhé"}</span>}
+      {checked && item.explanation && <span className="nw-item-explanation">{item.explanation}</span>}
     </button>
   );
 }
@@ -33,7 +34,8 @@ export function NeedWantMiniGame({ game, onComplete, className, immersive = fals
   const grouped = Object.fromEntries(zones.map(zone => [zone.id, game.items.filter(item => (placements[item.id] || "inventory") === zone.id)]));
   const placed = game.items.length - grouped.inventory.length;
   const correct = game.items.filter(item => placements[item.id] === item.category).length;
-  const passed = correct >= game.items.length * 0.5; // 50% hoặc cao hơn là pass
+  const requiredScore = game.passScore ?? Math.ceil(game.items.length * 0.8);
+  const passed = correct >= requiredScore;
   const selectedItem = game.items.find(item => item.id === selected);
 
   const moveItem = (id, zone) => {
@@ -79,7 +81,7 @@ export function NeedWantMiniGame({ game, onComplete, className, immersive = fals
       </div>
       <footer className="nw-footer">
         <div className="nw-status" aria-live="polite">
-          {submitted ? <><strong>{passed ? "Tuyệt vời!" : `Bạn xếp đúng ${correct}/${game.items.length} món.`}</strong><span>{passed ? "Sẵn sàng tiếp tục!" : "Có thể cần chỉnh lại một chút."}</span></> : <><strong>{selectedItem ? `Đang chọn: ${selectedItem.label}` : "Kéo thả hoặc bấm để chọn"}</strong><span>{selectedItem ? "Bấm nút dưới giỏ để chuyển vật phẩm." : "Chọn vật phẩm, sau đó bấm nút dưới giỏ Cần hoặc Muốn."}</span></>}
+          {submitted ? <><strong>{passed ? `Đạt ${correct}/${game.items.length} — Hoàn thành!` : `Bạn xếp đúng ${correct}/${game.items.length} món.`}</strong><span>{passed ? "Hãy đọc phần giải thích rồi tiếp tục." : `Cần đúng ít nhất ${requiredScore} món. Các thẻ màu cam có thể sửa lại.`}</span></> : <><strong>{selectedItem ? `Đang chọn: ${selectedItem.label}` : "Kéo thả hoặc bấm để chọn"}</strong><span>{selectedItem ? "Bấm nút dưới giỏ để chuyển vật phẩm." : `Mục tiêu: xếp đúng ít nhất ${requiredScore}/${game.items.length} món.`}</span></>}
         </div>
         <div className="nw-actions"><button type="button" className="nw-reset" onClick={reset}><RotateCcw size={17} /> Xếp lại</button>
           {submitted ? (

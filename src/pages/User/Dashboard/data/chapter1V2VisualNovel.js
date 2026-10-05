@@ -279,13 +279,7 @@ export const chapter1V2GameData = {
           label:
             "C. So tổng giá rồi hoãn mua vì 200.000đ không còn tiền tiết kiệm",
           condition: { type: "ALWAYS_UNLOCKED" },
-          moneyEvents: [
-            {
-              eventId: "EV_CH01_BUY_HEADPHONE_CHEAP",
-              amount: -200000,
-              description: "Thanh toán mua tai nghe giá rẻ hơn",
-            },
-          ],
+          moneyEvents: [],
           deltaStats: {
             SAVING: 5,
             HAPPINESS: -2,
@@ -493,6 +487,7 @@ export const chapter1V2GameData = {
         title: "Needs or Wants Mini-Game",
         mechanic: "DRAG_AND_DROP",
         timeLimitSeconds: 0,
+        passScore: 5,
         items: [
           {
             id: "ITEM_MEAL",
@@ -576,7 +571,7 @@ export const chapter1V2GameData = {
       {
         id: "A_GOAL_ACHIEVED",
         title: "Ending A: Goal Achieved",
-        condition: "money > 500000",
+        condition: "money >= 500000 && miniGameScore >= 5",
         storyText:
           "An vui vẻ đánh dấu lên lịch ngày 28: 'Mình còn nhiều tiền tiết kiệm sau khi đóng tiền lớp vẽ. Tuyệt vời! Đây là lựa chọn thông minh!'",
         characterSprite: `${ASSET_BASE}/char/an/an-relieved.png`,

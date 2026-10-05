@@ -216,6 +216,26 @@ Cả hai 1254 × 1254, nền trong suốt.
 
 ## Prompt tạo ảnh
 
+## Công thức lắp cảnh hoàn chỉnh cho AI
+
+Đây là chương **Mua thông minh**, không phải mini-game chương 4 về lịch học/ca làm trong code cũ. Khởi tạo ngân sách mua sắm và nhu cầu điện thoại theo GDD của chương này; không mang giao dịch chương khác sang.
+
+| Beat | Chế độ và lớp ảnh | Nội dung/điểm chuyển |
+| --- | --- | --- |
+| SC01 | tranh `sc01-phone-needs` → BG07 + An `thinking` + cô Linh `explaining` + phong bì ngân sách | Người chơi xác định nhu cầu tối thiểu trước khi xem máy; `battery-repair-inspection` là phương án kiểm tra/sửa, không phải kết luận. |
+| SC02 | tranh `sc02-comparing-three-phones` → `bg08b-phone-comparison-counter` + An `thinking` + nhân viên `explaining` | Ba thẻ A/B/C dùng đúng ba ảnh; UI tính giá mua + sửa/phụ kiện/gói/phí để ra tổng chi phí, không xếp hạng từ hình. |
+| SC03 | tranh `sc03-questioning-receipt` → `bg08c-checkout-documents` + An `thinking` + nhân viên `explaining` + prop chứng từ | Kiểm tra báo giá, hóa đơn, bảo hành, đổi trả trước xác nhận. Không vẽ dấu duyệt lên ảnh; lưu checklist trong state. |
+| SC04 | tranh `sc04-following-renewal` → BG08/BG08C + An và cô Linh theo kết quả | Dùng `renewal-calendar` để theo dõi hạn đổi trả/gia hạn; lịch và thông báo là UI. Chỉ tạo transaction nếu người chơi thật sự xác nhận mua. |
+
+State tối thiểu: `needs`, `budget`, `phoneQuotes`, `inspectionResults`, `documentChecklist`, `selectedPhone`, `purchaseConfirmed`, `renewalDates`. Ảnh điện thoại không mang thông số; mọi thông số phải gắn theo ID dữ liệu.
+
+### Kiểm thử bắt buộc
+
+- Đổi thứ tự thẻ vẫn giữ đúng giá/thông số theo ID.
+- Xem/so sánh/hỏi hóa đơn không trừ tiền; nút mua áp dụng một lần.
+- Không coi máy cũ là kém chỉ vì hình; tổng chi phí và độ phù hợp quyết định kết quả.
+- Ngày đổi trả/gia hạn lấy từ state và timezone, không đọc từ icon lịch.
+
 <details>
 <summary>bg/bg08-phone-shop.png</summary>
 

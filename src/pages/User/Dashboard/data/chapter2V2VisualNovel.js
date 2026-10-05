@@ -441,7 +441,7 @@ export const chapter2V2GameData = {
           condition: { type: "ALWAYS_UNLOCKED" },
           moneyEvents: [
             {
-              eventId: "EV_CH01_REPAIR_BIKE_BUFFER",
+              eventId: "EV_CH02_REPAIR_BIKE_BUFFER",
               amount: -200000,
               description: "Chi trả tiền sửa xe từ Quỹ dự trù linh hoạt",
             },
@@ -463,7 +463,7 @@ export const chapter2V2GameData = {
           condition: { type: "ALWAYS_UNLOCKED" },
           moneyEvents: [
             {
-              eventId: "EV_CH01_REPAIR_BIKE_SAVINGS",
+              eventId: "EV_CH02_REPAIR_BIKE_SAVINGS",
               amount: -200000,
               description: "Chi trả tiền sửa xe từ Hũ tiết kiệm Laptop",
             },

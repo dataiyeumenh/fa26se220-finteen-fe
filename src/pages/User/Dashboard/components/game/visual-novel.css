@@ -1,19 +1,28 @@
 .vn-player { position: fixed; inset: 0; z-index: 100; height: 100dvh; display: flex; flex-direction: column; background: #111a20; color: #f4f1e8; overflow: hidden; }
-.vn-toolbar { position: absolute; z-index: 50; top: max(18px, env(safe-area-inset-top)); left: max(18px, env(safe-area-inset-left)); right: max(18px, env(safe-area-inset-right)); display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; pointer-events: none; }
+.vn-toolbar { position: absolute; z-index: 50; top: max(16px, env(safe-area-inset-top)); left: max(16px, env(safe-area-inset-left)); right: max(16px, env(safe-area-inset-right)); display: grid; grid-template-columns: minmax(110px, 1fr) minmax(220px, 420px) minmax(280px, 1fr); align-items: start; gap: 14px; pointer-events: none; }
 .vn-toolbar > * { pointer-events: auto; }
-.vn-hud-right { display: flex; gap: 8px; align-items: center; }
+.vn-hud-right { display: flex; justify-content: flex-end; gap: 8px; align-items: center; }
 .vn-heading { min-width: 0; flex: 1; }
 .vn-eyebrow { font-size: 9px; letter-spacing: 2px; color: #c5b783; font-weight: 700; }
 .vn-heading h1 { font-size: 14px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
-.vn-icon-button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-width: 42px; height: 42px; border-radius: 14px; color: #ffedc9; cursor: pointer; border: 1px solid #e8c99066; background: #35271edb; box-shadow: 0 3px 12px #27160926; backdrop-filter: blur(12px); font-size: 12px; }
-.vn-icon-button:hover { background: #ffffff12; color: #fbbf24; }
+.vn-icon-button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-width: 44px; height: 44px; padding: 0 13px; border-radius: 15px; color: #fff3d6; cursor: pointer; border: 1px solid #e8c99073; background: linear-gradient(145deg, #4b382be8, #2e211ae8); box-shadow: 0 5px 18px #1b0e0738, inset 0 1px #ffffff12; backdrop-filter: blur(14px); font-size: 12px; font-weight: 700; transition: transform .15s, border-color .15s, background .15s; }
+.vn-icon-button:hover { transform: translateY(-1px); border-color: #f0c66dbb; background: linear-gradient(145deg, #5a422feF, #38261cef); color: #ffd978; }
 .vn-icon-button:focus-visible, .vn-scene-next:focus-visible { outline: 2px solid #fbbf24; outline-offset: 3px; }
 .vn-control-label { padding-right: 10px; }
 .vn-scene-count { font-size: 12px; white-space: nowrap; color: #e1e2dc; }
 .vn-scene-count span { color: #8e9b9e; }
-.vn-wallet { display: flex; align-items: center; gap: 9px; height: 42px; color: #ffe1a0; padding: 8px 14px; border-radius: 14px; border: 1px solid #e8c99066; background: #35271edb; backdrop-filter: blur(12px); font-size: 14px; font-weight: 700; white-space: nowrap; }
+.vn-wallet { position: relative; display: flex; align-items: center; gap: 8px; height: 44px; color: #ffe4a8; padding: 8px 14px; border-radius: 15px; border: 1px solid #e8c99073; background: linear-gradient(145deg, #4b382be8, #2e211ae8); box-shadow: 0 5px 18px #1b0e0738, inset 0 1px #ffffff12; backdrop-filter: blur(14px); font-size: 14px; font-weight: 800; white-space: nowrap; transition: border-color .2s, box-shadow .2s; }
 .vn-wallet small { font-weight: 400; opacity: .7; }
-.vn-progress { height: 2px; background: #ffffff08; flex-shrink: 0; }
+.vn-wallet.has-positive-change { border-color: #89b567; box-shadow: 0 0 0 3px #78a85833; }
+.vn-wallet.has-negative-change { border-color: #dc8068; box-shadow: 0 0 0 3px #d86c5633; }
+.vn-wallet-delta, .vn-stat-delta { position: absolute; top: -9px; right: -5px; padding: 2px 7px; border-radius: 999px; color: white; font-size: 10px; font-weight: 900; box-shadow: 0 2px 7px #0004; }
+.vn-wallet-delta.is-positive, .vn-stat-delta.is-positive { background: #628c44; }
+.vn-wallet-delta.is-negative, .vn-stat-delta.is-negative { background: #c45f4d; }
+.vn-progress-pill { align-self: start; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 10px; min-height: 44px; padding: 8px 13px 7px; color: #fff4dd; border: 1px solid #e8c99060; border-radius: 15px; background: #2f231cdb; box-shadow: 0 5px 18px #1b0e0730; backdrop-filter: blur(14px); }
+.vn-progress-pill > span { overflow: hidden; font-size: 12px; font-weight: 800; white-space: nowrap; text-overflow: ellipsis; }
+.vn-progress-pill > small { color: #ead29e; font-size: 11px; font-weight: 800; }
+.vn-progress-pill .vn-progress { grid-column: 1 / -1; }
+.vn-progress { height: 4px; background: #ffffff1a; flex-shrink: 0; border-radius: 999px; overflow: hidden; }
 .vn-progress > div { height: 100%; background: #e7bb57; transition: width .3s; }
 .vn-play-area { position: relative; flex: 1; min-height: 0; display: flex; flex-direction: column; }
 .vn-stage-space { flex: 1; min-height: 0; position: relative; display: flex; align-items: center; justify-content: center; container-type: size; overflow: hidden; isolation: isolate; background: #66503b; }
@@ -34,9 +43,24 @@
 .vn-details { position: relative; }
 .vn-details summary { list-style: none; }
 .vn-details summary::-webkit-details-marker { display: none; }
-.vn-popover { position: absolute; right: 0; top: 48px; width: min(420px, calc(100vw - 32px)); padding: 20px; background: #f7f5ef; color: #24342d; border: 1px solid #e4dfd1; border-radius: 16px; box-shadow: 0 16px 60px #0006; z-index: 80; }
+.vn-popover { position: absolute; right: 0; top: 52px; width: min(460px, calc(100vw - 32px)); padding: 20px; background: linear-gradient(145deg, #fffbf2, #f2e7d4); color: #493626; border: 1px solid #cdb58e; border-radius: 20px; box-shadow: 0 18px 60px #1d0f0960, inset 0 0 0 4px #ffffff66; z-index: 80; }
 .vn-popover h2 { font-size: 16px; font-weight: 800; }
-.vn-popover > .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.vn-popover-heading > span { color: #936a34; font-size: 9px; font-weight: 900; letter-spacing: 1.8px; }
+.vn-popover-heading h2 { font-family: 'Baloo 2', sans-serif; font-size: 22px; }
+.vn-stats-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; margin-top: 13px; }
+.vn-stat-card { --stat-accent: #9b7440; position: relative; display: flex; align-items: center; gap: 10px; min-width: 0; padding: 10px; border: 1px solid color-mix(in srgb, var(--stat-accent) 35%, #e7dac5); border-radius: 14px; background: #fffdf8; transition: transform .2s, box-shadow .2s; }
+.vn-stat-card.is-wealth { --stat-accent: #9a7031; }
+.vn-stat-card.is-saving { --stat-accent: #5f8a5b; }
+.vn-stat-card.is-fiq { --stat-accent: #5b7fa1; }
+.vn-stat-card.is-happiness { --stat-accent: #c46c77; }
+.vn-stat-card.is-risk { --stat-accent: #bd7048; }
+.vn-stat-card.is-goal { --stat-accent: #8269a3; }
+.vn-stat-card.has-positive-change { box-shadow: 0 0 0 3px #6c9c5533; transform: translateY(-1px); }
+.vn-stat-card.has-negative-change { box-shadow: 0 0 0 3px #c45f4d33; transform: translateY(-1px); }
+.vn-stat-icon { display: grid; place-items: center; width: 34px; height: 34px; flex: 0 0 34px; color: var(--stat-accent); border-radius: 11px; background: color-mix(in srgb, var(--stat-accent) 13%, white); }
+.vn-stat-copy { display: flex; flex-direction: column; min-width: 0; }
+.vn-stat-copy small { overflow: hidden; color: #7a6957; font-size: 10px; font-weight: 800; text-transform: uppercase; text-overflow: ellipsis; white-space: nowrap; }
+.vn-stat-copy strong { color: #44301f; font-size: 17px; line-height: 1.15; }
 .vn-menu-panel { left: 0; right: auto; max-height: calc(100dvh - 90px); overflow-y: auto; }
 .vn-menu-panel .vn-heading h1 { white-space: normal; font-size: 16px; }
 .vn-menu-panel .vn-eyebrow { color: #997239; }
@@ -51,21 +75,27 @@
 .vn-restart p { margin: 10px 0 16px; font-size: 13px; color: #637167; }
 .vn-restart button { padding: 10px 16px; border-radius: 8px; background: #fbbf24; color: #422b0a; font-weight: 700; cursor: pointer; }
 @media (max-width: 640px) {
-  .vn-toolbar { top: max(12px, env(safe-area-inset-top)); left: 12px; right: 12px; gap: 6px; }
+  .vn-toolbar { top: max(10px, env(safe-area-inset-top)); left: 10px; right: 10px; grid-template-columns: auto 1fr; gap: 7px; }
+  .vn-progress-pill { display: none; }
+  .vn-hud-right { min-width: 0; gap: 6px; }
+  .vn-hud-right .vn-wallet { margin-left: auto; }
   .vn-heading h1 { font-size: 11px; }
   .vn-eyebrow { font-size: 7px; letter-spacing: 1px; }
   .vn-scene-count, .vn-control-label { display: none; }
-  .vn-wallet { padding: 8px; font-size: 12px; gap: 5px; }
-  .vn-wallet svg { display: none; }
-  .vn-icon-button { min-width: 32px; height: 34px; }
+  .vn-wallet { height: 42px; padding: 7px 10px; font-size: 12px; gap: 5px; }
+  .vn-wallet svg { width: 16px; }
+  .vn-icon-button { min-width: 42px; height: 42px; padding: 0 10px; }
+  .vn-fullscreen-button { display: none; }
   .vn-dialogue-dock { left: 12px; right: 12px; bottom: max(12px, env(safe-area-inset-bottom)); width: calc(100% - 24px); max-height: 55%; }
   .vn-dialogue { padding: 14px 16px; }
   .vn-choices { grid-template-columns: 1fr; }
-  .vn-popover { position: fixed; right: 16px; top: 68px; }
-  .vn-menu-panel { left: 16px; right: auto; }
+  .vn-popover { position: fixed; right: 10px; top: 60px; width: calc(100vw - 20px); max-height: calc(100dvh - 72px); overflow-y: auto; }
+  .vn-menu-panel { left: 10px; right: auto; }
+  .vn-stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-height: 500px) and (orientation: landscape) {
   .vn-toolbar { top: max(8px, env(safe-area-inset-top)); }
+  .vn-progress-pill { display: none; }
   .vn-eyebrow { display: none; }
   .vn-dialogue-dock { bottom: max(10px, env(safe-area-inset-bottom)); max-height: 48%; }
   .vn-dialogue { padding: 10px 18px; }
@@ -82,6 +112,7 @@
 .vn-dialogue > .vn-dialogue-text { font-size: clamp(24px, 1.6vw, 28px); line-height: 1.65; font-weight: 500; color: #493224; }
 .vn-dialogue-next { color: #89591f; margin-top: 8px; font-size: 13px; }
 .vn-dialogue-next span { font-size: 24px; line-height: 1; }
+.vn-minigame-host > .nw-game, .vn-minigame-host > .c2-game { padding-top: 74px; }
 .vn-summary-title { font-family: 'Baloo 2', sans-serif; font-size: 28px; font-weight: 800; }
 .vn-choice-overlay { position: absolute; inset: 0; z-index: 40; display: flex; padding: 80px 24px 24px; overflow-y: auto; background: #261a135e; backdrop-filter: blur(4px); }
 .vn-choice-panel { width: min(680px, 100%); margin: auto; padding: 30px; border-radius: 24px; border: 2px solid #b58b57; background: linear-gradient(130deg, #fff9ed, #f6e8cf); color: #493224; box-shadow: 0 20px 70px #21120960, inset 0 0 0 5px #fffcf366; }
@@ -103,6 +134,7 @@
   .vn-choice-overlay { padding: 68px 12px 16px; }
   .vn-choice-panel { padding: 22px 16px; }
   .vn-choice-option { padding: 14px; font-size: 20px; gap: 10px; }
+  .vn-minigame-host > .nw-game, .vn-minigame-host > .c2-game { padding-top: 64px; }
 }
 @media (max-height: 500px) and (orientation: landscape) {
   .vn-dialogue-dock { max-height: 55%; }

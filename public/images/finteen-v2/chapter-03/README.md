@@ -161,6 +161,26 @@ Hai nền: 1672 × 941. Năm icon và hai đạo cụ: 1254 × 1254. An trung t�
 
 ## Nguồn và bàn giao
 
+## Công thức lắp cảnh hoàn chỉnh cho AI
+
+Chương độc lập về chọn cơ hội nghề nghiệp. Ba lời mời chỉ là phương án để điều tra; nhìn thấy thẻ không đồng nghĩa đã nhận việc hoặc trả tiền khóa học.
+
+| Beat | Chế độ và lớp ảnh | Nội dung/điểm chuyển |
+| --- | --- | --- |
+| SC01 | tranh `sc01-three-career-offers` → BG06 + tư vấn viên `presenting` + An `neutral/thinking` | Dựng ba thẻ bằng `commission-sales`, `design-assistant`, `intro-course`; UI ghi thu nhập, chi phí, giờ và kỹ năng. |
+| SC02 | tranh `sc02-checking-course-source` → `bg06b-course-information-desk` + An `thinking` + tư vấn viên `presenting` + laptop kiểm nguồn | Người chơi kiểm đơn vị cung cấp, phí, điều kiện và bằng chứng; chưa xác minh phải lưu trạng thái `pending`, không tự coi là lừa đảo hay an toàn. |
+| SC03 | tranh `sc03-weekly-career-plan` → BG07 + An `thinking` + cô Linh `explaining` | Dùng `time-availability` để ghép lịch học/làm và ngân sách đào tạo; xung đột phải được UI báo rõ. |
+| SC04 | tranh `sc04-career-report` → `bg06c-career-report-corner` + An theo kết quả + cô Linh/tư vấn viên phù hợp | Báo cáo lựa chọn dựa trên bằng chứng, chi phí, thời gian và mục tiêu kỹ năng; không chấm chỉ theo thu nhập cao nhất. |
+
+State nên có `offersById`, `checkedSources`, `weeklySlots`, `trainingBudget`, `selectedOffer`, `unresolvedRisks`. Ending tốt chỉ khả dụng khi lựa chọn khả thi và rủi ro bắt buộc đã được kiểm tra.
+
+### Kiểm thử bắt buộc
+
+- Mỗi offer giữ ID ổn định khi lọc/sắp xếp; không ghép nhầm số liệu giữa ba ảnh.
+- Mở laptop kiểm nguồn không làm An sở hữu laptop và không tự trừ học phí.
+- Lịch không cho một giờ thuộc hai hoạt động; lựa chọn chưa xác minh không được gắn huy hiệu an toàn.
+- Báo cáo cuối nêu lý do và dữ kiện đã dùng, không suy từ biểu cảm nhân vật.
+
 13 ảnh dùng lại nguyên bản: 9 sprite An/Minh/cô Linh cùng đường dẫn trong `../chapter-02/char/`; BG07 từ `../chapter-01/bg/bg01b-study-corner.png`; biểu tượng thời gian từ `../chapter-02/asset-mini-game/savings-race/month-calendar.png`; laptop từ `../chapter-02/asset-mini-game/savings-race/laptop-goal.png`; phong bì từ `../chapter-01/props/allowance-envelope.png`.
 
 7 ảnh bổ sung bằng imagegen tích hợp: BG06, hai sprite tư vấn viên, bốn icon nghề/khóa học. BG06 chỉnh từ `public/images/career-match/career-fair-kawaii-v2.png`; tư vấn viên tham chiếu phong cách cô Linh chương 2 và giữ cùng nhận dạng giữa hai pose.

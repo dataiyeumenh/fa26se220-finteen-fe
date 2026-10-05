@@ -1,5 +1,7 @@
 # Đối chiếu scene và nhân vật từng chương
 
+> **Phạm vi:** báo cáo này chỉ xác nhận nhân vật trong tranh scene khớp sprite. Nó không xác nhận logic truyện, phép tính hay việc asset đã được tích hợp. AI triển khai game phải dùng [`../../public/images/finteen-v2/README.md`](../../public/images/finteen-v2/README.md) và README từng chương; không import các ảnh comparison/before vào runtime.
+
 Ngày kiểm tra: 03/10/2026. Đã xem trực quan đủ 24 scene trong 6 chương hiện có, đối chiếu với sprite của đúng chương. Ban đầu 20 scene khớp và 4 scene lệch chi tiết; cả 4 đã được sửa và thay vào dự án.
 
 Tiêu chí: nhận diện khuôn mặt, tóc, trang phục nhìn thấy và tỷ lệ chibi. Khác biệt do biểu cảm, tư thế, góc nhìn được chấp nhận; không kết luận về phần trang phục bị che khuất. Mỗi chương là câu chuyện độc lập. An và Minh theo tuổi từng chương (14, 16, 17, 16, 16, 18); người lớn giữ mẫu cố định.
@@ -75,3 +77,10 @@ Tiêu chí: nhận diện khuôn mặt, tóc, trang phục nhìn thấy và tỷ
 Bốn bản sửa dùng công cụ built-in imagegen, giữ phong cách chibi. [Prompt, ảnh tham chiếu và đường dẫn bản sao lưu](fixes.json). Ảnh trước sửa nằm trong thư mục `before/`. Đã xem từng bản sửa trước khi cài đặt.
 
 Đã đồng bộ bản ảnh chính, bản nháp sản xuất và manifest; kiểm tra SHA-256 đủ 84 file. Các ảnh đối chiếu được tạo lại từ ảnh đã cài đặt.
+
+## Cách đọc kết quả khi ghép game
+
+- Dòng “khớp” nghĩa là khuôn mặt/tóc/trang phục nhất quán, không có nghĩa scene được dùng làm background.
+- Mọi `scene/*.png` liệt kê ở trên đã chứa nhân vật: hiển thị riêng, rồi chuyển về `bg + char` khi bắt đầu thoại hoặc tương tác.
+- Ảnh trong `before/` và các file `*-comparison.png` là bằng chứng audit, không phải biến thể cảm xúc hay ending.
+- Khi scene và sprite khác tư thế nhưng cùng nhận dạng, giữ scene nguyên vẹn; không chồng sprite để “sửa” tư thế.

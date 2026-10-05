@@ -41,13 +41,13 @@ export function GuestDemo() {
       <span className="ws-pill">BẢN DEMO MIỄN PHÍ</span>
       <h2>Chương 1: Khám phá tiền tệ</h2>
       <p>Làm quen với nhu cầu, mong muốn và giá trị của đồng tiền qua câu chuyện đầu tiên.</p>
-      <Link className="ws-btn primary" to="/dashboard/demo/play?chapter=1&v=2">Bắt đầu dùng thử →</Link>
+      <Link className="ws-btn primary" to="/dashboard/demo/play?chapter=1">Bắt đầu dùng thử →</Link>
       </div><BookOpen className="ws-hero-art" aria-hidden="true" /></section>
       <section className="ws-hero ws-shop-intro"><div>
         <span className="ws-pill">CHƯƠNG MỚI</span>
         <h2>Chương 2: Học sinh cấp 3 - Quản lý chi tiêu</h2>
         <p>Tiếp tục hành trình bằng câu chuyện trọ học, chi tiêu, flash sale và bài học về tiết kiệm.</p>
-        <Link className="ws-btn primary" to="/dashboard/demo/play?chapter=2&v=2">Bắt đầu Chapter 2 →</Link>
+        <Link className="ws-btn primary" to="/dashboard/demo/play?chapter=2">Bắt đầu Chapter 2 →</Link>
       </div><BadgeDollarSign className="ws-hero-art" aria-hidden="true" /></section>
     </div>
   </>

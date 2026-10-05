@@ -198,3 +198,27 @@ Thư mục: `asset-mini-game/needs-or-wants/`. Mỗi ảnh 1254 × 1254, dùng c
 ## Phạm vi bàn giao
 
 Chỉ gồm bộ ảnh chương 1, chưa thay vào gameplay đang chạy. Logic tiền, lựa chọn, điểm số và ending triển khai riêng theo GDD v2. Các file preview và JSON phục vụ tạo / kiểm tra đã được dọn; ghi chú sử dụng tập trung trong file này.
+
+## Công thức lắp cảnh hoàn chỉnh cho AI
+
+Khởi tạo: `scenarioMoney=500000`, `reservedForArtClass=300000`, `headphonePrice=250000`, `oldHeadphonesWorking=true`. Không mang state từ gameplay Tí hoặc chương khác vào.
+
+| Beat | Chế độ và lớp ảnh | Nội dung/điểm chuyển |
+| --- | --- | --- |
+| SC01-A | `scene/sc01-receiving-allowance.png`, không sprite | Establishing: mẹ trao phong bì, chưa trừ tiền. |
+| SC01-B | `bg/bg01c-family-table.png` + mẹ `explaining` trái + An `neutral` phải + prop phong bì | UI hiện 500.000đ, cam kết lớp vẽ 300.000đ ngày 28. Minh chỉ xuất hiện dưới dạng tin nhắn. |
+| SC02-A | `scene/sc02-headphone-temptation.png`, không sprite | Chuyển địa điểm; tranh chỉ cho thấy lời mời, không khẳng định đã mua. |
+| SC02-B | `bg/bg02-headphone-shop.png` hoặc góc cận `bg02b` + Minh `inviting` trái + An `thinking` phải | Hiện dữ kiện tai nghe cũ còn dùng được; mở lựa chọn mua ngay / so giá / hoãn. Dùng thẻ `05-upgrade-headphones.png` cho món muốn mua. |
+| SC02-C | cùng nền + panel so sánh | Báo giá nội địa 250.000đ; online `8×25.000+20.000=220.000đ`. So giá không tự mua. Chỉ nút xác nhận mua mới tạo transaction. |
+| SC03-A | `scene/sc03-checking-priorities.png`, không sprite | Nhịp suy ngẫm trước mini-game, chưa hiển thị ending. |
+| SC03-B | `bg/bg01b-study-corner.png` + An `thinking` + mẹ `explaining` | Needs or Wants dùng 6 ảnh theo từng thẻ; câu chữ hoàn cảnh quyết định đáp án, không phải pixel. |
+| SC03-C | cùng nền + sprite theo kết quả | Mua ngay: An `worried-money`, mẹ `concerned`, còn 250.000đ và thiếu 50.000đ. Hoãn: An `relieved`, mẹ `neutral`, vẫn đủ quỹ. Nhánh sửa dùng An `thinking`. |
+
+Effect phải có ID như `ch01.purchase_headphones`; chỉ áp dụng một lần. Ending lấy từ state lựa chọn + số dư + bước recovery, không lấy từ sprite. Scene kết không cần ảnh mới: dùng BG01B, biểu cảm và bảng recap HTML.
+
+### Kiểm thử bắt buộc
+
+- Minh không xuất hiện vật lý trong SC01; mẹ không đứng trong cửa hàng nếu chỉ nhắn tin.
+- `scene/*.png` không bị chồng sprite.
+- Hoãn/so giá không làm giảm tiền; mua đúng một lần còn 250.000đ.
+- Reload sau mua không trừ thêm; mini-game hỗ trợ bàn phím và giải thích câu sai.

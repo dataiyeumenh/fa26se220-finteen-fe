@@ -119,3 +119,23 @@ Use case: illustration-story. ONE square game item. One square isolated icon: th
 
 Use case: illustration-story. ONE square game item. One square isolated icon: long blank cream statement sheet beside plain muted blue payment card with small generic gold chip, no digits or brand. Compact coherent three-quarter still life. Represents an obligation to inspect, no completed payment or checkmark. Entire objects centered ample margin. No text, currency, arrows, logos, people or floor. Genuine alpha transparent background.  Clean kawaii cartoon 2D, warm dark brown outlines, soft cel shading, fresh mint cream coral palette consistent with previous chapters. No readable text, numbers, logos, watermark, speech bubbles or UI. Real alpha background.
 
+## Công thức lắp cảnh hoàn chỉnh cho AI
+
+Chương độc lập dành cho An 18 tuổi. Mục tiêu là quyết định có cần vay để có laptop hay có thể dùng máy trường/chờ; không bắt buộc người chơi phải vay để hoàn thành chương.
+
+| Beat | Chế độ và lớp ảnh | Nội dung/điểm chuyển |
+| --- | --- | --- |
+| SC01 | tranh `sc01-school-computer-or-laptop` → BG10 + An `thinking` + cô Linh `explaining` + `laptop-goal` | Xác định nhu cầu, thời điểm và lựa chọn thay thế. Chưa tạo khoản vay. |
+| SC02 | tranh `sc02-comparing-loan-offers` → `bg10b-offer-comparison-board` + An/cô Linh + `loan-offers-inspection` | UI gắn từng đề nghị với principal, APR/lãi, phí, kỳ hạn, tổng trả; giấy trong ảnh để trống và không có đề nghị được chọn sẵn. |
+| SC03 | tranh `sc03-bnpl-and-minimum-payment` → `bg10c-statement-workstation` + An `thinking/worried` + Minh + `card-and-statement` | Mô phỏng BNPL/thanh toán tối thiểu theo dữ liệu GDD; giải thích dư nợ còn lại và phí/lãi, không coi “tối thiểu” là đã trả xong. |
+| SC04 | tranh `sc04-realistic-repayment-plan` → `bg10d-final-planning-table` + An/cô Linh + lịch trả + `terms-and-fees` | Lập kế hoạch theo thu nhập khả dụng và buffer. Cho phép kết quả chờ/không vay nếu kế hoạch không chịu được biến cố. |
+
+State tối thiểu: `needByDate`, `alternatives`, `offersById`, `selectedOffer`, `principal`, `repaymentSchedule`, `minimumPaymentExercise`, `affordabilityBuffer`, `borrowConfirmed`. Việc chọn thẻ chỉ tạo draft; chỉ bước xác nhận cuối mới tạo nghĩa vụ trong mô phỏng.
+
+### Kiểm thử bắt buộc
+
+- Tổng trả được tính từ dữ liệu từng offer, không từ thứ tự/hình tờ giấy.
+- Thanh toán tối thiểu làm giảm đúng dư nợ nhưng không đóng nghĩa vụ nếu còn số dư.
+- Reload không tạo khoản vay hoặc khoản trả lần hai.
+- Nhánh dùng máy trường/chờ vẫn là kết quả hợp lệ nếu đáp ứng mục tiêu; sprite nhẹ nhõm không đồng nghĩa đã được duyệt vay.
+
