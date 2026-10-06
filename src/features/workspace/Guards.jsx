@@ -3,9 +3,12 @@ import { useWorkspace } from './useWorkspace'
 import { canAccessChapter } from './model'
 import WorkspaceLayout from './WorkspaceLayout'
 import { Empty } from './ui'
+import { auth } from '../../api/auth.api'
 
 export function RequireAccount({ kind, roles, plans }) {
-  const { actor } = useWorkspace()
+  const { actor, loading, authError } = useWorkspace()
+  if (loading) return <Empty>Đang kiểm tra phiên đăng nhập…</Empty>
+  if (authError && auth.hasSession()) return <Empty>{authError} <button onClick={() => void auth.refresh().catch(() => {})}>Thử lại</button> <button onClick={() => auth.logout()}>Đăng nhập lại</button></Empty>
   if (!actor) return <Navigate to="/login" replace />
   const home = actor.role === 'kid' ? '/dashboard/kid' : '/dashboard'
   if (kind && actor.kind !== kind) return <Navigate to={home} replace />
@@ -13,6 +16,7 @@ export function RequireAccount({ kind, roles, plans }) {
     return <Navigate to={actor.role === 'guest' ? '/dashboard/plans' : home} replace />
   }
   if (plans && !plans.includes(actor.plan)) return <Navigate to={home} replace />
+  if (actor.source === 'api' && roles?.some(role => ['parent', 'teacher'].includes(role))) return <WorkspaceLayout><Empty>Chức năng học sinh, nhóm và báo cáo chưa kết nối API. Quyền gói học được đọc từ tài khoản thật; dữ liệu demo không dùng chung.</Empty></WorkspaceLayout>
   return <Outlet />
 }
 

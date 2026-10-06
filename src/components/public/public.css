@@ -80,7 +80,20 @@
 .ft-auth-switch { margin:25px 0 0; padding-top:20px; border-top:1px solid #eeeae1; text-align:center; font-size:12px; color:var(--ft-muted); }
 .ft-auth-switch a { display:inline-flex; gap:3px; align-items:center; color:var(--ft-link); font-weight:700; }
 .ft-auth-switch a:hover, .ft-register-note a:hover { text-decoration:underline; text-underline-offset:3px; }
-.ft-free-note { color:var(--ft-muted); font-size:11px; margin:14px 0 0; text-align:center; }
+.ft-free-note { color:var(--ft-muted); font-size:13px; line-height:1.6; margin:14px 0 0; text-align:center; }
+.ft-auth-alternatives { display:flex; flex-direction:column; gap:14px; margin-top:16px; }
+.ft-account-fields .ft-otp-input { text-align:center; letter-spacing:.4em; font-size:24px; font-weight:600; height:58px; }
+.ft-auth-text-action { align-self:center; border:0; background:transparent; padding:5px 8px; color:var(--ft-link); font-size:13px; font-weight:600; cursor:pointer; }
+.ft-auth-text-action:hover:not(:disabled) { text-decoration:underline; text-underline-offset:4px; }
+.ft-auth-text-action:disabled { opacity:.55; cursor:not-allowed; }
+.ft-auth-divider { display:flex; align-items:center; gap:14px; color:#777982; font-size:12px; }
+.ft-auth-divider::before, .ft-auth-divider::after { content:''; flex:1; height:1px; background:#e5e7eb; }
+.ft-google-button { position:relative; display:flex; align-items:center; justify-content:center; gap:12px; width:100%; min-height:48px; padding:12px 20px; border:1px solid #747775; border-radius:10px; background:#fff; color:#1f1f1f; font-family:Arial,sans-serif; font-size:14px; font-weight:500; cursor:pointer; transition:background .15s,box-shadow .15s; }
+.ft-google-button svg { flex-shrink:0; }
+.ft-google-button:hover:not(:disabled) { background:#f8faff; box-shadow:0 1px 3px #3c404326; }
+.ft-google-button:active:not(:disabled) { background:#edf2fa; }
+.ft-google-button:focus-visible, .ft-auth-text-action:focus-visible { outline:3px solid #4285f4; outline-offset:3px; }
+.ft-google-button:disabled { background:#f8f9fa; border-color:#dadce0; color:#747775; cursor:not-allowed; }
 .ft-demo-disclosure { font-size:10px; color:#74717c; margin-top:18px; text-align:center; }
 .ft-demo-disclosure summary { padding:4px; }
 .ft-demo-disclosure p { font-size:11px; margin:8px 0 0; }
