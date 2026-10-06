@@ -1,0 +1,855 @@
+[
+  {
+    "id": "14-an-neutral",
+    "kind": "sprite",
+    "chapter": 1,
+    "age": 14,
+    "who": "an",
+    "pose": "an-neutral",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-01/char/an/an-neutral.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-01/char/an/an-neutral.png"
+    ],
+    "status": "superseded-tall-draft",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-7c3cd2b4-d21c-4bb4-a1ea-fb9628170e0b.png",
+    "prompt": "Use case: identity-preserve. Edit ONE transparent full-body visual-novel sprite. Subject: An, brown side-swept hair, yellow T-shirt, navy shorts, white slide sandals. Age MUST read as a 14-year-old early adolescent: slim adolescent body, approximately 5.5 heads tall, youthful but not baby-round face. Preserve this character's identity, hair, exact clothing colors, original expression, gesture and props from reference 1 (an-neutral). Preserve original standing or kneeling action but correct age anatomy. Keep warm clean outlines, soft pastel 2D cartoon rendering consistent with FinTeen. Reference 2, if present, is the corrected neutral design: match its age, face and body proportions closely while using the expression/gesture from reference 1. Smaller eyes and head relative to body than the original chibi. Full body, all hands and feet visible with margins, centered single character. Genuine transparent background. No text, letters, labels, logos, added objects, duplicate people, photorealism, or oversized baby head."
+  },
+  {
+    "id": "14-an-relieved",
+    "kind": "sprite",
+    "chapter": 1,
+    "age": 14,
+    "who": "an",
+    "pose": "an-relieved",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-01/char/an/an-relieved.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-01/char/an/an-relieved.png"
+    ],
+    "status": "pending",
+    "prompt": "Use case: identity-preserve. Edit ONE transparent full-body visual-novel sprite. Subject: An, brown side-swept hair, yellow T-shirt, navy shorts, white slide sandals. Age MUST read as a 14-year-old early adolescent: slim adolescent body, approximately 5.5 heads tall, youthful but not baby-round face. Preserve this character's identity, hair, exact clothing colors, original expression, gesture and props from reference 1 (an-relieved). Preserve original standing or kneeling action but correct age anatomy. Keep warm clean outlines, soft pastel 2D cartoon rendering consistent with FinTeen. Reference 2, if present, is the corrected neutral design: match its age, face and body proportions closely while using the expression/gesture from reference 1. Smaller eyes and head relative to body than the original chibi. Full body, all hands and feet visible with margins, centered single character. Genuine transparent background. No text, letters, labels, logos, added objects, duplicate people, photorealism, or oversized baby head."
+  },
+  {
+    "id": "14-an-thinking",
+    "kind": "sprite",
+    "chapter": 1,
+    "age": 14,
+    "who": "an",
+    "pose": "an-thinking",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-01/char/an/an-thinking.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-01/char/an/an-thinking.png"
+    ],
+    "status": "pending",
+    "prompt": "Use case: identity-preserve. Edit ONE transparent full-body visual-novel sprite. Subject: An, brown side-swept hair, yellow T-shirt, navy shorts, white slide sandals. Age MUST read as a 14-year-old early adolescent: slim adolescent body, approximately 5.5 heads tall, youthful but not baby-round face. Preserve this character's identity, hair, exact clothing colors, original expression, gesture and props from reference 1 (an-thinking). Preserve original standing or kneeling action but correct age anatomy. Keep warm clean outlines, soft pastel 2D cartoon rendering consistent with FinTeen. Reference 2, if present, is the corrected neutral design: match its age, face and body proportions closely while using the expression/gesture from reference 1. Smaller eyes and head relative to body than the original chibi. Full body, all hands and feet visible with margins, centered single character. Genuine transparent background. No text, letters, labels, logos, added objects, duplicate people, photorealism, or oversized baby head."
+  },
+  {
+    "id": "14-an-worried-money",
+    "kind": "sprite",
+    "chapter": 1,
+    "age": 14,
+    "who": "an",
+    "pose": "an-worried-money",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-01/char/an/an-worried-money.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-01/char/an/an-worried-money.png"
+    ],
+    "status": "pending",
+    "prompt": "Use case: identity-preserve. Edit ONE transparent full-body visual-novel sprite. Subject: An, brown side-swept hair, yellow T-shirt, navy shorts, white slide sandals. Age MUST read as a 14-year-old early adolescent: slim adolescent body, approximately 5.5 heads tall, youthful but not baby-round face. Preserve this character's identity, hair, exact clothing colors, original expression, gesture and props from reference 1 (an-worried-money). Preserve original standing or kneeling action but correct age anatomy. Keep warm clean outlines, soft pastel 2D cartoon rendering consistent with FinTeen. Reference 2, if present, is the corrected neutral design: match its age, face and body proportions closely while using the expression/gesture from reference 1. Smaller eyes and head relative to body than the original chibi. Full body, all hands and feet visible with margins, centered single character. Genuine transparent background. No text, letters, labels, logos, added objects, duplicate people, photorealism, or oversized baby head."
+  },
+  {
+    "id": "adult-me-concerned",
+    "kind": "sprite",
+    "chapter": 1,
+    "age": 14,
+    "who": "me",
+    "pose": "me-concerned",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-01/char/me/me-concerned.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-01/char/me/me-concerned.png"
+    ],
+    "status": "pending",
+    "prompt": "Use case: identity-preserve. Edit ONE transparent full-body visual-novel sprite. Subject: An's mother, a clearly mature adult mother of a teenager, mustard headscarf, dark hair, cream sleeves, brown apron/top, black trousers. Use clearly adult anatomy, about 6.5 heads tall when standing, mature facial features, natural eyes and adult hands; avoid childlike or doll proportions. Preserve this character's identity, hair, exact clothing colors, original expression, gesture and props from reference 1 (me-concerned). Preserve original standing or kneeling action but correct age anatomy. Keep warm clean outlines, soft pastel 2D cartoon rendering consistent with FinTeen. Reference 2, if present, is the corrected neutral design: match its age, face and body proportions closely while using the expression/gesture from reference 1. Smaller eyes and head relative to body than the original chibi. Full body, all hands and feet visible with margins, centered single character. Genuine transparent background. No text, letters, labels, logos, added objects, duplicate people, photorealism, or oversized baby head."
+  },
+  {
+    "id": "adult-me-explaining",
+    "kind": "sprite",
+    "chapter": 1,
+    "age": 14,
+    "who": "me",
+    "pose": "me-explaining",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-01/char/me/me-explaining.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-01/char/me/me-explaining.png"
+    ],
+    "status": "pending",
+    "prompt": "Use case: identity-preserve. Edit ONE transparent full-body visual-novel sprite. Subject: An's mother, a clearly mature adult mother of a teenager, mustard headscarf, dark hair, cream sleeves, brown apron/top, black trousers. Use clearly adult anatomy, about 6.5 heads tall when standing, mature facial features, natural eyes and adult hands; avoid childlike or doll proportions. Preserve this character's identity, hair, exact clothing colors, original expression, gesture and props from reference 1 (me-explaining). Preserve original standing or kneeling action but correct age anatomy. Keep warm clean outlines, soft pastel 2D cartoon rendering consistent with FinTeen. Reference 2, if present, is the corrected neutral design: match its age, face and body proportions closely while using the expression/gesture from reference 1. Smaller eyes and head relative to body than the original chibi. Full body, all hands and feet visible with margins, centered single character. Genuine transparent background. No text, letters, labels, logos, added objects, duplicate people, photorealism, or oversized baby head."
+  },
+  {
+    "id": "adult-me-neutral",
+    "kind": "sprite",
+    "chapter": 1,
+    "age": 14,
+    "who": "me",
+    "pose": "me-neutral",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-01/char/me/me-neutral.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-01/char/me/me-neutral.png"
+    ],
+    "status": "superseded-tall-draft",
+    "prompt": "Use case: identity-preserve. Edit ONE transparent full-body visual-novel sprite. Subject: An's mother, a clearly mature adult mother of a teenager, mustard headscarf, dark hair, cream sleeves, brown apron/top, black trousers. Use clearly adult anatomy, about 6.5 heads tall when standing, mature facial features, natural eyes and adult hands; avoid childlike or doll proportions. Preserve this character's identity, hair, exact clothing colors, original expression, gesture and props from reference 1 (me-neutral). Preserve original standing or kneeling action but correct age anatomy. Keep warm clean outlines, soft pastel 2D cartoon rendering consistent with FinTeen. Reference 2, if present, is the corrected neutral design: match its age, face and body proportions closely while using the expression/gesture from reference 1. Smaller eyes and head relative to body than the original chibi. Full body, all hands and feet visible with margins, centered single character. Genuine transparent background. No text, letters, labels, logos, added objects, duplicate people, photorealism, or oversized baby head.",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-f4b93596-240a-4f5c-8304-bc880223a20d.png"
+  },
+  {
+    "id": "14-minh-inviting",
+    "kind": "sprite",
+    "chapter": 1,
+    "age": 14,
+    "who": "minh",
+    "pose": "minh-inviting",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-01/char/minh/minh-inviting.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-01/char/minh/minh-inviting.png"
+    ],
+    "status": "pending",
+    "prompt": "Use case: identity-preserve. Edit ONE transparent full-body visual-novel sprite. Subject: Minh, swept black hair, navy polo, beige shorts, white sneakers and wristwatch. Age MUST read as a 14-year-old early adolescent: slim adolescent body, approximately 5.5 heads tall, youthful but not baby-round face. Preserve this character's identity, hair, exact clothing colors, original expression, gesture and props from reference 1 (minh-inviting). Preserve original standing or kneeling action but correct age anatomy. Keep warm clean outlines, soft pastel 2D cartoon rendering consistent with FinTeen. Reference 2, if present, is the corrected neutral design: match its age, face and body proportions closely while using the expression/gesture from reference 1. Smaller eyes and head relative to body than the original chibi. Full body, all hands and feet visible with margins, centered single character. Genuine transparent background. No text, letters, labels, logos, added objects, duplicate people, photorealism, or oversized baby head."
+  },
+  {
+    "id": "14-minh-neutral",
+    "kind": "sprite",
+    "chapter": 1,
+    "age": 14,
+    "who": "minh",
+    "pose": "minh-neutral",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-01/char/minh/minh-neutral.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-01/char/minh/minh-neutral.png"
+    ],
+    "status": "superseded-tall-draft",
+    "prompt": "Use case: identity-preserve. Edit ONE transparent full-body visual-novel sprite. Subject: Minh, swept black hair, navy polo, beige shorts, white sneakers and wristwatch. Age MUST read as a 14-year-old early adolescent: slim adolescent body, approximately 5.5 heads tall, youthful but not baby-round face. Preserve this character's identity, hair, exact clothing colors, original expression, gesture and props from reference 1 (minh-neutral). Preserve original standing or kneeling action but correct age anatomy. Keep warm clean outlines, soft pastel 2D cartoon rendering consistent with FinTeen. Reference 2, if present, is the corrected neutral design: match its age, face and body proportions closely while using the expression/gesture from reference 1. Smaller eyes and head relative to body than the original chibi. Full body, all hands and feet visible with margins, centered single character. Genuine transparent background. No text, letters, labels, logos, added objects, duplicate people, photorealism, or oversized baby head.",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-c57e56b9-126b-4015-b4a3-d9014313295f.png"
+  },
+  {
+    "id": "chapter-01/scene/sc01-receiving-allowance.png",
+    "kind": "scene",
+    "chapter": 1,
+    "age": 14,
+    "who": "scene",
+    "pose": "sc01-receiving-allowance",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-01/scene/sc01-receiving-allowance.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-01/scene/sc01-receiving-allowance.png"
+    ],
+    "status": "pending"
+  },
+  {
+    "id": "chapter-01/scene/sc02-headphone-temptation.png",
+    "kind": "scene",
+    "chapter": 1,
+    "age": 14,
+    "who": "scene",
+    "pose": "sc02-headphone-temptation",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-01/scene/sc02-headphone-temptation.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-01/scene/sc02-headphone-temptation.png"
+    ],
+    "status": "pending"
+  },
+  {
+    "id": "chapter-01/scene/sc03-checking-priorities.png",
+    "kind": "scene",
+    "chapter": 1,
+    "age": 14,
+    "who": "scene",
+    "pose": "sc03-checking-priorities",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-01/scene/sc03-checking-priorities.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-01/scene/sc03-checking-priorities.png"
+    ],
+    "status": "pending"
+  },
+  {
+    "id": "16-an-neutral",
+    "kind": "sprite",
+    "chapter": 2,
+    "age": 16,
+    "who": "an",
+    "pose": "an-neutral",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/char/an/an-neutral.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-02/char/an/an-neutral.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-04/char/an/an-neutral.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-05/char/an/an-neutral.png"
+    ],
+    "status": "superseded-tall-draft",
+    "prompt": "Use case: identity-preserve. Edit ONE transparent full-body visual-novel sprite. Subject: An, brown side-swept hair, yellow T-shirt, navy shorts, white slide sandals. Age MUST read as a 16-year-old high-school teenager: approximately 6 heads tall, longer adolescent limbs and torso, more defined face and shoulders than age 14. Preserve this character's identity, hair, exact clothing colors, original expression, gesture and props from reference 1 (an-neutral). Preserve original standing or kneeling action but correct age anatomy. Keep warm clean outlines, soft pastel 2D cartoon rendering consistent with FinTeen. Reference 2, if present, is the corrected neutral design: match its age, face and body proportions closely while using the expression/gesture from reference 1. Smaller eyes and head relative to body than the original chibi. Full body, all hands and feet visible with margins, centered single character. Genuine transparent background. No text, letters, labels, logos, added objects, duplicate people, photorealism, or oversized baby head.",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-14a8eefb-97d3-4293-9690-5bdbcf0d2153.png"
+  },
+  {
+    "id": "16-an-relieved",
+    "kind": "sprite",
+    "chapter": 2,
+    "age": 16,
+    "who": "an",
+    "pose": "an-relieved",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/char/an/an-relieved.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-02/char/an/an-relieved.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-04/char/an/an-relieved.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-05/char/an/an-relieved.png"
+    ],
+    "status": "pending",
+    "prompt": "Use case: identity-preserve. Edit ONE transparent full-body visual-novel sprite. Subject: An, brown side-swept hair, yellow T-shirt, navy shorts, white slide sandals. Age MUST read as a 16-year-old high-school teenager: approximately 6 heads tall, longer adolescent limbs and torso, more defined face and shoulders than age 14. Preserve this character's identity, hair, exact clothing colors, original expression, gesture and props from reference 1 (an-relieved). Preserve original standing or kneeling action but correct age anatomy. Keep warm clean outlines, soft pastel 2D cartoon rendering consistent with FinTeen. Reference 2, if present, is the corrected neutral design: match its age, face and body proportions closely while using the expression/gesture from reference 1. Smaller eyes and head relative to body than the original chibi. Full body, all hands and feet visible with margins, centered single character. Genuine transparent background. No text, letters, labels, logos, added objects, duplicate people, photorealism, or oversized baby head."
+  },
+  {
+    "id": "16-an-thinking",
+    "kind": "sprite",
+    "chapter": 2,
+    "age": 16,
+    "who": "an",
+    "pose": "an-thinking",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/char/an/an-thinking.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-02/char/an/an-thinking.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-04/char/an/an-thinking.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-05/char/an/an-thinking.png"
+    ],
+    "status": "pending",
+    "prompt": "Use case: identity-preserve. Edit ONE transparent full-body visual-novel sprite. Subject: An, brown side-swept hair, yellow T-shirt, navy shorts, white slide sandals. Age MUST read as a 16-year-old high-school teenager: approximately 6 heads tall, longer adolescent limbs and torso, more defined face and shoulders than age 14. Preserve this character's identity, hair, exact clothing colors, original expression, gesture and props from reference 1 (an-thinking). Preserve original standing or kneeling action but correct age anatomy. Keep warm clean outlines, soft pastel 2D cartoon rendering consistent with FinTeen. Reference 2, if present, is the corrected neutral design: match its age, face and body proportions closely while using the expression/gesture from reference 1. Smaller eyes and head relative to body than the original chibi. Full body, all hands and feet visible with margins, centered single character. Genuine transparent background. No text, letters, labels, logos, added objects, duplicate people, photorealism, or oversized baby head."
+  },
+  {
+    "id": "16-an-worried-money",
+    "kind": "sprite",
+    "chapter": 2,
+    "age": 16,
+    "who": "an",
+    "pose": "an-worried-money",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/char/an/an-worried-money.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-02/char/an/an-worried-money.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-04/char/an/an-worried-money.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-05/char/an/an-worried-money.png"
+    ],
+    "status": "pending",
+    "prompt": "Use case: identity-preserve. Edit ONE transparent full-body visual-novel sprite. Subject: An, brown side-swept hair, yellow T-shirt, navy shorts, white slide sandals. Age MUST read as a 16-year-old high-school teenager: approximately 6 heads tall, longer adolescent limbs and torso, more defined face and shoulders than age 14. Preserve this character's identity, hair, exact clothing colors, original expression, gesture and props from reference 1 (an-worried-money). Preserve original standing or kneeling action but correct age anatomy. Keep warm clean outlines, soft pastel 2D cartoon rendering consistent with FinTeen. Reference 2, if present, is the corrected neutral design: match its age, face and body proportions closely while using the expression/gesture from reference 1. Smaller eyes and head relative to body than the original chibi. Full body, all hands and feet visible with margins, centered single character. Genuine transparent background. No text, letters, labels, logos, added objects, duplicate people, photorealism, or oversized baby head."
+  },
+  {
+    "id": "adult-co-linh-encouraging",
+    "kind": "sprite",
+    "chapter": 2,
+    "age": 16,
+    "who": "co-linh",
+    "pose": "co-linh-encouraging",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/char/co-linh/co-linh-encouraging.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-02/char/co-linh/co-linh-encouraging.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-03/char/co-linh/co-linh-encouraging.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-04/char/co-linh/co-linh-encouraging.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-05/char/co-linh/co-linh-encouraging.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-06/char/co-linh/co-linh-encouraging.png"
+    ],
+    "status": "pending",
+    "prompt": "Use case: identity-preserve. Edit ONE transparent full-body visual-novel sprite. Subject: teacher Co Linh, a clearly mature adult woman and mentor, brown side ponytail, eyeglasses, light blue blouse, navy trousers. Use clearly adult anatomy, about 6.5 heads tall when standing, mature facial features, natural eyes and adult hands; avoid childlike or doll proportions. Preserve this character's identity, hair, exact clothing colors, original expression, gesture and props from reference 1 (co-linh-encouraging). Preserve original standing or kneeling action but correct age anatomy. Keep warm clean outlines, soft pastel 2D cartoon rendering consistent with FinTeen. Reference 2, if present, is the corrected neutral design: match its age, face and body proportions closely while using the expression/gesture from reference 1. Smaller eyes and head relative to body than the original chibi. Full body, all hands and feet visible with margins, centered single character. Genuine transparent background. No text, letters, labels, logos, added objects, duplicate people, photorealism, or oversized baby head."
+  },
+  {
+    "id": "adult-co-linh-explaining",
+    "kind": "sprite",
+    "chapter": 2,
+    "age": 16,
+    "who": "co-linh",
+    "pose": "co-linh-explaining",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/char/co-linh/co-linh-explaining.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-02/char/co-linh/co-linh-explaining.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-03/char/co-linh/co-linh-explaining.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-04/char/co-linh/co-linh-explaining.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-05/char/co-linh/co-linh-explaining.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-06/char/co-linh/co-linh-explaining.png"
+    ],
+    "status": "pending",
+    "prompt": "Use case: identity-preserve. Edit ONE transparent full-body visual-novel sprite. Subject: teacher Co Linh, a clearly mature adult woman and mentor, brown side ponytail, eyeglasses, light blue blouse, navy trousers. Use clearly adult anatomy, about 6.5 heads tall when standing, mature facial features, natural eyes and adult hands; avoid childlike or doll proportions. Preserve this character's identity, hair, exact clothing colors, original expression, gesture and props from reference 1 (co-linh-explaining). Preserve original standing or kneeling action but correct age anatomy. Keep warm clean outlines, soft pastel 2D cartoon rendering consistent with FinTeen. Reference 2, if present, is the corrected neutral design: match its age, face and body proportions closely while using the expression/gesture from reference 1. Smaller eyes and head relative to body than the original chibi. Full body, all hands and feet visible with margins, centered single character. Genuine transparent background. No text, letters, labels, logos, added objects, duplicate people, photorealism, or oversized baby head."
+  },
+  {
+    "id": "adult-co-linh-neutral",
+    "kind": "sprite",
+    "chapter": 2,
+    "age": 16,
+    "who": "co-linh",
+    "pose": "co-linh-neutral",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/char/co-linh/co-linh-neutral.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-02/char/co-linh/co-linh-neutral.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-03/char/co-linh/co-linh-neutral.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-04/char/co-linh/co-linh-neutral.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-05/char/co-linh/co-linh-neutral.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-06/char/co-linh/co-linh-neutral.png"
+    ],
+    "status": "superseded-tall-draft",
+    "prompt": "Use case: identity-preserve. Edit ONE transparent full-body visual-novel sprite. Subject: teacher Co Linh, a clearly mature adult woman and mentor, brown side ponytail, eyeglasses, light blue blouse, navy trousers. Use clearly adult anatomy, about 6.5 heads tall when standing, mature facial features, natural eyes and adult hands; avoid childlike or doll proportions. Preserve this character's identity, hair, exact clothing colors, original expression, gesture and props from reference 1 (co-linh-neutral). Preserve original standing or kneeling action but correct age anatomy. Keep warm clean outlines, soft pastel 2D cartoon rendering consistent with FinTeen. Reference 2, if present, is the corrected neutral design: match its age, face and body proportions closely while using the expression/gesture from reference 1. Smaller eyes and head relative to body than the original chibi. Full body, all hands and feet visible with margins, centered single character. Genuine transparent background. No text, letters, labels, logos, added objects, duplicate people, photorealism, or oversized baby head.",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-de522659-9f77-4d31-9d88-bb3afb969807.png"
+  },
+  {
+    "id": "16-minh-inviting",
+    "kind": "sprite",
+    "chapter": 2,
+    "age": 16,
+    "who": "minh",
+    "pose": "minh-inviting",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/char/minh/minh-inviting.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-02/char/minh/minh-inviting.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-04/char/minh/minh-inviting.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-05/char/minh/minh-inviting.png"
+    ],
+    "status": "pending",
+    "prompt": "Use case: identity-preserve. Edit ONE transparent full-body visual-novel sprite. Subject: Minh, swept black hair, navy polo, beige shorts, white sneakers and wristwatch. Age MUST read as a 16-year-old high-school teenager: approximately 6 heads tall, longer adolescent limbs and torso, more defined face and shoulders than age 14. Preserve this character's identity, hair, exact clothing colors, original expression, gesture and props from reference 1 (minh-inviting). Preserve original standing or kneeling action but correct age anatomy. Keep warm clean outlines, soft pastel 2D cartoon rendering consistent with FinTeen. Reference 2, if present, is the corrected neutral design: match its age, face and body proportions closely while using the expression/gesture from reference 1. Smaller eyes and head relative to body than the original chibi. Full body, all hands and feet visible with margins, centered single character. Genuine transparent background. No text, letters, labels, logos, added objects, duplicate people, photorealism, or oversized baby head."
+  },
+  {
+    "id": "16-minh-neutral",
+    "kind": "sprite",
+    "chapter": 2,
+    "age": 16,
+    "who": "minh",
+    "pose": "minh-neutral",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/char/minh/minh-neutral.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-02/char/minh/minh-neutral.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-04/char/minh/minh-neutral.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-05/char/minh/minh-neutral.png"
+    ],
+    "status": "superseded-tall-draft",
+    "prompt": "Use case: identity-preserve. Edit ONE transparent full-body visual-novel sprite. Subject: Minh, swept black hair, navy polo, beige shorts, white sneakers and wristwatch. Age MUST read as a 16-year-old high-school teenager: approximately 6 heads tall, longer adolescent limbs and torso, more defined face and shoulders than age 14. Preserve this character's identity, hair, exact clothing colors, original expression, gesture and props from reference 1 (minh-neutral). Preserve original standing or kneeling action but correct age anatomy. Keep warm clean outlines, soft pastel 2D cartoon rendering consistent with FinTeen. Reference 2, if present, is the corrected neutral design: match its age, face and body proportions closely while using the expression/gesture from reference 1. Smaller eyes and head relative to body than the original chibi. Full body, all hands and feet visible with margins, centered single character. Genuine transparent background. No text, letters, labels, logos, added objects, duplicate people, photorealism, or oversized baby head.",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-188a8cba-6cfd-4fc0-ba1e-3de1b0b5fcc9.png"
+  },
+  {
+    "id": "chapter-02/scene/sc01-camp-budget-briefing.png",
+    "kind": "scene",
+    "chapter": 2,
+    "age": 16,
+    "who": "scene",
+    "pose": "sc01-camp-budget-briefing",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/scene/sc01-camp-budget-briefing.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-02/scene/sc01-camp-budget-briefing.png"
+    ],
+    "status": "pending"
+  },
+  {
+    "id": "chapter-02/scene/sc02-dividing-envelopes.png",
+    "kind": "scene",
+    "chapter": 2,
+    "age": 16,
+    "who": "scene",
+    "pose": "sc02-dividing-envelopes",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/scene/sc02-dividing-envelopes.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-02/scene/sc02-dividing-envelopes.png"
+    ],
+    "status": "pending"
+  },
+  {
+    "id": "chapter-02/scene/sc03-laptop-goal-planning.png",
+    "kind": "scene",
+    "chapter": 2,
+    "age": 16,
+    "who": "scene",
+    "pose": "sc03-laptop-goal-planning",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/scene/sc03-laptop-goal-planning.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-02/scene/sc03-laptop-goal-planning.png"
+    ],
+    "status": "pending"
+  },
+  {
+    "id": "chapter-02/scene/sc04-bicycle-surprise.png",
+    "kind": "scene",
+    "chapter": 2,
+    "age": 16,
+    "who": "scene",
+    "pose": "sc04-bicycle-surprise",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/scene/sc04-bicycle-surprise.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-02/scene/sc04-bicycle-surprise.png"
+    ],
+    "status": "pending"
+  },
+  {
+    "id": "chapter-02/scene/sc05-revising-budget.png",
+    "kind": "scene",
+    "chapter": 2,
+    "age": 16,
+    "who": "scene",
+    "pose": "sc05-revising-budget",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/scene/sc05-revising-budget.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-02/scene/sc05-revising-budget.png"
+    ],
+    "status": "pending"
+  },
+  {
+    "id": "17-an-neutral",
+    "kind": "sprite",
+    "chapter": 3,
+    "age": 17,
+    "who": "an",
+    "pose": "an-neutral",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-03/char/an/an-neutral.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-03/char/an/an-neutral.png"
+    ],
+    "status": "superseded-tall-draft",
+    "prompt": "Use case: identity-preserve. Edit ONE transparent full-body visual-novel sprite. Subject: An, brown side-swept hair, yellow T-shirt, navy shorts, white slide sandals. Age MUST read as a 17-year-old late adolescent: approximately 6.3 heads tall, near-adult slim proportions, more defined jaw and shoulders, still youthful. Preserve this character's identity, hair, exact clothing colors, original expression, gesture and props from reference 1 (an-neutral). Preserve original standing or kneeling action but correct age anatomy. Keep warm clean outlines, soft pastel 2D cartoon rendering consistent with FinTeen. Reference 2, if present, is the corrected neutral design: match its age, face and body proportions closely while using the expression/gesture from reference 1. Smaller eyes and head relative to body than the original chibi. Full body, all hands and feet visible with margins, centered single character. Genuine transparent background. No text, letters, labels, logos, added objects, duplicate people, photorealism, or oversized baby head.",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-d0363b37-421b-4b9b-a52b-3974334e3d69.png"
+  },
+  {
+    "id": "17-an-relieved",
+    "kind": "sprite",
+    "chapter": 3,
+    "age": 17,
+    "who": "an",
+    "pose": "an-relieved",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-03/char/an/an-relieved.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-03/char/an/an-relieved.png"
+    ],
+    "status": "pending",
+    "prompt": "Use case: identity-preserve. Edit ONE transparent full-body visual-novel sprite. Subject: An, brown side-swept hair, yellow T-shirt, navy shorts, white slide sandals. Age MUST read as a 17-year-old late adolescent: approximately 6.3 heads tall, near-adult slim proportions, more defined jaw and shoulders, still youthful. Preserve this character's identity, hair, exact clothing colors, original expression, gesture and props from reference 1 (an-relieved). Preserve original standing or kneeling action but correct age anatomy. Keep warm clean outlines, soft pastel 2D cartoon rendering consistent with FinTeen. Reference 2, if present, is the corrected neutral design: match its age, face and body proportions closely while using the expression/gesture from reference 1. Smaller eyes and head relative to body than the original chibi. Full body, all hands and feet visible with margins, centered single character. Genuine transparent background. No text, letters, labels, logos, added objects, duplicate people, photorealism, or oversized baby head."
+  },
+  {
+    "id": "17-an-thinking",
+    "kind": "sprite",
+    "chapter": 3,
+    "age": 17,
+    "who": "an",
+    "pose": "an-thinking",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-03/char/an/an-thinking.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-03/char/an/an-thinking.png"
+    ],
+    "status": "pending",
+    "prompt": "Use case: identity-preserve. Edit ONE transparent full-body visual-novel sprite. Subject: An, brown side-swept hair, yellow T-shirt, navy shorts, white slide sandals. Age MUST read as a 17-year-old late adolescent: approximately 6.3 heads tall, near-adult slim proportions, more defined jaw and shoulders, still youthful. Preserve this character's identity, hair, exact clothing colors, original expression, gesture and props from reference 1 (an-thinking). Preserve original standing or kneeling action but correct age anatomy. Keep warm clean outlines, soft pastel 2D cartoon rendering consistent with FinTeen. Reference 2, if present, is the corrected neutral design: match its age, face and body proportions closely while using the expression/gesture from reference 1. Smaller eyes and head relative to body than the original chibi. Full body, all hands and feet visible with margins, centered single character. Genuine transparent background. No text, letters, labels, logos, added objects, duplicate people, photorealism, or oversized baby head."
+  },
+  {
+    "id": "17-an-worried-money",
+    "kind": "sprite",
+    "chapter": 3,
+    "age": 17,
+    "who": "an",
+    "pose": "an-worried-money",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-03/char/an/an-worried-money.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-03/char/an/an-worried-money.png"
+    ],
+    "status": "pending",
+    "prompt": "Use case: identity-preserve. Edit ONE transparent full-body visual-novel sprite. Subject: An, brown side-swept hair, yellow T-shirt, navy shorts, white slide sandals. Age MUST read as a 17-year-old late adolescent: approximately 6.3 heads tall, near-adult slim proportions, more defined jaw and shoulders, still youthful. Preserve this character's identity, hair, exact clothing colors, original expression, gesture and props from reference 1 (an-worried-money). Preserve original standing or kneeling action but correct age anatomy. Keep warm clean outlines, soft pastel 2D cartoon rendering consistent with FinTeen. Reference 2, if present, is the corrected neutral design: match its age, face and body proportions closely while using the expression/gesture from reference 1. Smaller eyes and head relative to body than the original chibi. Full body, all hands and feet visible with margins, centered single character. Genuine transparent background. No text, letters, labels, logos, added objects, duplicate people, photorealism, or oversized baby head."
+  },
+  {
+    "id": "17-minh-inviting",
+    "kind": "sprite",
+    "chapter": 3,
+    "age": 17,
+    "who": "minh",
+    "pose": "minh-inviting",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-03/char/minh/minh-inviting.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-03/char/minh/minh-inviting.png"
+    ],
+    "status": "pending",
+    "prompt": "Use case: identity-preserve. Edit ONE transparent full-body visual-novel sprite. Subject: Minh, swept black hair, navy polo, beige shorts, white sneakers and wristwatch. Age MUST read as a 17-year-old late adolescent: approximately 6.3 heads tall, near-adult slim proportions, more defined jaw and shoulders, still youthful. Preserve this character's identity, hair, exact clothing colors, original expression, gesture and props from reference 1 (minh-inviting). Preserve original standing or kneeling action but correct age anatomy. Keep warm clean outlines, soft pastel 2D cartoon rendering consistent with FinTeen. Reference 2, if present, is the corrected neutral design: match its age, face and body proportions closely while using the expression/gesture from reference 1. Smaller eyes and head relative to body than the original chibi. Full body, all hands and feet visible with margins, centered single character. Genuine transparent background. No text, letters, labels, logos, added objects, duplicate people, photorealism, or oversized baby head."
+  },
+  {
+    "id": "17-minh-neutral",
+    "kind": "sprite",
+    "chapter": 3,
+    "age": 17,
+    "who": "minh",
+    "pose": "minh-neutral",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-03/char/minh/minh-neutral.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-03/char/minh/minh-neutral.png"
+    ],
+    "status": "superseded-tall-draft",
+    "prompt": "Use case: identity-preserve. Edit ONE transparent full-body visual-novel sprite. Subject: Minh, swept black hair, navy polo, beige shorts, white sneakers and wristwatch. Age MUST read as a 17-year-old late adolescent: approximately 6.3 heads tall, near-adult slim proportions, more defined jaw and shoulders, still youthful. Preserve this character's identity, hair, exact clothing colors, original expression, gesture and props from reference 1 (minh-neutral). Preserve original standing or kneeling action but correct age anatomy. Keep warm clean outlines, soft pastel 2D cartoon rendering consistent with FinTeen. Reference 2, if present, is the corrected neutral design: match its age, face and body proportions closely while using the expression/gesture from reference 1. Smaller eyes and head relative to body than the original chibi. Full body, all hands and feet visible with margins, centered single character. Genuine transparent background. No text, letters, labels, logos, added objects, duplicate people, photorealism, or oversized baby head.",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-d1136944-d81c-4089-a314-fb08280992d5.png"
+  },
+  {
+    "id": "adult-tu-van-neutral",
+    "kind": "sprite",
+    "chapter": 3,
+    "age": 17,
+    "who": "tu-van",
+    "pose": "tu-van-neutral",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-03/char/tu-van/tu-van-neutral.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-03/char/tu-van/tu-van-neutral.png"
+    ],
+    "status": "superseded-tall-draft",
+    "prompt": "Use case: identity-preserve. Edit ONE transparent full-body visual-novel sprite. Subject: an adult male career course adviser, short brown hair, cream shirt, teal trousers, lanyard. Use clearly adult anatomy, about 6.5 heads tall when standing, mature facial features, natural eyes and adult hands; avoid childlike or doll proportions. Preserve this character's identity, hair, exact clothing colors, original expression, gesture and props from reference 1 (tu-van-neutral). Preserve original standing or kneeling action but correct age anatomy. Keep warm clean outlines, soft pastel 2D cartoon rendering consistent with FinTeen. Reference 2, if present, is the corrected neutral design: match its age, face and body proportions closely while using the expression/gesture from reference 1. Smaller eyes and head relative to body than the original chibi. Full body, all hands and feet visible with margins, centered single character. Genuine transparent background. No text, letters, labels, logos, added objects, duplicate people, photorealism, or oversized baby head.",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-349fe2a3-0bce-480c-b1fa-701201890176.png"
+  },
+  {
+    "id": "adult-tu-van-presenting",
+    "kind": "sprite",
+    "chapter": 3,
+    "age": 17,
+    "who": "tu-van",
+    "pose": "tu-van-presenting",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-03/char/tu-van/tu-van-presenting.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-03/char/tu-van/tu-van-presenting.png"
+    ],
+    "status": "pending",
+    "prompt": "Use case: identity-preserve. Edit ONE transparent full-body visual-novel sprite. Subject: an adult male career course adviser, short brown hair, cream shirt, teal trousers, lanyard. Use clearly adult anatomy, about 6.5 heads tall when standing, mature facial features, natural eyes and adult hands; avoid childlike or doll proportions. Preserve this character's identity, hair, exact clothing colors, original expression, gesture and props from reference 1 (tu-van-presenting). Preserve original standing or kneeling action but correct age anatomy. Keep warm clean outlines, soft pastel 2D cartoon rendering consistent with FinTeen. Reference 2, if present, is the corrected neutral design: match its age, face and body proportions closely while using the expression/gesture from reference 1. Smaller eyes and head relative to body than the original chibi. Full body, all hands and feet visible with margins, centered single character. Genuine transparent background. No text, letters, labels, logos, added objects, duplicate people, photorealism, or oversized baby head."
+  },
+  {
+    "id": "chapter-03/scene/sc01-three-career-offers.png",
+    "kind": "scene",
+    "chapter": 3,
+    "age": 17,
+    "who": "scene",
+    "pose": "sc01-three-career-offers",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-03/scene/sc01-three-career-offers.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-03/scene/sc01-three-career-offers.png"
+    ],
+    "status": "pending"
+  },
+  {
+    "id": "chapter-03/scene/sc02-checking-course-source.png",
+    "kind": "scene",
+    "chapter": 3,
+    "age": 17,
+    "who": "scene",
+    "pose": "sc02-checking-course-source",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-03/scene/sc02-checking-course-source.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-03/scene/sc02-checking-course-source.png"
+    ],
+    "status": "pending"
+  },
+  {
+    "id": "chapter-03/scene/sc03-weekly-career-plan.png",
+    "kind": "scene",
+    "chapter": 3,
+    "age": 17,
+    "who": "scene",
+    "pose": "sc03-weekly-career-plan",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-03/scene/sc03-weekly-career-plan.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-03/scene/sc03-weekly-career-plan.png"
+    ],
+    "status": "pending"
+  },
+  {
+    "id": "chapter-03/scene/sc04-career-report.png",
+    "kind": "scene",
+    "chapter": 3,
+    "age": 17,
+    "who": "scene",
+    "pose": "sc04-career-report",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-03/scene/sc04-career-report.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-03/scene/sc04-career-report.png"
+    ],
+    "status": "pending"
+  },
+  {
+    "id": "adult-shop-assistant-explaining",
+    "kind": "sprite",
+    "chapter": 4,
+    "age": 16,
+    "who": "shop-assistant",
+    "pose": "shop-assistant-explaining",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-04/char/shop-assistant/shop-assistant-explaining.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-04/char/shop-assistant/shop-assistant-explaining.png"
+    ],
+    "status": "pending",
+    "prompt": "Use case: identity-preserve. Edit ONE transparent full-body visual-novel sprite. Subject: an adult female shop assistant, brown bob, mint collared shirt, teal trousers, name badge. Use clearly adult anatomy, about 6.5 heads tall when standing, mature facial features, natural eyes and adult hands; avoid childlike or doll proportions. Preserve this character's identity, hair, exact clothing colors, original expression, gesture and props from reference 1 (shop-assistant-explaining). Preserve original standing or kneeling action but correct age anatomy. Keep warm clean outlines, soft pastel 2D cartoon rendering consistent with FinTeen. Reference 2, if present, is the corrected neutral design: match its age, face and body proportions closely while using the expression/gesture from reference 1. Smaller eyes and head relative to body than the original chibi. Full body, all hands and feet visible with margins, centered single character. Genuine transparent background. No text, letters, labels, logos, added objects, duplicate people, photorealism, or oversized baby head."
+  },
+  {
+    "id": "adult-shop-assistant-neutral",
+    "kind": "sprite",
+    "chapter": 4,
+    "age": 16,
+    "who": "shop-assistant",
+    "pose": "shop-assistant-neutral",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-04/char/shop-assistant/shop-assistant-neutral.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-04/char/shop-assistant/shop-assistant-neutral.png"
+    ],
+    "status": "superseded-tall-draft",
+    "prompt": "Use case: identity-preserve. Edit ONE transparent full-body visual-novel sprite. Subject: an adult female shop assistant, brown bob, mint collared shirt, teal trousers, name badge. Use clearly adult anatomy, about 6.5 heads tall when standing, mature facial features, natural eyes and adult hands; avoid childlike or doll proportions. Preserve this character's identity, hair, exact clothing colors, original expression, gesture and props from reference 1 (shop-assistant-neutral). Preserve original standing or kneeling action but correct age anatomy. Keep warm clean outlines, soft pastel 2D cartoon rendering consistent with FinTeen. Reference 2, if present, is the corrected neutral design: match its age, face and body proportions closely while using the expression/gesture from reference 1. Smaller eyes and head relative to body than the original chibi. Full body, all hands and feet visible with margins, centered single character. Genuine transparent background. No text, letters, labels, logos, added objects, duplicate people, photorealism, or oversized baby head.",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-9d4b6597-4ad5-4c24-a1f3-9fa48f01c8de.png"
+  },
+  {
+    "id": "chapter-04/scene/sc01-phone-needs.png",
+    "kind": "scene",
+    "chapter": 4,
+    "age": 16,
+    "who": "scene",
+    "pose": "sc01-phone-needs",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-04/scene/sc01-phone-needs.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-04/scene/sc01-phone-needs.png"
+    ],
+    "status": "pending"
+  },
+  {
+    "id": "chapter-04/scene/sc02-comparing-three-phones.png",
+    "kind": "scene",
+    "chapter": 4,
+    "age": 16,
+    "who": "scene",
+    "pose": "sc02-comparing-three-phones",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-04/scene/sc02-comparing-three-phones.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-04/scene/sc02-comparing-three-phones.png"
+    ],
+    "status": "pending"
+  },
+  {
+    "id": "chapter-04/scene/sc03-questioning-receipt.png",
+    "kind": "scene",
+    "chapter": 4,
+    "age": 16,
+    "who": "scene",
+    "pose": "sc03-questioning-receipt",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-04/scene/sc03-questioning-receipt.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-04/scene/sc03-questioning-receipt.png"
+    ],
+    "status": "pending"
+  },
+  {
+    "id": "chapter-04/scene/sc04-following-renewal.png",
+    "kind": "scene",
+    "chapter": 4,
+    "age": 16,
+    "who": "scene",
+    "pose": "sc04-following-renewal",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-04/scene/sc04-following-renewal.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-04/scene/sc04-following-renewal.png"
+    ],
+    "status": "pending"
+  },
+  {
+    "id": "adult-bank-guide-explaining",
+    "kind": "sprite",
+    "chapter": 5,
+    "age": 16,
+    "who": "bank-guide",
+    "pose": "bank-guide-explaining",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-05/char/bank-guide/bank-guide-explaining.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-05/char/bank-guide/bank-guide-explaining.png"
+    ],
+    "status": "pending",
+    "prompt": "Use case: identity-preserve. Edit ONE transparent full-body visual-novel sprite. Subject: an adult male bank guide, brown hair, navy suit, burgundy tie, name badge. Use clearly adult anatomy, about 6.5 heads tall when standing, mature facial features, natural eyes and adult hands; avoid childlike or doll proportions. Preserve this character's identity, hair, exact clothing colors, original expression, gesture and props from reference 1 (bank-guide-explaining). Preserve original standing or kneeling action but correct age anatomy. Keep warm clean outlines, soft pastel 2D cartoon rendering consistent with FinTeen. Reference 2, if present, is the corrected neutral design: match its age, face and body proportions closely while using the expression/gesture from reference 1. Smaller eyes and head relative to body than the original chibi. Full body, all hands and feet visible with margins, centered single character. Genuine transparent background. No text, letters, labels, logos, added objects, duplicate people, photorealism, or oversized baby head."
+  },
+  {
+    "id": "adult-bank-guide-neutral",
+    "kind": "sprite",
+    "chapter": 5,
+    "age": 16,
+    "who": "bank-guide",
+    "pose": "bank-guide-neutral",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-05/char/bank-guide/bank-guide-neutral.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-05/char/bank-guide/bank-guide-neutral.png"
+    ],
+    "status": "superseded-tall-draft",
+    "prompt": "Use case: identity-preserve. Edit ONE transparent full-body visual-novel sprite. Subject: an adult male bank guide, brown hair, navy suit, burgundy tie, name badge. Use clearly adult anatomy, about 6.5 heads tall when standing, mature facial features, natural eyes and adult hands; avoid childlike or doll proportions. Preserve this character's identity, hair, exact clothing colors, original expression, gesture and props from reference 1 (bank-guide-neutral). Preserve original standing or kneeling action but correct age anatomy. Keep warm clean outlines, soft pastel 2D cartoon rendering consistent with FinTeen. Reference 2, if present, is the corrected neutral design: match its age, face and body proportions closely while using the expression/gesture from reference 1. Smaller eyes and head relative to body than the original chibi. Full body, all hands and feet visible with margins, centered single character. Genuine transparent background. No text, letters, labels, logos, added objects, duplicate people, photorealism, or oversized baby head.",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-79923255-2bfa-432b-bd35-e0ddefc518d0.png"
+  },
+  {
+    "id": "chapter-05/scene/sc01-two-accounts.png",
+    "kind": "scene",
+    "chapter": 5,
+    "age": 16,
+    "who": "scene",
+    "pose": "sc01-two-accounts",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-05/scene/sc01-two-accounts.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-05/scene/sc01-two-accounts.png"
+    ],
+    "status": "pending"
+  },
+  {
+    "id": "chapter-05/scene/sc02-investigating-provider.png",
+    "kind": "scene",
+    "chapter": 5,
+    "age": 16,
+    "who": "scene",
+    "pose": "sc02-investigating-provider",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-05/scene/sc02-investigating-provider.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-05/scene/sc02-investigating-provider.png"
+    ],
+    "status": "pending"
+  },
+  {
+    "id": "chapter-05/scene/sc03-money-and-purchasing-power.png",
+    "kind": "scene",
+    "chapter": 5,
+    "age": 16,
+    "who": "scene",
+    "pose": "sc03-money-and-purchasing-power",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-05/scene/sc03-money-and-purchasing-power.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-05/scene/sc03-money-and-purchasing-power.png"
+    ],
+    "status": "pending"
+  },
+  {
+    "id": "chapter-05/scene/sc04-planning-for-deadline.png",
+    "kind": "scene",
+    "chapter": 5,
+    "age": 16,
+    "who": "scene",
+    "pose": "sc04-planning-for-deadline",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-05/scene/sc04-planning-for-deadline.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-05/scene/sc04-planning-for-deadline.png"
+    ],
+    "status": "pending"
+  },
+  {
+    "id": "18-an-neutral",
+    "kind": "sprite",
+    "chapter": 6,
+    "age": 18,
+    "who": "an",
+    "pose": "an-neutral",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-06/char/an/an-neutral.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-06/char/an/an-neutral.png"
+    ],
+    "status": "superseded-tall-draft",
+    "prompt": "Use case: identity-preserve. Edit ONE transparent full-body visual-novel sprite. Subject: An, brown side-swept hair, yellow T-shirt, navy shorts, white slide sandals. Age MUST read as an 18-year-old young adult: approximately 6.7 heads tall, adult-length limbs and torso, defined youthful jaw and shoulders, no beard or aging wrinkles. Preserve this character's identity, hair, exact clothing colors, original expression, gesture and props from reference 1 (an-neutral). Preserve original standing or kneeling action but correct age anatomy. Keep warm clean outlines, soft pastel 2D cartoon rendering consistent with FinTeen. Reference 2, if present, is the corrected neutral design: match its age, face and body proportions closely while using the expression/gesture from reference 1. Smaller eyes and head relative to body than the original chibi. Full body, all hands and feet visible with margins, centered single character. Genuine transparent background. No text, letters, labels, logos, added objects, duplicate people, photorealism, or oversized baby head.",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-81648615-294b-4f40-a506-dc40db1e5fb5.png"
+  },
+  {
+    "id": "18-an-relieved",
+    "kind": "sprite",
+    "chapter": 6,
+    "age": 18,
+    "who": "an",
+    "pose": "an-relieved",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-06/char/an/an-relieved.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-06/char/an/an-relieved.png"
+    ],
+    "status": "pending",
+    "prompt": "Use case: identity-preserve. Edit ONE transparent full-body visual-novel sprite. Subject: An, brown side-swept hair, yellow T-shirt, navy shorts, white slide sandals. Age MUST read as an 18-year-old young adult: approximately 6.7 heads tall, adult-length limbs and torso, defined youthful jaw and shoulders, no beard or aging wrinkles. Preserve this character's identity, hair, exact clothing colors, original expression, gesture and props from reference 1 (an-relieved). Preserve original standing or kneeling action but correct age anatomy. Keep warm clean outlines, soft pastel 2D cartoon rendering consistent with FinTeen. Reference 2, if present, is the corrected neutral design: match its age, face and body proportions closely while using the expression/gesture from reference 1. Smaller eyes and head relative to body than the original chibi. Full body, all hands and feet visible with margins, centered single character. Genuine transparent background. No text, letters, labels, logos, added objects, duplicate people, photorealism, or oversized baby head."
+  },
+  {
+    "id": "18-an-thinking",
+    "kind": "sprite",
+    "chapter": 6,
+    "age": 18,
+    "who": "an",
+    "pose": "an-thinking",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-06/char/an/an-thinking.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-06/char/an/an-thinking.png"
+    ],
+    "status": "pending",
+    "prompt": "Use case: identity-preserve. Edit ONE transparent full-body visual-novel sprite. Subject: An, brown side-swept hair, yellow T-shirt, navy shorts, white slide sandals. Age MUST read as an 18-year-old young adult: approximately 6.7 heads tall, adult-length limbs and torso, defined youthful jaw and shoulders, no beard or aging wrinkles. Preserve this character's identity, hair, exact clothing colors, original expression, gesture and props from reference 1 (an-thinking). Preserve original standing or kneeling action but correct age anatomy. Keep warm clean outlines, soft pastel 2D cartoon rendering consistent with FinTeen. Reference 2, if present, is the corrected neutral design: match its age, face and body proportions closely while using the expression/gesture from reference 1. Smaller eyes and head relative to body than the original chibi. Full body, all hands and feet visible with margins, centered single character. Genuine transparent background. No text, letters, labels, logos, added objects, duplicate people, photorealism, or oversized baby head."
+  },
+  {
+    "id": "18-an-worried-money",
+    "kind": "sprite",
+    "chapter": 6,
+    "age": 18,
+    "who": "an",
+    "pose": "an-worried-money",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-06/char/an/an-worried-money.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-06/char/an/an-worried-money.png"
+    ],
+    "status": "pending",
+    "prompt": "Use case: identity-preserve. Edit ONE transparent full-body visual-novel sprite. Subject: An, brown side-swept hair, yellow T-shirt, navy shorts, white slide sandals. Age MUST read as an 18-year-old young adult: approximately 6.7 heads tall, adult-length limbs and torso, defined youthful jaw and shoulders, no beard or aging wrinkles. Preserve this character's identity, hair, exact clothing colors, original expression, gesture and props from reference 1 (an-worried-money). Preserve original standing or kneeling action but correct age anatomy. Keep warm clean outlines, soft pastel 2D cartoon rendering consistent with FinTeen. Reference 2, if present, is the corrected neutral design: match its age, face and body proportions closely while using the expression/gesture from reference 1. Smaller eyes and head relative to body than the original chibi. Full body, all hands and feet visible with margins, centered single character. Genuine transparent background. No text, letters, labels, logos, added objects, duplicate people, photorealism, or oversized baby head."
+  },
+  {
+    "id": "18-minh-inviting",
+    "kind": "sprite",
+    "chapter": 6,
+    "age": 18,
+    "who": "minh",
+    "pose": "minh-inviting",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-06/char/minh/minh-inviting.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-06/char/minh/minh-inviting.png"
+    ],
+    "status": "pending",
+    "prompt": "Use case: identity-preserve. Edit ONE transparent full-body visual-novel sprite. Subject: Minh, swept black hair, navy polo, beige shorts, white sneakers and wristwatch. Age MUST read as an 18-year-old young adult: approximately 6.7 heads tall, adult-length limbs and torso, defined youthful jaw and shoulders, no beard or aging wrinkles. Preserve this character's identity, hair, exact clothing colors, original expression, gesture and props from reference 1 (minh-inviting). Preserve original standing or kneeling action but correct age anatomy. Keep warm clean outlines, soft pastel 2D cartoon rendering consistent with FinTeen. Reference 2, if present, is the corrected neutral design: match its age, face and body proportions closely while using the expression/gesture from reference 1. Smaller eyes and head relative to body than the original chibi. Full body, all hands and feet visible with margins, centered single character. Genuine transparent background. No text, letters, labels, logos, added objects, duplicate people, photorealism, or oversized baby head."
+  },
+  {
+    "id": "18-minh-neutral",
+    "kind": "sprite",
+    "chapter": 6,
+    "age": 18,
+    "who": "minh",
+    "pose": "minh-neutral",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-06/char/minh/minh-neutral.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-06/char/minh/minh-neutral.png"
+    ],
+    "status": "superseded-tall-draft",
+    "prompt": "Use case: identity-preserve. Edit ONE transparent full-body visual-novel sprite. Subject: Minh, swept black hair, navy polo, beige shorts, white sneakers and wristwatch. Age MUST read as an 18-year-old young adult: approximately 6.7 heads tall, adult-length limbs and torso, defined youthful jaw and shoulders, no beard or aging wrinkles. Preserve this character's identity, hair, exact clothing colors, original expression, gesture and props from reference 1 (minh-neutral). Preserve original standing or kneeling action but correct age anatomy. Keep warm clean outlines, soft pastel 2D cartoon rendering consistent with FinTeen. Reference 2, if present, is the corrected neutral design: match its age, face and body proportions closely while using the expression/gesture from reference 1. Smaller eyes and head relative to body than the original chibi. Full body, all hands and feet visible with margins, centered single character. Genuine transparent background. No text, letters, labels, logos, added objects, duplicate people, photorealism, or oversized baby head.",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-734998d4-632a-476c-8d3d-7acc0ecf69ad.png"
+  },
+  {
+    "id": "chapter-06/scene/sc01-school-computer-or-laptop.png",
+    "kind": "scene",
+    "chapter": 6,
+    "age": 18,
+    "who": "scene",
+    "pose": "sc01-school-computer-or-laptop",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-06/scene/sc01-school-computer-or-laptop.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-06/scene/sc01-school-computer-or-laptop.png"
+    ],
+    "status": "pending"
+  },
+  {
+    "id": "chapter-06/scene/sc02-comparing-loan-offers.png",
+    "kind": "scene",
+    "chapter": 6,
+    "age": 18,
+    "who": "scene",
+    "pose": "sc02-comparing-loan-offers",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-06/scene/sc02-comparing-loan-offers.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-06/scene/sc02-comparing-loan-offers.png"
+    ],
+    "status": "pending"
+  },
+  {
+    "id": "chapter-06/scene/sc03-bnpl-and-minimum-payment.png",
+    "kind": "scene",
+    "chapter": 6,
+    "age": 18,
+    "who": "scene",
+    "pose": "sc03-bnpl-and-minimum-payment",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-06/scene/sc03-bnpl-and-minimum-payment.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-06/scene/sc03-bnpl-and-minimum-payment.png"
+    ],
+    "status": "pending"
+  },
+  {
+    "id": "chapter-06/scene/sc04-realistic-repayment-plan.png",
+    "kind": "scene",
+    "chapter": 6,
+    "age": 18,
+    "who": "scene",
+    "pose": "sc04-realistic-repayment-plan",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-06/scene/sc04-realistic-repayment-plan.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-06/scene/sc04-realistic-repayment-plan.png"
+    ],
+    "status": "pending"
+  }
+]

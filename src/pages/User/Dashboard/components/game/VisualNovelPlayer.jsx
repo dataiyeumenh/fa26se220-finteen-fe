@@ -1,21 +1,25 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ArrowLeft, ChartNoAxesColumn, Coins, ImageOff, Maximize2, Menu, Minimize2, RotateCcw } from "lucide-react";
+import { ArrowLeft, Brain, ChartNoAxesColumn, Coins, Heart, ImageOff, Landmark, Maximize2, Menu, Minimize2, PiggyBank, RotateCcw, ShieldAlert, Target } from "lucide-react";
 import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
 import "./visual-novel.css";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { NeedWantMiniGame } from "./NeedWantMiniGame";
-import { ServeCustomerMiniGame } from "./ServeCustomerMiniGame";
+import { BudgetBuilderMiniGame } from "./BudgetBuilderMiniGame";
+import { SavingsRaceMiniGame } from "./SavingsRaceMiniGame";
 
-const statLabels = {
-  WEALTH: "Tài sản",
-  SAVINGS: "Tiết kiệm",
-  FIQ: "IQ tài chính",
-  HAPPINESS: "Hạnh phúc",
-  RISK: "Rủi ro",
-  GOAL: "Mục tiêu",
+const statDisplay = {
+  WEALTH: { label: "Tài sản", icon: Landmark, tone: "wealth" },
+  SAVING: { label: "Tiết kiệm", icon: PiggyBank, tone: "saving" },
+  FIQ: { label: "IQ tài chính", icon: Brain, tone: "fiq" },
+  HAPPINESS: { label: "Hạnh phúc", icon: Heart, tone: "happiness" },
+  RISK: { label: "Rủi ro", icon: ShieldAlert, tone: "risk" },
+  GOAL: { label: "Mục tiêu", icon: Target, tone: "goal" },
 };
+const statLabels = Object.fromEntries(
+  Object.entries(statDisplay).map(([key, value]) => [key, value.label]),
+);
 
 function applyStatEffects(current, effects = {}) {
   const next = { ...current };
@@ -152,37 +156,36 @@ function SpeakerTag({ scene }) {
 
 function StatsPanel({ stats, statFxByKey }) {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2 mt-3">
-      {Object.entries(statLabels).map(([key, label]) => (
+    <div className="vn-stats-grid">
+      {Object.entries(statDisplay).map(([key, meta]) => {
+        const Icon = meta.icon;
+        return (
         <div
           key={key}
           className={cn(
-            "relative bg-[#faf8f5] rounded-xl border p-2.5 transition-all duration-500",
+            "vn-stat-card",
+            `is-${meta.tone}`,
             statFxByKey[key]
               ? statFxByKey[key] > 0
-                ? "border-[#22c55e]/55 shadow-[0_0_0_2px_rgba(34,197,94,0.18)]"
-                : "border-[#ef4444]/55 shadow-[0_0_0_2px_rgba(239,68,68,0.18)]"
-              : "border-[#22c55e]/15",
+                ? "has-positive-change"
+                : "has-negative-change"
+              : "",
           )}
         >
-          <div className="text-[10px] uppercase tracking-wide font-bold text-[#1a3a1a]/55">
-            {label}
-          </div>
-          <div className="text-base font-black text-[#1a3a1a]">
-            {Number(stats[key] ?? 0).toLocaleString("vi-VN")}
-          </div>
+          <span className="vn-stat-icon"><Icon size={17} /></span>
+          <span className="vn-stat-copy"><small>{meta.label}</small><strong>{Number(stats[key] ?? 0).toLocaleString("vi-VN")}</strong></span>
           {statFxByKey[key] ? (
             <span
               className={cn(
-                "absolute -top-2 -right-2 rounded-full px-2 py-0.5 text-[11px] font-black text-white animate-bounce",
-                statFxByKey[key] > 0 ? "bg-[#22c55e]" : "bg-[#ef4444]",
+                "vn-stat-delta",
+                statFxByKey[key] > 0 ? "is-positive" : "is-negative",
               )}
             >
               {statFxByKey[key] > 0 ? `+${statFxByKey[key]}` : statFxByKey[key]}
             </span>
           ) : null}
         </div>
-      ))}
+      )})}
     </div>
   );
 }
@@ -201,6 +204,15 @@ export function VisualNovelPlayer({ data }) {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [pendingEffects, setPendingEffects] = useState(null);
   const [statFxByKey, setStatFxByKey] = useState({});
+  
+  // New state for Scene Data Runtime features
+  const [gameFlag, setGameFlag] = useState(null);
+  const [evidenceScores, setEvidenceScores] = useState({ I: 0, C: 0, P: 0 });
+  const [inspectPopup, setInspectPopup] = useState(null);
+  const [miniGameCompleted, setMiniGameCompleted] = useState(false);
+  const [miniGameScore, setMiniGameScore] = useState(0); // Track score: 0-6
+  const [money, setMoney] = useState(data.initialMoney || 0);
+  const [moneyFx, setMoneyFx] = useState(null);
 
   const sceneIndex = scenePath[scenePath.length - 1];
 
@@ -244,6 +256,12 @@ export function VisualNovelPlayer({ data }) {
     if (!scene.characters) return [];
 
     return scene.characters.map((character) => {
+      // If src is already provided in character object, use it
+      if (character.src) {
+        return character;
+      }
+      
+      // Otherwise, build from sprites data
       const spriteSet = data.sprites?.[character.id] || {};
       return {
         ...character,
@@ -325,9 +343,33 @@ export function VisualNovelPlayer({ data }) {
   };
 
   const selectChoice = (option) => {
+    // Track evidence scores
+    if (option.evidenceScores) {
+      setEvidenceScores((prev) => ({
+        I: (prev.I || 0) + (option.evidenceScores.I || 0),
+        C: (prev.C || 0) + (option.evidenceScores.C || 0),
+        P: (prev.P || 0) + (option.evidenceScores.P || 0),
+      }));
+    }
+
+    // Track game flag
+    if (option.flag) {
+      setGameFlag(option.flag);
+    }
+
+    // Handle money events
+    if (option.moneyEvents && Array.isArray(option.moneyEvents)) {
+      const totalMoneyDelta = option.moneyEvents.reduce((sum, evt) => sum + (evt.amount || 0), 0);
+      setMoney((prev) => Math.max(0, prev + totalMoneyDelta));
+      if (totalMoneyDelta !== 0) {
+        setMoneyFx(totalMoneyDelta);
+        setTimeout(() => setMoneyFx(null), 1200);
+      }
+    }
+
     runTransitionWithEffects({
       sceneId: option.id,
-      effects: option.effects,
+      effects: option.deltaStats || option.effects,
       transition: () => {
         const targetIndex = option.nextSceneId
           ? sceneIndexById[option.nextSceneId]
@@ -341,10 +383,16 @@ export function VisualNovelPlayer({ data }) {
   };
 
   const handleMiniGameComplete = (result) => {
-    const { passed } = result || {};
-    setMiniGameDoneByScene((prev) => ({ ...prev, [scene.id]: true }));
+    const { passed, score } = result || {};
+    setMiniGameDoneByScene((prev) => ({ ...prev, [scene.id]: Boolean(passed) }));
+    setMiniGameCompleted(Boolean(passed));
+    if (score !== undefined) {
+      setMiniGameScore(score);
+    }
 
-    const targetSceneId = passed ? scene.onPassSceneId : scene.onFailSceneId;
+    const targetSceneId = passed
+      ? scene.onPassSceneId || scene.nextSceneId
+      : scene.onFailSceneId;
     if (targetSceneId && typeof sceneIndexById[targetSceneId] === "number") {
       goToSceneIndex(sceneIndexById[targetSceneId]);
       return;
@@ -366,6 +414,61 @@ export function VisualNovelPlayer({ data }) {
     setPendingEffects(null);
     setStatFxByKey({});
     pendingTransitionRef.current = null;
+    setGameFlag(null);
+    setEvidenceScores({ I: 0, C: 0, P: 0 });
+    setMiniGameCompleted(false);
+    setMiniGameScore(0);
+    setMoney(data.initialMoney || 0);
+    setMoneyFx(null);
+  };
+
+  const evaluateEndingCondition = (condition) => {
+    if (condition === "DEFAULT_FALLBACK") return true;
+    
+    if (typeof condition === "string") {
+      try {
+        const evaluator = new Function(
+          "flag",
+          "evidenceScore",
+          "miniGameCompleted",
+          "stats",
+          "money",
+          "miniGameScore",
+          `const { SAVING = 0, HAPPINESS = 0, RISK = 0, GOAL = 0 } = stats || {}; return Boolean(${condition});`,
+        );
+        
+        const totalEvidenceScore = (evidenceScores.I || 0) + (evidenceScores.C || 0) + (evidenceScores.P || 0);
+        
+        return evaluator(
+          gameFlag,
+          totalEvidenceScore,
+          miniGameCompleted,
+          stats,
+          money,
+          miniGameScore
+        );
+      } catch {
+        return false;
+      }
+    }
+    
+    return false;
+  };
+
+  const resolveEnding = () => {
+    if (!data.endingRules?.endings) return null;
+
+    const endingRules = data.endingRules;
+    const priorityOrder = endingRules.priorityOrder || [];
+
+    for (const endingId of priorityOrder) {
+      const ending = endingRules.endings.find((e) => e.id === endingId);
+      if (ending && evaluateEndingCondition(ending.condition)) {
+        return ending;
+      }
+    }
+
+    return endingRules.endings[endingRules.endings.length - 1] || null;
   };
 
   useEffect(() => {
@@ -432,7 +535,7 @@ export function VisualNovelPlayer({ data }) {
     <div ref={gameContainerRef} className="vn-player">
       <header className="vn-toolbar">
         <details className="vn-details vn-menu">
-          <summary className="vn-icon-button" aria-label="Menu trò chơi" title="Menu trò chơi"><Menu size={20} /></summary>
+          <summary className="vn-icon-button vn-menu-trigger" aria-label="Mở menu trò chơi" title="Menu trò chơi"><Menu size={20} /><span className="vn-control-label">Menu</span></summary>
           <div className="vn-popover vn-menu-panel">
             <div className="vn-heading"><span className="vn-eyebrow">HÀNH TRÌNH FINTEEN</span><h1>{data.title}</h1></div>
             <p className="vn-menu-progress">Cảnh {sceneIndex + 1} / {totalScenes}</p>
@@ -449,14 +552,19 @@ export function VisualNovelPlayer({ data }) {
             </div>
           </div>
         </details>
-        {!isSceneOnlyScreen && scene.type !== "minigame" && <div className="vn-hud-right">
-        <div className="vn-wallet"><Coins size={17} /><span>{Number(stats.WEALTH || 0).toLocaleString("vi-VN")}<small> đ</small></span></div>
-        <details className="vn-details">
-          <summary className="vn-icon-button" aria-label="Xem chỉ số" title="Chỉ số"><ChartNoAxesColumn size={18} /><span className="vn-control-label">Chỉ số</span></summary>
-          <div className="vn-popover"><h2>Hành trình của bạn</h2><StatsPanel stats={stats} statFxByKey={statFxByKey} /></div>
-        </details>
-        <button type="button" onClick={toggleFullscreen} className="vn-icon-button" aria-label={isFullscreen ? "Thu nhỏ" : "Toàn màn hình"} title={isFullscreen ? "Thu nhỏ" : "Toàn màn hình"}>{isFullscreen ? <Minimize2 size={18} /> : <Maximize2 size={18} />}</button>
-        </div>}
+        <div className="vn-progress-pill" aria-label={`Tiến độ: cảnh ${sceneIndex + 1} trên ${totalScenes}`}>
+          <span>{data.title}</span>
+          <div className="vn-progress" role="progressbar" aria-label="Tiến độ chương" aria-valuenow={sceneIndex + 1} aria-valuemin={1} aria-valuemax={totalScenes}><div style={{ width: progress + "%" }} /></div>
+          <small>{sceneIndex + 1}/{totalScenes}</small>
+        </div>
+        <div className="vn-hud-right">
+          <div className={cn("vn-wallet", moneyFx && (moneyFx > 0 ? "has-positive-change" : "has-negative-change"))} aria-label={`Số dư ${Number(money || 0).toLocaleString("vi-VN")} đồng`}><Coins size={18} /><span>{Number(money || 0).toLocaleString("vi-VN")}<small> đ</small></span>{moneyFx ? <span className={cn("vn-wallet-delta", moneyFx > 0 ? "is-positive" : "is-negative")}>{moneyFx > 0 ? `+${Number(moneyFx).toLocaleString("vi-VN")}` : Number(moneyFx).toLocaleString("vi-VN")}</span> : null}</div>
+          <details className="vn-details vn-stats-details">
+            <summary className="vn-icon-button" aria-label="Xem các chỉ số hành trình" title="Chỉ số"><ChartNoAxesColumn size={18} /><span className="vn-control-label">Chỉ số</span></summary>
+            <div className="vn-popover vn-stats-popover"><div className="vn-popover-heading"><span>TIẾN TRÌNH</span><h2>Chỉ số hành trình</h2></div><StatsPanel stats={stats} statFxByKey={statFxByKey} /></div>
+          </details>
+          <button type="button" onClick={toggleFullscreen} className="vn-icon-button vn-fullscreen-button" aria-label={isFullscreen ? "Thu nhỏ" : "Toàn màn hình"} title={isFullscreen ? "Thu nhỏ" : "Toàn màn hình"}>{isFullscreen ? <Minimize2 size={18} /> : <Maximize2 size={18} />}</button>
+        </div>
       </header>
       <main
         className="vn-play-area"
@@ -494,22 +602,42 @@ export function VisualNovelPlayer({ data }) {
           </>
         )}
 
-          {isSceneOnlyScreen && canGoNext && <button className="vn-scene-next" onClick={(event) => { event.stopPropagation(); goNext(); }}>Tiếp tục câu chuyện <span>→</span></button>}
+          {isSceneOnlyScreen && scene.inspect && (
+            <button
+              className="vn-inspect-button"
+              onClick={(event) => {
+                event.stopPropagation();
+                setInspectPopup(scene.inspect);
+              }}
+              title="Bấm vào phong bì để mở"
+              aria-label="Mở phong bì"
+            >
+              <span>Nhấn vào đây để mở</span>
+            </button>
+          )}
+          {isSceneOnlyScreen && canGoNext && !scene.inspect && <button className="vn-scene-next" onClick={(event) => { event.stopPropagation(); goNext(); }}>Tiếp tục câu chuyện <span>→</span></button>}
           </div>
         </div>
         {scene.type === "minigame" ? (
           <div className="vn-minigame-host">
-            {scene.game?.id === "STALL_SERVE_MINIGAME" ? (
-              <ServeCustomerMiniGame
-                key={scene.id}
+            {scene.game?.id === "BUDGET_BUILDER_CH02" ? (
+              <BudgetBuilderMiniGame
+                key={`${scene.id}-${scenePath.length}`}
                 game={scene.game}
                 onComplete={handleMiniGameComplete}
                 className="h-full"
-                immersive
+              />
+            ) : scene.game?.id === "SAVINGS_RACE_CH02" ? (
+              <SavingsRaceMiniGame
+                key={`${scene.id}-${scenePath.length}`}
+                game={scene.game}
+                planFlag={gameFlag}
+                onComplete={handleMiniGameComplete}
+                className="h-full"
               />
             ) : (
               <NeedWantMiniGame
-                key={scene.id}
+                key={`${scene.id}-${scenePath.length}`}
                 game={scene.game}
                 onComplete={handleMiniGameComplete}
                 className="h-full"
@@ -557,6 +685,31 @@ export function VisualNovelPlayer({ data }) {
                   </p>
                 )}
               </div>
+            ) : scene.type === "ending" ? (
+              <div className="vn-dialogue">
+                <p className="text-2xl font-black mb-3 text-center">
+                  {resolveEnding()?.title || "Kết thúc"}
+                </p>
+                <p className="text-center mb-4">
+                  {resolveEnding()?.storyText || scene.text}
+                </p>
+                {resolveEnding()?.finalStats && (
+                  <div className="bg-white/5 rounded-lg p-3 mb-4 text-sm">
+                    <p className="font-bold mb-2">Chỉ số cuối cùng:</p>
+                    <div className="space-y-1 text-white/75">
+                      {Object.entries(resolveEnding().finalStats).map(([stat, value]) => value !== null && (
+                        <div key={stat} className="flex justify-between">
+                          <span>{statLabels[stat]}</span>
+                          <span>{value}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                <Link to="/dashboard/user/lessons" className="w-full inline-block bg-green-600 text-white p-3 rounded-lg text-center hover:bg-green-700">
+                  Quay lại bản đồ chương
+                </Link>
+              </div>
             ) : (
               <div
                 className={cn(
@@ -570,6 +723,19 @@ export function VisualNovelPlayer({ data }) {
                   {scene.text || scene.prompt}
                 </p>
 
+                {scene.inspect && (
+                  <button
+                    type="button"
+                    className="w-full mt-3 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg transition-colors"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setInspectPopup(scene.inspect);
+                    }}
+                  >
+                    {scene.inspect.buttonText}
+                  </button>
+                )}
+
                 {canGoNext && !hasChoiceOptions && scene.type !== "summary" && (
                   <button type="button" className="vn-dialogue-next" onClick={(event) => { event.stopPropagation(); goNext(); }}>
                     Tiếp tục <span aria-hidden="true">→</span>
@@ -581,6 +747,61 @@ export function VisualNovelPlayer({ data }) {
         )}
 
       </main>
+        {inspectPopup && (
+          <div className="absolute inset-0 z-[60] bg-black/45 backdrop-blur-sm flex items-center justify-center p-4">
+            <div className="w-full max-w-3xl rounded-3xl border border-white/25 bg-[#0b1723] text-white p-6 shadow-2xl max-h-[85vh] overflow-y-auto">
+              <div className="flex items-start justify-between mb-4">
+                <h3 className="text-base font-black">{inspectPopup.buttonText}</h3>
+                <button
+                  onClick={() => {
+                    // Handle money events when closing popup
+                    if (inspectPopup.moneyEvents && Array.isArray(inspectPopup.moneyEvents)) {
+                      const totalMoneyDelta = inspectPopup.moneyEvents.reduce((sum, evt) => sum + (evt.amount || 0), 0);
+                      setMoney((prev) => Math.max(0, prev + totalMoneyDelta));
+                      if (totalMoneyDelta !== 0) {
+                        setMoneyFx(totalMoneyDelta);
+                        setTimeout(() => setMoneyFx(null), 1200);
+                      }
+                    }
+                    setInspectPopup(null);
+                    if (inspectPopup.autoNextSceneOnClose) {
+                      goNext();
+                    }
+                  }}
+                  className="text-white/60 hover:text-white text-2xl leading-none"
+                >
+                  ×
+                </button>
+              </div>
+              {inspectPopup.popupImage && (
+                <img src={inspectPopup.popupImage} alt={inspectPopup.buttonText} className="w-full rounded-lg mb-4 max-h-96 object-contain" />
+              )}
+              <p className="text-sm whitespace-pre-wrap text-white/90 mb-4">
+                {inspectPopup.dataText}
+              </p>
+              <button
+                onClick={() => {
+                  // Handle money events when closing popup
+                  if (inspectPopup.moneyEvents && Array.isArray(inspectPopup.moneyEvents)) {
+                    const totalMoneyDelta = inspectPopup.moneyEvents.reduce((sum, evt) => sum + (evt.amount || 0), 0);
+                    setMoney((prev) => Math.max(0, prev + totalMoneyDelta));
+                    if (totalMoneyDelta !== 0) {
+                      setMoneyFx(totalMoneyDelta);
+                      setTimeout(() => setMoneyFx(null), 1200);
+                    }
+                  }
+                  setInspectPopup(null);
+                  if (inspectPopup.autoNextSceneOnClose) {
+                    goNext();
+                  }
+                }}
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg text-sm font-bold"
+              >
+                Đóng
+              </button>
+            </div>
+          </div>
+        )}
         {pendingEffects && (
           <div className="absolute inset-0 z-[60] bg-black/45 backdrop-blur-sm flex items-center justify-center p-4">
             <div className="w-full max-w-md rounded-3xl border border-white/25 bg-[#0b1723] text-white p-5 shadow-2xl">

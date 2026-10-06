@@ -1,0 +1,50 @@
+[
+  {
+    "id": "chapter-01/scene/sc01-receiving-allowance.png",
+    "ref": "chapter-01/char/me/me-neutral.png",
+    "change": "Change ONLY the mother's garment below the waist to match reference2. Her brown bodice/apron TOP must end at the waist. Remove the long brown apron panel covering her lap. Show her charcoal-black tied waistband and black wide trousers on her seated lap, like the reference sprite. Keep cream sleeves and brown upper bodice exactly as they are. Preserve the seated leg pose and all occlusion by hands/table. Do not alter anything above the waist.",
+    "target": "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-01/scene/sc01-receiving-allowance.png",
+    "reference": "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-01/char/me/me-neutral.png",
+    "backup": "D:/DO-AN/SEQ/output/scene-character-audit/before/chapter-01-sc01-receiving-allowance.png",
+    "prompt": "Use case: precise-object-edit. Reference1 is the edit target; reference2 is the canonical character sprite. Change ONLY the mother's garment below the waist to match reference2. Her brown bodice/apron TOP must end at the waist. Remove the long brown apron panel covering her lap. Show her charcoal-black tied waistband and black wide trousers on her seated lap, like the reference sprite. Keep cream sleeves and brown upper bodice exactly as they are. Preserve the seated leg pose and all occlusion by hands/table. Do not alter anything above the waist. Strict localized correction only. Keep An and every other person, all faces and expressions, the chibi body proportions, character sizes, composition, crop, perspective, background, furniture, lighting, colors, hands, props and blank documents exactly as reference1. Do not redesign the scene or change character height. Keep the same polished chibi 2D style and 16:9 opaque landscape canvas. No new text, symbols, people, objects, logos or watermark.",
+    "status": "installed",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-250cec26-8eff-4487-85c4-7f114abc7106.png",
+    "draft": "D:/DO-AN/SEQ/output/scene-character-audit/chapter-01-sc01-receiving-allowance.png"
+  },
+  {
+    "id": "chapter-01/scene/sc03-checking-priorities.png",
+    "ref": "chapter-01/char/me/me-neutral.png",
+    "change": "Change ONLY the mother's garment below the waist to match reference2. Her brown bodice/apron TOP must end at the waist. Replace the brown hanging apron/skirt section and brown waist tie with the reference sprite's charcoal-black waistband/tie and black wide trousers visible above/behind the desk. Keep the brown upper bodice and cream sleeves unchanged. Keep her bent standing posture and original desk occlusion. Do not alter anything above the waist.",
+    "target": "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-01/scene/sc03-checking-priorities.png",
+    "reference": "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-01/char/me/me-neutral.png",
+    "backup": "D:/DO-AN/SEQ/output/scene-character-audit/before/chapter-01-sc03-checking-priorities.png",
+    "prompt": "Use case: precise-object-edit. Reference1 is the edit target; reference2 is the canonical character sprite. Change ONLY the mother's garment below the waist to match reference2. Her brown bodice/apron TOP must end at the waist. Replace the brown hanging apron/skirt section and brown waist tie with the reference sprite's charcoal-black waistband/tie and black wide trousers visible above/behind the desk. Keep the brown upper bodice and cream sleeves unchanged. Keep her bent standing posture and original desk occlusion. Do not alter anything above the waist. Strict localized correction only. Keep An and every other person, all faces and expressions, the chibi body proportions, character sizes, composition, crop, perspective, background, furniture, lighting, colors, hands, props and blank documents exactly as reference1. Do not redesign the scene or change character height. Keep the same polished chibi 2D style and 16:9 opaque landscape canvas. No new text, symbols, people, objects, logos or watermark.",
+    "status": "installed",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-ba312e90-feaf-4ca1-a1d2-a48cd164646f.png",
+    "draft": "D:/DO-AN/SEQ/output/scene-character-audit/chapter-01-sc03-checking-priorities.png"
+  },
+  {
+    "id": "chapter-05/scene/sc03-money-and-purchasing-power.png",
+    "ref": "chapter-05/char/co-linh/co-linh-neutral.png",
+    "change": "Change ONLY the placement of Co Linh's low ponytail to match reference2. Her ponytail must drape over her anatomical RIGHT shoulder, which is the LEFT side of her torso as viewed by the viewer, the side nearer An. Currently it is on the viewer-right side: remove that incorrect ponytail and restore the blue blouse area there, then place ONE same brown ponytail on the viewer-left shoulder. Do not mirror or rotate the whole teacher, the face, hands, clothing or entire scene. Keep her front hair part, face, glasses, pose and expression exactly.",
+    "target": "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-05/scene/sc03-money-and-purchasing-power.png",
+    "reference": "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-05/char/co-linh/co-linh-neutral.png",
+    "backup": "D:/DO-AN/SEQ/output/scene-character-audit/before/chapter-05-sc03-money-and-purchasing-power.png",
+    "prompt": "Use case: precise-object-edit. Reference1 is the edit target; reference2 is the canonical character sprite. Change ONLY the placement of Co Linh's low ponytail to match reference2. Her ponytail must drape over her anatomical RIGHT shoulder, which is the LEFT side of her torso as viewed by the viewer, the side nearer An. Currently it is on the viewer-right side: remove that incorrect ponytail and restore the blue blouse area there, then place ONE same brown ponytail on the viewer-left shoulder. Do not mirror or rotate the whole teacher, the face, hands, clothing or entire scene. Keep her front hair part, face, glasses, pose and expression exactly. Strict localized correction only. Keep An and every other person, all faces and expressions, the chibi body proportions, character sizes, composition, crop, perspective, background, furniture, lighting, colors, hands, props and blank documents exactly as reference1. Do not redesign the scene or change character height. Keep the same polished chibi 2D style and 16:9 opaque landscape canvas. No new text, symbols, people, objects, logos or watermark.",
+    "status": "installed",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-40985ff4-782f-4ab0-b337-1db5dc8da5de.png",
+    "draft": "D:/DO-AN/SEQ/output/scene-character-audit/chapter-05-sc03-money-and-purchasing-power.png"
+  },
+  {
+    "id": "chapter-06/scene/sc04-realistic-repayment-plan.png",
+    "ref": "chapter-06/char/co-linh/co-linh-neutral.png",
+    "change": "Change ONLY the placement of Co Linh's low ponytail to match reference2. Her ponytail must drape over her anatomical RIGHT shoulder, which is the LEFT side of her torso as viewed by the viewer, the side nearer An and her hand supporting her cheek. Remove the current viewer-right ponytail and restore the blue blouse there. Place ONE brown ponytail on viewer-left shoulder, naturally partly occluded by her forearm/hand as needed. Do not move the supporting hand or change her pose. Do not mirror or rotate her face or the scene. Keep front hair part, glasses, clothing, expression exactly.",
+    "target": "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-06/scene/sc04-realistic-repayment-plan.png",
+    "reference": "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-06/char/co-linh/co-linh-neutral.png",
+    "backup": "D:/DO-AN/SEQ/output/scene-character-audit/before/chapter-06-sc04-realistic-repayment-plan.png",
+    "prompt": "Use case: precise-object-edit. Reference1 is the edit target; reference2 is the canonical character sprite. Change ONLY the placement of Co Linh's low ponytail to match reference2. Her ponytail must drape over her anatomical RIGHT shoulder, which is the LEFT side of her torso as viewed by the viewer, the side nearer An and her hand supporting her cheek. Remove the current viewer-right ponytail and restore the blue blouse there. Place ONE brown ponytail on viewer-left shoulder, naturally partly occluded by her forearm/hand as needed. Do not move the supporting hand or change her pose. Do not mirror or rotate her face or the scene. Keep front hair part, glasses, clothing, expression exactly. Strict localized correction only. Keep An and every other person, all faces and expressions, the chibi body proportions, character sizes, composition, crop, perspective, background, furniture, lighting, colors, hands, props and blank documents exactly as reference1. Do not redesign the scene or change character height. Keep the same polished chibi 2D style and 16:9 opaque landscape canvas. No new text, symbols, people, objects, logos or watermark.",
+    "status": "installed",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-ca6c6cbf-6ddd-4f36-8d48-de1fa21c25e0.png",
+    "draft": "D:/DO-AN/SEQ/output/scene-character-audit/chapter-06-sc04-realistic-repayment-plan.png"
+  }
+]

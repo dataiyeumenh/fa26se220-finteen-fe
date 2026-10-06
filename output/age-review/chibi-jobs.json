@@ -1,0 +1,1209 @@
+[
+  {
+    "id": "14-an-neutral",
+    "kind": "sprite",
+    "chapter": 1,
+    "age": 14,
+    "who": "an",
+    "pose": "an-neutral",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-01/char/an/an-neutral.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-01/char/an/an-neutral.png"
+    ],
+    "status": "installed",
+    "outfit": "yellow T-shirt, navy shorts, white slide sandals",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-9de5163d-8ddc-48ad-aff0-3cb34b77fa65.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/14-an-neutral.png"
+  },
+  {
+    "id": "14-an-relieved",
+    "kind": "sprite",
+    "chapter": 1,
+    "age": 14,
+    "who": "an",
+    "pose": "an-relieved",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-01/char/an/an-relieved.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-01/char/an/an-relieved.png"
+    ],
+    "status": "installed",
+    "outfit": "yellow T-shirt, navy shorts, white slide sandals",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-da418c79-6df5-4191-b5ee-34048c0f731b.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/14-an-relieved.png"
+  },
+  {
+    "id": "14-an-thinking",
+    "kind": "sprite",
+    "chapter": 1,
+    "age": 14,
+    "who": "an",
+    "pose": "an-thinking",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-01/char/an/an-thinking.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-01/char/an/an-thinking.png"
+    ],
+    "status": "installed",
+    "outfit": "yellow T-shirt, navy shorts, white slide sandals",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-9d955d23-09bf-4ea0-922c-6876afbf4882.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/14-an-thinking.png"
+  },
+  {
+    "id": "14-an-worried-money",
+    "kind": "sprite",
+    "chapter": 1,
+    "age": 14,
+    "who": "an",
+    "pose": "an-worried-money",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-01/char/an/an-worried-money.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-01/char/an/an-worried-money.png"
+    ],
+    "status": "installed",
+    "outfit": "yellow T-shirt, navy shorts, white slide sandals",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-0a120a9f-4bf4-4d95-8f1c-da7dd6398890.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/14-an-worried-money.png"
+  },
+  {
+    "id": "adult-me-concerned",
+    "kind": "sprite",
+    "chapter": 1,
+    "age": 14,
+    "who": "me",
+    "pose": "me-concerned",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-01/char/me/me-concerned.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-01/char/me/me-concerned.png"
+    ],
+    "status": "installed",
+    "adult": true,
+    "prompt": "Use case: identity-preserve. ONE full-body transparent CHIBI adult sprite. Reference1 supplies the original expression, action, gesture and props (me-concerned). Reference2 is the NEW final CHIBI neutral version of this same adult and strictly controls identity, face age, clothes, short compact body proportions and rendering. Recreate reference2 with the expression/gesture/props from reference1, keeping a consistent adult face and EXACT SAME compact chibi anatomy. Keep original standing or kneeling action. Do not lengthen legs or torso, make taller, or restore old elongated proportions. All characters share harmonious cute CHIBI style; adulthood is conveyed by face and adult clothes, not increased height. Full body and feet visible with margins, correct natural hands and original props, warm brown outlines and pastel 2D cel shading. Genuine transparent background, no added props, text, labels, extra people, background, shadow or glow.",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-01/char/me/me-concerned.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/adult-me-neutral.png"
+    ],
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-807ee02a-0a65-4378-aafc-02bf0f91e990.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/adult-me-concerned.png"
+  },
+  {
+    "id": "adult-me-explaining",
+    "kind": "sprite",
+    "chapter": 1,
+    "age": 14,
+    "who": "me",
+    "pose": "me-explaining",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-01/char/me/me-explaining.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-01/char/me/me-explaining.png"
+    ],
+    "status": "installed",
+    "adult": true,
+    "prompt": "Use case: identity-preserve. ONE full-body transparent CHIBI adult sprite. Reference1 supplies the original expression, action, gesture and props (me-explaining). Reference2 is the NEW final CHIBI neutral version of this same adult and strictly controls identity, face age, clothes, short compact body proportions and rendering. Recreate reference2 with the expression/gesture/props from reference1, keeping a consistent adult face and EXACT SAME compact chibi anatomy. Keep original standing or kneeling action. Do not lengthen legs or torso, make taller, or restore old elongated proportions. All characters share harmonious cute CHIBI style; adulthood is conveyed by face and adult clothes, not increased height. Full body and feet visible with margins, correct natural hands and original props, warm brown outlines and pastel 2D cel shading. Genuine transparent background, no added props, text, labels, extra people, background, shadow or glow.",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-01/char/me/me-explaining.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/adult-me-neutral.png"
+    ],
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-6b2ddf11-9b2a-4917-892d-2cf4e3f05538.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/adult-me-explaining.png"
+  },
+  {
+    "id": "adult-me-neutral",
+    "kind": "sprite",
+    "chapter": 1,
+    "age": 14,
+    "who": "me",
+    "pose": "me-neutral",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-01/char/me/me-neutral.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-01/char/me/me-neutral.png"
+    ],
+    "status": "installed",
+    "adult": true,
+    "prompt": "Use case: identity-preserve. Convert ONE adult character sprite to the SAME balanced compact CHIBI style used for all FinTeen characters. Subject: An's mother, mature woman around30, mustard headscarf and dark hair, cream long sleeves, brown apron/top, black wide trousers and simple red sandals. Reference1 is the original character identity, exact outfit and neutral pose. Reference2 is the chibi design sheet: use its compact large-head/short-body style for adults too. Keep the recognizable face/hair/clothing identity and original neutral hand pose, but make clearly CHIBI around3.5 heads tall with short harmonious limbs, no long skinny anime legs/torso and no tiny head. This adult will use ONE fixed model in all chapters; never increase height with the children's ages. Adult age is conveyed by a gently mature face, more composed expression, slightly less baby-round cheeks, and the adult outfit, not longer body or legs. Do not make elderly, wrinkled, muscular or realistic. Single full-body figure, all feet and hands in frame, warm brown outlines and soft pastel cel shading consistent with the sheet. Genuine transparent background, no text, labels, additional people, scene, ground ellipse, glow or cast shadow.",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-01/char/me/me-neutral.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-age-design.png"
+    ],
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-a429af15-003e-431c-8abb-7a13e8ccdb40.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/adult-me-neutral.png"
+  },
+  {
+    "id": "14-minh-inviting",
+    "kind": "sprite",
+    "chapter": 1,
+    "age": 14,
+    "who": "minh",
+    "pose": "minh-inviting",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-01/char/minh/minh-inviting.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-01/char/minh/minh-inviting.png"
+    ],
+    "status": "installed",
+    "outfit": "navy polo, beige shorts, white sneakers, his existing watch",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-2dc2d378-a0af-430f-9249-55eb508e7032.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/14-minh-inviting.png"
+  },
+  {
+    "id": "14-minh-neutral",
+    "kind": "sprite",
+    "chapter": 1,
+    "age": 14,
+    "who": "minh",
+    "pose": "minh-neutral",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-01/char/minh/minh-neutral.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-01/char/minh/minh-neutral.png"
+    ],
+    "status": "installed",
+    "outfit": "navy polo, beige shorts, white sneakers, his existing watch",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-9cc76b44-28eb-4a64-aa30-71cceb14a9e8.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/14-minh-neutral.png"
+  },
+  {
+    "id": "chapter-01/scene/sc01-receiving-allowance.png",
+    "kind": "scene",
+    "chapter": 1,
+    "age": 14,
+    "who": "scene",
+    "pose": "sc01-receiving-allowance",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-01/scene/sc01-receiving-allowance.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-01/scene/sc01-receiving-allowance.png"
+    ],
+    "status": "installed",
+    "companion": "me",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-250cec26-8eff-4487-85c4-7f114abc7106.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-scenes/chapter-01-sc01-receiving-allowance.png",
+    "previousDraft": "D:/DO-AN/SEQ/output/age-review/chibi-scenes/chapter-01-sc01-receiving-allowance.png",
+    "references": [
+      "D:/DO-AN/SEQ/output/scene-character-audit/before/chapter-01-sc01-receiving-allowance.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-01/char/me/me-neutral.png"
+    ],
+    "prompt": "Use case: precise-object-edit. Reference1 is the edit target; reference2 is the canonical character sprite. Change ONLY the mother's garment below the waist to match reference2. Her brown bodice/apron TOP must end at the waist. Remove the long brown apron panel covering her lap. Show her charcoal-black tied waistband and black wide trousers on her seated lap, like the reference sprite. Keep cream sleeves and brown upper bodice exactly as they are. Preserve the seated leg pose and all occlusion by hands/table. Do not alter anything above the waist. Strict localized correction only. Keep An and every other person, all faces and expressions, the chibi body proportions, character sizes, composition, crop, perspective, background, furniture, lighting, colors, hands, props and blank documents exactly as reference1. Do not redesign the scene or change character height. Keep the same polished chibi 2D style and 16:9 opaque landscape canvas. No new text, symbols, people, objects, logos or watermark.",
+    "auditHistory": [
+      {
+        "date": "2026-10-03",
+        "previousGenerated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-087808aa-4bb5-4365-8f67-92159bf094bc.png",
+        "previousPrompt": "Use case: identity-preserve. Edit ONE existing landscape16:9 visual-novel scene (chapter-01/scene/sc01-receiving-allowance.png). Reference1 supplies the scene's environment, framing, positions, original action, expressions and props. Reference2 is the FINAL CHIBI An age14. Reference3 is the FINAL CHIBI me adult model.\nALL PEOPLE MUST BE COMPACT BALANCED CHIBI in the exact harmonious style of reference2/3. Replace the people with those final chibi designs, using their exact faces, hair and outfits, while retaining original scene pose, expression, action and prop interactions from reference1. An outfit: yellow T-shirt, navy shorts, white slide sandals.\nCRITICAL USER DIRECTION: age differences are shown ONLY by clothes and facial cues, never by making people taller, stretching bodies, longer legs or smaller heads. Keep fixed compact chibi body proportions for each character. Do not scale mother/teacher/staff up as An/Minh get older. Adults also stay CHIBI, with their stable adult face and outfit from reference3. Preserve sensible original placement, perspective, overall character size and seated/standing posture; harmonize everyone to the same chibi style. Do not use old elongated adult anatomy from reference1. Do not turn late-teen characters into realistic/anime tall bodies. Do not invent growth or a timeline.\nKeep original scene facial EXPRESSIONS and gestures (not the neutral reference poses). Preserve background architecture, camera, furniture, warm light, mint/cream/coral palette, story action and all existing teaching props. Same number of people. No extra objects or changed decision outcome. Coherent hands, limbs, occlusion and prop contact. Warm brown outlines, soft pastel kawaii2D cel shading, clean full-bleed16:9 landscape. No border, no panels, no words, numbers, captions, labels, UI, speech bubbles, logos or watermark. Documents and screens stay blank for later UI.",
+        "backup": "D:/DO-AN/SEQ/output/scene-character-audit/before/chapter-01-sc01-receiving-allowance.png",
+        "correction": "Change ONLY the mother's garment below the waist to match reference2. Her brown bodice/apron TOP must end at the waist. Remove the long brown apron panel covering her lap. Show her charcoal-black tied waistband and black wide trousers on her seated lap, like the reference sprite. Keep cream sleeves and brown upper bodice exactly as they are. Preserve the seated leg pose and all occlusion by hands/table. Do not alter anything above the waist."
+      }
+    ]
+  },
+  {
+    "id": "chapter-01/scene/sc02-headphone-temptation.png",
+    "kind": "scene",
+    "chapter": 1,
+    "age": 14,
+    "who": "scene",
+    "pose": "sc02-headphone-temptation",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-01/scene/sc02-headphone-temptation.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-01/scene/sc02-headphone-temptation.png"
+    ],
+    "status": "installed",
+    "companion": "minh",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-14aafa92-bad1-4784-be45-3ffbcb0c793e.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-scenes/chapter-01-sc02-headphone-temptation.png"
+  },
+  {
+    "id": "chapter-01/scene/sc03-checking-priorities.png",
+    "kind": "scene",
+    "chapter": 1,
+    "age": 14,
+    "who": "scene",
+    "pose": "sc03-checking-priorities",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-01/scene/sc03-checking-priorities.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-01/scene/sc03-checking-priorities.png"
+    ],
+    "status": "installed",
+    "companion": "me",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-ba312e90-feaf-4ca1-a1d2-a48cd164646f.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-scenes/chapter-01-sc03-checking-priorities.png",
+    "previousDraft": "D:/DO-AN/SEQ/output/age-review/chibi-scenes/chapter-01-sc03-checking-priorities.png",
+    "references": [
+      "D:/DO-AN/SEQ/output/scene-character-audit/before/chapter-01-sc03-checking-priorities.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-01/char/me/me-neutral.png"
+    ],
+    "prompt": "Use case: precise-object-edit. Reference1 is the edit target; reference2 is the canonical character sprite. Change ONLY the mother's garment below the waist to match reference2. Her brown bodice/apron TOP must end at the waist. Replace the brown hanging apron/skirt section and brown waist tie with the reference sprite's charcoal-black waistband/tie and black wide trousers visible above/behind the desk. Keep the brown upper bodice and cream sleeves unchanged. Keep her bent standing posture and original desk occlusion. Do not alter anything above the waist. Strict localized correction only. Keep An and every other person, all faces and expressions, the chibi body proportions, character sizes, composition, crop, perspective, background, furniture, lighting, colors, hands, props and blank documents exactly as reference1. Do not redesign the scene or change character height. Keep the same polished chibi 2D style and 16:9 opaque landscape canvas. No new text, symbols, people, objects, logos or watermark.",
+    "auditHistory": [
+      {
+        "date": "2026-10-03",
+        "previousGenerated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-fd632342-a3c3-4ce6-a23a-efb66b353c43.png",
+        "previousPrompt": "Use case: identity-preserve. Edit ONE existing landscape16:9 visual-novel scene (chapter-01/scene/sc03-checking-priorities.png). Reference1 supplies the scene's environment, framing, positions, original action, expressions and props. Reference2 is the FINAL CHIBI An age14. Reference3 is the FINAL CHIBI me adult model.\nALL PEOPLE MUST BE COMPACT BALANCED CHIBI in the exact harmonious style of reference2/3. Replace the people with those final chibi designs, using their exact faces, hair and outfits, while retaining original scene pose, expression, action and prop interactions from reference1. An outfit: yellow T-shirt, navy shorts, white slide sandals.\nCRITICAL USER DIRECTION: age differences are shown ONLY by clothes and facial cues, never by making people taller, stretching bodies, longer legs or smaller heads. Keep fixed compact chibi body proportions for each character. Do not scale mother/teacher/staff up as An/Minh get older. Adults also stay CHIBI, with their stable adult face and outfit from reference3. Preserve sensible original placement, perspective, overall character size and seated/standing posture; harmonize everyone to the same chibi style. Do not use old elongated adult anatomy from reference1. Do not turn late-teen characters into realistic/anime tall bodies. Do not invent growth or a timeline.\nKeep original scene facial EXPRESSIONS and gestures (not the neutral reference poses). Preserve background architecture, camera, furniture, warm light, mint/cream/coral palette, story action and all existing teaching props. Same number of people. No extra objects or changed decision outcome. Coherent hands, limbs, occlusion and prop contact. Warm brown outlines, soft pastel kawaii2D cel shading, clean full-bleed16:9 landscape. No border, no panels, no words, numbers, captions, labels, UI, speech bubbles, logos or watermark. Documents and screens stay blank for later UI.",
+        "backup": "D:/DO-AN/SEQ/output/scene-character-audit/before/chapter-01-sc03-checking-priorities.png",
+        "correction": "Change ONLY the mother's garment below the waist to match reference2. Her brown bodice/apron TOP must end at the waist. Replace the brown hanging apron/skirt section and brown waist tie with the reference sprite's charcoal-black waistband/tie and black wide trousers visible above/behind the desk. Keep the brown upper bodice and cream sleeves unchanged. Keep her bent standing posture and original desk occlusion. Do not alter anything above the waist."
+      }
+    ]
+  },
+  {
+    "id": "16-an-neutral",
+    "kind": "sprite",
+    "chapter": 2,
+    "age": 16,
+    "who": "an",
+    "pose": "an-neutral",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/char/an/an-neutral.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-02/char/an/an-neutral.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-04/char/an/an-neutral.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-05/char/an/an-neutral.png"
+    ],
+    "status": "installed",
+    "outfit": "mustard short-sleeved overshirt over a white T-shirt, dark blue straight jeans, simple white sneakers",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-cbb33142-40e0-447e-aec9-a0acd6781747.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/16-an-neutral.png"
+  },
+  {
+    "id": "16-an-relieved",
+    "kind": "sprite",
+    "chapter": 2,
+    "age": 16,
+    "who": "an",
+    "pose": "an-relieved",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/char/an/an-relieved.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-02/char/an/an-relieved.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-04/char/an/an-relieved.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-05/char/an/an-relieved.png"
+    ],
+    "status": "installed",
+    "outfit": "mustard short-sleeved overshirt over a white T-shirt, dark blue straight jeans, simple white sneakers",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-cb87f966-3b88-4021-95b0-fccf7cfc7732.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/16-an-relieved.png"
+  },
+  {
+    "id": "16-an-thinking",
+    "kind": "sprite",
+    "chapter": 2,
+    "age": 16,
+    "who": "an",
+    "pose": "an-thinking",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/char/an/an-thinking.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-02/char/an/an-thinking.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-04/char/an/an-thinking.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-05/char/an/an-thinking.png"
+    ],
+    "status": "installed",
+    "outfit": "mustard short-sleeved overshirt over a white T-shirt, dark blue straight jeans, simple white sneakers",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-42954c8d-dc46-4cb1-8510-646661cec0fe.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/16-an-thinking.png"
+  },
+  {
+    "id": "16-an-worried-money",
+    "kind": "sprite",
+    "chapter": 2,
+    "age": 16,
+    "who": "an",
+    "pose": "an-worried-money",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/char/an/an-worried-money.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-02/char/an/an-worried-money.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-04/char/an/an-worried-money.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-05/char/an/an-worried-money.png"
+    ],
+    "status": "installed",
+    "outfit": "mustard short-sleeved overshirt over a white T-shirt, dark blue straight jeans, simple white sneakers",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-152ea11a-1bc3-4ee3-a1b7-48a224a8cde5.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/16-an-worried-money.png"
+  },
+  {
+    "id": "adult-co-linh-encouraging",
+    "kind": "sprite",
+    "chapter": 2,
+    "age": 16,
+    "who": "co-linh",
+    "pose": "co-linh-encouraging",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/char/co-linh/co-linh-encouraging.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-02/char/co-linh/co-linh-encouraging.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-03/char/co-linh/co-linh-encouraging.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-04/char/co-linh/co-linh-encouraging.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-05/char/co-linh/co-linh-encouraging.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-06/char/co-linh/co-linh-encouraging.png"
+    ],
+    "status": "installed",
+    "adult": true,
+    "prompt": "Use case: identity-preserve. ONE full-body transparent CHIBI adult sprite. Reference1 supplies the original expression, action, gesture and props (co-linh-encouraging). Reference2 is the NEW final CHIBI neutral version of this same adult and strictly controls identity, face age, clothes, short compact body proportions and rendering. Recreate reference2 with the expression/gesture/props from reference1, keeping a consistent adult face and EXACT SAME compact chibi anatomy. Keep original standing or kneeling action. Do not lengthen legs or torso, make taller, or restore old elongated proportions. All characters share harmonious cute CHIBI style; adulthood is conveyed by face and adult clothes, not increased height. Full body and feet visible with margins, correct natural hands and original props, warm brown outlines and pastel 2D cel shading. Genuine transparent background, no added props, text, labels, extra people, background, shadow or glow.",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/char/co-linh/co-linh-encouraging.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/adult-co-linh-neutral.png"
+    ],
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-70604259-d1e7-4370-8795-632ce8179b53.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/adult-co-linh-encouraging.png"
+  },
+  {
+    "id": "adult-co-linh-explaining",
+    "kind": "sprite",
+    "chapter": 2,
+    "age": 16,
+    "who": "co-linh",
+    "pose": "co-linh-explaining",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/char/co-linh/co-linh-explaining.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-02/char/co-linh/co-linh-explaining.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-03/char/co-linh/co-linh-explaining.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-04/char/co-linh/co-linh-explaining.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-05/char/co-linh/co-linh-explaining.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-06/char/co-linh/co-linh-explaining.png"
+    ],
+    "status": "installed",
+    "adult": true,
+    "prompt": "Use case: identity-preserve. ONE full-body transparent CHIBI adult sprite. Reference1 supplies the original expression, action, gesture and props (co-linh-explaining). Reference2 is the NEW final CHIBI neutral version of this same adult and strictly controls identity, face age, clothes, short compact body proportions and rendering. Recreate reference2 with the expression/gesture/props from reference1, keeping a consistent adult face and EXACT SAME compact chibi anatomy. Keep original standing or kneeling action. Do not lengthen legs or torso, make taller, or restore old elongated proportions. All characters share harmonious cute CHIBI style; adulthood is conveyed by face and adult clothes, not increased height. Full body and feet visible with margins, correct natural hands and original props, warm brown outlines and pastel 2D cel shading. Genuine transparent background, no added props, text, labels, extra people, background, shadow or glow.",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/char/co-linh/co-linh-explaining.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/adult-co-linh-neutral.png"
+    ],
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-ed614fe8-7f7c-4d80-87bc-cec9436b43c1.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/adult-co-linh-explaining.png"
+  },
+  {
+    "id": "adult-co-linh-neutral",
+    "kind": "sprite",
+    "chapter": 2,
+    "age": 16,
+    "who": "co-linh",
+    "pose": "co-linh-neutral",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/char/co-linh/co-linh-neutral.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-02/char/co-linh/co-linh-neutral.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-03/char/co-linh/co-linh-neutral.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-04/char/co-linh/co-linh-neutral.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-05/char/co-linh/co-linh-neutral.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-06/char/co-linh/co-linh-neutral.png"
+    ],
+    "status": "installed",
+    "adult": true,
+    "prompt": "Use case: identity-preserve. Convert ONE adult character sprite to the SAME balanced compact CHIBI style used for all FinTeen characters. Subject: Co Linh, mature woman teacher around30, brown side ponytail, oval eyeglasses, light blue blouse, navy trousers and cream flats. Reference1 is the original character identity, exact outfit and neutral pose. Reference2 is the chibi design sheet: use its compact large-head/short-body style for adults too. Keep the recognizable face/hair/clothing identity and original neutral hand pose, but make clearly CHIBI around3.5 heads tall with short harmonious limbs, no long skinny anime legs/torso and no tiny head. This adult will use ONE fixed model in all chapters; never increase height with the children's ages. Adult age is conveyed by a gently mature face, more composed expression, slightly less baby-round cheeks, and the adult outfit, not longer body or legs. Do not make elderly, wrinkled, muscular or realistic. Single full-body figure, all feet and hands in frame, warm brown outlines and soft pastel cel shading consistent with the sheet. Genuine transparent background, no text, labels, additional people, scene, ground ellipse, glow or cast shadow.",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/char/co-linh/co-linh-neutral.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-age-design.png"
+    ],
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-d0eececa-853d-4895-8285-08bc04fbf204.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/adult-co-linh-neutral.png"
+  },
+  {
+    "id": "16-minh-inviting",
+    "kind": "sprite",
+    "chapter": 2,
+    "age": 16,
+    "who": "minh",
+    "pose": "minh-inviting",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/char/minh/minh-inviting.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-02/char/minh/minh-inviting.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-04/char/minh/minh-inviting.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-05/char/minh/minh-inviting.png"
+    ],
+    "status": "installed",
+    "outfit": "navy short-sleeved overshirt over a light tee, beige straight trousers, white sneakers, his existing watch",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-c6cccfc9-23df-4a18-a83d-60816e3da6dd.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/16-minh-inviting.png"
+  },
+  {
+    "id": "16-minh-neutral",
+    "kind": "sprite",
+    "chapter": 2,
+    "age": 16,
+    "who": "minh",
+    "pose": "minh-neutral",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/char/minh/minh-neutral.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-02/char/minh/minh-neutral.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-04/char/minh/minh-neutral.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-05/char/minh/minh-neutral.png"
+    ],
+    "status": "installed",
+    "outfit": "navy short-sleeved overshirt over a light tee, beige straight trousers, white sneakers, his existing watch",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-11a509ef-a438-4f0a-8ba2-9e34e12313ee.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/16-minh-neutral.png"
+  },
+  {
+    "id": "chapter-02/scene/sc01-camp-budget-briefing.png",
+    "kind": "scene",
+    "chapter": 2,
+    "age": 16,
+    "who": "scene",
+    "pose": "sc01-camp-budget-briefing",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/scene/sc01-camp-budget-briefing.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-02/scene/sc01-camp-budget-briefing.png"
+    ],
+    "status": "installed",
+    "companion": "co-linh",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-b5b063b6-1430-4777-b8be-87025d1aa49b.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-scenes/chapter-02-sc01-camp-budget-briefing.png",
+    "previousDraft": "D:/DO-AN/SEQ/output/age-review/chibi-scenes/chapter-02-sc01-camp-budget-briefing.png",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/scene/sc01-camp-budget-briefing.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/16-an-neutral.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/adult-co-linh-neutral.png"
+    ],
+    "prompt": "Use case: identity-preserve. Edit ONE existing landscape16:9 visual-novel scene (chapter-02/scene/sc01-camp-budget-briefing.png). Reference1 supplies the scene's environment, framing, positions, original action, expressions and props. Reference2 is the FINAL CHIBI An age16. Reference3 is the FINAL CHIBI co-linh adult model.\nALL PEOPLE MUST BE COMPACT BALANCED CHIBI in the exact harmonious style of reference2/3. Replace the people with those final chibi designs, using their exact faces, hair and outfits, while retaining original scene pose, expression, action and prop interactions from reference1. An outfit: mustard short-sleeved overshirt over a white T-shirt, dark blue straight jeans, simple white sneakers.\nCRITICAL USER DIRECTION: age differences are shown ONLY by clothes and facial cues, never by making people taller, stretching bodies, longer legs or smaller heads. Keep fixed compact chibi body proportions for each character. Do not scale mother/teacher/staff up as An/Minh get older. Adults also stay CHIBI, with their stable adult face and outfit from reference3. Preserve sensible original placement, perspective, overall character size and seated/standing posture; harmonize everyone to the same chibi style. Do not use old elongated adult anatomy from reference1. Do not turn late-teen characters into realistic/anime tall bodies. Do not invent growth or a timeline.\nKeep original scene facial EXPRESSIONS and gestures (not the neutral reference poses). Preserve background architecture, camera, furniture, warm light, mint/cream/coral palette, story action and all existing teaching props. Same number of people. No extra objects or changed decision outcome. Coherent hands, limbs, occlusion and prop contact. Warm brown outlines, soft pastel kawaii2D cel shading, clean full-bleed16:9 landscape. No border, no panels, no words, numbers, captions, labels, UI, speech bubbles, logos or watermark. Documents and screens stay blank for later UI."
+  },
+  {
+    "id": "chapter-02/scene/sc02-dividing-envelopes.png",
+    "kind": "scene",
+    "chapter": 2,
+    "age": 16,
+    "who": "scene",
+    "pose": "sc02-dividing-envelopes",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/scene/sc02-dividing-envelopes.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-02/scene/sc02-dividing-envelopes.png"
+    ],
+    "status": "installed",
+    "companion": "minh",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-acb0ae08-4de6-4008-b963-1395212cfd08.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-scenes/chapter-02-sc02-dividing-envelopes.png"
+  },
+  {
+    "id": "chapter-02/scene/sc03-laptop-goal-planning.png",
+    "kind": "scene",
+    "chapter": 2,
+    "age": 16,
+    "who": "scene",
+    "pose": "sc03-laptop-goal-planning",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/scene/sc03-laptop-goal-planning.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-02/scene/sc03-laptop-goal-planning.png"
+    ],
+    "status": "installed",
+    "companion": "co-linh",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-bf6b12bc-610f-458e-acc2-c03c50984876.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-scenes/chapter-02-sc03-laptop-goal-planning.png",
+    "previousDraft": "D:/DO-AN/SEQ/output/age-review/chibi-scenes/chapter-02-sc03-laptop-goal-planning.png",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/scene/sc03-laptop-goal-planning.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/16-an-neutral.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/adult-co-linh-neutral.png"
+    ],
+    "prompt": "Use case: identity-preserve. Edit ONE existing landscape16:9 visual-novel scene (chapter-02/scene/sc03-laptop-goal-planning.png). Reference1 supplies the scene's environment, framing, positions, original action, expressions and props. Reference2 is the FINAL CHIBI An age16. Reference3 is the FINAL CHIBI co-linh adult model.\nALL PEOPLE MUST BE COMPACT BALANCED CHIBI in the exact harmonious style of reference2/3. Replace the people with those final chibi designs, using their exact faces, hair and outfits, while retaining original scene pose, expression, action and prop interactions from reference1. An outfit: mustard short-sleeved overshirt over a white T-shirt, dark blue straight jeans, simple white sneakers.\nCRITICAL USER DIRECTION: age differences are shown ONLY by clothes and facial cues, never by making people taller, stretching bodies, longer legs or smaller heads. Keep fixed compact chibi body proportions for each character. Do not scale mother/teacher/staff up as An/Minh get older. Adults also stay CHIBI, with their stable adult face and outfit from reference3. Preserve sensible original placement, perspective, overall character size and seated/standing posture; harmonize everyone to the same chibi style. Do not use old elongated adult anatomy from reference1. Do not turn late-teen characters into realistic/anime tall bodies. Do not invent growth or a timeline.\nKeep original scene facial EXPRESSIONS and gestures (not the neutral reference poses). Preserve background architecture, camera, furniture, warm light, mint/cream/coral palette, story action and all existing teaching props. Same number of people. No extra objects or changed decision outcome. Coherent hands, limbs, occlusion and prop contact. Warm brown outlines, soft pastel kawaii2D cel shading, clean full-bleed16:9 landscape. No border, no panels, no words, numbers, captions, labels, UI, speech bubbles, logos or watermark. Documents and screens stay blank for later UI."
+  },
+  {
+    "id": "chapter-02/scene/sc04-bicycle-surprise.png",
+    "kind": "scene",
+    "chapter": 2,
+    "age": 16,
+    "who": "scene",
+    "pose": "sc04-bicycle-surprise",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/scene/sc04-bicycle-surprise.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-02/scene/sc04-bicycle-surprise.png"
+    ],
+    "status": "installed",
+    "companion": "minh",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-647df0f3-f82f-450e-86e9-a80195504eec.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-scenes/chapter-02-sc04-bicycle-surprise.png"
+  },
+  {
+    "id": "chapter-02/scene/sc05-revising-budget.png",
+    "kind": "scene",
+    "chapter": 2,
+    "age": 16,
+    "who": "scene",
+    "pose": "sc05-revising-budget",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/scene/sc05-revising-budget.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-02/scene/sc05-revising-budget.png"
+    ],
+    "status": "installed",
+    "companion": "co-linh",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-938548cb-208e-4f84-94a7-ebe0047246d1.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-scenes/chapter-02-sc05-revising-budget.png",
+    "previousDraft": "D:/DO-AN/SEQ/output/age-review/chibi-scenes/chapter-02-sc05-revising-budget.png",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-02/scene/sc05-revising-budget.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/16-an-neutral.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/adult-co-linh-neutral.png"
+    ],
+    "prompt": "Use case: identity-preserve. Edit ONE existing landscape16:9 visual-novel scene (chapter-02/scene/sc05-revising-budget.png). Reference1 supplies the scene's environment, framing, positions, original action, expressions and props. Reference2 is the FINAL CHIBI An age16. Reference3 is the FINAL CHIBI co-linh adult model.\nALL PEOPLE MUST BE COMPACT BALANCED CHIBI in the exact harmonious style of reference2/3. Replace the people with those final chibi designs, using their exact faces, hair and outfits, while retaining original scene pose, expression, action and prop interactions from reference1. An outfit: mustard short-sleeved overshirt over a white T-shirt, dark blue straight jeans, simple white sneakers.\nCRITICAL USER DIRECTION: age differences are shown ONLY by clothes and facial cues, never by making people taller, stretching bodies, longer legs or smaller heads. Keep fixed compact chibi body proportions for each character. Do not scale mother/teacher/staff up as An/Minh get older. Adults also stay CHIBI, with their stable adult face and outfit from reference3. Preserve sensible original placement, perspective, overall character size and seated/standing posture; harmonize everyone to the same chibi style. Do not use old elongated adult anatomy from reference1. Do not turn late-teen characters into realistic/anime tall bodies. Do not invent growth or a timeline.\nKeep original scene facial EXPRESSIONS and gestures (not the neutral reference poses). Preserve background architecture, camera, furniture, warm light, mint/cream/coral palette, story action and all existing teaching props. Same number of people. No extra objects or changed decision outcome. Coherent hands, limbs, occlusion and prop contact. Warm brown outlines, soft pastel kawaii2D cel shading, clean full-bleed16:9 landscape. No border, no panels, no words, numbers, captions, labels, UI, speech bubbles, logos or watermark. Documents and screens stay blank for later UI."
+  },
+  {
+    "id": "17-an-neutral",
+    "kind": "sprite",
+    "chapter": 3,
+    "age": 17,
+    "who": "an",
+    "pose": "an-neutral",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-03/char/an/an-neutral.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-03/char/an/an-neutral.png"
+    ],
+    "status": "installed",
+    "outfit": "muted yellow polo, dark blue straight trousers, white sneakers",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/17-an-neutral.png",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-4a3682e7-2c3f-458b-ab64-45434cec76cd.png"
+  },
+  {
+    "id": "17-an-relieved",
+    "kind": "sprite",
+    "chapter": 3,
+    "age": 17,
+    "who": "an",
+    "pose": "an-relieved",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-03/char/an/an-relieved.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-03/char/an/an-relieved.png"
+    ],
+    "status": "installed",
+    "outfit": "muted yellow polo, dark blue straight trousers, white sneakers",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-7aacebad-425e-444d-baf8-6c69c50d562d.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/17-an-relieved.png"
+  },
+  {
+    "id": "17-an-thinking",
+    "kind": "sprite",
+    "chapter": 3,
+    "age": 17,
+    "who": "an",
+    "pose": "an-thinking",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-03/char/an/an-thinking.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-03/char/an/an-thinking.png"
+    ],
+    "status": "installed",
+    "outfit": "muted yellow polo, dark blue straight trousers, white sneakers",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-3ce45ee2-e0d1-45b5-ac21-225892c4cb17.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/17-an-thinking.png"
+  },
+  {
+    "id": "17-an-worried-money",
+    "kind": "sprite",
+    "chapter": 3,
+    "age": 17,
+    "who": "an",
+    "pose": "an-worried-money",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-03/char/an/an-worried-money.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-03/char/an/an-worried-money.png"
+    ],
+    "status": "installed",
+    "outfit": "muted yellow polo, dark blue straight trousers, white sneakers",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-4d24a60e-b106-4a68-a111-2e880ff3f8c7.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/17-an-worried-money.png"
+  },
+  {
+    "id": "17-minh-inviting",
+    "kind": "sprite",
+    "chapter": 3,
+    "age": 17,
+    "who": "minh",
+    "pose": "minh-inviting",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-03/char/minh/minh-inviting.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-03/char/minh/minh-inviting.png"
+    ],
+    "status": "installed",
+    "outfit": "navy polo, beige straight trousers, white sneakers, his existing watch",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-63ebc071-95b0-45b7-bdcd-48aea67c449b.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/17-minh-inviting.png"
+  },
+  {
+    "id": "17-minh-neutral",
+    "kind": "sprite",
+    "chapter": 3,
+    "age": 17,
+    "who": "minh",
+    "pose": "minh-neutral",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-03/char/minh/minh-neutral.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-03/char/minh/minh-neutral.png"
+    ],
+    "status": "installed",
+    "outfit": "navy polo, beige straight trousers, white sneakers, his existing watch",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/17-minh-neutral.png",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-650e2691-f275-4b2b-a911-6cb598a79c89.png"
+  },
+  {
+    "id": "adult-tu-van-neutral",
+    "kind": "sprite",
+    "chapter": 3,
+    "age": 17,
+    "who": "tu-van",
+    "pose": "tu-van-neutral",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-03/char/tu-van/tu-van-neutral.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-03/char/tu-van/tu-van-neutral.png"
+    ],
+    "status": "installed",
+    "adult": true,
+    "prompt": "Use case: identity-preserve. Convert ONE adult character sprite to the SAME balanced compact CHIBI style used for all FinTeen characters. Subject: adult male course adviser, short brown hair, cream short-sleeved shirt, teal trousers, brown shoes, lanyard and blank badge. Reference1 is the original character identity, exact outfit and neutral pose. Reference2 is the chibi design sheet: use its compact large-head/short-body style for adults too. Keep the recognizable face/hair/clothing identity and original neutral hand pose, but make clearly CHIBI around3.5 heads tall with short harmonious limbs, no long skinny anime legs/torso and no tiny head. This adult will use ONE fixed model in all chapters; never increase height with the children's ages. Adult age is conveyed by a gently mature face, more composed expression, slightly less baby-round cheeks, and the adult outfit, not longer body or legs. Do not make elderly, wrinkled, muscular or realistic. Single full-body figure, all feet and hands in frame, warm brown outlines and soft pastel cel shading consistent with the sheet. Genuine transparent background, no text, labels, additional people, scene, ground ellipse, glow or cast shadow.",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-03/char/tu-van/tu-van-neutral.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-age-design.png"
+    ],
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-5709e36c-9e78-4a3c-abd1-9a727d75537e.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/adult-tu-van-neutral.png"
+  },
+  {
+    "id": "adult-tu-van-presenting",
+    "kind": "sprite",
+    "chapter": 3,
+    "age": 17,
+    "who": "tu-van",
+    "pose": "tu-van-presenting",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-03/char/tu-van/tu-van-presenting.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-03/char/tu-van/tu-van-presenting.png"
+    ],
+    "status": "installed",
+    "adult": true,
+    "prompt": "Use case: identity-preserve. ONE full-body transparent CHIBI adult sprite. Reference1 supplies the original expression, action, gesture and props (tu-van-presenting). Reference2 is the NEW final CHIBI neutral version of this same adult and strictly controls identity, face age, clothes, short compact body proportions and rendering. Recreate reference2 with the expression/gesture/props from reference1, keeping a consistent adult face and EXACT SAME compact chibi anatomy. Keep original standing or kneeling action. Do not lengthen legs or torso, make taller, or restore old elongated proportions. All characters share harmonious cute CHIBI style; adulthood is conveyed by face and adult clothes, not increased height. Full body and feet visible with margins, correct natural hands and original props, warm brown outlines and pastel 2D cel shading. Genuine transparent background, no added props, text, labels, extra people, background, shadow or glow.",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-03/char/tu-van/tu-van-presenting.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/adult-tu-van-neutral.png"
+    ],
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-8384720f-0f0b-4caf-a266-95c40c3c4177.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/adult-tu-van-presenting.png"
+  },
+  {
+    "id": "chapter-03/scene/sc01-three-career-offers.png",
+    "kind": "scene",
+    "chapter": 3,
+    "age": 17,
+    "who": "scene",
+    "pose": "sc01-three-career-offers",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-03/scene/sc01-three-career-offers.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-03/scene/sc01-three-career-offers.png"
+    ],
+    "status": "installed",
+    "companion": "minh",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-03/scene/sc01-three-career-offers.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/17-an-neutral.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/17-minh-neutral.png"
+    ],
+    "prompt": "Use case: identity-preserve. Edit ONE existing landscape16:9 visual-novel scene (chapter-03/scene/sc01-three-career-offers.png). Reference1 supplies the scene's environment, framing, positions, original action, expressions and props. Reference2 is the FINAL CHIBI An age17. Reference3 is the FINAL CHIBI Minh of the same age model.\nALL PEOPLE MUST BE COMPACT BALANCED CHIBI in the exact harmonious style of reference2/3. Replace the people with those final chibi designs, using their exact faces, hair and outfits, while retaining original scene pose, expression, action and prop interactions from reference1. An outfit: muted yellow polo, dark blue straight trousers, white sneakers. Minh outfit: navy polo, beige straight trousers, white sneakers, his existing watch.\nCRITICAL USER DIRECTION: age differences are shown ONLY by clothes and facial cues, never by making people taller, stretching bodies, longer legs or smaller heads. Keep fixed compact chibi body proportions for each character. Do not scale mother/teacher/staff up as An/Minh get older. Adults also stay CHIBI, with their stable adult face and outfit from reference3. Preserve sensible original placement, perspective, overall character size and seated/standing posture; harmonize everyone to the same chibi style. Do not use old elongated adult anatomy from reference1. Do not turn late-teen characters into realistic/anime tall bodies. Do not invent growth or a timeline.\nKeep original scene facial EXPRESSIONS and gestures (not the neutral reference poses). Preserve background architecture, camera, furniture, warm light, mint/cream/coral palette, story action and all existing teaching props. Same number of people. No extra objects or changed decision outcome. Coherent hands, limbs, occlusion and prop contact. Warm brown outlines, soft pastel kawaii2D cel shading, clean full-bleed16:9 landscape. No border, no panels, no words, numbers, captions, labels, UI, speech bubbles, logos or watermark. Documents and screens stay blank for later UI.",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-8774bddd-8629-463e-bc41-54c7408048fa.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-scenes/chapter-03-sc01-three-career-offers.png"
+  },
+  {
+    "id": "chapter-03/scene/sc02-checking-course-source.png",
+    "kind": "scene",
+    "chapter": 3,
+    "age": 17,
+    "who": "scene",
+    "pose": "sc02-checking-course-source",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-03/scene/sc02-checking-course-source.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-03/scene/sc02-checking-course-source.png"
+    ],
+    "status": "installed",
+    "companion": "tu-van",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-03/scene/sc02-checking-course-source.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/17-an-neutral.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/adult-tu-van-neutral.png"
+    ],
+    "prompt": "Use case: identity-preserve. Edit ONE existing landscape16:9 visual-novel scene (chapter-03/scene/sc02-checking-course-source.png). Reference1 supplies the scene's environment, framing, positions, original action, expressions and props. Reference2 is the FINAL CHIBI An age17. Reference3 is the FINAL CHIBI tu-van adult model.\nALL PEOPLE MUST BE COMPACT BALANCED CHIBI in the exact harmonious style of reference2/3. Replace the people with those final chibi designs, using their exact faces, hair and outfits, while retaining original scene pose, expression, action and prop interactions from reference1. An outfit: muted yellow polo, dark blue straight trousers, white sneakers.\nCRITICAL USER DIRECTION: age differences are shown ONLY by clothes and facial cues, never by making people taller, stretching bodies, longer legs or smaller heads. Keep fixed compact chibi body proportions for each character. Do not scale mother/teacher/staff up as An/Minh get older. Adults also stay CHIBI, with their stable adult face and outfit from reference3. Preserve sensible original placement, perspective, overall character size and seated/standing posture; harmonize everyone to the same chibi style. Do not use old elongated adult anatomy from reference1. Do not turn late-teen characters into realistic/anime tall bodies. Do not invent growth or a timeline.\nKeep original scene facial EXPRESSIONS and gestures (not the neutral reference poses). Preserve background architecture, camera, furniture, warm light, mint/cream/coral palette, story action and all existing teaching props. Same number of people. No extra objects or changed decision outcome. Coherent hands, limbs, occlusion and prop contact. Warm brown outlines, soft pastel kawaii2D cel shading, clean full-bleed16:9 landscape. No border, no panels, no words, numbers, captions, labels, UI, speech bubbles, logos or watermark. Documents and screens stay blank for later UI.",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-f909dbde-f86d-4175-9c32-743c531c2237.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-scenes/chapter-03-sc02-checking-course-source.png"
+  },
+  {
+    "id": "chapter-03/scene/sc03-weekly-career-plan.png",
+    "kind": "scene",
+    "chapter": 3,
+    "age": 17,
+    "who": "scene",
+    "pose": "sc03-weekly-career-plan",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-03/scene/sc03-weekly-career-plan.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-03/scene/sc03-weekly-career-plan.png"
+    ],
+    "status": "installed",
+    "companion": null,
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-03/scene/sc03-weekly-career-plan.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/17-an-neutral.png"
+    ],
+    "prompt": "Use case: identity-preserve. Edit ONE existing landscape16:9 visual-novel scene (chapter-03/scene/sc03-weekly-career-plan.png). Reference1 supplies the scene's environment, framing, positions, original action, expressions and props. Reference2 is the FINAL CHIBI An age17. An is the only character.\nALL PEOPLE MUST BE COMPACT BALANCED CHIBI in the exact harmonious style of reference2/3. Replace the people with those final chibi designs, using their exact faces, hair and outfits, while retaining original scene pose, expression, action and prop interactions from reference1. An outfit: muted yellow polo, dark blue straight trousers, white sneakers.\nCRITICAL USER DIRECTION: age differences are shown ONLY by clothes and facial cues, never by making people taller, stretching bodies, longer legs or smaller heads. Keep fixed compact chibi body proportions for each character. Do not scale mother/teacher/staff up as An/Minh get older. Adults also stay CHIBI, with their stable adult face and outfit from reference3. Preserve sensible original placement, perspective, overall character size and seated/standing posture; harmonize everyone to the same chibi style. Do not use old elongated adult anatomy from reference1. Do not turn late-teen characters into realistic/anime tall bodies. Do not invent growth or a timeline.\nKeep original scene facial EXPRESSIONS and gestures (not the neutral reference poses). Preserve background architecture, camera, furniture, warm light, mint/cream/coral palette, story action and all existing teaching props. Same number of people. No extra objects or changed decision outcome. Coherent hands, limbs, occlusion and prop contact. Warm brown outlines, soft pastel kawaii2D cel shading, clean full-bleed16:9 landscape. No border, no panels, no words, numbers, captions, labels, UI, speech bubbles, logos or watermark. Documents and screens stay blank for later UI.",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-99a3676b-d9c7-4f43-8f4f-9ac993d36614.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-scenes/chapter-03-sc03-weekly-career-plan.png"
+  },
+  {
+    "id": "chapter-03/scene/sc04-career-report.png",
+    "kind": "scene",
+    "chapter": 3,
+    "age": 17,
+    "who": "scene",
+    "pose": "sc04-career-report",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-03/scene/sc04-career-report.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-03/scene/sc04-career-report.png"
+    ],
+    "status": "installed",
+    "companion": "co-linh",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-03/scene/sc04-career-report.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/17-an-neutral.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/adult-co-linh-neutral.png"
+    ],
+    "prompt": "Use case: identity-preserve. Edit ONE existing landscape16:9 visual-novel scene (chapter-03/scene/sc04-career-report.png). Reference1 supplies the scene's environment, framing, positions, original action, expressions and props. Reference2 is the FINAL CHIBI An age17. Reference3 is the FINAL CHIBI co-linh adult model.\nALL PEOPLE MUST BE COMPACT BALANCED CHIBI in the exact harmonious style of reference2/3. Replace the people with those final chibi designs, using their exact faces, hair and outfits, while retaining original scene pose, expression, action and prop interactions from reference1. An outfit: muted yellow polo, dark blue straight trousers, white sneakers.\nCRITICAL USER DIRECTION: age differences are shown ONLY by clothes and facial cues, never by making people taller, stretching bodies, longer legs or smaller heads. Keep fixed compact chibi body proportions for each character. Do not scale mother/teacher/staff up as An/Minh get older. Adults also stay CHIBI, with their stable adult face and outfit from reference3. Preserve sensible original placement, perspective, overall character size and seated/standing posture; harmonize everyone to the same chibi style. Do not use old elongated adult anatomy from reference1. Do not turn late-teen characters into realistic/anime tall bodies. Do not invent growth or a timeline.\nKeep original scene facial EXPRESSIONS and gestures (not the neutral reference poses). Preserve background architecture, camera, furniture, warm light, mint/cream/coral palette, story action and all existing teaching props. Same number of people. No extra objects or changed decision outcome. Coherent hands, limbs, occlusion and prop contact. Warm brown outlines, soft pastel kawaii2D cel shading, clean full-bleed16:9 landscape. No border, no panels, no words, numbers, captions, labels, UI, speech bubbles, logos or watermark. Documents and screens stay blank for later UI.",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-ab522f82-6b71-4744-8df8-cf9565228354.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-scenes/chapter-03-sc04-career-report.png"
+  },
+  {
+    "id": "adult-shop-assistant-explaining",
+    "kind": "sprite",
+    "chapter": 4,
+    "age": 16,
+    "who": "shop-assistant",
+    "pose": "shop-assistant-explaining",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-04/char/shop-assistant/shop-assistant-explaining.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-04/char/shop-assistant/shop-assistant-explaining.png"
+    ],
+    "status": "installed",
+    "adult": true,
+    "prompt": "Use case: identity-preserve. ONE full-body transparent CHIBI adult sprite. Reference1 supplies the original expression, action, gesture and props (shop-assistant-explaining). Reference2 is the NEW final CHIBI neutral version of this same adult and strictly controls identity, face age, clothes, short compact body proportions and rendering. Recreate reference2 with the expression/gesture/props from reference1, keeping a consistent adult face and EXACT SAME compact chibi anatomy. Keep original standing or kneeling action. Do not lengthen legs or torso, make taller, or restore old elongated proportions. All characters share harmonious cute CHIBI style; adulthood is conveyed by face and adult clothes, not increased height. Full body and feet visible with margins, correct natural hands and original props, warm brown outlines and pastel 2D cel shading. Genuine transparent background, no added props, text, labels, extra people, background, shadow or glow.",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-04/char/shop-assistant/shop-assistant-explaining.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/adult-shop-assistant-neutral.png"
+    ],
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-e733f50f-d50b-4fab-a6a7-1ee521db8088.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/adult-shop-assistant-explaining.png"
+  },
+  {
+    "id": "adult-shop-assistant-neutral",
+    "kind": "sprite",
+    "chapter": 4,
+    "age": 16,
+    "who": "shop-assistant",
+    "pose": "shop-assistant-neutral",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-04/char/shop-assistant/shop-assistant-neutral.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-04/char/shop-assistant/shop-assistant-neutral.png"
+    ],
+    "status": "installed",
+    "adult": true,
+    "prompt": "Use case: identity-preserve. Convert ONE adult character sprite to the SAME balanced compact CHIBI style used for all FinTeen characters. Subject: adult female shop assistant, brown bob hairstyle, mint collared shirt, teal trousers, white sneakers, small blank name badge. Reference1 is the original character identity, exact outfit and neutral pose. Reference2 is the chibi design sheet: use its compact large-head/short-body style for adults too. Keep the recognizable face/hair/clothing identity and original neutral hand pose, but make clearly CHIBI around3.5 heads tall with short harmonious limbs, no long skinny anime legs/torso and no tiny head. This adult will use ONE fixed model in all chapters; never increase height with the children's ages. Adult age is conveyed by a gently mature face, more composed expression, slightly less baby-round cheeks, and the adult outfit, not longer body or legs. Do not make elderly, wrinkled, muscular or realistic. Single full-body figure, all feet and hands in frame, warm brown outlines and soft pastel cel shading consistent with the sheet. Genuine transparent background, no text, labels, additional people, scene, ground ellipse, glow or cast shadow.",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-04/char/shop-assistant/shop-assistant-neutral.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-age-design.png"
+    ],
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-a266b0c4-8414-4e9d-bda4-cd4000914e70.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/adult-shop-assistant-neutral.png"
+  },
+  {
+    "id": "chapter-04/scene/sc01-phone-needs.png",
+    "kind": "scene",
+    "chapter": 4,
+    "age": 16,
+    "who": "scene",
+    "pose": "sc01-phone-needs",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-04/scene/sc01-phone-needs.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-04/scene/sc01-phone-needs.png"
+    ],
+    "status": "installed",
+    "companion": "minh",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-04/scene/sc01-phone-needs.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/16-an-neutral.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/16-minh-neutral.png"
+    ],
+    "prompt": "Use case: identity-preserve. Edit ONE existing landscape16:9 visual-novel scene (chapter-04/scene/sc01-phone-needs.png). Reference1 supplies the scene's environment, framing, positions, original action, expressions and props. Reference2 is the FINAL CHIBI An age16. Reference3 is the FINAL CHIBI Minh of the same age model.\nALL PEOPLE MUST BE COMPACT BALANCED CHIBI in the exact harmonious style of reference2/3. Replace the people with those final chibi designs, using their exact faces, hair and outfits, while retaining original scene pose, expression, action and prop interactions from reference1. An outfit: mustard short-sleeved overshirt over a white T-shirt, dark blue straight jeans, simple white sneakers. Minh outfit: navy short-sleeved overshirt over a light tee, beige straight trousers, white sneakers, his existing watch.\nCRITICAL USER DIRECTION: age differences are shown ONLY by clothes and facial cues, never by making people taller, stretching bodies, longer legs or smaller heads. Keep fixed compact chibi body proportions for each character. Do not scale mother/teacher/staff up as An/Minh get older. Adults also stay CHIBI, with their stable adult face and outfit from reference3. Preserve sensible original placement, perspective, overall character size and seated/standing posture; harmonize everyone to the same chibi style. Do not use old elongated adult anatomy from reference1. Do not turn late-teen characters into realistic/anime tall bodies. Do not invent growth or a timeline.\nKeep original scene facial EXPRESSIONS and gestures (not the neutral reference poses). Preserve background architecture, camera, furniture, warm light, mint/cream/coral palette, story action and all existing teaching props. Same number of people. No extra objects or changed decision outcome. Coherent hands, limbs, occlusion and prop contact. Warm brown outlines, soft pastel kawaii2D cel shading, clean full-bleed16:9 landscape. No border, no panels, no words, numbers, captions, labels, UI, speech bubbles, logos or watermark. Documents and screens stay blank for later UI.",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-2349c834-0c32-4066-8408-bd0058e12742.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-scenes/chapter-04-sc01-phone-needs.png"
+  },
+  {
+    "id": "chapter-04/scene/sc02-comparing-three-phones.png",
+    "kind": "scene",
+    "chapter": 4,
+    "age": 16,
+    "who": "scene",
+    "pose": "sc02-comparing-three-phones",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-04/scene/sc02-comparing-three-phones.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-04/scene/sc02-comparing-three-phones.png"
+    ],
+    "status": "installed",
+    "companion": "shop-assistant",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-04/scene/sc02-comparing-three-phones.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/16-an-neutral.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/adult-shop-assistant-neutral.png"
+    ],
+    "prompt": "Use case: identity-preserve. Edit ONE existing landscape16:9 visual-novel scene (chapter-04/scene/sc02-comparing-three-phones.png). Reference1 supplies the scene's environment, framing, positions, original action, expressions and props. Reference2 is the FINAL CHIBI An age16. Reference3 is the FINAL CHIBI shop-assistant adult model.\nALL PEOPLE MUST BE COMPACT BALANCED CHIBI in the exact harmonious style of reference2/3. Replace the people with those final chibi designs, using their exact faces, hair and outfits, while retaining original scene pose, expression, action and prop interactions from reference1. An outfit: mustard short-sleeved overshirt over a white T-shirt, dark blue straight jeans, simple white sneakers.\nCRITICAL USER DIRECTION: age differences are shown ONLY by clothes and facial cues, never by making people taller, stretching bodies, longer legs or smaller heads. Keep fixed compact chibi body proportions for each character. Do not scale mother/teacher/staff up as An/Minh get older. Adults also stay CHIBI, with their stable adult face and outfit from reference3. Preserve sensible original placement, perspective, overall character size and seated/standing posture; harmonize everyone to the same chibi style. Do not use old elongated adult anatomy from reference1. Do not turn late-teen characters into realistic/anime tall bodies. Do not invent growth or a timeline.\nKeep original scene facial EXPRESSIONS and gestures (not the neutral reference poses). Preserve background architecture, camera, furniture, warm light, mint/cream/coral palette, story action and all existing teaching props. Same number of people. No extra objects or changed decision outcome. Coherent hands, limbs, occlusion and prop contact. Warm brown outlines, soft pastel kawaii2D cel shading, clean full-bleed16:9 landscape. No border, no panels, no words, numbers, captions, labels, UI, speech bubbles, logos or watermark. Documents and screens stay blank for later UI.",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-07d88c64-2054-4d46-aebd-ec28dead5335.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-scenes/chapter-04-sc02-comparing-three-phones.png"
+  },
+  {
+    "id": "chapter-04/scene/sc03-questioning-receipt.png",
+    "kind": "scene",
+    "chapter": 4,
+    "age": 16,
+    "who": "scene",
+    "pose": "sc03-questioning-receipt",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-04/scene/sc03-questioning-receipt.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-04/scene/sc03-questioning-receipt.png"
+    ],
+    "status": "installed",
+    "companion": "shop-assistant",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-04/scene/sc03-questioning-receipt.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/16-an-neutral.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/adult-shop-assistant-neutral.png"
+    ],
+    "prompt": "Use case: identity-preserve. Edit ONE existing landscape16:9 visual-novel scene (chapter-04/scene/sc03-questioning-receipt.png). Reference1 supplies the scene's environment, framing, positions, original action, expressions and props. Reference2 is the FINAL CHIBI An age16. Reference3 is the FINAL CHIBI shop-assistant adult model.\nALL PEOPLE MUST BE COMPACT BALANCED CHIBI in the exact harmonious style of reference2/3. Replace the people with those final chibi designs, using their exact faces, hair and outfits, while retaining original scene pose, expression, action and prop interactions from reference1. An outfit: mustard short-sleeved overshirt over a white T-shirt, dark blue straight jeans, simple white sneakers.\nCRITICAL USER DIRECTION: age differences are shown ONLY by clothes and facial cues, never by making people taller, stretching bodies, longer legs or smaller heads. Keep fixed compact chibi body proportions for each character. Do not scale mother/teacher/staff up as An/Minh get older. Adults also stay CHIBI, with their stable adult face and outfit from reference3. Preserve sensible original placement, perspective, overall character size and seated/standing posture; harmonize everyone to the same chibi style. Do not use old elongated adult anatomy from reference1. Do not turn late-teen characters into realistic/anime tall bodies. Do not invent growth or a timeline.\nKeep original scene facial EXPRESSIONS and gestures (not the neutral reference poses). Preserve background architecture, camera, furniture, warm light, mint/cream/coral palette, story action and all existing teaching props. Same number of people. No extra objects or changed decision outcome. Coherent hands, limbs, occlusion and prop contact. Warm brown outlines, soft pastel kawaii2D cel shading, clean full-bleed16:9 landscape. No border, no panels, no words, numbers, captions, labels, UI, speech bubbles, logos or watermark. Documents and screens stay blank for later UI.",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-3c75a94d-b148-4b2a-b86d-478277ccffe8.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-scenes/chapter-04-sc03-questioning-receipt.png"
+  },
+  {
+    "id": "chapter-04/scene/sc04-following-renewal.png",
+    "kind": "scene",
+    "chapter": 4,
+    "age": 16,
+    "who": "scene",
+    "pose": "sc04-following-renewal",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-04/scene/sc04-following-renewal.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-04/scene/sc04-following-renewal.png"
+    ],
+    "status": "installed",
+    "companion": "co-linh",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-04/scene/sc04-following-renewal.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/16-an-neutral.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/adult-co-linh-neutral.png"
+    ],
+    "prompt": "Use case: identity-preserve. Edit ONE existing landscape16:9 visual-novel scene (chapter-04/scene/sc04-following-renewal.png). Reference1 supplies the scene's environment, framing, positions, original action, expressions and props. Reference2 is the FINAL CHIBI An age16. Reference3 is the FINAL CHIBI co-linh adult model.\nALL PEOPLE MUST BE COMPACT BALANCED CHIBI in the exact harmonious style of reference2/3. Replace the people with those final chibi designs, using their exact faces, hair and outfits, while retaining original scene pose, expression, action and prop interactions from reference1. An outfit: mustard short-sleeved overshirt over a white T-shirt, dark blue straight jeans, simple white sneakers.\nCRITICAL USER DIRECTION: age differences are shown ONLY by clothes and facial cues, never by making people taller, stretching bodies, longer legs or smaller heads. Keep fixed compact chibi body proportions for each character. Do not scale mother/teacher/staff up as An/Minh get older. Adults also stay CHIBI, with their stable adult face and outfit from reference3. Preserve sensible original placement, perspective, overall character size and seated/standing posture; harmonize everyone to the same chibi style. Do not use old elongated adult anatomy from reference1. Do not turn late-teen characters into realistic/anime tall bodies. Do not invent growth or a timeline.\nKeep original scene facial EXPRESSIONS and gestures (not the neutral reference poses). Preserve background architecture, camera, furniture, warm light, mint/cream/coral palette, story action and all existing teaching props. Same number of people. No extra objects or changed decision outcome. Coherent hands, limbs, occlusion and prop contact. Warm brown outlines, soft pastel kawaii2D cel shading, clean full-bleed16:9 landscape. No border, no panels, no words, numbers, captions, labels, UI, speech bubbles, logos or watermark. Documents and screens stay blank for later UI.",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-5505c5e2-8de3-46f5-b0d8-ec4214c20bb4.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-scenes/chapter-04-sc04-following-renewal.png"
+  },
+  {
+    "id": "adult-bank-guide-explaining",
+    "kind": "sprite",
+    "chapter": 5,
+    "age": 16,
+    "who": "bank-guide",
+    "pose": "bank-guide-explaining",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-05/char/bank-guide/bank-guide-explaining.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-05/char/bank-guide/bank-guide-explaining.png"
+    ],
+    "status": "installed",
+    "adult": true,
+    "prompt": "Use case: identity-preserve. ONE full-body transparent CHIBI adult sprite. Reference1 supplies the original expression, action, gesture and props (bank-guide-explaining). Reference2 is the NEW final CHIBI neutral version of this same adult and strictly controls identity, face age, clothes, short compact body proportions and rendering. Recreate reference2 with the expression/gesture/props from reference1, keeping a consistent adult face and EXACT SAME compact chibi anatomy. Keep original standing or kneeling action. Do not lengthen legs or torso, make taller, or restore old elongated proportions. All characters share harmonious cute CHIBI style; adulthood is conveyed by face and adult clothes, not increased height. Full body and feet visible with margins, correct natural hands and original props, warm brown outlines and pastel 2D cel shading. Genuine transparent background, no added props, text, labels, extra people, background, shadow or glow.",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-05/char/bank-guide/bank-guide-explaining.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/adult-bank-guide-neutral.png"
+    ],
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-fd4f889f-6ef4-4155-81f9-05e33127ee48.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/adult-bank-guide-explaining.png"
+  },
+  {
+    "id": "adult-bank-guide-neutral",
+    "kind": "sprite",
+    "chapter": 5,
+    "age": 16,
+    "who": "bank-guide",
+    "pose": "bank-guide-neutral",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-05/char/bank-guide/bank-guide-neutral.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-05/char/bank-guide/bank-guide-neutral.png"
+    ],
+    "status": "installed",
+    "adult": true,
+    "prompt": "Use case: identity-preserve. Convert ONE adult character sprite to the SAME balanced compact CHIBI style used for all FinTeen characters. Subject: adult male bank guide, brown swept hair, navy suit, white shirt, burgundy tie, dark shoes and blank name badge. Reference1 is the original character identity, exact outfit and neutral pose. Reference2 is the chibi design sheet: use its compact large-head/short-body style for adults too. Keep the recognizable face/hair/clothing identity and original neutral hand pose, but make clearly CHIBI around3.5 heads tall with short harmonious limbs, no long skinny anime legs/torso and no tiny head. This adult will use ONE fixed model in all chapters; never increase height with the children's ages. Adult age is conveyed by a gently mature face, more composed expression, slightly less baby-round cheeks, and the adult outfit, not longer body or legs. Do not make elderly, wrinkled, muscular or realistic. Single full-body figure, all feet and hands in frame, warm brown outlines and soft pastel cel shading consistent with the sheet. Genuine transparent background, no text, labels, additional people, scene, ground ellipse, glow or cast shadow.",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-05/char/bank-guide/bank-guide-neutral.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-age-design.png"
+    ],
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-78645b86-d7d6-449d-8912-e99997f81089.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/adult-bank-guide-neutral.png"
+  },
+  {
+    "id": "chapter-05/scene/sc01-two-accounts.png",
+    "kind": "scene",
+    "chapter": 5,
+    "age": 16,
+    "who": "scene",
+    "pose": "sc01-two-accounts",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-05/scene/sc01-two-accounts.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-05/scene/sc01-two-accounts.png"
+    ],
+    "status": "installed",
+    "companion": "bank-guide",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-05/scene/sc01-two-accounts.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/16-an-neutral.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/adult-bank-guide-neutral.png"
+    ],
+    "prompt": "Use case: identity-preserve. Edit ONE existing landscape16:9 visual-novel scene (chapter-05/scene/sc01-two-accounts.png). Reference1 supplies the scene's environment, framing, positions, original action, expressions and props. Reference2 is the FINAL CHIBI An age16. Reference3 is the FINAL CHIBI bank-guide adult model.\nALL PEOPLE MUST BE COMPACT BALANCED CHIBI in the exact harmonious style of reference2/3. Replace the people with those final chibi designs, using their exact faces, hair and outfits, while retaining original scene pose, expression, action and prop interactions from reference1. An outfit: mustard short-sleeved overshirt over a white T-shirt, dark blue straight jeans, simple white sneakers.\nCRITICAL USER DIRECTION: age differences are shown ONLY by clothes and facial cues, never by making people taller, stretching bodies, longer legs or smaller heads. Keep fixed compact chibi body proportions for each character. Do not scale mother/teacher/staff up as An/Minh get older. Adults also stay CHIBI, with their stable adult face and outfit from reference3. Preserve sensible original placement, perspective, overall character size and seated/standing posture; harmonize everyone to the same chibi style. Do not use old elongated adult anatomy from reference1. Do not turn late-teen characters into realistic/anime tall bodies. Do not invent growth or a timeline.\nKeep original scene facial EXPRESSIONS and gestures (not the neutral reference poses). Preserve background architecture, camera, furniture, warm light, mint/cream/coral palette, story action and all existing teaching props. Same number of people. No extra objects or changed decision outcome. Coherent hands, limbs, occlusion and prop contact. Warm brown outlines, soft pastel kawaii2D cel shading, clean full-bleed16:9 landscape. No border, no panels, no words, numbers, captions, labels, UI, speech bubbles, logos or watermark. Documents and screens stay blank for later UI.",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-c069ec98-f597-43af-af1f-2c59f8b8b8ac.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-scenes/chapter-05-sc01-two-accounts.png"
+  },
+  {
+    "id": "chapter-05/scene/sc02-investigating-provider.png",
+    "kind": "scene",
+    "chapter": 5,
+    "age": 16,
+    "who": "scene",
+    "pose": "sc02-investigating-provider",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-05/scene/sc02-investigating-provider.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-05/scene/sc02-investigating-provider.png"
+    ],
+    "status": "installed",
+    "companion": "minh",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-05/scene/sc02-investigating-provider.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/16-an-neutral.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/16-minh-neutral.png"
+    ],
+    "prompt": "Use case: identity-preserve. Edit ONE existing landscape16:9 visual-novel scene (chapter-05/scene/sc02-investigating-provider.png). Reference1 supplies the scene's environment, framing, positions, original action, expressions and props. Reference2 is the FINAL CHIBI An age16. Reference3 is the FINAL CHIBI Minh of the same age model.\nALL PEOPLE MUST BE COMPACT BALANCED CHIBI in the exact harmonious style of reference2/3. Replace the people with those final chibi designs, using their exact faces, hair and outfits, while retaining original scene pose, expression, action and prop interactions from reference1. An outfit: mustard short-sleeved overshirt over a white T-shirt, dark blue straight jeans, simple white sneakers. Minh outfit: navy short-sleeved overshirt over a light tee, beige straight trousers, white sneakers, his existing watch.\nCRITICAL USER DIRECTION: age differences are shown ONLY by clothes and facial cues, never by making people taller, stretching bodies, longer legs or smaller heads. Keep fixed compact chibi body proportions for each character. Do not scale mother/teacher/staff up as An/Minh get older. Adults also stay CHIBI, with their stable adult face and outfit from reference3. Preserve sensible original placement, perspective, overall character size and seated/standing posture; harmonize everyone to the same chibi style. Do not use old elongated adult anatomy from reference1. Do not turn late-teen characters into realistic/anime tall bodies. Do not invent growth or a timeline.\nKeep original scene facial EXPRESSIONS and gestures (not the neutral reference poses). Preserve background architecture, camera, furniture, warm light, mint/cream/coral palette, story action and all existing teaching props. Same number of people. No extra objects or changed decision outcome. Coherent hands, limbs, occlusion and prop contact. Warm brown outlines, soft pastel kawaii2D cel shading, clean full-bleed16:9 landscape. No border, no panels, no words, numbers, captions, labels, UI, speech bubbles, logos or watermark. Documents and screens stay blank for later UI.",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-2d8f2359-7af4-4dfa-8e04-52f4fb5e2680.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-scenes/chapter-05-sc02-investigating-provider.png"
+  },
+  {
+    "id": "chapter-05/scene/sc03-money-and-purchasing-power.png",
+    "kind": "scene",
+    "chapter": 5,
+    "age": 16,
+    "who": "scene",
+    "pose": "sc03-money-and-purchasing-power",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-05/scene/sc03-money-and-purchasing-power.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-05/scene/sc03-money-and-purchasing-power.png"
+    ],
+    "status": "installed",
+    "companion": "co-linh",
+    "references": [
+      "D:/DO-AN/SEQ/output/scene-character-audit/before/chapter-05-sc03-money-and-purchasing-power.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-05/char/co-linh/co-linh-neutral.png"
+    ],
+    "prompt": "Use case: precise-object-edit. Reference1 is the edit target; reference2 is the canonical character sprite. Change ONLY the placement of Co Linh's low ponytail to match reference2. Her ponytail must drape over her anatomical RIGHT shoulder, which is the LEFT side of her torso as viewed by the viewer, the side nearer An. Currently it is on the viewer-right side: remove that incorrect ponytail and restore the blue blouse area there, then place ONE same brown ponytail on the viewer-left shoulder. Do not mirror or rotate the whole teacher, the face, hands, clothing or entire scene. Keep her front hair part, face, glasses, pose and expression exactly. Strict localized correction only. Keep An and every other person, all faces and expressions, the chibi body proportions, character sizes, composition, crop, perspective, background, furniture, lighting, colors, hands, props and blank documents exactly as reference1. Do not redesign the scene or change character height. Keep the same polished chibi 2D style and 16:9 opaque landscape canvas. No new text, symbols, people, objects, logos or watermark.",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-40985ff4-782f-4ab0-b337-1db5dc8da5de.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-scenes/chapter-05-sc03-money-and-purchasing-power.png",
+    "auditHistory": [
+      {
+        "date": "2026-10-03",
+        "previousGenerated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-76baefd8-8b7d-4c90-b47f-80a9dbf7cfeb.png",
+        "previousPrompt": "Use case: identity-preserve. Edit ONE existing landscape16:9 visual-novel scene (chapter-05/scene/sc03-money-and-purchasing-power.png). Reference1 supplies the scene's environment, framing, positions, original action, expressions and props. Reference2 is the FINAL CHIBI An age16. Reference3 is the FINAL CHIBI co-linh adult model.\nALL PEOPLE MUST BE COMPACT BALANCED CHIBI in the exact harmonious style of reference2/3. Replace the people with those final chibi designs, using their exact faces, hair and outfits, while retaining original scene pose, expression, action and prop interactions from reference1. An outfit: mustard short-sleeved overshirt over a white T-shirt, dark blue straight jeans, simple white sneakers.\nCRITICAL USER DIRECTION: age differences are shown ONLY by clothes and facial cues, never by making people taller, stretching bodies, longer legs or smaller heads. Keep fixed compact chibi body proportions for each character. Do not scale mother/teacher/staff up as An/Minh get older. Adults also stay CHIBI, with their stable adult face and outfit from reference3. Preserve sensible original placement, perspective, overall character size and seated/standing posture; harmonize everyone to the same chibi style. Do not use old elongated adult anatomy from reference1. Do not turn late-teen characters into realistic/anime tall bodies. Do not invent growth or a timeline.\nKeep original scene facial EXPRESSIONS and gestures (not the neutral reference poses). Preserve background architecture, camera, furniture, warm light, mint/cream/coral palette, story action and all existing teaching props. Same number of people. No extra objects or changed decision outcome. Coherent hands, limbs, occlusion and prop contact. Warm brown outlines, soft pastel kawaii2D cel shading, clean full-bleed16:9 landscape. No border, no panels, no words, numbers, captions, labels, UI, speech bubbles, logos or watermark. Documents and screens stay blank for later UI.",
+        "backup": "D:/DO-AN/SEQ/output/scene-character-audit/before/chapter-05-sc03-money-and-purchasing-power.png",
+        "correction": "Change ONLY the placement of Co Linh's low ponytail to match reference2. Her ponytail must drape over her anatomical RIGHT shoulder, which is the LEFT side of her torso as viewed by the viewer, the side nearer An. Currently it is on the viewer-right side: remove that incorrect ponytail and restore the blue blouse area there, then place ONE same brown ponytail on the viewer-left shoulder. Do not mirror or rotate the whole teacher, the face, hands, clothing or entire scene. Keep her front hair part, face, glasses, pose and expression exactly."
+      }
+    ]
+  },
+  {
+    "id": "chapter-05/scene/sc04-planning-for-deadline.png",
+    "kind": "scene",
+    "chapter": 5,
+    "age": 16,
+    "who": "scene",
+    "pose": "sc04-planning-for-deadline",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-05/scene/sc04-planning-for-deadline.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-05/scene/sc04-planning-for-deadline.png"
+    ],
+    "status": "installed",
+    "companion": "bank-guide",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-05/scene/sc04-planning-for-deadline.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/16-an-neutral.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/adult-bank-guide-neutral.png"
+    ],
+    "prompt": "Use case: identity-preserve. Edit ONE existing landscape16:9 visual-novel scene (chapter-05/scene/sc04-planning-for-deadline.png). Reference1 supplies the scene's environment, framing, positions, original action, expressions and props. Reference2 is the FINAL CHIBI An age16. Reference3 is the FINAL CHIBI bank-guide adult model.\nALL PEOPLE MUST BE COMPACT BALANCED CHIBI in the exact harmonious style of reference2/3. Replace the people with those final chibi designs, using their exact faces, hair and outfits, while retaining original scene pose, expression, action and prop interactions from reference1. An outfit: mustard short-sleeved overshirt over a white T-shirt, dark blue straight jeans, simple white sneakers.\nCRITICAL USER DIRECTION: age differences are shown ONLY by clothes and facial cues, never by making people taller, stretching bodies, longer legs or smaller heads. Keep fixed compact chibi body proportions for each character. Do not scale mother/teacher/staff up as An/Minh get older. Adults also stay CHIBI, with their stable adult face and outfit from reference3. Preserve sensible original placement, perspective, overall character size and seated/standing posture; harmonize everyone to the same chibi style. Do not use old elongated adult anatomy from reference1. Do not turn late-teen characters into realistic/anime tall bodies. Do not invent growth or a timeline.\nKeep original scene facial EXPRESSIONS and gestures (not the neutral reference poses). Preserve background architecture, camera, furniture, warm light, mint/cream/coral palette, story action and all existing teaching props. Same number of people. No extra objects or changed decision outcome. Coherent hands, limbs, occlusion and prop contact. Warm brown outlines, soft pastel kawaii2D cel shading, clean full-bleed16:9 landscape. No border, no panels, no words, numbers, captions, labels, UI, speech bubbles, logos or watermark. Documents and screens stay blank for later UI.",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-86c6f6f2-c0d1-4352-b5f6-8561a3129dd3.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-scenes/chapter-05-sc04-planning-for-deadline.png"
+  },
+  {
+    "id": "18-an-neutral",
+    "kind": "sprite",
+    "chapter": 6,
+    "age": 18,
+    "who": "an",
+    "pose": "an-neutral",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-06/char/an/an-neutral.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-06/char/an/an-neutral.png"
+    ],
+    "status": "installed",
+    "outfit": "mustard overshirt over cream tee with casually rolled sleeves, dark navy straight trousers, white sneakers",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-a8addfde-d3ce-4344-883e-beca6760aa66.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/18-an-neutral.png"
+  },
+  {
+    "id": "18-an-relieved",
+    "kind": "sprite",
+    "chapter": 6,
+    "age": 18,
+    "who": "an",
+    "pose": "an-relieved",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-06/char/an/an-relieved.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-06/char/an/an-relieved.png"
+    ],
+    "status": "installed",
+    "outfit": "mustard overshirt over cream tee with casually rolled sleeves, dark navy straight trousers, white sneakers",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-51f9c2a5-2a0a-423c-bf0f-b89a978d8d0b.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/18-an-relieved.png"
+  },
+  {
+    "id": "18-an-thinking",
+    "kind": "sprite",
+    "chapter": 6,
+    "age": 18,
+    "who": "an",
+    "pose": "an-thinking",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-06/char/an/an-thinking.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-06/char/an/an-thinking.png"
+    ],
+    "status": "installed",
+    "outfit": "mustard overshirt over cream tee with casually rolled sleeves, dark navy straight trousers, white sneakers",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-b16aca4a-b22e-4491-8a56-c0f308998bee.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/18-an-thinking.png"
+  },
+  {
+    "id": "18-an-worried-money",
+    "kind": "sprite",
+    "chapter": 6,
+    "age": 18,
+    "who": "an",
+    "pose": "an-worried-money",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-06/char/an/an-worried-money.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-06/char/an/an-worried-money.png"
+    ],
+    "status": "installed",
+    "outfit": "mustard overshirt over cream tee with casually rolled sleeves, dark navy straight trousers, white sneakers",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-12723b65-ce1d-42e2-b54d-3817d6d5b0d2.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/18-an-worried-money.png"
+  },
+  {
+    "id": "18-minh-inviting",
+    "kind": "sprite",
+    "chapter": 6,
+    "age": 18,
+    "who": "minh",
+    "pose": "minh-inviting",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-06/char/minh/minh-inviting.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-06/char/minh/minh-inviting.png"
+    ],
+    "status": "installed",
+    "outfit": "navy casual button-up shirt with rolled sleeves, beige straight trousers, white sneakers, his existing watch",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-4928387f-9812-4499-bb30-3ae123a01cfb.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/18-minh-inviting.png"
+  },
+  {
+    "id": "18-minh-neutral",
+    "kind": "sprite",
+    "chapter": 6,
+    "age": 18,
+    "who": "minh",
+    "pose": "minh-neutral",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-06/char/minh/minh-neutral.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-06/char/minh/minh-neutral.png"
+    ],
+    "status": "installed",
+    "outfit": "navy casual button-up shirt with rolled sleeves, beige straight trousers, white sneakers, his existing watch",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-83cd16eb-9724-4852-aa9c-eeb4780fce14.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-sprites/18-minh-neutral.png"
+  },
+  {
+    "id": "chapter-06/scene/sc01-school-computer-or-laptop.png",
+    "kind": "scene",
+    "chapter": 6,
+    "age": 18,
+    "who": "scene",
+    "pose": "sc01-school-computer-or-laptop",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-06/scene/sc01-school-computer-or-laptop.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-06/scene/sc01-school-computer-or-laptop.png"
+    ],
+    "status": "installed",
+    "companion": "minh",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-06/scene/sc01-school-computer-or-laptop.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/18-an-neutral.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/18-minh-neutral.png"
+    ],
+    "prompt": "Use case: identity-preserve. Edit ONE existing landscape16:9 visual-novel scene (chapter-06/scene/sc01-school-computer-or-laptop.png). Reference1 supplies the scene's environment, framing, positions, original action, expressions and props. Reference2 is the FINAL CHIBI An age18. Reference3 is the FINAL CHIBI Minh of the same age model.\nALL PEOPLE MUST BE COMPACT BALANCED CHIBI in the exact harmonious style of reference2/3. Replace the people with those final chibi designs, using their exact faces, hair and outfits, while retaining original scene pose, expression, action and prop interactions from reference1. An outfit: mustard overshirt over cream tee with casually rolled sleeves, dark navy straight trousers, white sneakers. Minh outfit: navy casual button-up shirt with rolled sleeves, beige straight trousers, white sneakers, his existing watch.\nCRITICAL USER DIRECTION: age differences are shown ONLY by clothes and facial cues, never by making people taller, stretching bodies, longer legs or smaller heads. Keep fixed compact chibi body proportions for each character. Do not scale mother/teacher/staff up as An/Minh get older. Adults also stay CHIBI, with their stable adult face and outfit from reference3. Preserve sensible original placement, perspective, overall character size and seated/standing posture; harmonize everyone to the same chibi style. Do not use old elongated adult anatomy from reference1. Do not turn late-teen characters into realistic/anime tall bodies. Do not invent growth or a timeline.\nKeep original scene facial EXPRESSIONS and gestures (not the neutral reference poses). Preserve background architecture, camera, furniture, warm light, mint/cream/coral palette, story action and all existing teaching props. Same number of people. No extra objects or changed decision outcome. Coherent hands, limbs, occlusion and prop contact. Warm brown outlines, soft pastel kawaii2D cel shading, clean full-bleed16:9 landscape. No border, no panels, no words, numbers, captions, labels, UI, speech bubbles, logos or watermark. Documents and screens stay blank for later UI.",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-681d34df-6065-4e9b-ad7c-f23011d5266b.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-scenes/chapter-06-sc01-school-computer-or-laptop.png"
+  },
+  {
+    "id": "chapter-06/scene/sc02-comparing-loan-offers.png",
+    "kind": "scene",
+    "chapter": 6,
+    "age": 18,
+    "who": "scene",
+    "pose": "sc02-comparing-loan-offers",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-06/scene/sc02-comparing-loan-offers.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-06/scene/sc02-comparing-loan-offers.png"
+    ],
+    "status": "installed",
+    "companion": "co-linh",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-8ceb7b84-0bb9-4b66-951b-846ffe6b0740.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-scenes/chapter-06-sc02-comparing-loan-offers.png",
+    "previousDraft": "D:/DO-AN/SEQ/output/age-review/chibi-scenes/chapter-06-sc02-comparing-loan-offers.png",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-06/scene/sc02-comparing-loan-offers.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/18-an-neutral.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/adult-co-linh-neutral.png"
+    ],
+    "prompt": "Use case: identity-preserve. Edit ONE existing landscape16:9 visual-novel scene (chapter-06/scene/sc02-comparing-loan-offers.png). Reference1 supplies the scene's environment, framing, positions, original action, expressions and props. Reference2 is the FINAL CHIBI An age18. Reference3 is the FINAL CHIBI co-linh adult model.\nALL PEOPLE MUST BE COMPACT BALANCED CHIBI in the exact harmonious style of reference2/3. Replace the people with those final chibi designs, using their exact faces, hair and outfits, while retaining original scene pose, expression, action and prop interactions from reference1. An outfit: mustard overshirt over cream tee with casually rolled sleeves, dark navy straight trousers, white sneakers.\nCRITICAL USER DIRECTION: age differences are shown ONLY by clothes and facial cues, never by making people taller, stretching bodies, longer legs or smaller heads. Keep fixed compact chibi body proportions for each character. Do not scale mother/teacher/staff up as An/Minh get older. Adults also stay CHIBI, with their stable adult face and outfit from reference3. Preserve sensible original placement, perspective, overall character size and seated/standing posture; harmonize everyone to the same chibi style. Do not use old elongated adult anatomy from reference1. Do not turn late-teen characters into realistic/anime tall bodies. Do not invent growth or a timeline.\nKeep original scene facial EXPRESSIONS and gestures (not the neutral reference poses). Preserve background architecture, camera, furniture, warm light, mint/cream/coral palette, story action and all existing teaching props. Same number of people. No extra objects or changed decision outcome. Coherent hands, limbs, occlusion and prop contact. Warm brown outlines, soft pastel kawaii2D cel shading, clean full-bleed16:9 landscape. No border, no panels, no words, numbers, captions, labels, UI, speech bubbles, logos or watermark. Documents and screens stay blank for later UI."
+  },
+  {
+    "id": "chapter-06/scene/sc03-bnpl-and-minimum-payment.png",
+    "kind": "scene",
+    "chapter": 6,
+    "age": 18,
+    "who": "scene",
+    "pose": "sc03-bnpl-and-minimum-payment",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-06/scene/sc03-bnpl-and-minimum-payment.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-06/scene/sc03-bnpl-and-minimum-payment.png"
+    ],
+    "status": "installed",
+    "companion": "minh",
+    "references": [
+      "D:/DO-AN/SEQ/output/age-review/originals/chapter-06/scene/sc03-bnpl-and-minimum-payment.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/18-an-neutral.png",
+      "D:/DO-AN/SEQ/output/age-review/chibi-sprites/18-minh-neutral.png"
+    ],
+    "prompt": "Use case: identity-preserve. Edit ONE existing landscape16:9 visual-novel scene (chapter-06/scene/sc03-bnpl-and-minimum-payment.png). Reference1 supplies the scene's environment, framing, positions, original action, expressions and props. Reference2 is the FINAL CHIBI An age18. Reference3 is the FINAL CHIBI Minh of the same age model.\nALL PEOPLE MUST BE COMPACT BALANCED CHIBI in the exact harmonious style of reference2/3. Replace the people with those final chibi designs, using their exact faces, hair and outfits, while retaining original scene pose, expression, action and prop interactions from reference1. An outfit: mustard overshirt over cream tee with casually rolled sleeves, dark navy straight trousers, white sneakers. Minh outfit: navy casual button-up shirt with rolled sleeves, beige straight trousers, white sneakers, his existing watch.\nCRITICAL USER DIRECTION: age differences are shown ONLY by clothes and facial cues, never by making people taller, stretching bodies, longer legs or smaller heads. Keep fixed compact chibi body proportions for each character. Do not scale mother/teacher/staff up as An/Minh get older. Adults also stay CHIBI, with their stable adult face and outfit from reference3. Preserve sensible original placement, perspective, overall character size and seated/standing posture; harmonize everyone to the same chibi style. Do not use old elongated adult anatomy from reference1. Do not turn late-teen characters into realistic/anime tall bodies. Do not invent growth or a timeline.\nKeep original scene facial EXPRESSIONS and gestures (not the neutral reference poses). Preserve background architecture, camera, furniture, warm light, mint/cream/coral palette, story action and all existing teaching props. Same number of people. No extra objects or changed decision outcome. Coherent hands, limbs, occlusion and prop contact. Warm brown outlines, soft pastel kawaii2D cel shading, clean full-bleed16:9 landscape. No border, no panels, no words, numbers, captions, labels, UI, speech bubbles, logos or watermark. Documents and screens stay blank for later UI.",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-a9ac5b15-7429-4531-9fd8-db6625c1dfe1.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-scenes/chapter-06-sc03-bnpl-and-minimum-payment.png"
+  },
+  {
+    "id": "chapter-06/scene/sc04-realistic-repayment-plan.png",
+    "kind": "scene",
+    "chapter": 6,
+    "age": 18,
+    "who": "scene",
+    "pose": "sc04-realistic-repayment-plan",
+    "original": "D:/DO-AN/SEQ/output/age-review/originals/chapter-06/scene/sc04-realistic-repayment-plan.png",
+    "targets": [
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-06/scene/sc04-realistic-repayment-plan.png"
+    ],
+    "status": "installed",
+    "companion": "co-linh",
+    "references": [
+      "D:/DO-AN/SEQ/output/scene-character-audit/before/chapter-06-sc04-realistic-repayment-plan.png",
+      "D:/DO-AN/SEQ/public/images/finteen-v2/chapter-06/char/co-linh/co-linh-neutral.png"
+    ],
+    "prompt": "Use case: precise-object-edit. Reference1 is the edit target; reference2 is the canonical character sprite. Change ONLY the placement of Co Linh's low ponytail to match reference2. Her ponytail must drape over her anatomical RIGHT shoulder, which is the LEFT side of her torso as viewed by the viewer, the side nearer An and her hand supporting her cheek. Remove the current viewer-right ponytail and restore the blue blouse there. Place ONE brown ponytail on viewer-left shoulder, naturally partly occluded by her forearm/hand as needed. Do not move the supporting hand or change her pose. Do not mirror or rotate her face or the scene. Keep front hair part, glasses, clothing, expression exactly. Strict localized correction only. Keep An and every other person, all faces and expressions, the chibi body proportions, character sizes, composition, crop, perspective, background, furniture, lighting, colors, hands, props and blank documents exactly as reference1. Do not redesign the scene or change character height. Keep the same polished chibi 2D style and 16:9 opaque landscape canvas. No new text, symbols, people, objects, logos or watermark.",
+    "generated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-ca6c6cbf-6ddd-4f36-8d48-de1fa21c25e0.png",
+    "draft": "D:/DO-AN/SEQ/output/age-review/chibi-scenes/chapter-06-sc04-realistic-repayment-plan.png",
+    "auditHistory": [
+      {
+        "date": "2026-10-03",
+        "previousGenerated": "C:/Users/ADMIN/.codex/generated_images/01a0ff0e-4046-7d33-807c-8bd8c85ad200/exec-a589b7dc-179d-47b5-b6a7-68b8cfa53bf8.png",
+        "previousPrompt": "Use case: identity-preserve. Edit ONE existing landscape16:9 visual-novel scene (chapter-06/scene/sc04-realistic-repayment-plan.png). Reference1 supplies the scene's environment, framing, positions, original action, expressions and props. Reference2 is the FINAL CHIBI An age18. Reference3 is the FINAL CHIBI co-linh adult model.\nALL PEOPLE MUST BE COMPACT BALANCED CHIBI in the exact harmonious style of reference2/3. Replace the people with those final chibi designs, using their exact faces, hair and outfits, while retaining original scene pose, expression, action and prop interactions from reference1. An outfit: mustard overshirt over cream tee with casually rolled sleeves, dark navy straight trousers, white sneakers.\nCRITICAL USER DIRECTION: age differences are shown ONLY by clothes and facial cues, never by making people taller, stretching bodies, longer legs or smaller heads. Keep fixed compact chibi body proportions for each character. Do not scale mother/teacher/staff up as An/Minh get older. Adults also stay CHIBI, with their stable adult face and outfit from reference3. Preserve sensible original placement, perspective, overall character size and seated/standing posture; harmonize everyone to the same chibi style. Do not use old elongated adult anatomy from reference1. Do not turn late-teen characters into realistic/anime tall bodies. Do not invent growth or a timeline.\nKeep original scene facial EXPRESSIONS and gestures (not the neutral reference poses). Preserve background architecture, camera, furniture, warm light, mint/cream/coral palette, story action and all existing teaching props. Same number of people. No extra objects or changed decision outcome. Coherent hands, limbs, occlusion and prop contact. Warm brown outlines, soft pastel kawaii2D cel shading, clean full-bleed16:9 landscape. No border, no panels, no words, numbers, captions, labels, UI, speech bubbles, logos or watermark. Documents and screens stay blank for later UI.",
+        "backup": "D:/DO-AN/SEQ/output/scene-character-audit/before/chapter-06-sc04-realistic-repayment-plan.png",
+        "correction": "Change ONLY the placement of Co Linh's low ponytail to match reference2. Her ponytail must drape over her anatomical RIGHT shoulder, which is the LEFT side of her torso as viewed by the viewer, the side nearer An and her hand supporting her cheek. Remove the current viewer-right ponytail and restore the blue blouse there. Place ONE brown ponytail on viewer-left shoulder, naturally partly occluded by her forearm/hand as needed. Do not move the supporting hand or change her pose. Do not mirror or rotate her face or the scene. Keep front hair part, glasses, clothing, expression exactly."
+      }
+    ]
+  }
+]

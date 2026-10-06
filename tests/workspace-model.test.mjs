@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { emptyDatabase, applyAction, resolveSession, canAccessChapter, PLANS } from '../src/features/workspace/model.js'
+import { emptyDatabase, applyAction, resolveSession, canAccessChapter, workspaceDatabase, PLANS } from '../src/features/workspace/model.js'
 import { reportRows, reportCsv, csvCell } from '../src/features/workspace/reporting.js'
 
 const credential = { salt: 'test-salt', hash: 'test-hash' }
@@ -15,12 +15,74 @@ function activate(db, session, slotId = db.slots.find(s => !s.learnerId && s.own
   return action(db, session, 'ACTIVATE_SLOT', { slotId, name: 'Học sinh', credential })
 }
 const q1 = { text: 'Nhu cầu thiết yếu?', options: ['Gạo', 'Game', 'Kẹo', 'Đồ chơi'], correct: 0 }
-test('new adults are Guest; entitlement allows only chapter 1 without a plan', () => {
+
+for (const first of ['parent', 'teacher']) test(`legacy ${first} data stays separate after buying both plans`, () => {
+  let { db, session } = setup(first)
+  db = activate(db, session)
+  const original = db.learners[0]
+  // Simulate v1 records saved before multi-role support.
+  delete db.accounts[0].plans
+  db.slots.forEach(s => { delete s.plan })
+  delete original.plan
+  const second = first === 'parent' ? 'teacher' : 'parent'
+  assert.equal(resolveSession(db, { ...session, role: second }), null)
+  db = action(db, session, 'ACTIVATE_DEMO_PLAN', { plan: second })
+  const sessions = { parent: { ...session, role: 'parent' }, teacher: { ...session, role: 'teacher' } }
+  const secondSlot = db.slots.find(s => s.plan === second)
+  db = activate(db, sessions[second], secondSlot.id)
+  const child = db.learners.find(l => (l.plan || first) === 'parent')
+  const student = db.learners.find(l => (l.plan || first) === 'teacher')
+  for (const role of ['parent', 'teacher']) {
+    const actor = resolveSession(db, sessions[role])
+    assert.equal(actor.role, role)
+    assert.equal(actor.plan, role)
+    assert.equal(actor.plans.length, 2)
+    const scoped = workspaceDatabase(db, actor)
+    assert.equal(scoped.slots.length, PLANS[role].capacity)
+    assert.equal(scoped.learners.length, 1)
+    const foreign = role === 'parent' ? student : child
+    assert.equal(scoped.learners.some(l => l.id === foreign.id), false)
+    assert.throws(() => action(db, sessions[role], 'RESET_PIN', { learnerId: foreign.id, credential }))
+    assert.throws(() => action(db, sessions[role], 'REVOKE_LEARNER', { learnerId: foreign.id }))
+    const foreignSlot = db.slots.find(s => !s.learnerId && (s.plan || first) !== role)
+    assert.throws(() => activate(db, sessions[role], foreignSlot.id))
+    assert.throws(() => action(db, sessions[role], 'ACTIVATE_DEMO_PLAN', { plan: role }))
+  }
+  const childSession = { kind: 'learner', id: child.id, authVersion: 1 }
+  const studentSession = { kind: 'learner', id: student.id, authVersion: 1 }
+  assert.equal(resolveSession(db, childSession).learnerRole, 'child')
+  assert.equal(resolveSession(db, studentSession).learnerRole, 'student')
+  assert.throws(() => action(db, sessions.parent, 'SAVE_QUIZ', { title: 'No', questions: [q1] }))
+  assert.throws(() => action(db, sessions.teacher, 'SAVE_GROUP', { name: 'Mixed', learnerIds: [child.id, student.id] }))
+  db = action(db, sessions.teacher, 'SAVE_GROUP', { name: 'Class', learnerIds: [student.id] })
+  db = action(db, sessions.teacher, 'SAVE_QUIZ', { title: 'Class quiz', questions: [q1] })
+  const quizId = db.quizzes[0].id
+  assert.throws(() => action(db, sessions.teacher, 'ASSIGN_QUIZ', { quizId, learnerIds: [child.id] }))
+  db = action(db, sessions.teacher, 'ASSIGN_QUIZ', { quizId, learnerIds: [student.id] })
+  const assignmentId = db.assignments[0].id
+  assert.throws(() => action(db, childSession, 'SUBMIT_QUIZ', { assignmentId, answers: [0] }))
+  db = action(db, studentSession, 'SUBMIT_QUIZ', { assignmentId, answers: [0] })
+  const parentDb = workspaceDatabase(db, resolveSession(db, sessions.parent))
+  assert.equal(parentDb.quizzes.length, 0)
+  assert.equal(parentDb.assignments.length, 0)
+  assert.equal(parentDb.groups.length, 0)
+  assert.equal(parentDb.submissions.length, 0)
+  assert.equal(parentDb.events.some(e => e.learnerId === student.id), false)
+  assert.equal(reportRows(parentDb, session.id, { learnerId: student.id }).length, 0)
+  const teacherDb = workspaceDatabase(db, resolveSession(db, sessions.teacher))
+  assert.equal(reportRows(teacherDb, session.id)[0].quizSubmitted, 1)
+  assert.equal(reportRows(teacherDb, session.id, { learnerId: child.id }).length, 0)
+  db = action(db, sessions.teacher, 'REVOKE_LEARNER', { learnerId: student.id })
+  assert.ok(resolveSession(db, childSession))
+  assert.equal(resolveSession(db, studentSession), null)
+})
+test('new adults are Guest; current main demo allows chapters 1 and 2 without a plan', () => {
   const { db, session } = setup()
   const guest = resolveSession(db, session)
   assert.equal(guest.role, 'guest')
   assert.equal(canAccessChapter(guest, 1), true)
-  for (const chapter of [0, 2, 8, 9, 1.5, NaN]) assert.equal(canAccessChapter(guest, chapter), false)
+  assert.equal(canAccessChapter(guest, 2), true)
+  for (const chapter of [0, 3, 8, 9, 1.5, NaN]) assert.equal(canAccessChapter(guest, chapter), false)
   assert.equal(canAccessChapter(null, 1), false)
   assert.throws(() => action(db, session, 'ACTIVATE_SLOT', {}))
   assert.throws(() => action(db, null, 'ACTIVATE_DEMO_PLAN', { plan: 'parent' }))
@@ -31,7 +93,8 @@ for (const plan of ['parent', 'teacher']) test(`${plan} purchase allocates exact
   assert.ok(db.slots.every(s => s.learnerId === null))
   for (let i = 1; i <= 8; i++) assert.equal(canAccessChapter(resolveSession(db, session), i), false)
   assert.throws(() => action(db, session, 'ACTIVATE_DEMO_PLAN', { plan }))
-  assert.throws(() => action(db, session, 'ACTIVATE_DEMO_PLAN', { plan: plan === 'parent' ? 'teacher' : 'parent' }))
+  db = action(db, session, 'ACTIVATE_DEMO_PLAN', { plan: plan === 'parent' ? 'teacher' : 'parent' })
+  assert.equal(db.slots.length, 44)
   db = activate(db, session)
   const l = db.learners[0]
   const child = resolveSession(db, { kind: 'learner', id: l.id, authVersion: 1 })

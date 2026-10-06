@@ -11,13 +11,41 @@ const events = new Map()
 globalThis.window = { addEventListener: (type, fn) => events.set(type, fn) }
 const { register, login, logout, saveLearner, dispatch, getSnapshot } = await import('../src/features/workspace/demoStore.js')
 const { resolveSession, applyAction } = await import('../src/features/workspace/model.js')
+
+test('one login supports both purchased roles, rejects unowned roles and persists the selected role', async () => {
+  await register({ name: 'Both roles', email: 'both@example.com', password: 'both-pass-123' })
+  logout()
+  await login({ kind: 'adult', role: 'teacher', identifier: 'both@example.com', secret: 'both-pass-123' })
+  assert.equal(resolveSession(getSnapshot().db, getSnapshot().session).role, 'guest')
+  dispatch('ACTIVATE_DEMO_PLAN', { plan: 'parent' })
+  logout()
+  await assert.rejects(login({ kind: 'adult', role: 'teacher', identifier: 'both@example.com', secret: 'both-pass-123' }), /chưa có gói/)
+  await login({ kind: 'adult', role: 'parent', identifier: 'both@example.com', secret: 'both-pass-123' })
+  dispatch('ACTIVATE_DEMO_PLAN', { plan: 'teacher' })
+  assert.equal(resolveSession(getSnapshot().db, getSnapshot().session).role, 'parent')
+  const ownerId = getSnapshot().session.id
+  assert.equal(getSnapshot().db.slots.filter(s => s.ownerId === ownerId).length, 44)
+  logout()
+  await assert.rejects(login({ kind: 'adult', identifier: 'both@example.com', secret: 'both-pass-123' }), /chọn vai/)
+  await assert.rejects(login({ kind: 'adult', role: 'admin', identifier: 'both@example.com', secret: 'both-pass-123' }), /không hợp lệ/)
+  for (const role of ['teacher', 'parent']) {
+    await login({ kind: 'adult', role, identifier: 'both@example.com', secret: 'both-pass-123' })
+    assert.equal(getSnapshot().session.id, ownerId)
+    const saved = JSON.parse(sessionStorage.getItem('finteen.workspace.session.v1'))
+    assert.equal(saved.role, role)
+    assert.equal(resolveSession(getSnapshot().db, saved).role, role)
+    events.get('storage')({ key: 'finteen.workspace.demo.v1' })
+    assert.equal(resolveSession(getSnapshot().db, getSnapshot().session).role, role)
+    logout()
+  }
+})
 test('browser demo lifecycle: credentials are hashed; old PIN/code rejected; refresh and cross-tab revocation work', async () => {
   await register({ name: 'Parent', email: 'P@EXAMPLE.COM', password: 'parent-pass-123' })
   assert.equal(resolveSession(getSnapshot().db, getSnapshot().session).role, 'guest')
   assert.equal(localStorage.getItem('finteen.workspace.demo.v1').includes('parent-pass-123'), false)
   await assert.rejects(register({ name: 'P', email: 'p@example.com', password: 'new-pass-123' }))
   dispatch('ACTIVATE_DEMO_PLAN', { plan: 'parent' })
-  const slotId = getSnapshot().db.slots[0].id
+  const slotId = getSnapshot().db.slots.find(s => s.ownerId === getSnapshot().session.id).id
   await assert.rejects(saveLearner({ slotId, name: 'Child', pin: 'abcd' }))
   await saveLearner({ slotId, name: 'Child', pin: '9876' })
   const child = getSnapshot().db.learners[0]

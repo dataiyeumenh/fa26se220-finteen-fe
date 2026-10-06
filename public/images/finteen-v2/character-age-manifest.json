@@ -1,0 +1,765 @@
+{
+  "updated": "2026-10-03",
+  "source": "GDD v2: 8 independent chapters",
+  "style": "All characters chibi; age communicated by clothing and facial cues, not growing bodies. Fixed adult models across chapters.",
+  "tool": "built-in image_gen",
+  "uniqueImages": 60,
+  "files": [
+    {
+      "file": "chapter-01/char/an/an-neutral.png",
+      "kind": "sprite",
+      "character": "an",
+      "scenarioAge": 14,
+      "width": 1024,
+      "height": 1536,
+      "sha256": "98d13a1cbf23dcf08e16831e9c51ae9787c6f4967402355ec8f6a863de611a84"
+    },
+    {
+      "file": "chapter-01/char/an/an-relieved.png",
+      "kind": "sprite",
+      "character": "an",
+      "scenarioAge": 14,
+      "width": 1024,
+      "height": 1536,
+      "sha256": "bc63688ad6e42455013712f4bc22752381f8631040df97da7da09240422c2542"
+    },
+    {
+      "file": "chapter-01/char/an/an-thinking.png",
+      "kind": "sprite",
+      "character": "an",
+      "scenarioAge": 14,
+      "width": 1024,
+      "height": 1536,
+      "sha256": "a15d0c108e0fbab859ea8bb06c73f297beed3b78cc71b4d5cff83e5bef6f3936"
+    },
+    {
+      "file": "chapter-01/char/an/an-worried-money.png",
+      "kind": "sprite",
+      "character": "an",
+      "scenarioAge": 14,
+      "width": 1024,
+      "height": 1536,
+      "sha256": "68071d829e502b60a9d9219cffb4e74efdb854e143ab52249fd1cfb68b633429"
+    },
+    {
+      "file": "chapter-01/char/me/me-concerned.png",
+      "kind": "sprite",
+      "character": "me",
+      "scenarioAge": null,
+      "width": 1145,
+      "height": 1374,
+      "sha256": "ed9ee18517c64b3a33c254da12331311e73339482c891efc81ba63c417f8ced4"
+    },
+    {
+      "file": "chapter-01/char/me/me-explaining.png",
+      "kind": "sprite",
+      "character": "me",
+      "scenarioAge": null,
+      "width": 1145,
+      "height": 1374,
+      "sha256": "8cb25674fc2a6f78ad4eba1841afd5c6df1e8b4e32608cd00b08b8b87dd06a01"
+    },
+    {
+      "file": "chapter-01/char/me/me-neutral.png",
+      "kind": "sprite",
+      "character": "me",
+      "scenarioAge": null,
+      "width": 1145,
+      "height": 1374,
+      "sha256": "0cc238835c0814b08303894e7056e8b192369724de342b77a900d5e0259464ac"
+    },
+    {
+      "file": "chapter-01/char/minh/minh-inviting.png",
+      "kind": "sprite",
+      "character": "minh",
+      "scenarioAge": 14,
+      "width": 1024,
+      "height": 1536,
+      "sha256": "19d4c87859c5df81fde0fa0f13cb3455f45d8f807690de97a4fa1cc7195917d6"
+    },
+    {
+      "file": "chapter-01/char/minh/minh-neutral.png",
+      "kind": "sprite",
+      "character": "minh",
+      "scenarioAge": 14,
+      "width": 1024,
+      "height": 1536,
+      "sha256": "2d5821b066c285332ed22a7a9719812e30a960cf4cb45aa1e4cf125d94b67463"
+    },
+    {
+      "file": "chapter-01/scene/sc01-receiving-allowance.png",
+      "kind": "scene",
+      "character": "scene",
+      "scenarioAge": 14,
+      "width": 1672,
+      "height": 941,
+      "sha256": "06cbe9e01524292a3a0ccaf90b8de950a1bbcbc556685cc3a012949ed72d1043"
+    },
+    {
+      "file": "chapter-01/scene/sc02-headphone-temptation.png",
+      "kind": "scene",
+      "character": "scene",
+      "scenarioAge": 14,
+      "width": 1672,
+      "height": 941,
+      "sha256": "6b5187929d1cb0c39a7176ca48575967200418a39cf623a722dfa56281e8c8fd"
+    },
+    {
+      "file": "chapter-01/scene/sc03-checking-priorities.png",
+      "kind": "scene",
+      "character": "scene",
+      "scenarioAge": 14,
+      "width": 1672,
+      "height": 941,
+      "sha256": "ebb22aa3fcb71822d5103b9cba242d4272b9feb45d168d222e8539202d0c113d"
+    },
+    {
+      "file": "chapter-02/char/an/an-neutral.png",
+      "kind": "sprite",
+      "character": "an",
+      "scenarioAge": 16,
+      "width": 1024,
+      "height": 1536,
+      "sha256": "94cc5e3be5d77be5870a85a7f87dd67f5f6029420158d6ca6c802808228c5055"
+    },
+    {
+      "file": "chapter-04/char/an/an-neutral.png",
+      "kind": "sprite",
+      "character": "an",
+      "scenarioAge": 16,
+      "width": 1024,
+      "height": 1536,
+      "sha256": "94cc5e3be5d77be5870a85a7f87dd67f5f6029420158d6ca6c802808228c5055"
+    },
+    {
+      "file": "chapter-05/char/an/an-neutral.png",
+      "kind": "sprite",
+      "character": "an",
+      "scenarioAge": 16,
+      "width": 1024,
+      "height": 1536,
+      "sha256": "94cc5e3be5d77be5870a85a7f87dd67f5f6029420158d6ca6c802808228c5055"
+    },
+    {
+      "file": "chapter-02/char/an/an-relieved.png",
+      "kind": "sprite",
+      "character": "an",
+      "scenarioAge": 16,
+      "width": 1024,
+      "height": 1536,
+      "sha256": "f71342c9b4bae284dcdef1643ad6373bf3951e267628ca3c1f7acf749f5b188f"
+    },
+    {
+      "file": "chapter-04/char/an/an-relieved.png",
+      "kind": "sprite",
+      "character": "an",
+      "scenarioAge": 16,
+      "width": 1024,
+      "height": 1536,
+      "sha256": "f71342c9b4bae284dcdef1643ad6373bf3951e267628ca3c1f7acf749f5b188f"
+    },
+    {
+      "file": "chapter-05/char/an/an-relieved.png",
+      "kind": "sprite",
+      "character": "an",
+      "scenarioAge": 16,
+      "width": 1024,
+      "height": 1536,
+      "sha256": "f71342c9b4bae284dcdef1643ad6373bf3951e267628ca3c1f7acf749f5b188f"
+    },
+    {
+      "file": "chapter-02/char/an/an-thinking.png",
+      "kind": "sprite",
+      "character": "an",
+      "scenarioAge": 16,
+      "width": 1024,
+      "height": 1536,
+      "sha256": "cc2047de1e7fe58b5016e2a85481f743991c64a5dc0bd951207596ee98046351"
+    },
+    {
+      "file": "chapter-04/char/an/an-thinking.png",
+      "kind": "sprite",
+      "character": "an",
+      "scenarioAge": 16,
+      "width": 1024,
+      "height": 1536,
+      "sha256": "cc2047de1e7fe58b5016e2a85481f743991c64a5dc0bd951207596ee98046351"
+    },
+    {
+      "file": "chapter-05/char/an/an-thinking.png",
+      "kind": "sprite",
+      "character": "an",
+      "scenarioAge": 16,
+      "width": 1024,
+      "height": 1536,
+      "sha256": "cc2047de1e7fe58b5016e2a85481f743991c64a5dc0bd951207596ee98046351"
+    },
+    {
+      "file": "chapter-02/char/an/an-worried-money.png",
+      "kind": "sprite",
+      "character": "an",
+      "scenarioAge": 16,
+      "width": 1024,
+      "height": 1536,
+      "sha256": "4c4a45e3e6a3696cce2007bfd9a497fc92dbd9f3e05a2ce856336f3df9ebe02c"
+    },
+    {
+      "file": "chapter-04/char/an/an-worried-money.png",
+      "kind": "sprite",
+      "character": "an",
+      "scenarioAge": 16,
+      "width": 1024,
+      "height": 1536,
+      "sha256": "4c4a45e3e6a3696cce2007bfd9a497fc92dbd9f3e05a2ce856336f3df9ebe02c"
+    },
+    {
+      "file": "chapter-05/char/an/an-worried-money.png",
+      "kind": "sprite",
+      "character": "an",
+      "scenarioAge": 16,
+      "width": 1024,
+      "height": 1536,
+      "sha256": "4c4a45e3e6a3696cce2007bfd9a497fc92dbd9f3e05a2ce856336f3df9ebe02c"
+    },
+    {
+      "file": "chapter-02/char/co-linh/co-linh-encouraging.png",
+      "kind": "sprite",
+      "character": "co-linh",
+      "scenarioAge": null,
+      "width": 1024,
+      "height": 1536,
+      "sha256": "7838d7e4e004b4c0134b5bc2b541963edbcae05e7a1dd2db539aac2a4b6baba6"
+    },
+    {
+      "file": "chapter-03/char/co-linh/co-linh-encouraging.png",
+      "kind": "sprite",
+      "character": "co-linh",
+      "scenarioAge": null,
+      "width": 1024,
+      "height": 1536,
+      "sha256": "7838d7e4e004b4c0134b5bc2b541963edbcae05e7a1dd2db539aac2a4b6baba6"
+    },
+    {
+      "file": "chapter-04/char/co-linh/co-linh-encouraging.png",
+      "kind": "sprite",
+      "character": "co-linh",
+      "scenarioAge": null,
+      "width": 1024,
+      "height": 1536,
+      "sha256": "7838d7e4e004b4c0134b5bc2b541963edbcae05e7a1dd2db539aac2a4b6baba6"
+    },
+    {
+      "file": "chapter-05/char/co-linh/co-linh-encouraging.png",
+      "kind": "sprite",
+      "character": "co-linh",
+      "scenarioAge": null,
+      "width": 1024,
+      "height": 1536,
+      "sha256": "7838d7e4e004b4c0134b5bc2b541963edbcae05e7a1dd2db539aac2a4b6baba6"
+    },
+    {
+      "file": "chapter-06/char/co-linh/co-linh-encouraging.png",
+      "kind": "sprite",
+      "character": "co-linh",
+      "scenarioAge": null,
+      "width": 1024,
+      "height": 1536,
+      "sha256": "7838d7e4e004b4c0134b5bc2b541963edbcae05e7a1dd2db539aac2a4b6baba6"
+    },
+    {
+      "file": "chapter-02/char/co-linh/co-linh-explaining.png",
+      "kind": "sprite",
+      "character": "co-linh",
+      "scenarioAge": null,
+      "width": 1024,
+      "height": 1536,
+      "sha256": "8f3905e47f59078ff80d5514e3c0b1682f4cb8a62032a4e545be3009786fe221"
+    },
+    {
+      "file": "chapter-03/char/co-linh/co-linh-explaining.png",
+      "kind": "sprite",
+      "character": "co-linh",
+      "scenarioAge": null,
+      "width": 1024,
+      "height": 1536,
+      "sha256": "8f3905e47f59078ff80d5514e3c0b1682f4cb8a62032a4e545be3009786fe221"
+    },
+    {
+      "file": "chapter-04/char/co-linh/co-linh-explaining.png",
+      "kind": "sprite",
+      "character": "co-linh",
+      "scenarioAge": null,
+      "width": 1024,
+      "height": 1536,
+      "sha256": "8f3905e47f59078ff80d5514e3c0b1682f4cb8a62032a4e545be3009786fe221"
+    },
+    {
+      "file": "chapter-05/char/co-linh/co-linh-explaining.png",
+      "kind": "sprite",
+      "character": "co-linh",
+      "scenarioAge": null,
+      "width": 1024,
+      "height": 1536,
+      "sha256": "8f3905e47f59078ff80d5514e3c0b1682f4cb8a62032a4e545be3009786fe221"
+    },
+    {
+      "file": "chapter-06/char/co-linh/co-linh-explaining.png",
+      "kind": "sprite",
+      "character": "co-linh",
+      "scenarioAge": null,
+      "width": 1024,
+      "height": 1536,
+      "sha256": "8f3905e47f59078ff80d5514e3c0b1682f4cb8a62032a4e545be3009786fe221"
+    },
+    {
+      "file": "chapter-02/char/co-linh/co-linh-neutral.png",
+      "kind": "sprite",
+      "character": "co-linh",
+      "scenarioAge": null,
+      "width": 1024,
+      "height": 1536,
+      "sha256": "ac8102fd87ee4de7620416ac72cb62e83f94fc1090dff317e1791c4a9da6f5e9"
+    },
+    {
+      "file": "chapter-03/char/co-linh/co-linh-neutral.png",
+      "kind": "sprite",
+      "character": "co-linh",
+      "scenarioAge": null,
+      "width": 1024,
+      "height": 1536,
+      "sha256": "ac8102fd87ee4de7620416ac72cb62e83f94fc1090dff317e1791c4a9da6f5e9"
+    },
+    {
+      "file": "chapter-04/char/co-linh/co-linh-neutral.png",
+      "kind": "sprite",
+      "character": "co-linh",
+      "scenarioAge": null,
+      "width": 1024,
+      "height": 1536,
+      "sha256": "ac8102fd87ee4de7620416ac72cb62e83f94fc1090dff317e1791c4a9da6f5e9"
+    },
+    {
+      "file": "chapter-05/char/co-linh/co-linh-neutral.png",
+      "kind": "sprite",
+      "character": "co-linh",
+      "scenarioAge": null,
+      "width": 1024,
+      "height": 1536,
+      "sha256": "ac8102fd87ee4de7620416ac72cb62e83f94fc1090dff317e1791c4a9da6f5e9"
+    },
+    {
+      "file": "chapter-06/char/co-linh/co-linh-neutral.png",
+      "kind": "sprite",
+      "character": "co-linh",
+      "scenarioAge": null,
+      "width": 1024,
+      "height": 1536,
+      "sha256": "ac8102fd87ee4de7620416ac72cb62e83f94fc1090dff317e1791c4a9da6f5e9"
+    },
+    {
+      "file": "chapter-02/char/minh/minh-inviting.png",
+      "kind": "sprite",
+      "character": "minh",
+      "scenarioAge": 16,
+      "width": 1024,
+      "height": 1536,
+      "sha256": "2bf2ebe3bf21ab4eab7eeb2f58bf5cdab279aff52a6f0de157e6aa0d341a42cd"
+    },
+    {
+      "file": "chapter-04/char/minh/minh-inviting.png",
+      "kind": "sprite",
+      "character": "minh",
+      "scenarioAge": 16,
+      "width": 1024,
+      "height": 1536,
+      "sha256": "2bf2ebe3bf21ab4eab7eeb2f58bf5cdab279aff52a6f0de157e6aa0d341a42cd"
+    },
+    {
+      "file": "chapter-05/char/minh/minh-inviting.png",
+      "kind": "sprite",
+      "character": "minh",
+      "scenarioAge": 16,
+      "width": 1024,
+      "height": 1536,
+      "sha256": "2bf2ebe3bf21ab4eab7eeb2f58bf5cdab279aff52a6f0de157e6aa0d341a42cd"
+    },
+    {
+      "file": "chapter-02/char/minh/minh-neutral.png",
+      "kind": "sprite",
+      "character": "minh",
+      "scenarioAge": 16,
+      "width": 1024,
+      "height": 1536,
+      "sha256": "b3daeb5cfa46c3d0196a7aa93831e5cd7e2771115c1923157c7e8cd60a197158"
+    },
+    {
+      "file": "chapter-04/char/minh/minh-neutral.png",
+      "kind": "sprite",
+      "character": "minh",
+      "scenarioAge": 16,
+      "width": 1024,
+      "height": 1536,
+      "sha256": "b3daeb5cfa46c3d0196a7aa93831e5cd7e2771115c1923157c7e8cd60a197158"
+    },
+    {
+      "file": "chapter-05/char/minh/minh-neutral.png",
+      "kind": "sprite",
+      "character": "minh",
+      "scenarioAge": 16,
+      "width": 1024,
+      "height": 1536,
+      "sha256": "b3daeb5cfa46c3d0196a7aa93831e5cd7e2771115c1923157c7e8cd60a197158"
+    },
+    {
+      "file": "chapter-02/scene/sc01-camp-budget-briefing.png",
+      "kind": "scene",
+      "character": "scene",
+      "scenarioAge": 16,
+      "width": 1672,
+      "height": 941,
+      "sha256": "625d5b0b29a4bef37579430222e06f343ef503fdb330180378529313e8e86059"
+    },
+    {
+      "file": "chapter-02/scene/sc02-dividing-envelopes.png",
+      "kind": "scene",
+      "character": "scene",
+      "scenarioAge": 16,
+      "width": 1672,
+      "height": 941,
+      "sha256": "6aa6e5690dcfd174655523862ae36a7513d36056eb003802571bc5310847893b"
+    },
+    {
+      "file": "chapter-02/scene/sc03-laptop-goal-planning.png",
+      "kind": "scene",
+      "character": "scene",
+      "scenarioAge": 16,
+      "width": 1672,
+      "height": 941,
+      "sha256": "d92cd1dfc4e27842ce8ba54ee8852949d8894037c9951c688e7d611f8b20db78"
+    },
+    {
+      "file": "chapter-02/scene/sc04-bicycle-surprise.png",
+      "kind": "scene",
+      "character": "scene",
+      "scenarioAge": 16,
+      "width": 1672,
+      "height": 941,
+      "sha256": "164a9745131de9011c24ddbc4cf4b777f4b5e2dc7d8b28e8c76496620b48afed"
+    },
+    {
+      "file": "chapter-02/scene/sc05-revising-budget.png",
+      "kind": "scene",
+      "character": "scene",
+      "scenarioAge": 16,
+      "width": 1672,
+      "height": 941,
+      "sha256": "bbe61a74597176110b4f7e7bc941258c7aa345580ac51f8d4c30967b0aa6c881"
+    },
+    {
+      "file": "chapter-03/char/an/an-neutral.png",
+      "kind": "sprite",
+      "character": "an",
+      "scenarioAge": 17,
+      "width": 1024,
+      "height": 1536,
+      "sha256": "c3d4863ef10c4c4b125aed3ba4220b8b2abad48caf0e4a7baed9b40a479458f9"
+    },
+    {
+      "file": "chapter-03/char/an/an-relieved.png",
+      "kind": "sprite",
+      "character": "an",
+      "scenarioAge": 17,
+      "width": 1024,
+      "height": 1536,
+      "sha256": "1f8c0adb2ec49c7ea8920c579c73dcea26b4cfef0c805d81d8e1be96caedced5"
+    },
+    {
+      "file": "chapter-03/char/an/an-thinking.png",
+      "kind": "sprite",
+      "character": "an",
+      "scenarioAge": 17,
+      "width": 1024,
+      "height": 1536,
+      "sha256": "c1851122bec0e4f3d49ea68e603e633f33b166f3b5f5e9faf6975a98409e634d"
+    },
+    {
+      "file": "chapter-03/char/an/an-worried-money.png",
+      "kind": "sprite",
+      "character": "an",
+      "scenarioAge": 17,
+      "width": 1024,
+      "height": 1536,
+      "sha256": "0670f15c10ecf28c31deb19b70f8dd50cc55ef423dfbd82b8eecb2db5380b396"
+    },
+    {
+      "file": "chapter-03/char/minh/minh-inviting.png",
+      "kind": "sprite",
+      "character": "minh",
+      "scenarioAge": 17,
+      "width": 1024,
+      "height": 1536,
+      "sha256": "fdf1336c171ef83cd525c0eed07a6e3428bfc2a7f6e25d5a3934a7d9181dd166"
+    },
+    {
+      "file": "chapter-03/char/minh/minh-neutral.png",
+      "kind": "sprite",
+      "character": "minh",
+      "scenarioAge": 17,
+      "width": 1024,
+      "height": 1536,
+      "sha256": "b0e2d71bff5bfd40d0d4cacc755af789079dd10e47874fc724fae3de395c13d7"
+    },
+    {
+      "file": "chapter-03/char/tu-van/tu-van-neutral.png",
+      "kind": "sprite",
+      "character": "tu-van",
+      "scenarioAge": null,
+      "width": 1024,
+      "height": 1536,
+      "sha256": "fa986baebb60612d4473f1f504b40bbd89d560bd22b868d54a4e576535fedbe3"
+    },
+    {
+      "file": "chapter-03/char/tu-van/tu-van-presenting.png",
+      "kind": "sprite",
+      "character": "tu-van",
+      "scenarioAge": null,
+      "width": 1024,
+      "height": 1536,
+      "sha256": "0cbc4679125201df300feaf785ad8d4466e8a380fa4bb09df3d3ed937b49888e"
+    },
+    {
+      "file": "chapter-03/scene/sc01-three-career-offers.png",
+      "kind": "scene",
+      "character": "scene",
+      "scenarioAge": 17,
+      "width": 1672,
+      "height": 941,
+      "sha256": "8da4c4ec9757dbdd93d75b790c74f0cfed7fedeb258b7a41da5ca2b65d33c16a"
+    },
+    {
+      "file": "chapter-03/scene/sc02-checking-course-source.png",
+      "kind": "scene",
+      "character": "scene",
+      "scenarioAge": 17,
+      "width": 1672,
+      "height": 941,
+      "sha256": "fc4cfb394a69fd2830c297012a114216f32fb088a9475fa1ead3030a0b968710"
+    },
+    {
+      "file": "chapter-03/scene/sc03-weekly-career-plan.png",
+      "kind": "scene",
+      "character": "scene",
+      "scenarioAge": 17,
+      "width": 1672,
+      "height": 941,
+      "sha256": "9862142691fadfb0bea99dcfc3803a13e78bd684cba9854c252d3170b8daf419"
+    },
+    {
+      "file": "chapter-03/scene/sc04-career-report.png",
+      "kind": "scene",
+      "character": "scene",
+      "scenarioAge": 17,
+      "width": 1672,
+      "height": 941,
+      "sha256": "dc79fe299f03478e01e47bfc816eb353061bffe09431f68854e6d2a0c5e03c71"
+    },
+    {
+      "file": "chapter-04/char/shop-assistant/shop-assistant-explaining.png",
+      "kind": "sprite",
+      "character": "shop-assistant",
+      "scenarioAge": null,
+      "width": 1024,
+      "height": 1536,
+      "sha256": "d11a4fd1c058e1977a1b254e081bcf638bf94c4a67b2bfbc48a6032f84922396"
+    },
+    {
+      "file": "chapter-04/char/shop-assistant/shop-assistant-neutral.png",
+      "kind": "sprite",
+      "character": "shop-assistant",
+      "scenarioAge": null,
+      "width": 1024,
+      "height": 1536,
+      "sha256": "172916ecb2a9ee9b2074716e89fa0382e93bfd223bdc9758e51a7b38a56b27f0"
+    },
+    {
+      "file": "chapter-04/scene/sc01-phone-needs.png",
+      "kind": "scene",
+      "character": "scene",
+      "scenarioAge": 16,
+      "width": 1672,
+      "height": 941,
+      "sha256": "724f52c7a043bcf14b2cd7467b6eb1f60d7a8a77ffffb85b879bad22d167f726"
+    },
+    {
+      "file": "chapter-04/scene/sc02-comparing-three-phones.png",
+      "kind": "scene",
+      "character": "scene",
+      "scenarioAge": 16,
+      "width": 1672,
+      "height": 941,
+      "sha256": "1517c2e7e5ca1e323ba88f945bd1b9e69fd17fc6ca57541238484396a1724359"
+    },
+    {
+      "file": "chapter-04/scene/sc03-questioning-receipt.png",
+      "kind": "scene",
+      "character": "scene",
+      "scenarioAge": 16,
+      "width": 1672,
+      "height": 941,
+      "sha256": "51b05f6573466ee5aa6b7b2f47f233945127e46c144cc83bfe1f0f21b88f0f7a"
+    },
+    {
+      "file": "chapter-04/scene/sc04-following-renewal.png",
+      "kind": "scene",
+      "character": "scene",
+      "scenarioAge": 16,
+      "width": 1672,
+      "height": 941,
+      "sha256": "f7f8c52460ef6c378edfda9f8dfe749485291f8e70b0d4f80882f6c42d67acd8"
+    },
+    {
+      "file": "chapter-05/char/bank-guide/bank-guide-explaining.png",
+      "kind": "sprite",
+      "character": "bank-guide",
+      "scenarioAge": null,
+      "width": 1024,
+      "height": 1536,
+      "sha256": "f41d17460f50031b3563eeab7a682cb571ae1ab04a9d43bfc8e4bff992998f8d"
+    },
+    {
+      "file": "chapter-05/char/bank-guide/bank-guide-neutral.png",
+      "kind": "sprite",
+      "character": "bank-guide",
+      "scenarioAge": null,
+      "width": 1024,
+      "height": 1536,
+      "sha256": "e2a14a00d864b339b81cead77b475b6ddfe94dc6a461ec43a870d6247e05f71a"
+    },
+    {
+      "file": "chapter-05/scene/sc01-two-accounts.png",
+      "kind": "scene",
+      "character": "scene",
+      "scenarioAge": 16,
+      "width": 1672,
+      "height": 941,
+      "sha256": "711fc04c9adc56914e0a1be132fce7c23ccbabcdf710f59ca73f0ee8648d8677"
+    },
+    {
+      "file": "chapter-05/scene/sc02-investigating-provider.png",
+      "kind": "scene",
+      "character": "scene",
+      "scenarioAge": 16,
+      "width": 1672,
+      "height": 941,
+      "sha256": "78f8d3d053fed3f87c586b1fdee87422df2b9aa8ab60ccfa8773e5c5f8c61b74"
+    },
+    {
+      "file": "chapter-05/scene/sc03-money-and-purchasing-power.png",
+      "kind": "scene",
+      "character": "scene",
+      "scenarioAge": 16,
+      "width": 1672,
+      "height": 941,
+      "sha256": "ab15e0e13c83b7d527bae629463f0d9e76c4b610e221cb7588c71ea7f3f4d233"
+    },
+    {
+      "file": "chapter-05/scene/sc04-planning-for-deadline.png",
+      "kind": "scene",
+      "character": "scene",
+      "scenarioAge": 16,
+      "width": 1672,
+      "height": 941,
+      "sha256": "a10a4c7d4788b22762a39c25d1c45f915473fdbafc57582875e660af2a73ca60"
+    },
+    {
+      "file": "chapter-06/char/an/an-neutral.png",
+      "kind": "sprite",
+      "character": "an",
+      "scenarioAge": 18,
+      "width": 1024,
+      "height": 1536,
+      "sha256": "9aa673c507f6010a1b94b27a4cb5b6be0f98b812d0979eb431b8dd5347d4dfed"
+    },
+    {
+      "file": "chapter-06/char/an/an-relieved.png",
+      "kind": "sprite",
+      "character": "an",
+      "scenarioAge": 18,
+      "width": 1024,
+      "height": 1536,
+      "sha256": "be195ab1f4398ef2714e764cf88ccd5f23748600f328aa73b795ada595f15225"
+    },
+    {
+      "file": "chapter-06/char/an/an-thinking.png",
+      "kind": "sprite",
+      "character": "an",
+      "scenarioAge": 18,
+      "width": 1024,
+      "height": 1536,
+      "sha256": "9a55d87ea56249a8897984fd9f38c61728608c8b56aa0de490557693e6f3845a"
+    },
+    {
+      "file": "chapter-06/char/an/an-worried-money.png",
+      "kind": "sprite",
+      "character": "an",
+      "scenarioAge": 18,
+      "width": 1024,
+      "height": 1536,
+      "sha256": "ac4cf4235c2fce9ce12146c41a723d15ac2a7976471efcc0c48f68727b844470"
+    },
+    {
+      "file": "chapter-06/char/minh/minh-inviting.png",
+      "kind": "sprite",
+      "character": "minh",
+      "scenarioAge": 18,
+      "width": 1024,
+      "height": 1536,
+      "sha256": "57c430c7dd4e1768d58037ac5a6c9f0d7582b214c0a3298a71b6f0955fa49b6c"
+    },
+    {
+      "file": "chapter-06/char/minh/minh-neutral.png",
+      "kind": "sprite",
+      "character": "minh",
+      "scenarioAge": 18,
+      "width": 1024,
+      "height": 1536,
+      "sha256": "24c55d5915d52067e4ed916e29d98d6ef550e167133251964e0de813ebbe6da7"
+    },
+    {
+      "file": "chapter-06/scene/sc01-school-computer-or-laptop.png",
+      "kind": "scene",
+      "character": "scene",
+      "scenarioAge": 18,
+      "width": 1672,
+      "height": 941,
+      "sha256": "e6b7bdf9616b24e543357e29365c936b7c2149f859987fe95defe68d9b28401b"
+    },
+    {
+      "file": "chapter-06/scene/sc02-comparing-loan-offers.png",
+      "kind": "scene",
+      "character": "scene",
+      "scenarioAge": 18,
+      "width": 1672,
+      "height": 941,
+      "sha256": "77b98f8c25784e6edbe76019a1f682e74b2678e236fb4bc68ffe8e81e022d833"
+    },
+    {
+      "file": "chapter-06/scene/sc03-bnpl-and-minimum-payment.png",
+      "kind": "scene",
+      "character": "scene",
+      "scenarioAge": 18,
+      "width": 1672,
+      "height": 941,
+      "sha256": "20dd0273f09d51742a36ca1d5270cc534abbbe7148843d5649c14261dc9df782"
+    },
+    {
+      "file": "chapter-06/scene/sc04-realistic-repayment-plan.png",
+      "kind": "scene",
+      "character": "scene",
+      "scenarioAge": 18,
+      "width": 1672,
+      "height": 941,
+      "sha256": "d6839e4bbce9bda15f335b4b2cee5750690f9195bdc310a9afa3740d58bb2d77"
+    }
+  ]
+}
