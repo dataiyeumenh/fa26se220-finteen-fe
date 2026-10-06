@@ -1,8 +1,9 @@
 import { useSyncExternalStore } from 'react'
-import { getSnapshot, subscribe } from './demoStore'
-import { resolveSession, workspaceDatabase } from './model'
+import { emptyDatabase } from './model'
+import { auth } from '../../api/auth.api'
+
+const db = emptyDatabase()
 export function useWorkspace() {
-  const state = useSyncExternalStore(subscribe, getSnapshot, getSnapshot)
-  const actor = resolveSession(state.db, state.session)
-  return { ...state, db: workspaceDatabase(state.db, actor), actor }
+  const account = useSyncExternalStore(auth.subscribe, auth.getSnapshot, auth.getSnapshot)
+  return { db, session: null, actor: account.actor, loading: account.loading, authError: account.error }
 }

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useWorkspace } from './useWorkspace'
-import { dispatch } from './demoStore'
+import { dispatch } from './pendingBackend'
 import { activeLearners } from './model'
 import { Heading, Empty, Modal, ActionForm, Notice } from './ui'
 import { dateLabel } from './format'

@@ -1,9 +1,14 @@
-import { Navigate, Route, Routes } from 'react-router-dom'
-import InternalLogin from './InternalLogin'
-import InternalLayout, { RequireStaff } from './InternalLayout'
-import { Chapters, ChapterDetail, ChapterDemo } from './Chapters'
-import { InternalOverview, StaffDirectory, Publications, AuditLog, AccountMonitor } from './Operations'
+import { Link, Navigate } from 'react-router-dom'
+import { useWorkspace } from '../workspace/useWorkspace'
 
 export default function InternalApp() {
-  return <Routes><Route path="login" element={<InternalLogin/>}/><Route element={<RequireStaff/>}><Route element={<InternalLayout/>}><Route index element={<InternalOverview/>}/><Route path="chapters" element={<Chapters/>}/><Route path="chapters/:id" element={<ChapterDetail/>}/><Route path="chapters/:id/demo" element={<ChapterDemo/>}/><Route path="audit" element={<AuditLog/>}/><Route element={<RequireStaff roles={['manager', 'admin']}/>}><Route path="staff" element={<StaffDirectory/>}/><Route path="publications" element={<Publications/>}/></Route><Route element={<RequireStaff roles={['admin']}/>}><Route path="accounts" element={<AccountMonitor/>}/></Route></Route></Route><Route path="*" element={<Navigate to="/internal" replace/>}/></Routes>
+  const { actor, loading } = useWorkspace()
+  if (loading) return <p role="status">Đang kiểm tra quyền truy cập…</p>
+  if (!actor) return <Navigate to="/login" replace />
+  if (!actor.roles?.includes('ADMIN')) return <Navigate to="/dashboard" replace />
+  return <main style={{ padding: '3rem', maxWidth: 720, margin: 'auto' }}>
+    <h1>Không gian nội bộ chưa kết nối API</h1>
+    <p>Đã gỡ tài khoản và đăng nhập demo. Chức năng này sẽ mở khi backend cung cấp API và phân quyền tương ứng.</p>
+    <Link to="/login">Đăng nhập tài khoản thật</Link>
+  </main>
 }
