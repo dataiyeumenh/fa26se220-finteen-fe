@@ -7,6 +7,7 @@ export function Heading({ eyebrow = 'FINTEEN · ĐỒNG HÀNH MỖI NGÀY', titl
 }
 export function Empty({ children }) { return <div className="ws-empty">{children}</div> }
 export function Notice({ text }) { return text ? <p className="ws-notice" role="status">{text}</p> : null }
+export function DataSourceNote({ api = false, children }) { return <div className={`ws-source-note ${api ? 'api' : 'mock'}`} role="note"><strong>{api ? 'ĐÃ KẾT NỐI API' : 'DỮ LIỆU MOCK · CHƯA CÓ API'}</strong><span>{children}</span></div> }
 export function Modal({ title, description, onClose, children }) {
   const { actor } = useWorkspace()
   return <Dialog open onOpenChange={open => { if (!open) onClose() }}><DialogContent className="ws-modal" data-ws-role={actor?.role || 'guest'}><DialogTitle>{title}</DialogTitle><DialogDescription>{description}</DialogDescription>{children}</DialogContent></Dialog>

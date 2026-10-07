@@ -38,7 +38,7 @@ export default function WorkspaceLayout({ children }) {
       <button className="ws-logout" onClick={() => { auth.logout(); navigate('/login') }}><LogOut size={18}/> Đăng xuất</button>
     </aside>
     <div className="ws-main"><header className="ws-top"><span>Không gian {learner ? 'học tập' : 'đồng hành'}</span><span className="ws-pill">{label}</span></header>
-      <div className="ws-demo">Tài khoản dùng API thật · Các tính năng học sinh và thanh toán chưa kết nối.</div>
+      <div className="ws-demo"><strong>Đã có API:</strong> tài khoản, quyền gói và bảng giá. <strong>Đang dùng mock:</strong> học sinh/slot, nhóm, báo cáo, Quiz và thanh toán. Dữ liệu mock chỉ để xem giao diện và sẽ được xóa khi API hoàn thiện.</div>
       <main className="ws-content">{children}</main>
     </div>
   </div>

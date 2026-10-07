@@ -134,6 +134,31 @@ test('Google exchange/link payload and conflict codes preserve session', async (
   assert.equal(calls.at(-1).headers.Authorization, 'Bearer account-token')
   assert.ok(auth.getSnapshot().actor)
 })
+
+test('admin API methods use the account token and documented payloads', async () => {
+  const { auth, queue, calls } = setup()
+  queue.push({ code: 0, result: token }, { code: 0, result: me })
+  await auth.login('admin@example.com', 'password')
+  queue.push(
+    { code: 0, result: [] },
+    { code: 0, result: { kind: 'PARENT', price: 99000, months: 3 } },
+    { code: 0, result: [] },
+    { code: 0, result: { orderCode: 123, status: 'PAID' } },
+    { code: 0, result: {} },
+  )
+  await auth.listPlans()
+  await auth.setPlanPrice('PARENT', 99000, 3)
+  await auth.listAdminTransactions({ status: 'PENDING', page: 1, size: 20 })
+  await auth.reconcileTransaction(123)
+  await auth.grantEntitlement({ accountId: '00000000-0000-0000-0000-000000000001', kind: 'TEACHER', months: 6, reason: ' Demo ' })
+  assert.equal(calls[2].headers.Authorization, undefined)
+  assert.equal(calls[3].method, 'PUT')
+  assert.deepEqual(JSON.parse(calls[3].body), { price: 99000, months: 3 })
+  assert.match(calls[4].url, /status=PENDING/)
+  assert.equal(calls[5].method, 'POST')
+  assert.deepEqual(JSON.parse(calls[6].body), { accountId: '00000000-0000-0000-0000-000000000001', kind: 'TEACHER', months: 6, reason: 'Demo' })
+  for (const call of calls.slice(3)) assert.equal(call.headers.Authorization, 'Bearer account-token')
+})
 test('network failures are retryable, not a silent success or fake demo login', async () => {
   const { auth, queue } = setup()
   queue.push({ code: 0, result: token }, new Error('Offline'))

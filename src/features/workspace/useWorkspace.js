@@ -1,9 +1,9 @@
 import { useSyncExternalStore } from 'react'
-import { emptyDatabase } from './model'
 import { auth } from '../../api/auth.api'
+import { workspaceMockData } from './mockData'
 
-const db = emptyDatabase()
 export function useWorkspace() {
   const account = useSyncExternalStore(auth.subscribe, auth.getSnapshot, auth.getSnapshot)
-  return { db, session: null, actor: account.actor, loading: account.loading, authError: account.error }
+  const db = workspaceMockData(account.actor)
+  return { db, session: null, actor: account.actor, loading: account.loading, authError: account.error, dataMode: account.actor?.source === 'api' ? 'api-with-mock-features' : 'mock' }
 }
