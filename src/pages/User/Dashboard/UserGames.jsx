@@ -13,9 +13,10 @@ import useUserDashboard from "./hooks/useUserDashboard";
 import { VisualNovelPlayer } from "./components/game/VisualNovelPlayer";
 import { loadChapter1V2RuntimeData } from "./data/chapter1V2RuntimeAdapter";
 import { loadChapter2V2RuntimeData } from "./data/chapter2V2RuntimeAdapter";
+import { loadChapter3V2RuntimeData } from "./data/chapter3V2RuntimeAdapter";
 import { usePublishedChapters } from "@/features/internal/hooks";
 
-const StoryPlayer = lazy(() => import('@/features/internal/StoryPlayer'));
+const StoryPlayer = lazy(() => import("@/features/internal/StoryPlayer"));
 
 const role = {
   id: "user",
@@ -53,7 +54,10 @@ export default function UserGames() {
   const chapterId = searchParams.get("chapter") || "1";
   const isChapterOne = chapterId === "1";
   const isChapterTwo = chapterId === "2";
-  const published = usePublishedChapters().find(chapter => chapter.number === Number(chapterId));
+  const isChapterThree = chapterId === "3";
+  const published = usePublishedChapters().find(
+    (chapter) => chapter.number === Number(chapterId),
+  );
   const { user, loading, error } = useUserDashboard();
   const [gameData, setGameData] = useState(null);
   const [runtimeError, setRuntimeError] = useState("");
@@ -67,7 +71,9 @@ export default function UserGames() {
           ? await loadChapter1V2RuntimeData()
           : isChapterTwo
             ? await loadChapter2V2RuntimeData()
-            : null;
+            : isChapterThree
+              ? await loadChapter3V2RuntimeData()
+              : null;
         if (mounted) {
           if (runtimeData) {
             setGameData(runtimeData);
@@ -84,11 +90,11 @@ export default function UserGames() {
       }
     };
 
-    if (isChapterOne || isChapterTwo) loadRuntime();
+    if (isChapterOne || isChapterTwo || isChapterThree) loadRuntime();
     return () => {
       mounted = false;
     };
-  }, [isChapterOne, isChapterTwo]);
+  }, [isChapterOne, isChapterTwo, isChapterThree]);
 
   return (
     <DashboardLayout role={role} navItems={navItems} user={user}>
@@ -124,60 +130,98 @@ export default function UserGames() {
         </div>
       )}
 
-      {!loading && !error && published && <Suspense fallback={<p role="status">Đang tải chương đã phát hành…</p>}><StoryPlayer key={`${published.id}-${published.version.number}`} version={published.version}/></Suspense>}
-      {!loading && !error && !published && gameData && (isChapterOne || isChapterTwo) && <VisualNovelPlayer key={gameData.id} data={gameData} />}
-
-      {!loading && !error && !published && !isChapterOne && !isChapterTwo && (
-        <div className="mx-auto max-w-5xl space-y-4">
-          <div className="rounded-3xl border border-amber-200 bg-white p-8 text-center">
-            <Gamepad2 className="mx-auto mb-4 h-12 w-12 text-amber-500" />
-            <h1 className="text-2xl font-bold text-gray-800">
-              Chọn chương để bắt đầu
-            </h1>
-            <p className="mt-3 text-gray-600">
-              Chọn Chapter 1 hoặc Chapter 2 để vào visual novel tương ứng.
-            </p>
-          </div>
-
-          <div className="grid gap-4 md:grid-cols-2">
-            <Link
-              to="/dashboard/demo/play?chapter=1"
-              className="rounded-3xl border border-amber-200 bg-white p-6 text-left transition hover:-translate-y-0.5 hover:shadow-lg"
-            >
-              <div className="text-xs font-bold uppercase tracking-widest text-amber-600">
-                Chapter 1
-              </div>
-              <h2 className="mt-2 text-2xl font-black text-gray-900">
-                Khám phá tiền tệ
-              </h2>
-              <p className="mt-2 text-sm text-gray-600">
-                Hành trình đầu tiên về nhu cầu, mong muốn và tư duy tài chính.
-              </p>
-            </Link>
-
-            <Link
-              to="/dashboard/demo/play?chapter=2"
-              className="rounded-3xl border border-sky-200 bg-white p-6 text-left transition hover:-translate-y-0.5 hover:shadow-lg"
-            >
-              <div className="text-xs font-bold uppercase tracking-widest text-sky-600">
-                Chapter 2
-              </div>
-              <h2 className="mt-2 text-2xl font-black text-gray-900">
-                Học sinh cấp 3 - Quản lý chi tiêu
-              </h2>
-              <p className="mt-2 text-sm text-gray-600">
-                Trải nghiệm trọ học, flash sale và bài học tiết kiệm trong đời sống cấp 3.
-              </p>
-            </Link>
-          </div>
-
-          <div className="text-center">
-            <Link to="/dashboard/user/lessons" className="inline-flex rounded-xl bg-amber-400 px-5 py-3 font-bold text-amber-950">
-              Về bản đồ chương
-            </Link>
-          </div>
-        </div>
+      {!loading && !error && published && (
+        <Suspense fallback={<p role="status">Đang tải chương đã phát hành…</p>}>
+          <StoryPlayer
+            key={`${published.id}-${published.version.number}`}
+            version={published.version}
+          />
+        </Suspense>
       )}
+      {!loading &&
+        !error &&
+        !published &&
+        gameData &&
+        (isChapterOne || isChapterTwo || isChapterThree) && (
+          <VisualNovelPlayer key={gameData.id} data={gameData} />
+        )}
+
+      {!loading &&
+        !error &&
+        !published &&
+        !isChapterOne &&
+        !isChapterTwo &&
+        !isChapterThree && (
+          <div className="mx-auto max-w-5xl space-y-4">
+            <div className="rounded-3xl border border-amber-200 bg-white p-8 text-center">
+              <Gamepad2 className="mx-auto mb-4 h-12 w-12 text-amber-500" />
+              <h1 className="text-2xl font-bold text-gray-800">
+                Chọn chương để bắt đầu
+              </h1>
+              <p className="mt-3 text-gray-600">
+                Chọn một chương để vào visual novel tương ứng.
+              </p>
+            </div>
+
+            <div className="grid gap-4 md:grid-cols-2">
+              <Link
+                to="/dashboard/demo/play?chapter=1"
+                className="rounded-3xl border border-amber-200 bg-white p-6 text-left transition hover:-translate-y-0.5 hover:shadow-lg"
+              >
+                <div className="text-xs font-bold uppercase tracking-widest text-amber-600">
+                  Chapter 1
+                </div>
+                <h2 className="mt-2 text-2xl font-black text-gray-900">
+                  Khám phá tiền tệ
+                </h2>
+                <p className="mt-2 text-sm text-gray-600">
+                  Hành trình đầu tiên về nhu cầu, mong muốn và tư duy tài chính.
+                </p>
+              </Link>
+
+              <Link
+                to="/dashboard/demo/play?chapter=2"
+                className="rounded-3xl border border-sky-200 bg-white p-6 text-left transition hover:-translate-y-0.5 hover:shadow-lg"
+              >
+                <div className="text-xs font-bold uppercase tracking-widest text-sky-600">
+                  Chapter 2
+                </div>
+                <h2 className="mt-2 text-2xl font-black text-gray-900">
+                  Học sinh cấp 3 - Quản lý chi tiêu
+                </h2>
+                <p className="mt-2 text-sm text-gray-600">
+                  Trải nghiệm trọ học, flash sale và bài học tiết kiệm trong đời
+                  sống cấp 3.
+                </p>
+              </Link>
+
+              <Link
+                to="/dashboard/demo/play?chapter=3"
+                className="rounded-3xl border border-violet-200 bg-white p-6 text-left transition hover:-translate-y-0.5 hover:shadow-lg"
+              >
+                <div className="text-xs font-bold uppercase tracking-widest text-violet-600">
+                  Chapter 3
+                </div>
+                <h2 className="mt-2 text-2xl font-black text-gray-900">
+                  Công việc đầu tiên
+                </h2>
+                <p className="mt-2 text-sm text-gray-600">
+                  Tìm kiếm cơ hội việc làm, so sánh việc thiết kế hoặc làm hoa
+                  hồng.
+                </p>
+              </Link>
+            </div>
+
+            <div className="text-center">
+              <Link
+                to="/dashboard/user/lessons"
+                className="inline-flex rounded-xl bg-amber-400 px-5 py-3 font-bold text-amber-950"
+              >
+                Về bản đồ chương
+              </Link>
+            </div>
+          </div>
+        )}
     </DashboardLayout>
   );
 }
