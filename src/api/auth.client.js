@@ -84,6 +84,22 @@ export function createAuthClient({ baseUrl, storage, contextStorage = storage, f
       logout()
     },
     googleLogin: idToken => signIn('/api/auth/login/google', { provider: 'GOOGLE', idToken }),
+    listPlans: () => request('/api/plans'),
+    setPlanPrice: (kind, price, months) => request(`/api/admin/plans/${encodeURIComponent(kind)}`, {
+      authenticated: true, method: 'PUT', body: { price, months },
+    }),
+    listAdminTransactions: ({ status = '', page = 0, size = 20 } = {}) => {
+      const query = new URLSearchParams({ page: String(page), size: String(size) })
+      if (status) query.set('status', status)
+      return request(`/api/admin/transactions?${query}`, { authenticated: true })
+    },
+    reconcileTransaction: orderCode => request(`/api/admin/transactions/${encodeURIComponent(orderCode)}/reconcile`, {
+      authenticated: true, method: 'POST',
+    }),
+    grantEntitlement: ({ accountId, kind, months, reason }) => request('/api/entitlements/grant', {
+      authenticated: true,
+      body: { accountId: accountId.trim(), kind, months, reason: reason.trim() },
+    }),
     setContext(context) {
       if (!['parent', 'teacher'].includes(context) || !state.actor?.plans.includes(context)) {
         throw new ApiError('Tài khoản không có quyền sử dụng phạm vi này.', 3004, 403)

@@ -16,7 +16,6 @@ export function RequireAccount({ kind, roles, plans }) {
     return <Navigate to={actor.role === 'guest' ? '/dashboard/plans' : home} replace />
   }
   if (plans && !plans.includes(actor.plan)) return <Navigate to={home} replace />
-  if (actor.source === 'api' && roles?.some(role => ['parent', 'teacher'].includes(role))) return <WorkspaceLayout><Empty>Chức năng học sinh, nhóm và báo cáo chưa kết nối API. Quyền gói học được đọc từ tài khoản thật; dữ liệu demo không dùng chung.</Empty></WorkspaceLayout>
   return <Outlet />
 }
 
