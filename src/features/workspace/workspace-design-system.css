@@ -22,11 +22,11 @@
 .ws[data-ws-page="learning"] { --page-primary:#3b82f6;--page-hover:#2563eb;--page-light:#eff6ff;--page-medium:#dbeafe; }
 
 /* Role identity is dominant across every page in that workspace. */
-.ws[data-ws-role="parent"] { --page-primary:#ffe33f;--page-accent-text:#806400;--page-hover:#f5cf18;--page-light:#fffdf0;--page-medium:#fff4a3; }
+.ws[data-ws-role="parent"] { --page-primary:#16a34a;--page-accent-text:#15803d;--page-hover:#15803d;--page-light:#f0fdf4;--page-medium:#dcfce7; }
 .ws[data-ws-role="teacher"] { --page-primary:#7c3aed;--page-hover:#6d28d9;--page-light:#f5f3ff;--page-medium:#ede9fe; }
 .ws[data-ws-role="kid"] { --page-primary:#ffe33f;--page-accent-text:#806400;--page-hover:#f5cf18;--page-light:#fffdf0;--page-medium:#fff4a3; }
 .ws[data-ws-role="guest"] { --page-primary:#16a34a;--page-hover:#15803d;--page-light:#f0fdf4;--page-medium:#dcfce7; }
-.ws:is([data-ws-role="kid"],[data-ws-role="parent"]) .ws-btn.primary { color:#25210a !important; }
+.ws[data-ws-role="kid"] .ws-btn.primary { color:#25210a !important; }
 
 .ws .ws-main,.ws .ws-content { background: var(--ds-page) !important; }
 .ws .ws-sidebar { width: 248px; gap: 20px; padding: 24px 16px; border-right: 1px solid var(--ds-border); background: #fff !important; }
@@ -149,17 +149,17 @@
 .ws[data-ws-page] .ws-stat { background: #fff !important; border-color: var(--ds-border) !important; }
 
 /* Bright-yellow brand roles need a darker foreground for accessible text. */
-.ws:is([data-ws-role="kid"],[data-ws-role="parent"]) .ws-sidebar nav a.active,
-.ws:is([data-ws-role="kid"],[data-ws-role="parent"]) .ws-sidebar nav a.active svg,
-.ws:is([data-ws-role="kid"],[data-ws-role="parent"]) .ws-sidebar nav a:hover,
-.ws:is([data-ws-role="kid"],[data-ws-role="parent"]) .ws-sidebar nav a:hover svg,
-.ws:is([data-ws-role="kid"],[data-ws-role="parent"]) .ws-heading small,
-.ws:is([data-ws-role="kid"],[data-ws-role="parent"]) .ws-text-link,
-.ws:is([data-ws-role="kid"],[data-ws-role="parent"]) .ws-pill,
-.ws:is([data-ws-role="kid"],[data-ws-role="parent"]) .ws-overview-kicker,
-.ws:is([data-ws-role="kid"],[data-ws-role="parent"]) .ws-overview-tile small { color:var(--page-accent-text) !important; }
-.ws:is([data-ws-role="kid"],[data-ws-role="parent"]) .ws-profile-avatar,
-.ws:is([data-ws-role="kid"],[data-ws-role="parent"]) .ws-overview-tile>span,
-.ws:is([data-ws-role="kid"],[data-ws-role="parent"]) .ws-account-strip>span,
-.ws:is([data-ws-role="kid"],[data-ws-role="parent"]) .ws-stat svg { color:var(--page-accent-text) !important; }
-.ws:is([data-ws-role="kid"],[data-ws-role="parent"]) .ws-context-switch .ws-role-button.active { color:#25210a; }
+.ws[data-ws-role="kid"] .ws-sidebar nav a.active,
+.ws[data-ws-role="kid"] .ws-sidebar nav a.active svg,
+.ws[data-ws-role="kid"] .ws-sidebar nav a:hover,
+.ws[data-ws-role="kid"] .ws-sidebar nav a:hover svg,
+.ws[data-ws-role="kid"] .ws-heading small,
+.ws[data-ws-role="kid"] .ws-text-link,
+.ws[data-ws-role="kid"] .ws-pill,
+.ws[data-ws-role="kid"] .ws-overview-kicker,
+.ws[data-ws-role="kid"] .ws-overview-tile small { color:var(--page-accent-text) !important; }
+.ws[data-ws-role="kid"] .ws-profile-avatar,
+.ws[data-ws-role="kid"] .ws-overview-tile>span,
+.ws[data-ws-role="kid"] .ws-account-strip>span,
+.ws[data-ws-role="kid"] .ws-stat svg { color:var(--page-accent-text) !important; }
+.ws[data-ws-role="kid"] .ws-context-switch .ws-role-button.active { color:#25210a; }
