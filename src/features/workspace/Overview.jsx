@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { RefreshCw } from 'lucide-react'
 import { useWorkspace } from './useWorkspace'
 import { PLANS } from './model'
-import { Heading, Empty, DataSourceNote } from './ui'
+import { Heading, Empty } from './ui'
 import AccountSettings from '../auth/AccountSettings'
 import { auth } from '../../api/auth.api'
 import PaymentResult from './PaymentResult'
@@ -18,7 +18,6 @@ const PLAN_COPY = {
 export function Overview() {
   const { actor } = useWorkspace()
   return <><Heading title={`Chào ${actor.name}!`} description="Bạn đã đăng nhập bằng tài khoản FinTeen."/>
-    <DataSourceNote api>Thông tin tài khoản và quyền gói bên dưới được đọc từ máy chủ.</DataSourceNote>
     <section className="ws-card"><h2>Tài khoản đã kết nối</h2>
       <p>Gói hiện có: {actor.plans.map(p => PLANS[p].name).join(' + ') || 'Chưa có gói'}.</p>
       <p>Các màn học sinh, báo cáo và Quiz đang hiển thị dữ liệu mẫu có ghi chú riêng.</p>
@@ -54,7 +53,6 @@ export function Plans() {
     }
   }
   return <><Heading title="Gói học tập" description="Chọn gói phù hợp để đồng hành cùng trẻ trên hành trình tài chính."><button className="ws-btn" onClick={() => void load()} disabled={loading}><RefreshCw size={16}/> Làm mới</button></Heading>
-    <DataSourceNote api>Tên gói, giá, thời hạn, quyền sở hữu và luồng thanh toán đều dùng API thật.</DataSourceNote>
     <section className="ws-card ws-current-plan"><div><strong>Gói đang có</strong><p>{actor.plans.map(p => PLANS[p].name).join(' + ') || 'Tài khoản của bạn hiện chưa có gói học tập.'}</p></div>{entitlementsLoading && !entitlements ? <span className="ws-plan-validity">Đang tải thời hạn…</span> : activeEntitlements.length > 0 && <div className="ws-plan-validities">{activeEntitlements.map(item => <span className="ws-plan-validity" key={item.id}><strong>{PLAN_NAME[item.kind] || item.kind}</strong><span>Kỳ hiện tại: {formatPlanDate(item.startsOn)} – {formatPlanDate(item.currentExpiresOn || item.expiresOn)}</span>{item.renewalCount > 0 && <span>Đã gia hạn đến: {formatPlanDate(item.expiresOn)}</span>}</span>)}</div>}</section>
     {error && <p className="ws-notice" role="alert">{error}</p>}
     {loading ? <Empty>Đang tải bảng giá…</Empty> : plans.length ? <div className="ws-grid two ws-public-plans">{plans.map(plan => {

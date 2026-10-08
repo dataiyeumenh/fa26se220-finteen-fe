@@ -17,7 +17,7 @@ export default function WorkspaceLayout({ children }) {
   const activeEntitlements = currentEntitlements(actor, entitlements)
   const expiringEntitlements = activeEntitlements.map(item => ({ ...item, daysLeft: daysUntilExpiry(item.expiresOn) })).filter(item => item.daysLeft !== null && item.daysLeft >= 0 && item.daysLeft <= 7)
   useEffect(() => { if (!learner) void auth.ensureEntitlements().catch(() => {}) }, [learner])
-  const label = learner ? 'Học sinh' : teacher ? 'Giáo viên' : paid ? 'Phụ huynh' : 'Guest · dùng thử'
+  const label = learner ? actor?.learnerRole === 'student' ? 'Học sinh' : 'Con trong gia đình' : teacher ? 'Giáo viên' : paid ? 'Phụ huynh' : 'Khách · dùng thử'
   const links = learner ? [
     ['/dashboard/kid', 'Góc học tập', Home],
     ['/dashboard/kid/lessons', 'Bài học', BookOpen],
@@ -43,7 +43,7 @@ export default function WorkspaceLayout({ children }) {
       <button className="ws-logout" onClick={() => { auth.logout(); navigate('/login') }}><LogOut size={18}/> Đăng xuất</button>
     </aside>
     <div className="ws-main"><header className="ws-top"><span>Không gian {learner ? 'học tập' : 'đồng hành'}</span><span className="ws-pill">{label}</span></header>
-      <div className="ws-demo"><strong>Đã có API:</strong> tài khoản, quyền gói, bảng giá và thanh toán. <strong>Đang dùng mock:</strong> học sinh/slot, nhóm, báo cáo và Quiz. Dữ liệu mock chỉ để xem giao diện và sẽ được xóa khi API hoàn thiện.</div>
+      <div className="ws-demo"><strong>Chưa kết nối máy chủ:</strong> báo cáo và bài kiểm tra hiện vẫn dùng dữ liệu minh họa.</div>
       <main className="ws-content">{expiringEntitlements.length > 0 && <aside className="ws-expiry-alert" role="alert"><AlertTriangle/><div><strong>Gói học tập sắp hết hạn</strong>{expiringEntitlements.map(item => <p key={item.id}>{PLAN_NAME[item.kind] || item.kind} {item.daysLeft === 0 ? 'hết hạn hôm nay' : `còn ${item.daysLeft} ngày`} (đến {formatPlanDate(item.expiresOn)}). <Link to="/dashboard/plans">Gia hạn ngay</Link></p>)}</div></aside>}{children}</main>
     </div>
   </div>
