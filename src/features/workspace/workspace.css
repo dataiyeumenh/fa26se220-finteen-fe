@@ -13,6 +13,7 @@
 .ws-sidebar nav a[aria-current=page] { font-weight:750; }
 .ws-identity svg { color:#7852b0; }
 .ws-logout:hover { background:#fff0e8; color:#a54c33; border-radius:10px; }
+.ws-brand>img { display:block; width:auto; max-width:170px; height:44px; object-fit:contain; }
 .ws-kid .ws-identity { background:#ddf5e9; }
 .ws-kid .ws-identity svg { color:#258167; }
 .ws-kid .ws-hero { background:#d9f3e7; border-color:#c0e4d3; }

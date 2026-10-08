@@ -1,0 +1,58 @@
+.ws-top { position: relative; z-index: 80; min-height: 82px; padding: 12px 32px; box-shadow: 0 5px 22px #1f29370a; }
+.ws-top-title { display: grid; gap: 3px; }
+.ws-top-title strong { color: #1f2937; font-size: 15px; }
+.ws-top-title small { color: #7b8494; font-size: 11px; }
+.ws-top-actions { display: flex; align-items: center; gap: 12px; }
+.ws-header-menu { position: relative; }
+.ws-notification-button { position: relative; display: grid; width: 44px; height: 44px; place-items: center; border: 1px solid #e1e6ec; border-radius: 14px; background: #fff; color: #4b5563; transition: .2s ease; }
+.ws-notification-button:hover { border-color: var(--role-border); background: var(--role-soft); color: var(--role-link); }
+.ws-notification-button>span { position: absolute; top: -5px; right: -5px; display: grid; min-width: 19px; height: 19px; place-items: center; border: 2px solid #fff; border-radius: 999px; background: #ef4444; color: #fff; font-size: 9px; font-weight: 800; }
+.ws-profile-trigger { display: flex; min-width: 210px; align-items: center; gap: 10px; padding: 7px 10px; border: 1px solid #e1e6ec; border-radius: 16px; background: #fff; text-align: left; transition: .2s ease; }
+.ws-profile-trigger:hover, .ws-profile-trigger[aria-expanded=true] { border-color: var(--role-border); background: var(--role-soft); }
+.ws-profile-avatar { display: grid; width: 36px; height: 36px; flex: none; place-items: center; border-radius: 12px; background: var(--role-color); color: var(--role-ink); font-size: 14px; font-weight: 800; }
+.ws-profile-avatar.large { width: 43px; height: 43px; border-radius: 14px; }
+.ws-profile-copy { display: grid; min-width: 0; flex: 1; line-height: 1.25; }
+.ws-profile-copy strong { max-width: 145px; overflow: hidden; color: #27313f; font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
+.ws-profile-copy small { color: #77808e; font-size: 10px; }
+.ws-profile-trigger>svg { color: #7b8494; transition: transform .2s ease; }
+.ws-profile-trigger>svg.is-open { transform: rotate(180deg); }
+.ws-header-dropdown { position: absolute; top: calc(100% + 10px); right: 0; width: 340px; overflow: hidden; border: 1px solid var(--role-border); border-radius: 18px; background: #fff; box-shadow: 0 18px 55px #1f293724; }
+.ws-dropdown-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 16px; border-bottom: 1px solid #e8ebef; }
+.ws-dropdown-heading strong { font-size: 13px; }
+.ws-dropdown-heading span { border-radius: 999px; background: var(--role-soft); padding: 4px 8px; color: var(--role-link); font-size: 9px; font-weight: 750; }
+.ws-notification-item { display: flex; align-items: flex-start; gap: 11px; padding: 14px 16px; color: #303846; }
+.ws-notification-item:hover { background: var(--role-soft); }
+.ws-notification-item>svg { flex: none; color: #d18b16; }
+.ws-notification-item div { display: grid; gap: 3px; }
+.ws-notification-item strong { font-size: 12px; }
+.ws-notification-item small { color: #77808e; font-size: 10px; }
+.ws-notification-empty { display: grid; justify-items: center; gap: 5px; padding: 28px 16px; text-align: center; }
+.ws-notification-empty svg { color: #22a06b; }
+.ws-notification-empty strong { font-size: 12px; }
+.ws-notification-empty small { color: #7b8494; font-size: 10px; }
+.ws-profile-summary { display: flex; align-items: center; gap: 11px; padding: 16px; background: var(--role-soft); }
+.ws-profile-summary>div { display: grid; gap: 3px; }
+.ws-profile-summary strong { font-size: 13px; }
+.ws-profile-summary small { color: var(--role-link); font-size: 10px; font-weight: 650; }
+.ws-dropdown-plans { padding: 4px 14px 12px; }
+.ws-dropdown-plans>.ws-dropdown-heading { padding-inline: 2px; }
+.ws-dropdown-plans>p { margin: 14px 2px 4px; font-size: 11px; }
+.ws-dropdown-plan { display: grid; gap: 4px; margin-top: 10px; padding: 11px; border: 1px solid var(--role-border); border-radius: 12px; background: #fff; }
+.ws-dropdown-plan>div { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.ws-dropdown-plan strong { font-size: 11px; }
+.ws-dropdown-plan span { border-radius: 999px; background: #dcf7e9; padding: 3px 7px; color: #237353; font-size: 8px; font-weight: 750; }
+.ws-dropdown-plan small { color: #717b89; font-size: 9px; }
+.ws-dropdown-plan small b { color: #3e4855; }
+.ws-dropdown-links { display: grid; border-top: 1px solid #e8ebef; padding: 7px; }
+.ws-dropdown-links a, .ws-dropdown-links button { display: flex; width: 100%; align-items: center; gap: 9px; padding: 10px; border-radius: 10px; color: #4b5563; font-size: 11px; font-weight: 650; text-align: left; }
+.ws-dropdown-links a:hover, .ws-dropdown-links button:hover { background: var(--role-soft); color: var(--role-link); }
+.ws-dropdown-links button:last-child { color: #b14b57; }
+
+@media(max-width: 760px) {
+  .ws .ws-top { display: flex; min-height: 68px; padding: 10px 14px; }
+  .ws-top-title small, .ws-profile-copy { display: none; }
+  .ws-profile-trigger { min-width: 0; padding: 5px; border: 0; background: transparent; }
+  .ws-profile-trigger>svg { display: none; }
+  .ws-notification-button { width: 40px; height: 40px; }
+  .ws-header-dropdown { position: fixed; top: 76px; right: 12px; width: min(340px, calc(100vw - 24px)); }
+}

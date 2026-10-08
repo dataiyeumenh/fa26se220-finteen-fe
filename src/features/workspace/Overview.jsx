@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { RefreshCw } from 'lucide-react'
+import { BarChart3, BookOpen, RefreshCw, ShieldCheck, Users, WalletCards } from 'lucide-react'
 import { useWorkspace } from './useWorkspace'
 import { PLANS } from './model'
 import { Heading, Empty } from './ui'
@@ -17,13 +17,11 @@ const PLAN_COPY = {
 
 export function Overview() {
   const { actor } = useWorkspace()
-  return <><Heading title={`Chào ${actor.name}!`} description="Bạn đã đăng nhập bằng tài khoản FinTeen."/>
-    <section className="ws-card"><h2>Tài khoản đã kết nối</h2>
-      <p>Gói hiện có: {actor.plans.map(p => PLANS[p].name).join(' + ') || 'Chưa có gói'}.</p>
-      <p>Các màn học sinh, báo cáo và Quiz đang hiển thị dữ liệu mẫu có ghi chú riêng.</p>
-      <Link className="ws-btn primary" to="/dashboard/settings">Quản lý tài khoản</Link>
-      {actor.role === 'guest' && <Link className="ws-btn" to="/dashboard/demo">Chơi thử</Link>}
-    </section></>
+  const teacher = actor.role === 'teacher'
+  return <><Heading title={`Chào ${actor.name}!`} description="Cùng xem nhanh không gian FinTeen của bạn hôm nay."/>
+    <section className="ws-overview-hero"><div><span className="ws-overview-kicker">TỔNG QUAN TÀI KHOẢN</span><h2>{teacher ? 'Lớp học đã sẵn sàng để tiếp tục' : 'Cùng đồng hành trên hành trình tài chính'}</h2><p>{teacher ? 'Quản lý học sinh, nhóm học và tiến độ tại cùng một nơi.' : 'Theo dõi các con, thời hạn gói và kết quả học tập thật thuận tiện.'}</p><Link className="ws-btn primary" to={teacher ? '/dashboard/groups' : '/dashboard/learners'}>{teacher ? 'Mở nhóm học sinh' : 'Xem danh sách các con'}</Link></div><BookOpen /></section>
+    <div className="ws-overview-grid"><Link to="/dashboard/plans" className="ws-overview-tile"><span><WalletCards /></span><div><small>Gói đang dùng</small><strong>{actor.plans.length || 0}</strong><p>{actor.plans.map(p => PLANS[p].name).join(' + ') || 'Chưa có gói học tập'}</p></div></Link><Link to="/dashboard/learners" className="ws-overview-tile"><span><Users /></span><div><small>{teacher ? 'Học sinh & slot' : 'Các con & slot'}</small><strong>Quản lý</strong><p>Xem hồ sơ và quyền truy cập</p></div></Link><Link to="/dashboard/reports" className="ws-overview-tile"><span><BarChart3 /></span><div><small>Tiến độ học tập</small><strong>Báo cáo</strong><p>Theo dõi kết quả theo thời gian</p></div></Link></div>
+    <section className="ws-card ws-account-strip"><span><ShieldCheck /></span><div><h2>Tài khoản đã kết nối</h2><p>Gói hiện có: {actor.plans.map(p => PLANS[p].name).join(' + ') || 'Chưa có gói'}.</p></div><Link className="ws-btn" to="/dashboard/settings">Quản lý tài khoản</Link>{actor.role === 'guest' && <Link className="ws-btn" to="/dashboard/demo">Chơi thử</Link>}</section></>
 }
 export function Plans() {
   const { actor, entitlements, entitlementsLoading } = useWorkspace()
@@ -58,7 +56,7 @@ export function Plans() {
     {loading ? <Empty>Đang tải bảng giá…</Empty> : plans.length ? <div className="ws-grid two ws-public-plans">{plans.map(plan => {
       const copy = PLAN_COPY[plan.kind] || { name: plan.kind, description: 'Gói học tập FinTeen.', benefits: [] }
       const owned = actor.plans.includes(String(plan.kind).toLowerCase())
-      return <article className={`ws-card ws-plan ${plan.kind === 'TEACHER' ? 'featured' : ''}`} key={plan.kind}>
+      return <article className={`ws-card ws-plan ws-plan-${String(plan.kind).toLowerCase()} ${plan.kind === 'TEACHER' ? 'featured' : ''}`} key={plan.kind}>
         <div className="ws-row"><span className="ws-pill">{plan.kind}</span>{owned && <span className="ws-owned-plan">Đang sử dụng</span>}</div>
         <h2>{copy.name}</h2><p>{copy.description}</p>
         <div className="ws-plan-number">{money(plan.price)} <span>/ {plan.months} tháng</span></div>
