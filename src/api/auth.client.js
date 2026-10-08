@@ -9,13 +9,14 @@ export function createAuthClient({ baseUrl, storage, contextStorage = storage, f
   let saved
   try { saved = JSON.parse(storage.getItem(key)) } catch { /* Invalid or unavailable storage. */ }
   let session = saved?.type === 'ACCOUNT' && saved.expiresAt > now() ? saved : null
-  let state = { actor: null, loading: Boolean(session), error: '' }
+  let state = { actor: null, entitlements: null, entitlementsLoading: false, loading: Boolean(session), error: '' }
+  let entitlementsRequest = null
   let revision = 0
   const listeners = new Set()
   const publish = value => { state = { ...state, ...value }; listeners.forEach(fn => fn()) }
   const persist = () => { try { storage.setItem(key, JSON.stringify(session)) } catch { /* In-memory session still works. */ } }
   if (saved && !session) persist()
-  const logout = () => { revision++; session = null; persist(); publish({ actor: null, loading: false, error: '' }) }
+  const logout = () => { revision++; session = null; entitlementsRequest = null; persist(); publish({ actor: null, entitlements: null, entitlementsLoading: false, loading: false, error: '' }) }
   const expired = () => { logout(); publish({ error: 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.' }) }
   async function request(path, { body, method = body === undefined ? 'GET' : 'POST', authenticated = false } = {}) {
     const token = session?.accessToken
@@ -72,9 +73,24 @@ export function createAuthClient({ baseUrl, storage, contextStorage = storage, f
     storeToken(result)
     await refresh()
   }
+  async function ensureEntitlements({ force = false } = {}) {
+    if (!session) return []
+    if (!force && Array.isArray(state.entitlements)) return state.entitlements
+    if (entitlementsRequest) return entitlementsRequest
+    publish({ entitlementsLoading: true })
+    entitlementsRequest = request('/api/entitlements', { authenticated: true })
+      .then(result => {
+        const entitlements = Array.isArray(result) ? result : []
+        publish({ entitlements, entitlementsLoading: false })
+        return entitlements
+      })
+      .catch(error => { publish({ entitlementsLoading: false }); throw error })
+      .finally(() => { entitlementsRequest = null })
+    return entitlementsRequest
+  }
   return {
     subscribe: fn => { listeners.add(fn); return () => listeners.delete(fn) }, getSnapshot: () => state,
-    logout, refresh, hasSession: () => Boolean(session),
+    logout, refresh, ensureEntitlements, hasSession: () => Boolean(session),
     checkExpiry: () => { if (session && session.expiresAt <= now()) expired() },
     register: ({ email, password, displayName, phone }) => request('/api/auth/register', { body: { email: email.trim(), password, displayName: displayName.trim(), ...(phone?.trim() ? { phone: phone.trim() } : {}) } }),
     login: (email, password) => signIn('/api/auth/login', { email: email.trim(), password }),
@@ -85,6 +101,12 @@ export function createAuthClient({ baseUrl, storage, contextStorage = storage, f
     },
     googleLogin: idToken => signIn('/api/auth/login/google', { provider: 'GOOGLE', idToken }),
     listPlans: () => request('/api/plans'),
+    createPayment: kind => request('/api/payments', { authenticated: true, body: { kind } }),
+    listPayments: ({ page = 0, size = 20 } = {}) => request(`/api/payments?page=${encodeURIComponent(page)}&size=${encodeURIComponent(size)}`, { authenticated: true }),
+    getPayment: orderCode => request(`/api/payments/${encodeURIComponent(orderCode)}`, { authenticated: true }),
+    cancelPayment: (orderCode, reason = '') => request(`/api/payments/${encodeURIComponent(orderCode)}/cancel${reason ? `?reason=${encodeURIComponent(reason)}` : ''}`, {
+      authenticated: true, method: 'POST',
+    }),
     setPlanPrice: (kind, price, months) => request(`/api/admin/plans/${encodeURIComponent(kind)}`, {
       authenticated: true, method: 'PUT', body: { price, months },
     }),

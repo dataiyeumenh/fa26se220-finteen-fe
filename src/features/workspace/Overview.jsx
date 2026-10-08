@@ -6,6 +6,8 @@ import { PLANS } from './model'
 import { Heading, Empty, DataSourceNote } from './ui'
 import AccountSettings from '../auth/AccountSettings'
 import { auth } from '../../api/auth.api'
+import PaymentResult from './PaymentResult'
+import { currentEntitlements, formatPlanDate, PLAN_NAME } from './entitlements'
 
 const money = value => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND', maximumFractionDigits: 0 }).format(Number(value || 0))
 const PLAN_COPY = {
@@ -25,10 +27,12 @@ export function Overview() {
     </section></>
 }
 export function Plans() {
-  const { actor } = useWorkspace()
+  const { actor, entitlements, entitlementsLoading } = useWorkspace()
   const [plans, setPlans] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [buying, setBuying] = useState('')
+  const [payment, setPayment] = useState(null)
   const load = async () => {
     setLoading(true); setError('')
     try { setPlans(await auth.listPlans() || []) }
@@ -37,10 +41,21 @@ export function Plans() {
   }
   // Public plan prices are loaded independently from the account's owned entitlements.
   // eslint-disable-next-line react-hooks/set-state-in-effect
-  useEffect(() => { void load() }, [])
+  useEffect(() => { void load(); void auth.ensureEntitlements().catch(() => {}) }, [])
+  const activeEntitlements = currentEntitlements(actor, entitlements)
+  const buy = async kind => {
+    setBuying(kind); setError('')
+    try {
+      const created = await auth.createPayment(kind)
+      setPayment(created)
+      setBuying('')
+    } catch (buyError) {
+      setError(buyError.message); setBuying('')
+    }
+  }
   return <><Heading title="Gói học tập" description="Chọn gói phù hợp để đồng hành cùng trẻ trên hành trình tài chính."><button className="ws-btn" onClick={() => void load()} disabled={loading}><RefreshCw size={16}/> Làm mới</button></Heading>
-    <DataSourceNote api>Tên gói, giá, thời hạn và gói tài khoản đang sở hữu là dữ liệu thật. Nút mua gói chưa có API nên đang bị khóa.</DataSourceNote>
-    <section className="ws-card ws-current-plan"><strong>Gói đang có</strong><p>{actor.plans.map(p => PLANS[p].name).join(' + ') || 'Tài khoản của bạn hiện chưa có gói học tập.'}</p></section>
+    <DataSourceNote api>Tên gói, giá, thời hạn, quyền sở hữu và luồng thanh toán đều dùng API thật.</DataSourceNote>
+    <section className="ws-card ws-current-plan"><div><strong>Gói đang có</strong><p>{actor.plans.map(p => PLANS[p].name).join(' + ') || 'Tài khoản của bạn hiện chưa có gói học tập.'}</p></div>{entitlementsLoading && !entitlements ? <span className="ws-plan-validity">Đang tải thời hạn…</span> : activeEntitlements.length > 0 && <div className="ws-plan-validities">{activeEntitlements.map(item => <span className="ws-plan-validity" key={item.id}><strong>{PLAN_NAME[item.kind] || item.kind}</strong><span>Kỳ hiện tại: {formatPlanDate(item.startsOn)} – {formatPlanDate(item.currentExpiresOn || item.expiresOn)}</span>{item.renewalCount > 0 && <span>Đã gia hạn đến: {formatPlanDate(item.expiresOn)}</span>}</span>)}</div>}</section>
     {error && <p className="ws-notice" role="alert">{error}</p>}
     {loading ? <Empty>Đang tải bảng giá…</Empty> : plans.length ? <div className="ws-grid two ws-public-plans">{plans.map(plan => {
       const copy = PLAN_COPY[plan.kind] || { name: plan.kind, description: 'Gói học tập FinTeen.', benefits: [] }
@@ -50,10 +65,11 @@ export function Plans() {
         <h2>{copy.name}</h2><p>{copy.description}</p>
         <div className="ws-plan-number">{money(plan.price)} <span>/ {plan.months} tháng</span></div>
         <ul>{copy.benefits.map(benefit => <li key={benefit}>{benefit}</li>)}</ul>
-        <button className="ws-btn primary" disabled>{owned ? 'Gói hiện tại' : 'Mua gói · Sắp mở'}</button>
-        <small className="ws-plan-note">Tính năng mua gói sẽ được mở khi API thanh toán sẵn sàng.</small>
+        <button className="ws-btn primary" disabled={Boolean(buying)} onClick={() => void buy(plan.kind)}>{buying === plan.kind ? 'Đang tạo đơn…' : owned ? 'Gia hạn gói' : 'Mua gói ngay'}</button>
+        <small className="ws-plan-note">Mã VietQR và thông tin chuyển khoản sẽ hiển thị ngay tại đây.</small>
       </article>
     })}</div> : <Empty>Hiện chưa có gói nào được mở bán.</Empty>}
+    {payment && <div className="payment-overlay" role="dialog" aria-modal="true" aria-label="Thanh toán gói học tập"><PaymentResult payment={payment} onClose={() => setPayment(null)}/></div>}
   </>
 }
 export function Settings() {

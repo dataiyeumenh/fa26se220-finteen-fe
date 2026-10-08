@@ -159,6 +159,31 @@ test('admin API methods use the account token and documented payloads', async ()
   assert.deepEqual(JSON.parse(calls[6].body), { accountId: '00000000-0000-0000-0000-000000000001', kind: 'TEACHER', months: 6, reason: 'Demo' })
   for (const call of calls.slice(3)) assert.equal(call.headers.Authorization, 'Bearer account-token')
 })
+test('payment API creates a VietQR order, lists, checks and cancels it', async () => {
+  const { auth, queue, calls } = setup()
+  queue.push({ code: 0, result: token }, { code: 0, result: { ...me, plans: [] } })
+  await auth.login('user1@finteen.com', 'password')
+  queue.push(
+    { code: 0, message: 'OK', result: { orderCode: 1791234567890123, qrCode: '000201010212385700...', bin: '970422', accountNumber: '123456', accountName: 'FINTEEN', amount: 2000, description: 'FinTeen goi phu huynh', expiresAt: '2026-10-09T01:44:02Z' } },
+    { code: 0, message: 'OK', result: [{ orderCode: 1791234567890123, status: 'PENDING' }] },
+    { code: 0, message: 'OK', result: { orderCode: 1791234567890123, status: 'PENDING', amount: 2000, paidAt: null } },
+    { code: 0, message: 'OK' },
+  )
+  const created = await auth.createPayment('PARENT')
+  const history = await auth.listPayments({ page: 0, size: 20 })
+  const checked = await auth.getPayment(created.orderCode)
+  const cancelled = await auth.cancelPayment(created.orderCode, 'Người dùng hủy')
+  assert.equal(created.qrCode, '000201010212385700...')
+  assert.equal(history[0].status, 'PENDING')
+  assert.equal(checked.status, 'PENDING')
+  assert.equal(cancelled, undefined)
+  assert.deepEqual(JSON.parse(calls[2].body), { kind: 'PARENT' })
+  assert.match(calls[3].url, /\/api\/payments\?page=0&size=20$/)
+  assert.match(calls[4].url, /\/api\/payments\/1791234567890123$/)
+  assert.match(calls[5].url, /\/cancel\?reason=Ng%C6%B0%E1%BB%9Di%20d%C3%B9ng%20h%E1%BB%A7y$/)
+  assert.equal(calls[5].method, 'POST')
+  for (const call of calls.slice(2)) assert.equal(call.headers.Authorization, 'Bearer account-token')
+})
 test('network failures are retryable, not a silent success or fake demo login', async () => {
   const { auth, queue } = setup()
   queue.push({ code: 0, result: token }, new Error('Offline'))
