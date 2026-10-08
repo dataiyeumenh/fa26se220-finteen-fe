@@ -1,0 +1,16 @@
+.admin-shell { --admin-primary:#7c3aed;--admin-light:#f5f3ff;--admin-border:#e2e8f0;--admin-text:#0f172a;--admin-muted:#64748b; background:#f8fafc; color:var(--admin-text); }
+.admin-sidebar { width:248px; padding:24px 16px; background:#fff; color:var(--admin-text); border-right:1px solid var(--admin-border); }
+.admin-brand { min-height:52px; padding:0 8px 14px; border-bottom:1px solid var(--admin-border); color:var(--admin-text); }
+.admin-brand>b { width:40px;height:40px;border-radius:12px;background:#ede9fe;color:#6d28d9; }.admin-brand small{color:#94a3b8}
+.admin-user { margin:22px 0 16px;padding:14px;border:1px solid #ddd6fe;border-radius:14px;background:#f5f3ff; }.admin-user svg{color:#7c3aed}.admin-user small{color:#64748b}
+.admin-sidebar nav { gap:6px; }.admin-sidebar nav button,.admin-logout { min-height:44px;border-radius:11px;color:#475569; }.admin-sidebar nav button svg{color:#64748b}
+.admin-sidebar nav button:hover,.admin-sidebar nav button.active { background:#f5f3ff;color:#6d28d9; }.admin-sidebar nav button.active{box-shadow:inset 3px 0 #7c3aed}.admin-sidebar nav button.active svg{color:#7c3aed}
+.admin-logout{border-top:1px solid var(--admin-border)}
+.admin-topbar { height:72px;padding:0 32px;border-color:var(--admin-border);background:#fff; }.admin-admin-badge{background:#ede9fe;color:#6d28d9}
+.admin-content { max-width:1440px;padding:32px; }.admin-heading{margin-bottom:28px}.admin-heading h1{color:var(--admin-text);font-size:34px;font-weight:700}.admin-heading p{color:var(--admin-muted)}
+.admin-card { border:1px solid var(--admin-border);border-radius:16px;background:#fff;box-shadow:0 1px 3px #0f172a0f; }.admin-plan-card{padding:24px}.admin-card-title h2{font-size:19px}.admin-plan-icon,.admin-plan-icon.teacher{background:#ede9fe;color:#7c3aed}
+.admin-shell input,.admin-shell select,.admin-shell textarea { min-height:42px;border-color:#cbd5e1;border-radius:10px; }.admin-shell input:focus,.admin-shell select:focus,.admin-shell textarea:focus{border-color:#7c3aed;outline:3px solid #7c3aed1f;outline-offset:0}
+.admin-primary,.admin-secondary { min-height:42px;border-radius:10px;font-weight:600; }.admin-primary{border-color:#7c3aed;background:#7c3aed;color:#fff}.admin-primary:hover{background:#6d28d9}.admin-secondary:hover{border-color:#7c3aed;background:#f5f3ff;color:#6d28d9}
+.admin-table-card th{background:#f8fafc;color:#475569}.admin-table-card td{border-color:var(--admin-border)}.admin-table-card tbody tr:hover{background:#f5f3ff}
+.admin-notice{border-color:#dbeafe;background:#eff6ff;color:#1e40af}.admin-notice.success{border-color:#bbf7d0;background:#f0fdf4;color:#166534}.admin-notice.error{border-color:#fecdd3;background:#fff1f2;color:#9f1239}
+@media(max-width:680px){.admin-content{padding:20px 16px}.admin-heading h1{font-size:30px}}

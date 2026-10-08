@@ -5,6 +5,8 @@
   --role-ink: #433c12;
   --role-link: #806000;
   --role-soft: #fff8cb;
+  --role-sidebar: #fff3a5;
+  --role-identity: #ffed87;
   --role-canvas: #fffdf4;
   --role-border: #ebde93;
 }
@@ -14,6 +16,8 @@
   --role-ink: #124b3b;
   --role-link: #206c53;
   --role-soft: #e4f8ef;
+  --role-sidebar: #c9f3e2;
+  --role-identity: #b5ead5;
   --role-canvas: #f6fcf9;
   --role-border: #b8e6d2;
 }
@@ -23,20 +27,37 @@
   --role-ink: #352258;
   --role-link: #6944a3;
   --role-soft: #f0e9ff;
+  --role-sidebar: #e5d8ff;
+  --role-identity: #d9c7fc;
   --role-canvas: #faf8ff;
   --role-border: #dac9f5;
 }
 
 @media screen {
-  .ws[data-ws-role] { background: var(--role-canvas); }
+  .ws[data-ws-role] { background: #fff; }
+  .ws[data-ws-role] .ws-main,
+  .ws[data-ws-role] .ws-content { background: #fff; }
+  .ws[data-ws-role] .ws-sidebar {
+    background: var(--role-sidebar);
+    border-right-color: var(--role-border);
+  }
+  .ws[data-ws-role] .ws-brand {
+    padding: 4px 8px 14px;
+    border-bottom: 1px solid var(--role-border);
+  }
+  .ws[data-ws-role] .ws-brand img {
+    filter: drop-shadow(0 3px 7px color-mix(in srgb, var(--role-link) 14%, transparent));
+  }
   .ws[data-ws-role] .ws-brand>span,
   .ws[data-ws-role] .ws-sidebar nav a.active {
     background: var(--role-color); color: var(--role-ink);
   }
+  .ws[data-ws-role] .ws-sidebar nav a:not(.active) { color: var(--role-ink); }
   .ws[data-ws-role] .ws-sidebar nav a svg { color: var(--role-link); }
   .ws[data-ws-role] .ws-sidebar nav a.active svg { color: var(--role-ink); }
-  .ws[data-ws-role] .ws-sidebar nav a:hover:not(.active) { background: var(--role-soft); }
-  .ws[data-ws-role] .ws-identity { background: var(--role-soft); border: 1px solid var(--role-border); }
+  .ws[data-ws-role] .ws-sidebar nav a:hover:not(.active) { background: rgb(255 255 255 / 55%); }
+  .ws[data-ws-role] .ws-logout { color: var(--role-link); }
+  .ws[data-ws-role] .ws-identity { background: var(--role-identity); border: 1px solid var(--role-border); }
   .ws[data-ws-role] .ws-identity svg,
   .ws[data-ws-role] .ws-identity small,
   .ws[data-ws-role] .ws-heading small { color: var(--role-link); }

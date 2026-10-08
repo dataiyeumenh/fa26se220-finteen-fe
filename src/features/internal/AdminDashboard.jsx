@@ -3,6 +3,7 @@ import { BadgeDollarSign, CheckCircle2, CreditCard, Gift, LogOut, RefreshCw, Sav
 import { auth } from '../../api/auth.api'
 import { useWorkspace } from '../workspace/useWorkspace'
 import './admin.css'
+import './admin-modern.css'
 
 const PLAN_KINDS = ['PARENT', 'TEACHER']
 const STATUS_LABELS = { PENDING: 'Chờ thanh toán', PAID: 'Đã thanh toán', FAILED: 'Thất bại' }

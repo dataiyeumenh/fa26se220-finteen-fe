@@ -66,10 +66,14 @@ export default function AuthForm({ registration = false }) {
         await auth.register({ displayName: form.get('name'), email: form.get('identifier'), phone: form.get('phone'), password: form.get('secret') })
         setEmail(String(form.get('identifier')).trim()); setOtpMode('verify'); setCooldown(60)
         return
-      } else if (kid) { throw new Error('Đăng nhập học sinh chưa kết nối API SLOT. Không còn đăng nhập demo.') }
+      } else if (kid) { await auth.slotLogin(form.get('identifier'), form.get('secret')) }
       else { await auth.login(form.get('identifier'), form.get('secret')) }
       navigate(destination(auth.getSnapshot().actor), { replace: true })
-    } catch (err) { setError(err.code === 3016 ? 'Tài khoản tạm khóa do nhập sai nhiều lần. Vui lòng thử lại sau 15 phút.' : err.message); if (err.code === 3011) { setEmail(String(form.get('identifier')).trim()); setOtpMode('verify') } } finally { setBusy(false) }
+    } catch (err) {
+      const kidErrors = { 3002: 'Sai PIN, bạn thử lại nhé.', 3007: 'Không tìm thấy mã này. Hãy kiểm tra lại mã được cấp.', 3008: 'PIN đã bị khóa do nhập sai nhiều lần. Vui lòng đợi 15 phút rồi thử lại.', 3009: 'Nhóm hoặc lớp học đã kết thúc. Mã này không còn sử dụng được.' }
+      setError(kid && kidErrors[err.code] ? kidErrors[err.code] : err.code === 3016 ? 'Tài khoản tạm khóa do nhập sai nhiều lần. Vui lòng thử lại sau 15 phút.' : err.message)
+      if (err.code === 3011) { setEmail(String(form.get('identifier')).trim()); setOtpMode('verify') }
+    } finally { setBusy(false) }
   }
 
   const emailAction = async action => {
@@ -94,15 +98,15 @@ export default function AuthForm({ registration = false }) {
     <p className="ft-auth-intro">{registration ? 'Dành cho phụ huynh và giáo viên. Tạo tài khoản để cùng các bạn nhỏ khám phá FinTeen.' : kid ? 'Nhập mã và PIN được cấp để vào góc học tập của bạn.' : 'Đăng nhập để đồng hành cùng con và học sinh.'}</p>
     {!registration && <div className="ft-auth-tabs" role="group" aria-label="Loại tài khoản">
       <button type="button" disabled={busy} aria-pressed={!kid} onClick={() => chooseKind('adult')}><Users size={19} aria-hidden="true" /><span>Người lớn<small>Phụ huynh / Giáo viên</small></span></button>
-      <button type="button" disabled={busy} aria-pressed={kid} onClick={() => chooseKind('learner')}><GraduationCap size={20} aria-hidden="true" /><span>Kid<small>Học sinh 13–18 tuổi</small></span></button>
+      <button type="button" disabled={busy} aria-pressed={kid} onClick={() => chooseKind('learner')}><GraduationCap size={20} aria-hidden="true" /><span>Trẻ em<small>Học sinh 13–18 tuổi</small></span></button>
     </div>}
-    {registration && <div className="ft-register-note"><span className="ft-icon-circle ft-lime"><GraduationCap size={20} aria-hidden="true" /></span><p>Các bạn học sinh đã có mã?<br /><Link to="/login?as=kid">Đăng nhập Kid tại đây <ArrowRight size={14} aria-hidden="true" /></Link></p></div>}
+    {registration && <div className="ft-register-note"><span className="ft-icon-circle ft-lime"><GraduationCap size={20} aria-hidden="true" /></span><p>Các bạn nhỏ đã có mã?<br /><Link to="/login?as=kid">Đăng nhập cho trẻ tại đây <ArrowRight size={14} aria-hidden="true" /></Link></p></div>}
     <form key={`${kind}-${registration}`} className="ft-account-fields" onSubmit={onSubmit} aria-busy={busy} aria-describedby={error ? 'ft-auth-error' : undefined}>
-      <fieldset disabled={busy || kid}>
+      <fieldset disabled={busy}>
         {registration && <label htmlFor="ft-name">Họ và tên<input id="ft-name" name="name" placeholder="Nhập họ và tên của bạn" autoComplete="name" required maxLength={80} /></label>}
-        <label htmlFor="ft-identifier">{kid ? 'Mã đăng nhập' : 'Địa chỉ email'}<input id="ft-identifier" name="identifier" type={kid ? 'text' : 'email'} onChange={event => { if (!kid) setEmail(event.target.value) }} autoComplete="username" autoCapitalize="none" spellCheck={false} placeholder={kid ? 'VD: FT-XXXXXXXXXX' : 'ban@example.com'} required /></label>
+        <label htmlFor="ft-identifier">{kid ? 'Mã đăng nhập' : 'Địa chỉ email'}<input id="ft-identifier" name="identifier" type={kid ? 'text' : 'email'} onChange={event => { if (!kid) setEmail(event.target.value) }} autoComplete="username" autoCapitalize="characters" spellCheck={false} maxLength={kid ? 16 : undefined} placeholder={kid ? 'VD: K7MPQ2XA' : 'ban@example.com'} required /></label>
         {registration && <label htmlFor="ft-phone">Số điện thoại (không bắt buộc)<input id="ft-phone" name="phone" type="tel" inputMode="tel" autoComplete="tel" placeholder="Nhập số điện thoại của bạn" /></label>}
-        <PasswordField id="ft-secret" label={kid ? 'Mã PIN' : 'Mật khẩu'} name="secret" placeholder={kid ? 'Nhập PIN 4–6 chữ số' : 'Nhập mật khẩu của bạn'} autoComplete={registration ? 'new-password' : 'current-password'} minLength={kid ? 4 : 8} maxLength={kid ? 6 : undefined} pattern={kid ? '[0-9]{4,6}' : undefined} inputMode={kid ? 'numeric' : undefined} hint={registration ? 'Sử dụng ít nhất 8 ký tự.' : undefined} required />
+        <PasswordField id="ft-secret" label={kid ? 'Mã PIN' : 'Mật khẩu'} name="secret" placeholder={kid ? 'Nhập PIN 6 chữ số' : 'Nhập mật khẩu của bạn'} autoComplete={registration ? 'new-password' : 'current-password'} minLength={kid ? 6 : 8} maxLength={kid ? 6 : undefined} pattern={kid ? '[0-9]{6}' : undefined} inputMode={kid ? 'numeric' : undefined} hint={registration ? 'Sử dụng ít nhất 8 ký tự.' : undefined} required />
         {registration && <PasswordField id="ft-confirm" label="Xác nhận mật khẩu" name="confirm" placeholder="Nhập lại mật khẩu vừa tạo" autoComplete="new-password" required minLength={8} />}
         {kid && <div className="ft-pin-note"><KeyRound size={18} aria-hidden="true" /><p>Chưa có mã hoặc quên PIN? Nhờ phụ huynh hoặc giáo viên tạo tài khoản, đặt lại PIN giúp bạn nhé.</p></div>}
         {error && <p className="ft-auth-error" id="ft-auth-error" role="alert">{error}</p>}
@@ -125,6 +129,5 @@ export default function AuthForm({ registration = false }) {
       {auth.getSnapshot().error && !error && <p role="alert">{auth.getSnapshot().error}</p>}
     </div>}
     <p className="ft-auth-switch">{registration ? 'Bạn đã có tài khoản?' : 'Bạn là phụ huynh hoặc giáo viên mới?'} <Link to={registration ? '/login' : '/register'}>{registration ? 'Đăng nhập' : 'Đăng ký ngay'} <ArrowUpRight size={15} aria-hidden="true" /></Link></p>
-    {kid && <p role="status">Đăng nhập học sinh đang chờ kết nối API SLOT. Tài khoản và PIN demo đã ngừng sử dụng.</p>}
   </section>
 }
