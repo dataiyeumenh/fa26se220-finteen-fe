@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { BarChart3, BookOpen, RefreshCw, ShieldCheck, Users, WalletCards } from 'lucide-react'
+import { Award, BarChart3, BookOpen, Clock3, Coins, PlayCircle, RefreshCw, ShieldCheck, Users, WalletCards } from 'lucide-react'
 import { useWorkspace } from './useWorkspace'
 import { PLANS } from './model'
-import { Heading, Empty } from './ui'
+import { Heading, Empty, DataSourceNote } from './ui'
 import AccountSettings from '../auth/AccountSettings'
 import { auth } from '../../api/auth.api'
 import PaymentResult from './PaymentResult'
@@ -73,5 +73,21 @@ export function Settings() {
   return <AccountSettings actor={actor}/>
 }
 export function LearnerHome() {
-  return <Empty>Không gian học sinh đang chờ kết nối API SLOT.</Empty>
+  const { actor } = useWorkspace()
+  const isStudent = actor.learnerRole === 'student'
+  return <>
+    <Heading title={`Chào ${actor.name}!`} description={isStudent ? 'Sẵn sàng tiếp tục hành trình tài chính hôm nay.' : 'Cùng khám phá những bài học tài chính gần gũi mỗi ngày.'}/>
+    <DataSourceNote>Dashboard minh họa dữ liệu BE cần trả về: hồ sơ trẻ, ngữ cảnh gia đình/lớp học, chương đang học, phần trăm tiến độ, bài Quiz chờ làm, điểm thưởng, huy hiệu và hoạt động gần đây.</DataSourceNote>
+    <section className="ws-learner-hero ws-card">
+      <div><span className="ws-overview-kicker">TIẾP TỤC HÀNH TRÌNH</span><h2>Chương 3 · Tiền đến từ đâu?</h2><p>Bạn đã hoàn thành 3 trong 8 chương. Hoàn thành bài tiếp theo để nhận thêm 40 đồng FinCoin.</p><div className="ws-progress-track" aria-label="Tiến độ học tập 38%"><span style={{ width: '38%' }}/></div><small>38% hành trình đã hoàn thành</small><Link className="ws-btn primary" to="/dashboard/kid/play?chapter=3"><PlayCircle size={17}/> Học tiếp</Link></div>
+      <div className="ws-learner-hero-score"><strong>03</strong><span>/ 08 chương</span></div>
+    </section>
+    <div className="ws-learner-stats">
+      <article className="ws-card ws-learner-stat"><BookOpen/><div><small>Bài đã hoàn thành</small><strong>6 bài</strong><p>2 bài trong tuần này</p></div></article>
+      <article className="ws-card ws-learner-stat"><Clock3/><div><small>{isStudent ? 'Quiz đang chờ' : 'Thử thách đang chờ'}</small><strong>{isStudent ? '2 bài' : '1 bài'}</strong><p>Hoàn thành trước cuối tuần</p></div></article>
+      <article className="ws-card ws-learner-stat"><Coins/><div><small>FinCoin hiện có</small><strong>240</strong><p>+40 từ bài học gần nhất</p></div></article>
+      <article className="ws-card ws-learner-stat"><Award/><div><small>Huy hiệu</small><strong>4</strong><p>Sắp đạt huy hiệu Tiết kiệm</p></div></article>
+    </div>
+    <section className="ws-card ws-learner-activity"><div className="ws-row"><div><h2>Hoạt động gần đây</h2><p>Lịch sử học tập mẫu để BE đối chiếu dữ liệu cần cung cấp.</p></div><Link className="ws-btn" to="/dashboard/kid/lessons">Xem tất cả bài học</Link></div><div className="ws-activity-list"><div><span>Đã hoàn thành bài “Nhu cầu và mong muốn”</span><time>Hôm nay, 09:20</time></div><div><span>Nhận 40 FinCoin từ bài luyện tập</span><time>Hôm qua, 19:15</time></div><div><span>Đạt huy hiệu “Người mua sắm thông minh”</span><time>06/10/2026</time></div></div></section>
+  </>
 }

@@ -1,8 +1,8 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useWorkspace } from './useWorkspace'
 import { dispatch } from './pendingBackend'
 import { activeLearners } from './model'
-import { Heading, Empty, Modal, ActionForm, Notice } from './ui'
+import { Heading, Empty, Modal, ActionForm, Notice, DataSourceNote } from './ui'
 import { dateLabel } from './format'
 
 const blankQuestion = () => ({ text: '', options: ['', '', '', ''], correct: 0 })
@@ -22,7 +22,15 @@ export function TeacherQuizManagement() {
   const [editing, edit] = useState(null)
   const [assigning, assign] = useState(null)
   const [preview, setPreview] = useState(null)
-  return <><Heading title="Quản lý Quiz" description="Tạo đề, xem trước và giao cho nhóm hoặc từng học sinh."><button className="ws-btn primary" onClick={() => edit({ title: '', questions: [blankQuestion()] })}>+ Tạo Quiz</button></Heading><div className="ws-grid two">{quizzes.map(q => <article className="ws-card" key={q.id}><span className="ws-pill">{q.questions.length} câu hỏi</span><h2>{q.title}</h2><p>Cập nhật {dateLabel(q.updatedAt)}</p><div className="ws-actions"><button className="ws-btn" onClick={() => setPreview(q)}>Xem trước</button><button className="ws-btn" onClick={() => edit(q)}>Sửa đề</button><button className="ws-btn primary" onClick={() => assign(q)}>Giao bài</button></div></article>)}</div>{!quizzes.length && <Empty>Chưa có Quiz. Tạo đề đầu tiên để bắt đầu.</Empty>}<section className="ws-card"><h2>Các lượt giao bài</h2>{assignments.length ? assignments.map(a => { const done = db.submissions.filter(s => s.assignmentId === a.id).length; return <div className="ws-list-row" key={a.id}><span>{a.title}<small>{dateLabel(a.createdAt)} · {a.questions.length} câu</small></span><strong>{done}/{a.learnerIds.length} đã nộp</strong></div> }) : <Empty>Chưa giao bài kiểm tra.</Empty>}</section>{editing && <QuizEditor quiz={editing} close={() => edit(null)}/>} {assigning && <AssignmentForm quiz={assigning} close={() => assign(null)}/>} {preview && <Modal title={`Xem trước · ${preview.title}`} description="Bản xem của giáo viên, có đánh dấu đáp án đúng." onClose={() => setPreview(null)}>{preview.questions.map((q, i) => <div className="ws-question" key={i}><h3>{i + 1}. {q.text}</h3>{q.options.map((o, n) => <p key={n}>{String.fromCharCode(65 + n)}. {o} {q.correct === n && '✓'}</p>)}</div>)}</Modal>}</>
+  const [printable, setPrintable] = useState(null)
+  useEffect(() => {
+    if (!printable) return undefined
+    const timer = window.setTimeout(() => window.print(), 80)
+    const finish = () => setPrintable(null)
+    window.addEventListener('afterprint', finish, { once: true })
+    return () => { window.clearTimeout(timer); window.removeEventListener('afterprint', finish) }
+  }, [printable])
+  return <><Heading title="Quản lý Quiz" description="Tạo đề, xem trước và giao cho nhóm hoặc từng học sinh."><button className="ws-btn primary" onClick={() => edit({ title: '', questions: [blankQuestion()] })}>+ Tạo Quiz</button></Heading><DataSourceNote>Giao diện này mô tả dữ liệu BE cần cung cấp: quizId, title, questions (nội dung, lựa chọn, đáp án đúng), assignments (nhóm/học sinh, thời điểm giao) và submissions (câu trả lời, điểm, thời điểm nộp).</DataSourceNote><div className="ws-grid two">{quizzes.map(q => <article className="ws-card" key={q.id}><span className="ws-pill">{q.questions.length} câu hỏi</span><h2>{q.title}</h2><p>Cập nhật {dateLabel(q.updatedAt)}</p><div className="ws-actions"><button className="ws-btn" onClick={() => setPreview(q)}>Xem trước</button><button className="ws-btn" onClick={() => setPrintable(q)}>Xuất PDF</button><button className="ws-btn" onClick={() => edit(q)}>Sửa đề</button><button className="ws-btn primary" onClick={() => assign(q)}>Giao bài</button></div></article>)}</div>{!quizzes.length && <Empty>Chưa có Quiz. Tạo đề đầu tiên để bắt đầu.</Empty>}<section className="ws-card"><h2>Các lượt giao bài</h2>{assignments.length ? assignments.map(a => { const done = db.submissions.filter(s => s.assignmentId === a.id).length; return <div className="ws-list-row" key={a.id}><span>{a.title}<small>{dateLabel(a.createdAt)} · {a.questions.length} câu</small></span><strong>{done}/{a.learnerIds.length} đã nộp</strong></div> }) : <Empty>Chưa giao bài kiểm tra.</Empty>}</section>{editing && <QuizEditor quiz={editing} close={() => edit(null)}/>} {assigning && <AssignmentForm quiz={assigning} close={() => assign(null)}/>} {preview && <Modal title={`Xem trước · ${preview.title}`} description="Bản xem của giáo viên, có đánh dấu đáp án đúng." onClose={() => setPreview(null)}>{preview.questions.map((q, i) => <div className="ws-question" key={i}><h3>{i + 1}. {q.text}</h3>{q.options.map((o, n) => <p key={n}>{String.fromCharCode(65 + n)}. {o} {q.correct === n && '✓'}</p>)}</div>)}</Modal>}{printable && <section className="ws-quiz-print"><header><strong>FinTeen</strong><h1>{printable.title}</h1><p>Họ và tên: ................................................ Lớp: ....................</p></header>{printable.questions.map((q, i) => <article key={i}><h2>Câu {i + 1}. {q.text}</h2>{q.options.map((option, n) => <p key={n}>☐ {String.fromCharCode(65 + n)}. {option}</p>)}</article>)}</section>}</>
 }
 function TakeQuiz({ assignment, close }) {
   const [answers, setAnswers] = useState({})
