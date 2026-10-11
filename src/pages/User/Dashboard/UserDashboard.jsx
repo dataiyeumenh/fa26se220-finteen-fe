@@ -2,7 +2,6 @@ import { Home, BookOpen, Gamepad2, Trophy, MessageCircle, User as UserIcon } fro
 import { DashboardLayout } from '@/components/dashboard/DashboardLayout'
 import useUserDashboard from './hooks/useUserDashboard.js'
 import WelcomeBanner from './components/WelcomeBanner.jsx'
-import StatsGrid from './components/StatsGrid.jsx'
 import ContinueLearning from './components/ContinueLearning.jsx'
 import Achievements from './components/Achievements.jsx'
 import AiSuggestionCard from './components/AiSuggestionCard.jsx'
@@ -59,7 +58,6 @@ export default function UserDashboard() {
             lessonsThisWeek={dashboard.lessonsThisWeek}
             lessonsTarget={dashboard.lessonsTarget}
           />
-          <StatsGrid stats={dashboard.stats} accentColor={role.accent} accentText={role.accentText} />
           <ContinueLearning lessons={dashboard.continueLessons} />
           <Achievements items={dashboard.achievements} />
           <AiSuggestionCard />

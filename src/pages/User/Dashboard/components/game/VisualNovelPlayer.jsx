@@ -1,21 +1,14 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowLeft,
-  Brain,
-  ChartNoAxesColumn,
   Coins,
   FileSearch,
-  Heart,
   ImageOff,
-  Landmark,
   Lock,
   Maximize2,
   Menu,
   Minimize2,
-  PiggyBank,
   RotateCcw,
-  ShieldAlert,
-  Target,
 } from "lucide-react";
 import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
@@ -27,18 +20,6 @@ import { BudgetBuilderMiniGame } from "./BudgetBuilderMiniGame";
 import { SavingsRaceMiniGame } from "./SavingsRaceMiniGame";
 import { CareerMatchMiniGame } from "./CareerMatchMiniGame";
 import "./chapter-three.css";
-
-const statDisplay = {
-  WEALTH: { label: "Tài sản", icon: Landmark, tone: "wealth" },
-  SAVING: { label: "Tiết kiệm", icon: PiggyBank, tone: "saving" },
-  FIQ: { label: "IQ tài chính", icon: Brain, tone: "fiq" },
-  HAPPINESS: { label: "Hạnh phúc", icon: Heart, tone: "happiness" },
-  RISK: { label: "Rủi ro", icon: ShieldAlert, tone: "risk" },
-  GOAL: { label: "Mục tiêu", icon: Target, tone: "goal" },
-};
-const statLabels = Object.fromEntries(
-  Object.entries(statDisplay).map(([key, value]) => [key, value.label]),
-);
 
 function applyStatEffects(current, effects = {}) {
   const next = { ...current };
@@ -171,58 +152,9 @@ function SpeakerTag({ scene }) {
   return <div className="vn-speaker">{scene.speaker || "Nhân vật"}</div>;
 }
 
-function StatsPanel({ stats, statFxByKey }) {
-  return (
-    <div className="vn-stats-grid">
-      {Object.entries(statDisplay)
-        .filter(([key]) => key in stats)
-        .map(([key, meta]) => {
-          const Icon = meta.icon;
-          return (
-            <div
-              key={key}
-              className={cn(
-                "vn-stat-card",
-                `is-${meta.tone}`,
-                statFxByKey[key]
-                  ? statFxByKey[key] > 0
-                    ? "has-positive-change"
-                    : "has-negative-change"
-                  : "",
-              )}
-            >
-              <span className="vn-stat-icon">
-                <Icon size={17} />
-              </span>
-              <span className="vn-stat-copy">
-                <small>{meta.label}</small>
-                <strong>
-                  {Number(stats[key] ?? 0).toLocaleString("vi-VN")}
-                </strong>
-              </span>
-              {statFxByKey[key] ? (
-                <span
-                  className={cn(
-                    "vn-stat-delta",
-                    statFxByKey[key] > 0 ? "is-positive" : "is-negative",
-                  )}
-                >
-                  {statFxByKey[key] > 0
-                    ? `+${statFxByKey[key]}`
-                    : statFxByKey[key]}
-                </span>
-              ) : null}
-            </div>
-          );
-        })}
-    </div>
-  );
-}
-
 function EndingReport({ report }) {
   if (!report) return null;
   const format = (value) => Number(value || 0).toLocaleString("vi-VN");
-  const signed = (value) => (value > 0 ? `+${value}` : String(value));
 
   return (
     <div className="vn-report">
@@ -239,19 +171,6 @@ function EndingReport({ report }) {
             <span>{report.bandLabel}</span>
           </div>
         )}
-        <div className="vn-report-card">
-          <small>Chỉ số thay đổi</small>
-          <ul>
-            {report.stats.map((item) => (
-              <li key={item.key}>
-                {item.label}{" "}
-                <b className={item.delta > 0 ? "is-up" : "is-down"}>
-                  {signed(item.delta)}
-                </b>
-              </li>
-            ))}
-          </ul>
-        </div>
       </div>
       <ul className="vn-report-metrics">
         {report.choicePercent !== null && (
@@ -311,10 +230,12 @@ function EndingReport({ report }) {
 
 export function VisualNovelPlayer({ data }) {
   const gameContainerRef = useRef(null);
+  const menuDetailsRef = useRef(null);
   const stageRef = useRef(null);
   const dialogueRef = useRef(null);
   const pendingTransitionRef = useRef(null);
-  const statFxTimerRef = useRef(null);
+  const preloadedImageStateRef = useRef(new Map());
+  const preloadingImageRef = useRef(new Map());
 
   const [scenePath, setScenePath] = useState([0]);
   const [miniGameDoneByScene, setMiniGameDoneByScene] = useState({});
@@ -322,7 +243,6 @@ export function VisualNovelPlayer({ data }) {
   const [stats, setStats] = useState(data.initialStats || {});
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [pendingEffects, setPendingEffects] = useState(null);
-  const [statFxByKey, setStatFxByKey] = useState({});
 
   // New state for Scene Data Runtime features
   const [gameFlag, setGameFlag] = useState(null);
@@ -387,6 +307,90 @@ export function VisualNovelPlayer({ data }) {
     return index;
   };
 
+  const preloadImage = useCallback((src) => {
+    if (!src || typeof src !== "string") return;
+
+    const state = preloadedImageStateRef.current.get(src);
+    if (state === "loaded" || state === "loading") return;
+
+    preloadedImageStateRef.current.set(src, "loading");
+
+    const image = new Image();
+    image.decoding = "async";
+
+    image.onload = () => {
+      preloadedImageStateRef.current.set(src, "loaded");
+      preloadingImageRef.current.delete(src);
+    };
+
+    image.onerror = () => {
+      preloadedImageStateRef.current.set(src, "error");
+      preloadingImageRef.current.delete(src);
+    };
+
+    preloadingImageRef.current.set(src, image);
+    image.src = src;
+  }, []);
+
+  const getSceneImageUrls = useCallback(
+    (targetScene) => {
+      if (!targetScene) return [];
+
+      const urls = new Set();
+      if (targetScene.background) urls.add(targetScene.background);
+      if (targetScene.sceneArt) urls.add(targetScene.sceneArt);
+
+      (targetScene.characters || []).forEach((character) => {
+        if (character?.src) {
+          urls.add(character.src);
+          return;
+        }
+
+        const spriteSet = data.sprites?.[character?.id] || {};
+        const fallbackSrc =
+          spriteSet[character?.expression] || spriteSet.neutral || "";
+        if (fallbackSrc) urls.add(fallbackSrc);
+      });
+
+      return Array.from(urls);
+    },
+    [data.sprites],
+  );
+
+  const expandTargetSceneIds = useCallback(
+    (rawIds) => {
+      const queue = rawIds.filter(Boolean);
+      const visited = new Set();
+      const expanded = new Set();
+      let guard = 0;
+
+      while (queue.length && guard < data.scenes.length * 2) {
+        const sceneId = queue.shift();
+        if (!sceneId || visited.has(sceneId)) continue;
+        visited.add(sceneId);
+
+        const targetIndex = sceneIndexById[sceneId];
+        if (typeof targetIndex !== "number") continue;
+
+        const targetScene = data.scenes[targetIndex];
+        if (!targetScene) continue;
+
+        if (targetScene.type === "conditional") {
+          if (targetScene.ifTrueSceneId) queue.push(targetScene.ifTrueSceneId);
+          if (targetScene.ifFalseSceneId)
+            queue.push(targetScene.ifFalseSceneId);
+        } else {
+          expanded.add(sceneId);
+        }
+
+        guard += 1;
+      }
+
+      return Array.from(expanded);
+    },
+    [data.scenes, sceneIndexById],
+  );
+
   const sceneCharacters = useMemo(() => {
     if (!scene.characters) return [];
 
@@ -425,14 +429,6 @@ export function VisualNovelPlayer({ data }) {
 
     setStats((current) => applyStatEffects(current, effects));
     setSceneActionApplied((prev) => ({ ...prev, [sceneId]: true }));
-    setStatFxByKey(effects);
-
-    if (statFxTimerRef.current) {
-      clearTimeout(statFxTimerRef.current);
-    }
-    statFxTimerRef.current = setTimeout(() => {
-      setStatFxByKey({});
-    }, 1200);
   };
 
   const runTransitionWithEffects = ({
@@ -634,7 +630,6 @@ export function VisualNovelPlayer({ data }) {
     setSceneActionApplied({});
     setStats(data.initialStats || {});
     setPendingEffects(null);
-    setStatFxByKey({});
     pendingTransitionRef.current = null;
     setGameFlag(null);
     setFlags({});
@@ -769,14 +764,6 @@ export function VisualNovelPlayer({ data }) {
 
     return {
       money: { start: data.initialMoney || 0, end: money },
-      stats: Object.keys(statDisplay)
-        .filter((key) => key in stats)
-        .map((key) => ({
-          key,
-          label: statDisplay[key].label,
-          delta: (stats[key] ?? 0) - ((data.initialStats || {})[key] ?? 0),
-        }))
-        .filter((item) => item.delta !== 0),
       choicePercent,
       firstPercent,
       miniPercent,
@@ -804,6 +791,34 @@ export function VisualNovelPlayer({ data }) {
   }, []);
 
   useEffect(() => {
+    if (!scene) return;
+
+    const nextTargets = [
+      scene.nextSceneId,
+      scene.onPassSceneId,
+      scene.onFailSceneId,
+      ...(scene.options || []).map((option) => option.nextSceneId),
+    ].filter(Boolean);
+
+    if (!nextTargets.length) return;
+
+    expandTargetSceneIds(nextTargets).forEach((sceneId) => {
+      const targetIndex = sceneIndexById[sceneId];
+      if (typeof targetIndex !== "number") return;
+
+      const targetScene = data.scenes[targetIndex];
+      getSceneImageUrls(targetScene).forEach(preloadImage);
+    });
+  }, [
+    data.scenes,
+    expandTargetSceneIds,
+    getSceneImageUrls,
+    preloadImage,
+    scene,
+    sceneIndexById,
+  ]);
+
+  useEffect(() => {
     const handleFullscreenChange = () => {
       setIsFullscreen(document.fullscreenElement === gameContainerRef.current);
     };
@@ -815,10 +830,10 @@ export function VisualNovelPlayer({ data }) {
   }, []);
 
   useEffect(() => {
+    const preloadingImages = preloadingImageRef.current;
+
     return () => {
-      if (statFxTimerRef.current) {
-        clearTimeout(statFxTimerRef.current);
-      }
+      preloadingImages.clear();
     };
   }, []);
 
@@ -857,96 +872,91 @@ export function VisualNovelPlayer({ data }) {
     }
   };
 
+  const collapseMenuOnGameClick = (event) => {
+    const menuDetails = menuDetailsRef.current;
+    if (!menuDetails?.open) return;
+
+    if (event.target instanceof Element && event.target.closest(".vn-menu")) {
+      return;
+    }
+
+    menuDetails.open = false;
+  };
+
   return createPortal(
-    <div ref={gameContainerRef} className="vn-player">
+    <div
+      ref={gameContainerRef}
+      className="vn-player"
+      onPointerDownCapture={collapseMenuOnGameClick}
+    >
       <header className="vn-toolbar">
-        <details className="vn-details vn-menu">
-          <summary
-            className="vn-icon-button vn-menu-trigger"
-            aria-label="Mở menu trò chơi"
-            title="Menu trò chơi"
-          >
-            <Menu size={20} />
-            <span className="vn-control-label">Menu</span>
-          </summary>
-          <div className="vn-popover vn-menu-panel">
-            <div className="vn-heading">
-              <span className="vn-eyebrow">HÀNH TRÌNH FINTEEN</span>
-              <h1>{data.title}</h1>
-            </div>
-            <p className="vn-menu-progress">
-              Cảnh {sceneIndex + 1} / {totalScenes}
-            </p>
-            <div
-              className="vn-progress"
-              role="progressbar"
-              aria-label="Tiến độ chương"
-              aria-valuenow={sceneIndex + 1}
-              aria-valuemin={0}
-              aria-valuemax={totalScenes}
+        <div className="vn-toolbar-left">
+          <details ref={menuDetailsRef} className="vn-details vn-menu">
+            <summary
+              className="vn-icon-button vn-menu-trigger"
+              aria-label="Mở menu trò chơi"
+              title="Menu trò chơi"
             >
-              <div style={{ width: progress + "%" }} />
-            </div>
-            <StatsPanel stats={stats} statFxByKey={statFxByKey} />
-            <div className="vn-menu-actions">
-              <Link
-                to="/dashboard/user/lessons"
-                className="vn-icon-button"
-                aria-label="Về bản đồ chương"
-                title="Về bản đồ chương"
+              <Menu size={20} />
+              <span className="vn-control-label">Menu</span>
+            </summary>
+            <div className="vn-popover vn-menu-panel">
+              <div className="vn-heading">
+                <span className="vn-eyebrow">HÀNH TRÌNH FINTEEN</span>
+                <h1>{data.title}</h1>
+              </div>
+              <p className="vn-menu-progress">
+                Cảnh {sceneIndex + 1} / {totalScenes}
+              </p>
+              <div
+                className="vn-progress"
+                role="progressbar"
+                aria-label="Tiến độ chương"
+                aria-valuenow={sceneIndex + 1}
+                aria-valuemin={0}
+                aria-valuemax={totalScenes}
               >
-                <ArrowLeft size={18} />
-              </Link>
-              <button
-                type="button"
-                onClick={toggleFullscreen}
-                className="vn-icon-button"
-                aria-label={isFullscreen ? "Thu nhỏ" : "Toàn màn hình"}
-              >
-                {isFullscreen ? (
-                  <Minimize2 size={18} />
-                ) : (
-                  <Maximize2 size={18} />
-                )}
-              </button>
-              <details className="vn-restart-confirm">
-                <summary>
-                  <RotateCcw size={16} /> Chơi lại
-                </summary>
-                <p>Đặt lại tiến độ và chỉ số của lượt chơi này?</p>
+                <div style={{ width: progress + "%" }} />
+              </div>
+              <div className="vn-menu-actions">
+                <Link
+                  to="/dashboard/user/lessons"
+                  className="vn-icon-button"
+                  aria-label="Về bản đồ chương"
+                  title="Về bản đồ chương"
+                >
+                  <ArrowLeft size={18} />
+                </Link>
                 <button
                   type="button"
-                  onClick={(event) => {
-                    restart();
-                    event.currentTarget.closest("details").open = false;
-                  }}
+                  onClick={toggleFullscreen}
+                  className="vn-icon-button"
+                  aria-label={isFullscreen ? "Thu nhỏ" : "Toàn màn hình"}
                 >
-                  Bắt đầu lại chương
+                  {isFullscreen ? (
+                    <Minimize2 size={18} />
+                  ) : (
+                    <Maximize2 size={18} />
+                  )}
                 </button>
-              </details>
+                <details className="vn-restart-confirm">
+                  <summary>
+                    <RotateCcw size={16} /> Chơi lại
+                  </summary>
+                  <p>Đặt lại tiến độ và chỉ số của lượt chơi này?</p>
+                  <button
+                    type="button"
+                    onClick={(event) => {
+                      restart();
+                      event.currentTarget.closest("details").open = false;
+                    }}
+                  >
+                    Bắt đầu lại chương
+                  </button>
+                </details>
+              </div>
             </div>
-          </div>
-        </details>
-        <div
-          className="vn-progress-pill"
-          aria-label={`Tiến độ: cảnh ${sceneIndex + 1} trên ${totalScenes}`}
-        >
-          <span>{data.title}</span>
-          <div
-            className="vn-progress"
-            role="progressbar"
-            aria-label="Tiến độ chương"
-            aria-valuenow={sceneIndex + 1}
-            aria-valuemin={1}
-            aria-valuemax={totalScenes}
-          >
-            <div style={{ width: progress + "%" }} />
-          </div>
-          <small>
-            {sceneIndex + 1}/{totalScenes}
-          </small>
-        </div>
-        <div className="vn-hud-right">
+          </details>
           <div
             className={cn(
               "vn-wallet",
@@ -973,32 +983,6 @@ export function VisualNovelPlayer({ data }) {
               </span>
             ) : null}
           </div>
-          <details className="vn-details vn-stats-details">
-            <summary
-              className="vn-icon-button"
-              aria-label="Xem các chỉ số hành trình"
-              title="Chỉ số"
-            >
-              <ChartNoAxesColumn size={18} />
-              <span className="vn-control-label">Chỉ số</span>
-            </summary>
-            <div className="vn-popover vn-stats-popover">
-              <div className="vn-popover-heading">
-                <span>TIẾN TRÌNH</span>
-                <h2>Chỉ số hành trình</h2>
-              </div>
-              <StatsPanel stats={stats} statFxByKey={statFxByKey} />
-            </div>
-          </details>
-          <button
-            type="button"
-            onClick={toggleFullscreen}
-            className="vn-icon-button vn-fullscreen-button"
-            aria-label={isFullscreen ? "Thu nhỏ" : "Toàn màn hình"}
-            title={isFullscreen ? "Thu nhỏ" : "Toàn màn hình"}
-          >
-            {isFullscreen ? <Minimize2 size={18} /> : <Maximize2 size={18} />}
-          </button>
         </div>
       </header>
       <main
@@ -1257,22 +1241,6 @@ export function VisualNovelPlayer({ data }) {
                 <p className="text-center mb-4">
                   {resolveEnding()?.storyText || scene.text}
                 </p>
-                {resolveEnding()?.finalStats && (
-                  <div className="bg-white/5 rounded-lg p-3 mb-4 text-sm">
-                    <p className="font-bold mb-2">Chỉ số cuối cùng:</p>
-                    <div className="space-y-1 text-white/75">
-                      {Object.entries(resolveEnding().finalStats).map(
-                        ([stat, value]) =>
-                          value !== null && (
-                            <div key={stat} className="flex justify-between">
-                              <span>{statLabels[stat]}</span>
-                              <span>{value}</span>
-                            </div>
-                          ),
-                      )}
-                    </div>
-                  </div>
-                )}
                 <Link
                   to="/dashboard/user/lessons"
                   className="w-full inline-block bg-green-600 text-white p-3 rounded-lg text-center hover:bg-green-700"
@@ -1432,30 +1400,10 @@ export function VisualNovelPlayer({ data }) {
       {pendingEffects && (
         <div className="absolute inset-0 z-[60] bg-black/45 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="w-full max-w-md rounded-3xl border border-white/25 bg-[#0b1723] text-white p-5 shadow-2xl">
-            <h3 className="text-base font-black mb-1">Chỉ số thay đổi</h3>
+            <h3 className="text-base font-black mb-1">Lựa chọn đã ghi nhận</h3>
             <p className="text-sm text-white/75 mb-4">
-              Lựa chọn của bạn đã tác động đến các chỉ số sau:
+              Trò chơi đã cập nhật kết quả theo lựa chọn của bạn.
             </p>
-            <div className="space-y-2">
-              {Object.entries(pendingEffects.effects).map(([key, delta]) => (
-                <div
-                  key={key}
-                  className="flex items-center justify-between rounded-xl bg-white/10 border border-white/15 px-3 py-2"
-                >
-                  <span className="text-sm font-bold">
-                    {statLabels[key] || key}
-                  </span>
-                  <span
-                    className={cn(
-                      "text-sm font-black",
-                      Number(delta) >= 0 ? "text-[#86efac]" : "text-[#fca5a5]",
-                    )}
-                  >
-                    {Number(delta) >= 0 ? `+${delta}` : delta}
-                  </span>
-                </div>
-              ))}
-            </div>
             <Button
               onClick={confirmPendingEffects}
               className="w-full mt-4 bg-[#22c55e] text-white hover:bg-[#16a34a]"
