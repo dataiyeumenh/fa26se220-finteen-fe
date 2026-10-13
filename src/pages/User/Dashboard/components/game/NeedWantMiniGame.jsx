@@ -81,16 +81,12 @@ export function NeedWantMiniGame({ game, onComplete, className, immersive = fals
       </div>
       <footer className="nw-footer">
         <div className="nw-status" aria-live="polite">
-          {submitted ? <><strong>{passed ? `Đạt ${correct}/${game.items.length} — Hoàn thành!` : `Bạn xếp đúng ${correct}/${game.items.length} món.`}</strong><span>{passed ? "Hãy đọc phần giải thích rồi tiếp tục." : `Cần đúng ít nhất ${requiredScore} món. Các thẻ màu cam có thể sửa lại.`}</span></> : <><strong>{selectedItem ? `Đang chọn: ${selectedItem.label}` : "Kéo thả hoặc bấm để chọn"}</strong><span>{selectedItem ? "Bấm nút dưới giỏ để chuyển vật phẩm." : `Mục tiêu: xếp đúng ít nhất ${requiredScore}/${game.items.length} món.`}</span></>}
+          {submitted ? <><strong>{`Bạn xếp đúng ${correct}/${game.items.length} món.`}</strong><span>Đọc phần giải thích rồi tiếp tục, hoặc xếp lại để thử cách khác.</span></> : <><strong>{selectedItem ? `Đang chọn: ${selectedItem.label}` : "Kéo thả hoặc bấm để chọn"}</strong><span>{selectedItem ? "Bấm nút dưới giỏ để chuyển vật phẩm." : "Xếp các món vào giỏ rồi kiểm tra kết quả."}</span></>}
         </div>
         <div className="nw-actions"><button type="button" className="nw-reset" onClick={reset}><RotateCcw size={17} /> Xếp lại</button>
           {submitted ? (
             <>
-              {passed ? (
-                <button type="button" className="nw-submit" disabled={finished} onClick={finish}>Tiếp tục →</button>
-              ) : (
-                <button type="button" className="nw-submit" onClick={() => { setSubmitted(false); setSelected(null); }} style={{ background: '#b67c30' }}>Xếp lại <RotateCcw size={17} /></button>
-              )}
+              <button type="button" className="nw-submit" disabled={finished} onClick={finish}>Tiếp tục →</button>
             </>
           ) : (
             <button type="button" className="nw-submit" disabled={placed !== game.items.length || !game.items.length} onClick={() => { setSubmitted(true); setSelected(null); }}>Kiểm tra <Check size={19} /></button>

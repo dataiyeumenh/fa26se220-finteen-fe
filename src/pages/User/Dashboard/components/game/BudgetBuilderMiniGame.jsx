@@ -80,7 +80,7 @@ export function BudgetBuilderMiniGame({ game, onComplete, className }) {
           <div className="c2-money-tray">
             <div className="c2-tray-label"><Coins size={18} /><span>Tiền chờ phân bổ</span><strong>{remaining.toLocaleString("vi-VN")}đ</strong></div>
             <div className="c2-amounts" aria-label="Các thẻ tiền">
-              {game.draggables.map((amount) => {
+              {[...game.draggables].sort((a, b) => a.value - b.value).map((amount) => {
                 const used = usedAmountIds.has(amount.id);
                 return (
                   <button
@@ -144,7 +144,7 @@ export function BudgetBuilderMiniGame({ game, onComplete, className }) {
       <footer className="c2-footer">
         <p aria-live="polite">
           {submitted && !passed
-            ? `Bạn đã đúng ${correctCount}/${game.dropZones.length} phong bì. Hãy điều chỉnh các ô màu cam.`
+            ? `Bạn đã đúng ${correctCount}/${game.dropZones.length} phong bì. Bạn có thể điều chỉnh các ô màu cam hoặc tiếp tục.`
             : submitted && passed
               ? "Ngân sách cân bằng: đủ nhu cầu thiết yếu, mục tiêu và quỹ dự trù."
             : selectedAmountId
@@ -155,8 +155,8 @@ export function BudgetBuilderMiniGame({ game, onComplete, className }) {
         </p>
         <div>
           <button type="button" className="c2-secondary" onClick={reset}><RotateCcw size={17} /> Làm lại</button>
-          {submitted && passed
-            ? <button type="button" className="c2-primary" onClick={() => onComplete?.({ passed: true, score: correctCount, total: game.dropZones.length })}>Tiếp tục →</button>
+          {submitted
+            ? <button type="button" className="c2-primary" onClick={() => onComplete?.({ passed, score: correctCount, total: game.dropZones.length, allocations: Object.fromEntries(game.dropZones.map(zone => [zone.id, game.draggables.find(item => item.id === assignments[zone.id])?.value || 0])) })}>Tiếp tục →</button>
             : <button type="button" className="c2-primary" disabled={assignedCount !== game.dropZones.length} onClick={check}><Check size={18} /> Kiểm tra</button>}
         </div>
       </footer>
