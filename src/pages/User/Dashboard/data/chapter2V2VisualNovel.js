@@ -438,6 +438,7 @@ export const chapter2V2GameData = {
           id: "CH02_SC04_CHOICE_A",
           text: "A. Trích từ Quỹ dự trù linh hoạt 200.000đ (Bảo toàn nguyên vẹn tiền tiết kiệm Laptop)",
           label: "A. Dùng Quỹ dự trù linh hoạt",
+          requires: { minFlexibleReserve: 200000 },
           condition: { type: "ALWAYS_UNLOCKED" },
           moneyEvents: [
             {

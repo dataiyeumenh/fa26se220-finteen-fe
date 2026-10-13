@@ -28,9 +28,7 @@ export function CareerMatchMiniGame({ game, onComplete, className }) {
 
   const isFit = (job) => job.hours <= game.weeklyLimit;
   const allVerdicts = jobs.every((job) => verdicts[job.id]);
-  const calcSolved = questions.every(
-    (question) => picked[question.id] === question.correctId,
-  );
+  const calcAnswered = questions.every((question) => picked[question.id]);
   const calcFirstScore = questions.filter(
     (question) => !missed[question.id],
   ).length;
@@ -51,6 +49,7 @@ export function CareerMatchMiniGame({ game, onComplete, className }) {
     });
     setWrongJobs(wrong);
     if (fitFirstScore === null) setFitFirstScore(correct);
+    setFitSolved(true);
     if (correct === jobs.length) {
       setFitSolved(true);
       setFeedback({
@@ -60,7 +59,7 @@ export function CareerMatchMiniGame({ game, onComplete, className }) {
     } else {
       setFeedback({
         tone: "bad",
-        text: "Có thẻ chưa khớp. So giờ làm mỗi tuần với vạch giới hạn rồi thử lại nhé.",
+        text: `Bạn ghép đúng ${correct}/${jobs.length} việc. Hãy so giờ làm với giới hạn; bạn vẫn có thể sang bước tính toán.`,
       });
     }
   };
@@ -86,7 +85,7 @@ export function CareerMatchMiniGame({ game, onComplete, className }) {
 
   const finish = () => {
     onComplete?.({
-      passed: true,
+      passed: jobs.every((job) => (verdicts[job.id] === "fit") === isFit(job)) && questions.every((question) => picked[question.id] === question.correctId),
       score: (fitFirstScore ?? 0) + calcFirstScore,
       total: jobs.length + questions.length,
     });
@@ -139,7 +138,7 @@ export function CareerMatchMiniGame({ game, onComplete, className }) {
                   className={cn(
                     "c3-job",
                     wrongJobs[job.id] && "is-wrong",
-                    fitSolved && "is-right",
+                    fitSolved && !wrongJobs[job.id] && "is-right",
                   )}
                 >
                   <img className="c3-job-image" src={job.image} alt="" />
@@ -226,7 +225,7 @@ export function CareerMatchMiniGame({ game, onComplete, className }) {
                     </button>
                   ))}
                 </div>
-                {solved && <p className="c3-explain">{question.explain}</p>}
+                {picked[question.id] && <p className="c3-explain">{question.explain}</p>}
               </article>
             );
           })}
@@ -269,7 +268,7 @@ export function CareerMatchMiniGame({ game, onComplete, className }) {
             <button
               type="button"
               className="c2-primary"
-              disabled={!calcSolved}
+              disabled={!calcAnswered}
               onClick={finish}
             >
               Hoàn tất Career Match →

@@ -20,6 +20,7 @@ import { BudgetBuilderMiniGame } from "./BudgetBuilderMiniGame";
 import { SavingsRaceMiniGame } from "./SavingsRaceMiniGame";
 import { CareerMatchMiniGame } from "./CareerMatchMiniGame";
 import "./chapter-three.css";
+import { flexibleReserveLock } from "./miniGameRules";
 
 function applyStatEffects(current, effects = {}) {
   const next = { ...current };
@@ -251,6 +252,7 @@ export function VisualNovelPlayer({ data }) {
   const [firstChoiceScores, setFirstChoiceScores] = useState({});
   const [inspectedIds, setInspectedIds] = useState({});
   const [moneyEventsApplied, setMoneyEventsApplied] = useState({});
+  const [budgetAllocations, setBudgetAllocations] = useState({});
   const [inspectPopup, setInspectPopup] = useState(null);
   const [miniGameCompleted, setMiniGameCompleted] = useState(false);
   const [miniGameScore, setMiniGameScore] = useState(0); // Track score: 0-6
@@ -486,6 +488,8 @@ export function VisualNovelPlayer({ data }) {
   };
 
   const getOptionLock = (option) => {
+    const reserveLock = flexibleReserveLock(option, budgetAllocations);
+    if (reserveLock) return reserveLock;
     const requires = option.requires;
     if (!requires) return null;
     const unmet =
@@ -598,19 +602,18 @@ export function VisualNovelPlayer({ data }) {
   };
 
   const handleMiniGameComplete = (result) => {
-    const { passed, score } = result || {};
+    if (result?.allocations) setBudgetAllocations(result.allocations);
+    const { score } = result || {};
     setMiniGameDoneByScene((prev) => ({
       ...prev,
-      [scene.id]: Boolean(passed),
+      [scene.id]: true,
     }));
-    setMiniGameCompleted(Boolean(passed));
+    setMiniGameCompleted(true);
     if (score !== undefined) {
       setMiniGameScore(score);
     }
 
-    const targetSceneId = passed
-      ? scene.onPassSceneId || scene.nextSceneId
-      : scene.onFailSceneId;
+    const targetSceneId = scene.nextSceneId || scene.onPassSceneId;
     if (targetSceneId && typeof sceneIndexById[targetSceneId] === "number") {
       goToSceneIndex(sceneIndexById[targetSceneId]);
       return;
@@ -637,6 +640,7 @@ export function VisualNovelPlayer({ data }) {
     setFirstChoiceScores({});
     setInspectedIds({});
     setMoneyEventsApplied({});
+    setBudgetAllocations({});
     setMiniGameCompleted(false);
     setMiniGameScore(0);
     setMoney(data.initialMoney || 0);
