@@ -1,14 +1,21 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowLeft,
+  Brain,
+  ChartNoAxesColumn,
   Coins,
   FileSearch,
+  Heart,
   ImageOff,
+  Landmark,
   Lock,
   Maximize2,
   Menu,
   Minimize2,
+  PiggyBank,
   RotateCcw,
+  ShieldAlert,
+  Target,
 } from "lucide-react";
 import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
@@ -21,6 +28,18 @@ import { SavingsRaceMiniGame } from "./SavingsRaceMiniGame";
 import { CareerMatchMiniGame } from "./CareerMatchMiniGame";
 import "./chapter-three.css";
 import { flexibleReserveLock } from "./miniGameRules";
+
+const statDisplay = {
+  WEALTH: { label: "Tài sản", icon: Landmark, tone: "wealth" },
+  SAVING: { label: "Tiết kiệm", icon: PiggyBank, tone: "saving" },
+  FIQ: { label: "IQ tài chính", icon: Brain, tone: "fiq" },
+  HAPPINESS: { label: "Hạnh phúc", icon: Heart, tone: "happiness" },
+  RISK: { label: "Rủi ro", icon: ShieldAlert, tone: "risk" },
+  GOAL: { label: "Mục tiêu", icon: Target, tone: "goal" },
+};
+const statLabels = Object.fromEntries(
+  Object.entries(statDisplay).map(([key, value]) => [key, value.label]),
+);
 
 function applyStatEffects(current, effects = {}) {
   const next = { ...current };
@@ -151,6 +170,43 @@ function SpeakerTag({ scene }) {
   if (scene.type !== "dialogue") return null;
 
   return <div className="vn-speaker">{scene.speaker || "Nhân vật"}</div>;
+}
+
+function StatsPanel({ stats, statFxByKey }) {
+  return (
+    <div className="vn-stats-grid">
+      {Object.entries(statDisplay)
+        .filter(([key]) => key in stats)
+        .map(([key, meta]) => {
+          const Icon = meta.icon;
+          return (
+            <div
+              key={key}
+              className={cn(
+                "vn-stat-card",
+                `is-${meta.tone}`,
+                statFxByKey[key]
+                  ? statFxByKey[key] > 0
+                    ? "has-positive-change"
+                    : "has-negative-change"
+                  : "",
+              )}
+            >
+              <span className="vn-stat-icon"><Icon size={17} /></span>
+              <span className="vn-stat-copy">
+                <small>{meta.label}</small>
+                <strong>{Number(stats[key] ?? 0).toLocaleString("vi-VN")}</strong>
+              </span>
+              {statFxByKey[key] ? (
+                <span className={cn("vn-stat-delta", statFxByKey[key] > 0 ? "is-positive" : "is-negative")}>
+                  {statFxByKey[key] > 0 ? `+${statFxByKey[key]}` : statFxByKey[key]}
+                </span>
+              ) : null}
+            </div>
+          );
+        })}
+    </div>
+  );
 }
 
 function EndingReport({ report }) {
@@ -922,6 +978,7 @@ export function VisualNovelPlayer({ data }) {
               >
                 <div style={{ width: progress + "%" }} />
               </div>
+              <StatsPanel stats={stats} statFxByKey={statFxByKey} />
               <div className="vn-menu-actions">
                 <Link
                   to="/dashboard/user/lessons"
@@ -987,6 +1044,23 @@ export function VisualNovelPlayer({ data }) {
               </span>
             ) : null}
           </div>
+          <details className="vn-details vn-stats-details">
+            <summary
+              className="vn-icon-button"
+              aria-label="Xem các chỉ số hành trình"
+              title="Chỉ số"
+            >
+              <ChartNoAxesColumn size={18} />
+              <span className="vn-control-label">Chỉ số</span>
+            </summary>
+            <div className="vn-popover vn-stats-popover">
+              <div className="vn-popover-heading">
+                <span>TIẾN TRÌNH</span>
+                <h2>Chỉ số hành trình</h2>
+              </div>
+              <StatsPanel stats={stats} statFxByKey={statFxByKey} />
+            </div>
+          </details>
         </div>
       </header>
       <main
@@ -1212,9 +1286,6 @@ export function VisualNovelPlayer({ data }) {
                 </div>
               </header>
               <EndingReport report={buildEndingReport()} />
-              <Link to="/dashboard/user/lessons" className="vn-ending-exit">
-                Quay lại bản đồ chương
-              </Link>
             </section>
           </div>
         ) : (
@@ -1245,6 +1316,22 @@ export function VisualNovelPlayer({ data }) {
                 <p className="text-center mb-4">
                   {resolveEnding()?.storyText || scene.text}
                 </p>
+                {resolveEnding()?.finalStats && (
+                  <div className="bg-white/5 rounded-lg p-3 mb-4 text-sm">
+                    <p className="font-bold mb-2">Chỉ số cuối cùng:</p>
+                    <div className="space-y-1 text-white/75">
+                      {Object.entries(resolveEnding().finalStats).map(
+                        ([stat, value]) =>
+                          value !== null && (
+                            <div key={stat} className="flex justify-between">
+                              <span>{statLabels[stat]}</span>
+                              <span>{value}</span>
+                            </div>
+                          ),
+                      )}
+                    </div>
+                  </div>
+                )}
                 <Link
                   to="/dashboard/user/lessons"
                   className="w-full inline-block bg-green-600 text-white p-3 rounded-lg text-center hover:bg-green-700"

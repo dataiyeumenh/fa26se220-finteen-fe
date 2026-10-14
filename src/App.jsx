@@ -15,6 +15,7 @@ import {
   Plans,
   Settings,
   LearnerHome as KidDashboard,
+  LearnerAchievements,
 } from '@/features/workspace/Overview'
 import { Learners, LearnerDetail, Groups } from '@/features/workspace/Learners'
 import Reports from '@/features/workspace/Reports'
@@ -24,7 +25,7 @@ import { TeacherQuizManagement, KidQuiz } from '@/features/workspace/Quiz'
 // Khu vực RIÊNG của role kid: Bài học / Trò chơi / Cửa hàng / Quiz
 import UserLessons from '@/pages/User/Dashboard/UserLessons'
 import UserGames from '@/pages/User/Dashboard/UserGames'
-import { KidGames, KidShop, GuestDemo } from '@/features/workspace/KidPages'
+import { KidGames, GuestDemo } from '@/features/workspace/KidPages'
 
 // Layout và kiểm tra quyền truy cập
 import {
@@ -82,7 +83,8 @@ function App() {
             <Route element={<DashboardShell />}>
               <Route path="/dashboard/kid" element={<KidDashboard />} />
               <Route path="/dashboard/kid/games" element={<KidGames />} />
-              <Route path="/dashboard/kid/shop" element={<KidShop />} />
+              <Route path="/dashboard/kid/achievements" element={<LearnerAchievements />} />
+              <Route path="/dashboard/kid/shop" element={<Navigate to="/dashboard/kid/lessons" replace />} />
 
               {/* QUIZ CỦA KID — làm bài, nộp bài và xem kết quả giáo viên giao. */}
               {/* Áp dụng cho Kid thuộc gói Teacher. */}
@@ -118,7 +120,7 @@ function App() {
           <Route path="/dashboard/lessons" element={<LessonsEntry />} />
           <Route path="/dashboard/user/lessons" element={<LessonsEntry />} />
           <Route path="/dashboard/user/games" element={<LegacyGameEntry />} />
-          <Route path="/dashboard/user/shop" element={<Navigate to="/dashboard/kid/shop" replace />} />
+          <Route path="/dashboard/user/shop" element={<Navigate to="/dashboard/kid/lessons" replace />} />
           <Route path="/dashboard/parent/*" element={<AccountHome />} />
           <Route path="/dashboard/teacher/*" element={<AccountHome />} />
           <Route path="/dashboard/*" element={<NotFound />} />

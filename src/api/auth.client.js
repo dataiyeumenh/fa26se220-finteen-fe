@@ -18,8 +18,9 @@ export function createAuthClient({ baseUrl, storage, contextStorage = storage, f
     const name = slotSession.slot?.displayName || 'Bạn nhỏ'
     return { ...slotSession.slot, id: slotSession.slot?.id || slotSession.code, name, displayName: name, code: slotSession.code, kind: 'learner', role: 'kid', learnerRole: classroom ? 'student' : 'child', plan: classroom ? 'teacher' : 'parent', plans: [classroom ? 'teacher' : 'parent'], roles: ['CHILD'], source: 'api' }
   }
-  let state = { actor: slotActor(), entitlements: null, entitlementsLoading: false, loading: !slotSession && Boolean(session), error: '' }
+  let state = { actor: slotActor(), entitlements: null, entitlementsLoading: false, learnerDashboard: null, learnerDashboardLoading: false, learnerDashboardError: '', loading: !slotSession && Boolean(session), error: '' }
   let entitlementsRequest = null
+  let learnerDashboardRequest = null
   let revision = 0
   const listeners = new Set()
   const publish = value => { state = { ...state, ...value }; listeners.forEach(fn => fn()) }
@@ -27,23 +28,30 @@ export function createAuthClient({ baseUrl, storage, contextStorage = storage, f
   const persistSlot = () => { try { storage.setItem(slotKey, JSON.stringify(slotSession)) } catch { /* In-memory session still works. */ } }
   if (saved && !session) persist()
   if (savedSlot && !slotSession) persistSlot()
-  const logout = () => { revision++; session = null; slotSession = null; entitlementsRequest = null; persist(); persistSlot(); publish({ actor: null, entitlements: null, entitlementsLoading: false, loading: false, error: '' }) }
+  const logout = () => { revision++; session = null; slotSession = null; entitlementsRequest = null; learnerDashboardRequest = null; persist(); persistSlot(); publish({ actor: null, entitlements: null, entitlementsLoading: false, learnerDashboard: null, learnerDashboardLoading: false, learnerDashboardError: '', loading: false, error: '' }) }
+  const logoutSlot = message => { revision++; slotSession = null; learnerDashboardRequest = null; persistSlot(); publish({ actor: null, learnerDashboard: null, learnerDashboardLoading: false, learnerDashboardError: '', loading: false, error: message || '' }) }
   const expired = () => { logout(); publish({ error: 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.' }) }
-  async function request(path, { body, method = body === undefined ? 'GET' : 'POST', authenticated = false } = {}) {
-    const token = session?.accessToken
-    if (authenticated && (!token || session.expiresAt <= now())) { expired(); throw new ApiError('Vui lòng đăng nhập lại.', 3003, 401) }
+  async function request(path, { body, method = body === undefined ? 'GET' : 'POST', authenticated = false, slotAuthenticated = false } = {}) {
+    const activeSession = slotAuthenticated ? slotSession : session
+    const token = activeSession?.accessToken
+    if ((authenticated || slotAuthenticated) && (!token || activeSession.expiresAt <= now())) {
+      if (slotAuthenticated) logoutSlot('Phiên học tập đã hết hạn. Vui lòng đăng nhập lại.')
+      else expired()
+      throw new ApiError('Vui lòng đăng nhập lại.', 3003, 401)
+    }
     let response
     try {
       response = await fetcher(`${baseUrl.replace(/\/$/, '')}${path}`, {
         method, credentials: 'omit', signal: AbortSignal.timeout(20000),
-        headers: { Accept: 'application/json', ...(body !== undefined ? { 'Content-Type': 'application/json' } : {}), ...(authenticated ? { Authorization: `Bearer ${token}` } : {}) },
+        headers: { Accept: 'application/json', ...(body !== undefined ? { 'Content-Type': 'application/json' } : {}), ...(authenticated || slotAuthenticated ? { Authorization: `Bearer ${token}` } : {}) },
         ...(body !== undefined ? { body: JSON.stringify(body) } : {}),
       })
     } catch { throw new ApiError('Không kết nối được máy chủ. Kiểm tra mạng rồi thử lại.', null, 0) }
     let data
     try { data = await response.json() } catch { throw new ApiError('Máy chủ trả dữ liệu không hợp lệ. Vui lòng thử lại.', null, response.status) }
     if (!response.ok || data?.code !== 0) {
-      if (authenticated && data?.code === 3003 && session?.accessToken === token) expired()
+      if (slotAuthenticated && [3003, 3007, 3009].includes(data?.code) && slotSession?.accessToken === token) logoutSlot(data?.message)
+      else if (authenticated && data?.code === 3003 && session?.accessToken === token) expired()
       throw new ApiError(data?.message || 'Yêu cầu không thành công.', data?.code, response.status)
     }
     return data.result
@@ -102,6 +110,21 @@ export function createAuthClient({ baseUrl, storage, contextStorage = storage, f
       .finally(() => { entitlementsRequest = null })
     return entitlementsRequest
   }
+  async function ensureLearnerDashboard({ force = false } = {}) {
+    if (!slotSession) return null
+    if (!force && state.learnerDashboard) return state.learnerDashboard
+    if (learnerDashboardRequest) return learnerDashboardRequest
+    publish({ learnerDashboardLoading: true, learnerDashboardError: '' })
+    learnerDashboardRequest = request('/api/learner/dashboard', { slotAuthenticated: true })
+      .then(result => {
+        if (!result?.learner || !result?.progress) throw new ApiError('Máy chủ trả dữ liệu dashboard chưa đầy đủ.')
+        publish({ learnerDashboard: result, learnerDashboardLoading: false, learnerDashboardError: '' })
+        return result
+      })
+      .catch(error => { publish({ learnerDashboardLoading: false, learnerDashboardError: error.message }); throw error })
+      .finally(() => { learnerDashboardRequest = null })
+    return learnerDashboardRequest
+  }
   async function slotLogin(code, pin) {
     const normalizedCode = String(code || '').trim().toUpperCase()
     const result = await request('/api/slots/login', { body: { code: normalizedCode, pin } })
@@ -109,12 +132,12 @@ export function createAuthClient({ baseUrl, storage, contextStorage = storage, f
     if (!result.slot?.id || !result.slot?.displayName || !['FAMILY', 'CLASS'].includes(result.slot?.groupContext)) throw new ApiError('Máy chủ chưa trả đầy đủ thông tin hồ sơ trẻ.')
     slotSession = { type: 'SLOT', code: normalizedCode, slot: result.slot, accessToken: result.accessToken, expiresAt: now() + result.expiresIn * 1000 }
     persistSlot()
-    publish({ actor: slotActor(), loading: false, error: '' })
+    publish({ actor: slotActor(), learnerDashboard: null, learnerDashboardError: '', loading: false, error: '' })
   }
   return {
     subscribe: fn => { listeners.add(fn); return () => listeners.delete(fn) }, getSnapshot: () => state,
-    logout, refresh, ensureEntitlements, hasSession: () => Boolean(session || slotSession),
-    checkExpiry: () => { if ((slotSession && slotSession.expiresAt <= now()) || (!slotSession && session && session.expiresAt <= now())) expired() },
+    logout, logoutSlot, refresh, ensureEntitlements, ensureLearnerDashboard, hasSession: () => Boolean(session || slotSession),
+    checkExpiry: () => { if (slotSession && slotSession.expiresAt <= now()) logoutSlot('Phiên học tập đã hết hạn. Vui lòng đăng nhập lại.'); else if (session && session.expiresAt <= now()) expired() },
     register: ({ email, password, displayName, phone }) => request('/api/auth/register', { body: { email: email.trim(), password, displayName: displayName.trim(), ...(phone?.trim() ? { phone: phone.trim() } : {}) } }),
     login: (email, password) => signIn('/api/auth/login', { email: email.trim(), password }),
     verify: (email, otp) => signIn('/api/auth/verify', { email: email.trim(), otp: otp.trim() }),

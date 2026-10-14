@@ -231,6 +231,30 @@ test('SLOT login normalizes code, keeps a separate session and restores the kid 
   assert.equal(restored.getSnapshot().actor.learnerRole, 'student')
   assert.equal(restored.getSnapshot().actor.plan, 'teacher')
 })
+
+test('learner dashboard uses the SLOT bearer, caches the result and clears revoked SLOT sessions', async () => {
+  const { auth, queue, calls } = setup()
+  queue.push({ code: 0, result: { accessToken: 'slot-token', expiresIn: 28800, slot: { id: 'slot-1', displayName: 'Bé An', badge: null, groupContext: 'FAMILY' } } })
+  await auth.slotLogin('kidcode1', '012345')
+  const dashboard = {
+    learner: { id: 'slot-1', displayName: 'Bé An', badge: null, groupContext: 'FAMILY', groupName: 'Nhà mình' },
+    progress: { totalChapters: null, completedChapters: 0, chaptersDone: [], continueChapter: 1, lastPlayedAt: null },
+    quizzes: null,
+    achievements: [],
+    recentActivities: [],
+  }
+  queue.push({ code: 0, result: dashboard })
+  assert.equal((await auth.ensureLearnerDashboard()).learner.groupName, 'Nhà mình')
+  assert.equal(calls.at(-1).headers.Authorization, 'Bearer slot-token')
+  assert.match(calls.at(-1).url, /\/api\/learner\/dashboard$/)
+  const requestCount = calls.length
+  await auth.ensureLearnerDashboard()
+  assert.equal(calls.length, requestCount)
+  queue.push({ code: 3009, message: 'Slot đã kết thúc' })
+  await assert.rejects(auth.ensureLearnerDashboard({ force: true }), error => error.code === 3009)
+  assert.equal(auth.getSnapshot().actor, null)
+  assert.equal(auth.hasSession(), false)
+})
 test('network failures are retryable, not a silent success or fake demo login', async () => {
   const { auth, queue } = setup()
   queue.push({ code: 0, result: token }, new Error('Offline'))

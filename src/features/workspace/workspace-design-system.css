@@ -142,6 +142,14 @@
 .ws[data-ws-page="packages"] .ws-plan-teacher .ws-plan-number { color: var(--ds-text); }
 .ws[data-ws-page="packages"] .ws-public-plans .ws-plan { box-shadow: 0 1px 3px #0f172a0f; }
 .ws[data-ws-page="packages"] .ws-public-plans .ws-plan:hover { border-color: #cbd5e1; box-shadow: 0 4px 12px #0f172a0d; }
+.ws .ws-payment-history { margin-top:24px; }
+.ws .ws-payment-history>.ws-row { align-items:flex-start;margin-bottom:18px; }
+.ws .ws-payment-history h2,.ws .ws-payment-history p { margin-top:0; }
+.ws .ws-payment-status { display:inline-flex;padding:4px 9px;border-radius:999px;background:#f1f5f9;color:#475569;font-size:11px;font-weight:700;white-space:nowrap; }
+.ws .ws-payment-status.paid { background:#dcfce7;color:#15803d; }
+.ws .ws-payment-status.pending { background:#fef3c7;color:#a16207; }
+.ws .ws-payment-status.failed { background:#fee2e2;color:#b91c1c; }
+.ws .ws-load-more { display:flex;margin:18px auto 0; }
 
 .ws[data-ws-page="quiz"] .ws-question { border: 1px solid var(--ds-border); border-left: 3px solid var(--page-primary); background: #fff; }
 .ws[data-ws-page] .ws-chapter,
@@ -164,6 +172,18 @@
 .ws[data-ws-role="kid"] .ws-stat svg { color:var(--page-accent-text) !important; }
 .ws[data-ws-role="kid"] .ws-context-switch .ws-role-button.active { color:#25210a; }
 
+/* Learner identities: family child = coral, classroom student = blue. */
+.ws[data-ws-role="kid"][data-ws-learner-context="child"] { --page-primary:#ff7657;--page-accent-text:#c2412d;--page-hover:#e85b3f;--page-light:#fff3ef;--page-medium:#ffd9cf;--kid-border:#ffc4b5; }
+.ws[data-ws-role="kid"][data-ws-learner-context="student"] { --page-primary:#3b82f6;--page-accent-text:#1d4ed8;--page-hover:#2563eb;--page-light:#eff6ff;--page-medium:#dbeafe;--kid-border:#bfdbfe; }
+.ws[data-ws-role="kid"] .ws-btn.primary { color:#fff !important; }
+.ws[data-ws-role="kid"] .ws-kid-nav a.active,.ws[data-ws-role="kid"] .ws-kid-bottom-nav a.active { color:#fff; }
+.ws[data-ws-role="kid"] .atlas-tabs button[aria-pressed="true"],
+.ws[data-ws-role="kid"] .atlas-resume,
+.ws[data-ws-role="kid"] .atlas-here { border-color:var(--kid-border);background:var(--page-primary);color:#fff; }
+.ws[data-ws-role="kid"] .atlas-stop.current .atlas-medal { background:var(--page-primary);outline-color:var(--page-hover);color:#fff; }
+.ws[data-ws-role="kid"] .atlas-label.current { border-color:var(--page-primary);background:var(--page-light); }
+.ws[data-ws-role="kid"] .atlas-label.current .atlas-label-track i { background:var(--page-primary); }
+
 .ws .ws-quiz-print { display: none; }
 
 /* Learner mock dashboard also acts as a visible data contract for the BE team. */
@@ -175,7 +195,7 @@
 .ws .ws-learner-hero-score { display:grid;place-content:center;width:150px;height:150px;justify-self:end;border:10px solid var(--page-medium);border-radius:50%;background:var(--page-light);text-align:center; }
 .ws .ws-learner-hero-score strong { color:var(--page-accent-text);font-size:42px;line-height:1; }
 .ws .ws-learner-hero-score span { margin-top:6px;color:var(--ds-muted);font-size:12px; }
-.ws .ws-learner-stats { display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-bottom:20px; }
+.ws .ws-learner-stats { display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:20px; }
 .ws .ws-learner-stat { display:flex;align-items:flex-start;gap:14px;padding:18px; }
 .ws .ws-learner-stat>svg { flex:0 0 auto;width:38px;height:38px;padding:9px;border-radius:11px;background:var(--page-light);color:var(--page-accent-text); }
 .ws .ws-learner-stat small,.ws .ws-learner-stat p { display:block;margin:0;color:var(--ds-muted);font-size:12px; }
@@ -185,6 +205,7 @@
 .ws .ws-activity-list { margin-top:18px;border-top:1px solid var(--ds-border); }
 .ws .ws-activity-list>div { display:flex;justify-content:space-between;gap:20px;padding:14px 2px;border-bottom:1px solid var(--ds-border);color:#334155;font-size:14px; }
 .ws .ws-activity-list time { color:var(--ds-muted);font-size:12px;white-space:nowrap; }
+.ws .ws-achievement>svg { width:46px;height:46px;padding:10px;border-radius:14px;background:var(--page-light);color:var(--page-accent-text); }
 
 @media(max-width:1024px){.ws .ws-learner-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:760px){.ws .ws-learner-hero{grid-template-columns:1fr}.ws .ws-learner-hero-score{display:none}.ws .ws-learner-stats{grid-template-columns:1fr}.ws .ws-activity-list>div{display:grid;gap:4px}}
@@ -203,4 +224,98 @@
   .ws .ws-quiz-print article { break-inside:avoid;margin:0 0 22px; }
   .ws .ws-quiz-print article h2 { font-size:15px; }
   .ws .ws-quiz-print article p { margin:8px 0;color:#111827;font-size:13px; }
+}
+
+/* Learner shell: wide, visual-first navigation instead of an adult dashboard sidebar. */
+.ws.ws-kid { display:block;min-height:100dvh; }
+.ws.ws-kid .ws-main { width:100%; }
+.ws.ws-kid .ws-main,.ws.ws-kid .ws-content { background:#fff !important; }
+.ws.ws-kid .ws-top { position:sticky;top:0;z-index:40;min-height:76px;padding:10px 28px; }
+.ws .ws-kid-header-main { display:flex;align-items:center;flex:1;min-width:0; }
+.ws .ws-kid-brand { display:flex;align-items:center;flex:0 0 auto; }
+.ws .ws-kid-brand img { width:128px;height:42px;object-fit:contain; }
+.ws .ws-kid-nav { position:absolute;left:50%;display:flex;align-items:center;gap:6px;transform:translateX(-50%); }
+.ws .ws-kid-nav a { display:inline-flex;align-items:center;gap:8px;min-height:42px;padding:9px 15px;border-radius:12px;color:#526074;font-size:13px;font-weight:650; }
+.ws .ws-kid-nav a:hover { background:var(--page-light);color:var(--page-accent-text); }
+.ws .ws-kid-nav a.active { background:var(--page-primary);color:#fff;box-shadow:0 4px 12px color-mix(in srgb,var(--page-primary) 24%,transparent); }
+.ws.ws-kid .ws-content { max-width:1560px;padding-top:30px; }
+.ws .ws-kid-bottom-nav { display:none; }
+
+@media(min-width:761px) and (max-width:1100px){
+  .ws.ws-kid .ws-profile-copy { display:none; }
+  .ws.ws-kid .ws-profile-trigger { min-width:48px;padding:6px; }
+  .ws .ws-kid-nav a { padding-inline:11px; }
+}
+
+/* Learner home: editorial learning hub, not an administrative dashboard. */
+.ws .ws-kid-welcome { display:flex;align-items:flex-end;justify-content:space-between;gap:28px;margin:4px 0 28px; }
+.ws .ws-kid-welcome>div:first-child>span { display:flex;align-items:center;gap:7px;color:var(--page-accent-text);font-size:10px;font-weight:800;letter-spacing:1.7px; }
+.ws .ws-kid-welcome h1 { margin:8px 0 6px;font-size:clamp(34px,4vw,48px);letter-spacing:-1.4px; }
+.ws .ws-kid-welcome p { display:flex;align-items:center;gap:9px;margin:0;color:#64748b; }
+.ws .ws-kid-welcome p i { width:4px;height:4px;border-radius:50%;background:var(--page-primary); }
+.ws .ws-kid-welcome-note { display:grid;max-width:290px;padding:14px 18px;border-left:3px solid var(--page-primary);color:#64748b;font-size:13px;text-align:right; }
+.ws .ws-kid-welcome-note strong { color:#334155;font-size:14px; }
+.ws .ws-kid-journey-card { position:relative;display:grid;grid-template-columns:minmax(0,1.45fr) minmax(320px,.55fr);min-height:330px;margin-bottom:22px;overflow:hidden;border:1px solid var(--kid-border);border-top:5px solid var(--page-primary);border-radius:24px;background:#fff;box-shadow:0 8px 24px #0f172a0d; }
+.ws .ws-kid-journey-card::before { display:none; }
+.ws .ws-kid-journey-main { position:relative;z-index:1;padding:40px 44px; }
+.ws .ws-kid-section-label { color:var(--page-accent-text);font-size:10px;font-weight:800;letter-spacing:1.8px; }
+.ws .ws-kid-journey-main h2 { max-width:650px;margin:11px 0 10px;font-size:clamp(27px,3vw,38px);letter-spacing:-.7px; }
+.ws .ws-kid-journey-main h2 em { color:var(--page-accent-text);font-style:normal; }
+.ws .ws-kid-journey-main>p { max-width:620px;line-height:1.7; }
+.ws .ws-kid-journey-main .ws-btn { margin-top:18px; }
+.ws .ws-kid-progress { max-width:540px;margin-top:22px; }
+.ws .ws-kid-progress>div:first-child { display:flex;justify-content:space-between;color:#64748b;font-size:12px; }
+.ws .ws-kid-progress strong { color:var(--page-accent-text); }
+.ws .ws-kid-journey-aside { position:relative;z-index:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:22px;padding:28px;border-left:1px solid var(--kid-border);background:var(--page-light); }
+.ws .ws-journey-orbit { display:grid;place-content:center;width:152px;height:152px;border:10px solid var(--page-medium);border-radius:50%;background:#fff;text-align:center;box-shadow:0 10px 30px #0f172a12; }
+.ws .ws-journey-orbit>svg { width:22px;margin:0 auto 3px;color:var(--page-accent-text); }
+.ws .ws-journey-orbit>span { color:var(--page-accent-text);font-size:38px;font-weight:800;line-height:1; }
+.ws .ws-journey-orbit small { margin-top:5px;color:#7c7359;font-size:10px; }
+.ws .ws-kid-mini-metrics { display:flex;gap:9px; }
+.ws .ws-kid-mini-metrics>div { display:flex;align-items:center;gap:7px;padding:9px 11px;border:1px solid var(--kid-border);border-radius:12px;background:#fff; }
+.ws .ws-kid-mini-metrics svg { width:16px;color:var(--page-accent-text); }
+.ws .ws-kid-mini-metrics span { display:grid;color:#756f60;font-size:9px;white-space:nowrap; }
+.ws .ws-kid-mini-metrics strong { color:#332d1a;font-size:14px; }
+.ws .ws-kid-dashboard-grid { display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:22px; }
+.ws .ws-kid-dashboard-grid>.ws-card { margin:0;padding:26px; }
+.ws .ws-kid-section-head { display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:20px; }
+.ws .ws-kid-section-head h2 { margin:5px 0 0;font-size:21px; }
+.ws .ws-kid-section-head>small { color:#94a3b8; }
+.ws .ws-kid-shortcut-list { display:grid;gap:10px; }
+.ws .ws-kid-shortcut-list>a { display:grid;grid-template-columns:44px 1fr 18px;align-items:center;gap:13px;padding:12px;border:1px solid #e7ebf1;border-radius:14px;color:#1e293b;transition:.18s ease; }
+.ws .ws-kid-shortcut-list>a:hover { border-color:var(--kid-border);background:var(--page-light);transform:translateX(3px); }
+.ws .ws-kid-shortcut-list>a>span { display:grid;place-items:center;width:44px;height:44px;border-radius:12px;background:var(--page-light);color:var(--page-accent-text); }
+.ws .ws-kid-shortcut-list>a>span svg { width:20px; }
+.ws .ws-kid-shortcut-list>a>svg { width:17px;color:#94a3b8; }
+.ws .ws-kid-shortcut-list strong,.ws .ws-kid-shortcut-list small { display:block; }
+.ws .ws-kid-shortcut-list small { margin-top:2px;color:#7b8799;font-size:11px; }
+.ws .ws-kid-activity-empty { display:grid;place-items:center;min-height:196px;padding:20px;border:1px dashed var(--kid-border);border-radius:16px;background:#fff;text-align:center; }
+.ws .ws-kid-activity-empty>span { display:grid;place-items:center;width:45px;height:45px;border-radius:50%;background:var(--page-primary);color:#fff; }
+.ws .ws-kid-activity-empty strong { margin-top:10px;color:#334155; }
+.ws .ws-kid-activity-empty p { margin:2px 0 8px;font-size:12px; }
+.ws .ws-kid-activity-empty a { display:inline-flex;align-items:center;gap:5px;color:var(--page-accent-text);font-size:12px;font-weight:750; }
+
+@media(max-width:760px){
+  .ws.ws-kid .ws-top { display:flex;position:sticky;min-height:64px;padding:8px 14px; }
+  .ws.ws-kid .ws-content { padding:20px 14px 94px; }
+  .ws .ws-kid-header-main { gap:0; }
+  .ws .ws-kid-brand img { width:108px;height:38px; }
+  .ws .ws-kid-nav { display:none; }
+  .ws.ws-kid .ws-top-actions { margin-left:auto; }
+  .ws.ws-kid .ws-notification-button { display:none; }
+  .ws.ws-kid .ws-profile-trigger { min-width:46px;padding:5px; }
+  .ws.ws-kid .ws-profile-copy,.ws.ws-kid .ws-profile-trigger>svg { display:none; }
+  .ws .ws-kid-bottom-nav { position:fixed;z-index:60;right:10px;bottom:10px;left:10px;display:grid;grid-auto-flow:column;grid-auto-columns:1fr;padding:6px;border:1px solid #e2e8f0;border-radius:18px;background:#fffffff2;box-shadow:0 12px 30px #0f172a24;backdrop-filter:blur(14px); }
+  .ws .ws-kid-bottom-nav a { display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:52px;border-radius:13px;color:#64748b;font-size:10px;font-weight:650;text-align:center; }
+  .ws .ws-kid-bottom-nav a.active { background:var(--page-primary);color:#fff; }
+  .ws .ws-kid-welcome { align-items:flex-start;margin-bottom:20px; }
+  .ws .ws-kid-welcome-note { display:none; }
+  .ws .ws-kid-welcome h1 { font-size:34px; }
+  .ws .ws-kid-journey-card { grid-template-columns:1fr;min-height:0; }
+  .ws .ws-kid-journey-main { padding:28px 24px; }
+  .ws .ws-kid-journey-main h2 { font-size:28px; }
+  .ws .ws-kid-journey-aside { align-items:flex-start;padding:20px 24px 26px;border-top:1px solid var(--kid-border);border-left:0; }
+  .ws .ws-journey-orbit { display:none; }
+  .ws .ws-kid-mini-metrics { flex-wrap:wrap; }
+  .ws .ws-kid-dashboard-grid { grid-template-columns:1fr; }
 }

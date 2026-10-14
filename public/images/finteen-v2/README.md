@@ -12,8 +12,12 @@ Cập nhật 03/10/2026 theo yêu cầu người dùng: **toàn bộ nhân vật
 | [4](chapter-04/README.md) | 16 | Cùng bộ chương 2 |
 | [5](chapter-05/README.md) | 16 | Cùng bộ chương 2 |
 | [6](chapter-06/README.md) | 18 | Sơ mi xắn tay và quần dài |
+| [7](chapter-07/README.md) | 17 | Cùng bộ polo chương 3 |
+| [8](chapter-08/README.md) | 18 | Cùng bộ sơ mi xắn tay chương 6 |
 
-GDD v2 có 8 **tình huống độc lập**. Chương 7 là 17 tuổi, chương 8 là 18 tuổi; hai chương này chưa nằm trong bộ ảnh hiện tại. Không nối số chương thành một hành trình lớn lên.
+GDD v2 có 8 **tình huống độc lập**. Chương 7 là 17 tuổi, chương 8 là 18 tuổi. Không nối số chương thành một hành trình lớn lên.
+
+Bổ sung ngày 14/10/2026: **59 PNG cho chương 7–8**, gồm 9 nền, 9 scene, 18 sprite, 19 ảnh mini-game và 4 props. 32 ảnh mới tạo bằng imagegen tích hợp, 27 ảnh tái sử dụng nguyên bản đúng tuổi/phong cách. Xem README từng chương, [manifest 7–8](chapter-07-08-manifest.json), [prompt](../../../output/chapter-07-08-art/final-prompts.md) và bảng kiểm tra [chương 7](../../../output/chapter-07-08-art/chapter-07-review.png), [chương 8](../../../output/chapter-07-08-art/chapter-08-review.png). Bộ mới dùng cartoon 2D kawaii/chibi; chưa thêm gameplay 7–8.
 
 - [Nguồn và quy tắc độ tuổi](../../../docs/finteen-v2-character-ages.md).
 - [Manifest ảnh hiện tại](character-age-manifest.json).

@@ -1,73 +1,22 @@
 import { Link } from "react-router-dom";
-import { Store, BookOpen, BadgeDollarSign, Briefcase } from "lucide-react";
+import { BookOpen, BadgeDollarSign, Briefcase } from "lucide-react";
 import { CHAPTERS } from "./model";
 import { Heading } from "./ui";
 import { usePublishedChapters } from "../internal/hooks";
 
 export function KidGames() {
   const published = usePublishedChapters();
-  return (
-    <>
-      <Heading
-        title="Trò chơi của bạn"
-        description="Chọn một chương để khám phá câu chuyện và thử thách tài chính."
-      />
-      <div className="ws-grid two">
-        {CHAPTERS.map((title, i) => (
-          <article className="ws-card ws-chapter" key={title}>
-            <span className="ws-chapter-number">
-              {String(i + 1).padStart(2, "0")}
-            </span>
-            <div>
-              <small>CHƯƠNG {i + 1}</small>
-              <h2>
-                {published.find((c) => c.number === i + 1)?.version.title ||
-                  title}
-              </h2>
-              <p>
-                {i < 3 || published.some((c) => c.number === i + 1)
-                  ? "Có thể trải nghiệm ngay"
-                  : "Nội dung trò chơi đang được chuẩn bị"}
-              </p>
-              <Link
-                className="ws-text-link"
-                to={`/dashboard/kid/play?chapter=${i + 1}`}
-              >
-                {i < 3 || published.some((c) => c.number === i + 1)
-                  ? "Vào chơi →"
-                  : "Xem chương →"}
-              </Link>
-            </div>
-          </article>
-        ))}
-      </div>
-    </>
-  );
-}
-
-export function KidShop() {
-  return (
-    <>
-      <Heading
-        title="Cửa hàng"
-        description="Không gian cửa hàng dành cho các bạn nhỏ."
-      />
-      <section className="ws-hero ws-shop-intro">
-        <div>
-          <span className="ws-pill">GÓC KHÁM PHÁ</span>
-          <h2>Một điều mới đang được chuẩn bị.</h2>
-          <p>
-            Cửa hàng đang được chuẩn bị. Bạn quay lại khám phá bài học và trò
-            chơi trước nhé!
-          </p>
-          <Link className="ws-btn primary" to="/dashboard/kid/games">
-            Khám phá trò chơi →
-          </Link>
-        </div>
-        <Store className="ws-hero-art" aria-hidden="true" />
-      </section>
-    </>
-  );
+  return <>
+    <Heading title="Trò chơi theo chương" description="Chọn một chương để bước vào câu chuyện và thử thách tài chính."/>
+    <div className="ws-grid two ws-kid-game-grid">{CHAPTERS.map((title, index) => {
+      const chapter = index + 1
+      const available = chapter <= 3 || published.some(item => item.number === chapter)
+      return <article className={`ws-card ws-chapter ${available ? '' : 'is-coming'}`} key={title}>
+        <span className="ws-chapter-number">{String(chapter).padStart(2, '0')}</span>
+        <div><small>CHƯƠNG {chapter}</small><h2>{published.find(item => item.number === chapter)?.version.title || title}</h2><p>{available ? 'Câu chuyện và thử thách đã sẵn sàng' : 'Nội dung chương đang được chuẩn bị'}</p><Link className={available ? 'ws-btn primary' : 'ws-btn'} to={`/dashboard/kid/play?chapter=${chapter}`}>{available ? 'Vào chơi →' : 'Xem chương →'}</Link></div>
+      </article>
+    })}</div>
+  </>
 }
 
 export function GuestDemo() {

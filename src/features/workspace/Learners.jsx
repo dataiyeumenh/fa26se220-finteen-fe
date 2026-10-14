@@ -17,6 +17,7 @@ export function Learners({ groupsOnly = false }) {
   const context = actor.role === 'teacher' ? 'CLASS' : 'FAMILY'
   const [group, setGroup] = useState(null)
   const [slots, setSlots] = useState([])
+  const [capacity, setCapacity] = useState(null)
   const [loading, setLoading] = useState(true)
   const [modal, setModal] = useState(null)
   const [search, setSearch] = useState('')
@@ -30,7 +31,14 @@ export function Learners({ groupsOnly = false }) {
       const allGroups = await auth.listGroups() || []
       const open = allGroups.find(item => item.context === context && !item.closedAt) || null
       setGroup(open)
-      setSlots(open ? await auth.listGroupSlots(open.id) || [] : [])
+      if (open) {
+        const [slotRows, availableCapacity] = await Promise.all([auth.listGroupSlots(open.id), auth.groupCapacity(open.id)])
+        setSlots(slotRows || [])
+        setCapacity(Number.isFinite(Number(availableCapacity)) ? Number(availableCapacity) : null)
+      } else {
+        setSlots([])
+        setCapacity(null)
+      }
     } catch (loadError) { setError(errorMessage(loadError)) }
     finally { setLoading(false) }
   }, [context])
@@ -45,7 +53,7 @@ export function Learners({ groupsOnly = false }) {
   const active = slots.filter(slot => slot.status === 'ACTIVE')
   const inactive = slots.filter(slot => slot.status !== 'ACTIVE')
   const visible = (tab === 'ACTIVE' ? active : inactive).filter(slot => !search || `${slot.displayName || ''} ${slot.code || ''}`.toLowerCase().includes(search.toLowerCase()))
-  const available = group ? Math.max(0, Number(group.slotLimit) - Number(group.slotUsed)) : 0
+  const available = group ? capacity ?? Math.max(0, Number(group.slotLimit) - Number(group.slotUsed)) : 0
 
   const run = async (action, success) => {
     setError('')

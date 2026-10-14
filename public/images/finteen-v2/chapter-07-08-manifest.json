@@ -1,0 +1,479 @@
+{
+  "date": "2026-10-14",
+  "style": "cartoon 2D kawaii/chibi",
+  "count": 59,
+  "files": [
+    {
+      "path": "chapter-07/asset-mini-game/scam-or-safe/link-inspection.png",
+      "width": 1254,
+      "height": 1254,
+      "alphaMin": 0,
+      "alphaMax": 254,
+      "sha256": "28379FF224C2D3E9700DE74E1DB7B7E000A4B549644CCD01BC83607758BF69B6"
+    },
+    {
+      "path": "chapter-07/asset-mini-game/scam-or-safe/message-phone.png",
+      "width": 1254,
+      "height": 1254,
+      "alphaMin": 0,
+      "alphaMax": 254,
+      "sha256": "D10B6FE486BC0FADE1773976973BB253543C212737FB4AA160158E7EC0AA45F9"
+    },
+    {
+      "path": "chapter-07/asset-mini-game/scam-or-safe/official-contact.png",
+      "width": 1254,
+      "height": 1254,
+      "alphaMin": 0,
+      "alphaMax": 255,
+      "sha256": "4ACF7F8606CD0E429191C2AF9FAE55479B735133DA10FEEA2BC75DFEB311E77E"
+    },
+    {
+      "path": "chapter-07/asset-mini-game/scam-or-safe/protect-account.png",
+      "width": 1254,
+      "height": 1254,
+      "alphaMin": 0,
+      "alphaMax": 254,
+      "sha256": "34616747A1E01303ABC612A7C18179C4F284F6449B940BA02892DC67E0127182"
+    },
+    {
+      "path": "chapter-07/asset-mini-game/scam-or-safe/save-evidence.png",
+      "width": 1254,
+      "height": 1254,
+      "alphaMin": 0,
+      "alphaMax": 254,
+      "sha256": "E2E227AA8A167CEAAEEBEF40762D02F1F09EBA441EB1D1107E85E1D5B74AB88F"
+    },
+    {
+      "path": "chapter-07/asset-mini-game/scam-or-safe/stop-transaction.png",
+      "width": 1254,
+      "height": 1254,
+      "alphaMin": 0,
+      "alphaMax": 254,
+      "sha256": "50BE8F5DE81B53F15A44A99DCBC9006710AE8C6E211CD215FB84F6297F889366"
+    },
+    {
+      "path": "chapter-07/asset-mini-game/scam-or-safe/time-pressure.png",
+      "width": 1254,
+      "height": 1254,
+      "alphaMin": 0,
+      "alphaMax": 254,
+      "sha256": "71DE1A2E794BCBC4CF77FF538F179B047301A1A5D805E58E85C6763361A63C59"
+    },
+    {
+      "path": "chapter-07/bg/bg11-school-infirmary.png",
+      "width": 1672,
+      "height": 941,
+      "alphaMin": 255,
+      "alphaMax": 255,
+      "sha256": "AE928C7E0BD942AA230B7658AF4DCAE9BF584CBA3D904087A8A843F55A34F3E9"
+    },
+    {
+      "path": "chapter-07/bg/bg11b-medical-paperwork-desk.png",
+      "width": 1672,
+      "height": 941,
+      "alphaMin": 255,
+      "alphaMax": 255,
+      "sha256": "B873EF63271DB96F46680887AA0DAAD5AF6BC3CE76E905E95873D8F79654C64E"
+    },
+    {
+      "path": "chapter-07/bg/bg11c-recovery-evidence-desk.png",
+      "width": 1672,
+      "height": 941,
+      "alphaMin": 255,
+      "alphaMax": 255,
+      "sha256": "CF45AFAEFF8E32686297827E044BB24CF432E92814434883DC9B7224EDE3B62C"
+    },
+    {
+      "path": "chapter-07/bg/bg12-refund-message-phone.png",
+      "width": 1672,
+      "height": 941,
+      "alphaMin": 255,
+      "alphaMax": 255,
+      "sha256": "558806CFCA3227DC7F2CEC2C041136140A37AABF911642597ABD580E0118546C"
+    },
+    {
+      "path": "chapter-07/char/an/an-neutral.png",
+      "width": 1024,
+      "height": 1536,
+      "alphaMin": 0,
+      "alphaMax": 254,
+      "sha256": "C3D4863EF10C4C4B125AED3BA4220B8B2ABAD48CAF0E4A7BAED9B40A479458F9"
+    },
+    {
+      "path": "chapter-07/char/an/an-relieved.png",
+      "width": 1024,
+      "height": 1536,
+      "alphaMin": 0,
+      "alphaMax": 254,
+      "sha256": "1F8C0ADB2EC49C7EA8920C579C73DCEA26B4CFEF0C805D81D8E1BE96CAEDCED5"
+    },
+    {
+      "path": "chapter-07/char/an/an-thinking.png",
+      "width": 1024,
+      "height": 1536,
+      "alphaMin": 0,
+      "alphaMax": 254,
+      "sha256": "C1851122BEC0E4F3D49EA68E603E633F33B166F3B5F5E9FAF6975A98409E634D"
+    },
+    {
+      "path": "chapter-07/char/an/an-worried-money.png",
+      "width": 1024,
+      "height": 1536,
+      "alphaMin": 0,
+      "alphaMax": 254,
+      "sha256": "0670F15C10ECF28C31DEB19B70F8DD50CC55EF423DFBD82B8EECB2DB5380B396"
+    },
+    {
+      "path": "chapter-07/char/co-linh/co-linh-encouraging.png",
+      "width": 1024,
+      "height": 1536,
+      "alphaMin": 0,
+      "alphaMax": 254,
+      "sha256": "7838D7E4E004B4C0134B5BC2B541963EDBCAE05E7A1DD2DB539AAC2A4B6BABA6"
+    },
+    {
+      "path": "chapter-07/char/co-linh/co-linh-explaining.png",
+      "width": 1024,
+      "height": 1536,
+      "alphaMin": 0,
+      "alphaMax": 254,
+      "sha256": "8F3905E47F59078FF80D5514E3C0B1682F4CB8A62032A4E545BE3009786FE221"
+    },
+    {
+      "path": "chapter-07/char/co-linh/co-linh-neutral.png",
+      "width": 1024,
+      "height": 1536,
+      "alphaMin": 0,
+      "alphaMax": 254,
+      "sha256": "AC8102FD87EE4DE7620416AC72CB62E83F94FC1090DFF317E1791C4A9DA6F5E9"
+    },
+    {
+      "path": "chapter-07/char/minh/minh-inviting.png",
+      "width": 1024,
+      "height": 1536,
+      "alphaMin": 0,
+      "alphaMax": 254,
+      "sha256": "FDF1336C171EF83CD525C0EED07A6E3428BFC2A7F6E25D5A3934A7D9181DD166"
+    },
+    {
+      "path": "chapter-07/char/minh/minh-neutral.png",
+      "width": 1024,
+      "height": 1536,
+      "alphaMin": 0,
+      "alphaMax": 254,
+      "sha256": "B0E2D71BFF5BFD40D0D4CACC755AF789079DD10E47874FC724FAE3DE395C13D7"
+    },
+    {
+      "path": "chapter-07/props/insurance-terms-folder.png",
+      "width": 1254,
+      "height": 1254,
+      "alphaMin": 0,
+      "alphaMax": 254,
+      "sha256": "9316A00F3FC3E8CFB54BEEE21E906BD7D2E33EE5E139FFFE41B9CAD8BA02EEAD"
+    },
+    {
+      "path": "chapter-07/props/medical-receipt.png",
+      "width": 1254,
+      "height": 1254,
+      "alphaMin": 0,
+      "alphaMax": 254,
+      "sha256": "CFB45C371BB602A3C5B263792354F07A4E550D765E646A5DA171854D9F092B1F"
+    },
+    {
+      "path": "chapter-07/scene/sc01-understanding-medical-cost.png",
+      "width": 1672,
+      "height": 941,
+      "alphaMin": 255,
+      "alphaMax": 255,
+      "sha256": "3313CFDBEC29E6544E8F7072163C0F93C2A55F71692F7522F1C4F53E15EEFE7D"
+    },
+    {
+      "path": "chapter-07/scene/sc02-paying-and-keeping-records.png",
+      "width": 1672,
+      "height": 941,
+      "alphaMin": 255,
+      "alphaMax": 255,
+      "sha256": "CE7C206289B41584801C1F074AB948B357CB634C631730F7A5924D06D63BD99C"
+    },
+    {
+      "path": "chapter-07/scene/sc03-checking-refund-message.png",
+      "width": 1672,
+      "height": 941,
+      "alphaMin": 255,
+      "alphaMax": 255,
+      "sha256": "4FB517F8CAA6C8362BE6E3298FD6737D74BDD917679CEEDA862C9099EE6869B2"
+    },
+    {
+      "path": "chapter-07/scene/sc04-organizing-evidence-and-support.png",
+      "width": 1672,
+      "height": 941,
+      "alphaMin": 255,
+      "alphaMax": 255,
+      "sha256": "F3BBF7734BDB9935C0095EAF98C0A5822D9EDF03ED5F7AF9CAE1BAC8B3031247"
+    },
+    {
+      "path": "chapter-08/asset-mini-game/life-planner/course-goal.png",
+      "width": 1254,
+      "height": 1254,
+      "alphaMin": 0,
+      "alphaMax": 255,
+      "sha256": "81A06F1C661119D26A52371794B9C1D43AEE56C09C4973F254E8F6F5E7B38245"
+    },
+    {
+      "path": "chapter-08/asset-mini-game/life-planner/essential-expenses.png",
+      "width": 1254,
+      "height": 1254,
+      "alphaMin": 0,
+      "alphaMax": 254,
+      "sha256": "63A2546557B6308277E794F9356962563CAD8A27CEFA9C911C0FE3694B98E24D"
+    },
+    {
+      "path": "chapter-08/asset-mini-game/life-planner/existing-obligation.png",
+      "width": 1254,
+      "height": 1254,
+      "alphaMin": 0,
+      "alphaMax": 254,
+      "sha256": "B13AE8077E5EB14AA79ED6B2E3390726E95218B47A9C21056939E513CA5AE9B9"
+    },
+    {
+      "path": "chapter-08/asset-mini-game/life-planner/flexible-expenses.png",
+      "width": 1254,
+      "height": 1254,
+      "alphaMin": 0,
+      "alphaMax": 254,
+      "sha256": "6CD2320F008456BAFCAA7E44687F8C69514DEE5C59F15194ECB97C91DF442DFC"
+    },
+    {
+      "path": "chapter-08/asset-mini-game/life-planner/income-envelope.png",
+      "width": 1254,
+      "height": 1254,
+      "alphaMin": 0,
+      "alphaMax": 254,
+      "sha256": "8EA9B612B72EA622C1B5395EDC552724AD8A502CF091D3E9FD30E1F8BFB1B56F"
+    },
+    {
+      "path": "chapter-08/asset-mini-game/life-planner/month-calendar.png",
+      "width": 1254,
+      "height": 1254,
+      "alphaMin": 0,
+      "alphaMax": 255,
+      "sha256": "F571C27F3727B4F66B178DCDD7EA6C341C3B543C2C91814F59C05B533118935A"
+    },
+    {
+      "path": "chapter-08/asset-mini-game/life-planner/price-change.png",
+      "width": 1254,
+      "height": 1254,
+      "alphaMin": 0,
+      "alphaMax": 254,
+      "sha256": "F2EA386061DE4C888CF84CB4D55A93AF9BAA1CF0AF3AF99F43774E1DAAB62E3C"
+    },
+    {
+      "path": "chapter-08/asset-mini-game/portfolio-builder/bond.png",
+      "width": 1254,
+      "height": 1254,
+      "alphaMin": 0,
+      "alphaMax": 254,
+      "sha256": "77CA5FDE6486B1599454D86F09990D84563A15D86D4795BDE96C274370CCB7B1"
+    },
+    {
+      "path": "chapter-08/asset-mini-game/portfolio-builder/diversified-fund.png",
+      "width": 1254,
+      "height": 1254,
+      "alphaMin": 0,
+      "alphaMax": 254,
+      "sha256": "0C84825A817F90DF44048B47989E035133D8C55F5B0DF655BF9DCEBCF0FF13DD"
+    },
+    {
+      "path": "chapter-08/asset-mini-game/portfolio-builder/equity.png",
+      "width": 1254,
+      "height": 1254,
+      "alphaMin": 0,
+      "alphaMax": 254,
+      "sha256": "F92EE6AA14A3361EF16BCA1127C7933EBC2C25BD3FD81CA6775132CDCDCCB4F4"
+    },
+    {
+      "path": "chapter-08/asset-mini-game/portfolio-builder/liquid-money.png",
+      "width": 1254,
+      "height": 1254,
+      "alphaMin": 0,
+      "alphaMax": 255,
+      "sha256": "261F67D673AB7F321AA0B456D51E5C1C11E74D74695CCA03A470227016931E28"
+    },
+    {
+      "path": "chapter-08/asset-mini-game/portfolio-builder/real-estate.png",
+      "width": 1254,
+      "height": 1254,
+      "alphaMin": 0,
+      "alphaMax": 254,
+      "sha256": "FA07579376A6716FE19065514131D32384959A96EC3266C655FF69BB5528BB79"
+    },
+    {
+      "path": "chapter-08/bg/bg12-investment-simulation-tablet.png",
+      "width": 1672,
+      "height": 941,
+      "alphaMin": 255,
+      "alphaMax": 255,
+      "sha256": "70F555268F7C5F0E2BCB88BC722DE83CD032801DFA682D6DED34B073304C0F42"
+    },
+    {
+      "path": "chapter-08/bg/bg13-investment-classroom.png",
+      "width": 1672,
+      "height": 941,
+      "alphaMin": 255,
+      "alphaMax": 255,
+      "sha256": "468D478141662FB37BAF930C52FCD5813DA4E9AA0E5210B8168C685815FC613D"
+    },
+    {
+      "path": "chapter-08/bg/bg13b-asset-allocation-table.png",
+      "width": 1672,
+      "height": 941,
+      "alphaMin": 255,
+      "alphaMax": 255,
+      "sha256": "3E8AD21FE8C6A1E0FEE81A7BF13F1A144815B303DE821EA210DC58C938CF052B"
+    },
+    {
+      "path": "chapter-08/bg/bg14-twelve-month-planning-desk.png",
+      "width": 1672,
+      "height": 941,
+      "alphaMin": 255,
+      "alphaMax": 255,
+      "sha256": "CE5F40ED413CFABA678CA7131F822503331C540C97FBDEFE2918FF53A4C07ED4"
+    },
+    {
+      "path": "chapter-08/bg/bg14b-plan-review-corner.png",
+      "width": 1672,
+      "height": 941,
+      "alphaMin": 255,
+      "alphaMax": 255,
+      "sha256": "19FACF22B7B3F54D9BF1BD08DE2831E12BBD9556BCBEFC73D679B0A5A7C7F718"
+    },
+    {
+      "path": "chapter-08/char/an/an-neutral.png",
+      "width": 1024,
+      "height": 1536,
+      "alphaMin": 0,
+      "alphaMax": 254,
+      "sha256": "9AA673C507F6010A1B94B27A4CB5B6BE0F98B812D0979EB431B8DD5347D4DFED"
+    },
+    {
+      "path": "chapter-08/char/an/an-relieved.png",
+      "width": 1024,
+      "height": 1536,
+      "alphaMin": 0,
+      "alphaMax": 254,
+      "sha256": "BE195AB1F4398EF2714E764CF88CCD5F23748600F328AA73B795ADA595F15225"
+    },
+    {
+      "path": "chapter-08/char/an/an-thinking.png",
+      "width": 1024,
+      "height": 1536,
+      "alphaMin": 0,
+      "alphaMax": 254,
+      "sha256": "9A55D87EA56249A8897984FD9F38C61728608C8B56AA0DE490557693E6F3845A"
+    },
+    {
+      "path": "chapter-08/char/an/an-worried-money.png",
+      "width": 1024,
+      "height": 1536,
+      "alphaMin": 0,
+      "alphaMax": 254,
+      "sha256": "AC4CF4235C2FCE9CE12146C41A723D15AC2A7976471EFCC0C48F68727B844470"
+    },
+    {
+      "path": "chapter-08/char/co-linh/co-linh-encouraging.png",
+      "width": 1024,
+      "height": 1536,
+      "alphaMin": 0,
+      "alphaMax": 254,
+      "sha256": "7838D7E4E004B4C0134B5BC2B541963EDBCAE05E7A1DD2DB539AAC2A4B6BABA6"
+    },
+    {
+      "path": "chapter-08/char/co-linh/co-linh-explaining.png",
+      "width": 1024,
+      "height": 1536,
+      "alphaMin": 0,
+      "alphaMax": 254,
+      "sha256": "8F3905E47F59078FF80D5514E3C0B1682F4CB8A62032A4E545BE3009786FE221"
+    },
+    {
+      "path": "chapter-08/char/co-linh/co-linh-neutral.png",
+      "width": 1024,
+      "height": 1536,
+      "alphaMin": 0,
+      "alphaMax": 254,
+      "sha256": "AC8102FD87EE4DE7620416AC72CB62E83F94FC1090DFF317E1791C4A9DA6F5E9"
+    },
+    {
+      "path": "chapter-08/char/minh/minh-inviting.png",
+      "width": 1024,
+      "height": 1536,
+      "alphaMin": 0,
+      "alphaMax": 254,
+      "sha256": "57C430C7DD4E1768D58037AC5A6C9F0D7582B214C0A3298A71B6F0955FA49B6C"
+    },
+    {
+      "path": "chapter-08/char/minh/minh-neutral.png",
+      "width": 1024,
+      "height": 1536,
+      "alphaMin": 0,
+      "alphaMax": 254,
+      "sha256": "24C55D5915D52067E4ED916E29D98D6EF550E167133251964E0DE813EBBE6DA7"
+    },
+    {
+      "path": "chapter-08/props/crypto-app.png",
+      "width": 1254,
+      "height": 1254,
+      "alphaMin": 0,
+      "alphaMax": 254,
+      "sha256": "2CCD66115F67399DAD979C384D574E7FFA059BCAC9FAA48EC528500644E2AC01"
+    },
+    {
+      "path": "chapter-08/props/esg-claim-inspection.png",
+      "width": 1254,
+      "height": 1254,
+      "alphaMin": 0,
+      "alphaMax": 254,
+      "sha256": "E86CB344F62623BA7C171C77A3E44E7DB303499E25E45CF03E25A944F3CD677D"
+    },
+    {
+      "path": "chapter-08/scene/sc01-near-and-long-term-goals.png",
+      "width": 1672,
+      "height": 941,
+      "alphaMin": 255,
+      "alphaMax": 255,
+      "sha256": "6C08627F18A07FB79E67300DB948262CC302DDB93A972B0468D18B2309F3D590"
+    },
+    {
+      "path": "chapter-08/scene/sc02-building-allocation.png",
+      "width": 1672,
+      "height": 941,
+      "alphaMin": 255,
+      "alphaMax": 255,
+      "sha256": "A92767C507D7912408FA88D34A2DCFFFDF30DB854F64A48CBBA1196054888E65"
+    },
+    {
+      "path": "chapter-08/scene/sc03-reviewing-market-and-promises.png",
+      "width": 1672,
+      "height": 941,
+      "alphaMin": 255,
+      "alphaMax": 255,
+      "sha256": "BD01261BF6E776BCC94B18D02256E1CE4A11D5FA5FB8078F581D663536B8D779"
+    },
+    {
+      "path": "chapter-08/scene/sc04-adjusting-twelve-month-plan.png",
+      "width": 1672,
+      "height": 941,
+      "alphaMin": 255,
+      "alphaMax": 255,
+      "sha256": "A51A163894A8B5218FCBFE314A8F024E39B3612BA41CDBB3E367FA5C7F40F36C"
+    },
+    {
+      "path": "chapter-08/scene/sc05-explaining-personal-plan.png",
+      "width": 1672,
+      "height": 941,
+      "alphaMin": 255,
+      "alphaMax": 255,
+      "sha256": "EA877322BC1C11A8FB4CCCFE81956A582A7D9250FE229B29B4E629402928F7C1"
+    }
+  ]
+}
