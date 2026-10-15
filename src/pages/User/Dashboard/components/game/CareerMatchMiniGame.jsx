@@ -20,7 +20,7 @@ export function CareerMatchMiniGame({ game, onComplete, className }) {
   const [fitFirstScore, setFitFirstScore] = useState(null);
   const [fitSolved, setFitSolved] = useState(false);
   const [picked, setPicked] = useState({});
-  const [missed, setMissed] = useState({});
+  
   const [feedback, setFeedback] = useState({
     tone: "info",
     text: `Mỗi tuần An chỉ có tối đa ${game.weeklyLimit} giờ ngoài giờ học. Hãy đánh dấu từng việc là vừa lịch hay quá giờ.`,
@@ -29,9 +29,7 @@ export function CareerMatchMiniGame({ game, onComplete, className }) {
   const isFit = (job) => job.hours <= game.weeklyLimit;
   const allVerdicts = jobs.every((job) => verdicts[job.id]);
   const calcAnswered = questions.every((question) => picked[question.id]);
-  const calcFirstScore = questions.filter(
-    (question) => !missed[question.id],
-  ).length;
+  const calcScore = questions.filter(question => picked[question.id] === question.correctId).length;
 
   const setVerdict = (jobId, value) => {
     if (fitSolved) return;
@@ -70,7 +68,6 @@ export function CareerMatchMiniGame({ game, onComplete, className }) {
     if (option.id === question.correctId) {
       setFeedback({ tone: "good", text: question.explain });
     } else {
-      setMissed((current) => ({ ...current, [question.id]: true }));
       setFeedback({ tone: "bad", text: question.hint });
     }
   };
@@ -86,7 +83,7 @@ export function CareerMatchMiniGame({ game, onComplete, className }) {
   const finish = () => {
     onComplete?.({
       passed: jobs.every((job) => (verdicts[job.id] === "fit") === isFit(job)) && questions.every((question) => picked[question.id] === question.correctId),
-      score: (fitFirstScore ?? 0) + calcFirstScore,
+      score: (fitFirstScore ?? 0) + calcScore,
       total: jobs.length + questions.length,
     });
   };

@@ -124,7 +124,7 @@ export function canAccessChapter(actor, chapter) {
   return Boolean(
     actor &&
     Number.isInteger(chapter) &&
-    ((actor.role === "guest" && [1, 2, 3].includes(chapter)) ||
+    ((actor.role === "guest" && [1, 2, 3, 4].includes(chapter)) ||
       (actor.role === "kid" && PLANS[actor.plan]?.chapters.includes(chapter))),
   );
 }

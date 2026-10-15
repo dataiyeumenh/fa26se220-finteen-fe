@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Store, BookOpen, BadgeDollarSign, Briefcase } from "lucide-react";
+import { Store, BookOpen, BadgeDollarSign, Briefcase, ShoppingBag } from "lucide-react";
 import { CHAPTERS } from "./model";
 import { Heading } from "./ui";
 import { usePublishedChapters } from "../internal/hooks";
@@ -128,6 +128,20 @@ export function GuestDemo() {
             </Link>
           </div>
           <Briefcase className="ws-hero-art" aria-hidden="true" />
+        </section>
+        <section className="ws-hero ws-shop-intro">
+          <div>
+            <span className="ws-pill">CHƯƠNG MỚI</span>
+            <h2>Chương 4: Mua thông minh</h2>
+            <p>
+              So sánh điện thoại theo nhu cầu và tổng chi phí, kiểm tra hóa đơn
+              và theo dõi thuê bao để đưa ra lựa chọn phù hợp.
+            </p>
+            <Link className="ws-btn primary" to="/dashboard/demo/play?chapter=4">
+              Bắt đầu Chapter 4 →
+            </Link>
+          </div>
+          <ShoppingBag className="ws-hero-art" aria-hidden="true" />
         </section>
       </div>
     </>

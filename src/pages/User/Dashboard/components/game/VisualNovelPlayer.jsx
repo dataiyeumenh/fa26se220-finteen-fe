@@ -19,14 +19,16 @@ import { NeedWantMiniGame } from "./NeedWantMiniGame";
 import { BudgetBuilderMiniGame } from "./BudgetBuilderMiniGame";
 import { SavingsRaceMiniGame } from "./SavingsRaceMiniGame";
 import { CareerMatchMiniGame } from "./CareerMatchMiniGame";
+import { SmartShoppingMiniGame } from "./SmartShoppingMiniGame";
+import { InspectHotspot } from "./InspectHotspot.jsx";
 import "./chapter-three.css";
-import { flexibleReserveLock } from "./miniGameRules";
+import { flexibleReserveLock, recordMiniGameResult, summarizeMiniGames } from "./miniGameRules";
 
 function applyStatEffects(current, effects = {}) {
   const next = { ...current };
   Object.entries(effects).forEach(([key, delta]) => {
     const currentValue = next[key] ?? 0;
-    next[key] = Math.max(0, currentValue + Number(delta || 0));
+    next[key] = Math.min(100, Math.max(0, currentValue + Number(delta || 0)));
   });
   return next;
 }
@@ -185,7 +187,7 @@ function EndingReport({ report }) {
         )}
         {report.miniPercent !== null && (
           <li>
-            Mini-game chọn nghề: <b>{report.miniPercent}%</b>
+            Mini-game: <b>{report.miniPercent}%</b>
           </li>
         )}
         {report.reflectionPercent !== null && (
@@ -255,7 +257,8 @@ export function VisualNovelPlayer({ data }) {
   const [budgetAllocations, setBudgetAllocations] = useState({});
   const [inspectPopup, setInspectPopup] = useState(null);
   const [miniGameCompleted, setMiniGameCompleted] = useState(false);
-  const [miniGameScore, setMiniGameScore] = useState(0); // Track score: 0-6
+  const [miniGameResults, setMiniGameResults] = useState({});
+  const { score: miniGameScore, percent: miniGamePercent } = summarizeMiniGames(miniGameResults);
   const [money, setMoney] = useState(data.initialMoney || 0);
   const [moneyFx, setMoneyFx] = useState(null);
 
@@ -505,6 +508,24 @@ export function VisualNovelPlayer({ data }) {
     setInspectPopup(inspect);
   };
 
+  const closeInspectPopup = () => {
+    if (!inspectPopup) return;
+    const popup = inspectPopup;
+    if (Array.isArray(popup.moneyEvents)) {
+      const newEvents = popup.moneyEvents.filter((evt, index) =>
+        !moneyEventsApplied[evt.eventId || `${popup.id || "inspect"}:${index}`]);
+      if (newEvents.length) {
+        const delta = newEvents.reduce((sum, evt) => sum + Number(evt.amount || 0), 0);
+        setMoneyEventsApplied(prev => ({ ...prev, ...Object.fromEntries(newEvents.map((evt, i) => [evt.eventId || `${popup.id || "inspect"}:${i}`, true])) }));
+        setMoney(prev => Math.max(0, prev + delta));
+        if (delta) setMoneyFx(delta);
+      }
+    }
+    if (popup.setFlags) setFlags(prev => ({ ...prev, ...popup.setFlags }));
+    setInspectPopup(null);
+    if (popup.autoNextSceneOnClose) goNext();
+  };
+
   const selectChoice = (option) => {
     if (getOptionLock(option)) return;
 
@@ -603,15 +624,16 @@ export function VisualNovelPlayer({ data }) {
 
   const handleMiniGameComplete = (result) => {
     if (result?.allocations) setBudgetAllocations(result.allocations);
-    const { score } = result || {};
+    setMiniGameResults(previous => recordMiniGameResult(previous, {
+      chapterId: data.metadata?.chapterId || data.id,
+      sceneId: scene.id,
+      gameId: scene.game?.id || scene.id,
+    }, result || {}));
     setMiniGameDoneByScene((prev) => ({
       ...prev,
       [scene.id]: true,
     }));
     setMiniGameCompleted(true);
-    if (score !== undefined) {
-      setMiniGameScore(score);
-    }
 
     const targetSceneId = scene.nextSceneId || scene.onPassSceneId;
     if (targetSceneId && typeof sceneIndexById[targetSceneId] === "number") {
@@ -642,7 +664,7 @@ export function VisualNovelPlayer({ data }) {
     setMoneyEventsApplied({});
     setBudgetAllocations({});
     setMiniGameCompleted(false);
-    setMiniGameScore(0);
+    setMiniGameResults({});
     setMoney(data.initialMoney || 0);
     setMoneyFx(null);
   };
@@ -729,10 +751,7 @@ export function VisualNovelPlayer({ data }) {
         0,
       ),
     );
-    const miniPercent =
-      miniGameCompleted && config.miniGameMax
-        ? Math.min(100, Math.round((100 * miniGameScore) / config.miniGameMax))
-        : null;
+    const miniPercent = miniGamePercent;
     const reflectionPercent = config.reflectionMax
       ? Math.min(
           100,
@@ -923,6 +942,19 @@ export function VisualNovelPlayer({ data }) {
                 <div style={{ width: progress + "%" }} />
               </div>
               <div className="vn-menu-actions">
+                <button
+                  type="button"
+                  className="vn-icon-button"
+                  disabled={scenePath.length <= 1 || Boolean(pendingEffects) || Boolean(inspectPopup)}
+                  onClick={() => {
+                    setScenePath(current => current.length > 1 ? current.slice(0, -1) : current);
+                    if (menuDetailsRef.current) menuDetailsRef.current.open = false;
+                  }}
+                  title="Lùi lại một cảnh đã đi qua; giữ nguyên tiền và điểm"
+                >
+                  <ArrowLeft size={18} />
+                  <span>Lùi lại một cảnh</span>
+                </button>
                 <Link
                   to="/dashboard/user/lessons"
                   className="vn-icon-button"
@@ -993,6 +1025,8 @@ export function VisualNovelPlayer({ data }) {
         className="vn-play-area"
         onClick={(event) => {
           if (
+            scene.id === "CH01_SC01_A" ||
+            Boolean(scene.inspect?.hotspot) ||
             !canGoNext ||
             pendingEffects ||
             hasChoiceOptions ||
@@ -1043,7 +1077,9 @@ export function VisualNovelPlayer({ data }) {
               </>
             )}
 
-            {isSceneOnlyScreen && scene.inspect && (
+            {isSceneOnlyScreen && scene.inspect?.hotspot ? (
+              <InspectHotspot key={scene.id} sceneId={scene.id} inspect={scene.inspect} onOpen={openInspect} />
+            ) : isSceneOnlyScreen && scene.inspect && (
               <button
                 className="vn-inspect-button"
                 onClick={(event) => {
@@ -1083,6 +1119,13 @@ export function VisualNovelPlayer({ data }) {
                 key={`${scene.id}-${scenePath.length}`}
                 game={scene.game}
                 planFlag={gameFlag}
+                onComplete={handleMiniGameComplete}
+                className="h-full"
+              />
+            ) : scene.game?.id === "SMART_SHOPPING_CH04" ? (
+              <SmartShoppingMiniGame
+                key={`${scene.id}-${scenePath.length}`}
+                game={scene.game}
                 onComplete={handleMiniGameComplete}
                 className="h-full"
               />
@@ -1298,34 +1341,7 @@ export function VisualNovelPlayer({ data }) {
                 {inspectPopup.buttonText}
               </h3>
               <button
-                onClick={() => {
-                  // Handle money events when closing popup
-                  if (
-                    inspectPopup.moneyEvents &&
-                    Array.isArray(inspectPopup.moneyEvents)
-                  ) {
-                    const totalMoneyDelta = inspectPopup.moneyEvents.reduce(
-                      (sum, evt) => sum + (evt.amount || 0),
-                      0,
-                    );
-                    setMoney((prev) => Math.max(0, prev + totalMoneyDelta));
-                    if (totalMoneyDelta !== 0) {
-                      setMoneyFx(totalMoneyDelta);
-                      setTimeout(() => setMoneyFx(null), 1200);
-                    }
-                  }
-                  // Handle flags when closing popup
-                  if (
-                    inspectPopup.setFlags &&
-                    Object.keys(inspectPopup.setFlags).length > 0
-                  ) {
-                    setFlags((prev) => ({ ...prev, ...inspectPopup.setFlags }));
-                  }
-                  setInspectPopup(null);
-                  if (inspectPopup.autoNextSceneOnClose) {
-                    goNext();
-                  }
-                }}
+                onClick={closeInspectPopup}
                 className="text-white/60 hover:text-white text-2xl leading-none"
               >
                 ×
@@ -1366,34 +1382,7 @@ export function VisualNovelPlayer({ data }) {
               {inspectPopup.dataText}
             </p>
             <button
-              onClick={() => {
-                // Handle money events when closing popup
-                if (
-                  inspectPopup.moneyEvents &&
-                  Array.isArray(inspectPopup.moneyEvents)
-                ) {
-                  const totalMoneyDelta = inspectPopup.moneyEvents.reduce(
-                    (sum, evt) => sum + (evt.amount || 0),
-                    0,
-                  );
-                  setMoney((prev) => Math.max(0, prev + totalMoneyDelta));
-                  if (totalMoneyDelta !== 0) {
-                    setMoneyFx(totalMoneyDelta);
-                    setTimeout(() => setMoneyFx(null), 1200);
-                  }
-                }
-                // Handle flags when closing popup
-                if (
-                  inspectPopup.setFlags &&
-                  Object.keys(inspectPopup.setFlags).length > 0
-                ) {
-                  setFlags((prev) => ({ ...prev, ...inspectPopup.setFlags }));
-                }
-                setInspectPopup(null);
-                if (inspectPopup.autoNextSceneOnClose) {
-                  goNext();
-                }
-              }}
+              onClick={closeInspectPopup}
               className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg text-sm font-bold"
             >
               Đóng

@@ -55,12 +55,14 @@ export default function UserGames() {
   const isChapterOne = chapterId === "1";
   const isChapterTwo = chapterId === "2";
   const isChapterThree = chapterId === "3";
+  const isChapterFour = chapterId === "4";
   const published = usePublishedChapters().find(
     (chapter) => chapter.number === Number(chapterId),
   );
   const { user, loading, error } = useUserDashboard();
   const [gameData, setGameData] = useState(null);
   const [runtimeError, setRuntimeError] = useState("");
+  const [loadedChapterId, setLoadedChapterId] = useState(null);
 
   useEffect(() => {
     let mounted = true;
@@ -73,10 +75,13 @@ export default function UserGames() {
             ? await loadChapter2V2RuntimeData()
             : isChapterThree
               ? await loadChapter3V2RuntimeData()
-              : null;
+              : isChapterFour
+                ? (await import("./data/chapter4V2VisualNovel")).chapter4V2GameData
+                : null;
         if (mounted) {
           if (runtimeData) {
             setGameData(runtimeData);
+            setLoadedChapterId(chapterId);
             setRuntimeError("");
           }
         }
@@ -90,11 +95,11 @@ export default function UserGames() {
       }
     };
 
-    if (isChapterOne || isChapterTwo || isChapterThree) loadRuntime();
+    if (isChapterOne || isChapterTwo || isChapterThree || isChapterFour) loadRuntime();
     return () => {
       mounted = false;
     };
-  }, [isChapterOne, isChapterTwo, isChapterThree]);
+  }, [chapterId, isChapterOne, isChapterTwo, isChapterThree, isChapterFour]);
 
   return (
     <DashboardLayout role={role} navItems={navItems} user={user}>
@@ -142,7 +147,8 @@ export default function UserGames() {
         !error &&
         !published &&
         gameData &&
-        (isChapterOne || isChapterTwo || isChapterThree) && (
+        loadedChapterId === chapterId &&
+        (isChapterOne || isChapterTwo || isChapterThree || isChapterFour) && (
           <VisualNovelPlayer key={gameData.id} data={gameData} />
         )}
 
@@ -151,7 +157,8 @@ export default function UserGames() {
         !published &&
         !isChapterOne &&
         !isChapterTwo &&
-        !isChapterThree && (
+        !isChapterThree &&
+        !isChapterFour && (
           <div className="mx-auto max-w-5xl space-y-4">
             <div className="rounded-3xl border border-amber-200 bg-white p-8 text-center">
               <Gamepad2 className="mx-auto mb-4 h-12 w-12 text-amber-500" />
