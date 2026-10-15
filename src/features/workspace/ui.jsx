@@ -12,11 +12,11 @@ export function Modal({ title, description, onClose, children }) {
   const { actor } = useWorkspace()
   return <Dialog open onOpenChange={open => { if (!open) onClose() }}><DialogContent className="ws-modal" data-ws-role={actor?.role || 'guest'}><DialogTitle>{title}</DialogTitle><DialogDescription>{description}</DialogDescription>{children}</DialogContent></Dialog>
 }
-export function ActionForm({ onSubmit, children, submit = 'Lưu thay đổi' }) {
+export function ActionForm({ onSubmit, children, submit = 'Lưu thay đổi', submitTone = 'primary' }) {
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
   return <form className="ws-form" onSubmit={async e => {
     e.preventDefault(); setError(''); setBusy(true)
     try { await onSubmit(new FormData(e.currentTarget)) } catch (err) { setError(err.message) } finally { setBusy(false) }
-  }}>{children}<Notice text={error}/><button className="ws-btn primary" disabled={busy}>{busy ? 'Đang xử lý…' : submit}</button></form>
+  }}>{children}<Notice text={error}/><button className={`ws-btn ${submitTone}`} disabled={busy}>{busy ? 'Đang xử lý…' : submit}</button></form>
 }

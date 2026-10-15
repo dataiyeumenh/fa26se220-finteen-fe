@@ -59,7 +59,7 @@ export function StatCard({
           </span>
         )}
       </div>
-      <div className="font-display text-3xl font-black text-[#1a3a1a] leading-none">{value}</div>
+      <div className="font-display text-3xl font-black leading-none" style={{ color: textColor }}>{value}</div>
       <div className="text-xs text-[#1a3a1a]/60 mt-1.5 font-medium">{label}</div>
       {hint && <div className="text-[10px] text-[#1a3a1a]/40 mt-1">{hint}</div>}
     </div>

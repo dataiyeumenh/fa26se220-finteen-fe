@@ -79,10 +79,7 @@ function buildPath(width = 800, height = 1600) {
 }
 
 // ----- SVG Landmark cho từng node -----
-function NodeLandmark({ landmark, status, color, side }) {
-  const stroke = '#1f2937'
-  const sw = 2.5
-  const common = { fill: 'none', stroke, strokeWidth: sw, strokeLinecap: 'round', strokeLinejoin: 'round' }
+function NodeLandmark({ landmark, status, color }) {
 
   if (status === 'locked') {
     // version mờ khi bị khóa
@@ -95,7 +92,7 @@ function NodeLandmark({ landmark, status, color, side }) {
   return <LandmarkSvg landmark={landmark} color={color} />
 }
 
-function LandmarkSvg({ landmark, color }) {
+function LandmarkSvg({ landmark }) {
   const stroke = '#1f2937'
   const sw = 2.5
   const c = { fill: 'none', stroke, strokeWidth: sw, strokeLinecap: 'round', strokeLinejoin: 'round' }
@@ -355,8 +352,8 @@ function AreaGate() {
 }
 
 // ----- Chapter Node -----
-function ChapterNode({ chapter, x, y, onClick, isCurrent }) {
-  const { status, color, icon, title, subtitle, progress, lessonsCompleted, totalLessons } = chapter
+function ChapterNode({ chapter, onClick, isCurrent }) {
+  const { status, color, title, subtitle, progress, lessonsCompleted, totalLessons } = chapter
   const isLocked = status === 'locked'
   const isCompleted = status === 'completed'
 

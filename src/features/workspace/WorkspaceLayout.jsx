@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { NavLink, Link, useLocation, useNavigate } from 'react-router-dom'
-import { Home, BookOpen, Users, Layers, ClipboardList, BarChart3, Settings, LogOut, Package, Gamepad2, Store, Play, CalendarDays, AlertTriangle, Bell, ChevronDown, UserRound, CheckCircle2 } from 'lucide-react'
+import { Home, BookOpen, Users, Layers, ClipboardList, BarChart3, Settings, LogOut, Package, Gamepad2, MapPinned, Award, Play, CalendarDays, AlertTriangle, Bell, ChevronDown, UserRound, CheckCircle2 } from 'lucide-react'
 import { useWorkspace } from './useWorkspace'
 import { auth } from '../../api/auth.api'
 import { Button } from '@/components/ui/button'
@@ -12,7 +12,7 @@ import './workspace-design-system.css'
 import { currentEntitlements, daysUntilExpiry, formatPlanDate, PLAN_LIMIT, PLAN_NAME } from './entitlements'
 
 export default function WorkspaceLayout({ children }) {
-  const { actor, entitlements, entitlementsLoading } = useWorkspace()
+  const { actor, entitlements, entitlementsLoading, learnerDashboard } = useWorkspace()
   const navigate = useNavigate()
   const location = useLocation()
   const learner = actor?.role === 'kid'
@@ -23,14 +23,19 @@ export default function WorkspaceLayout({ children }) {
   const expiringEntitlements = activeEntitlements.map(item => ({ ...item, daysLeft: daysUntilExpiry(item.expiresOn) })).filter(item => item.daysLeft !== null && item.daysLeft >= 0 && item.daysLeft <= 7)
   const [profileOpen, setProfileOpen] = useState(false)
   const [notificationsOpen, setNotificationsOpen] = useState(false)
-  useEffect(() => { if (!learner) void auth.ensureEntitlements().catch(() => {}) }, [learner])
-  const label = learner ? actor?.learnerRole === 'student' ? 'Học sinh' : 'Con trong gia đình' : teacher ? 'Giáo viên' : paid ? 'Phụ huynh' : 'Khách · dùng thử'
+  useEffect(() => {
+    if (learner) void auth.ensureLearnerDashboard().catch(() => {})
+    else void auth.ensureEntitlements().catch(() => {})
+  }, [learner])
+  const learnerType = actor?.learnerRole === 'student' ? 'Học sinh' : 'Con trong gia đình'
+  const learnerGroup = learnerDashboard?.learner?.groupName
+  const label = learner ? `${learnerType}${learnerGroup ? ` · ${learnerGroup}` : ''}` : teacher ? 'Giáo viên' : paid ? 'Phụ huynh' : 'Khách · dùng thử'
   const links = learner ? [
-    ['/dashboard/kid', 'Góc học tập', Home],
-    ['/dashboard/kid/lessons', 'Bài học', BookOpen],
+    ['/dashboard/kid', 'Trang chủ', Home],
+    ['/dashboard/kid/lessons', 'Hành trình', MapPinned],
     ['/dashboard/kid/games', 'Trò chơi', Gamepad2],
-    ['/dashboard/kid/shop', 'Cửa hàng', Store],
-    ...(actor?.plan === 'teacher' ? [['/dashboard/kid/quiz', 'Quiz', ClipboardList]] : []),
+    ...(actor?.learnerRole === 'student' ? [['/dashboard/kid/quiz', 'Quiz', ClipboardList]] : []),
+    ['/dashboard/kid/achievements', 'Thành tích', Award],
   ] : [
     ['/dashboard', 'Tổng quan', Home], ['/dashboard/plans', 'Gói học tập', Package],
     ...(actor?.role === 'guest' ? [['/dashboard/demo', 'Dùng thử chương 1', Play]] : []),
@@ -40,15 +45,15 @@ export default function WorkspaceLayout({ children }) {
   ]
   const closeMenus = () => { setProfileOpen(false); setNotificationsOpen(false) }
   const pageTheme = location.pathname.includes('/plans') ? 'packages' : location.pathname.includes('/learners') ? 'children' : location.pathname.includes('/reports') ? 'reports' : location.pathname.includes('/settings') ? 'account' : location.pathname.includes('/groups') ? 'groups' : location.pathname.includes('/quiz') ? 'quiz' : location.pathname.includes('/games') || location.pathname.includes('/shop') || location.pathname.includes('/lessons') ? 'learning' : 'overview'
-  return <div className={`ws ${learner ? 'ws-kid' : 'ws-adult'}`} data-ws-role={actor?.role || 'guest'} data-ws-page={pageTheme}>
-    <aside className="ws-sidebar">
+  return <div className={`ws ${learner ? 'ws-kid' : 'ws-adult'}`} data-ws-role={actor?.role || 'guest'} data-ws-learner-context={learner ? actor?.learnerRole || 'child' : undefined} data-ws-page={pageTheme}>
+    {!learner && <aside className="ws-sidebar">
       <Link to="/" className="ws-brand"><img src="/brand/finteen-logo-v2.png" alt="FinTeen" /></Link>
       {dualContext && <div className="ws-context-switch" aria-label="Chuyển phạm vi sử dụng"><span>Không gian làm việc</span><div><Button type="button" variant={actor.role === 'parent' ? 'default' : 'ghost'} size="sm" className={actor.role === 'parent' ? 'ws-role-button active' : 'ws-role-button'} aria-pressed={actor.role === 'parent'} onClick={() => { auth.setContext('parent'); navigate('/dashboard') }}><UserRound/> Phụ huynh</Button><Button type="button" variant={actor.role === 'teacher' ? 'default' : 'ghost'} size="sm" className={actor.role === 'teacher' ? 'ws-role-button active' : 'ws-role-button'} aria-pressed={actor.role === 'teacher'} onClick={() => { auth.setContext('teacher'); navigate('/dashboard') }}><BookOpen/> Giáo viên</Button></div></div>}
       <nav aria-label="Điều hướng dashboard">{links.map(([to, text, Icon]) => <NavLink end key={to} to={to}><Icon size={19}/>{text}</NavLink>)}</nav>
       <button className="ws-logout" onClick={() => { auth.logout(); navigate('/login') }}><LogOut size={18}/> Đăng xuất</button>
-    </aside>
+    </aside>}
     <div className="ws-main"><header className="ws-top">
-      <div className="ws-top-title"><strong>Không gian {learner ? 'học tập' : 'đồng hành'}</strong><small>{teacher ? 'Quản lý lớp học và tiến độ học sinh' : learner ? 'Tiếp tục hành trình tài chính của bạn' : 'Theo dõi hành trình học tập trong một nơi'}</small></div>
+      {learner ? <div className="ws-kid-header-main"><Link to="/dashboard/kid" className="ws-kid-brand"><img src="/brand/finteen-logo-v2.png" alt="FinTeen" /></Link><nav className="ws-kid-nav" aria-label="Điều hướng học tập">{links.map(([to, text, Icon]) => <NavLink end key={to} to={to}><Icon size={18}/>{text}</NavLink>)}</nav></div> : <div className="ws-top-title"><strong>Không gian đồng hành</strong><small>{teacher ? 'Quản lý lớp học và tiến độ học sinh' : 'Theo dõi hành trình học tập trong một nơi'}</small></div>}
       <div className="ws-top-actions">
         <div className="ws-header-menu">
           <button className="ws-notification-button" type="button" aria-label="Thông báo" aria-expanded={notificationsOpen} onClick={() => { setNotificationsOpen(value => !value); setProfileOpen(false) }}><Bell size={20}/>{expiringEntitlements.length > 0 && <span>{expiringEntitlements.length}</span>}</button>
@@ -60,8 +65,8 @@ export default function WorkspaceLayout({ children }) {
         </div>
       </div>
     </header>
-      <div className="ws-demo"><strong>Chưa kết nối máy chủ:</strong> báo cáo và bài kiểm tra hiện vẫn dùng dữ liệu minh họa.</div>
       <main className="ws-content">{expiringEntitlements.length > 0 && <aside className="ws-expiry-alert" role="alert"><AlertTriangle/><div><strong>Gói học tập sắp hết hạn</strong>{expiringEntitlements.map(item => <p key={item.id}>{PLAN_NAME[item.kind] || item.kind} {item.daysLeft === 0 ? 'hết hạn hôm nay' : `còn ${item.daysLeft} ngày`} (đến {formatPlanDate(item.expiresOn)}). <Link to="/dashboard/plans">Gia hạn ngay</Link></p>)}</div></aside>}{children}</main>
     </div>
+    {learner && <nav className="ws-kid-bottom-nav" aria-label="Điều hướng học tập trên điện thoại">{links.map(([to, text, Icon]) => <NavLink end key={to} to={to}><Icon size={20}/><span>{text}</span></NavLink>)}</nav>}
   </div>
 }

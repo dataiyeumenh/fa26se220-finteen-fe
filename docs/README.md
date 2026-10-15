@@ -34,7 +34,7 @@ Nếu cần thay hành vi hiện chạy theo GDD, đó là migration có chủ �
 ## Trạng thái đã xác nhận
 
 - Gameplay main hiện có chương 1–2 tuyến cũ và đoạn demo chương 4.
-- Bộ `finteen-v2` có asset và README chi tiết cho chương 1–6; chương 7–8 chưa có bộ ảnh tương ứng.
+- Bộ `finteen-v2` có asset và README chi tiết cho chương 1–8. Ngày 14/10/2026 bổ sung 59 PNG chương 7–8 (32 ảnh mới, 27 ảnh tái sử dụng), đủ nền, scene, sprite, mini-game và props; xem `chapter-07-08-manifest.json`. Đây là trạng thái art, không xác nhận gameplay đã tích hợp.
 - Content Studio, tài khoản và quyền hiện là mô phỏng frontend/local state.
 - Không xem ghi chú “đã tạo ảnh” là bằng chứng ảnh đã được nối vào game.
 

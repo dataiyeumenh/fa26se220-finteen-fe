@@ -19,3 +19,14 @@ export function download(content, filename, type) {
   const link = document.createElement('a'); link.href = url; link.download = filename; link.click()
   setTimeout(() => URL.revokeObjectURL(url), 1000)
 }
+
+export function groupReportCsv(rows) {
+  const data = [['Học sinh', 'Mã đăng nhập', 'Trạng thái', 'Chương đã hoàn thành', 'Lần chơi', 'Hoạt động gần nhất', 'Tài sản', 'Tiết kiệm', 'Hạnh phúc', 'Rủi ro', 'Mục tiêu', 'Quiz đã giao', 'Quiz đã nộp', 'Điểm trung bình']]
+  rows.forEach(row => data.push([
+    row.displayName || 'Đã xoá', row.code || '', row.status, row.completedChapters ?? 0,
+    row.attemptIndex ?? 1, row.lastActiveAt || '', row.indicators?.wealth ?? '',
+    row.indicators?.saving ?? '', row.indicators?.happiness ?? '', row.indicators?.risk ?? '',
+    row.indicators?.goal ?? '', row.quizAssigned ?? 0, row.quizSubmitted ?? 0, row.averageScore ?? '',
+  ]))
+  return '\uFEFF' + data.map(row => row.map(csvCell).join(',')).join('\r\n')
+}
