@@ -145,29 +145,12 @@ function AccountCard({ account }) {
   return <section className="admin-card admin-account-card"><div className="admin-account-avatar">{(account.displayName || account.email || '?').trim().charAt(0).toUpperCase()}</div><div><span>TÀI KHOẢN ĐÃ CHỌN</span><h2>{account.displayName || 'Chưa đặt tên hiển thị'}</h2><p>{account.email}</p><small>ID: {account.id}</small></div><div className="admin-account-plans"><span>Gói hiện có</span><div>{account.plans?.length ? account.plans.map(plan => <b className={`admin-chip ${plan === 'TEACHER' ? 'purple' : ''}`} key={plan}>{plan}</b>) : <em>Chưa có gói</em>}</div></div></section>
 }
 
-function InternalAccounts({ selectedId, onSelect, reloadKey, disabled = false }) {
-  const [rows, setRows] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
-  useEffect(() => {   // không setState đồng bộ trong thân effect (quy tắc react-hooks/set-state-in-effect); tải lại thì giữ bảng cũ tới khi có dữ liệu mới
-    auth.listAdminRoles()
-      .then(list => { setRows(Array.isArray(list) ? list : []); setError('') })
-      .catch(loadError => setError(loadError.message || 'Không tải được danh sách tài khoản nội bộ.'))
-      .finally(() => setLoading(false))
-  }, [reloadKey])
-  return <section className="admin-card admin-table-card admin-section"><div className="admin-section-heading"><div><h2>Đang giữ vai trò nội bộ</h2><p>Mọi tài khoản có ít nhất một vai trò. Bấm “Quản lý” để cấp hoặc thu hồi; người chưa có vai trò thì tìm bằng email bên dưới.</p></div></div>
-    <Notice type="error">{error}</Notice>
-    {loading ? <div className="admin-loading">Đang tải danh sách…</div> : rows.length ? <div className="admin-table-wrap"><table><thead><tr><th>Tài khoản</th><th>Vai trò</th><th>Gói</th><th></th></tr></thead><tbody>{rows.map(row => <tr key={row.id} className={row.id === selectedId ? 'active' : ''}><td><strong>{row.displayName || 'Chưa đặt tên hiển thị'}</strong><small>{row.email}</small></td><td>{(row.roles || []).map(role => <span className={`admin-chip ${role === 'ADMIN' ? 'purple' : ''}`} key={role}>{role}</span>)}</td><td>{row.plans?.length ? row.plans.map(plan => <span className={`admin-chip ${plan === 'TEACHER' ? 'purple' : ''}`} key={plan}>{plan}</span>) : <em>Chưa có gói</em>}</td><td><button type="button" className="admin-secondary compact" disabled={disabled} onClick={() => onSelect(row)}>Quản lý</button></td></tr>)}</tbody></table></div> : <div className="admin-empty">Chưa có tài khoản nào giữ vai trò nội bộ.</div>}
-  </section>
-}
-
 function RolesTab({ actor }) {
   const [account, setAccount] = useState(null)
   const [reason, setReason] = useState('')
   const [pending, setPending] = useState(null)
   const [busy, setBusy] = useState(false)
   const [notice, setNotice] = useState(null)
-  const [listVersion, setListVersion] = useState(0)
   const chooseAccount = value => { setAccount(value); setPending(null); setReason(''); setNotice(null) }
   const requestChange = (role, action) => {
     if (!reason.trim()) { setNotice({ type: 'error', text: 'Vui lòng nhập lý do trước khi thay đổi vai trò.' }); return }
@@ -180,15 +163,13 @@ function RolesTab({ actor }) {
       const method = pending.action === 'grant' ? auth.grantAdminRole : auth.revokeAdminRole
       const result = await method({ subjectId: account.id, role: pending.role, reason })
       setAccount(current => ({ ...current, roles: result.roles || [] }))
-      setListVersion(version => version + 1)   // bảng "đang giữ vai trò" tải lại từ server, không tự suy
       setNotice({ type: 'success', text: `${pending.action === 'grant' ? 'Đã cấp' : 'Đã thu hồi'} vai trò ${pending.role} cho ${account.email}.` })
       setReason(''); setPending(null)
     } catch (error) { setNotice({ type: 'error', text: error.message }) }
     finally { setBusy(false) }
   }
   return <>
-    <header className="admin-heading"><div><span>QUẢN LÝ TRUY CẬP</span><h1>Phân quyền tài khoản</h1><p>Danh sách người đang giữ vai trò nội bộ ở ngay dưới; muốn cấp cho người mới thì tìm chính xác bằng email.</p></div></header>
-    <InternalAccounts selectedId={account?.id} onSelect={chooseAccount} reloadKey={listVersion} disabled={busy}/>
+    <header className="admin-heading"><div><span>QUẢN LÝ TRUY CẬP</span><h1>Phân quyền tài khoản</h1><p>Tìm chính xác tài khoản bằng email, sau đó cấp hoặc thu hồi vai trò nội bộ.</p></div></header>
     <AccountSearch onFound={chooseAccount} disabled={busy}/>
     <Notice type={notice?.type}>{notice?.text}</Notice>
     {!account ? <div className="admin-card admin-account-empty"><UserCog/><h2>Chọn một tài khoản để quản lý</h2><p>Thông tin vai trò và gói hiện tại sẽ xuất hiện tại đây.</p></div> : <>
