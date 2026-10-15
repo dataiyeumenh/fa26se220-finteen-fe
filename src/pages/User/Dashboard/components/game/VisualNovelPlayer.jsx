@@ -298,6 +298,7 @@ export function VisualNovelPlayer({ data }) {
   const [miniGameDoneByScene, setMiniGameDoneByScene] = useState({});
   const [sceneActionApplied, setSceneActionApplied] = useState({});
   const [stats, setStats] = useState(data.initialStats || {});
+  const [statFxByKey, setStatFxByKey] = useState({});
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [pendingEffects, setPendingEffects] = useState(null);
 
@@ -486,6 +487,8 @@ export function VisualNovelPlayer({ data }) {
     if (!effects || (!force && sceneActionApplied[sceneId])) return;
 
     setStats((current) => applyStatEffects(current, effects));
+    setStatFxByKey(effects);
+    window.setTimeout(() => setStatFxByKey({}), 1200);
     setSceneActionApplied((prev) => ({ ...prev, [sceneId]: true }));
   };
 
@@ -688,6 +691,7 @@ export function VisualNovelPlayer({ data }) {
     setMiniGameDoneByScene({});
     setSceneActionApplied({});
     setStats(data.initialStats || {});
+    setStatFxByKey({});
     setPendingEffects(null);
     pendingTransitionRef.current = null;
     setGameFlag(null);

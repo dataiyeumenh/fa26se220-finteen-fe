@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { ArrowRight, Award, BarChart3, BookOpen, Clock3, Compass, Gamepad2, History, Map, PlayCircle, RefreshCw, ShieldCheck, Users, WalletCards } from 'lucide-react'
+import { Activity, ArrowRight, Award, BarChart3, BookOpen, CheckCircle2, Clock3, Compass, Gamepad2, History, Map, PlayCircle, RefreshCw, ShieldCheck, Users } from 'lucide-react'
 import { useWorkspace } from './useWorkspace'
 import { PLANS } from './model'
 import { Heading, Empty } from './ui'
@@ -15,15 +15,41 @@ const PLAN_COPY = {
   TEACHER: { name: 'Gói Giáo viên', description: 'Tổ chức lớp học và quản lý hành trình của học sinh.', benefits: ['Tối đa 40 học sinh', 'Quản lý lớp và bài kiểm tra', 'Báo cáo kết quả học tập'] },
 }
 const PAYMENT_STATUS = { PENDING: 'Chờ thanh toán', PAID: 'Đã thanh toán', FAILED: 'Không thành công' }
-const paymentDateTime = value => value ? new Intl.DateTimeFormat('vi-VN', { dateStyle: 'short', timeStyle: 'short' }).format(new Date(value)) : '—'
+const paymentDateTime = value => value ? new Intl.DateTimeFormat('vi-VN', { dateStyle: 'short', timeStyle: 'short', timeZone: 'Asia/Ho_Chi_Minh' }).format(new Date(value)) : '—'
 
 export function Overview() {
   const { actor } = useWorkspace()
   const teacher = actor.role === 'teacher'
-  return <><Heading title={`Chào ${actor.name}!`} description="Cùng xem nhanh không gian FinTeen của bạn hôm nay."/>
-    <section className="ws-overview-hero"><div><span className="ws-overview-kicker">TỔNG QUAN TÀI KHOẢN</span><h2>{teacher ? 'Lớp học đã sẵn sàng để tiếp tục' : 'Cùng đồng hành trên hành trình tài chính'}</h2><p>{teacher ? 'Quản lý học sinh, nhóm học và tiến độ tại cùng một nơi.' : 'Theo dõi các con, thời hạn gói và kết quả học tập thật thuận tiện.'}</p><Link className="ws-btn primary" to={teacher ? '/dashboard/groups' : '/dashboard/learners'}>{teacher ? 'Mở nhóm học sinh' : 'Xem danh sách các con'}</Link></div><BookOpen /></section>
-    <div className="ws-overview-grid"><Link to="/dashboard/plans" className="ws-overview-tile"><span><WalletCards /></span><div><small>Gói đang dùng</small><strong>{actor.plans.length || 0}</strong><p>{actor.plans.map(p => PLANS[p].name).join(' + ') || 'Chưa có gói học tập'}</p></div></Link><Link to="/dashboard/learners" className="ws-overview-tile"><span><Users /></span><div><small>{teacher ? 'Học sinh & slot' : 'Các con & slot'}</small><strong>Quản lý</strong><p>Xem hồ sơ và quyền truy cập</p></div></Link><Link to="/dashboard/reports" className="ws-overview-tile"><span><BarChart3 /></span><div><small>Tiến độ học tập</small><strong>Báo cáo</strong><p>Theo dõi kết quả theo thời gian</p></div></Link></div>
-    <section className="ws-card ws-account-strip"><span><ShieldCheck /></span><div><h2>Tài khoản đã kết nối</h2><p>Gói hiện có: {actor.plans.map(p => PLANS[p].name).join(' + ') || 'Chưa có gói'}.</p></div><Link className="ws-btn" to="/dashboard/settings">Quản lý tài khoản</Link>{actor.role === 'guest' && <Link className="ws-btn" to="/dashboard/demo">Chơi thử</Link>}</section></>
+  const paid = actor.role === 'parent' || teacher
+  const [dashboard, setDashboard] = useState(null)
+  const [loading, setLoading] = useState(paid)
+  const [error, setError] = useState('')
+  const load = useCallback(async () => {
+    if (!paid) return
+    setLoading(true); setError('')
+    try {
+      const context = teacher ? 'CLASS' : 'FAMILY'
+      const groups = (await auth.listGroups() || []).filter(group => group.context === context)
+      groups.sort((a, b) => Number(Boolean(a.closedAt)) - Number(Boolean(b.closedAt)))
+      const group = groups[0] || null
+      const report = group ? await auth.getGroupReport(group.id) : null
+      setDashboard({ group, report, groupCount: groups.length })
+    } catch (loadError) { setError(loadError.message) }
+    finally { setLoading(false) }
+  }, [paid, teacher])
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  useEffect(() => { void load() }, [load])
+  const summary = dashboard?.report?.summary
+  const group = dashboard?.report?.group || dashboard?.group
+  if (!paid) return <><Heading title={`Chào ${actor.name}!`} description="Khám phá FinTeen và bắt đầu hành trình học tài chính."/><section className="ws-overview-hero"><div><span className="ws-overview-kicker">BẮT ĐẦU VỚI FINTEEN</span><h2>Trải nghiệm hành trình tài chính đầu tiên</h2><p>Chơi thử nội dung miễn phí hoặc chọn gói phù hợp để tạo hồ sơ cho trẻ.</p><div className="ws-actions"><Link className="ws-btn primary" to="/dashboard/demo">Chơi thử</Link><Link className="ws-btn" to="/dashboard/plans">Xem các gói</Link></div></div><BookOpen/></section></>
+  return <><Heading title={`Chào ${actor.name}!`} description={teacher ? 'Tình hình lớp học và hoạt động của học sinh hôm nay.' : 'Tình hình học tập của các con trong gia đình.'}><button className="ws-btn" onClick={() => void load()} disabled={loading}><RefreshCw size={16}/> Làm mới</button></Heading>
+    {error && <p className="ws-notice" role="alert">{error}</p>}
+    {loading && !dashboard ? <Empty>Đang tải tổng quan từ máy chủ…</Empty> : !group ? <section className="ws-overview-hero"><div><span className="ws-overview-kicker">BẮT ĐẦU THIẾT LẬP</span><h2>{teacher ? 'Tạo lớp học đầu tiên' : 'Tạo không gian gia đình'}</h2><p>{teacher ? 'Mở lớp, xác nhận đồng ý của phụ huynh và tạo hồ sơ học sinh.' : 'Mở nhóm gia đình để tạo hồ sơ và mã đăng nhập cho các con.'}</p><Link className="ws-btn primary" to={teacher ? '/dashboard/groups' : '/dashboard/learners'}>Thiết lập ngay <ArrowRight size={16}/></Link></div><Users/></section> : <>
+      <section className="ws-overview-live"><div><span className="ws-overview-kicker">{group.closedAt ? 'NHÓM ĐÃ KẾT THÚC' : 'ĐANG HOẠT ĐỘNG'}</span><h2>{group.name}</h2><p>{teacher ? 'Theo dõi nhịp học của cả lớp và nhận ra học sinh cần được hỗ trợ.' : 'Theo dõi hành trình của các con tại một nơi.'}</p><div className="ws-actions"><Link className="ws-btn primary" to="/dashboard/reports">Xem báo cáo chi tiết <ArrowRight size={16}/></Link><Link className="ws-btn" to="/dashboard/learners">Quản lý hồ sơ</Link></div></div><div className="ws-overview-live-score"><Activity/><strong>{summary?.activeLast7Days ?? 0}</strong><span>hoạt động trong 7 ngày</span></div></section>
+      <div className="ws-overview-metrics"><Link to="/dashboard/learners"><span><Users/></span><div><small>TỔNG HỒ SƠ</small><strong>{summary?.learners ?? 0}</strong><p>{summary?.active ?? 0} đang hoạt động</p></div></Link><Link to="/dashboard/reports"><span><Activity/></span><div><small>HOẠT ĐỘNG GẦN ĐÂY</small><strong>{summary?.activeLast7Days ?? 0}</strong><p>Trong 7 ngày gần nhất</p></div></Link><Link to="/dashboard/reports"><span><CheckCircle2/></span><div><small>CHƯƠNG HOÀN THÀNH</small><strong>{summary?.chaptersCompleted ?? 0}</strong><p>Tổng trên mọi học sinh</p></div></Link><Link to={teacher ? '/dashboard/groups' : '/dashboard/learners'}><span><BookOpen/></span><div><small>{teacher ? 'LỚP HỌC' : 'NHÓM GIA ĐÌNH'}</small><strong>{dashboard.groupCount}</strong><p>{group.closedAt ? 'Nhóm gần nhất đã đóng' : `${summary?.active ?? 0}/${group.slotLimit} chỗ đang dùng`}</p></div></Link></div>
+      <div className="ws-overview-columns"><section className="ws-card"><div className="ws-row"><div><span className="ws-overview-kicker">VIỆC NÊN LÀM</span><h2>Tiếp tục từ đây</h2></div><Compass/></div><div className="ws-overview-actions"><Link to="/dashboard/reports"><BarChart3/><div><strong>Xem tiến độ từng học sinh</strong><small>Chương đang chơi, chỉ số và thành tích</small></div><ArrowRight/></Link><Link to="/dashboard/learners"><Users/><div><strong>{teacher ? 'Quản lý học sinh và slot' : 'Quản lý hồ sơ các con'}</strong><small>Tạo hồ sơ, đổi PIN hoặc thu hồi</small></div><ArrowRight/></Link>{teacher && <Link to="/dashboard/groups"><ShieldCheck/><div><strong>Quản lý lớp học</strong><small>Kiểm tra sức chứa và trạng thái lớp</small></div><ArrowRight/></Link>}</div></section><section className="ws-card ws-overview-health"><span><ShieldCheck/></span><h2>Dữ liệu học tập an toàn</h2><p>Báo cáo chỉ hiển thị cho chủ nhóm. Hồ sơ đã thu hồi vẫn giữ tiến độ; hồ sơ đã xoá không còn tên và mã đăng nhập.</p><Link className="ws-text-link" to="/dashboard/settings">Quản lý tài khoản <ArrowRight size={15}/></Link></section></div>
+    </>}
+  </>
 }
 export function Plans() {
   const { actor, entitlements, entitlementsLoading } = useWorkspace()
@@ -120,7 +146,7 @@ export function LearnerHome() {
 }
 
 const ACHIEVEMENT_NAMES = { PIGGY_GOLD: 'Heo đất vàng' }
-const dateTimeLabel = value => value ? new Intl.DateTimeFormat('vi-VN', { dateStyle: 'short', timeStyle: 'short' }).format(new Date(value)) : ''
+const dateTimeLabel = value => value ? new Intl.DateTimeFormat('vi-VN', { dateStyle: 'short', timeStyle: 'short', timeZone: 'Asia/Ho_Chi_Minh' }).format(new Date(value)) : ''
 
 export function LearnerAchievements() {
   const { learnerDashboard: dashboard, learnerDashboardLoading: loading, learnerDashboardError: error } = useWorkspace()

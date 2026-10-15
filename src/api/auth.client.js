@@ -159,6 +159,8 @@ export function createAuthClient({ baseUrl, storage, contextStorage = storage, f
     confirmConsent: groupId => request(`/api/groups/${encodeURIComponent(groupId)}/consent`, { authenticated: true, method: 'POST' }),
     closeGroup: groupId => request(`/api/groups/${encodeURIComponent(groupId)}/close`, { authenticated: true, method: 'POST' }),
     listGroupSlots: groupId => request(`/api/groups/${encodeURIComponent(groupId)}/slots`, { authenticated: true }),
+    getGroupReport: groupId => request(`/api/groups/${encodeURIComponent(groupId)}/report`, { authenticated: true }),
+    getSlotReport: slotId => request(`/api/slots/${encodeURIComponent(slotId)}/report`, { authenticated: true }),
     groupCapacity: groupId => request(`/api/groups/${encodeURIComponent(groupId)}/capacity`, { authenticated: true }),
     openSlot: ({ groupId, displayName, pin, badge }) => request('/api/slots', { authenticated: true, body: { groupId, displayName: displayName.trim(), pin, ...(badge ? { badge } : {}) } }),
     openSlots: (groupId, items) => request('/api/slots/bulk', { authenticated: true, body: { slots: items.map(item => ({ groupId, displayName: item.displayName.trim(), pin: item.pin })) } }),
@@ -175,6 +177,17 @@ export function createAuthClient({ baseUrl, storage, contextStorage = storage, f
     },
     reconcileTransaction: orderCode => request(`/api/admin/transactions/${encodeURIComponent(orderCode)}/reconcile`, {
       authenticated: true, method: 'POST',
+    }),
+    findAdminAccount: email => request(`/api/admin/accounts?email=${encodeURIComponent(email.trim())}`, {
+      authenticated: true,
+    }),
+    grantAdminRole: ({ subjectId, role, reason }) => request('/api/admin/roles/grant', {
+      authenticated: true,
+      body: { subjectId: subjectId.trim(), role, reason: reason.trim() },
+    }),
+    revokeAdminRole: ({ subjectId, role, reason }) => request('/api/admin/roles/revoke', {
+      authenticated: true,
+      body: { subjectId: subjectId.trim(), role, reason: reason.trim() },
     }),
     grantEntitlement: ({ accountId, kind, months, reason }) => request('/api/entitlements/grant', {
       authenticated: true,

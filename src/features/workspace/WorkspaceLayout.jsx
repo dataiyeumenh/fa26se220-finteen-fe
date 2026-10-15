@@ -65,7 +65,6 @@ export default function WorkspaceLayout({ children }) {
         </div>
       </div>
     </header>
-      {!learner && <div className="ws-demo"><strong>Chưa kết nối máy chủ:</strong> báo cáo và bài kiểm tra hiện vẫn dùng dữ liệu minh họa.</div>}
       <main className="ws-content">{expiringEntitlements.length > 0 && <aside className="ws-expiry-alert" role="alert"><AlertTriangle/><div><strong>Gói học tập sắp hết hạn</strong>{expiringEntitlements.map(item => <p key={item.id}>{PLAN_NAME[item.kind] || item.kind} {item.daysLeft === 0 ? 'hết hạn hôm nay' : `còn ${item.daysLeft} ngày`} (đến {formatPlanDate(item.expiresOn)}). <Link to="/dashboard/plans">Gia hạn ngay</Link></p>)}</div></aside>}{children}</main>
     </div>
     {learner && <nav className="ws-kid-bottom-nav" aria-label="Điều hướng học tập trên điện thoại">{links.map(([to, text, Icon]) => <NavLink end key={to} to={to}><Icon size={20}/><span>{text}</span></NavLink>)}</nav>}

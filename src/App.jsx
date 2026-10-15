@@ -17,7 +17,7 @@ import {
   LearnerHome as KidDashboard,
   LearnerAchievements,
 } from '@/features/workspace/Overview'
-import { Learners, LearnerDetail, Groups } from '@/features/workspace/Learners'
+import { Learners, SlotReportDetail, Groups } from '@/features/workspace/Learners'
 import Reports from '@/features/workspace/Reports'
 // Hai màn hình khác nhau: Teacher quản lý đề, Kid làm bài.
 import { TeacherQuizManagement, KidQuiz } from '@/features/workspace/Quiz'
@@ -66,7 +66,7 @@ function App() {
               {/* 2a. PARENT + TEACHER — quản lý 4 / 40 slot và báo cáo */}
               <Route element={<RequireAccount roles={['parent', 'teacher']} />}>
                 <Route path="/dashboard/learners" element={<Learners />} />
-                <Route path="/dashboard/learners/:id" element={<LearnerDetail />} />
+                <Route path="/dashboard/learners/:id" element={<SlotReportDetail />} />
                 <Route path="/dashboard/reports" element={<Reports />} />
               </Route>
 

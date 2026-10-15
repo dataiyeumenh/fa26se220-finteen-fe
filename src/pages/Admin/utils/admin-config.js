@@ -3,7 +3,6 @@ import {
   Users,
   Layers,
   ShieldAlert,
-  FileText,
   Settings,
   Activity,
 } from 'lucide-react'

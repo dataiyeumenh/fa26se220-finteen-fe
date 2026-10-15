@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 const CHAPTER_1_RUNTIME_DATA = {
   chapterId: "c1",
   title: "CHƯƠNG 1 - KHÁM PHÁ TIỀN TỆ",

@@ -7,7 +7,6 @@ export default function WelcomeBanner({
   lessonsThisWeek,
   lessonsTarget,
   accent = '#fbbf24',
-  accentText = '#92400e',
 }) {
   return (
     <div

@@ -6,7 +6,6 @@ export default function WelcomeBanner({
   weeklyGrowth,
   streakChild,
   accent = '#fb923c',
-  accentText = '#c2410c',
 }) {
   return (
     <div

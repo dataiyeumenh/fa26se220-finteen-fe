@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { BadgeDollarSign, CheckCircle2, CreditCard, Gift, LogOut, RefreshCw, Save, ShieldCheck, Users } from 'lucide-react'
+import { BadgeDollarSign, CheckCircle2, CreditCard, Gift, LogOut, RefreshCw, Save, Search, ShieldCheck, UserCog, Users } from 'lucide-react'
 import { auth } from '../../api/auth.api'
 import { useWorkspace } from '../workspace/useWorkspace'
 import './admin.css'
@@ -10,7 +10,14 @@ const STATUS_LABELS = { PENDING: 'Chờ thanh toán', PAID: 'Đã thanh toán', 
 const TABS = [
   ['plans', 'Bảng giá', BadgeDollarSign],
   ['transactions', 'Giao dịch', CreditCard],
+  ['roles', 'Phân quyền', UserCog],
   ['grant', 'Cấp gói', Gift],
+]
+const ROLE_OPTIONS = [
+  { id: 'ADMIN', label: 'Quản trị viên', description: 'Toàn quyền quản trị giá, giao dịch, gói và vai trò.' },
+  { id: 'GAME_MANAGER', label: 'Quản lý nội dung', description: 'Điều phối quy trình và quản lý nội dung trò chơi.' },
+  { id: 'GAME_EDITOR', label: 'Biên tập viên', description: 'Tạo và chỉnh sửa nội dung trò chơi.' },
+  { id: 'GAME_REVIEWER', label: 'Kiểm duyệt viên', description: 'Xem xét và duyệt nội dung trước khi phát hành.' },
 ]
 const money = value => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND', maximumFractionDigits: 0 }).format(Number(value || 0))
 const dateTime = value => value ? new Intl.DateTimeFormat('vi-VN', { dateStyle: 'short', timeStyle: 'short' }).format(new Date(value)) : '—'
@@ -23,13 +30,6 @@ const MOCK_TRANSACTIONS = [
   { orderCode: 'FT26100604', email: 'co.ha@school.edu.vn', accountId: 'acc-demo-04', kind: 'TEACHER', amount: 899000, status: 'FAILED', purpose: 'NEW', createdAt: '2026-10-06T10:05:00+07:00', isMock: true },
   { orderCode: 'FT26100511', email: 'hoang.pham@gmail.com', accountId: 'acc-demo-05', kind: 'PARENT', amount: 299000, status: 'PAID', purpose: 'NEW', createdAt: '2026-10-05T20:12:00+07:00', paidAt: '2026-10-05T20:14:00+07:00', isMock: true },
   { orderCode: 'FT26100507', email: 'mai.tran@gmail.com', accountId: 'acc-demo-06', kind: 'PARENT', amount: 299000, status: 'PENDING', purpose: 'NEW', createdAt: '2026-10-05T14:21:00+07:00', isMock: true },
-]
-
-const MOCK_GRANTS = [
-  { id: 1, email: 'demo.parent@finteen.vn', kind: 'PARENT', months: 3, reason: 'Tài khoản trải nghiệm cho phụ huynh', by: 'Nguyễn Minh', at: '2026-10-07T08:30:00+07:00' },
-  { id: 2, email: 'teacher.hoa@school.edu.vn', kind: 'TEACHER', months: 6, reason: 'Đồng hành chương trình thí điểm tại trường', by: 'Nguyễn Minh', at: '2026-10-06T16:10:00+07:00' },
-  { id: 3, email: 'support.case@finteen.vn', kind: 'PARENT', months: 1, reason: 'Bù thời gian gián đoạn dịch vụ', by: 'Lê An', at: '2026-10-05T09:45:00+07:00' },
-  { id: 4, email: 'workshop@school.edu.vn', kind: 'TEACHER', months: 3, reason: 'Tài khoản phục vụ workshop giáo viên', by: 'Lê An', at: '2026-10-03T13:20:00+07:00' },
 ]
 
 function SummaryCards({ items }) {
@@ -127,41 +127,95 @@ function TransactionsTab() {
   </>
 }
 
-function GrantTab() {
+function AccountSearch({ onFound, disabled = false }) {
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const search = async event => {
+    event.preventDefault()
+    const email = String(new FormData(event.currentTarget).get('email') || '').trim()
+    setLoading(true); setError(''); onFound(null)
+    try { onFound(await auth.findAdminAccount(email)) }
+    catch (searchError) { setError(searchError.message || 'Không tìm thấy tài khoản với email này.') }
+    finally { setLoading(false) }
+  }
+  return <div><form className="admin-account-search" onSubmit={event => void search(event)}><label>Email tài khoản<input name="email" type="email" autoComplete="off" required placeholder="nguoidung@example.com"/></label><button className="admin-primary" disabled={disabled || loading}><Search size={17}/>{loading ? 'Đang tìm…' : 'Tìm tài khoản'}</button></form><Notice type="error">{error}</Notice></div>
+}
+
+function AccountCard({ account }) {
+  return <section className="admin-card admin-account-card"><div className="admin-account-avatar">{(account.displayName || account.email || '?').trim().charAt(0).toUpperCase()}</div><div><span>TÀI KHOẢN ĐÃ CHỌN</span><h2>{account.displayName || 'Chưa đặt tên hiển thị'}</h2><p>{account.email}</p><small>ID: {account.id}</small></div><div className="admin-account-plans"><span>Gói hiện có</span><div>{account.plans?.length ? account.plans.map(plan => <b className={`admin-chip ${plan === 'TEACHER' ? 'purple' : ''}`} key={plan}>{plan}</b>) : <em>Chưa có gói</em>}</div></div></section>
+}
+
+function RolesTab({ actor }) {
+  const [account, setAccount] = useState(null)
+  const [reason, setReason] = useState('')
+  const [pending, setPending] = useState(null)
   const [busy, setBusy] = useState(false)
   const [notice, setNotice] = useState(null)
-  const [grants, setGrants] = useState(MOCK_GRANTS)
+  const chooseAccount = value => { setAccount(value); setPending(null); setReason(''); setNotice(null) }
+  const requestChange = (role, action) => {
+    if (!reason.trim()) { setNotice({ type: 'error', text: 'Vui lòng nhập lý do trước khi thay đổi vai trò.' }); return }
+    setNotice(null); setPending({ role, action })
+  }
+  const confirmChange = async () => {
+    if (!account || !pending) return
+    setBusy(true); setNotice(null)
+    try {
+      const method = pending.action === 'grant' ? auth.grantAdminRole : auth.revokeAdminRole
+      const result = await method({ subjectId: account.id, role: pending.role, reason })
+      setAccount(current => ({ ...current, roles: result.roles || [] }))
+      setNotice({ type: 'success', text: `${pending.action === 'grant' ? 'Đã cấp' : 'Đã thu hồi'} vai trò ${pending.role} cho ${account.email}.` })
+      setReason(''); setPending(null)
+    } catch (error) { setNotice({ type: 'error', text: error.message }) }
+    finally { setBusy(false) }
+  }
+  return <>
+    <header className="admin-heading"><div><span>QUẢN LÝ TRUY CẬP</span><h1>Phân quyền tài khoản</h1><p>Tìm chính xác tài khoản bằng email, sau đó cấp hoặc thu hồi vai trò nội bộ.</p></div></header>
+    <AccountSearch onFound={chooseAccount} disabled={busy}/>
+    <Notice type={notice?.type}>{notice?.text}</Notice>
+    {!account ? <div className="admin-card admin-account-empty"><UserCog/><h2>Chọn một tài khoản để quản lý</h2><p>Thông tin vai trò và gói hiện tại sẽ xuất hiện tại đây.</p></div> : <>
+      <AccountCard account={account}/>
+      <section className="admin-role-section"><div className="admin-section-heading plain"><div><h2>Vai trò nội bộ</h2><p>Các thay đổi có hiệu lực ngay sau khi backend xác nhận.</p></div></div>
+        <div className="admin-role-grid">{ROLE_OPTIONS.map(role => {
+          const active = account.roles?.includes(role.id)
+          const selfAdmin = active && role.id === 'ADMIN' && account.id === actor?.id
+          return <article className={`admin-card admin-role-card ${active ? 'active' : ''}`} key={role.id}><div><span className="admin-role-state">{active ? <><CheckCircle2 size={15}/> Đang có quyền</> : 'Chưa được cấp'}</span><h3>{role.label}</h3><code>{role.id}</code><p>{role.description}</p></div><button type="button" className={active ? 'admin-danger' : 'admin-primary'} disabled={busy || selfAdmin} title={selfAdmin ? 'Bạn không thể tự thu hồi quyền ADMIN của mình.' : ''} onClick={() => requestChange(role.id, active ? 'revoke' : 'grant')}>{active ? 'Thu hồi vai trò' : 'Cấp vai trò'}</button>{selfAdmin && <small className="admin-role-warning">Không thể tự thu hồi quyền ADMIN.</small>}</article>
+        })}</div>
+      </section>
+      <label className="admin-reason">Lý do thay đổi<textarea value={reason} onChange={event => setReason(event.target.value)} maxLength="255" required placeholder="Ghi rõ lý do cấp hoặc thu hồi vai trò…"/><small>{reason.length}/255 ký tự</small></label>
+    </>}
+    {pending && <div className="admin-confirm" role="alertdialog" aria-modal="true" aria-labelledby="role-confirm-title"><div className="admin-card"><span>XÁC NHẬN THAY ĐỔI</span><h2 id="role-confirm-title">{pending.action === 'grant' ? 'Cấp' : 'Thu hồi'} vai trò {pending.role}?</h2><p>Tài khoản <strong>{account.email}</strong> sẽ được cập nhật quyền ngay lập tức.</p><blockquote>{reason}</blockquote>{pending.role === 'ADMIN' && pending.action === 'grant' && <p className="admin-confirm-warning">Vai trò ADMIN có toàn quyền quản trị hệ thống. Hãy chắc chắn đây là đúng người.</p>}<div><button className="admin-secondary" disabled={busy} onClick={() => setPending(null)}>Hủy</button><button className={pending.action === 'revoke' ? 'admin-danger' : 'admin-primary'} disabled={busy} onClick={() => void confirmChange()}>{busy ? 'Đang xử lý…' : 'Xác nhận'}</button></div></div></div>}
+  </>
+}
+
+function GrantTab() {
+  const [account, setAccount] = useState(null)
+  const [busy, setBusy] = useState(false)
+  const [notice, setNotice] = useState(null)
+  const chooseAccount = value => { setAccount(value); setNotice(null) }
   const submit = async event => {
     event.preventDefault()
+    if (!account) return
     const formElement = event.currentTarget
     const form = new FormData(formElement)
     setBusy(true); setNotice(null)
     try {
-      await auth.grantEntitlement({ accountId: form.get('accountId'), kind: form.get('kind'), months: Number(form.get('months')), reason: form.get('reason') })
-      setGrants(current => [{ id: Date.now(), email: String(form.get('accountId')).slice(0, 12) + '…', kind: form.get('kind'), months: Number(form.get('months')), reason: form.get('reason'), by: 'Quản trị viên', at: new Date().toISOString() }, ...current])
-      setNotice({ type: 'success', text: 'Đã cấp gói thành công. Quyền của tài khoản được cập nhật ngay.' })
+      await auth.grantEntitlement({ accountId: account.id, kind: form.get('kind'), months: Number(form.get('months')), reason: form.get('reason') })
+      setNotice({ type: 'success', text: `Đã cấp gói ${form.get('kind')} cho ${account.email}.` })
       formElement.reset()
     } catch (error) { setNotice({ type: 'error', text: error.message }) }
     finally { setBusy(false) }
   }
   return <>
     <header className="admin-heading"><div><span>HỖ TRỢ TÀI KHOẢN</span><h1>Cấp gói thủ công</h1><p>Dùng cho tài khoản trải nghiệm hoặc đền bù. Mỗi lần cấp đều cần ghi rõ lý do.</p></div></header>
+    <AccountSearch onFound={chooseAccount} disabled={busy}/>
     <Notice type={notice?.type}>{notice?.text}</Notice>
-    <MockNotice>Backend mới hỗ trợ thao tác cấp gói, chưa có API thống kê và lịch sử cấp gói.</MockNotice>
-    <SummaryCards items={[{ label: 'Đã cấp tháng này', value: 18, note: '12 Parent · 6 Teacher', Icon: Gift }, { label: 'Sắp hết hạn', value: 5, note: 'Trong 7 ngày tới', Icon: RefreshCw, tone: 'purple' }, { label: 'Tỷ lệ đang hoạt động', value: '94%', note: '17/18 tài khoản', Icon: CheckCircle2, tone: 'green' }]}/>
-    <div className="admin-grant-layout"><form className="admin-card admin-form" onSubmit={event => void submit(event)}>
-      <label>Account ID<input name="accountId" required pattern="[0-9a-fA-F-]{36}" placeholder="UUID của tài khoản"/><small>Người dùng lấy ID của mình từ thông tin tài khoản (`/api/auth/me`).</small></label>
-      <div className="admin-form-row"><label>Loại gói<select name="kind" defaultValue="PARENT"><option value="PARENT">PARENT — Phụ huynh</option><option value="TEACHER">TEACHER — Giáo viên</option></select></label><label>Số tháng<input name="months" type="number" min="1" max="36" defaultValue="3" required/></label></div>
-      <label>Lý do cấp gói<textarea name="reason" required maxLength="500" placeholder="Ví dụ: Tài khoản dùng thử cho buổi demo…"/></label>
-      <button className="admin-primary" disabled={busy}><Gift size={17}/>{busy ? 'Đang cấp gói…' : 'Xác nhận cấp gói'}</button>
-    </form><aside className="admin-card admin-help"><ShieldCheck/><h2>Lưu ý an toàn</h2><ul><li>Kiểm tra chính xác Account ID trước khi cấp.</li><li>Thời hạn cho phép từ 1 đến 36 tháng.</li><li>Backend chưa có API tìm tài khoản theo email, nên màn hình này không giả lập chức năng tìm kiếm.</li><li>Quyền có hiệu lực ngay, người dùng không cần đăng nhập lại.</li></ul></aside></div>
-    <section className="admin-card admin-table-card admin-section"><div className="admin-section-heading"><div><h2>Lịch sử cấp gói gần đây</h2><p>Theo dõi tài khoản, thời hạn và lý do hỗ trợ.</p></div><span className="admin-demo-label">DỮ LIỆU MẪU</span></div><div className="admin-table-wrap"><table><thead><tr><th>Tài khoản</th><th>Gói</th><th>Thời hạn</th><th>Lý do</th><th>Người thực hiện</th><th>Thời gian</th></tr></thead><tbody>{grants.map(row => <tr key={row.id}><td><strong>{row.email}</strong></td><td><span className={`admin-chip ${row.kind === 'TEACHER' ? 'purple' : ''}`}>{row.kind}</span></td><td><strong>{row.months} tháng</strong></td><td>{row.reason}</td><td>{row.by}</td><td>{dateTime(row.at)}</td></tr>)}</tbody></table></div></section>
+    {account ? <><AccountCard account={account}/><div className="admin-grant-layout"><form className="admin-card admin-form" onSubmit={event => void submit(event)}><div className="admin-form-row"><label>Loại gói<select name="kind" defaultValue="PARENT"><option value="PARENT">PARENT — Phụ huynh</option><option value="TEACHER">TEACHER — Giáo viên</option></select></label><label>Số tháng<input name="months" type="number" min="1" max="36" defaultValue="3" required/></label></div><label>Lý do cấp gói<textarea name="reason" required maxLength="255" placeholder="Ví dụ: Tài khoản dùng thử cho buổi demo…"/></label><button className="admin-primary" disabled={busy}><Gift size={17}/>{busy ? 'Đang cấp gói…' : 'Xác nhận cấp gói'}</button></form><aside className="admin-card admin-help"><ShieldCheck/><h2>Kiểm tra trước khi cấp</h2><ul><li>Email và tên tài khoản phải đúng người nhận.</li><li>Thời hạn cho phép từ 1 đến 36 tháng.</li><li>Ghi lý do cụ thể để thuận tiện đối soát.</li><li>Gói có hiệu lực ngay sau khi backend xác nhận.</li></ul></aside></div></> : <div className="admin-card admin-account-empty"><Search/><h2>Tìm tài khoản trước khi cấp gói</h2><p>Bạn không cần nhập hoặc sao chép Account ID thủ công nữa.</p></div>}
   </>
 }
 
 export default function AdminDashboard() {
   const { actor } = useWorkspace()
   const [tab, setTab] = useState('plans')
-  const content = tab === 'transactions' ? <TransactionsTab/> : tab === 'grant' ? <GrantTab/> : <PlansTab/>
+  const content = tab === 'transactions' ? <TransactionsTab/> : tab === 'roles' ? <RolesTab actor={actor}/> : tab === 'grant' ? <GrantTab/> : <PlansTab/>
   return <div className="admin-shell"><aside className="admin-sidebar"><a className="admin-brand" href="/"><b>f.</b><span>finteen<small>ADMIN CONSOLE</small></span></a><div className="admin-user"><ShieldCheck/><div><strong>{actor?.displayName || actor?.name || 'Quản trị viên'}</strong><small>{actor?.email}</small></div></div><nav aria-label="Điều hướng quản trị">{TABS.map(([id, label, Icon]) => <button key={id} className={tab === id ? 'active' : ''} onClick={() => setTab(id)}><Icon size={19}/>{label}</button>)}</nav><button className="admin-logout" onClick={() => auth.logout()}><LogOut size={18}/> Đăng xuất</button></aside><main className="admin-main"><div className="admin-topbar"><span>Hệ thống quản trị FinTeen</span><span className="admin-admin-badge"><ShieldCheck size={15}/> ADMIN</span></div><div className="admin-content">{content}</div></main></div>
 }
