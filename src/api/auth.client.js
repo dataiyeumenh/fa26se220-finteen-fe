@@ -181,6 +181,7 @@ export function createAuthClient({ baseUrl, storage, contextStorage = storage, f
     findAdminAccount: email => request(`/api/admin/accounts?email=${encodeURIComponent(email.trim())}`, {
       authenticated: true,
     }),
+    listAdminRoles: () => request('/api/admin/roles', { authenticated: true }),
     grantAdminRole: ({ subjectId, role, reason }) => request('/api/admin/roles/grant', {
       authenticated: true,
       body: { subjectId: subjectId.trim(), role, reason: reason.trim() },
