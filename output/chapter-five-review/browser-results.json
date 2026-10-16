@@ -1,0 +1,58 @@
+[
+  {
+    "status": "PASS",
+    "route": "goal",
+    "width": 1424,
+    "ending": "Ending A: Goal Achieved",
+    "overflow": [],
+    "errors": []
+  },
+  {
+    "status": "PASS",
+    "route": "topup",
+    "width": 1424,
+    "ending": "Ending A: Goal Achieved",
+    "overflow": [],
+    "errors": []
+  },
+  {
+    "status": "PASS",
+    "route": "pending",
+    "width": 1424,
+    "ending": "Ending C: Recovery",
+    "overflow": [],
+    "errors": []
+  },
+  {
+    "status": "PASS",
+    "route": "providerRecover",
+    "width": 1424,
+    "ending": "Ending B: Balanced",
+    "overflow": [],
+    "errors": []
+  },
+  {
+    "status": "PASS",
+    "route": "miniRetry",
+    "width": 1424,
+    "ending": "Ending A: Goal Achieved",
+    "overflow": [],
+    "errors": []
+  },
+  {
+    "status": "PASS",
+    "route": "revise",
+    "width": 360,
+    "ending": "Ending A: Goal Achieved",
+    "overflow": [],
+    "errors": []
+  },
+  {
+    "status": "PASS",
+    "route": "reflectionRetry",
+    "width": 1424,
+    "ending": "Ending A: Goal Achieved",
+    "overflow": [],
+    "errors": []
+  }
+]

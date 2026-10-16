@@ -8,7 +8,7 @@ const formatMoney = value => `${value.toLocaleString("vi-VN")}đ`;
 const clamp = value => Math.max(0, Math.min(1, value));
 const spriteBase = "/images/finteen-v2/chapter-02/asset-mini-game/savings-race";
 const freshCoin = () => ({ x: 0.1 + Math.random() * 0.8, y: 0, value: (1 + Math.floor(Math.random() * 10)) * 50000 });
-const duration = 90;
+const duration = 60;
 const expenses = [
   { label: "Trò chơi", image: "/images/finteen-v2/chapter-02/asset-mini-game/budget-builder/entertainment.png", value: -200000 },
   { label: "Tai nghe xịn", image: "/images/finteen-v2/chapter-01/asset-mini-game/needs-or-wants/05-upgrade-headphones.png", value: -150000 },
@@ -32,7 +32,7 @@ export function SavingsRaceMiniGame({ game, onComplete, className }) {
   const [feedback, setFeedback] = useState("Hứng từng đồng tiền để dành mua laptop nhé!");
   const finished = status === "won" || status === "timeout";
   const secondsLeft = Math.max(0, Math.ceil(duration - frame.elapsed));
-  const finish = () => onComplete?.({ passed: frame.saved >= game.targetAmount, score: frame.saved >= game.targetAmount ? 1 : 0, total: 1, saved: frame.saved });
+  const finish = () => onComplete?.({ outcome: frame.saved >= game.targetAmount ? "success" : "failed" });
 
   useEffect(() => {
     if (status !== "playing") return;

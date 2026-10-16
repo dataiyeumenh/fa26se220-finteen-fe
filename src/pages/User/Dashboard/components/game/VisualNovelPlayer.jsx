@@ -1,3 +1,6 @@
+import { CompoundTimelineMiniGame } from "./CompoundTimelineMiniGame";
+import { ChapterFiveReflection, ChapterFivePlanSummary, InspectCardsDialog } from "./ChapterFiveActivities";
+import { chapterFiveLearning } from "./compoundTimelineRules";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowLeft,
@@ -26,8 +29,11 @@ import { NeedWantMiniGame } from "./NeedWantMiniGame";
 import { BudgetBuilderMiniGame } from "./BudgetBuilderMiniGame";
 import { SavingsRaceMiniGame } from "./SavingsRaceMiniGame";
 import { CareerMatchMiniGame } from "./CareerMatchMiniGame";
+import { SmartShoppingMiniGame } from "./SmartShoppingMiniGame";
+import { InspectHotspot } from "./InspectHotspot.jsx";
 import "./chapter-three.css";
-import { flexibleReserveLock } from "./miniGameRules";
+import "./inspect-theme.css";
+import { flexibleReserveLock, recordMiniGameResult, summarizeMiniGames } from "./miniGameRules";
 
 const statDisplay = {
   WEALTH: { label: "Tài sản", icon: Landmark, tone: "wealth" },
@@ -45,7 +51,7 @@ function applyStatEffects(current, effects = {}) {
   const next = { ...current };
   Object.entries(effects).forEach(([key, delta]) => {
     const currentValue = next[key] ?? 0;
-    next[key] = Math.max(0, currentValue + Number(delta || 0));
+    next[key] = Math.min(100, Math.max(0, currentValue + Number(delta || 0)));
   });
   return next;
 }
@@ -241,7 +247,8 @@ function EndingReport({ report }) {
         )}
         {report.miniPercent !== null && (
           <li>
-            Mini-game chọn nghề: <b>{report.miniPercent}%</b>
+            Mini-game{report.miniGameLabel ? `: ${report.miniGameLabel}` : ''}: <b>{report.miniPercent}%</b>
+            {report.miniFirstPercent != null && report.miniFirstPercent !== report.miniPercent && <span> (lần đầu {report.miniFirstPercent}%)</span>}
           </li>
         )}
         {report.reflectionPercent !== null && (
@@ -250,6 +257,7 @@ function EndingReport({ report }) {
           </li>
         )}
       </ul>
+      {report.statDeltas && <ul className="vn-report-metrics">{Object.entries(report.statDeltas).map(([key, delta]) => <li key={key}>{key}: <b>{delta > 0 ? '+' : ''}{delta}</b></li>)}</ul>}
       {report.decisions.length > 0 && (
         <div className="vn-report-decisions">
           <h3>Những quyết định của bạn</h3>
@@ -291,6 +299,7 @@ export function VisualNovelPlayer({ data }) {
   const stageRef = useRef(null);
   const dialogueRef = useRef(null);
   const pendingTransitionRef = useRef(null);
+  const committedDecisionsRef = useRef(new Set());
   const preloadedImageStateRef = useRef(new Map());
   const preloadingImageRef = useRef(new Map());
 
@@ -312,7 +321,8 @@ export function VisualNovelPlayer({ data }) {
   const [budgetAllocations, setBudgetAllocations] = useState({});
   const [inspectPopup, setInspectPopup] = useState(null);
   const [miniGameCompleted, setMiniGameCompleted] = useState(false);
-  const [miniGameScore, setMiniGameScore] = useState(0); // Track score: 0-6
+  const [miniGameResults, setMiniGameResults] = useState({});
+  const { score: miniGameScore, percent: miniGamePercent } = summarizeMiniGames(miniGameResults);
   const [money, setMoney] = useState(data.initialMoney || 0);
   const [moneyFx, setMoneyFx] = useState(null);
 
@@ -473,6 +483,8 @@ export function VisualNovelPlayer({ data }) {
   const isSceneOnlyScreen = scene.type === "cutscene" || scene.type === "scene";
 
   const canGoNext =
+    scene.type !== "activity" &&
+    (scene.requiredInspections || []).every(id => inspectedIds[id]) &&
     (scene.type !== "minigame" || Boolean(miniGameDoneByScene[scene.id])) &&
     scene.type !== "choice" &&
     !hasChoiceOptions &&
@@ -522,8 +534,10 @@ export function VisualNovelPlayer({ data }) {
     nextTransition?.();
   };
 
-  const goNext = () => {
-    if (!canGoNext) return;
+  const goNext = (completedInspection = null) => {
+    // Closing a required card and advancing happen in the same React event.
+    const completedRequired = scene.requiredInspections?.length && scene.requiredInspections.every(id => inspectedIds[id] || id === completedInspection);
+    if (!canGoNext && !completedRequired) return;
 
     runTransitionWithEffects({
       sceneId: scene.id,
@@ -559,18 +573,45 @@ export function VisualNovelPlayer({ data }) {
   };
 
   const openInspect = (inspect) => {
-    if (inspect.id)
+    if (inspect.id && !inspect.cards)
       setInspectedIds((prev) => ({ ...prev, [inspect.id]: true }));
     setInspectPopup(inspect);
   };
 
+  const closeInspectPopup = () => {
+    if (!inspectPopup) return;
+    const popup = inspectPopup;
+    if (popup.id && popup.cards) setInspectedIds(prev => ({ ...prev, [popup.id]: true }));
+    if (Array.isArray(popup.moneyEvents)) {
+      const newEvents = popup.moneyEvents.filter((evt, index) =>
+        !moneyEventsApplied[evt.eventId || `${popup.id || "inspect"}:${index}`]);
+      if (newEvents.length) {
+        const delta = newEvents.reduce((sum, evt) => sum + Number(evt.amount || 0), 0);
+        setMoneyEventsApplied(prev => ({ ...prev, ...Object.fromEntries(newEvents.map((evt, i) => [evt.eventId || `${popup.id || "inspect"}:${i}`, true])) }));
+        setMoney(prev => Math.max(0, prev + delta));
+        if (delta) setMoneyFx(delta);
+      }
+    }
+    if (popup.setFlags) setFlags(prev => ({ ...prev, ...popup.setFlags }));
+    setInspectPopup(null);
+    if (popup.autoNextSceneOnClose) goNext(popup.id);
+  };
+
   const selectChoice = (option) => {
     if (getOptionLock(option)) return;
+    if (data.metadata?.lockDecisions && committedDecisionsRef.current.has(scene.id)) return;
+    if (option.deferLedger) {
+      const nextIndex = sceneIndexById[option.nextSceneId];
+      if (typeof nextIndex === 'number') goToSceneIndex(nextIndex);
+      return;
+    }
+    if (data.metadata?.lockDecisions) committedDecisionsRef.current.add(scene.id);
 
     // A choice group keeps one effective option; re-choosing reverts the old deltas first.
     const groupId = scene.choiceGroup || scene.id;
     const previous = choiceLedger[groupId];
-    const isSame = previous?.optionId === option.id;
+    const isSame = previous?.optionId === option.id &&
+      (!option.answer || JSON.stringify(previous.answer) === JSON.stringify(option.answer));
     const nextDelta = option.deltaStats || option.effects || {};
 
     if (!isSame) {
@@ -579,10 +620,15 @@ export function VisualNovelPlayer({ data }) {
         [groupId]: {
           optionId: option.id,
           sceneTitle: scene.title,
-          label: option.label,
+          label: option.label || scene.title,
           deltaStats: nextDelta,
           evidenceScores: option.evidenceScores || null,
           reflectionScore: option.reflectionScore || 0,
+          reflectionEvidenceScores: option.reflectionEvidenceScores || null,
+          answer: option.answer || null,
+          firstOptionId: previous?.firstOptionId || option.id,
+          firstLabel: previous?.firstLabel || option.label || scene.title,
+          firstEvidenceScores: previous ? previous.firstEvidenceScores : option.evidenceScores || null,
           revised: Boolean(previous),
         },
       }));
@@ -661,16 +707,18 @@ export function VisualNovelPlayer({ data }) {
   };
 
   const handleMiniGameComplete = (result) => {
+    if (scene.game?.id === 'COMPOUND_TIMELINE_CH05') setFlags(prev => ({ ...prev, mini_game_completed: true }));
     if (result?.allocations) setBudgetAllocations(result.allocations);
-    const { score } = result || {};
+    setMiniGameResults(previous => recordMiniGameResult(previous, {
+      chapterId: data.metadata?.chapterId || data.id,
+      sceneId: scene.id,
+      gameId: scene.game?.id || scene.id,
+    }, result || {}));
     setMiniGameDoneByScene((prev) => ({
       ...prev,
       [scene.id]: true,
     }));
     setMiniGameCompleted(true);
-    if (score !== undefined) {
-      setMiniGameScore(score);
-    }
 
     const targetSceneId = scene.nextSceneId || scene.onPassSceneId;
     if (targetSceneId && typeof sceneIndexById[targetSceneId] === "number") {
@@ -687,6 +735,7 @@ export function VisualNovelPlayer({ data }) {
   };
 
   const restart = () => {
+    committedDecisionsRef.current.clear();
     setScenePath([resolveNavigableSceneIndex(0)]);
     setMiniGameDoneByScene({});
     setSceneActionApplied({});
@@ -702,7 +751,7 @@ export function VisualNovelPlayer({ data }) {
     setMoneyEventsApplied({});
     setBudgetAllocations({});
     setMiniGameCompleted(false);
-    setMiniGameScore(0);
+    setMiniGameResults({});
     setMoney(data.initialMoney || 0);
     setMoneyFx(null);
   };
@@ -721,6 +770,7 @@ export function VisualNovelPlayer({ data }) {
           "miniGameScore",
           "flags",
           "reflectionScore",
+          "choicePercent", "learningScore", "coreCalculationsCorrect", "reflectionCompleted",
           `const { SAVING = 0, HAPPINESS = 0, RISK = 0, GOAL = 0 } = stats || {}; return Boolean(${condition});`,
         );
 
@@ -729,6 +779,8 @@ export function VisualNovelPlayer({ data }) {
           (evidenceScores.C || 0) +
           (evidenceScores.P || 0);
 
+        const learning = data.endingReport?.choiceGroupMaxima
+          ? chapterFiveLearning(choiceLedger, miniGameResults, data.endingReport) : {};
         return evaluator(
           gameFlag,
           totalEvidenceScore,
@@ -738,6 +790,7 @@ export function VisualNovelPlayer({ data }) {
           miniGameScore,
           flags,
           reflectionScore,
+          learning.choicePercent, learning.learningScore, learning.coreCalculationsCorrect, learning.reflectionCompleted,
         );
       } catch {
         return false;
@@ -789,10 +842,7 @@ export function VisualNovelPlayer({ data }) {
         0,
       ),
     );
-    const miniPercent =
-      miniGameCompleted && config.miniGameMax
-        ? Math.min(100, Math.round((100 * miniGameScore) / config.miniGameMax))
-        : null;
+    const miniPercent = miniGamePercent;
     const reflectionPercent = config.reflectionMax
       ? Math.min(
           100,
@@ -843,6 +893,12 @@ export function VisualNovelPlayer({ data }) {
       achieved: pickLine(config.achieved),
       practice: pickLine(config.practice),
       next: config.nextStep || null,
+      ...(config.choiceGroupMaxima ? {
+        ...Object.fromEntries(Object.entries(chapterFiveLearning(choiceLedger, miniGameResults, config)).map(([key, value]) => [key, typeof value === 'number' ? Math.round(value) : value])),
+        miniGameLabel: config.miniGameLabel,
+        miniFirstPercent: Object.values(miniGameResults).find(result => result.gameId === 'COMPOUND_TIMELINE_CH05')?.firstPercent,
+        statDeltas: Object.fromEntries(Object.keys(data.initialStats).map(key => [key, (stats[key] || 0) - data.initialStats[key]])),
+      } : {}),
     };
   };
 
@@ -951,6 +1007,7 @@ export function VisualNovelPlayer({ data }) {
     <div
       ref={gameContainerRef}
       className="vn-player"
+      data-scene-id={scene.id}
       onPointerDownCapture={collapseMenuOnGameClick}
     >
       <header className="vn-toolbar">
@@ -984,6 +1041,20 @@ export function VisualNovelPlayer({ data }) {
               </div>
               <StatsPanel stats={stats} statFxByKey={statFxByKey} />
               <div className="vn-menu-actions">
+                <button
+                  type="button"
+                  className="vn-icon-button"
+                  disabled={Boolean(data.metadata?.lockDecisions) || scenePath.length <= 1 || Boolean(pendingEffects) || Boolean(inspectPopup)}
+                  onClick={() => {
+                    if (data.metadata?.lockDecisions) return;
+                    setScenePath(current => current.length > 1 ? current.slice(0, -1) : current);
+                    if (menuDetailsRef.current) menuDetailsRef.current.open = false;
+                  }}
+                  title="Lùi lại một cảnh đã đi qua; giữ nguyên tiền và điểm"
+                >
+                  <ArrowLeft size={18} />
+                  <span>Lùi lại một cảnh</span>
+                </button>
                 <Link
                   to="/dashboard/user/lessons"
                   className="vn-icon-button"
@@ -1071,6 +1142,8 @@ export function VisualNovelPlayer({ data }) {
         className="vn-play-area"
         onClick={(event) => {
           if (
+            scene.id === "CH01_SC01_A" ||
+            Boolean(scene.inspect?.hotspot) ||
             !canGoNext ||
             pendingEffects ||
             hasChoiceOptions ||
@@ -1121,7 +1194,9 @@ export function VisualNovelPlayer({ data }) {
               </>
             )}
 
-            {isSceneOnlyScreen && scene.inspect && (
+            {isSceneOnlyScreen && scene.inspect?.hotspot ? (
+              <InspectHotspot key={scene.id} sceneId={scene.id} inspect={scene.inspect} onOpen={openInspect} />
+            ) : isSceneOnlyScreen && scene.inspect && (
               <button
                 className="vn-inspect-button"
                 onClick={(event) => {
@@ -1147,7 +1222,9 @@ export function VisualNovelPlayer({ data }) {
             )}
           </div>
         </div>
-        {scene.type === "minigame" ? (
+        {scene.type === "activity" ? (
+          <div className="vn-minigame-host"><ChapterFiveReflection key={`${scene.id}-${scenePath.length}`} scene={scene} flags={flags} onComplete={selectChoice}/></div>
+        ) : scene.type === "minigame" ? (
           <div className="vn-minigame-host">
             {scene.game?.id === "BUDGET_BUILDER_CH02" ? (
               <BudgetBuilderMiniGame
@@ -1161,6 +1238,15 @@ export function VisualNovelPlayer({ data }) {
                 key={`${scene.id}-${scenePath.length}`}
                 game={scene.game}
                 planFlag={gameFlag}
+                onComplete={handleMiniGameComplete}
+                className="h-full"
+              />
+            ) : scene.game?.id === "COMPOUND_TIMELINE_CH05" ? (
+              <CompoundTimelineMiniGame key={`${scene.id}-${scenePath.length}`} game={scene.game} initialResult={miniGameResults[scene.id]} onProgress={result => setMiniGameResults(prev => ({ ...prev, [scene.id]: { ...result, gameId: scene.game.id, completed: false } }))} onComplete={handleMiniGameComplete} className="h-full" />
+            ) : scene.game?.id === "SMART_SHOPPING_CH04" ? (
+              <SmartShoppingMiniGame
+                key={`${scene.id}-${scenePath.length}`}
+                game={scene.game}
                 onComplete={handleMiniGameComplete}
                 className="h-full"
               />
@@ -1194,6 +1280,7 @@ export function VisualNovelPlayer({ data }) {
               <h2 id="vn-choice-question">
                 {scene.prompt || scene.text || "Bạn sẽ chọn điều gì?"}
               </h2>
+              {scene.planSummary && <ChapterFivePlanSummary flags={flags}/>}
               <div className="vn-choices">
                 {scene.options.map((option, index) => {
                   const lockReason = getOptionLock(option);
@@ -1232,7 +1319,7 @@ export function VisualNovelPlayer({ data }) {
                   {scene.inspect && (
                     <button
                       type="button"
-                      className="vn-choice-tool"
+                      className="vn-choice-tool vn-inspect-choice-trigger"
                       onClick={() => openInspect(scene.inspect)}
                     >
                       <FileSearch size={17} aria-hidden="true" />{" "}
@@ -1290,6 +1377,10 @@ export function VisualNovelPlayer({ data }) {
                 </div>
               </header>
               <EndingReport report={buildEndingReport()} />
+              {data.endingReport.reviewSceneId && <button className="vn-choice-option" onClick={() => goToSceneIndex(sceneIndexById[data.endingReport.reviewSceneId])}>Xem lại và sửa kế hoạch</button>}
+              <Link to="/dashboard/user/lessons" className="vn-ending-exit">
+                Quay lại bản đồ chương
+              </Link>
             </section>
           </div>
         ) : (
@@ -1354,13 +1445,14 @@ export function VisualNovelPlayer({ data }) {
                 {scene.inspect && (
                   <button
                     type="button"
-                    className="w-full mt-3 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg transition-colors"
+                    className="ch5-inspect-trigger"
+                    aria-label={scene.inspect.buttonText}
                     onClick={(e) => {
                       e.stopPropagation();
                       openInspect(scene.inspect);
                     }}
                   >
-                    {scene.inspect.buttonText}
+                    <span className="ch5-inspect-icon" aria-hidden="true"><FileSearch size={26}/></span><span><b>{scene.inspect.buttonText}</b>{scene.inspect.cards && <small>Mở thẻ để cùng An tìm hiểu</small>}</span><span className="ch5-inspect-arrow" aria-hidden="true">↗</span>
                   </button>
                 )}
 
@@ -1381,43 +1473,18 @@ export function VisualNovelPlayer({ data }) {
           </div>
         )}
       </main>
-      {inspectPopup && (
-        <div className="absolute inset-0 z-[60] bg-black/45 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="w-full max-w-3xl rounded-3xl border border-white/25 bg-[#0b1723] text-white p-6 shadow-2xl max-h-[85vh] overflow-y-auto">
+      {inspectPopup?.cards && <InspectCardsDialog key={inspectPopup.id} inspect={inspectPopup} onClose={closeInspectPopup}/>}
+      {inspectPopup && !inspectPopup.cards && (
+        <div className="vn-inspect-modal">
+          <div className="vn-inspect-paper" role="dialog" aria-modal="true" aria-labelledby="vn-inspect-title">
             <div className="flex items-start justify-between mb-4">
-              <h3 className="text-base font-black">
+              <h3 id="vn-inspect-title" className="vn-inspect-title">
                 {inspectPopup.buttonText}
               </h3>
               <button
-                onClick={() => {
-                  // Handle money events when closing popup
-                  if (
-                    inspectPopup.moneyEvents &&
-                    Array.isArray(inspectPopup.moneyEvents)
-                  ) {
-                    const totalMoneyDelta = inspectPopup.moneyEvents.reduce(
-                      (sum, evt) => sum + (evt.amount || 0),
-                      0,
-                    );
-                    setMoney((prev) => Math.max(0, prev + totalMoneyDelta));
-                    if (totalMoneyDelta !== 0) {
-                      setMoneyFx(totalMoneyDelta);
-                      setTimeout(() => setMoneyFx(null), 1200);
-                    }
-                  }
-                  // Handle flags when closing popup
-                  if (
-                    inspectPopup.setFlags &&
-                    Object.keys(inspectPopup.setFlags).length > 0
-                  ) {
-                    setFlags((prev) => ({ ...prev, ...inspectPopup.setFlags }));
-                  }
-                  setInspectPopup(null);
-                  if (inspectPopup.autoNextSceneOnClose) {
-                    goNext();
-                  }
-                }}
-                className="text-white/60 hover:text-white text-2xl leading-none"
+                onClick={closeInspectPopup}
+                className="vn-inspect-close"
+                aria-label="Đóng"
               >
                 ×
               </button>
@@ -1453,39 +1520,12 @@ export function VisualNovelPlayer({ data }) {
                 ))}
               </div>
             )}
-            <p className="text-sm whitespace-pre-wrap text-white/90 mb-4">
+            <p className="vn-inspect-note">
               {inspectPopup.dataText}
             </p>
             <button
-              onClick={() => {
-                // Handle money events when closing popup
-                if (
-                  inspectPopup.moneyEvents &&
-                  Array.isArray(inspectPopup.moneyEvents)
-                ) {
-                  const totalMoneyDelta = inspectPopup.moneyEvents.reduce(
-                    (sum, evt) => sum + (evt.amount || 0),
-                    0,
-                  );
-                  setMoney((prev) => Math.max(0, prev + totalMoneyDelta));
-                  if (totalMoneyDelta !== 0) {
-                    setMoneyFx(totalMoneyDelta);
-                    setTimeout(() => setMoneyFx(null), 1200);
-                  }
-                }
-                // Handle flags when closing popup
-                if (
-                  inspectPopup.setFlags &&
-                  Object.keys(inspectPopup.setFlags).length > 0
-                ) {
-                  setFlags((prev) => ({ ...prev, ...inspectPopup.setFlags }));
-                }
-                setInspectPopup(null);
-                if (inspectPopup.autoNextSceneOnClose) {
-                  goNext();
-                }
-              }}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg text-sm font-bold"
+              onClick={closeInspectPopup}
+              className="vn-inspect-done"
             >
               Đóng
             </button>
