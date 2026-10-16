@@ -32,7 +32,7 @@ export default function AuthForm({ registration = false }) {
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
   const [email, setEmail] = useState('')
-  const [message, setMessage] = useState('')
+  const [message, setMessage] = useState(() => params.get('reason') === 'slot-ended' ? 'Lớp học hoặc hồ sơ của bạn đã kết thúc. Hãy xin mã mới từ phụ huynh hoặc giáo viên.' : '')
   const [otpMode, setOtpMode] = useState(null)
   const [cooldown, setCooldown] = useState(0)
   useEffect(() => {

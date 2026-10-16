@@ -144,19 +144,28 @@ test('admin API methods use the account token and documented payloads', async ()
     { code: 0, result: { kind: 'PARENT', price: 99000, months: 3 } },
     { code: 0, result: [] },
     { code: 0, result: { orderCode: 123, status: 'PAID' } },
+    { code: 0, result: { id: 'account-1', email: 'member@example.com', roles: [] } },
+    { code: 0, result: { subjectId: 'account-1', roles: ['GAME_EDITOR'] } },
+    { code: 0, result: { subjectId: 'account-1', roles: [] } },
     { code: 0, result: {} },
   )
   await auth.listPlans()
   await auth.setPlanPrice('PARENT', 99000, 3)
   await auth.listAdminTransactions({ status: 'PENDING', page: 1, size: 20 })
   await auth.reconcileTransaction(123)
+  await auth.findAdminAccount(' Member@Example.com ')
+  await auth.grantAdminRole({ subjectId: ' account-1 ', role: 'GAME_EDITOR', reason: ' Biên tập nội dung ' })
+  await auth.revokeAdminRole({ subjectId: ' account-1 ', role: 'GAME_EDITOR', reason: ' Không còn phụ trách ' })
   await auth.grantEntitlement({ accountId: '00000000-0000-0000-0000-000000000001', kind: 'TEACHER', months: 6, reason: ' Demo ' })
   assert.equal(calls[2].headers.Authorization, undefined)
   assert.equal(calls[3].method, 'PUT')
   assert.deepEqual(JSON.parse(calls[3].body), { price: 99000, months: 3 })
   assert.match(calls[4].url, /status=PENDING/)
   assert.equal(calls[5].method, 'POST')
-  assert.deepEqual(JSON.parse(calls[6].body), { accountId: '00000000-0000-0000-0000-000000000001', kind: 'TEACHER', months: 6, reason: 'Demo' })
+  assert.match(calls[6].url, /\/api\/admin\/accounts\?email=Member%40Example\.com$/)
+  assert.deepEqual(JSON.parse(calls[7].body), { subjectId: 'account-1', role: 'GAME_EDITOR', reason: 'Biên tập nội dung' })
+  assert.deepEqual(JSON.parse(calls[8].body), { subjectId: 'account-1', role: 'GAME_EDITOR', reason: 'Không còn phụ trách' })
+  assert.deepEqual(JSON.parse(calls[9].body), { accountId: '00000000-0000-0000-0000-000000000001', kind: 'TEACHER', months: 6, reason: 'Demo' })
   for (const call of calls.slice(3)) assert.equal(call.headers.Authorization, 'Bearer account-token')
 })
 test('payment API creates a VietQR order, lists, checks and cancels it', async () => {
@@ -230,6 +239,43 @@ test('SLOT login normalizes code, keeps a separate session and restores the kid 
   assert.equal(restored.getSnapshot().actor.name, 'Bạn Bình')
   assert.equal(restored.getSnapshot().actor.learnerRole, 'student')
   assert.equal(restored.getSnapshot().actor.plan, 'teacher')
+})
+
+test('report APIs use ACCOUNT authentication and encoded resource ids', async () => {
+  const { auth, queue, calls } = setup()
+  queue.push({ code: 0, result: token }, { code: 0, result: { ...me, plans: ['PARENT'] } })
+  await auth.login('parent@example.com', 'password')
+  queue.push({ code: 0, result: { rows: [] } }, { code: 0, result: { learner: {}, progress: {} } })
+  await auth.getGroupReport('group/one')
+  await auth.getSlotReport('slot/one')
+  assert.match(calls[2].url, /\/api\/groups\/group%2Fone\/report$/)
+  assert.match(calls[3].url, /\/api\/slots\/slot%2Fone\/report$/)
+  assert.equal(calls[2].headers.Authorization, 'Bearer account-token')
+  assert.equal(calls[3].headers.Authorization, 'Bearer account-token')
+})
+
+test('learner dashboard uses the SLOT bearer, caches the result and clears revoked SLOT sessions', async () => {
+  const { auth, queue, calls } = setup()
+  queue.push({ code: 0, result: { accessToken: 'slot-token', expiresIn: 28800, slot: { id: 'slot-1', displayName: 'Bé An', badge: null, groupContext: 'FAMILY' } } })
+  await auth.slotLogin('kidcode1', '012345')
+  const dashboard = {
+    learner: { id: 'slot-1', displayName: 'Bé An', badge: null, groupContext: 'FAMILY', groupName: 'Nhà mình' },
+    progress: { totalChapters: null, completedChapters: 0, chaptersDone: [], continueChapter: 1, lastPlayedAt: null },
+    quizzes: null,
+    achievements: [],
+    recentActivities: [],
+  }
+  queue.push({ code: 0, result: dashboard })
+  assert.equal((await auth.ensureLearnerDashboard()).learner.groupName, 'Nhà mình')
+  assert.equal(calls.at(-1).headers.Authorization, 'Bearer slot-token')
+  assert.match(calls.at(-1).url, /\/api\/learner\/dashboard$/)
+  const requestCount = calls.length
+  await auth.ensureLearnerDashboard()
+  assert.equal(calls.length, requestCount)
+  queue.push({ code: 3009, message: 'Slot đã kết thúc' })
+  await assert.rejects(auth.ensureLearnerDashboard({ force: true }), error => error.code === 3009)
+  assert.equal(auth.getSnapshot().actor, null)
+  assert.equal(auth.hasSession(), false)
 })
 test('network failures are retryable, not a silent success or fake demo login', async () => {
   const { auth, queue } = setup()

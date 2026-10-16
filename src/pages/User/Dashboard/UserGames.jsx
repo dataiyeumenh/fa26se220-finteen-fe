@@ -223,14 +223,6 @@ export default function UserGames() {
               </Link>
             </div>
 
-            <div className="text-center">
-              <Link
-                to="/dashboard/user/lessons"
-                className="inline-flex rounded-xl bg-amber-400 px-5 py-3 font-bold text-amber-950"
-              >
-                Về bản đồ chương
-              </Link>
-            </div>
           </div>
         )}
     </DashboardLayout>
