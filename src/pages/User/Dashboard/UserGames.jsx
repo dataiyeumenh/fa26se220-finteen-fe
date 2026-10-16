@@ -56,6 +56,7 @@ export default function UserGames() {
   const isChapterTwo = chapterId === "2";
   const isChapterThree = chapterId === "3";
   const isChapterFour = chapterId === "4";
+  const isChapterFive = chapterId === "5";
   const published = usePublishedChapters().find(
     (chapter) => chapter.number === Number(chapterId),
   );
@@ -77,7 +78,9 @@ export default function UserGames() {
               ? await loadChapter3V2RuntimeData()
               : isChapterFour
                 ? (await import("./data/chapter4V2VisualNovel")).chapter4V2GameData
-                : null;
+                : isChapterFive
+                  ? (await import("./data/chapter5V2VisualNovel")).chapter5V2GameData
+                  : null;
         if (mounted) {
           if (runtimeData) {
             setGameData(runtimeData);
@@ -95,11 +98,11 @@ export default function UserGames() {
       }
     };
 
-    if (isChapterOne || isChapterTwo || isChapterThree || isChapterFour) loadRuntime();
+    if (isChapterOne || isChapterTwo || isChapterThree || isChapterFour || isChapterFive) loadRuntime();
     return () => {
       mounted = false;
     };
-  }, [chapterId, isChapterOne, isChapterTwo, isChapterThree, isChapterFour]);
+  }, [chapterId, isChapterOne, isChapterTwo, isChapterThree, isChapterFour, isChapterFive]);
 
   return (
     <DashboardLayout role={role} navItems={navItems} user={user}>
@@ -148,7 +151,7 @@ export default function UserGames() {
         !published &&
         gameData &&
         loadedChapterId === chapterId &&
-        (isChapterOne || isChapterTwo || isChapterThree || isChapterFour) && (
+        (isChapterOne || isChapterTwo || isChapterThree || isChapterFour || isChapterFive) && (
           <VisualNovelPlayer key={gameData.id} data={gameData} />
         )}
 
@@ -158,7 +161,8 @@ export default function UserGames() {
         !isChapterOne &&
         !isChapterTwo &&
         !isChapterThree &&
-        !isChapterFour && (
+        !isChapterFour &&
+        !isChapterFive && (
           <div className="mx-auto max-w-5xl space-y-4">
             <div className="rounded-3xl border border-amber-200 bg-white p-8 text-center">
               <Gamepad2 className="mx-auto mb-4 h-12 w-12 text-amber-500" />

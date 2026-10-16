@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Store, BookOpen, BadgeDollarSign, Briefcase, ShoppingBag } from "lucide-react";
+import { Store } from "lucide-react";
 import { CHAPTERS } from "./model";
 import { Heading } from "./ui";
 import { usePublishedChapters } from "../internal/hooks";
@@ -93,7 +93,7 @@ export function GuestDemo() {
               Bắt đầu dùng thử →
             </Link>
           </div>
-          <BookOpen className="ws-hero-art" aria-hidden="true" />
+          <img className="ws-hero-art object-contain" src="/images/finteen-v2/chapter-01/props/allowance-envelope.png" alt="" />
         </section>
         <section className="ws-hero ws-shop-intro">
           <div>
@@ -110,7 +110,7 @@ export function GuestDemo() {
               Bắt đầu Chapter 2 →
             </Link>
           </div>
-          <BadgeDollarSign className="ws-hero-art" aria-hidden="true" />
+          <img className="ws-hero-art object-contain" src="/images/finteen-v2/chapter-02/asset-mini-game/savings-race/piggy-bank.png" alt="" />
         </section>
         <section className="ws-hero">
           <div>
@@ -127,7 +127,7 @@ export function GuestDemo() {
               Bắt đầu Chapter 3 →
             </Link>
           </div>
-          <Briefcase className="ws-hero-art" aria-hidden="true" />
+          <img className="ws-hero-art object-contain" src="/images/finteen-v2/chapter-03/asset-mini-game/career-match/design-assistant.png" alt="" />
         </section>
         <section className="ws-hero ws-shop-intro">
           <div>
@@ -141,7 +141,18 @@ export function GuestDemo() {
               Bắt đầu Chapter 4 →
             </Link>
           </div>
-          <ShoppingBag className="ws-hero-art" aria-hidden="true" />
+          <img className="ws-hero-art object-contain" src="/images/finteen-v2/chapter-04/asset-mini-game/smart-shopping/phone-a-new.png" alt="" />
+        </section>
+        <section className="ws-hero ws-shop-intro">
+          <div>
+            <span className="ws-pill">CHƯƠNG MỚI</span>
+            <h2>Chương 5: Ngân hàng và lãi</h2>
+            <p>Đọc phí và điều kiện rút, khám phá lãi kép và sức mua, lập kế hoạch đủ tiền cho khóa học sau ba tháng.</p>
+            <Link className="ws-btn primary" to="/dashboard/demo/play?chapter=5">
+              Bắt đầu Chapter 5 →
+            </Link>
+          </div>
+          <img className="ws-hero-art object-contain" src="/images/finteen-v2/chapter-05/asset-mini-game/compound-timeline/term-account.png" alt="" />
         </section>
       </div>
     </>
