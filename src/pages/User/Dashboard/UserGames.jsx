@@ -57,6 +57,7 @@ export default function UserGames() {
   const isChapterThree = chapterId === "3";
   const isChapterFour = chapterId === "4";
   const isChapterFive = chapterId === "5";
+  const isChapterSix = chapterId === "6";
   const published = usePublishedChapters().find(
     (chapter) => chapter.number === Number(chapterId),
   );
@@ -80,7 +81,9 @@ export default function UserGames() {
                 ? (await import("./data/chapter4V2VisualNovel")).chapter4V2GameData
                 : isChapterFive
                   ? (await import("./data/chapter5V2VisualNovel")).chapter5V2GameData
-                  : null;
+                  : isChapterSix
+                    ? (await import("./data/chapter6V2VisualNovel")).chapter6V2GameData
+                    : null;
         if (mounted) {
           if (runtimeData) {
             setGameData(runtimeData);
@@ -98,11 +101,11 @@ export default function UserGames() {
       }
     };
 
-    if (isChapterOne || isChapterTwo || isChapterThree || isChapterFour || isChapterFive) loadRuntime();
+    if (isChapterOne || isChapterTwo || isChapterThree || isChapterFour || isChapterFive || isChapterSix) loadRuntime();
     return () => {
       mounted = false;
     };
-  }, [chapterId, isChapterOne, isChapterTwo, isChapterThree, isChapterFour, isChapterFive]);
+  }, [chapterId, isChapterOne, isChapterTwo, isChapterThree, isChapterFour, isChapterFive, isChapterSix]);
 
   return (
     <DashboardLayout role={role} navItems={navItems} user={user}>
@@ -151,7 +154,7 @@ export default function UserGames() {
         !published &&
         gameData &&
         loadedChapterId === chapterId &&
-        (isChapterOne || isChapterTwo || isChapterThree || isChapterFour || isChapterFive) && (
+        (isChapterOne || isChapterTwo || isChapterThree || isChapterFour || isChapterFive || isChapterSix) && (
           <VisualNovelPlayer key={gameData.id} data={gameData} />
         )}
 
@@ -162,7 +165,8 @@ export default function UserGames() {
         !isChapterTwo &&
         !isChapterThree &&
         !isChapterFour &&
-        !isChapterFive && (
+        !isChapterFive &&
+        !isChapterSix && (
           <div className="mx-auto max-w-5xl space-y-4">
             <div className="rounded-3xl border border-amber-200 bg-white p-8 text-center">
               <Gamepad2 className="mx-auto mb-4 h-12 w-12 text-amber-500" />
@@ -198,7 +202,7 @@ export default function UserGames() {
                   Chapter 2
                 </div>
                 <h2 className="mt-2 text-2xl font-black text-gray-900">
-                  Học sinh cấp 3 - Quản lý chi tiêu
+                  Quản lý chi tiêu
                 </h2>
                 <p className="mt-2 text-sm text-gray-600">
                   Trải nghiệm trọ học, flash sale và bài học tiết kiệm trong đời
