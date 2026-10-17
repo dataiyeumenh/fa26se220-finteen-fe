@@ -1,24 +1,20 @@
+import { LoanDetectiveMiniGame } from "./LoanDetectiveMiniGame";
+import { chapterSixLearning } from "./loanDetectiveRules.js";
+import { readNovelProgress, saveNovelProgress } from "./visualNovelProgress.js";
 import { CompoundTimelineMiniGame } from "./CompoundTimelineMiniGame";
 import { ChapterFiveReflection, ChapterFivePlanSummary, InspectCardsDialog } from "./ChapterFiveActivities";
 import { chapterFiveLearning } from "./compoundTimelineRules";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowLeft,
-  Brain,
-  ChartNoAxesColumn,
   Coins,
   FileSearch,
-  Heart,
   ImageOff,
-  Landmark,
   Lock,
   Maximize2,
   Menu,
   Minimize2,
-  PiggyBank,
   RotateCcw,
-  ShieldAlert,
-  Target,
 } from "lucide-react";
 import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
@@ -34,18 +30,6 @@ import { InspectHotspot } from "./InspectHotspot.jsx";
 import "./chapter-three.css";
 import "./inspect-theme.css";
 import { flexibleReserveLock, recordMiniGameResult, summarizeMiniGames } from "./miniGameRules";
-
-const statDisplay = {
-  WEALTH: { label: "Tài sản", icon: Landmark, tone: "wealth" },
-  SAVING: { label: "Tiết kiệm", icon: PiggyBank, tone: "saving" },
-  FIQ: { label: "IQ tài chính", icon: Brain, tone: "fiq" },
-  HAPPINESS: { label: "Hạnh phúc", icon: Heart, tone: "happiness" },
-  RISK: { label: "Rủi ro", icon: ShieldAlert, tone: "risk" },
-  GOAL: { label: "Mục tiêu", icon: Target, tone: "goal" },
-};
-const statLabels = Object.fromEntries(
-  Object.entries(statDisplay).map(([key, value]) => [key, value.label]),
-);
 
 function applyStatEffects(current, effects = {}) {
   const next = { ...current };
@@ -178,43 +162,6 @@ function SpeakerTag({ scene }) {
   return <div className="vn-speaker">{scene.speaker || "Nhân vật"}</div>;
 }
 
-function StatsPanel({ stats, statFxByKey }) {
-  return (
-    <div className="vn-stats-grid">
-      {Object.entries(statDisplay)
-        .filter(([key]) => key in stats)
-        .map(([key, meta]) => {
-          const Icon = meta.icon;
-          return (
-            <div
-              key={key}
-              className={cn(
-                "vn-stat-card",
-                `is-${meta.tone}`,
-                statFxByKey[key]
-                  ? statFxByKey[key] > 0
-                    ? "has-positive-change"
-                    : "has-negative-change"
-                  : "",
-              )}
-            >
-              <span className="vn-stat-icon"><Icon size={17} /></span>
-              <span className="vn-stat-copy">
-                <small>{meta.label}</small>
-                <strong>{Number(stats[key] ?? 0).toLocaleString("vi-VN")}</strong>
-              </span>
-              {statFxByKey[key] ? (
-                <span className={cn("vn-stat-delta", statFxByKey[key] > 0 ? "is-positive" : "is-negative")}>
-                  {statFxByKey[key] > 0 ? `+${statFxByKey[key]}` : statFxByKey[key]}
-                </span>
-              ) : null}
-            </div>
-          );
-        })}
-    </div>
-  );
-}
-
 function EndingReport({ report }) {
   if (!report) return null;
   const format = (value) => Number(value || 0).toLocaleString("vi-VN");
@@ -257,7 +204,6 @@ function EndingReport({ report }) {
           </li>
         )}
       </ul>
-      {report.statDeltas && <ul className="vn-report-metrics">{Object.entries(report.statDeltas).map(([key, delta]) => <li key={key}>{key}: <b>{delta > 0 ? '+' : ''}{delta}</b></li>)}</ul>}
       {report.decisions.length > 0 && (
         <div className="vn-report-decisions">
           <h3>Những quyết định của bạn</h3>
@@ -294,39 +240,44 @@ function EndingReport({ report }) {
 }
 
 export function VisualNovelPlayer({ data }) {
+  const [savedProgress] = useState(() => {
+    try { return readNovelProgress(window.sessionStorage, data); } catch { return null; }
+  });
+  const learningSummary = data.metadata?.chapterId === 'CH06' ? chapterSixLearning : chapterFiveLearning;
   const gameContainerRef = useRef(null);
   const menuDetailsRef = useRef(null);
   const stageRef = useRef(null);
   const dialogueRef = useRef(null);
   const pendingTransitionRef = useRef(null);
-  const committedDecisionsRef = useRef(new Set());
+  const committedDecisionsRef = useRef(new Set(savedProgress?.committedDecisions || []));
   const preloadedImageStateRef = useRef(new Map());
   const preloadingImageRef = useRef(new Map());
 
-  const [scenePath, setScenePath] = useState([0]);
-  const [miniGameDoneByScene, setMiniGameDoneByScene] = useState({});
-  const [sceneActionApplied, setSceneActionApplied] = useState({});
-  const [stats, setStats] = useState(data.initialStats || {});
-  const [statFxByKey, setStatFxByKey] = useState({});
+  const [scenePath, setScenePath] = useState(savedProgress?.scenePath || [0]);
+  const [miniGameDoneByScene, setMiniGameDoneByScene] = useState(savedProgress?.miniGameDoneByScene || {});
+  const [sceneActionApplied, setSceneActionApplied] = useState(savedProgress?.sceneActionApplied || {});
+  const [stats, setStats] = useState(savedProgress?.stats || data.initialStats || {});
+  const [reviewOffset, setReviewOffset] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [pendingEffects, setPendingEffects] = useState(null);
 
   // New state for Scene Data Runtime features
-  const [gameFlag, setGameFlag] = useState(null);
-  const [flags, setFlags] = useState({});
-  const [choiceLedger, setChoiceLedger] = useState({});
-  const [firstChoiceScores, setFirstChoiceScores] = useState({});
-  const [inspectedIds, setInspectedIds] = useState({});
-  const [moneyEventsApplied, setMoneyEventsApplied] = useState({});
-  const [budgetAllocations, setBudgetAllocations] = useState({});
+  const [gameFlag, setGameFlag] = useState(savedProgress?.gameFlag || null);
+  const [flags, setFlags] = useState(savedProgress?.flags || {});
+  const [choiceLedger, setChoiceLedger] = useState(savedProgress?.choiceLedger || {});
+  const [firstChoiceScores, setFirstChoiceScores] = useState(savedProgress?.firstChoiceScores || {});
+  const [inspectedIds, setInspectedIds] = useState(savedProgress?.inspectedIds || {});
+  const [moneyEventsApplied, setMoneyEventsApplied] = useState(savedProgress?.moneyEventsApplied || {});
+  const [budgetAllocations, setBudgetAllocations] = useState(savedProgress?.budgetAllocations || {});
   const [inspectPopup, setInspectPopup] = useState(null);
-  const [miniGameCompleted, setMiniGameCompleted] = useState(false);
-  const [miniGameResults, setMiniGameResults] = useState({});
+  const [miniGameCompleted, setMiniGameCompleted] = useState(savedProgress?.miniGameCompleted || false);
+  const [miniGameResults, setMiniGameResults] = useState(savedProgress?.miniGameResults || {});
   const { score: miniGameScore, percent: miniGamePercent } = summarizeMiniGames(miniGameResults);
-  const [money, setMoney] = useState(data.initialMoney || 0);
+  const [money, setMoney] = useState(savedProgress?.money ?? data.initialMoney ?? 0);
   const [moneyFx, setMoneyFx] = useState(null);
 
-  const sceneIndex = scenePath[scenePath.length - 1];
+  const isReviewing = reviewOffset > 0;
+  const sceneIndex = scenePath[scenePath.length - 1 - reviewOffset];
 
   // Effective choice evidence: each choice group keeps only its current option.
   const { evidenceScores, reflectionScore } = useMemo(() => {
@@ -482,13 +433,13 @@ export function VisualNovelPlayer({ data }) {
     Array.isArray(scene.options) && scene.options.length > 0;
   const isSceneOnlyScreen = scene.type === "cutscene" || scene.type === "scene";
 
-  const canGoNext =
+  const canGoNext = isReviewing || (
     scene.type !== "activity" &&
     (scene.requiredInspections || []).every(id => inspectedIds[id]) &&
     (scene.type !== "minigame" || Boolean(miniGameDoneByScene[scene.id])) &&
     scene.type !== "choice" &&
     !hasChoiceOptions &&
-    sceneIndex < totalScenes - 1;
+    sceneIndex < totalScenes - 1);
 
   const goToSceneIndex = (nextIndex) => {
     const resolved = resolveNavigableSceneIndex(nextIndex);
@@ -499,8 +450,6 @@ export function VisualNovelPlayer({ data }) {
     if (!effects || (!force && sceneActionApplied[sceneId])) return;
 
     setStats((current) => applyStatEffects(current, effects));
-    setStatFxByKey(effects);
-    window.setTimeout(() => setStatFxByKey({}), 1200);
     setSceneActionApplied((prev) => ({ ...prev, [sceneId]: true }));
   };
 
@@ -535,6 +484,7 @@ export function VisualNovelPlayer({ data }) {
   };
 
   const goNext = (completedInspection = null) => {
+    if (isReviewing) { setReviewOffset(offset => Math.max(0, offset - 1)); return; }
     // Closing a required card and advancing happen in the same React event.
     const completedRequired = scene.requiredInspections?.length && scene.requiredInspections.every(id => inspectedIds[id] || id === completedInspection);
     if (!canGoNext && !completedRequired) return;
@@ -573,13 +523,14 @@ export function VisualNovelPlayer({ data }) {
   };
 
   const openInspect = (inspect) => {
-    if (inspect.id && !inspect.cards)
+    if (!isReviewing && inspect.id && !inspect.cards)
       setInspectedIds((prev) => ({ ...prev, [inspect.id]: true }));
     setInspectPopup(inspect);
   };
 
   const closeInspectPopup = () => {
     if (!inspectPopup) return;
+    if (isReviewing) { setInspectPopup(null); return; }
     const popup = inspectPopup;
     if (popup.id && popup.cards) setInspectedIds(prev => ({ ...prev, [popup.id]: true }));
     if (Array.isArray(popup.moneyEvents)) {
@@ -598,6 +549,7 @@ export function VisualNovelPlayer({ data }) {
   };
 
   const selectChoice = (option) => {
+    if (isReviewing) return;
     if (getOptionLock(option)) return;
     if (data.metadata?.lockDecisions && committedDecisionsRef.current.has(scene.id)) return;
     if (option.deferLedger) {
@@ -678,7 +630,7 @@ export function VisualNovelPlayer({ data }) {
     }
 
     const net = {};
-    if (!isSame) {
+    if (!isSame && !(data.metadata?.preserveFirstChoiceStats && previous)) {
       Object.entries(previous?.deltaStats || {}).forEach(([key, delta]) => {
         net[key] = (net[key] || 0) - Number(delta || 0);
       });
@@ -707,6 +659,7 @@ export function VisualNovelPlayer({ data }) {
   };
 
   const handleMiniGameComplete = (result) => {
+    if (isReviewing) return;
     if (scene.game?.id === 'COMPOUND_TIMELINE_CH05') setFlags(prev => ({ ...prev, mini_game_completed: true }));
     if (result?.allocations) setBudgetAllocations(result.allocations);
     setMiniGameResults(previous => recordMiniGameResult(previous, {
@@ -740,7 +693,7 @@ export function VisualNovelPlayer({ data }) {
     setMiniGameDoneByScene({});
     setSceneActionApplied({});
     setStats(data.initialStats || {});
-    setStatFxByKey({});
+    setReviewOffset(0);
     setPendingEffects(null);
     pendingTransitionRef.current = null;
     setGameFlag(null);
@@ -780,7 +733,7 @@ export function VisualNovelPlayer({ data }) {
           (evidenceScores.P || 0);
 
         const learning = data.endingReport?.choiceGroupMaxima
-          ? chapterFiveLearning(choiceLedger, miniGameResults, data.endingReport) : {};
+          ? learningSummary(choiceLedger, miniGameResults, data.endingReport) : {};
         return evaluator(
           gameFlag,
           totalEvidenceScore,
@@ -894,13 +847,31 @@ export function VisualNovelPlayer({ data }) {
       practice: pickLine(config.practice),
       next: config.nextStep || null,
       ...(config.choiceGroupMaxima ? {
-        ...Object.fromEntries(Object.entries(chapterFiveLearning(choiceLedger, miniGameResults, config)).map(([key, value]) => [key, typeof value === 'number' ? Math.round(value) : value])),
+        ...Object.fromEntries(Object.entries(learningSummary(choiceLedger, miniGameResults, config)).map(([key, value]) => [key, typeof value === 'number' ? Math.round(value) : value])),
         miniGameLabel: config.miniGameLabel,
-        miniFirstPercent: Object.values(miniGameResults).find(result => result.gameId === 'COMPOUND_TIMELINE_CH05')?.firstPercent,
+        miniFirstPercent: data.metadata?.chapterId === 'CH06'
+          ? (() => { const games = Object.values(miniGameResults).filter(result => config.requiredGameIds.includes(result.gameId)); const total = games.reduce((n, g) => n + g.total, 0); return total ? Math.round(games.reduce((n, g) => n + g.firstPercent * g.total, 0) / total) : null; })()
+          : Object.values(miniGameResults).find(result => result.gameId === 'COMPOUND_TIMELINE_CH05')?.firstPercent,
         statDeltas: Object.fromEntries(Object.keys(data.initialStats).map(key => [key, (stats[key] || 0) - data.initialStats[key]])),
       } : {}),
     };
   };
+
+  useEffect(() => {
+    // A choice with a stats popup commits atomically after the player acknowledges it.
+    // Until then keep the previous checkpoint, so reload cannot omit its delta.
+    if (pendingEffects || !data.metadata?.persistProgress) return;
+    try {
+      saveNovelProgress(window.sessionStorage, data, {
+        scenePath, miniGameDoneByScene, sceneActionApplied, stats, gameFlag, flags,
+        choiceLedger, firstChoiceScores, inspectedIds, moneyEventsApplied,
+        budgetAllocations, miniGameCompleted, miniGameResults, money,
+        committedDecisions: [...committedDecisionsRef.current],
+      });
+    } catch { /* Session storage is optional. */ }
+  }, [data, pendingEffects, scenePath, miniGameDoneByScene, sceneActionApplied, stats,
+    gameFlag, flags, choiceLedger, firstChoiceScores, inspectedIds, moneyEventsApplied,
+    budgetAllocations, miniGameCompleted, miniGameResults, money]);
 
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;
@@ -1039,15 +1010,13 @@ export function VisualNovelPlayer({ data }) {
               >
                 <div style={{ width: progress + "%" }} />
               </div>
-              <StatsPanel stats={stats} statFxByKey={statFxByKey} />
               <div className="vn-menu-actions">
                 <button
                   type="button"
                   className="vn-icon-button"
-                  disabled={Boolean(data.metadata?.lockDecisions) || scenePath.length <= 1 || Boolean(pendingEffects) || Boolean(inspectPopup)}
+                  disabled={reviewOffset >= scenePath.length - 1 || Boolean(pendingEffects) || Boolean(inspectPopup)}
                   onClick={() => {
-                    if (data.metadata?.lockDecisions) return;
-                    setScenePath(current => current.length > 1 ? current.slice(0, -1) : current);
+                    setReviewOffset(offset => Math.min(offset + 1, scenePath.length - 1));
                     if (menuDetailsRef.current) menuDetailsRef.current.open = false;
                   }}
                   title="Lùi lại một cảnh đã đi qua; giữ nguyên tiền và điểm"
@@ -1119,25 +1088,10 @@ export function VisualNovelPlayer({ data }) {
               </span>
             ) : null}
           </div>
-          <details className="vn-details vn-stats-details">
-            <summary
-              className="vn-icon-button"
-              aria-label="Xem các chỉ số hành trình"
-              title="Chỉ số"
-            >
-              <ChartNoAxesColumn size={18} />
-              <span className="vn-control-label">Chỉ số</span>
-            </summary>
-            <div className="vn-popover vn-stats-popover">
-              <div className="vn-popover-heading">
-                <span>TIẾN TRÌNH</span>
-                <h2>Chỉ số hành trình</h2>
-              </div>
-              <StatsPanel stats={stats} statFxByKey={statFxByKey} />
-            </div>
-          </details>
+
         </div>
       </header>
+      {isReviewing && <div className="vn-review-indicator" role="status">Đang xem lại <button onClick={() => { setReviewOffset(0); setInspectPopup(null); }}>Về cảnh đang chơi →</button></div>}
       <main
         className="vn-play-area"
         onClick={(event) => {
@@ -1222,7 +1176,16 @@ export function VisualNovelPlayer({ data }) {
             )}
           </div>
         </div>
-        {scene.type === "activity" ? (
+        {isReviewing && ['choice', 'activity', 'minigame', 'ending'].includes(scene.type) ? (
+          <div className="vn-choice-overlay"><section className="vn-choice-panel vn-review-panel" aria-label="Xem lại cảnh đã đi qua">
+            <span className="vn-choice-eyebrow">ĐANG XEM LẠI</span>
+            <h2>{scene.prompt || scene.title}</h2>
+            {scene.type === 'choice' ? <ul className="vn-review-options">{scene.options.map(option => <li key={option.id}>{option.label}</li>)}</ul>
+              : <p>{scene.type === 'minigame' ? 'Bạn đã đi qua mini-game này. Kết quả được giữ nguyên khi xem lại.' : scene.type === 'activity' ? 'Phần trả lời đã được ghi nhận. Bạn có thể tiếp tục đọc lại câu chuyện.' : scene.text || 'Kết quả lượt chơi được giữ nguyên.'}</p>}
+            <p className="vn-review-note">Đang đọc lại lịch sử. Tiền và kết quả không thay đổi.</p>
+            <button className="vn-review-forward" onClick={() => goNext()}>Tiếp tục →</button>
+          </section></div>
+        ) : scene.type === "activity" ? (
           <div className="vn-minigame-host"><ChapterFiveReflection key={`${scene.id}-${scenePath.length}`} scene={scene} flags={flags} onComplete={selectChoice}/></div>
         ) : scene.type === "minigame" ? (
           <div className="vn-minigame-host">
@@ -1241,6 +1204,8 @@ export function VisualNovelPlayer({ data }) {
                 onComplete={handleMiniGameComplete}
                 className="h-full"
               />
+            ) : ['LOAN_OFFERS_CH06', 'LOAN_REPAYMENT_CH06'].includes(scene.game?.id) ? (
+              <LoanDetectiveMiniGame key={`${scene.id}-${scenePath.length}`} game={scene.game} initialResult={miniGameResults[scene.id]} onProgress={result => setMiniGameResults(prev => ({ ...prev, [scene.id]: { ...result, gameId: scene.game.id, completed: false } }))} onComplete={handleMiniGameComplete}/>
             ) : scene.game?.id === "COMPOUND_TIMELINE_CH05" ? (
               <CompoundTimelineMiniGame key={`${scene.id}-${scenePath.length}`} game={scene.game} initialResult={miniGameResults[scene.id]} onProgress={result => setMiniGameResults(prev => ({ ...prev, [scene.id]: { ...result, gameId: scene.game.id, completed: false } }))} onComplete={handleMiniGameComplete} className="h-full" />
             ) : scene.game?.id === "SMART_SHOPPING_CH04" ? (
@@ -1411,22 +1376,6 @@ export function VisualNovelPlayer({ data }) {
                 <p className="text-center mb-4">
                   {resolveEnding()?.storyText || scene.text}
                 </p>
-                {resolveEnding()?.finalStats && (
-                  <div className="bg-white/5 rounded-lg p-3 mb-4 text-sm">
-                    <p className="font-bold mb-2">Chỉ số cuối cùng:</p>
-                    <div className="space-y-1 text-white/75">
-                      {Object.entries(resolveEnding().finalStats).map(
-                        ([stat, value]) =>
-                          value !== null && (
-                            <div key={stat} className="flex justify-between">
-                              <span>{statLabels[stat]}</span>
-                              <span>{value}</span>
-                            </div>
-                          ),
-                      )}
-                    </div>
-                  </div>
-                )}
                 <Link
                   to="/dashboard/user/lessons"
                   className="w-full inline-block bg-green-600 text-white p-3 rounded-lg text-center hover:bg-green-700"

@@ -9,7 +9,7 @@ export function KidGames() {
     <Heading title="Trò chơi theo chương" description="Chọn một chương để bước vào câu chuyện và thử thách tài chính."/>
     <div className="ws-grid two ws-kid-game-grid">{CHAPTERS.map((title, index) => {
       const chapter = index + 1
-      const available = chapter <= 3 || published.some(item => item.number === chapter)
+      const available = chapter <= 6 || published.some(item => item.number === chapter)
       return <article className={`ws-card ws-chapter ${available ? '' : 'is-coming'}`} key={title}>
         <span className="ws-chapter-number">{String(chapter).padStart(2, '0')}</span>
         <div><small>CHƯƠNG {chapter}</small><h2>{published.find(item => item.number === chapter)?.version.title || title}</h2><p>{available ? 'Câu chuyện và thử thách đã sẵn sàng' : 'Nội dung chương đang được chuẩn bị'}</p><Link className={available ? 'ws-btn primary' : 'ws-btn'} to={`/dashboard/kid/play?chapter=${chapter}`}>{available ? 'Vào chơi →' : 'Xem chương →'}</Link></div>
@@ -46,7 +46,7 @@ export function GuestDemo() {
         <section className="ws-hero ws-shop-intro">
           <div>
             <span className="ws-pill">CHƯƠNG MỚI</span>
-            <h2>Chương 2: Học sinh cấp 3 - Quản lý chi tiêu</h2>
+            <h2>Chương 2: Quản lý chi tiêu</h2>
             <p>
               Tiếp tục hành trình bằng câu chuyện trọ học, chi tiêu, flash sale
               và bài học về tiết kiệm.
@@ -101,6 +101,17 @@ export function GuestDemo() {
             </Link>
           </div>
           <img className="ws-hero-art object-contain" src="/images/finteen-v2/chapter-05/asset-mini-game/compound-timeline/term-account.png" alt="" />
+        </section>
+        <section className="ws-hero ws-shop-intro">
+          <div>
+            <span className="ws-pill">CHƯƠNG MỚI</span>
+            <h2>Chương 6: Mượn tiền có dễ không?</h2>
+            <p>Cùng An cân nhắc laptop, lật hồ sơ vay, xếp lịch BNPL và tìm phần dư nợ còn lại qua Thám tử khoản vay.</p>
+            <Link className="ws-btn primary" to="/dashboard/demo/play?chapter=6">
+              Bắt đầu Chương 6 →
+            </Link>
+          </div>
+          <img className="ws-hero-art object-contain" src="/images/finteen-v2/chapter-06/asset-mini-game/loan-detective/laptop-goal.png" alt="" />
         </section>
       </div>
     </>

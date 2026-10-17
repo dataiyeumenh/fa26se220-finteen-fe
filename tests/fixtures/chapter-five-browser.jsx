@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { MemoryRouter } from 'react-router-dom';
 import { VisualNovelPlayer } from '../../src/pages/User/Dashboard/components/game/VisualNovelPlayer';
 import { chapter5V2GameData as data } from '../../src/pages/User/Dashboard/data/chapter5V2VisualNovel';
+import { progressKey } from '../../src/pages/User/Dashboard/components/game/visualNovelProgress.js';
 import { challenges } from '../../src/pages/User/Dashboard/components/game/compoundTimelineRules';
 import '../../src/index.css';
 
@@ -19,7 +20,9 @@ function setValue(input, value) {
   Object.getOwnPropertyDescriptor(proto, 'value').set.call(input, String(value));
   input.dispatchEvent(new Event(input.tagName === 'SELECT' ? 'change' : 'input', { bubbles: true }));
 }
-createRoot(document.getElementById('root')).render(<MemoryRouter><VisualNovelPlayer data={data}/></MemoryRouter>);
+const testData = { ...data, id: 'CH05_BROWSER_TEST', metadata: { ...data.metadata, persistProgress: true } };
+sessionStorage.removeItem(progressKey(testData));
+createRoot(document.getElementById('root')).render(<MemoryRouter><VisualNovelPlayer data={testData}/></MemoryRouter>);
 async function run() {
   let miniTriedWrong = false;
   let miniRetried = false;
@@ -108,15 +111,18 @@ async function run() {
   if (!ending?.includes(expected)) throw new Error(`Ending ${ending}; expected ${expected}`);
   const report = document.querySelector('.vn-report')?.textContent || '';
   if (!report.includes('Compound Timeline') || !report.includes('1.000.000')) throw new Error('Missing game label or wallet');
+  const stored = JSON.parse(sessionStorage.getItem(progressKey(testData)));
+  if (document.querySelector('.vn-stats-grid,.vn-stats-details,.vn-stat-card') || /SAVING:|HAPPINESS:|RISK:|GOAL:/.test(report)) throw Error('Internal stats visible');
+  const delta = key => stored.stats[key] - data.initialStats[key];
   if (['goal', 'topup', 'miniRetry', 'reflectionRetry'].includes(route)) {
-    if (!report.includes('SAVING: +5') || !report.includes('GOAL: +4') || !report.includes('RISK: -1')) throw new Error(`Incorrect stat reversal: ${report}`);
+    if (delta('SAVING') !== 5 || delta('GOAL') !== 4 || delta('RISK') !== -1) throw Error('Incorrect internal stat reversal');
   }
-  if (['revise', 'maturity'].includes(route) && (!report.includes('SAVING: 0') || !report.includes('GOAL: -2'))) throw new Error('Mismatch choice changed unexpectedly');
+  if (['revise', 'maturity'].includes(route) && (delta('SAVING') !== 0 || delta('GOAL') !== -2)) throw Error('Mismatch choice changed unexpectedly');
   if (buttons().some(b => b.textContent.includes('Xem l\u1ea1i v\u00e0 s\u1eeda k\u1ebf ho\u1ea1ch'))) throw new Error('Ending allows decision revision');
   const back = buttons().find(b => b.title === 'L\u00f9i l\u1ea1i m\u1ed9t c\u1ea3nh \u0111\u00e3 \u0111i qua; gi\u1eef nguy\u00ean ti\u1ec1n v\u00e0 \u0111i\u1ec3m');
-  if (back && !back.disabled) throw new Error('Player allows returning to earlier decisions');
-  if (route === 'pending' && (!report.includes('SAVING: 0') || !report.includes('GOAL: +1'))) throw new Error('Pending plan received feasibility reward');
-  if (route === 'providerRecover' && (!report.includes('RISK: 0') || !report.includes('GOAL: +3'))) throw new Error('Provider recovery awarded retroactive stats');
+  if (!back || back.disabled) throw new Error('Back navigation is disabled');
+  if (route === 'pending' && (delta('SAVING') !== 0 || delta('GOAL') !== 1)) throw new Error('Pending plan received feasibility reward');
+  if (route === 'providerRecover' && (delta('RISK') !== 0 || delta('GOAL') !== 3)) throw new Error('Provider recovery awarded retroactive stats');
   if (route === 'miniRetry' && !report.includes('Compound Timeline: 92%')) throw new Error('Incorrect submitted answer was rescored');
   if (errors.length || overflow.length) throw new Error(JSON.stringify({ errors, overflow: [...new Set(overflow)] }));
   resultNode.textContent = JSON.stringify({ status: 'PASS', route, width: innerWidth, ending, overflow: [], errors });

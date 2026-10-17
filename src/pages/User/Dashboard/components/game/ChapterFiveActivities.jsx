@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { affordabilityAt } from './loanDetectiveRules.js';
 import { gradeReflection } from './compoundTimelineRules';
 import './compound-timeline.css';
 
@@ -12,7 +13,7 @@ export function InspectCardsDialog({ inspect, onClose }) {
     dialog.current?.querySelector('button')?.focus();
     return () => previous?.focus();
   }, []);
-  const done = inspect.cards.every(card => seen.includes(card.id));
+  const done = Boolean(inspect.reviewOnly || inspect.cashflows) || inspect.cards.every(card => seen.includes(card.id));
   function keys(event) {
     if (event.key === 'Escape') { event.stopPropagation(); if (done) onClose(); }
     if (event.key !== 'Tab') return;
@@ -22,13 +23,19 @@ export function InspectCardsDialog({ inspect, onClose }) {
     else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
   }
   return <div className="ch5-modal"><section ref={dialog} role="dialog" aria-modal="true" aria-labelledby="ch5-inspect-title" className="ch5-dialog" onKeyDown={keys}>
-    <header className="ch5-inspect-heading"><span>SỔ TAY KHÁM PHÁ CỦA AN</span><h3 id="ch5-inspect-title">{inspect.buttonText}</h3><p>Chạm vào từng thẻ để đọc. Thẻ đã xem sẽ được đánh dấu ✓.</p></header>
+    <header className="ch5-inspect-heading"><span>SỔ TAY KHÁM PHÁ CỦA AN</span><h3 id="ch5-inspect-title">{inspect.buttonText}</h3><p>{inspect.cashflows ? 'Thu nhập − tiền sinh hoạt − tiền trả gói B = tiền còn lại.' : 'Chạm vào từng thẻ để đọc. Thẻ đã xem sẽ được đánh dấu ✓.'}</p></header>
     {inspect.dataText && <p className="ch5-inspect-context">{inspect.dataText}</p>}
-    <nav aria-label="Thẻ dữ kiện" data-card-count={inspect.cards.length}>{inspect.cards.map((card, index) => <button key={card.id} aria-label={card.label} aria-pressed={active === card.id} onClick={() => { setActive(card.id); setSeen(prev => [...new Set([...prev, card.id])]); }}><span className="ch5-card-art" aria-hidden="true">{card.image ? <img src={card.image} alt=""/> : ['⌕', '♧', '◷'][index % 3]}</span><b>{card.label}</b><span className="ch5-card-state">{seen.includes(card.id) ? '✓ Đã xem' : 'Nhấn để mở'}</span></button>)}</nav>
-    {!active && <div className="ch5-inspect-empty"><span aria-hidden="true">✦</span><p>Chọn một thẻ phía trên.<br/>Mỗi thẻ có một mảnh thông tin giúp bạn quyết định.</p></div>}
-    {inspect.cards.filter(card => card.id === active).map(card => <article className={`ch5-card${card.sections ? ' ch5-structured-note' : ''}`} key={card.id} aria-live="polite"><span className="ch5-card-bookmark" aria-hidden="true">GHI CHÚ</span><h4>{card.label}</h4>{card.sections ? <><dl className="ch5-note-sections">{card.sections.map(section => <div key={section.label}><dt>{section.label}</dt><dd><ul>{section.items.map(item => <li key={item}>{item}</li>)}</ul></dd></div>)}</dl>{card.note && <p className="ch5-note-takeaway"><b>Nhớ đối chiếu:</b> {card.note}</p>}</> : <p>{card.text}</p>}</article>)}
+    {inspect.shared && <aside className="inspect-shared" aria-label={inspect.shared.label}><b>{inspect.shared.label}</b><ul>{inspect.shared.items.map(item => <li key={item}>{item}</li>)}</ul></aside>}
+    {!inspect.cashflows && <nav aria-label="Thẻ dữ kiện" data-card-count={inspect.cards.length}>{inspect.cards.map((card, index) => <button key={card.id} aria-label={card.label} aria-pressed={active === card.id} onClick={() => { setActive(card.id); setSeen(prev => [...new Set([...prev, card.id])]); }}><span className="ch5-card-art" aria-hidden="true">{card.image ? <img src={card.image} alt=""/> : ['⌕', '♧', '◷'][index % 3]}</span><b>{card.label}</b><span className="ch5-card-state">{seen.includes(card.id) ? '✓ Đã xem' : 'Nhấn để mở'}</span></button>)}</nav>}
+    {!inspect.cashflows && !active && <div className="ch5-inspect-empty"><span aria-hidden="true">✦</span><p>Chọn một thẻ phía trên.<br/>Mỗi thẻ có một mảnh thông tin giúp bạn quyết định.</p></div>}
+    {inspect.cashflows && <><div className="loan-affordability-cards">{inspect.cashflows.map(flow => {
+      const budget = affordabilityAt(flow.income);
+      const cash = n => `${n.toLocaleString('vi-VN')}đ`;
+      return <article key={flow.id} className="loan-affordability-card"><h4>{flow.label}</h4><dl><div><dt>Thu nhập</dt><dd>{cash(budget.income)}</dd></div><div><dt>Tiền sinh hoạt</dt><dd>− {cash(budget.essentials)}</dd></div><div><dt>Trả gói B</dt><dd>− {cash(budget.repayment)}</dd></div></dl><output><span>{budget.remaining >= 0 ? 'Còn lại' : 'Còn thiếu'}</span><strong>{cash(Math.abs(budget.remaining))}</strong></output><p>{budget.remaining >= 0 ? '✓ Đủ tiền trả trong tháng này' : 'Chưa đủ tiền trả trong tháng này'}</p></article>;
+    })}</div><p className="loan-affordability-takeaway">Cả hai tháng đều trả được 550.000đ. Khi thu nhập giảm, chỉ còn 150.000đ cho việc khác. Cần theo dõi thu nhập để duy trì lịch 12 tháng.</p></>}
+    {inspect.cards.filter(card => card.id === active).map(card => <article className={`ch5-card${card.sections ? ' ch5-structured-note' : ''}`} key={card.id} aria-live="polite"><span className="ch5-card-bookmark" aria-hidden="true">GHI CHÚ</span><h4>{card.label}</h4>{card.facts ? <dl className="inspect-facts">{card.facts.map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}</dl> : card.sections ? <><dl className="ch5-note-sections">{card.sections.map(section => <div key={section.label}><dt>{section.label}</dt><dd><ul>{section.items.map(item => <li key={item}>{item}</li>)}</ul></dd></div>)}</dl>{card.note && <p className="ch5-note-takeaway"><b>Nhớ đối chiếu:</b> {card.note}</p>}</> : <p>{card.text}</p>}</article>)}
     {inspect.reference && <aside className="ch5-course-reference" aria-label={inspect.reference.label}>{inspect.reference.image && <img src={inspect.reference.image} alt=""/>}<div><span>MỐC ĐỂ ĐỐI CHIẾU</span><h4>{inspect.reference.label}</h4><p>{inspect.reference.text}</p></div></aside>}
-    <footer className="ch5-inspect-footer"><div><progress max={inspect.cards.length} value={seen.length} aria-label="Số thẻ đã xem"/><p aria-live="polite">Đã xem {seen.length}/{inspect.cards.length} thẻ. {done ? 'Sẵn sàng trở lại câu chuyện!' : 'Mở đủ thẻ để tiếp tục nhé.'}</p></div><button aria-label="Đóng" disabled={!done} onClick={onClose}>Xong rồi <span aria-hidden="true">→</span></button></footer>
+    <footer className="ch5-inspect-footer"><div>{inspect.reviewOnly ? <p>Xem lại khi cần; đóng để tiếp tục nhập kết quả.</p> : inspect.cashflows ? <p>Bạn đã thấy phép tính của cả hai tháng.</p> : <><progress max={inspect.cards.length} value={seen.length} aria-label="Số thẻ đã xem"/><p aria-live="polite">Đã xem {seen.length}/{inspect.cards.length} thẻ. {done ? 'Sẵn sàng trở lại câu chuyện!' : 'Mở đủ thẻ để tiếp tục nhé.'}</p></>}</div><button aria-label="Đóng" disabled={!done} onClick={onClose}>Xong rồi <span aria-hidden="true">→</span></button></footer>
   </section></div>;
 }
 
