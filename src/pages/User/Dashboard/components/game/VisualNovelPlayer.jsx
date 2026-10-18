@@ -1,5 +1,7 @@
 import { LoanDetectiveMiniGame } from "./LoanDetectiveMiniGame";
 import { chapterSixLearning } from "./loanDetectiveRules.js";
+import { ScamOrSafeMiniGame } from "./ScamOrSafeMiniGame.jsx";
+import { chapterSevenLearning } from "./scamOrSafeRules.js";
 import { readNovelProgress, saveNovelProgress } from "./visualNovelProgress.js";
 import { CompoundTimelineMiniGame } from "./CompoundTimelineMiniGame";
 import { ChapterFiveReflection, ChapterFivePlanSummary, InspectCardsDialog } from "./ChapterFiveActivities";
@@ -243,7 +245,7 @@ export function VisualNovelPlayer({ data }) {
   const [savedProgress] = useState(() => {
     try { return readNovelProgress(window.sessionStorage, data); } catch { return null; }
   });
-  const learningSummary = data.metadata?.chapterId === 'CH06' ? chapterSixLearning : chapterFiveLearning;
+  const learningSummary = data.metadata?.chapterId === 'CH07' ? chapterSevenLearning : data.metadata?.chapterId === 'CH06' ? chapterSixLearning : chapterFiveLearning;
   const gameContainerRef = useRef(null);
   const menuDetailsRef = useRef(null);
   const stageRef = useRef(null);
@@ -772,6 +774,7 @@ export function VisualNovelPlayer({ data }) {
   const buildEndingReport = () => {
     const config = data.endingReport;
     if (!config) return null;
+    const normalizedLearning = config.choiceGroupMaxima ? learningSummary(choiceLedger, miniGameResults, config) : null;
 
     const sumScore = (scores) =>
       (scores?.I || 0) + (scores?.C || 0) + (scores?.P || 0);
@@ -847,9 +850,10 @@ export function VisualNovelPlayer({ data }) {
       practice: pickLine(config.practice),
       next: config.nextStep || null,
       ...(config.choiceGroupMaxima ? {
-        ...Object.fromEntries(Object.entries(learningSummary(choiceLedger, miniGameResults, config)).map(([key, value]) => [key, typeof value === 'number' ? Math.round(value) : value])),
+        ...Object.fromEntries(Object.entries(normalizedLearning).map(([key, value]) => [key, typeof value === 'number' ? Math.round(value) : value])),
+        bandLabel: (config.bands || []).find(item => normalizedLearning.learningScore >= item.min)?.label || null,
         miniGameLabel: config.miniGameLabel,
-        miniFirstPercent: data.metadata?.chapterId === 'CH06'
+        miniFirstPercent: ['CH06', 'CH07'].includes(data.metadata?.chapterId)
           ? (() => { const games = Object.values(miniGameResults).filter(result => config.requiredGameIds.includes(result.gameId)); const total = games.reduce((n, g) => n + g.total, 0); return total ? Math.round(games.reduce((n, g) => n + g.firstPercent * g.total, 0) / total) : null; })()
           : Object.values(miniGameResults).find(result => result.gameId === 'COMPOUND_TIMELINE_CH05')?.firstPercent,
         statDeltas: Object.fromEntries(Object.keys(data.initialStats).map(key => [key, (stats[key] || 0) - data.initialStats[key]])),
@@ -1204,6 +1208,8 @@ export function VisualNovelPlayer({ data }) {
                 onComplete={handleMiniGameComplete}
                 className="h-full"
               />
+            ) : ['INSURANCE_DESK_CH07', 'SCAM_OR_SAFE_CH07'].includes(scene.game?.id) ? (
+              <ScamOrSafeMiniGame key={`${scene.id}-${scenePath.length}`} game={scene.game} initialResult={miniGameResults[scene.id]} onProgress={result => setMiniGameResults(prev => ({ ...prev, [scene.id]: { ...result, gameId: scene.game.id, completed: false } }))} onComplete={handleMiniGameComplete}/>
             ) : ['LOAN_OFFERS_CH06', 'LOAN_REPAYMENT_CH06'].includes(scene.game?.id) ? (
               <LoanDetectiveMiniGame key={`${scene.id}-${scenePath.length}`} game={scene.game} initialResult={miniGameResults[scene.id]} onProgress={result => setMiniGameResults(prev => ({ ...prev, [scene.id]: { ...result, gameId: scene.game.id, completed: false } }))} onComplete={handleMiniGameComplete}/>
             ) : scene.game?.id === "COMPOUND_TIMELINE_CH05" ? (

@@ -19,7 +19,7 @@ export const CHAPTERS = [
   "Bước đầu tự lập",
   "Vượt khủng hoảng tài chính",
   "Mượn tiền có dễ không?",
-  "Tài chính gia đình",
+  "Biến cố bất ngờ",
   "Chuẩn bị tương lai",
 ];
 export const emptyDatabase = () => ({
@@ -124,7 +124,7 @@ export function canAccessChapter(actor, chapter) {
   return Boolean(
     actor &&
     Number.isInteger(chapter) &&
-    ((actor.role === "guest" && [1, 2, 3, 4, 5, 6].includes(chapter)) ||
+    ((actor.role === "guest" && [1, 2, 3, 4, 5, 6, 7].includes(chapter)) ||
 
       (actor.role === "kid" && PLANS[actor.plan]?.chapters.includes(chapter))),
   );

@@ -109,7 +109,7 @@ export const chapter6V2GameData = {
       ['AN', 'thinking', 'Họ đồng ý cho vay và mình đủ khả năng trả đều là hai chuyện cần xem riêng.'],
       ['MINH', 'neutral', 'Gói vay C có dòng “quyết định nhanh”. Tớ thấy hơi bị thúc. Có kết luận được là lừa đảo chưa cô?'],
       ['CO_LINH', 'neutral', 'Thông tin thiếu là lý do dừng lại để kiểm tra. Chỉ từ đó thì mình chưa kết luận được về cả đơn vị.'],
-      ['AN', 'neutral', 'Mình cần điều kiện rõ và kênh chính thức để hỏi, chứ không ký vì sợ bỏ lỡ.'],
+      ['AN', 'neutral', 'Mình cần đọc rõ điều kiện và hỏi trực tiếp bên cho vay, chứ không ký vì sợ bỏ lỡ.'],
     ], 'CH06_CREDIT_INFO'),
     inspect('CH06_CREDIT_INFO', 2, 'Những dòng chữ nhỏ cần đọc', [
       card('apr', 'APR là gì?', 'Annual Percentage Rate: tỷ lệ chi phí vay quy đổi theo năm. Đối chiếu cùng cách tính, đồng thời xem số tiền thực nhận và khoảng cách giữa các lần trả.', `${BASE}/props/terms-and-fees.png`),
@@ -237,8 +237,8 @@ export const chapter6V2GameData = {
     ], 'CH06_REPAY_CHECK', { ...plan(true), selected_loan_B: false, fallback_verified: true }),
     ...lines('CH06_FINAL_B', 4, [
       ['AN', 'thinking', 'Em sẽ tính ngân sách theo gói B, mỗi tháng trả 550.000đ trong một năm. Trước khi ký, em còn cần hỏi rõ hợp đồng và xem thu nhập có đủ đều không.'],
-      ['CO_LINH', 'neutral', 'Em sẽ hỏi điều gì qua kênh chính thức?'],
-      ['AN', 'neutral', 'Em sẽ đối chiếu hợp đồng, số tiền thực nhận và ngày trả. Nếu thu nhập giảm, em cập nhật kế hoạch và liên hệ kênh chính thức trước hạn.'],
+      ['CO_LINH', 'neutral', 'Nếu liên hệ bên cho vay, em sẽ hỏi những gì?'],
+      ['AN', 'neutral', 'Em sẽ đối chiếu hợp đồng, số tiền thực nhận và ngày trả. Nếu thu nhập giảm, em cập nhật kế hoạch và báo cho bên cho vay trước ngày đến hạn.'],
       ['MINH', 'neutral', 'Và nếu chưa làm rõ được thì vẫn đi theo kế hoạch tích lũy. Có bước thay thế sẽ đỡ bị thúc phải ký.'],
     ], 'CH06_REPAY_CHECK', { ...plan(true), selected_loan_B: true, fallback_verified: true }),
     ...lines('CH06_FINAL_C', 4, [

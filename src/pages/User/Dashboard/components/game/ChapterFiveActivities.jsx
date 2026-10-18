@@ -1,10 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
 import { affordabilityAt } from './loanDetectiveRules.js';
 import { gradeReflection } from './compoundTimelineRules';
+import { PhoneInspectDialog } from './PhoneInspectDialog.jsx';
 import './compound-timeline.css';
 
 // Cards are read-only evidence. Reading never grants choice points or stats.
 export function InspectCardsDialog({ inspect, onClose }) {
+  return inspect.layout === 'phone' ? <PhoneInspectDialog inspect={inspect} onClose={onClose}/> : <EvidenceCardsDialog inspect={inspect} onClose={onClose}/>;
+}
+
+function EvidenceCardsDialog({ inspect, onClose }) {
   const dialog = useRef(null);
   const [active, setActive] = useState(null);
   const [seen, setSeen] = useState([]);
