@@ -732,7 +732,7 @@ export const chapter4V2GameData = {
           buttonText: "Đối chiếu báo giá và hóa đơn",
           popupImage: `${BASE}/props/receipt-and-quotation.png`,
           dataText:
-            "Giá máy theo phương án đã xác nhận: A 1.600.000đ; B 1.300.000đ; C 2.300.000đ. Hóa đơn thêm 100.000đ không có trong báo giá. Chưa tự trả khoản đang tranh chấp. Lưu cả hai bản và hỏi kênh hỗ trợ chính thức.",
+            "Giá máy theo phương án đã xác nhận: A 1.600.000đ; B 1.300.000đ; C 2.300.000đ. Hóa đơn thêm 100.000đ không có trong báo giá. Chưa tự trả khoản đang tranh chấp. Lưu cả hai bản và hỏi bộ phận chăm sóc khách hàng của cửa hàng.",
         },
       },
     ),
@@ -975,7 +975,7 @@ export const chapter4V2GameData = {
       {
         id: "CH04_RECAP_RECEIPT",
         label:
-          "Yêu cầu giải thích phí và kiểm tra lại chứng từ qua kênh chính thức",
+          "Nhờ bộ phận chăm sóc khách hàng giải thích phí và kiểm tra lại hóa đơn",
         requires: {
           flags: ["receipt_unresolved"],
           lockedReason: "Chứng từ đã được kiểm tra và xử lý.",
@@ -1106,7 +1106,7 @@ export const chapter4V2GameData = {
     achieved: [
       {
         when: "flags.receipt_resolved",
-        text: "Bạn đã kiểm tra và xử lý chứng từ qua kênh chính thức.",
+        text: "Bạn đã nhờ bộ phận chăm sóc khách hàng kiểm tra và sửa lại hóa đơn.",
       },
       {
         when: "flags.purchase_fit",

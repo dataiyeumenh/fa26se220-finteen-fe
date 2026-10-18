@@ -9,7 +9,7 @@ export function KidGames() {
     <Heading title="Trò chơi theo chương" description="Chọn một chương để bước vào câu chuyện và thử thách tài chính."/>
     <div className="ws-grid two ws-kid-game-grid">{CHAPTERS.map((title, index) => {
       const chapter = index + 1
-      const available = chapter <= 6 || published.some(item => item.number === chapter)
+      const available = chapter <= 7 || published.some(item => item.number === chapter)
       return <article className={`ws-card ws-chapter ${available ? '' : 'is-coming'}`} key={title}>
         <span className="ws-chapter-number">{String(chapter).padStart(2, '0')}</span>
         <div><small>CHƯƠNG {chapter}</small><h2>{published.find(item => item.number === chapter)?.version.title || title}</h2><p>{available ? 'Câu chuyện và thử thách đã sẵn sàng' : 'Nội dung chương đang được chuẩn bị'}</p><Link className={available ? 'ws-btn primary' : 'ws-btn'} to={`/dashboard/kid/play?chapter=${chapter}`}>{available ? 'Vào chơi →' : 'Xem chương →'}</Link></div>
@@ -112,6 +112,15 @@ export function GuestDemo() {
             </Link>
           </div>
           <img className="ws-hero-art object-contain" src="/images/finteen-v2/chapter-06/asset-mini-game/loan-detective/laptop-goal.png" alt="" />
+        </section>
+        <section className="ws-hero ws-shop-intro">
+          <div>
+            <span className="ws-pill">CHƯƠNG MỚI</span>
+            <h2>Chương 7: Biến cố bất ngờ</h2>
+            <p>Cùng An xử lý khoản chi bất ngờ, đọc điều kiện bảo hiểm và kiểm tra tin nhắn trước khi chia sẻ thông tin.</p>
+            <Link className="ws-btn primary" to="/dashboard/demo/play?chapter=7">Bắt đầu Chương 7 →</Link>
+          </div>
+          <img className="ws-hero-art object-contain" src="/images/finteen-v2/chapter-07/props/insurance-terms-folder.png" alt="" />
         </section>
       </div>
     </>

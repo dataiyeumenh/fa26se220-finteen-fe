@@ -70,7 +70,7 @@ const providerCards = [
     ...card('identity', 'Đơn vị và giám sát', '', `${BASE}/props/provider-check-laptop.png`),
     sections: [
       { label: 'Ai cung cấp A và B?', items: ['Ngân hàng thực hành FinTeen là đơn vị cung cấp hai tài khoản này.'] },
-      { label: 'Kiểm tra ở đâu?', items: ['Hồ sơ sản phẩm có tên đơn vị, mã hồ sơ và kênh tra cứu thông tin giám sát. Đối chiếu các thông tin này với đúng sản phẩm bạn đang xem.'] },
+      { label: 'Kiểm tra ở đâu?', items: ['Hồ sơ sản phẩm có tên đơn vị, mã hồ sơ và nơi tra cứu thông tin về cơ quan giám sát. Đối chiếu các thông tin này với đúng sản phẩm bạn đang xem.'] },
       { label: 'Còn ứng dụng Minh giới thiệu?', items: ['Chưa thấy rõ tên đơn vị cung cấp và thông tin giám sát.', 'Cần tìm thêm hồ sơ của ứng dụng đó; không dùng hồ sơ A/B để kết luận thay.'] },
     ],
     note: 'Biểu đồ đẹp hoặc lãi cao chưa cho biết ai chịu trách nhiệm về khoản tiền của bạn.',
