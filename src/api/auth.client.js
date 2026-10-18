@@ -167,6 +167,34 @@ export function createAuthClient({ baseUrl, storage, contextStorage = storage, f
     returnSlot: slotId => request(`/api/slots/${encodeURIComponent(slotId)}/return`, { authenticated: true, method: 'POST' }),
     wipeSlot: slotId => request(`/api/slots/${encodeURIComponent(slotId)}`, { authenticated: true, method: 'DELETE' }),
     changeSlotPin: (slotId, pin) => request(`/api/slots/${encodeURIComponent(slotId)}/pin`, { authenticated: true, body: { pin } }),
+    setGroupPostTest: (groupId, enabled) => request(`/api/groups/${encodeURIComponent(groupId)}/post-test`, {
+      authenticated: true, body: { enabled: Boolean(enabled) },
+    }),
+    listQuestions: (filters = {}) => {
+      const query = new URLSearchParams()
+      ;['standard', 'concept', 'pool', 'q'].forEach(key => {
+        const value = String(filters[key] || '').trim()
+        if (value) query.set(key, value)
+      })
+      return request(`/api/questions${query.size ? `?${query}` : ''}`, { authenticated: true })
+    },
+    createQuiz: ({ groupId, title, questionIds, dueAt }) => request('/api/quizzes', {
+      authenticated: true, body: { groupId, title: title.trim(), questionIds, dueAt },
+    }),
+    listQuizzes: groupId => request(`/api/quizzes?groupId=${encodeURIComponent(groupId)}`, { authenticated: true }),
+    getQuiz: quizId => request(`/api/quizzes/${encodeURIComponent(quizId)}`, { authenticated: true }),
+    updateQuiz: (quizId, { title, questionIds, dueAt }) => request(`/api/quizzes/${encodeURIComponent(quizId)}`, {
+      authenticated: true, method: 'PUT', body: { title: title.trim(), questionIds, dueAt },
+    }),
+    deleteQuiz: quizId => request(`/api/quizzes/${encodeURIComponent(quizId)}`, { authenticated: true, method: 'DELETE' }),
+    publishQuiz: quizId => request(`/api/quizzes/${encodeURIComponent(quizId)}/publish`, { authenticated: true, method: 'POST' }),
+    getQuizResults: quizId => request(`/api/quizzes/${encodeURIComponent(quizId)}/results`, { authenticated: true }),
+    getQuizSlotResult: (quizId, slotId) => request(`/api/quizzes/${encodeURIComponent(quizId)}/results/${encodeURIComponent(slotId)}`, { authenticated: true }),
+    listLearnerQuizzes: () => request('/api/learner/quizzes', { slotAuthenticated: true }),
+    getLearnerQuiz: quizId => request(`/api/learner/quizzes/${encodeURIComponent(quizId)}`, { slotAuthenticated: true }),
+    submitLearnerQuiz: (quizId, answers) => request(`/api/learner/quizzes/${encodeURIComponent(quizId)}/submit`, {
+      slotAuthenticated: true, body: { answers },
+    }),
     setPlanPrice: (kind, price, months) => request(`/api/admin/plans/${encodeURIComponent(kind)}`, {
       authenticated: true, method: 'PUT', body: { price, months },
     }),
