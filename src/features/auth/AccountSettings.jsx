@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { auth } from '../../api/auth.api'
 import { googleIdToken, googleReady } from '../../api/firebase'
 
@@ -6,6 +6,11 @@ export default function AccountSettings({ actor }) {
   const [busy, setBusy] = useState(false)
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
+  useEffect(() => {
+    if (!message && !error) return undefined
+    const timer = window.setTimeout(() => { setMessage(''); setError('') }, 4500)
+    return () => window.clearTimeout(timer)
+  }, [message, error])
   async function change(event) {
     event.preventDefault()
     const form = event.currentTarget
@@ -37,6 +42,6 @@ export default function AccountSettings({ actor }) {
     <div className="ws-settings-section"><h2>Liên kết Google</h2><p>Chọn Google bạn sở hữu. Email Google có thể khác email FinTeen.</p>
     <button className="ws-btn" disabled={busy || !googleReady} onClick={link}>Liên kết Google</button>
     {!googleReady && <p className="ws-muted">Đang chờ cấu hình Firebase.</p>}</div>
-    {message && <p className="ws-settings-feedback success" role="status">{message}</p>}{error && <p className="ws-settings-feedback error" role="alert">{error}</p>}
+    {message && <div className="ws-toast success" role="status">{message}</div>}{error && <div className="ws-toast error" role="alert">{error}</div>}
   </section>
 }

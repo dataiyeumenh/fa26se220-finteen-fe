@@ -20,7 +20,7 @@ import {
 import { Learners, SlotReportDetail, Groups } from '@/features/workspace/Learners'
 import Reports from '@/features/workspace/Reports'
 // Hai màn hình khác nhau: Teacher quản lý đề, Kid làm bài.
-import { TeacherQuizManagement, KidQuiz } from '@/features/workspace/Quiz'
+import { TeacherQuizManagement, KidQuiz, KidQuizTake } from '@/features/workspace/Quiz'
 
 // Khu vực RIÊNG của role kid: Bài học / Trò chơi / Cửa hàng / Quiz
 import UserLessons from '@/pages/User/Dashboard/UserLessons'
@@ -90,6 +90,7 @@ function App() {
               {/* Áp dụng cho Kid thuộc gói Teacher. */}
               <Route element={<RequireAccount plans={['teacher']} />}>
                 <Route path="/dashboard/kid/quiz" element={<KidQuiz />} />
+                <Route path="/dashboard/kid/quiz/:id" element={<KidQuizTake />} />
               </Route>
             </Route>
 

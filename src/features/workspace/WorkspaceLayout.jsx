@@ -9,6 +9,7 @@ import './workspace-header.css'
 import './workspace-visuals.css'
 import './role-theme.css'
 import './workspace-design-system.css'
+import './quiz.css'
 import { currentEntitlements, daysUntilExpiry, formatPlanDate, PLAN_LIMIT, PLAN_NAME } from './entitlements'
 
 export default function WorkspaceLayout({ children }) {
