@@ -8,12 +8,12 @@ import '../../src/index.css';
 const params = new URLSearchParams(location.search), route = params.get('route') || 'goal', snapshot = params.get('snapshot');
 const node = document.getElementById('ch8-browser-result'), key = progressKey(data);
 const reloads = route === 'resume' ? Number(sessionStorage.getItem('ch8:reloads') || 0) : 0;
-if (!reloads) sessionStorage.removeItem(key);
+if (!reloads) localStorage.removeItem(key);
 const errors = [], overflow = new Set(), reviewed = new Set();
 window.addEventListener('error', event => errors.push(event.message));
 window.addEventListener('unhandledrejection', event => errors.push(String(event.reason)));
 const wait = () => new Promise(resolve => setTimeout(resolve, 40));
-const saved = () => JSON.parse(sessionStorage.getItem(key) || '{}');
+const saved = () => JSON.parse(localStorage.getItem(key) || '{}');
 const find = text => [...document.querySelectorAll('button')].find(button => !button.disabled && (button.getAttribute('aria-label') === text || (button.querySelector('.vn-choice-copy')?.textContent.trim() || button.textContent.trim()) === text));
 const click = text => { const button = find(text); if (!button) throw Error(`Missing button ${text}`); button.click(); };
 const reload = step => { sessionStorage.setItem('ch8:reloads', String(step)); location.reload(); };
@@ -34,13 +34,10 @@ async function run() {
     if (snapshot === scene.id) { node.textContent = 'SNAPSHOT'; return; }
     if (route === 'resume' && reloads === 1 && scene.id === 'CH08_PROMISE_1') { if (saved().money !== chapterEightSettlement(saved().miniGameResults, saved().flags).final) throw Error('Settlement before reload incorrect'); reload(2); return; }
     if (route === 'back' && ['CH08_FIT_1', 'CH08_PROMISE_1', 'CH08_CHECKED_1', 'CH08_FEASIBLE_1'].includes(scene.id) && !reviewed.has(scene.id)) {
-      const before = sessionStorage.getItem(key), checkpoint = saved(), previous = data.scenes[checkpoint.scenePath.at(-2)].id;
-      document.querySelector('.vn-menu>summary').click(); click('Lùi lại một cảnh'); await wait();
-      if (document.querySelector('.vn-player').dataset.sceneId !== previous) throw Error('Back did not follow history');
-      if (document.querySelector('.future-game,.vn-choices button')) throw Error('Review unlocked decision');
-      const forward = find('Tiếp tục →') || document.querySelector('.vn-dialogue-next');
-      if (!forward) throw Error('Missing review forward'); forward.click(); await wait();
-      if (sessionStorage.getItem(key) !== before) throw Error('Review changed money or decisions');
+      document.querySelector('.vn-menu>summary').click(); await wait();
+      if (find('Lùi lại một cảnh')) throw Error('Removed back action is still visible');
+      document.querySelector('.vn-menu>summary').click(); await wait();
+      if (document.querySelector('.vn-player').dataset.sceneId !== scene.id) throw Error('Menu changed the current scene');
       reviewed.add(scene.id); continue;
     }
     const dialog = document.querySelector('.ch5-dialog');

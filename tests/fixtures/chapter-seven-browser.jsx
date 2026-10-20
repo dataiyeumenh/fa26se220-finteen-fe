@@ -16,7 +16,7 @@ const exposure = ['exposed', 'allbad', 'exposedBack'].includes(route);
 const loan = ['balanced', 'allbad'].includes(route), fee = ['fee', 'allbad'].includes(route), pending = route === 'pending';
 window.addEventListener('error', event => errors.push(event.message));
 window.addEventListener('unhandledrejection', event => errors.push(String(event.reason)));
-if (!reloads) sessionStorage.removeItem(progressKey(data));
+if (!reloads) localStorage.removeItem(progressKey(data));
 const wait = () => new Promise(resolve => setTimeout(resolve, 35));
 const find = text => [...document.querySelectorAll('button')].find(button => !button.disabled && (button.getAttribute('aria-label') === text || (button.querySelector('.vn-choice-copy')?.textContent.trim() || button.textContent.trim()) === text));
 const click = text => { const button = find(text); if (!button) throw Error(`Missing button ${text}`); button.click(); };
@@ -36,20 +36,15 @@ async function run() {
     if (find('Đã hiểu')) { click('Đã hiểu'); continue; }
     if (['back', 'exposedBack'].includes(route) && ['CH07_AFTER_INSURANCE_1', 'CH07_PAY_1', 'CH07_VERIFY_1', 'CH07_OFFICIAL_1', 'CH07_EXPOSED_2'].includes(scene.id) && !reviewed.has(scene.id)) {
       await wait();
-      const before = sessionStorage.getItem(progressKey(data)), saved = JSON.parse(before);
-      const previous = data.scenes[saved.scenePath.at(-2)].id;
-      document.querySelector('.vn-menu>summary').click(); click('Lùi lại một cảnh'); await wait();
-      if (document.querySelector('.vn-player').dataset.sceneId !== previous) throw Error('Review did not follow visited history');
-      if (document.querySelector('.safety-game,.vn-choices button')) throw Error('Review reopens decisions');
-      if (sessionStorage.getItem(progressKey(data)) !== before) throw Error('Review modified money or scores');
-      const forward = find('Tiếp tục →') || document.querySelector('.vn-dialogue-next');
-      if (!forward) throw Error('Missing review forward'); forward.click(); await wait();
-      if (sessionStorage.getItem(progressKey(data)) !== before || document.querySelector('.vn-player').dataset.sceneId !== scene.id) throw Error('Review replayed effects');
+      document.querySelector('.vn-menu>summary').click(); await wait();
+      if (find('Lùi lại một cảnh')) throw Error('Removed back action is still visible');
+      document.querySelector('.vn-menu>summary').click(); await wait();
+      if (document.querySelector('.vn-player').dataset.sceneId !== scene.id) throw Error('Menu changed the current scene');
       reviewed.add(scene.id); continue;
     }
     if (route === 'resume' && reloads === 0 && scene.id === 'CH07_TERMS_3') { reload(1); return; }
     if (route === 'resume' && reloads === 1 && scene.id === 'CH07_PAY_2') {
-      const saved = JSON.parse(sessionStorage.getItem(progressKey(data)));
+      const saved = JSON.parse(localStorage.getItem(progressKey(data)));
       if (saved.money !== 1200000 || !saved.moneyEventsApplied.CH07_MEDICAL_PAYMENT) throw Error('Medical transaction checkpoint missing');
       reload(2); return;
     }
@@ -107,7 +102,7 @@ async function run() {
             document.querySelector(`[data-message-index="${index}"]`).click(); await wait();
             document.querySelector(`[data-message-answer=${wrong ? message.answer === 'check' ? 'continue' : 'check' : message.answer}]`).click(); await wait();
             if (route === 'resume' && reloads === 2 && index === 2) {
-              const saved = JSON.parse(sessionStorage.getItem(progressKey(data)));
+              const saved = JSON.parse(localStorage.getItem(progressKey(data)));
               if (Object.keys(saved.miniGameResults[scene.id].ui.messages).length !== 3) throw Error('Inbox drafts not saved');
               reload(3); return;
             }
@@ -122,14 +117,14 @@ async function run() {
         }
       }
       if (round === 2) {
-        const saved = JSON.parse(sessionStorage.getItem(progressKey(data)));
+        const saved = JSON.parse(localStorage.getItem(progressKey(data)));
         const ui = saved.miniGameResults[scene.id]?.ui;
         if (!ui.submittedRounds[2]) {
           const sequence = wrong ? ['stop', 'payFee', 'reply', 'save'] : route === 'alternate' ? ['stop', 'protect', 'contact', 'save'] : ['stop', 'contact', 'protect', 'save'];
           for (const id of sequence) {
             if (!document.querySelector(`[data-response=${id}]`).disabled) { document.querySelector(`[data-response=${id}]`).click(); await wait(); }
             if (route === 'resume' && reloads === 3 && id === 'contact') {
-              const saved = JSON.parse(sessionStorage.getItem(progressKey(data)));
+              const saved = JSON.parse(localStorage.getItem(progressKey(data)));
               if (saved.miniGameResults[scene.id].ui.response.length !== 2) throw Error('Response draft not saved');
               reload(4); return;
             }
@@ -155,7 +150,7 @@ async function run() {
   }
   const expected = exposure || fee || pending ? 'Recovery' : loan || wrong ? 'Balanced' : 'Goal Achieved';
   if (!ending?.includes(expected)) throw Error(`Ending ${ending}; expected ${expected}; last ${[...visited].at(-1)}`);
-  const saved = JSON.parse(sessionStorage.getItem(progressKey(data)));
+  const saved = JSON.parse(localStorage.getItem(progressKey(data)));
   const expectedMoney = 1500000 - (!loan && !pending ? 300000 : 0) - (exposure ? 150000 : 0) - (fee ? 100000 : 0);
   if (saved.money !== expectedMoney) throw Error(`Money ${saved.money} != ${expectedMoney}`);
   const expectedStats = { ...data.initialStats };

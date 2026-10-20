@@ -177,8 +177,8 @@ test('chapter-seven checkpoint preserves drafts and decisions; route and card ex
   for (const key of ['flags', 'choiceLedger', 'firstChoiceScores', 'inspectedIds', 'moneyEventsApplied', 'budgetAllocations', 'miniGameResults', 'miniGameDoneByScene', 'sceneActionApplied']) snapshot[key] = {};
   snapshot.miniGameResults.CH07_GAME_SAFETY = { ui: { ...createSafetyState([1, 2]), messages: { instantRefund: 'check' } } };
   saveNovelProgress(storage, data, snapshot);
-  assert.deepEqual(readNovelProgress(storage, data), { ...snapshot, version: data.version });
-  assert.equal(readNovelProgress(storage, { ...data, version: 'old' }), null);
+  assert.deepEqual(readNovelProgress(storage, data), { ...snapshot, version: data.version, sceneIds: snapshot.scenePath.map(index => data.scenes[index].id) });
+  assert.equal(readNovelProgress(storage, { ...data, version: 'old' }).version, 'old');
   assert.equal(CHAPTERS[6], 'Biến cố bất ngờ');
   assert.ok(readFileSync('src/features/workspace/KidPages.jsx', 'utf8').includes('/dashboard/demo/play?chapter=7'));
   assert.ok(readFileSync('src/pages/User/Dashboard/UserGames.jsx', 'utf8').includes('chapter7V2VisualNovel'));

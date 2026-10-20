@@ -4,7 +4,7 @@ import { LoanDetectiveMiniGame } from "./LoanDetectiveMiniGame";
 import { chapterSixLearning } from "./loanDetectiveRules.js";
 import { ScamOrSafeMiniGame } from "./ScamOrSafeMiniGame.jsx";
 import { chapterSevenLearning } from "./scamOrSafeRules.js";
-import { readNovelProgress, saveNovelProgress } from "./visualNovelProgress.js";
+import { clearBrowserNovelProgress, initialNovelProgress, loadBrowserNovelProgress, saveBrowserNovelProgress } from "./visualNovelProgress.js";
 import { CompoundTimelineMiniGame } from "./CompoundTimelineMiniGame";
 import { ChapterFiveReflection, ChapterFivePlanSummary, InspectCardsDialog } from "./ChapterFiveActivities";
 import { chapterFiveLearning } from "./compoundTimelineRules";
@@ -245,8 +245,9 @@ function EndingReport({ report }) {
 
 export function VisualNovelPlayer({ data }) {
   const [savedProgress] = useState(() => {
-    try { return readNovelProgress(window.sessionStorage, data); } catch { return null; }
+    return loadBrowserNovelProgress(data);
   });
+  const checkpointRef = useRef(savedProgress || initialNovelProgress(data));
   const learningSummary = data.metadata?.chapterId === 'CH08' ? chapterEightLearning : data.metadata?.chapterId === 'CH07' ? chapterSevenLearning : data.metadata?.chapterId === 'CH06' ? chapterSixLearning : chapterFiveLearning;
   const gameContainerRef = useRef(null);
   const menuDetailsRef = useRef(null);
@@ -707,6 +708,10 @@ export function VisualNovelPlayer({ data }) {
   };
 
   const restart = () => {
+    const initial = initialNovelProgress(data, resolveNavigableSceneIndex(0));
+    clearBrowserNovelProgress(data);
+    checkpointRef.current = initial;
+    saveBrowserNovelProgress(data, initial);
     committedDecisionsRef.current.clear();
     marketSettlementAppliedRef.current = false;
     setScenePath([resolveNavigableSceneIndex(0)]);
@@ -727,6 +732,7 @@ export function VisualNovelPlayer({ data }) {
     setMiniGameResults({});
     setMoney(data.initialMoney || 0);
     setMoneyFx(null);
+    setInspectPopup(null);
   };
 
   const evaluateEndingCondition = (condition) => {
@@ -885,18 +891,30 @@ export function VisualNovelPlayer({ data }) {
   useEffect(() => {
     // A choice with a stats popup commits atomically after the player acknowledges it.
     // Until then keep the previous checkpoint, so reload cannot omit its delta.
-    if (pendingEffects || !data.metadata?.persistProgress) return;
-    try {
-      saveNovelProgress(window.sessionStorage, data, {
+    if (pendingEffects) return;
+    const checkpoint = {
         scenePath, miniGameDoneByScene, sceneActionApplied, stats, gameFlag, flags,
         choiceLedger, firstChoiceScores, inspectedIds, moneyEventsApplied,
         budgetAllocations, miniGameCompleted, miniGameResults, money,
         committedDecisions: [...committedDecisionsRef.current],
-      });
-    } catch { /* Session storage is optional. */ }
+      };
+    checkpointRef.current = checkpoint;
+    saveBrowserNovelProgress(data, checkpoint);
   }, [data, pendingEffects, scenePath, miniGameDoneByScene, sceneActionApplied, stats,
     gameFlag, flags, choiceLedger, firstChoiceScores, inspectedIds, moneyEventsApplied,
     budgetAllocations, miniGameCompleted, miniGameResults, money]);
+
+  useEffect(() => {
+    const flush = () => saveBrowserNovelProgress(data, checkpointRef.current);
+    const onVisibilityChange = () => { if (document.visibilityState === 'hidden') flush(); };
+    window.addEventListener('pagehide', flush);
+    document.addEventListener('visibilitychange', onVisibilityChange);
+    return () => {
+      flush();
+      window.removeEventListener('pagehide', flush);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+    };
+  }, [data]);
 
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;
@@ -1036,19 +1054,6 @@ export function VisualNovelPlayer({ data }) {
                 <div style={{ width: progress + "%" }} />
               </div>
               <div className="vn-menu-actions">
-                <button
-                  type="button"
-                  className="vn-icon-button"
-                  disabled={reviewOffset >= scenePath.length - 1 || Boolean(pendingEffects) || Boolean(inspectPopup)}
-                  onClick={() => {
-                    setReviewOffset(offset => Math.min(offset + 1, scenePath.length - 1));
-                    if (menuDetailsRef.current) menuDetailsRef.current.open = false;
-                  }}
-                  title="Lùi lại một cảnh đã đi qua; giữ nguyên tiền và điểm"
-                >
-                  <ArrowLeft size={18} />
-                  <span>Lùi lại một cảnh</span>
-                </button>
                 <Link
                   to="/dashboard/user/lessons"
                   className="vn-icon-button"

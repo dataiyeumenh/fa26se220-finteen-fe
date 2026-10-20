@@ -40,7 +40,7 @@ async function run() {
         miniGameDoneByScene: {}, sceneActionApplied: {}, committedDecisions: [], miniGameCompleted: true };
       // Enable checkpoint loading only in this harness to open each chapter at its ending.
       const fixtureData = { ...data, metadata: { ...data.metadata, persistProgress: true } };
-      saveNovelProgress(sessionStorage, fixtureData, snapshot);
+      saveNovelProgress(localStorage, fixtureData, snapshot);
       root.render(<MemoryRouter key={`${data.id}-${requested}`}><VisualNovelPlayer data={fixtureData}/></MemoryRouter>);
       await wait();
       for (let tick = 0; tick < 30 && !document.querySelector(`[data-scene-id="${data.scenes[snapshot.scenePath[0]].id}"] #vn-ending-title`); tick++) await wait();
