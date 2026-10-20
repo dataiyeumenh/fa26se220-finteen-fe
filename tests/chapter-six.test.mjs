@@ -297,8 +297,8 @@ test('checkpoint round trips and rejects invalid/old snapshots; unavailable stor
   for (const key of ['flags', 'choiceLedger', 'firstChoiceScores', 'inspectedIds', 'moneyEventsApplied', 'budgetAllocations', 'miniGameResults', 'miniGameDoneByScene', 'sceneActionApplied']) snapshot[key] = {};
   snapshot.miniGameResults.offers = { ...loanResult({}, [0, 1]), ui: { round: 1 } };
   saveNovelProgress(storage, data, snapshot);
-  assert.deepEqual(readNovelProgress(storage, data), { ...snapshot, version: data.version });
-  assert.equal(readNovelProgress(storage, { ...data, version: 'old' }), null);
+  assert.deepEqual(readNovelProgress(storage, data), { ...snapshot, version: data.version, sceneIds: snapshot.scenePath.map(index => data.scenes[index].id) });
+  assert.equal(readNovelProgress(storage, { ...data, version: 'old' }).version, 'old');
   storage.setItem(progressKey(data), JSON.stringify({ ...snapshot, version: data.version, scenePath: [99999] }));
   assert.equal(readNovelProgress(storage, data), null);
   storage.setItem(progressKey(data), '{broken'); assert.equal(readNovelProgress(storage, data), null);

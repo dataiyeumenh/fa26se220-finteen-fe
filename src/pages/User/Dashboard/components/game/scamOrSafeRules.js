@@ -1,3 +1,4 @@
+import { chapterMiniGameSummary } from './miniGameRules.js';
 const ART = '/images/finteen-v2/chapter-07';
 export const insurancePayments = [100000, 200000, 300000, 500000];
 export const insuranceDocuments = [
@@ -76,10 +77,8 @@ export function chapterSevenLearning(ledger, results, config) {
   const max = groups.reduce((total, [, value]) => total + value, 0);
   const choicePercent = groups.reduce((total, [id]) => total + sum(ledger[id]?.evidenceScores), 0) * 100 / max;
   const firstPercent = groups.reduce((total, [id]) => total + sum(ledger[id]?.firstEvidenceScores || ledger[id]?.evidenceScores), 0) * 100 / max;
-  const games = config.requiredGameIds.map(id => Object.values(results).find(result => result.gameId === id && result.completed));
-  const total = games.reduce((n, game) => n + (game?.total || 0), 0);
-  const miniPercent = total ? games.reduce((n, game) => n + (game?.score || 0), 0) * 100 / total : 0;
-  return { choicePercent, firstPercent, miniPercent, reflectionPercent: null,
-    learningScore: choicePercent * config.weights.choices + miniPercent * config.weights.miniGame,
-    coreCalculationsCorrect: games.every(game => game?.passed) };
+  const miniGames = chapterMiniGameSummary(results, config);
+  const { miniPercent } = miniGames;
+  return { ...miniGames, choicePercent, firstPercent, miniPercent, reflectionPercent: null,
+    learningScore: choicePercent * config.weights.choices + miniPercent * config.weights.miniGame };
 }

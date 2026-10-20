@@ -46,3 +46,21 @@ export function recordMiniGameResult(results, { chapterId, sceneId, gameId }, re
     percent: total > 0 ? Math.round(100 * score / total) : null,
   } };
 }
+
+// One point per correct submitted answer/criterion. Missing activities never qualify for A.
+export function chapterMiniGameSummary(results, config) {
+  const required = config.requiredGameIds || [];
+  const games = required.map(id => Object.values(results).find(result => result.gameId === id && result.completed));
+  const total = config.miniGameMax || 0;
+  const submittedTotal = games.reduce((sum, result) => sum + (result?.total || 0), 0);
+  const correct = Math.min(total, games.reduce((sum, result) => sum + Math.max(0, Math.min(result?.total || 0, Math.trunc(result?.score || 0))), 0));
+  const complete = required.length > 0 && games.every(result => result && result.total > 0) && submittedTotal === total;
+  const percent = total > 0 ? 100 * correct / total : 0;
+  return {
+    miniCorrect: correct, miniWrong: Math.max(0, submittedTotal - correct), miniTotal: total,
+    miniPercent: percent, miniGamesComplete: complete,
+    miniGameGoalEligible: complete && percent >= 75,
+    miniGameNeedsPractice: complete && percent < 50,
+    coreCalculationsCorrect: complete && correct === total,
+  };
+}

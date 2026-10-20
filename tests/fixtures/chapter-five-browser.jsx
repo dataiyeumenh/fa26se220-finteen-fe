@@ -21,7 +21,7 @@ function setValue(input, value) {
   input.dispatchEvent(new Event(input.tagName === 'SELECT' ? 'change' : 'input', { bubbles: true }));
 }
 const testData = { ...data, id: 'CH05_BROWSER_TEST', metadata: { ...data.metadata, persistProgress: true } };
-sessionStorage.removeItem(progressKey(testData));
+localStorage.removeItem(progressKey(testData));
 createRoot(document.getElementById('root')).render(<MemoryRouter><VisualNovelPlayer data={testData}/></MemoryRouter>);
 async function run() {
   let miniTriedWrong = false;
@@ -111,7 +111,7 @@ async function run() {
   if (!ending?.includes(expected)) throw new Error(`Ending ${ending}; expected ${expected}`);
   const report = document.querySelector('.vn-report')?.textContent || '';
   if (!report.includes('Compound Timeline') || !report.includes('1.000.000')) throw new Error('Missing game label or wallet');
-  const stored = JSON.parse(sessionStorage.getItem(progressKey(testData)));
+  const stored = JSON.parse(localStorage.getItem(progressKey(testData)));
   if (document.querySelector('.vn-stats-grid,.vn-stats-details,.vn-stat-card') || /SAVING:|HAPPINESS:|RISK:|GOAL:/.test(report)) throw Error('Internal stats visible');
   const delta = key => stored.stats[key] - data.initialStats[key];
   if (['goal', 'topup', 'miniRetry', 'reflectionRetry'].includes(route)) {

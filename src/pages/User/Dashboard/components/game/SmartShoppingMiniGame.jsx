@@ -33,20 +33,21 @@ function PhoneDecision({ offer, budget, reserve, cancellationDay, setCancellatio
   </>;
 }
 
-export function SmartShoppingMiniGame({ game, onComplete, className = "" }) {
+export function SmartShoppingMiniGame({ game, initialResult, onProgress, onComplete, className = "" }) {
   const offers = buildShoppingOffers(game.phones || []);
-  const [step, setStep] = useState(0);
-  const [inspected, setInspected] = useState([]);
-  const [selectedId, setSelectedId] = useState("");
+  const saved = initialResult?.ui;
+  const [step, setStep] = useState(saved?.step ?? 0);
+  const [inspected, setInspected] = useState(saved?.inspected ?? []);
+  const [selectedId, setSelectedId] = useState(saved?.selectedId ?? "");
   const [activeFile, setActiveFile] = useState(null);
-  const [cancellationDay, setCancellationDay] = useState("");
-  const [batteryChecked, setBatteryChecked] = useState(false);
-  const [batteryPlan, setBatteryPlan] = useState("");
-  const [disputedLine, setDisputedLine] = useState("");
-  const [invoiceOpened, setInvoiceOpened] = useState(false);
-  const [report, setReport] = useState(null);
-  const [firstReport, setFirstReport] = useState(null);
-  const [attempt, setAttempt] = useState(1);
+  const [cancellationDay, setCancellationDay] = useState(saved?.cancellationDay ?? "");
+  const [batteryChecked, setBatteryChecked] = useState(saved?.batteryChecked ?? false);
+  const [batteryPlan, setBatteryPlan] = useState(saved?.batteryPlan ?? "");
+  const [disputedLine, setDisputedLine] = useState(saved?.disputedLine ?? "");
+  const [invoiceOpened, setInvoiceOpened] = useState(saved?.invoiceOpened ?? false);
+  const [report, setReport] = useState(saved?.report ?? null);
+  const [firstReport, setFirstReport] = useState(saved?.firstReport ?? null);
+  const [attempt, setAttempt] = useState(saved?.attempt ?? 1);
   const submitted = useRef(false);
   const budget = game.budget ?? 2500000;
   const reserve = game.reserve ?? 500000;
@@ -66,6 +67,9 @@ export function SmartShoppingMiniGame({ game, onComplete, className = "" }) {
     setReport(result);
     if (!firstReport) setFirstReport(result);
     setStep(2);
+    const first = firstReport || result;
+    onProgress?.({ score: first.score, total: 4, firstPercent: first.score * 25,
+      ui: { step: 2, inspected, selectedId, cancellationDay, batteryChecked, batteryPlan, disputedLine, invoiceOpened, report: result, firstReport: first, attempt } });
   }
   function retry() {
     setInvoiceOpened(false);
@@ -76,10 +80,11 @@ export function SmartShoppingMiniGame({ game, onComplete, className = "" }) {
   function complete() {
     if (submitted.current) return;
     submitted.current = true;
-    onComplete?.({ score: report.score, total: 4, passed: report.score >= 3,
+    onComplete?.({ score: firstReport.score, total: 4, passed: firstReport.score >= 3,
       firstPercent: firstReport.score * 25, revised: attempt > 1, attempt,
       selectedPhone: selectedId, inspected, cancellationDay, disputedLine, batteryChecked, batteryPlan,
-      totalCost: report.totalCost, criteria: report.criteria });
+      totalCost: report.totalCost, criteria: firstReport.criteria,
+      ui: { step: 2, inspected, selectedId, cancellationDay, batteryChecked, batteryPlan, disputedLine, invoiceOpened, report, firstReport, attempt } });
   }
 
   return <section className={`c2-game shopping-mission ${className}`} aria-label="Nhiệm vụ mua máy: bốn lượt kiểm tra">
@@ -115,9 +120,9 @@ export function SmartShoppingMiniGame({ game, onComplete, className = "" }) {
     </>}
 
     {step === 2 && report && <>
-      <div className="mission-result-heading"><span>MỘT NĂM SAU</span><h3>{report.score === 4 ? "Bạn đã mua bằng hiểu biết." : "Giá trên nhãn chưa kể hết câu chuyện."}</h3><p>{report.score}/4 mục tiêu đạt được · {offer.name}</p></div>
-      <div className="mission-results"><div className="mission-paper"><h3>Tiền đã đi đâu?</h3>{purchaseLedger(offer, report).map(row => <p className="mission-ledger-row" key={row.label}><span>{row.label}</span><strong>{money(row.amount)}</strong></p>)}<p className="mission-invoice-total">Tổng chi thực tế<strong>{money(report.totalCost)}</strong></p><div className={`mission-balance ${report.remaining >= reserve ? "is-good" : "is-risk"}`}><span>Ví còn lại</span><strong>{money(report.remaining)}</strong><small>Quỹ cần giữ: {money(reserve)}</small></div></div><div className="mission-outcomes">{report.criteria.map(item => <article key={item.id} className={item.passed ? "is-good" : "is-risk"}><span>{item.passed ? "✓ ĐẠT" : "! CHƯA ĐẠT"}</span><h4>{item.title}</h4><p>{item.detail}</p></article>)}</div></div>
-      <footer className="mission-footer"><p>Lần đầu: {firstReport.score}/4. Thử lại để kiểm chứng cách mua khác; kết quả lần đầu vẫn được lưu.</p><div><button type="button" className="c2-secondary" onClick={retry}><RotateCcw size={16} /> Thử phương án khác</button><button type="button" className="c2-primary" onClick={complete}>Trở lại câu chuyện <ArrowRight size={16} /></button></div></footer>
+      <div className="mission-result-heading"><span>MỘT NĂM SAU</span><h3>{report.score === 4 ? "Bạn đã mua bằng hiểu biết." : "Giá trên nhãn chưa kể hết câu chuyện."}</h3><p>{offer.name} · Xem lại từng tiêu chí bên dưới.</p></div>
+      <div className="mission-results"><div className="mission-paper"><h3>Tiền đã đi đâu?</h3>{purchaseLedger(offer, report).map(row => <p className="mission-ledger-row" key={row.label}><span>{row.label}</span><strong>{money(row.amount)}</strong></p>)}<p className="mission-invoice-total">Tổng chi thực tế<strong>{money(report.totalCost)}</strong></p><div className={`mission-balance ${report.remaining >= reserve ? "is-good" : "is-risk"}`}><span>Ví còn lại</span><strong>{money(report.remaining)}</strong><small>Quỹ cần giữ: {money(reserve)}</small></div></div><div className="mission-outcomes">{report.criteria.map(item => <article key={item.id} className={item.passed ? "is-good" : "is-risk"}><span>{item.passed ? "Đúng" : "Chưa đúng"}</span><h4>{item.title}</h4><p>{item.detail}</p></article>)}</div></div>
+      <footer className="mission-footer"><p>Bạn có thể thử phương án khác để so sánh. Kết quả đúng/sai của lần nộp đầu được dùng để xét kết thúc chương.</p><div><button type="button" className="c2-secondary" onClick={retry}><RotateCcw size={16} /> Thử phương án khác</button><button type="button" className="c2-primary" onClick={complete}>Trở lại câu chuyện <ArrowRight size={16} /></button></div></footer>
     </>}
     <p className="mission-simulation-note">Mô phỏng luyện tập · Các thao tác ở đây không trừ tiền trong câu chuyện của An.</p>
   </section>;

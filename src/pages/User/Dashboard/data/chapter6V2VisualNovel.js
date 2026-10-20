@@ -267,8 +267,8 @@ export const chapter6V2GameData = {
     scene('CH06_ENDING', 4, 'ending', { title: 'Kết thúc Chương 6 · Mượn tiền có dễ không?', nextSceneId: null }),
   ],
   endingRules: { priorityOrder: ['C_RECOVERY', 'A_GOAL_ACHIEVED', 'B_BALANCED'], endings: [
-    { id: 'C_RECOVERY', title: 'Ending C: Recovery', condition: '!flags.fallback_verified || flags.credit_unverified || !flags.repayment_understood || RISK > 55 || SAVING < 40', storyText: 'Khoản trả nhỏ chưa chứng minh tổng chi thấp hoặc đã hết nợ. Kế hoạch còn phần cần luyện; chưa có giao dịch vay nào phát sinh.', characterSprite: sprite('AN', 'worried-money') },
-    { id: 'A_GOAL_ACHIEVED', title: 'Ending A: Goal Achieved', condition: 'flags.credit_plan_fit && flags.repayment_understood && choicePercent >= 75 && learningScore >= 75 && miniGameCompleted && coreCalculationsCorrect', storyText: 'An có kế hoạch laptop khả thi theo giả định đã nêu, biết điều cần theo dõi và hiểu phần nghĩa vụ còn lại. Đạt mục tiêu lập kế hoạch không có nghĩa đã mua máy.', characterSprite: sprite('AN', 'relieved') },
+    { id: 'C_RECOVERY', title: 'Ending C: Recovery', condition: 'miniGameNeedsPractice || !flags.fallback_verified || flags.credit_unverified || !flags.repayment_understood || RISK > 55 || SAVING < 40', storyText: 'Khoản trả nhỏ chưa chứng minh tổng chi thấp hoặc đã hết nợ. Kế hoạch còn phần cần luyện; chưa có giao dịch vay nào phát sinh.', characterSprite: sprite('AN', 'worried-money') },
+    { id: 'A_GOAL_ACHIEVED', title: 'Ending A: Goal Achieved', condition: 'flags.credit_plan_fit && flags.repayment_understood && choicePercent >= 75 && learningScore >= 75 && miniGameCompleted && miniGameGoalEligible', storyText: 'An có kế hoạch laptop khả thi theo giả định đã nêu, biết điều cần theo dõi và hiểu phần nghĩa vụ còn lại. Đạt mục tiêu lập kế hoạch không có nghĩa đã mua máy.', characterSprite: sprite('AN', 'relieved') },
     { id: 'B_BALANCED', title: 'Ending B: Balanced', condition: 'DEFAULT_FALLBACK', storyText: 'An dùng máy trường trong lúc xác minh điều kiện và theo dõi khả năng chi trả. Chưa ký cũng là một quyết định có căn cứ; gói vay B vẫn chưa được xác nhận.', characterSprite: sprite('AN', 'thinking') },
   ] },
   endingReport: { choiceGroupMaxima: { CH06_PLAN: 6, CH06_REPAYMENT: 6 }, maxChoiceScore: 6,
@@ -276,6 +276,7 @@ export const chapter6V2GameData = {
     weights: { choices: .65, miniGame: .35, reflection: 0 },
     bands: [{ min: 85, label: 'Đã thể hiện vững' }, { min: 60, label: 'Đang hình thành' }, { min: 0, label: 'Cần luyện thêm' }],
     achieved: [{ when: 'flags.selected_loan_B', text: 'Đã lập dự thảo gói vay B: 550.000đ/tháng trong 12 tháng và kiểm tra khả năng trả.' }, { when: 'flags.credit_plan_fit && !flags.selected_loan_B', text: 'Đã chọn kế hoạch dùng máy trường và tích lũy theo khả năng thực.' }, { text: 'Đã đối chiếu tổng chi, lịch đến hạn và số tiền thực nhận.' }],
-    practice: [{ when: '!flags.repayment_understood', text: 'Phân biệt trả tối thiểu với hết dư nợ; xem lại 900.000đ còn lại.' }, { when: 'flags.credit_plan_conditional', text: 'Xác minh nguồn thu và lịch 12 tháng trước khi cân nhắc gói vay B.' }, { text: 'Theo dõi thu nhập và xác minh cách học tiếp nếu thời điểm mua bị lùi.' }],
+    practice: [
+      { when: "miniGameNeedsPractice", text: "Bài thực hành còn nhiều câu chưa đúng. Xem lại tổng tiền phải trả, lịch trả và số tiền cần giữ cho sinh hoạt." },{ when: '!flags.repayment_understood', text: 'Phân biệt trả tối thiểu với hết dư nợ; xem lại 900.000đ còn lại.' }, { when: 'flags.credit_plan_conditional', text: 'Xác minh nguồn thu và lịch 12 tháng trước khi cân nhắc gói vay B.' }, { text: 'Theo dõi thu nhập và xác minh cách học tiếp nếu thời điểm mua bị lùi.' }],
     nextStep: 'Kiểm tra kế hoạch mỗi tháng. Các khoản tích lũy là dự kiến, Money thực tế vẫn 0đ.' },
 };

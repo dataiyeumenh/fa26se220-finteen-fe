@@ -1,3 +1,4 @@
+import { chapterMiniGameSummary } from './miniGameRules.js';
 export const timelineAt = year => ({ compound: Math.round(1000000 * 1.05 ** year), simple: Math.round(1000000 * (1 + .05 * year)) });
 export const accountForecast = { aInterest: 7500, aFees: 15000, aBalance: 992500, aGap: 7500, bInterest: 5000, bBalance: 1005000 };
 export function gradeReflection(activity, answer) {
@@ -47,7 +48,7 @@ export function timelineResult(history) {
     const group = challenges.filter(q => q.competency === key);
     return [key, { correct: group.filter(q => history[q.id]?.finalCorrect).length, total: group.length }];
   }));
-  return { score, total: challenges.length, passed: score === challenges.length, answers: history, firstAttempt: Object.fromEntries(challenges.map(q => [q.id, history[q.id]?.firstAttempt])), firstPercent: Math.round(100 * first / challenges.length), competencies, attemptCount: Math.max(0, ...Object.values(history).map(item => item.attemptCount)), revised: Object.values(history).some(item => item.attemptCount > 1), inspectedItems: [...new Set(Object.values(history).flatMap(item => item.inspectedItems))] };
+  return { score, total: challenges.length, completed: challenges.every(q => Boolean(history[q.id])), passed: score === challenges.length, answers: history, firstAttempt: Object.fromEntries(challenges.map(q => [q.id, history[q.id]?.firstAttempt])), firstPercent: Math.round(100 * first / challenges.length), competencies, attemptCount: Math.max(0, ...Object.values(history).map(item => item.attemptCount)), revised: Object.values(history).some(item => item.attemptCount > 1), inspectedItems: [...new Set(Object.values(history).flatMap(item => item.inspectedItems))] };
 }
 export function chapterFiveLearning(ledger, results, config) {
   const sum = value => Object.values(value || {}).reduce((total, n) => total + n, 0);
@@ -55,10 +56,10 @@ export function chapterFiveLearning(ledger, results, config) {
   const max = groups.reduce((total, [, n]) => total + n, 0);
   const choicePercent = 100 * groups.reduce((total, [id]) => total + sum(ledger[id]?.evidenceScores), 0) / max;
   const firstPercent = 100 * groups.reduce((total, [id]) => total + sum(ledger[id]?.firstEvidenceScores), 0) / max;
-  const game = Object.values(results).find(item => item.gameId === 'COMPOUND_TIMELINE_CH05');
-  const miniPercent = game?.total ? 100 * game.score / game.total : 0;
+  const miniGames = chapterMiniGameSummary(results, config);
+  const { miniPercent } = miniGames;
   const reflectionScore = Object.values(ledger).reduce((total, entry) => total + (entry.reflectionScore || 0), 0);
   const reflectionPercent = Math.min(100, 100 * reflectionScore / config.reflectionMax);
   const learningScore = choicePercent * config.weights.choices + miniPercent * config.weights.miniGame + reflectionPercent * config.weights.reflection;
-  return { choicePercent, firstPercent, miniPercent, reflectionPercent, learningScore, coreCalculationsCorrect: Boolean(game?.passed), reflectionCompleted: Boolean(ledger.CH05_R1 && ledger.CH05_R2) };
+  return { ...miniGames, choicePercent, firstPercent, miniPercent, reflectionPercent, learningScore, reflectionCompleted: Boolean(ledger.CH05_R1 && ledger.CH05_R2) };
 }

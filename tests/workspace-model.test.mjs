@@ -76,7 +76,7 @@ for (const first of ['parent', 'teacher']) test(`legacy ${first} data stays sepa
   assert.ok(resolveSession(db, childSession))
   assert.equal(resolveSession(db, studentSession), null)
 })
-test('new adults are Guest; current main demo allows chapters 1 to 6 without a plan', () => {
+test('new adults are Guest; current main demo allows chapters 1 to 8 without a plan', () => {
   const { db, session } = setup()
   const guest = resolveSession(db, session)
   assert.equal(guest.role, 'guest')
@@ -87,7 +87,8 @@ test('new adults are Guest; current main demo allows chapters 1 to 6 without a p
   assert.equal(canAccessChapter(guest, 5), true)
   assert.equal(canAccessChapter(guest, 6), true)
   assert.equal(canAccessChapter(guest, 7), true)
-  for (const chapter of [0, 8, 9, 1.5, NaN]) assert.equal(canAccessChapter(guest, chapter), false)
+  assert.equal(canAccessChapter(guest, 8), true)
+  for (const chapter of [0, 9, 1.5, NaN]) assert.equal(canAccessChapter(guest, chapter), false)
   assert.equal(canAccessChapter(null, 1), false)
   assert.throws(() => action(db, session, 'ACTIVATE_SLOT', {}))
   assert.throws(() => action(db, null, 'ACTIVATE_DEMO_PLAN', { plan: 'parent' }))

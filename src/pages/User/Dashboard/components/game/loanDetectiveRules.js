@@ -1,3 +1,4 @@
+import { chapterMiniGameSummary } from './miniGameRules.js';
 export const loanOffers = [
   { id: 'A', periods: 6, installment: 1120000, upfront: 0, principal: 6000000, received: 6000000, intervalMonths: 1 },
   { id: 'B', periods: 12, installment: 550000, upfront: 0, principal: 6000000, received: 6000000, intervalMonths: 1 },
@@ -130,10 +131,8 @@ export function chapterSixLearning(ledger, results, config) {
   const max = groups.reduce((n, [, value]) => n + value, 0);
   const choicePercent = 100 * groups.reduce((n, [id]) => n + sum(ledger[id]), 0) / max;
   const firstPercent = 100 * groups.reduce((n, [id]) => n + sum({ evidenceScores: ledger[id]?.firstEvidenceScores }), 0) / max;
-  const games = config.requiredGameIds.map(id => Object.values(results).find(g => g.gameId === id && g.completed));
-  const total = games.reduce((n, g) => n + (g?.total || 0), 0);
-  const miniPercent = total ? 100 * games.reduce((n, g) => n + (g?.score || 0), 0) / total : 0;
-  return { choicePercent, firstPercent, miniPercent, reflectionPercent: null,
-    learningScore: choicePercent * config.weights.choices + miniPercent * config.weights.miniGame,
-    coreCalculationsCorrect: games.every(g => g?.passed) };
+  const miniGames = chapterMiniGameSummary(results, config);
+  const { miniPercent } = miniGames;
+  return { ...miniGames, choicePercent, firstPercent, miniPercent, reflectionPercent: null,
+    learningScore: choicePercent * config.weights.choices + miniPercent * config.weights.miniGame };
 }

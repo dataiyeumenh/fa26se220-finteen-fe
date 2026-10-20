@@ -22,7 +22,7 @@ const click = text => { const b = find(text); if (!b) throw Error(`Button unavai
 const mount = key => root.render(<MemoryRouter><VisualNovelPlayer key={key} data={data}/></MemoryRouter>);
 const reloadKey = 'finteen:ch6-acceptance:resume';
 const resumeCount = route === 'resume' ? Number(sessionStorage.getItem(reloadKey) || 0) : 0;
-if (!resumeCount) sessionStorage.removeItem(progressKey(data));
+if (!resumeCount) localStorage.removeItem(progressKey(data));
 mount(0);
 
 async function run() {
@@ -43,20 +43,20 @@ async function run() {
     if (document.querySelector('.vn-stats-grid,.vn-stats-details,.vn-stat-card') || buttons().some(b => b.title === 'Chỉ số')) throw Error('Internal stats are visible');
     if (route === 'back' && ['CH06_OPEN_2', 'CH06_AFTER_OFFERS_1', 'CH06_PLAN_WAIT_1'].includes(scene.id) && !backChecks.has(scene.id)) {
       await wait();
-      const before = sessionStorage.getItem(progressKey(data));
+      const before = localStorage.getItem(progressKey(data));
       const saved = JSON.parse(before);
       const previousId = data.scenes[saved.scenePath.at(-2)].id;
       document.querySelector('.vn-menu>summary').click();
       click('Lùi lại một cảnh'); await wait();
       if (document.querySelector('.vn-player').dataset.sceneId !== previousId) throw Error('Back did not show preceding visited scene');
-      if (sessionStorage.getItem(progressKey(data)) !== before) throw Error('Back modified progress or scoring');
+      if (localStorage.getItem(progressKey(data)) !== before) throw Error('Back modified progress or scoring');
       if (previousId === 'CH06_SC02' && document.querySelector('.vn-choices button')) throw Error('Review reopens committed choices');
       if (previousId === 'CH06_GAME_OFFERS' && document.querySelector('.loan-game')) throw Error('Review replays a completed mini-game');
       const forward = find('Tiếp tục →') || document.querySelector('.vn-dialogue-next');
       if (!forward) throw Error('No forward action while reviewing');
       forward.click(); await wait();
       if (document.querySelector('.vn-player').dataset.sceneId !== scene.id) throw Error('Review did not resume current scene');
-      if (sessionStorage.getItem(progressKey(data)) !== before) throw Error('Review forward reapplies effects');
+      if (localStorage.getItem(progressKey(data)) !== before) throw Error('Review forward reapplies effects');
       backChecks.add(scene.id); continue;
     }
 
@@ -69,7 +69,7 @@ async function run() {
     if (find('Đã hiểu')) { click('Đã hiểu'); continue; }
     if (route === 'resume' && reloads === 0 && scene.id === 'CH06_COMPARE_1') {
       await wait();
-      const saved = JSON.parse(sessionStorage.getItem(progressKey(data)));
+      const saved = JSON.parse(localStorage.getItem(progressKey(data)));
       if (data.scenes[saved.scenePath.at(-1)].id !== scene.id) throw Error('Story checkpoint missing');
       sessionStorage.setItem(reloadKey, String(reloads + 1));
       location.reload(); return;
@@ -132,7 +132,7 @@ async function run() {
             const zone = document.querySelector('[data-tray=fit]').closest('.loan-sort-zone');
             if (!zone.querySelector('[data-offer=A]')) throw Error('Wrong draft placement was rejected or not visible');
             if (document.querySelector('.loan-sort-pool [data-offer=A]')) throw Error('Placed card is duplicated in pool');
-            const saved = JSON.parse(sessionStorage.getItem(progressKey(data)));
+            const saved = JSON.parse(localStorage.getItem(progressKey(data)));
             if (saved.miniGameResults[scene.id].answers.sortA) throw Error('Sorting scored before submission');
             const transfer = new DataTransfer();
             zone.querySelector('[data-offer=A]').dispatchEvent(new DragEvent('dragstart', { bubbles: true, dataTransfer: transfer })); await wait();
@@ -147,7 +147,7 @@ async function run() {
           }
           if (snapshot === 'sortDraft') { resultNode.textContent = 'SNAPSHOT'; return; }
           if (route === 'resume' && reloads === 1) {
-            const saved = JSON.parse(sessionStorage.getItem(progressKey(data)));
+            const saved = JSON.parse(localStorage.getItem(progressKey(data)));
             if (!saved.miniGameResults[scene.id]?.ui.sorted.B || saved.miniGameResults[scene.id].ui.submittedRounds[1]) throw Error('Draft sorting checkpoint missing');
             sessionStorage.setItem(reloadKey, String(reloads + 1)); location.reload(); return;
           }
@@ -182,7 +182,7 @@ async function run() {
           if (!document.querySelector('[data-living-event]') || !document.querySelector('[data-statement-choice=partial]').disabled) throw Error('Statement confirmation did not lock and reveal living event');
         }
         if (route === 'resume' && reloads === 2) {
-          const saved = JSON.parse(sessionStorage.getItem(progressKey(data)));
+          const saved = JSON.parse(localStorage.getItem(progressKey(data)));
           if (saved.miniGameResults[scene.id]?.ui.statementStep !== 1 || saved.miniGameResults[scene.id]?.ui.statementChoice !== 'partial') throw Error('Statement checkpoint missing');
           sessionStorage.setItem(reloadKey, String(reloads + 1)); location.reload(); return;
         }
@@ -213,7 +213,7 @@ async function run() {
   const report = document.querySelector('.vn-report')?.textContent;
   if (report?.includes('Phản tư sau trải nghiệm')) throw Error('Reflection score remains');
   if (!report?.includes('Thám tử khoản vay')) throw Error('Missing learning report');
-  const saved = JSON.parse(sessionStorage.getItem(progressKey(data)));
+  const saved = JSON.parse(localStorage.getItem(progressKey(data)));
   const expectedPlan = ['repair', 'recovery'].includes(route) ? 'C' : route === 'conditional' ? 'B' : 'WAIT';
   if (!visited.has(`CH06_FINAL_${expectedPlan}_1`)) throw Error('Final story did not retain the original laptop plan');
   if (visited.has('CH06_MINIMUM_REVIEW_1') !== ['repair', 'recovery'].includes(route)) throw Error('Minimum-payment feedback contradicts the chosen answer');

@@ -794,16 +794,16 @@ export const chapter5V2GameData = {
         id: "C_RECOVERY",
         title: "Ending C: Recovery",
         condition:
-          "!flags.account_fit || flags.account_mismatch || flags.account_pending || RISK > 55 || SAVING < 40",
+          "miniGameNeedsPractice || !flags.account_fit || flags.account_mismatch || flags.account_pending || RISK > 55 || SAVING < 40",
         storyText:
-          "Kế hoạch lần này chưa đảm bảo đủ học phí. Mình đã hiểu vì sao phải tính cả phí và xác nhận nguồn bù trước khi quyết định.",
+          "An cần xem lại phép tính lãi, phí hoặc nguồn tiền cho học phí. Kế hoạch chỉ có thể thực hiện khi các khoản cần trả có đủ nguồn tiền.",
         characterSprite: sprite("AN", "worried-money"),
       },
       {
         id: "A_GOAL_ACHIEVED",
         title: "Ending A: Goal Achieved",
         condition:
-          "flags.provider_checked && flags.account_fit && choicePercent >= 75 && learningScore >= 75 && miniGameCompleted && coreCalculationsCorrect && reflectionCompleted && reflectionScore >= 9",
+          "flags.provider_checked && flags.account_fit && choicePercent >= 75 && learningScore >= 75 && miniGameCompleted && miniGameGoalEligible && reflectionCompleted && reflectionScore >= 9",
         storyText:
           "Ba tháng nữa vẫn đủ tiền học theo kế hoạch. Vậy là yên tâm hơn rồi.",
         characterSprite: sprite("AN", "relieved"),
@@ -821,6 +821,7 @@ export const chapter5V2GameData = {
   endingReport: {
     choiceGroupMaxima: { CH05_PROVIDER: 6, CH05_PLAN: 6 },
     maxChoiceScore: 6,
+    requiredGameIds: ["COMPOUND_TIMELINE_CH05"],
     miniGameMax: 12,
     miniGameLabel: "Compound Timeline",
     reflectionMax: 12,
@@ -838,6 +839,7 @@ export const chapter5V2GameData = {
       { text: "Đã thử so lãi, phí và sức mua qua các mốc thời gian." },
     ],
     practice: [
+      { when: "miniGameNeedsPractice", text: "Bài thực hành còn nhiều câu chưa đúng. Xem lại cách tính lãi, trừ phí và so số tiền rút được với học phí đến hạn." },
       {
         when: "!flags.account_fit",
         text: "Kiểm tra lại nguồn bù 7.500đ hoặc sửa phương án rút tiền.",

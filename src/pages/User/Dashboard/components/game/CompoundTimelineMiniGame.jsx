@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { challenges, gradeRound, timelineAt, timelineResult } from './compoundTimelineRules';
 import './compound-timeline.css';
 const BASE = '/images/finteen-v2/chapter-05/asset-mini-game/compound-timeline';
@@ -15,17 +15,24 @@ const facts = {
   B: ['term-account', 'Tài khoản B · Kỳ hạn 12 tháng', 'Vốn 1.000.000đ, lãi niêm yết 6%/năm nếu đủ hạn, không phí. Rút sau 3 tháng áp dụng 2%/năm.'],
 };
 export function CompoundTimelineMiniGame({ game = {}, initialResult, onProgress, onComplete, className = '' }) {
-  const [round, setRound] = useState(0);
-  const [year, setYear] = useState(0);
-  const [visited, setVisited] = useState([]);
-  const [answers, setAnswers] = useState(() => Object.fromEntries(Object.entries(initialResult?.answers || {}).map(([id, item]) => [id, item.answer])));
+  const saved = initialResult?.ui;
+  const [round, setRound] = useState(saved?.round ?? 0);
+  const [year, setYear] = useState(saved?.year ?? 0);
+  const [visited, setVisited] = useState(saved?.visited || initialResult?.visitedYears || []);
+  const [answers, setAnswers] = useState(() => saved?.answers || Object.fromEntries(Object.entries(initialResult?.answers || {}).map(([id, item]) => [id, item.answer])));
   const [history, setHistory] = useState(initialResult?.answers || {});
   const [checked, setChecked] = useState(() => Object.fromEntries([0, 1, 2, 3].map(n => [n, challenges.filter(q => q.round === n).every(q => Boolean(initialResult?.answers?.[q.id]))])));
-  const [inspected, setInspected] = useState([]);
+  const [inspected, setInspected] = useState(saved?.inspected || []);
   const [activeFact, setActiveFact] = useState(null);
   const submitted = useRef(false);
   const titleRef = useRef(null);
   const feedbackRef = useRef(null);
+  const progressCallback = useRef(onProgress);
+  useEffect(() => { progressCallback.current = onProgress; }, [onProgress]);
+  useEffect(() => {
+    progressCallback.current?.({ ...timelineResult(history), visitedYears: visited,
+      ui: { round, year, visited, answers, inspected } });
+  }, [round, year, visited, answers, inspected, history]);
   const questions = challenges.filter(q => q.round === round);
   const complete = questions.every(q => answers[q.id] !== undefined && String(answers[q.id]).trim() !== '') && (round !== 0 || [1, 2].every(n => visited.includes(n))) && (round !== 3 || ['A', 'B'].every(id => inspected.includes(id)));
   const result = timelineResult(history);
@@ -57,9 +64,9 @@ export function CompoundTimelineMiniGame({ game = {}, initialResult, onProgress,
     <div className="compound-questions">{questions.map(q => <fieldset key={q.id} disabled={Boolean(checked[round])} className={checked[round] ? history[q.id]?.finalCorrect ? 'is-correct' : 'needs-retry' : ''}><legend>{q.prompt}</legend>{q.options ? q.options.map(label => <label key={label} className={answers[q.id] === label ? 'is-selected' : ''}><input type="radio" name={`compound-${q.id}`} checked={answers[q.id] === label} onChange={() => change(q.id, label)}/>{label}</label>) : <label>Số tiền (đồng)<span className="compound-money-input"><input type="number" min="0" step="1" inputMode="numeric" placeholder="Nhập số tiền" value={answers[q.id] ?? ''} onChange={e => change(q.id, e.target.value)}/><span aria-hidden="true">đ</span></span>{String(answers[q.id] ?? '').trim() !== '' && <output className="compound-money-preview">Bạn nhập: {cash(Number(answers[q.id]))}</output>}</label>}{checked[round] && <p className={history[q.id]?.finalCorrect ? 'correct' : 'retry'}>{history[q.id]?.finalCorrect ? '✓ Đúng rồi! ' : '✗ Chưa đúng. '}{q.feedback}</p>}</fieldset>)}</div>
     <div ref={feedbackRef} className="compound-round-feedback" aria-live="polite">{checked[round] && <p>{questions.every(q => history[q.id]?.finalCorrect) ? '✦ Bạn đã trả lời đúng các câu trong vòng này.' : 'Có câu trả lời chưa đúng. Phần giải thích dưới mỗi câu cho biết cách tính và kết quả đúng.'} Câu trả lời đã được ghi nhận và không thể thay đổi.</p>}</div>
     <div className="compound-next-task" aria-live="polite">{nextTask}</div>
-    <footer className="compound-actions"><button className="compound-back" disabled={round === 0} onClick={() => move(round - 1)}>Quay lại</button><button className="compound-check" disabled={!complete || checked[round]} onClick={() => { if (checked[round] || !complete) return; const nextHistory = gradeRound(round, answers, history, inspected); setHistory(nextHistory); onProgress?.({ ...timelineResult(nextHistory), visitedYears: visited }); setChecked(prev => ({ ...prev, [round]: true })); requestAnimationFrame(() => feedbackRef.current?.scrollIntoView({ block: 'nearest', behavior: 'instant' })); }}>Kiểm tra</button><button className="compound-next" disabled={!checked[round]} onClick={() => {
+    <footer className="compound-actions"><button className="compound-back" disabled={round === 0} onClick={() => move(round - 1)}>Quay lại</button><button className="compound-check" disabled={!complete || checked[round]} onClick={() => { if (checked[round] || !complete) return; const nextHistory = gradeRound(round, answers, history, inspected); setHistory(nextHistory); setChecked(prev => ({ ...prev, [round]: true })); requestAnimationFrame(() => feedbackRef.current?.scrollIntoView({ block: 'nearest', behavior: 'instant' })); }}>Kiểm tra</button><button className="compound-next" disabled={!checked[round]} onClick={() => {
       if (round < 3) move(round + 1);
-      else if (!submitted.current) { submitted.current = true; onComplete?.({ ...result, visitedYears: visited }); }
+      else if (!submitted.current) { submitted.current = true; onComplete?.({ ...result, visitedYears: visited, ui: { round, year, visited, answers, inspected } }); }
     }}>{round === 3 ? 'Trở lại câu chuyện' : 'Tiếp tục'}</button></footer>
     <p className="compound-note">Mỗi vòng được nộp một lần. Bạn có thể xem lại dữ kiện và giải thích, nhưng không sửa câu trả lời sau khi bấm Kiểm tra.</p>
   </section>;
