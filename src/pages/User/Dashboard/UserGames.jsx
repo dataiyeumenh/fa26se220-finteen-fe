@@ -59,6 +59,7 @@ export default function UserGames() {
   const isChapterFive = chapterId === "5";
   const isChapterSix = chapterId === "6";
   const isChapterSeven = chapterId === "7";
+  const isChapterEight = chapterId === "8";
   const published = usePublishedChapters().find(
     (chapter) => chapter.number === Number(chapterId),
   );
@@ -86,7 +87,9 @@ export default function UserGames() {
                     ? (await import("./data/chapter6V2VisualNovel")).chapter6V2GameData
                     : isChapterSeven
                       ? (await import("./data/chapter7V2VisualNovel")).chapter7V2GameData
-                      : null;
+                      : isChapterEight
+                        ? (await import("./data/chapter8V2VisualNovel")).chapter8V2GameData
+                        : null;
         if (mounted) {
           if (runtimeData) {
             setGameData(runtimeData);
@@ -104,11 +107,11 @@ export default function UserGames() {
       }
     };
 
-    if (isChapterOne || isChapterTwo || isChapterThree || isChapterFour || isChapterFive || isChapterSix || isChapterSeven) loadRuntime();
+    if (isChapterOne || isChapterTwo || isChapterThree || isChapterFour || isChapterFive || isChapterSix || isChapterSeven || isChapterEight) loadRuntime();
     return () => {
       mounted = false;
     };
-  }, [chapterId, isChapterOne, isChapterTwo, isChapterThree, isChapterFour, isChapterFive, isChapterSix, isChapterSeven]);
+  }, [chapterId, isChapterOne, isChapterTwo, isChapterThree, isChapterFour, isChapterFive, isChapterSix, isChapterSeven, isChapterEight]);
 
   return (
     <DashboardLayout role={role} navItems={navItems} user={user}>
@@ -157,7 +160,7 @@ export default function UserGames() {
         !published &&
         gameData &&
         loadedChapterId === chapterId &&
-        (isChapterOne || isChapterTwo || isChapterThree || isChapterFour || isChapterFive || isChapterSix || isChapterSeven) && (
+        (isChapterOne || isChapterTwo || isChapterThree || isChapterFour || isChapterFive || isChapterSix || isChapterSeven || isChapterEight) && (
           <VisualNovelPlayer key={gameData.id} data={gameData} />
         )}
 
@@ -170,7 +173,8 @@ export default function UserGames() {
         !isChapterFour &&
         !isChapterFive &&
         !isChapterSix &&
-        !isChapterSeven && (
+        !isChapterSeven &&
+        !isChapterEight && (
           <div className="mx-auto max-w-5xl space-y-4">
             <div className="rounded-3xl border border-amber-200 bg-white p-8 text-center">
               <Gamepad2 className="mx-auto mb-4 h-12 w-12 text-amber-500" />

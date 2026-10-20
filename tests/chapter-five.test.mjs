@@ -105,7 +105,7 @@ test('ending C precedes A; A requires normalized learning, choices, calculations
   assert.equal(ending(fit), 'A_GOAL_ACHIEVED');
   for (const flags of [{ ...fit, account_pending: true }, { ...fit, account_mismatch: true }, {}]) assert.equal(ending(flags), 'C_RECOVERY');
   for (const overrides of [{ RISK: 56 }, { SAVING: 39 }]) assert.equal(ending(fit, overrides), 'C_RECOVERY');
-  for (const overrides of [{ choicePercent: 74.99 }, { learningScore: 74.99 }, { coreCalculationsCorrect: false }, { reflectionCompleted: false }, { reflectionScore: 8 }]) assert.equal(ending(fit, overrides), 'B_BALANCED');
+  for (const overrides of [{ choicePercent: 74.99 }, { learningScore: 74.99 }, { miniGameGoalEligible: false }, { reflectionCompleted: false }, { reflectionScore: 8 }]) assert.equal(ending(fit, overrides), 'B_BALANCED');
   assert.equal(ending({ account_fit: true }), 'B_BALANCED');
 });
 test('reflection grades evidence rather than just selecting every information card', () => {

@@ -77,13 +77,14 @@ test("Chapter 4 compares for free, charges once at purchase and keeps fees separ
   }
   for (const [phone, price] of [['A', 1600000], ['B', 1300000], ['C', 2300000]]) {
     const purchase = scenes[`CH04_SC03_PAY_${phone}`].options[0];
-    assert.equal(purchase.moneyEvents[0].amount, -price);
-    assert.equal(purchase.moneyEvents[0].eventId, 'EV_CH04_PHONE_PURCHASE');
+    assert.deepEqual(purchase.moneyEvents, []);
+    const receipt = scenes[phone === 'A' ? 'CH04_SC03' : `CH04_SC03_${phone}_RECEIPT`];
+    assert.equal(receipt.options[0].moneyEvents[0].amount, -price);
+    assert.equal(receipt.options[0].moneyEvents[0].eventId, 'EV_CH04_PHONE_PURCHASE');
+    assert.equal(receipt.options[1].moneyEvents[1].amount, -100000);
     assert.equal(purchase.requires.minMoney, price);
   }
-  assert.deepEqual(scenes.CH04_SC03.options[0].moneyEvents, []);
-  assert.equal(scenes.CH04_SC03.options[1].moneyEvents[0].amount, -100000);
-  assert.equal(scenes.CH04_SC03.options[1].requires.minMoney, 100000);
+  assert.equal(scenes.CH04_SC03.options[1].requires.minMoney, 1700000);
   const fees = chapter4V2GameData.scenes.filter(scene => /^CH04_SC04_MONTH_/.test(scene.id)).map(scene => scene.options[0].moneyEvents[0]);
   assert.equal(fees.length, 11);
   assert.equal(new Set(fees.map(fee => fee.eventId)).size, 11);
@@ -97,8 +98,9 @@ test("Chapter 4 compares for free, charges once at purchase and keeps fees separ
 test("Chapter 4 mini-game has scored answers and both results continue the chapter", () => {
   const scene = chapter4V2GameData.scenes.find(scene => scene.type === 'minigame');
   assert.equal(scene.game.id, 'SMART_SHOPPING_CH04');
-  assert.equal(scene.game.maxScore, scene.game.questions.length);
-  for (const question of scene.game.questions) assert.ok(question.options.some(option => option.id === question.correctId));
+  assert.equal(scene.game.phones.length, 3);
+  assert.equal(chapter4V2GameData.endingReport.miniGameMax, 4);
+  assert.deepEqual(chapter4V2GameData.endingReport.requiredGameIds, [scene.game.id]);
   assert.equal(scene.onPassSceneId, scene.nextSceneId);
   assert.equal(scene.onFailSceneId, scene.nextSceneId);
 });
@@ -109,8 +111,8 @@ test("Chapter 4 endings check recovery first, then fit, evidence, completion and
     for (const id of rules.priorityOrder) {
       const ending = rules.endings.find(ending => ending.id === id);
       if (ending.condition === 'DEFAULT_FALLBACK') return id;
-      const check = new Function('flags', 'RISK', 'SAVING', 'evidenceScore', 'miniGameCompleted', 'reflectionScore', `return ${ending.condition}`);
-      if (check(flags, risk, saving, evidence, mini, reflection)) return id;
+      const check = new Function('flags', 'RISK', 'SAVING', 'evidenceScore', 'miniGameCompleted', 'reflectionScore', 'miniGameGoalEligible', 'miniGameNeedsPractice', `return ${ending.condition}`);
+      if (check(flags, risk, saving, evidence, mini, reflection, mini, false)) return id;
     }
   };
   const fit = { purchase_fit: true, phone_b: true, receipt_resolved: true, budget_adjusted: true };
@@ -125,7 +127,7 @@ test("Chapter 4 endings check recovery first, then fit, evidence, completion and
   assert.equal(resolve(fit, { evidence: 8 }), 'B_BALANCED');
   assert.equal(resolve(fit, { mini: false }), 'B_BALANCED');
   assert.equal(resolve(fit, { reflection: 2 }), 'B_BALANCED');
-  assert.equal(resolve({ ...fit, budget_revised: true }), 'B_BALANCED');
+  assert.equal(resolve({ ...fit, budget_revised: true }), 'A_GOAL_ACHIEVED');
 });
 
 test("Chapter 1 and Chapter 2 V2 have valid scene graphs and assets", () => {

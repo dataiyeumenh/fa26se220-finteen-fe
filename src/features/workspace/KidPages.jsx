@@ -9,7 +9,7 @@ export function KidGames() {
     <Heading title="Trò chơi theo chương" description="Chọn một chương để bước vào câu chuyện và thử thách tài chính."/>
     <div className="ws-grid two ws-kid-game-grid">{CHAPTERS.map((title, index) => {
       const chapter = index + 1
-      const available = chapter <= 7 || published.some(item => item.number === chapter)
+      const available = chapter <= 8 || published.some(item => item.number === chapter)
       return <article className={`ws-card ws-chapter ${available ? '' : 'is-coming'}`} key={title}>
         <span className="ws-chapter-number">{String(chapter).padStart(2, '0')}</span>
         <div><small>CHƯƠNG {chapter}</small><h2>{published.find(item => item.number === chapter)?.version.title || title}</h2><p>{available ? 'Câu chuyện và thử thách đã sẵn sàng' : 'Nội dung chương đang được chuẩn bị'}</p><Link className={available ? 'ws-btn primary' : 'ws-btn'} to={`/dashboard/kid/play?chapter=${chapter}`}>{available ? 'Vào chơi →' : 'Xem chương →'}</Link></div>
@@ -121,6 +121,15 @@ export function GuestDemo() {
             <Link className="ws-btn primary" to="/dashboard/demo/play?chapter=7">Bắt đầu Chương 7 →</Link>
           </div>
           <img className="ws-hero-art object-contain" src="/images/finteen-v2/chapter-07/props/insurance-terms-folder.png" alt="" />
+        </section>
+        <section className="ws-hero ws-shop-intro">
+          <div>
+            <span className="ws-pill">CHƯƠNG MỚI</span>
+            <h2>Chương 8: Tiền sinh tiền và kế hoạch 18 tuổi</h2>
+            <p>Cùng An chia giỏ tiền, tìm hiểu lời quảng cáo đầu tư và cân đối kế hoạch khi thu nhập, giá cả thay đổi.</p>
+            <Link className="ws-btn primary" to="/dashboard/demo/play?chapter=8">Bắt đầu Chương 8 →</Link>
+          </div>
+          <img className="ws-hero-art object-contain" src="/images/finteen-v2/chapter-08/asset-mini-game/portfolio-builder/diversified-fund.png" alt="" />
         </section>
       </div>
     </>
