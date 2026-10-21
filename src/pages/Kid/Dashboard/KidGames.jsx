@@ -1,11 +1,4 @@
-import {
-  Home,
-  BookOpen,
-  Gamepad2,
-  Trophy as TrophyIcon,
-  MessageCircle,
-  User as UserIcon,
-} from "lucide-react";
+import { Gamepad2 } from "lucide-react";
 import { lazy, Suspense, useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import useKidDashboard from "./hooks/useKidDashboard";
@@ -16,37 +9,6 @@ import { loadChapter3V2RuntimeData } from "./data/chapter3V2RuntimeAdapter";
 import { usePublishedChapters } from "@/features/internal/hooks";
 
 const StoryPlayer = lazy(() => import("@/features/internal/StoryPlayer"));
-
-const role = {
-  id: "user",
-  label: "Học sinh",
-  emoji: "GraduationCap",
-  accent: "#fbbf24",
-  accentText: "#92400e",
-  accentBg: "#fbbf2415",
-  accentHover: "#fbbf2410",
-  accentDeep: "#d97706",
-  onAccent: "#ffffff",
-};
-
-const navItems = [
-  { icon: Home, label: "Tổng quan", to: "/dashboard/kid" },
-  {
-    icon: BookOpen,
-    label: "Bài học",
-    to: "/dashboard/kid/lessons",
-    badge: "5 mới",
-  },
-  {
-    icon: Gamepad2,
-    label: "Trò chơi",
-    to: "/dashboard/kid/games",
-    badge: "1 chương",
-  },
-  { icon: TrophyIcon, label: "Thành tích", to: "/dashboard/kid/achievements" },
-  { icon: MessageCircle, label: "Quiz", to: "/dashboard/kid/quiz" },
-  { icon: UserIcon, label: "Hồ sơ", to: "/dashboard/settings" },
-];
 
 export default function KidGames() {
   const [searchParams] = useSearchParams();
@@ -62,7 +24,7 @@ export default function KidGames() {
   const published = usePublishedChapters().find(
     (chapter) => chapter.number === Number(chapterId),
   );
-  const { user, loading, error } = useKidDashboard();
+  const { loading, error } = useKidDashboard();
   const [gameData, setGameData] = useState(null);
   const [runtimeError, setRuntimeError] = useState("");
   const [loadedChapterId, setLoadedChapterId] = useState(null);

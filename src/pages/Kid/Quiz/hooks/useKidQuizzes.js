@@ -18,8 +18,8 @@ export function useKidQuizzes() {
       setLoading(false);
     }
   }, []);
-  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     void refresh();
   }, [refresh]);
   return {

@@ -33,6 +33,7 @@ export function useAdminPlans() {
     }
   };
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     void load();
   }, []);
   const save = async (kind, price, months) => {
