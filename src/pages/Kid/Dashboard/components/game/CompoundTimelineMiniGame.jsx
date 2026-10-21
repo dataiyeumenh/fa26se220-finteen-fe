@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   challenges,
   gradeRound,
@@ -55,16 +55,21 @@ export function CompoundTimelineMiniGame({
   onComplete,
   className = "",
 }) {
-  const [round, setRound] = useState(0);
-  const [year, setYear] = useState(0);
-  const [visited, setVisited] = useState([]);
-  const [answers, setAnswers] = useState(() =>
-    Object.fromEntries(
-      Object.entries(initialResult?.answers || {}).map(([id, item]) => [
-        id,
-        item.answer,
-      ]),
-    ),
+  const saved = initialResult?.ui;
+  const [round, setRound] = useState(saved?.round ?? 0);
+  const [year, setYear] = useState(saved?.year ?? 0);
+  const [visited, setVisited] = useState(
+    saved?.visited || initialResult?.visitedYears || [],
+  );
+  const [answers, setAnswers] = useState(
+    () =>
+      saved?.answers ||
+      Object.fromEntries(
+        Object.entries(initialResult?.answers || {}).map(([id, item]) => [
+          id,
+          item.answer,
+        ]),
+      ),
   );
   const [history, setHistory] = useState(initialResult?.answers || {});
   const [checked, setChecked] = useState(() =>
@@ -77,11 +82,22 @@ export function CompoundTimelineMiniGame({
       ]),
     ),
   );
-  const [inspected, setInspected] = useState([]);
+  const [inspected, setInspected] = useState(saved?.inspected || []);
   const [activeFact, setActiveFact] = useState(null);
   const submitted = useRef(false);
   const titleRef = useRef(null);
   const feedbackRef = useRef(null);
+  const progressCallback = useRef(onProgress);
+  useEffect(() => {
+    progressCallback.current = onProgress;
+  }, [onProgress]);
+  useEffect(() => {
+    progressCallback.current?.({
+      ...timelineResult(history),
+      visitedYears: visited,
+      ui: { round, year, visited, answers, inspected },
+    });
+  }, [round, year, visited, answers, inspected, history]);
   const questions = challenges.filter((q) => q.round === round);
   const complete =
     questions.every(
@@ -454,10 +470,6 @@ export function CompoundTimelineMiniGame({
             if (checked[round] || !complete) return;
             const nextHistory = gradeRound(round, answers, history, inspected);
             setHistory(nextHistory);
-            onProgress?.({
-              ...timelineResult(nextHistory),
-              visitedYears: visited,
-            });
             setChecked((prev) => ({ ...prev, [round]: true }));
             requestAnimationFrame(() =>
               feedbackRef.current?.scrollIntoView({
@@ -476,7 +488,11 @@ export function CompoundTimelineMiniGame({
             if (round < 3) move(round + 1);
             else if (!submitted.current) {
               submitted.current = true;
-              onComplete?.({ ...result, visitedYears: visited });
+              onComplete?.({
+                ...result,
+                visitedYears: visited,
+                ui: { round, year, visited, answers, inspected },
+              });
             }
           }}
         >

@@ -286,6 +286,7 @@ export const chapter4V2GameData = {
   },
   metadata: {
     chapterId: "CH04",
+    persistProgress: true,
     targetAge: 16,
     goalDescription:
       "Mua điện thoại đáp ứng học tập, tổng chi phí năm đầu tối đa 2.000.000đ; kiểm tra chứng từ và thuê bao.",
@@ -1072,9 +1073,9 @@ export const chapter4V2GameData = {
         id: "C_RECOVERY",
         title: "Ending C: Recovery",
         condition:
-          "!flags.receipt_resolved || !flags.budget_adjusted || RISK > 55 || SAVING < 40",
+          "miniGameNeedsPractice || !flags.receipt_resolved || !flags.budget_adjusted || RISK > 55 || SAVING < 40",
         storyText:
-          "An cần xử lý phí hoặc thuê bao: “Mình mới xem giá trên kệ, chưa tính hết việc dùng máy.”",
+          "An còn phần cần luyện về tổng chi, hóa đơn hoặc kế hoạch sử dụng máy. Hãy đối chiếu lời giải với các khoản tiền và điều kiện đã cho.",
         characterSprite: sprite("AN", "worried-money"),
         position: "center",
         backgroundId: "BG07",
@@ -1083,7 +1084,7 @@ export const chapter4V2GameData = {
         id: "A_GOAL_ACHIEVED",
         title: "Ending A: Goal Achieved",
         condition:
-          "flags.purchase_fit && flags.receipt_resolved && (!flags.phone_a || flags.cancellation_confirmed) && !flags.subscription_kept && !flags.purchase_over_budget && evidenceScore >= 9 && miniGameCompleted && reflectionScore >= 3",
+          "flags.purchase_fit && flags.receipt_resolved && (!flags.phone_a || flags.cancellation_confirmed) && !flags.subscription_kept && !flags.purchase_over_budget && evidenceScore >= 9 && miniGameCompleted && miniGameGoalEligible && reflectionScore >= 3",
         storyText:
           "An có máy đủ học và chứng từ rõ: “Mình biết cả giá máy lẫn phí sau đó.”",
         characterSprite: sprite("AN", "relieved"),
@@ -1104,6 +1105,7 @@ export const chapter4V2GameData = {
   },
   endingReport: {
     maxChoiceScore: 12,
+    requiredGameIds: ["SMART_SHOPPING_CH04"],
     miniGameMax: 4,
     reflectionMax: 4,
     weights: { choices: 0.6, miniGame: 0.3, reflection: 0.1 },
@@ -1126,6 +1128,10 @@ export const chapter4V2GameData = {
       },
     ],
     practice: [
+      {
+        when: "miniGameNeedsPractice",
+        text: "Bài thực hành còn nhiều câu chưa đúng. Xem lại cách tính tổng chi, đối chiếu hóa đơn và giữ đủ tiền cho hoạt động trường.",
+      },
       {
         when: "!flags.receipt_resolved",
         text: "Lưu báo giá, hóa đơn và hỏi rõ khoản phí trước khi đồng ý trả.",

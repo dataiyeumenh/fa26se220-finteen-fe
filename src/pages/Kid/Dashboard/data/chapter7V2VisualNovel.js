@@ -1245,16 +1245,16 @@ export const chapter7V2GameData = {
         id: "C_RECOVERY",
         title: "Ending C: Recovery",
         condition:
-          "flags.incident_unresolved || flags.recovery_unverified || flags.fraud_exposed || RISK > 55 || SAVING < 40",
+          "miniGameNeedsPractice || flags.incident_unresolved || flags.recovery_unverified || flags.fraud_exposed || RISK > 55 || SAVING < 40",
         storyText:
-          "An vẫn còn việc cần giải quyết và theo dõi. Tiền đã mất chưa được hoàn lại; An có người cùng theo dõi tài khoản và liên hệ ngân hàng, bên bảo hiểm. Khoản bảo hiểm chưa được cộng vào ví.",
+          "An cần luyện thêm cách xử lý khoản chi, kiểm tra tin nhắn hoặc tìm người hỗ trợ. Nếu đã có giao dịch đáng ngờ, cần tiếp tục theo dõi với ngân hàng. Khoản bảo hiểm vẫn chờ xét và chưa được cộng vào ví.",
         characterSprite: sprite("AN", "worried-money"),
       },
       {
         id: "A_GOAL_ACHIEVED",
         title: "Ending A: Goal Achieved",
         condition:
-          "flags.incident_resolved && !flags.hot_loan && flags.fraud_contained && flags.recovery_done && choicePercent >= 75 && learningScore >= 75 && miniGameCompleted && coreCalculationsCorrect",
+          "flags.incident_resolved && !flags.hot_loan && flags.fraud_contained && flags.recovery_done && choicePercent >= 75 && learningScore >= 75 && miniGameCompleted && miniGameGoalEligible",
         storyText:
           "An xử lý khoản chi bằng tiền đã chuẩn bị, dừng tin giả và giữ đủ giấy tờ và biết liên hệ ai để hỏi tiếp. Tiền bảo hiểm vẫn chờ xét; biết cách xử lý không có nghĩa mọi rủi ro biến mất.",
         characterSprite: sprite("AN", "relieved"),
@@ -1300,6 +1300,10 @@ export const chapter7V2GameData = {
       },
     ],
     practice: [
+      {
+        when: "miniGameNeedsPractice",
+        text: "Bài thực hành còn nhiều câu chưa đúng. Xem lại giấy tờ bảo hiểm, bối cảnh tin nhắn và thứ tự xử lý giao dịch đáng ngờ.",
+      },
       {
         when: "flags.incident_unresolved",
         text: "Khoản chi y tế và cách hoàn thiện hồ sơ vẫn chưa được xử lý.",

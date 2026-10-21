@@ -1,187 +1,345 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
-import { existsSync } from 'node:fs';
-import { chapter6V2GameData as data } from '../src/pages/Kid/Dashboard/data/chapter6V2VisualNovel.js';
-import { loanApr, loanOffers, loanTotal, loanMonthlyPayment, monthlyCapacity, bnplItems, cartForecast, statementOutcome, loanTasks, applyLoanAction, createLoanState, loanResult, chapterSixLearning, affordabilityAt } from '../src/pages/Kid/Dashboard/components/game/loanDetectiveRules.js';
-import { progressKey, readNovelProgress, saveNovelProgress } from '../src/pages/Kid/Dashboard/components/game/visualNovelProgress.js';
+import test from "node:test";
+import assert from "node:assert/strict";
+import { existsSync } from "node:fs";
+import { chapter6V2GameData as data } from "../src/pages/Kid/Dashboard/data/chapter6V2VisualNovel.js";
+import {
+  loanApr,
+  loanOffers,
+  loanTotal,
+  loanMonthlyPayment,
+  monthlyCapacity,
+  bnplItems,
+  cartForecast,
+  statementOutcome,
+  loanTasks,
+  applyLoanAction,
+  createLoanState,
+  loanResult,
+  chapterSixLearning,
+  affordabilityAt,
+} from "../src/pages/Kid/Dashboard/components/game/loanDetectiveRules.js";
+import {
+  progressKey,
+  readNovelProgress,
+  saveNovelProgress,
+} from "../src/pages/Kid/Dashboard/components/game/visualNovelProgress.js";
 
-const scenes = new Map(data.scenes.map(s => [s.id, s]));
-const option = id => data.scenes.flatMap(s => s.options || []).find(o => o.id === id);
+const scenes = new Map(data.scenes.map((s) => [s.id, s]));
+const option = (id) =>
+  data.scenes.flatMap((s) => s.options || []).find((o) => o.id === id);
 function completedGames() {
-  const history = Object.fromEntries(loanTasks.map(t => [t.id, { finalCorrect: true, firstAttemptCorrect: true, attemptCount: 1 }]));
-  return Object.fromEntries([['LOAN_OFFERS_CH06', [0, 1]], ['LOAN_REPAYMENT_CH06', [2, 3]]].map(([gameId, rounds]) => [gameId, { ...loanResult(history, rounds), gameId, completed: true }]));
+  const history = Object.fromEntries(
+    loanTasks.map((t) => [
+      t.id,
+      { finalCorrect: true, firstAttemptCorrect: true, attemptCount: 1 },
+    ]),
+  );
+  return Object.fromEntries(
+    [
+      ["LOAN_OFFERS_CH06", [0, 1]],
+      ["LOAN_REPAYMENT_CH06", [2, 3]],
+    ].map(([gameId, rounds]) => [
+      gameId,
+      { ...loanResult(history, rounds), gameId, completed: true },
+    ]),
+  );
 }
-function resolveEnding(flags, ledger, results = completedGames(), stats = data.initialStats) {
+function resolveEnding(
+  flags,
+  ledger,
+  results = completedGames(),
+  stats = data.initialStats,
+) {
   const learning = chapterSixLearning(ledger, results, data.endingReport);
-  const args = { flags, ...stats, miniGameCompleted: true, ...learning,
-    reflectionScore: Object.values(ledger).reduce((n, e) => n + (e?.reflectionScore || 0), 0) };
-  return data.endingRules.endings.find(e => e.condition === 'DEFAULT_FALLBACK' || new Function(...Object.keys(args), `return ${e.condition}`)(...Object.values(args))).id;
+  const args = {
+    flags,
+    ...stats,
+    miniGameCompleted: true,
+    ...learning,
+    reflectionScore: Object.values(ledger).reduce(
+      (n, e) => n + (e?.reflectionScore || 0),
+      0,
+    ),
+  };
+  return data.endingRules.endings.find(
+    (e) =>
+      e.condition === "DEFAULT_FALLBACK" ||
+      new Function(...Object.keys(args), `return ${e.condition}`)(
+        ...Object.values(args),
+      ),
+  ).id;
 }
-const ledger = { CH06_PLAN: { evidenceScores: { I: 2, C: 2, P: 2 } }, CH06_REPAYMENT: { evidenceScores: { I: 2, C: 2, P: 2 } } };
-const fit = { credit_plan_fit: true, fallback_verified: true, repayment_understood: true };
+const ledger = {
+  CH06_PLAN: { evidenceScores: { I: 2, C: 2, P: 2 } },
+  CH06_REPAYMENT: { evidenceScores: { I: 2, C: 2, P: 2 } },
+};
+const fit = {
+  credit_plan_fit: true,
+  fallback_verified: true,
+  repayment_understood: true,
+};
 
-test('all story links resolve, every scene is reachable and all art files exist', () => {
+test("all story links resolve, every scene is reachable and all art files exist", () => {
   assert.equal(scenes.size, data.scenes.length);
   const seen = new Set();
   function visit(id) {
     if (!id || seen.has(id)) return;
-    const s = scenes.get(id); assert.ok(s, `Broken link ${id}`); seen.add(id);
-    for (const target of [s.nextSceneId, s.ifTrueSceneId, s.ifFalseSceneId, ...(s.options || []).map(o => o.nextSceneId)]) visit(target);
+    const s = scenes.get(id);
+    assert.ok(s, `Broken link ${id}`);
+    seen.add(id);
+    for (const target of [
+      s.nextSceneId,
+      s.ifTrueSceneId,
+      s.ifFalseSceneId,
+      ...(s.options || []).map((o) => o.nextSceneId),
+    ])
+      visit(target);
   }
-  visit(data.scenes[0].id); assert.equal(seen.size, scenes.size);
+  visit(data.scenes[0].id);
+  assert.equal(seen.size, scenes.size);
   function inspect(value) {
-    if (typeof value === 'string' && value.startsWith('/images/')) assert.ok(existsSync(`public${value}`), value);
-    else if (value && typeof value === 'object') {
-      assert.ok(!value.moneyEvents?.length, 'Planning must not transact');
+    if (typeof value === "string" && value.startsWith("/images/"))
+      assert.ok(existsSync(`public${value}`), value);
+    else if (value && typeof value === "object") {
+      assert.ok(!value.moneyEvents?.length, "Planning must not transact");
       Object.values(value).forEach(inspect);
     }
   }
   inspect(data);
 });
-test('chapter has sustained dialogue in all four scenes, with no forced borrowing', () => {
-  const dialogue = data.scenes.filter(s => s.type === 'dialogue');
+test("chapter has sustained dialogue in all four scenes, with no forced borrowing", () => {
+  const dialogue = data.scenes.filter((s) => s.type === "dialogue");
   assert.ok(dialogue.length >= 120);
-  for (const bg of ['bg10-design-lab', 'bg10b-offer-comparison-board', 'bg10c-statement-workstation', 'bg10d-final-planning-table']) {
-    assert.ok(dialogue.filter(s => s.background.endsWith(`${bg}.png`)).length >= 20, bg);
+  for (const bg of [
+    "bg10-design-lab",
+    "bg10b-offer-comparison-board",
+    "bg10c-statement-workstation",
+    "bg10d-final-planning-table",
+  ]) {
+    assert.ok(
+      dialogue.filter((s) => s.background.endsWith(`${bg}.png`)).length >= 20,
+      bg,
+    );
   }
   assert.equal(data.initialMoney, 0);
-  assert.deepEqual(Object.keys(data.initialStats), ['SAVING', 'HAPPINESS', 'RISK', 'GOAL']);
-  assert.equal(data.scenes.some(s => s.setFlags?.borrowConfirmed || s.options?.some(o => o.setFlags?.borrowConfirmed)), false);
-  assert.equal(option('CH06_SIGN_B'), undefined);
-  assert.equal(scenes.get('CH06_FINAL_B_1').setFlags.credit_plan_fit, true);
-  assert.equal(option('CH06_SC02_B').requires, undefined);
+  assert.deepEqual(Object.keys(data.initialStats), [
+    "SAVING",
+    "HAPPINESS",
+    "RISK",
+    "GOAL",
+  ]);
+  assert.equal(
+    data.scenes.some(
+      (s) =>
+        s.setFlags?.borrowConfirmed ||
+        s.options?.some((o) => o.setFlags?.borrowConfirmed),
+    ),
+    false,
+  );
+  assert.equal(option("CH06_SIGN_B"), undefined);
+  assert.equal(scenes.get("CH06_FINAL_B_1").setFlags.credit_plan_fit, true);
+  assert.equal(option("CH06_SC02_B").requires, undefined);
 });
-test('loan labels and abbreviations are explained in the story', () => {
-  const dialogue = data.scenes.filter(s => s.type === 'dialogue').map(s => s.text).join('\n');
-  assert.ok(dialogue.includes('ba gói vay mua laptop'));
-  assert.ok(dialogue.includes('Annual Percentage Rate'));
-  assert.ok(dialogue.includes('Buy Now, Pay Later'));
-  assert.ok(dialogue.includes('mua trước, trả sau'));
-  assert.ok(dialogue.includes('Gói vay A'));
-  assert.ok(dialogue.includes('gói vay B'));
-  assert.ok(dialogue.includes('gói vay C'));
-  assert.ok(!dialogue.includes('BNLP'));
+test("loan labels and abbreviations are explained in the story", () => {
+  const dialogue = data.scenes
+    .filter((s) => s.type === "dialogue")
+    .map((s) => s.text)
+    .join("\n");
+  assert.ok(dialogue.includes("ba gói vay mua laptop"));
+  assert.ok(dialogue.includes("Annual Percentage Rate"));
+  assert.ok(dialogue.includes("Buy Now, Pay Later"));
+  assert.ok(dialogue.includes("mua trước, trả sau"));
+  assert.ok(dialogue.includes("Gói vay A"));
+  assert.ok(dialogue.includes("gói vay B"));
+  assert.ok(dialogue.includes("gói vay C"));
+  assert.ok(!dialogue.includes("BNLP"));
 });
-test('new offers have no upfront fee; C pays twice per monthly period and receives less than the contract amount', () => {
+test("new offers have no upfront fee; C pays twice per monthly period and receives less than the contract amount", () => {
   assert.deepEqual(loanOffers.map(loanTotal), [6720000, 6600000, 8000000]);
-  assert.deepEqual(loanOffers.map(o => o.upfront), [0, 0, 0]);
-  assert.deepEqual(loanOffers.map(o => o.received), [6000000, 6000000, 5400000]);
+  assert.deepEqual(
+    loanOffers.map((o) => o.upfront),
+    [0, 0, 0],
+  );
+  assert.deepEqual(
+    loanOffers.map((o) => o.received),
+    [6000000, 6000000, 5400000],
+  );
   assert.equal(loanOffers[2].periods * loanOffers[2].intervalMonths, 8);
-  assert.deepEqual(loanOffers.map(loanMonthlyPayment), [1120000, 550000, 1000000]);
+  assert.deepEqual(
+    loanOffers.map(loanMonthlyPayment),
+    [1120000, 550000, 1000000],
+  );
   assert.equal(monthlyCapacity() - loanMonthlyPayment(loanOffers[0]), -120000);
-  assert.equal(monthlyCapacity(2700000) - loanMonthlyPayment(loanOffers[1]), 150000);
+  assert.equal(
+    monthlyCapacity(2700000) - loanMonthlyPayment(loanOffers[1]),
+    150000,
+  );
 });
-test('APR follows new net proceeds and payment frequency rather than copying incompatible screenshot estimates', () => {
-  const expected = [40.04798773, 17.97199750, 121.17817654];
+test("APR follows new net proceeds and payment frequency rather than copying incompatible screenshot estimates", () => {
+  const expected = [40.04798773, 17.9719975, 121.17817654];
   for (const [index, offer] of loanOffers.entries()) {
-    assert.ok(Math.abs(loanApr(offer) - expected[index]) < .000001);
+    assert.ok(Math.abs(loanApr(offer) - expected[index]) < 0.000001);
     const rate = loanApr(offer) / (1200 / offer.intervalMonths);
-    const present = Array.from({ length: offer.periods }, (_, k) => offer.installment / (1 + rate) ** (k + 1)).reduce((a, b) => a + b, 0);
-    assert.ok(Math.abs(present - offer.received) < .001);
+    const present = Array.from(
+      { length: offer.periods },
+      (_, k) => offer.installment / (1 + rate) ** (k + 1),
+    ).reduce((a, b) => a + b, 0);
+    assert.ok(Math.abs(present - offer.received) < 0.001);
   }
 });
-test('pre-game Inspect has exactly the requested shared context and never reveals the totals', () => {
-  const popup = scenes.get('CH06_OFFERS').inspect;
-  assert.deepEqual(popup.shared.items, ['Mục tiêu vay: 6.000.000đ', 'Mỗi kỳ tương đương với 1 tháng.']);
-  assert.deepEqual(popup.cards.map(c => c.label), ['Gói vay A', 'Gói vay B', 'Gói vay C']);
+test("pre-game Inspect has exactly the requested shared context and never reveals the totals", () => {
+  const popup = scenes.get("CH06_OFFERS").inspect;
+  assert.deepEqual(popup.shared.items, [
+    "Mục tiêu vay: 6.000.000đ",
+    "Mỗi kỳ tương đương với 1 tháng.",
+  ]);
+  assert.deepEqual(
+    popup.cards.map((c) => c.label),
+    ["Gói vay A", "Gói vay B", "Gói vay C"],
+  );
   for (const card of popup.cards) {
     const copy = JSON.stringify(card);
-    assert.ok(!copy.includes('Tổng trả'));
-    assert.ok(!copy.includes('6.720.000'));
-    assert.ok(!copy.includes('6.600.000'));
-    assert.ok(!copy.includes('8.000.000'));
-    assert.ok(!copy.includes('Phí đầu'));
+    assert.ok(!copy.includes("Tổng trả"));
+    assert.ok(!copy.includes("6.720.000"));
+    assert.ok(!copy.includes("6.600.000"));
+    assert.ok(!copy.includes("8.000.000"));
+    assert.ok(!copy.includes("Phí đầu"));
   }
-  assert.ok(JSON.stringify(popup.cards[2]).includes('500.000đ / ½ kỳ'));
-  assert.ok(JSON.stringify(popup.cards[2]).includes('5.400.000đ'));
-  assert.ok(!JSON.stringify(popup.cards[2]).includes('đã khấu trừ'));
-  assert.deepEqual(scenes.get('CH06_GAME_OFFERS').game.reference.cards, popup.cards);
+  assert.ok(JSON.stringify(popup.cards[2]).includes("500.000đ / ½ kỳ"));
+  assert.ok(JSON.stringify(popup.cards[2]).includes("5.400.000đ"));
+  assert.ok(!JSON.stringify(popup.cards[2]).includes("đã khấu trừ"));
+  assert.deepEqual(
+    scenes.get("CH06_GAME_OFFERS").game.reference.cards,
+    popup.cards,
+  );
 });
-test('totals submit once, retain wrong answers and score without requiring correction', () => {
+test("totals submit once, retain wrong answers and score without requiring correction", () => {
   let state = createLoanState([0, 1]);
-  for (const offer of loanOffers) state = applyLoanAction(state, { type: 'TOTAL_DRAFT', id: offer.id, value: String(offer.id === 'C' ? 8600000 : loanTotal(offer)) });
+  for (const offer of loanOffers)
+    state = applyLoanAction(state, {
+      type: "TOTAL_DRAFT",
+      id: offer.id,
+      value: String(offer.id === "C" ? 8600000 : loanTotal(offer)),
+    });
   assert.deepEqual(state.history, {});
-  state = applyLoanAction(state, { type: 'TOTAL' });
+  state = applyLoanAction(state, { type: "TOTAL" });
   assert.equal(state.submittedRounds[0], true);
-  assert.equal(state.totals.C, '8600000');
+  assert.equal(state.totals.C, "8600000");
   const result = loanResult(state.history, [0]);
   assert.equal(result.completed, true);
   assert.equal(result.passed, false);
   assert.equal(result.score, 2);
   assert.equal(result.firstPercent, 67);
-  assert.equal(applyLoanAction(state, { type: 'TOTAL_DRAFT', id: 'C', value: '8000000' }), state);
-  assert.equal(applyLoanAction(state, { type: 'TOTAL' }), state);
-  assert.equal(applyLoanAction(state, { type: 'ROUND', round: 1 }).round, 1);
+  assert.equal(
+    applyLoanAction(state, { type: "TOTAL_DRAFT", id: "C", value: "8000000" }),
+    state,
+  );
+  assert.equal(applyLoanAction(state, { type: "TOTAL" }), state);
+  assert.equal(applyLoanAction(state, { type: "ROUND", round: 1 }).round, 1);
 });
-test('blank, incomplete or invalid totals cannot be submitted and unfinished rounds cannot be skipped', () => {
+test("blank, incomplete or invalid totals cannot be submitted and unfinished rounds cannot be skipped", () => {
   let state = createLoanState([0, 1]);
-  assert.equal(applyLoanAction(state, { type: 'TOTAL' }), state);
-  assert.equal(applyLoanAction(state, { type: 'ROUND', round: 1 }), state);
-  for (const [id, value] of [['A', '6720000'], ['B', '6600000'], ['C', 'Infinity']]) state = applyLoanAction(state, { type: 'TOTAL_DRAFT', id, value });
-  assert.equal(applyLoanAction(state, { type: 'TOTAL' }), state);
+  assert.equal(applyLoanAction(state, { type: "TOTAL" }), state);
+  assert.equal(applyLoanAction(state, { type: "ROUND", round: 1 }), state);
+  for (const [id, value] of [
+    ["A", "6720000"],
+    ["B", "6600000"],
+    ["C", "Infinity"],
+  ])
+    state = applyLoanAction(state, { type: "TOTAL_DRAFT", id, value });
+  assert.equal(applyLoanAction(state, { type: "TOTAL" }), state);
   assert.deepEqual(state.history, {});
 });
-test('sorting accepts wrong placements and moves freely before one explicit submission', () => {
+test("sorting accepts wrong placements and moves freely before one explicit submission", () => {
   let state = { ...createLoanState([0, 1]), round: 1 };
-  assert.equal(applyLoanAction(state, { type: 'SUBMIT_SORT' }), state);
-  state = applyLoanAction(state, { type: 'SORT', id: 'A', target: 'fit' });
-  assert.equal(state.sorted.A, 'fit');
+  assert.equal(applyLoanAction(state, { type: "SUBMIT_SORT" }), state);
+  state = applyLoanAction(state, { type: "SORT", id: "A", target: "fit" });
+  assert.equal(state.sorted.A, "fit");
   assert.deepEqual(state.history, {});
-  state = applyLoanAction(state, { type: 'SORT', id: 'A', target: 'over' });
-  state = applyLoanAction(state, { type: 'UNSORT', id: 'A' });
+  state = applyLoanAction(state, { type: "SORT", id: "A", target: "over" });
+  state = applyLoanAction(state, { type: "UNSORT", id: "A" });
   assert.equal(state.sorted.A, undefined);
-  assert.equal(state.selected, 'A');
-  for (const id of ['A', 'B', 'C']) state = applyLoanAction(state, { type: 'SORT', id, target: 'fit' });
-  assert.deepEqual(state.sorted, { A: 'fit', B: 'fit', C: 'fit' });
+  assert.equal(state.selected, "A");
+  for (const id of ["A", "B", "C"])
+    state = applyLoanAction(state, { type: "SORT", id, target: "fit" });
+  assert.deepEqual(state.sorted, { A: "fit", B: "fit", C: "fit" });
   assert.deepEqual(state.history, {});
-  state = applyLoanAction(state, { type: 'SUBMIT_SORT' });
+  state = applyLoanAction(state, { type: "SUBMIT_SORT" });
   assert.equal(state.submittedRounds[1], true);
   assert.equal(loanResult(state.history, [1]).score, 1);
   assert.equal(loanResult(state.history, [1]).completed, true);
   assert.equal(state.history.sortA.firstAttemptCorrect, false);
   assert.equal(state.history.sortA.attemptCount, 1);
-  for (const action of [{ type: 'SORT', id: 'A', target: 'over' }, { type: 'UNSORT', id: 'B' }, { type: 'SELECT', id: 'C' }, { type: 'SUBMIT_SORT' }]) assert.equal(applyLoanAction(state, action), state);
+  for (const action of [
+    { type: "SORT", id: "A", target: "over" },
+    { type: "UNSORT", id: "B" },
+    { type: "SELECT", id: "C" },
+    { type: "SUBMIT_SORT" },
+  ])
+    assert.equal(applyLoanAction(state, action), state);
 });
-test('moving drafts before submission does not count as a wrong attempt', () => {
+test("moving drafts before submission does not count as a wrong attempt", () => {
   let state = { ...createLoanState([0, 1]), round: 1 };
-  state = applyLoanAction(state, { type: 'SORT', id: 'A', target: 'fit' });
-  for (const [id, target] of [['A', 'over'], ['B', 'fit'], ['C', 'shortfall']]) state = applyLoanAction(state, { type: 'SORT', id, target });
-  state = applyLoanAction(state, { type: 'SUBMIT_SORT' });
+  state = applyLoanAction(state, { type: "SORT", id: "A", target: "fit" });
+  for (const [id, target] of [
+    ["A", "over"],
+    ["B", "fit"],
+    ["C", "shortfall"],
+  ])
+    state = applyLoanAction(state, { type: "SORT", id, target });
+  state = applyLoanAction(state, { type: "SUBMIT_SORT" });
   assert.equal(loanResult(state.history, [1]).score, 3);
   assert.equal(loanResult(state.history, [1]).firstPercent, 100);
   assert.equal(loanResult(state.history, [1]).revised, false);
 });
-test('shopping cart stacks monthly obligations with an existing month-two payment', () => {
+test("shopping cart stacks monthly obligations with an existing month-two payment", () => {
   for (const item of bnplItems) {
     assert.ok(existsSync(`public${item.image}`), item.image);
     assert.equal(item.price, item.installment * 3);
   }
-  assert.deepEqual(cartForecast(['headphones', 'notebook']).months.map(month => month.remaining), [200000, 0, 200000]);
-  assert.equal(cartForecast(['headphones', 'notebook']).meetsNeed, true);
-  assert.equal(cartForecast(['headphones', 'notebook']).affordable, true);
-  assert.equal(cartForecast(['headphones', 'decoration']).months[1].remaining, -50000);
-  assert.equal(cartForecast(['headphones', 'decoration']).affordable, false);
-  assert.equal(cartForecast(['notebook', 'decoration']).meetsNeed, false);
-  assert.equal(cartForecast(['headphones']).meetsNeed, false);
-  assert.equal(cartForecast(['headphones', 'headphones', 'missing']).monthly, 200000);
+  assert.deepEqual(
+    cartForecast(["headphones", "notebook"]).months.map(
+      (month) => month.remaining,
+    ),
+    [200000, 0, 200000],
+  );
+  assert.equal(cartForecast(["headphones", "notebook"]).meetsNeed, true);
+  assert.equal(cartForecast(["headphones", "notebook"]).affordable, true);
+  assert.equal(
+    cartForecast(["headphones", "decoration"]).months[1].remaining,
+    -50000,
+  );
+  assert.equal(cartForecast(["headphones", "decoration"]).affordable, false);
+  assert.equal(cartForecast(["notebook", "decoration"]).meetsNeed, false);
+  assert.equal(cartForecast(["headphones"]).meetsNeed, false);
+  assert.equal(
+    cartForecast(["headphones", "headphones", "missing"]).monthly,
+    200000,
+  );
 });
-test('cart only scores at checkout and wrong budgets are preserved without replay', () => {
+test("cart only scores at checkout and wrong budgets are preserved without replay", () => {
   let state = createLoanState([2, 3]);
-  assert.equal(applyLoanAction(state, { type: 'BUY_CART' }), state);
-  for (const id of ['headphones', 'decoration', 'notebook', 'notebook']) state = applyLoanAction(state, { type: 'TOGGLE_ITEM', id });
-  assert.deepEqual(state.basket, ['headphones', 'decoration']);
+  assert.equal(applyLoanAction(state, { type: "BUY_CART" }), state);
+  for (const id of ["headphones", "decoration", "notebook", "notebook"])
+    state = applyLoanAction(state, { type: "TOGGLE_ITEM", id });
+  assert.deepEqual(state.basket, ["headphones", "decoration"]);
   assert.deepEqual(state.history, {});
-  state = applyLoanAction(state, { type: 'BUY_CART' });
+  state = applyLoanAction(state, { type: "BUY_CART" });
   assert.equal(state.history.cartNeed.finalCorrect, true);
   assert.equal(state.history.cartBudget.finalCorrect, false);
   assert.equal(loanResult(state.history, [2]).completed, true);
   assert.equal(loanResult(state.history, [2]).score, 1);
-  assert.equal(applyLoanAction(state, { type: 'TOGGLE_ITEM', id: 'decoration' }), state);
-  assert.equal(applyLoanAction(state, { type: 'BUY_CART' }), state);
-  assert.equal(applyLoanAction(state, { type: 'ROUND', round: 3 }).round, 3);
+  assert.equal(
+    applyLoanAction(state, { type: "TOGGLE_ITEM", id: "decoration" }),
+    state,
+  );
+  assert.equal(applyLoanAction(state, { type: "BUY_CART" }), state);
+  assert.equal(applyLoanAction(state, { type: "ROUND", round: 3 }).round, 3);
 });
-test('statement choices have distinct consequences for living costs, interest and next-month debt', () => {
-  const minimum = statementOutcome('minimum'), full = statementOutcome('full'), partial = statementOutcome('partial');
+test("statement choices have distinct consequences for living costs, interest and next-month debt", () => {
+  const minimum = statementOutcome("minimum"),
+    full = statementOutcome("full"),
+    partial = statementOutcome("partial");
   assert.equal(minimum.walletLeft, 1100000);
   assert.equal(minimum.debtLeft, 900000);
   assert.equal(minimum.interest, 18000);
@@ -198,111 +356,247 @@ test('statement choices have distinct consequences for living costs, interest an
   assert.equal(partial.livingCovered && partial.costCovered, true);
   assert.equal(partial.interest, 4000);
   assert.equal(partial.nextDebt, 204000);
-  assert.equal(statementOutcome('half').interest, 10000);
-  assert.equal(statementOutcome('threeQuarters').interest, 5000);
-  assert.equal(statementOutcome('threeQuarters').afterLiving, 50000);
-  assert.equal(statementOutcome('threeQuarters').costCovered, true);
-  assert.equal(statementOutcome('almostFull').livingShortfall, 100000);
-  assert.equal(statementOutcome('missing'), null);
+  assert.equal(statementOutcome("half").interest, 10000);
+  assert.equal(statementOutcome("threeQuarters").interest, 5000);
+  assert.equal(statementOutcome("threeQuarters").afterLiving, 50000);
+  assert.equal(statementOutcome("threeQuarters").costCovered, true);
+  assert.equal(statementOutcome("almostFull").livingShortfall, 100000);
+  assert.equal(statementOutcome("missing"), null);
 });
-test('statement locks on confirmation, reveals events sequentially, scores once and never transacts', () => {
-  for (const [id, score] of [['minimum', 1], ['half', 1], ['threeQuarters', 2], ['partial', 2], ['almostFull', 1], ['full', 1]]) {
+test("statement locks on confirmation, reveals events sequentially, scores once and never transacts", () => {
+  for (const [id, score] of [
+    ["minimum", 1],
+    ["half", 1],
+    ["threeQuarters", 2],
+    ["partial", 2],
+    ["almostFull", 1],
+    ["full", 1],
+  ]) {
     let state = { ...createLoanState([2, 3]), round: 3 };
-    assert.equal(applyLoanAction(state, { type: 'CONFIRM_STATEMENT' }), state);
-    assert.equal(applyLoanAction(state, { type: 'REVEAL_STATEMENT' }), state);
-    state = applyLoanAction(state, { type: 'STATEMENT_CHOICE', id });
+    assert.equal(applyLoanAction(state, { type: "CONFIRM_STATEMENT" }), state);
+    assert.equal(applyLoanAction(state, { type: "REVEAL_STATEMENT" }), state);
+    state = applyLoanAction(state, { type: "STATEMENT_CHOICE", id });
     assert.deepEqual(state.history, {});
-    state = applyLoanAction(state, { type: 'CONFIRM_STATEMENT' });
+    state = applyLoanAction(state, { type: "CONFIRM_STATEMENT" });
     assert.equal(state.statementStep, 1);
     assert.deepEqual(state.history, {});
-    assert.equal(applyLoanAction(state, { type: 'STATEMENT_CHOICE', id: id === 'partial' ? 'full' : 'partial' }), state);
-    state = applyLoanAction(state, { type: 'REVEAL_STATEMENT' });
+    assert.equal(
+      applyLoanAction(state, {
+        type: "STATEMENT_CHOICE",
+        id: id === "partial" ? "full" : "partial",
+      }),
+      state,
+    );
+    state = applyLoanAction(state, { type: "REVEAL_STATEMENT" });
     assert.equal(state.statementStep, 2);
     assert.equal(loanResult(state.history, [3]).score, score);
     assert.equal(loanResult(state.history, [3]).completed, true);
-    assert.equal(applyLoanAction(state, { type: 'REVEAL_STATEMENT' }), state);
+    assert.equal(applyLoanAction(state, { type: "REVEAL_STATEMENT" }), state);
     assert.equal(state.money, undefined);
   }
   assert.equal(loanTasks.length, data.endingReport.miniGameMax);
 });
-test('affordability view shows complete income-minus-living-minus-installment arithmetic', () => {
-  assert.deepEqual(affordabilityAt(3000000), { income: 3000000, essentials: 2000000, repayment: 550000, remaining: 450000 });
+test("affordability view shows complete income-minus-living-minus-installment arithmetic", () => {
+  assert.deepEqual(affordabilityAt(3000000), {
+    income: 3000000,
+    essentials: 2000000,
+    repayment: 550000,
+    remaining: 450000,
+  });
   assert.equal(affordabilityAt(2700000).remaining, 150000);
   assert.equal(affordabilityAt(2400000).remaining, -150000);
-  const inspect = scenes.get('CH06_FINAL_DATA').inspect;
+  const inspect = scenes.get("CH06_FINAL_DATA").inspect;
   assert.equal(inspect.cashflows.length, 2);
   assert.deepEqual(inspect.cards, []);
-  assert.ok(!JSON.stringify(inspect).includes('Nếu chờ'));
+  assert.ok(!JSON.stringify(inspect).includes("Nếu chờ"));
 });
-test('waiting earns A; conditional B with a school fallback earns B; unresolved mistakes earn C', () => {
-  assert.equal(resolveEnding(fit, ledger), 'A_GOAL_ACHIEVED');
-  assert.equal(resolveEnding({ ...fit, credit_plan_fit: false, credit_plan_conditional: true }, ledger), 'B_BALANCED');
-  for (const changes of [{ fallback_verified: false }, { repayment_understood: false }, { credit_unverified: true }]) {
-    assert.equal(resolveEnding({ ...fit, ...changes }, ledger), 'C_RECOVERY');
+test("waiting earns A; conditional B with a school fallback earns B; unresolved mistakes earn C", () => {
+  assert.equal(resolveEnding(fit, ledger), "A_GOAL_ACHIEVED");
+  assert.equal(
+    resolveEnding(
+      { ...fit, credit_plan_fit: false, credit_plan_conditional: true },
+      ledger,
+    ),
+    "B_BALANCED",
+  );
+  for (const changes of [
+    { fallback_verified: false },
+    { repayment_understood: false },
+    { credit_unverified: true },
+  ]) {
+    assert.equal(resolveEnding({ ...fit, ...changes }, ledger), "C_RECOVERY");
   }
-  assert.equal(resolveEnding(fit, ledger, completedGames(), { ...data.initialStats, RISK: 56 }), 'C_RECOVERY');
-  assert.equal(resolveEnding(fit, ledger, completedGames(), { ...data.initialStats, SAVING: 39 }), 'C_RECOVERY');
+  assert.equal(
+    resolveEnding(fit, ledger, completedGames(), {
+      ...data.initialStats,
+      RISK: 56,
+    }),
+    "C_RECOVERY",
+  );
+  assert.equal(
+    resolveEnding(fit, ledger, completedGames(), {
+      ...data.initialStats,
+      SAVING: 39,
+    }),
+    "C_RECOVERY",
+  );
 });
-test('A requires both mini-game stages but no reflection activities or reflection score', () => {
-  const games = completedGames(); delete games.LOAN_REPAYMENT_CH06;
-  assert.equal(chapterSixLearning(ledger, games, data.endingReport).coreCalculationsCorrect, false);
-  assert.equal(resolveEnding(fit, ledger, games), 'B_BALANCED');
-  assert.equal(resolveEnding(fit, ledger), 'A_GOAL_ACHIEVED');
-  assert.equal(data.scenes.some(s => s.type === 'activity'), false);
-  assert.equal(chapterSixLearning(ledger, completedGames(), data.endingReport).reflectionPercent, null);
+test("A requires both mini-game stages but no reflection activities or reflection score", () => {
+  const games = completedGames();
+  delete games.LOAN_REPAYMENT_CH06;
+  assert.equal(
+    chapterSixLearning(ledger, games, data.endingReport)
+      .coreCalculationsCorrect,
+    false,
+  );
+  assert.equal(resolveEnding(fit, ledger, games), "B_BALANCED");
+  assert.equal(resolveEnding(fit, ledger), "A_GOAL_ACHIEVED");
+  assert.equal(
+    data.scenes.some((s) => s.type === "activity"),
+    false,
+  );
+  assert.equal(
+    chapterSixLearning(ledger, completedGames(), data.endingReport)
+      .reflectionPercent,
+    null,
+  );
   assert.equal(data.endingReport.weights.reflection, 0);
 });
-test('bad final decisions have feedback but no repair choice, loop or route back to choose again', () => {
-  assert.deepEqual(option('CH06_SC02_C').deltaStats, { SAVING: -2, HAPPINESS: 3, RISK: 8 });
-  assert.deepEqual(option('CH06_SC03_B').deltaStats, { RISK: 12, GOAL: -8 });
-  assert.equal(scenes.has('CH06_REPAIR_PLAN'), false);
-  assert.equal(scenes.has('CH06_REPAIR_CHOICE'), false);
-  assert.equal(scenes.has('CH06_REPAIR_REPAYMENT'), false);
-  assert.equal(scenes.get('CH06_FINAL_C_2').nextSceneId, 'CH06_REPAY_CHECK');
-  assert.equal(scenes.get('CH06_MINIMUM_REVIEW_3').nextSceneId, 'CH06_RECAP_1');
-  const active = new Set(), done = new Set();
+test("bad final decisions have feedback but no repair choice, loop or route back to choose again", () => {
+  assert.deepEqual(option("CH06_SC02_C").deltaStats, {
+    SAVING: -2,
+    HAPPINESS: 3,
+    RISK: 8,
+  });
+  assert.deepEqual(option("CH06_SC03_B").deltaStats, { RISK: 12, GOAL: -8 });
+  assert.equal(scenes.has("CH06_REPAIR_PLAN"), false);
+  assert.equal(scenes.has("CH06_REPAIR_CHOICE"), false);
+  assert.equal(scenes.has("CH06_REPAIR_REPAYMENT"), false);
+  assert.equal(scenes.get("CH06_FINAL_C_2").nextSceneId, "CH06_REPAY_CHECK");
+  assert.equal(scenes.get("CH06_MINIMUM_REVIEW_3").nextSceneId, "CH06_RECAP_1");
+  const active = new Set(),
+    done = new Set();
   function walk(id) {
     if (!id || done.has(id)) return;
     assert.ok(!active.has(id), `Story loop at ${id}`);
     active.add(id);
     const scene = scenes.get(id);
-    for (const next of [scene.nextSceneId, scene.ifTrueSceneId, scene.ifFalseSceneId, ...(scene.options || []).map(option => option.nextSceneId)]) walk(next);
-    active.delete(id); done.add(id);
+    for (const next of [
+      scene.nextSceneId,
+      scene.ifTrueSceneId,
+      scene.ifFalseSceneId,
+      ...(scene.options || []).map((option) => option.nextSceneId),
+    ])
+      walk(next);
+    active.delete(id);
+    done.add(id);
   }
   walk(data.scenes[0].id);
   assert.equal(data.metadata.lockDecisions, true);
   assert.equal(data.metadata.preserveFirstChoiceStats, true);
-  assert.equal(scenes.get('CH06_FINAL_C_1').setFlags.credit_unverified, true);
-  assert.equal(scenes.has('CH06_FINAL_PLAN'), false);
-  const lateScenes = data.scenes.slice(data.scenes.findIndex(scene => scene.id === 'CH06_SC04_ART'));
-  assert.equal(lateScenes.some(scene => scene.type === 'choice'), false);
+  assert.equal(scenes.get("CH06_FINAL_C_1").setFlags.credit_unverified, true);
+  assert.equal(scenes.has("CH06_FINAL_PLAN"), false);
+  const lateScenes = data.scenes.slice(
+    data.scenes.findIndex((scene) => scene.id === "CH06_SC04_ART"),
+  );
+  assert.equal(
+    lateScenes.some((scene) => scene.type === "choice"),
+    false,
+  );
 });
-test('conditional story branches use expressions understood by the shared player and retain the original plan', () => {
+test("conditional story branches use expressions understood by the shared player and retain the original plan", () => {
   const evaluate = (id, flags) => {
     const scene = scenes.get(id);
-    assert.equal(typeof scene.condition.expression, 'string');
-    return new Function('flags', `return Boolean(${scene.condition.expression})`)(flags) ? scene.ifTrueSceneId : scene.ifFalseSceneId;
+    assert.equal(typeof scene.condition.expression, "string");
+    return new Function(
+      "flags",
+      `return Boolean(${scene.condition.expression})`,
+    )(flags)
+      ? scene.ifTrueSceneId
+      : scene.ifFalseSceneId;
   };
-  assert.equal(evaluate('CH06_FINAL_ROUTE', { credit_plan_fit: true }), 'CH06_FINAL_WAIT_1');
-  assert.equal(evaluate('CH06_FINAL_ROUTE', { credit_plan_conditional: true }), 'CH06_FINAL_ROUTE_B');
-  assert.equal(evaluate('CH06_FINAL_ROUTE_B', { credit_plan_conditional: true }), 'CH06_FINAL_B_1');
-  assert.equal(evaluate('CH06_FINAL_ROUTE_B', { credit_unverified: true }), 'CH06_FINAL_C_1');
-  assert.equal(evaluate('CH06_REPAY_CHECK', { repayment_understood: true }), 'CH06_RECAP_1');
-  assert.equal(evaluate('CH06_REPAY_CHECK', { repayment_understood: false }), 'CH06_MINIMUM_REVIEW_1');
-  for (const scene of data.scenes.filter(scene => scene.type === 'conditional')) assert.ok(scene.condition.expression);
+  assert.equal(
+    evaluate("CH06_FINAL_ROUTE", { credit_plan_fit: true }),
+    "CH06_FINAL_WAIT_1",
+  );
+  assert.equal(
+    evaluate("CH06_FINAL_ROUTE", { credit_plan_conditional: true }),
+    "CH06_FINAL_ROUTE_B",
+  );
+  assert.equal(
+    evaluate("CH06_FINAL_ROUTE_B", { credit_plan_conditional: true }),
+    "CH06_FINAL_B_1",
+  );
+  assert.equal(
+    evaluate("CH06_FINAL_ROUTE_B", { credit_unverified: true }),
+    "CH06_FINAL_C_1",
+  );
+  assert.equal(
+    evaluate("CH06_REPAY_CHECK", { repayment_understood: true }),
+    "CH06_RECAP_1",
+  );
+  assert.equal(
+    evaluate("CH06_REPAY_CHECK", { repayment_understood: false }),
+    "CH06_MINIMUM_REVIEW_1",
+  );
+  for (const scene of data.scenes.filter(
+    (scene) => scene.type === "conditional",
+  ))
+    assert.ok(scene.condition.expression);
 });
-test('checkpoint round trips and rejects invalid/old snapshots; unavailable storage is harmless', () => {
-  const memory = new Map(); const storage = { getItem: k => memory.get(k), setItem: (k, v) => memory.set(k, v) };
-  const snapshot = { scenePath: [0, 1, 2], stats: data.initialStats, money: 0, committedDecisions: ['CH06_SC02'] };
-  for (const key of ['flags', 'choiceLedger', 'firstChoiceScores', 'inspectedIds', 'moneyEventsApplied', 'budgetAllocations', 'miniGameResults', 'miniGameDoneByScene', 'sceneActionApplied']) snapshot[key] = {};
-  snapshot.miniGameResults.offers = { ...loanResult({}, [0, 1]), ui: { round: 1 } };
+test("checkpoint round trips and rejects invalid/old snapshots; unavailable storage is harmless", () => {
+  const memory = new Map();
+  const storage = {
+    getItem: (k) => memory.get(k),
+    setItem: (k, v) => memory.set(k, v),
+  };
+  const snapshot = {
+    scenePath: [0, 1, 2],
+    stats: data.initialStats,
+    money: 0,
+    committedDecisions: ["CH06_SC02"],
+  };
+  for (const key of [
+    "flags",
+    "choiceLedger",
+    "firstChoiceScores",
+    "inspectedIds",
+    "moneyEventsApplied",
+    "budgetAllocations",
+    "miniGameResults",
+    "miniGameDoneByScene",
+    "sceneActionApplied",
+  ])
+    snapshot[key] = {};
+  snapshot.miniGameResults.offers = {
+    ...loanResult({}, [0, 1]),
+    ui: { round: 1 },
+  };
   saveNovelProgress(storage, data, snapshot);
-  assert.deepEqual(readNovelProgress(storage, data), { ...snapshot, version: data.version });
-  assert.equal(readNovelProgress(storage, { ...data, version: 'old' }), null);
-  storage.setItem(progressKey(data), JSON.stringify({ ...snapshot, version: data.version, scenePath: [99999] }));
+  assert.deepEqual(readNovelProgress(storage, data), {
+    ...snapshot,
+    version: data.version,
+    sceneIds: snapshot.scenePath.map((index) => data.scenes[index].id),
+  });
+  assert.equal(
+    readNovelProgress(storage, { ...data, version: "old" }).version,
+    "old",
+  );
+  storage.setItem(
+    progressKey(data),
+    JSON.stringify({ ...snapshot, version: data.version, scenePath: [99999] }),
+  );
   assert.equal(readNovelProgress(storage, data), null);
-  storage.setItem(progressKey(data), '{broken'); assert.equal(readNovelProgress(storage, data), null);
-  const denied = { getItem() { throw Error('denied'); }, setItem() { throw Error('full'); } };
+  storage.setItem(progressKey(data), "{broken");
+  assert.equal(readNovelProgress(storage, data), null);
+  const denied = {
+    getItem() {
+      throw Error("denied");
+    },
+    setItem() {
+      throw Error("full");
+    },
+  };
   assert.equal(readNovelProgress(denied, data), null);
   assert.doesNotThrow(() => saveNovelProgress(denied, data, snapshot));
 });

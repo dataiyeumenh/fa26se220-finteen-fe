@@ -24,7 +24,11 @@ export function GuestDemo() {
               Bắt đầu dùng thử →
             </Link>
           </div>
-          <img className="ws-hero-art object-contain" src="/images/finteen-v2/chapter-01/props/allowance-envelope.png" alt="" />
+          <img
+            className="ws-hero-art object-contain"
+            src="/images/finteen-v2/chapter-01/props/allowance-envelope.png"
+            alt=""
+          />
         </section>
         <section className="ws-hero ws-shop-intro">
           <div>
@@ -41,7 +45,11 @@ export function GuestDemo() {
               Bắt đầu Chapter 2 →
             </Link>
           </div>
-          <img className="ws-hero-art object-contain" src="/images/finteen-v2/chapter-02/asset-mini-game/savings-race/piggy-bank.png" alt="" />
+          <img
+            className="ws-hero-art object-contain"
+            src="/images/finteen-v2/chapter-02/asset-mini-game/savings-race/piggy-bank.png"
+            alt=""
+          />
         </section>
         <section className="ws-hero">
           <div>
@@ -58,7 +66,11 @@ export function GuestDemo() {
               Bắt đầu Chapter 3 →
             </Link>
           </div>
-          <img className="ws-hero-art object-contain" src="/images/finteen-v2/chapter-03/asset-mini-game/career-match/design-assistant.png" alt="" />
+          <img
+            className="ws-hero-art object-contain"
+            src="/images/finteen-v2/chapter-03/asset-mini-game/career-match/design-assistant.png"
+            alt=""
+          />
         </section>
         <section className="ws-hero ws-shop-intro">
           <div>
@@ -68,42 +80,102 @@ export function GuestDemo() {
               So sánh điện thoại theo nhu cầu và tổng chi phí, kiểm tra hóa đơn
               và theo dõi thuê bao để đưa ra lựa chọn phù hợp.
             </p>
-            <Link className="ws-btn primary" to="/dashboard/demo/play?chapter=4">
+            <Link
+              className="ws-btn primary"
+              to="/dashboard/demo/play?chapter=4"
+            >
               Bắt đầu Chapter 4 →
             </Link>
           </div>
-          <img className="ws-hero-art object-contain" src="/images/finteen-v2/chapter-04/asset-mini-game/smart-shopping/phone-a-new.png" alt="" />
+          <img
+            className="ws-hero-art object-contain"
+            src="/images/finteen-v2/chapter-04/asset-mini-game/smart-shopping/phone-a-new.png"
+            alt=""
+          />
         </section>
         <section className="ws-hero ws-shop-intro">
           <div>
             <span className="ws-pill">CHƯƠNG MỚI</span>
             <h2>Chương 5: Ngân hàng và lãi</h2>
-            <p>Đọc phí và điều kiện rút, khám phá lãi kép và sức mua, lập kế hoạch đủ tiền cho khóa học sau ba tháng.</p>
-            <Link className="ws-btn primary" to="/dashboard/demo/play?chapter=5">
+            <p>
+              Đọc phí và điều kiện rút, khám phá lãi kép và sức mua, lập kế
+              hoạch đủ tiền cho khóa học sau ba tháng.
+            </p>
+            <Link
+              className="ws-btn primary"
+              to="/dashboard/demo/play?chapter=5"
+            >
               Bắt đầu Chapter 5 →
             </Link>
           </div>
-          <img className="ws-hero-art object-contain" src="/images/finteen-v2/chapter-05/asset-mini-game/compound-timeline/term-account.png" alt="" />
+          <img
+            className="ws-hero-art object-contain"
+            src="/images/finteen-v2/chapter-05/asset-mini-game/compound-timeline/term-account.png"
+            alt=""
+          />
         </section>
         <section className="ws-hero ws-shop-intro">
           <div>
             <span className="ws-pill">CHƯƠNG MỚI</span>
             <h2>Chương 6: Mượn tiền có dễ không?</h2>
-            <p>Cùng An cân nhắc laptop, lật hồ sơ vay, xếp lịch BNPL và tìm phần dư nợ còn lại qua Thám tử khoản vay.</p>
-            <Link className="ws-btn primary" to="/dashboard/demo/play?chapter=6">
+            <p>
+              Cùng An cân nhắc laptop, lật hồ sơ vay, xếp lịch BNPL và tìm phần
+              dư nợ còn lại qua Thám tử khoản vay.
+            </p>
+            <Link
+              className="ws-btn primary"
+              to="/dashboard/demo/play?chapter=6"
+            >
               Bắt đầu Chương 6 →
             </Link>
           </div>
-          <img className="ws-hero-art object-contain" src="/images/finteen-v2/chapter-06/asset-mini-game/loan-detective/laptop-goal.png" alt="" />
+          <img
+            className="ws-hero-art object-contain"
+            src="/images/finteen-v2/chapter-06/asset-mini-game/loan-detective/laptop-goal.png"
+            alt=""
+          />
         </section>
         <section className="ws-hero ws-shop-intro">
           <div>
             <span className="ws-pill">CHƯƠNG MỚI</span>
             <h2>Chương 7: Biến cố bất ngờ</h2>
-            <p>Cùng An xử lý khoản chi bất ngờ, đọc điều kiện bảo hiểm và kiểm tra tin nhắn trước khi chia sẻ thông tin.</p>
-            <Link className="ws-btn primary" to="/dashboard/demo/play?chapter=7">Bắt đầu Chương 7 →</Link>
+            <p>
+              Cùng An xử lý khoản chi bất ngờ, đọc điều kiện bảo hiểm và kiểm
+              tra tin nhắn trước khi chia sẻ thông tin.
+            </p>
+            <Link
+              className="ws-btn primary"
+              to="/dashboard/demo/play?chapter=7"
+            >
+              Bắt đầu Chương 7 →
+            </Link>
           </div>
-          <img className="ws-hero-art object-contain" src="/images/finteen-v2/chapter-07/props/insurance-terms-folder.png" alt="" />
+          <img
+            className="ws-hero-art object-contain"
+            src="/images/finteen-v2/chapter-07/props/insurance-terms-folder.png"
+            alt=""
+          />
+        </section>
+        <section className="ws-hero ws-shop-intro">
+          <div>
+            <span className="ws-pill">CHƯƠNG MỚI</span>
+            <h2>Chương 8: Tiền sinh tiền và kế hoạch tuổi 18</h2>
+            <p>
+              Cùng An chia giỏ tiền, tìm hiểu quảng cáo đầu tư và cân đối kế
+              hoạch khi thu nhập, giá cả thay đổi.
+            </p>
+            <Link
+              className="ws-btn primary"
+              to="/dashboard/demo/play?chapter=8"
+            >
+              Bắt đầu Chương 8 →
+            </Link>
+          </div>
+          <img
+            className="ws-hero-art object-contain"
+            src="/images/finteen-v2/chapter-08/asset-mini-game/portfolio-builder/diversified-fund.png"
+            alt=""
+          />
         </section>
       </div>
     </>

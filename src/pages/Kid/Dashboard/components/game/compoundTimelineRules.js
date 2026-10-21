@@ -1,3 +1,4 @@
+import { chapterMiniGameSummary } from "./miniGameRules.js";
 export const timelineAt = (year) => ({
   compound: Math.round(1000000 * 1.05 ** year),
   simple: Math.round(1000000 * (1 + 0.05 * year)),
@@ -179,6 +180,7 @@ export function timelineResult(history) {
   return {
     score,
     total: challenges.length,
+    completed: challenges.every((q) => Boolean(history[q.id])),
     passed: score === challenges.length,
     answers: history,
     firstAttempt: Object.fromEntries(
@@ -215,10 +217,8 @@ export function chapterFiveLearning(ledger, results, config) {
         0,
       )) /
     max;
-  const game = Object.values(results).find(
-    (item) => item.gameId === "COMPOUND_TIMELINE_CH05",
-  );
-  const miniPercent = game?.total ? (100 * game.score) / game.total : 0;
+  const miniGames = chapterMiniGameSummary(results, config);
+  const { miniPercent } = miniGames;
   const reflectionScore = Object.values(ledger).reduce(
     (total, entry) => total + (entry.reflectionScore || 0),
     0,
@@ -232,12 +232,12 @@ export function chapterFiveLearning(ledger, results, config) {
     miniPercent * config.weights.miniGame +
     reflectionPercent * config.weights.reflection;
   return {
+    ...miniGames,
     choicePercent,
     firstPercent,
     miniPercent,
     reflectionPercent,
     learningScore,
-    coreCalculationsCorrect: Boolean(game?.passed),
     reflectionCompleted: Boolean(ledger.CH05_R1 && ledger.CH05_R2),
   };
 }

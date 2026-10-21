@@ -111,11 +111,18 @@ function Notice({ type = "info", children }) {
 }
 
 function PlansTab() {
-  const { plans, loading, saving, notice, load, save } = useAdminPlans();
-  const save = async (event, kind) => {
+  const {
+    plans,
+    loading,
+    saving,
+    notice,
+    load,
+    save: savePlan,
+  } = useAdminPlans();
+  const handleSave = async (event, kind) => {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
-    await save(kind, Number(form.get("price")), Number(form.get("months")));
+    await savePlan(kind, Number(form.get("price")), Number(form.get("months")));
   };
   return (
     <>
@@ -144,7 +151,7 @@ function PlansTab() {
               <form
                 className={`admin-card admin-plan-card ${kind.toLowerCase()}`}
                 key={`${kind}-${plan?.updatedAt || "new"}`}
-                onSubmit={(event) => void save(event, kind)}
+                onSubmit={(event) => void handleSave(event, kind)}
               >
                 <div className="admin-card-title">
                   <div className={`admin-plan-icon ${kind.toLowerCase()}`}>

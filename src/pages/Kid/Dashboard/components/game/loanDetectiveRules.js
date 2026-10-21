@@ -1,3 +1,4 @@
+import { chapterMiniGameSummary } from "./miniGameRules.js";
 export const loanOffers = [
   {
     id: "A",
@@ -332,14 +333,10 @@ export function chapterSixLearning(ledger, results, config) {
         0,
       )) /
     max;
-  const games = config.requiredGameIds.map((id) =>
-    Object.values(results).find((g) => g.gameId === id && g.completed),
-  );
-  const total = games.reduce((n, g) => n + (g?.total || 0), 0);
-  const miniPercent = total
-    ? (100 * games.reduce((n, g) => n + (g?.score || 0), 0)) / total
-    : 0;
+  const miniGames = chapterMiniGameSummary(results, config);
+  const { miniPercent } = miniGames;
   return {
+    ...miniGames,
     choicePercent,
     firstPercent,
     miniPercent,
@@ -347,6 +344,5 @@ export function chapterSixLearning(ledger, results, config) {
     learningScore:
       choicePercent * config.weights.choices +
       miniPercent * config.weights.miniGame,
-    coreCalculationsCorrect: games.every((g) => g?.passed),
   };
 }

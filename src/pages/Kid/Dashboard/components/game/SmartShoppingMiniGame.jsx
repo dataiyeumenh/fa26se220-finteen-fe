@@ -139,20 +139,33 @@ function PhoneDecision({
   );
 }
 
-export function SmartShoppingMiniGame({ game, onComplete, className = "" }) {
+export function SmartShoppingMiniGame({
+  game,
+  initialResult,
+  onProgress,
+  onComplete,
+  className = "",
+}) {
   const offers = buildShoppingOffers(game.phones || []);
-  const [step, setStep] = useState(0);
-  const [inspected, setInspected] = useState([]);
-  const [selectedId, setSelectedId] = useState("");
+  const saved = initialResult?.ui;
+  const [step, setStep] = useState(saved?.step ?? 0);
+  const [inspected, setInspected] = useState(saved?.inspected ?? []);
+  const [selectedId, setSelectedId] = useState(saved?.selectedId ?? "");
   const [activeFile, setActiveFile] = useState(null);
-  const [cancellationDay, setCancellationDay] = useState("");
-  const [batteryChecked, setBatteryChecked] = useState(false);
-  const [batteryPlan, setBatteryPlan] = useState("");
-  const [disputedLine, setDisputedLine] = useState("");
-  const [invoiceOpened, setInvoiceOpened] = useState(false);
-  const [report, setReport] = useState(null);
-  const [firstReport, setFirstReport] = useState(null);
-  const [attempt, setAttempt] = useState(1);
+  const [cancellationDay, setCancellationDay] = useState(
+    saved?.cancellationDay ?? "",
+  );
+  const [batteryChecked, setBatteryChecked] = useState(
+    saved?.batteryChecked ?? false,
+  );
+  const [batteryPlan, setBatteryPlan] = useState(saved?.batteryPlan ?? "");
+  const [disputedLine, setDisputedLine] = useState(saved?.disputedLine ?? "");
+  const [invoiceOpened, setInvoiceOpened] = useState(
+    saved?.invoiceOpened ?? false,
+  );
+  const [report, setReport] = useState(saved?.report ?? null);
+  const [firstReport, setFirstReport] = useState(saved?.firstReport ?? null);
+  const [attempt, setAttempt] = useState(saved?.attempt ?? 1);
   const submitted = useRef(false);
   const budget = game.budget ?? 2500000;
   const reserve = game.reserve ?? 500000;
@@ -181,6 +194,25 @@ export function SmartShoppingMiniGame({ game, onComplete, className = "" }) {
     setReport(result);
     if (!firstReport) setFirstReport(result);
     setStep(2);
+    const first = firstReport || result;
+    onProgress?.({
+      score: first.score,
+      total: 4,
+      firstPercent: first.score * 25,
+      ui: {
+        step: 2,
+        inspected,
+        selectedId,
+        cancellationDay,
+        batteryChecked,
+        batteryPlan,
+        disputedLine,
+        invoiceOpened,
+        report: result,
+        firstReport: first,
+        attempt,
+      },
+    });
   }
   function retry() {
     setInvoiceOpened(false);
@@ -199,9 +231,9 @@ export function SmartShoppingMiniGame({ game, onComplete, className = "" }) {
     if (submitted.current) return;
     submitted.current = true;
     onComplete?.({
-      score: report.score,
+      score: firstReport.score,
       total: 4,
-      passed: report.score >= 3,
+      passed: firstReport.score >= 3,
       firstPercent: firstReport.score * 25,
       revised: attempt > 1,
       attempt,
@@ -212,7 +244,20 @@ export function SmartShoppingMiniGame({ game, onComplete, className = "" }) {
       batteryChecked,
       batteryPlan,
       totalCost: report.totalCost,
-      criteria: report.criteria,
+      criteria: firstReport.criteria,
+      ui: {
+        step: 2,
+        inspected,
+        selectedId,
+        cancellationDay,
+        batteryChecked,
+        batteryPlan,
+        disputedLine,
+        invoiceOpened,
+        report,
+        firstReport,
+        attempt,
+      },
     });
   }
 
@@ -496,9 +541,7 @@ export function SmartShoppingMiniGame({ game, onComplete, className = "" }) {
                 ? "Bạn đã mua bằng hiểu biết."
                 : "Giá trên nhãn chưa kể hết câu chuyện."}
             </h3>
-            <p>
-              {report.score}/4 mục tiêu đạt được · {offer.name}
-            </p>
+            <p>{offer.name} · Xem lại từng tiêu chí bên dưới.</p>
           </div>
           <div className="mission-results">
             <div className="mission-paper">
@@ -526,7 +569,7 @@ export function SmartShoppingMiniGame({ game, onComplete, className = "" }) {
                   key={item.id}
                   className={item.passed ? "is-good" : "is-risk"}
                 >
-                  <span>{item.passed ? "✓ ĐẠT" : "! CHƯA ĐẠT"}</span>
+                  <span>{item.passed ? "Đúng" : "Chưa đúng"}</span>
                   <h4>{item.title}</h4>
                   <p>{item.detail}</p>
                 </article>
@@ -535,8 +578,8 @@ export function SmartShoppingMiniGame({ game, onComplete, className = "" }) {
           </div>
           <footer className="mission-footer">
             <p>
-              Lần đầu: {firstReport.score}/4. Thử lại để kiểm chứng cách mua
-              khác; kết quả lần đầu vẫn được lưu.
+              Bạn có thể thử phương án khác để so sánh. Kết quả đúng/sai của lần
+              nộp đầu được dùng để xét kết thúc chương.
             </p>
             <div>
               <button type="button" className="c2-secondary" onClick={retry}>

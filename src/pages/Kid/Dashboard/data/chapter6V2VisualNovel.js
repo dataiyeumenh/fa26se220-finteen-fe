@@ -1203,7 +1203,7 @@ export const chapter6V2GameData = {
         id: "C_RECOVERY",
         title: "Ending C: Recovery",
         condition:
-          "!flags.fallback_verified || flags.credit_unverified || !flags.repayment_understood || RISK > 55 || SAVING < 40",
+          "miniGameNeedsPractice || !flags.fallback_verified || flags.credit_unverified || !flags.repayment_understood || RISK > 55 || SAVING < 40",
         storyText:
           "Khoản trả nhỏ chưa chứng minh tổng chi thấp hoặc đã hết nợ. Kế hoạch còn phần cần luyện; chưa có giao dịch vay nào phát sinh.",
         characterSprite: sprite("AN", "worried-money"),
@@ -1212,7 +1212,7 @@ export const chapter6V2GameData = {
         id: "A_GOAL_ACHIEVED",
         title: "Ending A: Goal Achieved",
         condition:
-          "flags.credit_plan_fit && flags.repayment_understood && choicePercent >= 75 && learningScore >= 75 && miniGameCompleted && coreCalculationsCorrect",
+          "flags.credit_plan_fit && flags.repayment_understood && choicePercent >= 75 && learningScore >= 75 && miniGameCompleted && miniGameGoalEligible",
         storyText:
           "An có kế hoạch laptop khả thi theo giả định đã nêu, biết điều cần theo dõi và hiểu phần nghĩa vụ còn lại. Đạt mục tiêu lập kế hoạch không có nghĩa đã mua máy.",
         characterSprite: sprite("AN", "relieved"),
@@ -1251,6 +1251,10 @@ export const chapter6V2GameData = {
       { text: "Đã đối chiếu tổng chi, lịch đến hạn và số tiền thực nhận." },
     ],
     practice: [
+      {
+        when: "miniGameNeedsPractice",
+        text: "Bài thực hành còn nhiều câu chưa đúng. Xem lại tổng tiền phải trả, lịch trả và số tiền cần giữ cho sinh hoạt.",
+      },
       {
         when: "!flags.repayment_understood",
         text: "Phân biệt trả tối thiểu với hết dư nợ; xem lại 900.000đ còn lại.",
