@@ -14,18 +14,26 @@ import {
   Overview as SharedDashboard,
   Plans,
   Settings,
-  LearnerHome as KidDashboard,
-  LearnerAchievements,
 } from '@/features/workspace/Overview'
-import { Learners, SlotReportDetail, Groups } from '@/features/workspace/Learners'
-import Reports from '@/features/workspace/Reports'
+import { useWorkspace } from '@/features/workspace/useWorkspace'
+import ParentLearners from '@/pages/Parent/Learners/ParentLearners'
+import TeacherGroups from '@/pages/Teacher/Groups/TeacherGroups'
+import ParentReports from '@/pages/Parent/Reports/ParentReports'
+import TeacherReports from '@/pages/Teacher/Reports/TeacherReports'
 // Hai màn hình khác nhau: Teacher quản lý đề, Kid làm bài.
-import { TeacherQuizManagement, KidQuiz, KidQuizTake } from '@/features/workspace/Quiz'
+import KidQuiz from '@/pages/Kid/Quiz/KidQuiz'
+import KidQuizTake from '@/pages/Kid/Quiz/KidQuizTake'
+import TeacherQuizManagement from '@/pages/Teacher/Quiz/TeacherQuizManagement'
+import ParentDashboard from '@/pages/Parent/Dashboard/ParentDashboard'
+import TeacherDashboard from '@/pages/Teacher/Dashboard/TeacherDashboard'
+import LearnerReport from '@/pages/LearnerReport/LearnerReport'
 
 // Khu vực RIÊNG của role kid: Bài học / Trò chơi / Cửa hàng / Quiz
-import UserLessons from '@/pages/User/Dashboard/UserLessons'
-import UserGames from '@/pages/User/Dashboard/UserGames'
-import { KidGames, GuestDemo } from '@/features/workspace/KidPages'
+import KidDashboard from '@/pages/Kid/Dashboard/KidDashboard'
+import KidLessons from '@/pages/Kid/Dashboard/KidLessons'
+import KidGamesPage from '@/pages/Kid/Dashboard/KidGames'
+import KidAchievements from '@/pages/Kid/Dashboard/KidAchievements'
+import { GuestDemo } from '@/features/workspace/KidPages'
 
 // Layout và kiểm tra quyền truy cập
 import {
@@ -37,6 +45,23 @@ import {
   ChapterGuard,
   NotFound,
 } from '@/features/workspace/Guards'
+
+function AdultLearners() {
+  const { actor } = useWorkspace()
+  return actor.role === 'teacher' ? <TeacherGroups groupsOnly={false} /> : <ParentLearners />
+}
+
+function AdultReports() {
+  const { actor } = useWorkspace()
+  return actor.role === 'teacher' ? <TeacherReports /> : <ParentReports />
+}
+
+function AdultDashboard() {
+  const { actor } = useWorkspace()
+  if (actor.role === 'parent') return <ParentDashboard />
+  if (actor.role === 'teacher') return <TeacherDashboard />
+  return <SharedDashboard />
+}
 
 function App() {
   return (
@@ -59,20 +84,20 @@ function App() {
           {/* Bài học, Trò chơi và Cửa hàng không nằm trong dashboard người lớn. */}
           <Route element={<RequireAccount kind="adult" />}>
             <Route element={<DashboardShell />}>
-              <Route path="/dashboard" element={<SharedDashboard />} />
+              <Route path="/dashboard" element={<AdultDashboard />} />
               <Route path="/dashboard/plans" element={<Plans />} />
               <Route path="/dashboard/settings" element={<Settings />} />
 
               {/* 2a. PARENT + TEACHER — quản lý 4 / 40 slot và báo cáo */}
               <Route element={<RequireAccount roles={['parent', 'teacher']} />}>
-                <Route path="/dashboard/learners" element={<Learners />} />
-                <Route path="/dashboard/learners/:id" element={<SlotReportDetail />} />
-                <Route path="/dashboard/reports" element={<Reports />} />
+                <Route path="/dashboard/learners" element={<AdultLearners />} />
+                <Route path="/dashboard/learners/:id" element={<LearnerReport />} />
+                <Route path="/dashboard/reports" element={<AdultReports />} />
               </Route>
 
               {/* 2b. RIÊNG TEACHER — Quản lý Quiz: tạo đề, giao bài, theo dõi kết quả */}
               <Route element={<RequireAccount roles={['teacher']} />}>
-                <Route path="/dashboard/groups" element={<Groups />} />
+                <Route path="/dashboard/groups" element={<TeacherGroups />} />
                 <Route path="/dashboard/quiz-management" element={<TeacherQuizManagement />} />
               </Route>
             </Route>
@@ -82,8 +107,8 @@ function App() {
           <Route element={<RequireAccount roles={['kid']} />}>
             <Route element={<DashboardShell />}>
               <Route path="/dashboard/kid" element={<KidDashboard />} />
-              <Route path="/dashboard/kid/games" element={<KidGames />} />
-              <Route path="/dashboard/kid/achievements" element={<LearnerAchievements />} />
+              <Route path="/dashboard/kid/games" element={<KidGamesPage />} />
+              <Route path="/dashboard/kid/achievements" element={<KidAchievements />} />
               <Route path="/dashboard/kid/shop" element={<Navigate to="/dashboard/kid/lessons" replace />} />
 
               {/* QUIZ CỦA KID — làm bài, nộp bài và xem kết quả giáo viên giao. */}
@@ -95,10 +120,10 @@ function App() {
             </Route>
 
             {/* Hai trang hiện tại đã có layout bên trong, không bọc thêm DashboardShell. */}
-            <Route path="/dashboard/kid/lessons" element={<UserLessons />} />
+            <Route path="/dashboard/kid/lessons" element={<KidLessons />} />
             <Route
               path="/dashboard/kid/play"
-              element={<ChapterGuard><UserGames /></ChapterGuard>}
+              element={<ChapterGuard><KidGamesPage /></ChapterGuard>}
             />
           </Route>
 
@@ -109,7 +134,7 @@ function App() {
             </Route>
             <Route
               path="/dashboard/demo/play"
-              element={<ChapterGuard><UserGames /></ChapterGuard>}
+              element={<ChapterGuard><KidGamesPage /></ChapterGuard>}
             />
           </Route>
 
