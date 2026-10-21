@@ -164,9 +164,8 @@ async function run() {
         ["offersInspect", "offersInspectC"].includes(snapshot) &&
         scene.id === "CH06_OFFERS"
       ) {
-        dialog
-          .querySelectorAll("nav button")
-          [snapshot === "offersInspectC" ? 2 : 0].click();
+        const offerButtons = dialog.querySelectorAll("nav button");
+        offerButtons[snapshot === "offersInspectC" ? 2 : 0].click();
         await wait();
         if (
           !dialog.querySelector(".inspect-shared") ||
@@ -290,14 +289,12 @@ async function run() {
             if (saved.miniGameResults[scene.id].answers.sortA)
               throw Error("Sorting scored before submission");
             const transfer = new DataTransfer();
-            zone
-              .querySelector("[data-offer=A]")
-              .dispatchEvent(
-                new DragEvent("dragstart", {
-                  bubbles: true,
-                  dataTransfer: transfer,
-                }),
-              );
+            zone.querySelector("[data-offer=A]").dispatchEvent(
+              new DragEvent("dragstart", {
+                bubbles: true,
+                dataTransfer: transfer,
+              }),
+            );
             await wait();
             document
               .querySelector("[data-tray=over]")

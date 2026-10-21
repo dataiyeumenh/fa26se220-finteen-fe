@@ -25,8 +25,8 @@ export default function useParentDashboard() {
     }
   }, []);
 
-  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     void refetch();
   }, [refetch]);
   return { dashboard, loading, error, refetch };

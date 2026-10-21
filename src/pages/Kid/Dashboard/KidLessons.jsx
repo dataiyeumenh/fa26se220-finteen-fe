@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import { MapPinned } from "lucide-react";
-import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { useKidLessons } from "./hooks/useKidLessons";
 import GameMap from "./components/GameMapReal";
 
@@ -14,17 +13,17 @@ export default function KidLessons() {
 
   if (loading) {
     return (
-      <DashboardLayout>
+      <>
         <div className="text-center text-sm text-[#1a3a1a]/60 py-12">
           Đang tải bản đồ...
         </div>
-      </DashboardLayout>
+      </>
     );
   }
 
   if (error) {
     return (
-      <DashboardLayout>
+      <>
         <div
           className="border-2 rounded-2xl p-4 mb-6 text-sm font-bold"
           style={{
@@ -35,7 +34,7 @@ export default function KidLessons() {
         >
           {error}
         </div>
-      </DashboardLayout>
+      </>
     );
   }
 
@@ -54,7 +53,7 @@ export default function KidLessons() {
   );
 
   return (
-    <DashboardLayout>
+    <>
       <div className="space-y-4">
         {/* Compact Header */}
         <div className="flex items-center justify-between gap-3 flex-wrap">
@@ -91,6 +90,6 @@ export default function KidLessons() {
         {/* ADVENTURE MAP */}
         <GameMap chapters={chapters} onChapterClick={handleChapterClick} />
       </div>
-    </DashboardLayout>
+    </>
   );
 }
