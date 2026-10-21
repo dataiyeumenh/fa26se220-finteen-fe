@@ -8,7 +8,6 @@ import {
 } from "lucide-react";
 import { lazy, Suspense, useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import useKidDashboard from "./hooks/useKidDashboard";
 import { VisualNovelPlayer } from "./components/game/VisualNovelPlayer";
 import { loadChapter1V2RuntimeData } from "./data/chapter1V2RuntimeAdapter";
@@ -139,7 +138,7 @@ export default function KidGames() {
   ]);
 
   return (
-    <DashboardLayout role={role} navItems={navItems} user={user}>
+    <>
       {loading && (
         <div className="text-center text-sm text-[#1a3a1a]/60 py-12">
           Đang tải game...
@@ -268,6 +267,6 @@ export default function KidGames() {
             </div>
           </div>
         )}
-    </DashboardLayout>
+    </>
   );
 }
