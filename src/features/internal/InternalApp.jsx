@@ -1,6 +1,6 @@
 import { Navigate } from 'react-router-dom'
 import { useWorkspace } from '../workspace/useWorkspace'
-import AdminDashboard from './AdminDashboard'
+import AdminDashboard from '../../pages/Admin/Dashboard/AdminDashboard'
 
 export default function InternalApp() {
   const { actor, loading } = useWorkspace()

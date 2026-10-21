@@ -2,7 +2,7 @@ import { lazy, Suspense, useState } from 'react'
 import { ArrowRight, RotateCcw, BookOpen } from 'lucide-react'
 import './internal.css'
 
-const ChapterFourMiniGame = lazy(() => import('@/pages/User/Dashboard/components/game/ChapterFourMiniGame').then(module => ({ default: module.ChapterFourMiniGame })))
+const ChapterFourMiniGame = lazy(() => import('@/pages/Kid/Dashboard/components/game/ChapterFourMiniGame').then(module => ({ default: module.ChapterFourMiniGame })))
 
 export default function StoryPlayer({ version, onFinish }) {
   const [index, setIndex] = useState(0)

@@ -1,0 +1,29 @@
+.vn-hotspot-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+}
+.vn-hotspot-region {
+  position: absolute;
+  pointer-events: auto;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  padding: 8px;
+  border: 3px dashed #fff9;
+  border-radius: 14px;
+  background: #101c2830;
+  color: white;
+  text-shadow: 0 2px 4px #000;
+  font-weight: 800;
+  font-size: clamp(12px, 1.5vw, 22px);
+}
+.vn-hotspot-region:hover {
+  background: #ffffff20;
+  border-color: white;
+}
+.vn-hotspot-region:focus-visible {
+  outline: 3px solid #ffe071;
+  outline-offset: 3px;
+}

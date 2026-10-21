@@ -1,9 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
-import { chapter7V2GameData as data } from '../src/pages/User/Dashboard/data/chapter7V2VisualNovel.js';
-import { applySafetyAction, createSafetyState, safetyMessages, insuranceDocuments, responseActions, safetyTasks, safetyResult, chapterSevenLearning } from '../src/pages/User/Dashboard/components/game/scamOrSafeRules.js';
-import { progressKey, readNovelProgress, saveNovelProgress } from '../src/pages/User/Dashboard/components/game/visualNovelProgress.js';
+import { chapter7V2GameData as data } from '../src/pages/Kid/Dashboard/data/chapter7V2VisualNovel.js';
+import { applySafetyAction, createSafetyState, safetyMessages, insuranceDocuments, responseActions, safetyTasks, safetyResult, chapterSevenLearning } from '../src/pages/Kid/Dashboard/components/game/scamOrSafeRules.js';
+import { progressKey, readNovelProgress, saveNovelProgress } from '../src/pages/Kid/Dashboard/components/game/visualNovelProgress.js';
 import { CHAPTERS } from '../src/features/workspace/model.js';
 const scenes = new Map(data.scenes.map(scene => [scene.id, scene]));
 const option = id => data.scenes.flatMap(scene => scene.options || []).find(option => option.id === id);
@@ -181,6 +181,6 @@ test('chapter-seven checkpoint preserves drafts and decisions; route and card ex
   assert.equal(readNovelProgress(storage, { ...data, version: 'old' }), null);
   assert.equal(CHAPTERS[6], 'Biến cố bất ngờ');
   assert.ok(readFileSync('src/features/workspace/KidPages.jsx', 'utf8').includes('/dashboard/demo/play?chapter=7'));
-  assert.ok(readFileSync('src/pages/User/Dashboard/UserGames.jsx', 'utf8').includes('chapter7V2VisualNovel'));
+  assert.ok(readFileSync('src/pages/Kid/Dashboard/KidGames.jsx', 'utf8').includes('chapter7V2VisualNovel'));
   assert.ok(progressKey(data).includes('CH07_V2'));
 });

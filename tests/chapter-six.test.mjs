@@ -1,9 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync } from 'node:fs';
-import { chapter6V2GameData as data } from '../src/pages/User/Dashboard/data/chapter6V2VisualNovel.js';
-import { loanApr, loanOffers, loanTotal, loanMonthlyPayment, monthlyCapacity, bnplItems, cartForecast, statementOutcome, loanTasks, applyLoanAction, createLoanState, loanResult, chapterSixLearning, affordabilityAt } from '../src/pages/User/Dashboard/components/game/loanDetectiveRules.js';
-import { progressKey, readNovelProgress, saveNovelProgress } from '../src/pages/User/Dashboard/components/game/visualNovelProgress.js';
+import { chapter6V2GameData as data } from '../src/pages/Kid/Dashboard/data/chapter6V2VisualNovel.js';
+import { loanApr, loanOffers, loanTotal, loanMonthlyPayment, monthlyCapacity, bnplItems, cartForecast, statementOutcome, loanTasks, applyLoanAction, createLoanState, loanResult, chapterSixLearning, affordabilityAt } from '../src/pages/Kid/Dashboard/components/game/loanDetectiveRules.js';
+import { progressKey, readNovelProgress, saveNovelProgress } from '../src/pages/Kid/Dashboard/components/game/visualNovelProgress.js';
 
 const scenes = new Map(data.scenes.map(s => [s.id, s]));
 const option = id => data.scenes.flatMap(s => s.options || []).find(o => o.id === id);

@@ -1,0 +1,265 @@
+import {
+  Home,
+  BookOpen,
+  Gamepad2,
+  Trophy as TrophyIcon,
+  MessageCircle,
+  User as UserIcon,
+} from "lucide-react";
+import { lazy, Suspense, useEffect, useState } from "react";
+import { Link, useSearchParams } from "react-router-dom";
+import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
+import useKidDashboard from "./hooks/useKidDashboard";
+import { VisualNovelPlayer } from "./components/game/VisualNovelPlayer";
+import { loadChapter1V2RuntimeData } from "./data/chapter1V2RuntimeAdapter";
+import { loadChapter2V2RuntimeData } from "./data/chapter2V2RuntimeAdapter";
+import { loadChapter3V2RuntimeData } from "./data/chapter3V2RuntimeAdapter";
+import { usePublishedChapters } from "@/features/internal/hooks";
+
+const StoryPlayer = lazy(() => import("@/features/internal/StoryPlayer"));
+
+const role = {
+  id: "user",
+  label: "Học sinh",
+  emoji: "GraduationCap",
+  accent: "#fbbf24",
+  accentText: "#92400e",
+  accentBg: "#fbbf2415",
+  accentHover: "#fbbf2410",
+  accentDeep: "#d97706",
+  onAccent: "#ffffff",
+};
+
+const navItems = [
+  { icon: Home, label: "Tổng quan", to: "/dashboard/kid" },
+  {
+    icon: BookOpen,
+    label: "Bài học",
+    to: "/dashboard/kid/lessons",
+    badge: "5 mới",
+  },
+  {
+    icon: Gamepad2,
+    label: "Trò chơi",
+    to: "/dashboard/kid/games",
+    badge: "1 chương",
+  },
+  { icon: TrophyIcon, label: "Thành tích", to: "/dashboard/kid/achievements" },
+  { icon: MessageCircle, label: "Quiz", to: "/dashboard/kid/quiz" },
+  { icon: UserIcon, label: "Hồ sơ", to: "/dashboard/settings" },
+];
+
+export default function KidGames() {
+  const [searchParams] = useSearchParams();
+  const chapterId = searchParams.get("chapter") || "1";
+  const isChapterOne = chapterId === "1";
+  const isChapterTwo = chapterId === "2";
+  const isChapterThree = chapterId === "3";
+  const isChapterFour = chapterId === "4";
+  const isChapterFive = chapterId === "5";
+  const isChapterSix = chapterId === "6";
+  const isChapterSeven = chapterId === "7";
+  const published = usePublishedChapters().find(
+    (chapter) => chapter.number === Number(chapterId),
+  );
+  const { user, loading, error } = useKidDashboard();
+  const [gameData, setGameData] = useState(null);
+  const [runtimeError, setRuntimeError] = useState("");
+  const [loadedChapterId, setLoadedChapterId] = useState(null);
+
+  useEffect(() => {
+    let mounted = true;
+
+    const loadRuntime = async () => {
+      try {
+        const runtimeData = isChapterOne
+          ? await loadChapter1V2RuntimeData()
+          : isChapterTwo
+            ? await loadChapter2V2RuntimeData()
+            : isChapterThree
+              ? await loadChapter3V2RuntimeData()
+              : isChapterFour
+                ? (await import("./data/chapter4V2VisualNovel"))
+                    .chapter4V2GameData
+                : isChapterFive
+                  ? (await import("./data/chapter5V2VisualNovel"))
+                      .chapter5V2GameData
+                  : isChapterSix
+                    ? (await import("./data/chapter6V2VisualNovel"))
+                        .chapter6V2GameData
+                    : isChapterSeven
+                      ? (await import("./data/chapter7V2VisualNovel"))
+                          .chapter7V2GameData
+                      : null;
+        if (mounted) {
+          if (runtimeData) {
+            setGameData(runtimeData);
+            setLoadedChapterId(chapterId);
+            setRuntimeError("");
+          }
+        }
+      } catch (e) {
+        if (mounted) {
+          setRuntimeError(
+            e.message ||
+              "Runtime data không hợp lệ, đang dùng dữ liệu fallback.",
+          );
+        }
+      }
+    };
+
+    if (
+      isChapterOne ||
+      isChapterTwo ||
+      isChapterThree ||
+      isChapterFour ||
+      isChapterFive ||
+      isChapterSix ||
+      isChapterSeven
+    )
+      loadRuntime();
+    return () => {
+      mounted = false;
+    };
+  }, [
+    chapterId,
+    isChapterOne,
+    isChapterTwo,
+    isChapterThree,
+    isChapterFour,
+    isChapterFive,
+    isChapterSix,
+    isChapterSeven,
+  ]);
+
+  return (
+    <DashboardLayout role={role} navItems={navItems} user={user}>
+      {loading && (
+        <div className="text-center text-sm text-[#1a3a1a]/60 py-12">
+          Đang tải game...
+        </div>
+      )}
+
+      {error && (
+        <div
+          className="border-2 rounded-2xl p-4 mb-6 text-sm font-bold"
+          style={{
+            backgroundColor: "#f8717115",
+            borderColor: "#f87171",
+            color: "#dc2626",
+          }}
+        >
+          {error}
+        </div>
+      )}
+
+      {!loading && !error && !published && isChapterOne && runtimeError && (
+        <div
+          className="border-2 rounded-2xl p-4 mb-6 text-sm font-bold"
+          style={{
+            backgroundColor: "#fbbf2415",
+            borderColor: "#fbbf24",
+            color: "#92400e",
+          }}
+        >
+          {runtimeError}
+        </div>
+      )}
+
+      {!loading && !error && published && (
+        <Suspense fallback={<p role="status">Đang tải chương đã phát hành…</p>}>
+          <StoryPlayer
+            key={`${published.id}-${published.version.number}`}
+            version={published.version}
+          />
+        </Suspense>
+      )}
+      {!loading &&
+        !error &&
+        !published &&
+        gameData &&
+        loadedChapterId === chapterId &&
+        (isChapterOne ||
+          isChapterTwo ||
+          isChapterThree ||
+          isChapterFour ||
+          isChapterFive ||
+          isChapterSix ||
+          isChapterSeven) && (
+          <VisualNovelPlayer key={gameData.id} data={gameData} />
+        )}
+
+      {!loading &&
+        !error &&
+        !published &&
+        !isChapterOne &&
+        !isChapterTwo &&
+        !isChapterThree &&
+        !isChapterFour &&
+        !isChapterFive &&
+        !isChapterSix &&
+        !isChapterSeven && (
+          <div className="mx-auto max-w-5xl space-y-4">
+            <div className="rounded-3xl border border-amber-200 bg-white p-8 text-center">
+              <Gamepad2 className="mx-auto mb-4 h-12 w-12 text-amber-500" />
+              <h1 className="text-2xl font-bold text-gray-800">
+                Chọn chương để bắt đầu
+              </h1>
+              <p className="mt-3 text-gray-600">
+                Chọn một chương để vào visual novel tương ứng.
+              </p>
+            </div>
+
+            <div className="grid gap-4 md:grid-cols-2">
+              <Link
+                to="/dashboard/demo/play?chapter=1"
+                className="rounded-3xl border border-amber-200 bg-white p-6 text-left transition hover:-translate-y-0.5 hover:shadow-lg"
+              >
+                <div className="text-xs font-bold uppercase tracking-widest text-amber-600">
+                  Chapter 1
+                </div>
+                <h2 className="mt-2 text-2xl font-black text-gray-900">
+                  Khám phá tiền tệ
+                </h2>
+                <p className="mt-2 text-sm text-gray-600">
+                  Hành trình đầu tiên về nhu cầu, mong muốn và tư duy tài chính.
+                </p>
+              </Link>
+
+              <Link
+                to="/dashboard/demo/play?chapter=2"
+                className="rounded-3xl border border-sky-200 bg-white p-6 text-left transition hover:-translate-y-0.5 hover:shadow-lg"
+              >
+                <div className="text-xs font-bold uppercase tracking-widest text-sky-600">
+                  Chapter 2
+                </div>
+                <h2 className="mt-2 text-2xl font-black text-gray-900">
+                  Quản lý chi tiêu
+                </h2>
+                <p className="mt-2 text-sm text-gray-600">
+                  Trải nghiệm trọ học, flash sale và bài học tiết kiệm trong đời
+                  sống cấp 3.
+                </p>
+              </Link>
+
+              <Link
+                to="/dashboard/demo/play?chapter=3"
+                className="rounded-3xl border border-violet-200 bg-white p-6 text-left transition hover:-translate-y-0.5 hover:shadow-lg"
+              >
+                <div className="text-xs font-bold uppercase tracking-widest text-violet-600">
+                  Chapter 3
+                </div>
+                <h2 className="mt-2 text-2xl font-black text-gray-900">
+                  Công việc đầu tiên
+                </h2>
+                <p className="mt-2 text-sm text-gray-600">
+                  Tìm kiếm cơ hội việc làm, so sánh việc thiết kế hoặc làm hoa
+                  hồng.
+                </p>
+              </Link>
+            </div>
+          </div>
+        )}
+    </DashboardLayout>
+  );
+}

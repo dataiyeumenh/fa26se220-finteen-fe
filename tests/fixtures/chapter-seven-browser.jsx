@@ -1,9 +1,9 @@
 import { createRoot } from 'react-dom/client';
 import { MemoryRouter } from 'react-router-dom';
-import { VisualNovelPlayer } from '../../src/pages/User/Dashboard/components/game/VisualNovelPlayer';
-import { chapter7V2GameData as data } from '../../src/pages/User/Dashboard/data/chapter7V2VisualNovel.js';
-import { safetyMessages } from '../../src/pages/User/Dashboard/components/game/scamOrSafeRules.js';
-import { progressKey } from '../../src/pages/User/Dashboard/components/game/visualNovelProgress.js';
+import { VisualNovelPlayer } from '../../src/pages/Kid/Dashboard/components/game/VisualNovelPlayer';
+import { chapter7V2GameData as data } from '../../src/pages/Kid/Dashboard/data/chapter7V2VisualNovel.js';
+import { safetyMessages } from '../../src/pages/Kid/Dashboard/components/game/scamOrSafeRules.js';
+import { progressKey } from '../../src/pages/Kid/Dashboard/components/game/visualNovelProgress.js';
 import '../../src/index.css';
 
 const params = new URLSearchParams(location.search), route = params.get('route') || 'goal', snapshot = params.get('snapshot');

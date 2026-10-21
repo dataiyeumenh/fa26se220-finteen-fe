@@ -1,8 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { buildShoppingOffers, INSPECTIONS, evaluatePurchase, invoiceFor, purchaseLedger } from "../src/pages/User/Dashboard/components/game/shoppingMissionRules.js";
+import { buildShoppingOffers, INSPECTIONS, evaluatePurchase, invoiceFor, purchaseLedger } from "../src/pages/Kid/Dashboard/components/game/shoppingMissionRules.js";
 
-import { chapter4V2GameData } from "../src/pages/User/Dashboard/data/chapter4V2VisualNovel.js";
+import { chapter4V2GameData } from "../src/pages/Kid/Dashboard/data/chapter4V2VisualNovel.js";
 const game = chapter4V2GameData.scenes.find(scene => scene.game?.id === "SMART_SHOPPING_CH04").game;
 const offers = buildShoppingOffers(game.phones);
 function buy(offer, changes = {}) {

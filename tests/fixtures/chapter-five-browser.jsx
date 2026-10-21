@@ -1,10 +1,10 @@
 // Browser harness: run via Vite, independent of account/network services.
 import { createRoot } from 'react-dom/client';
 import { MemoryRouter } from 'react-router-dom';
-import { VisualNovelPlayer } from '../../src/pages/User/Dashboard/components/game/VisualNovelPlayer';
-import { chapter5V2GameData as data } from '../../src/pages/User/Dashboard/data/chapter5V2VisualNovel';
-import { progressKey } from '../../src/pages/User/Dashboard/components/game/visualNovelProgress.js';
-import { challenges } from '../../src/pages/User/Dashboard/components/game/compoundTimelineRules';
+import { VisualNovelPlayer } from '../../src/pages/Kid/Dashboard/components/game/VisualNovelPlayer';
+import { chapter5V2GameData as data } from '../../src/pages/Kid/Dashboard/data/chapter5V2VisualNovel';
+import { progressKey } from '../../src/pages/Kid/Dashboard/components/game/visualNovelProgress.js';
+import { challenges } from '../../src/pages/Kid/Dashboard/components/game/compoundTimelineRules';
 import '../../src/index.css';
 
 const resultNode = document.getElementById('ch5-browser-result');

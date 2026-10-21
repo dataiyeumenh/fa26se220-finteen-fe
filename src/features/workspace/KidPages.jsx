@@ -1,22 +1,5 @@
 import { Link } from "react-router-dom";
-import { CHAPTERS } from "./model";
 import { Heading } from "./ui";
-import { usePublishedChapters } from "../internal/hooks";
-
-export function KidGames() {
-  const published = usePublishedChapters();
-  return <>
-    <Heading title="Trò chơi theo chương" description="Chọn một chương để bước vào câu chuyện và thử thách tài chính."/>
-    <div className="ws-grid two ws-kid-game-grid">{CHAPTERS.map((title, index) => {
-      const chapter = index + 1
-      const available = chapter <= 7 || published.some(item => item.number === chapter)
-      return <article className={`ws-card ws-chapter ${available ? '' : 'is-coming'}`} key={title}>
-        <span className="ws-chapter-number">{String(chapter).padStart(2, '0')}</span>
-        <div><small>CHƯƠNG {chapter}</small><h2>{published.find(item => item.number === chapter)?.version.title || title}</h2><p>{available ? 'Câu chuyện và thử thách đã sẵn sàng' : 'Nội dung chương đang được chuẩn bị'}</p><Link className={available ? 'ws-btn primary' : 'ws-btn'} to={`/dashboard/kid/play?chapter=${chapter}`}>{available ? 'Vào chơi →' : 'Xem chương →'}</Link></div>
-      </article>
-    })}</div>
-  </>
-}
 
 export function GuestDemo() {
   return (

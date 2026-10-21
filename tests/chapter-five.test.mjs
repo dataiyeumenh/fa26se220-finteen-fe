@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync } from 'node:fs';
-import { chapter5V2GameData as data } from '../src/pages/User/Dashboard/data/chapter5V2VisualNovel.js';
-import { challenges, gradeRound, timelineAt, timelineResult, accountForecast, chapterFiveLearning, gradeReflection } from '../src/pages/User/Dashboard/components/game/compoundTimelineRules.js';
+import { chapter5V2GameData as data } from '../src/pages/Kid/Dashboard/data/chapter5V2VisualNovel.js';
+import { challenges, gradeRound, timelineAt, timelineResult, accountForecast, chapterFiveLearning, gradeReflection } from '../src/pages/Kid/Dashboard/components/game/compoundTimelineRules.js';
 const scenes = new Map(data.scenes.map(scene => [scene.id, scene]));
 const option = id => data.scenes.flatMap(scene => scene.options || []).find(item => item.id === id);
 const perfectAnswers = Object.fromEntries(challenges.map(q => [q.id, q.answer]));

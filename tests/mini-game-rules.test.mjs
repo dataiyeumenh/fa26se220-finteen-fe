@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { flexibleReserveLock, advanceFallingItems, recordMiniGameResult, summarizeMiniGames } from '../src/pages/User/Dashboard/components/game/miniGameRules.js'
+import { flexibleReserveLock, advanceFallingItems, recordMiniGameResult, summarizeMiniGames } from '../src/pages/Kid/Dashboard/components/game/miniGameRules.js'
 
 test('repair reserve choice uses the actual envelope allocation and allows exactly 200,000', () => {
   const option = { id: 'CH02_SC04_CHOICE_A' }

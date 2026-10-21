@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { chapterFourChoices,chapterFourEndings,chapterFourOutcome } from '../src/pages/User/Dashboard/components/game/chapterFourStory.js';
+import { chapterFourChoices,chapterFourEndings,chapterFourOutcome } from '../src/pages/Kid/Dashboard/components/game/chapterFourStory.js';
 
 test('All three choices end in a three-beat story with consistent earnings',()=>{
   assert.equal(chapterFourChoices.length,3);
