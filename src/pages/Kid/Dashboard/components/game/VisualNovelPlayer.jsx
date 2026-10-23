@@ -1521,9 +1521,7 @@ export function VisualNovelPlayer({ data }) {
                 }
                 onComplete={handleMiniGameComplete}
               />
-            ) : ["LOAN_OFFERS_CH06", "LOAN_REPAYMENT_CH06"].includes(
-                scene.game?.id,
-              ) ? (
+            ) : scene.game?.kind === "LOAN_DETECTIVE" ? (
               <LoanDetectiveMiniGame
                 key={`${scene.id}-${scenePath.length}`}
                 game={scene.game}

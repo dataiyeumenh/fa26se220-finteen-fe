@@ -14,7 +14,6 @@ import {
   chapterFiveLearning,
 } from "../src/pages/Kid/Dashboard/components/game/compoundTimelineRules.js";
 import {
-  loanTasks,
   loanResult,
   chapterSixLearning,
 } from "../src/pages/Kid/Dashboard/components/game/loanDetectiveRules.js";
@@ -53,6 +52,9 @@ const timelineConfig = ch5.scenes.find(
   (scene) => scene.game?.kind === "COMPOUND_TIMELINE",
 ).game.config;
 const challenges = timelineConfig.questions;
+const loanConfig = ch6.scenes.find(
+  (scene) => scene.game?.kind === "LOAN_DETECTIVE",
+).game.config;
 const cases = [
   [ch4, null, [{ id: "shopping" }], () => ({ total: 4 }), null],
   [
@@ -65,8 +67,8 @@ const cases = [
   [
     ch6,
     chapterSixLearning,
-    loanTasks,
-    (history, rounds) => loanResult(history, rounds),
+    loanConfig.tasks,
+    (history, rounds) => loanResult(loanConfig, history, rounds),
     [
       [0, 1],
       [2, 3],

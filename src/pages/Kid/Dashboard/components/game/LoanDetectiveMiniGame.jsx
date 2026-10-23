@@ -1,49 +1,33 @@
-import { useRef, useState } from "react";
+import { Fragment, useRef, useState } from "react";
 import {
   applyLoanAction,
-  bnplItems,
   cartForecast,
   createLoanState,
   loanApr,
-  loanOffers,
   loanResult,
   loanTotal,
-  sortTargets,
-  statementOptions,
   statementOutcome,
 } from "./loanDetectiveRules.js";
 import { InspectCardsDialog } from "./ChapterFiveActivities.jsx";
 import "./loan-detective.css";
 
-const BASE = "/images/finteen-v2/chapter-06/asset-mini-game/loan-detective";
+// Khung LOAN_DETECTIVE: chữ, số, đáp án, ảnh đều đọc từ game.config (JSON chương) — khung không giữ nội dung.
 const cash = (n) => `${n.toLocaleString("vi-VN")}đ`;
-const titles = [
-  "Tính tổng trả",
-  "Xếp gói vay",
-  "Giỏ hàng trả sau",
-  "Trả nợ thẻ",
-];
-const pictures = [
-  "loan-offers-inspection",
-  "laptop-goal",
-  "repayment-calendar",
-  "card-and-statement",
-];
-const trays = [
-  ["shortfall", "Chưa đủ tiền mua máy", "Tiền thực nhận dưới 6.000.000đ"],
-  ["over", "Khoản trả vượt ngân sách", "Cần trả hơn 1.000.000đ mỗi tháng"],
-  [
-    "fit",
-    "Đủ tiền mua, trả vừa ngân sách",
-    "Nhận đủ 6.000.000đ; trả không quá 1.000.000đ/tháng",
-  ],
-];
-const trayName = (id) => trays.find((tray) => tray[0] === id)?.[1];
-const sortReason = {
-  A: "Nhận đủ tiền mua máy nhưng cần trả 1.120.000đ/tháng, cao hơn ngân sách 120.000đ.",
-  B: "Nhận đủ 6.000.000đ và trả 550.000đ/tháng, còn 450.000đ trong ngân sách tháng.",
-  C: "Chỉ nhận 5.400.000đ, còn thiếu 600.000đ mua máy. Mỗi tháng có hai lần trả 500.000đ.",
-};
+const fill = (template, values) =>
+  template.replace(/\{(\w+)\}/g, (_, key) => values[key]);
+// Chữ nhiều đoạn: chuỗi = chữ thường, {b} = đậm, {strong} = nhấn, {br} = xuống dòng.
+const rich = (parts) =>
+  parts.map((part, i) =>
+    typeof part === "string" ? (
+      <Fragment key={i}>{part}</Fragment>
+    ) : part.br ? (
+      <br key={i} />
+    ) : part.strong ? (
+      <strong key={i}>{part.strong}</strong>
+    ) : (
+      <b key={i}>{part.b}</b>
+    ),
+  );
 
 export function LoanDetectiveMiniGame({
   game,
@@ -51,6 +35,8 @@ export function LoanDetectiveMiniGame({
   onProgress,
   onComplete,
 }) {
+  const config = game.config;
+  const { texts, offers, sort, cart, statement: st, card } = config;
   const [state, setState] = useState(
     () => initialResult?.ui || createLoanState(game.rounds),
   );
@@ -60,15 +46,17 @@ export function LoanDetectiveMiniGame({
   const heading = useRef(null);
   const submitted = useRef(false);
   const { round, totals, sorted, selected, history, feedback } = state;
+  const step = config.rounds[round];
   const finished = Boolean(state.submittedRounds[round]);
-  const basket = cartForecast(state.basket);
-  const statement = statementOutcome(state.statementChoice);
+  const basket = cartForecast(config, state.basket);
+  const statement = statementOutcome(config, state.statementChoice);
+  const trayName = (id) => sort.trays.find((tray) => tray.id === id)?.label;
   const dispatch = (action) => {
-    const next = applyLoanAction(stateRef.current, action);
+    const next = applyLoanAction(config, stateRef.current, action);
     if (next === stateRef.current) return;
     stateRef.current = next;
     setState(next);
-    onProgress?.({ ...loanResult(next.history, game.rounds), ui: next });
+    onProgress?.({ ...loanResult(config, next.history, game.rounds), ui: next });
   };
   const beginDrag = (event, id) => {
     dragRef.current = id;
@@ -97,60 +85,61 @@ export function LoanDetectiveMiniGame({
       aria-pressed={selected === offer.id}
       onClick={() => dispatch({ type: "SELECT", id: offer.id })}
     >
-      {!placed && <img src={`${BASE}/loan-offers-inspection.png`} alt="" />}
-      <b>Gói vay {offer.id}</b>
+      {!placed && <img src={config.offerImage} alt="" />}
+      <b>{fill(texts.offerName, { id: offer.id })}</b>
       <span>
-        {cash(offer.installment)}/
-        {offer.intervalMonths === 0.5 ? "nửa tháng" : "tháng"}
+        {fill(card.perPeriod, {
+          installment: cash(offer.installment),
+          interval: config.intervalLabels[offer.intervalMonths],
+        })}
       </span>
-      <small>Thực nhận: {cash(offer.received)}</small>
-      <small>Tổng trả: {cash(loanTotal(offer))}</small>
+      <small>{fill(card.received, { amount: cash(offer.received) })}</small>
+      <small>{fill(card.total, { amount: cash(loanTotal(offer)) })}</small>
       {!placed && (
         <>
           <small>
-            {offer.periods} lần trả · {offer.periods * offer.intervalMonths}{" "}
-            tháng
+            {fill(card.schedule, {
+              periods: offer.periods,
+              months: offer.periods * offer.intervalMonths,
+            })}
           </small>
           <small>
-            APR ≈ {loanApr(offer).toFixed(1).replace(".", ",")}%/năm
+            {fill(card.apr, {
+              apr: loanApr(offer).toFixed(1).replace(".", ","),
+            })}
           </small>
         </>
       )}
       <span className="loan-placement-label">
         {finished
           ? history[`sort${offer.id}`]?.finalCorrect
-            ? "✓ Đúng"
-            : "× Chưa đúng"
+            ? texts.correct
+            : texts.incorrect
           : selected === offer.id
-            ? "Đang cầm thẻ · chọn một khay"
+            ? card.holding
             : placed
-              ? "Đã đặt · chạm để chuyển khay"
-              : "Chạm hoặc kéo để xếp"}
+              ? card.placed
+              : card.idle}
       </span>
     </button>
   );
-  const instruction = [
-    "Nhập tổng tiền phải trả của cả ba gói rồi nộp một lần. Sau khi chấm, bạn sẽ thấy phép tính đúng và được tiếp tục dù có câu sai.",
-    "Đặt cả ba thẻ vào khay theo nhận định của bạn. Có thể chuyển thẻ trước khi bấm kiểm tra; hệ thống chỉ chấm sau khi bạn nộp.",
-    "Chọn tai nghe để học online và thêm ít nhất một món bạn muốn mua. Hãy cân đối giỏ hàng để ba tháng tới không thiếu tiền, rồi chốt giỏ một lần.",
-    "Chọn số tiền trả nợ hôm nay. Sau đó xem bạn còn đủ tiền sinh hoạt không và tháng sau còn phải trả bao nhiêu.",
-  ][round];
+  const lastRound = game.rounds.at(-1);
 
   return (
     <section
-      className={`loan-game loan-casual${round >= 2 ? " loan-neutral" : ""}`}
-      aria-label="Thám tử khoản vay"
+      className={`loan-game loan-casual${step.neutral ? " loan-neutral" : ""}`}
+      aria-label={config.heading}
     >
       <header className="loan-heading">
-        <img src={`${BASE}/${pictures[round]}.png`} alt="" />
+        <img src={step.picture} alt="" />
         <div>
-          <span>CÙNG AN THỬ MỘT KẾ HOẠCH</span>
-          <h2>Thám tử khoản vay</h2>
-          <p>Biết tổng chi · tính cả những lần trả sau</p>
+          <span>{config.eyebrow}</span>
+          <h2>{config.heading}</h2>
+          <p>{config.subheading}</p>
         </div>
       </header>
-      <ol className="loan-steps" aria-label="Các màn chơi">
-        {titles.map((title, i) => (
+      <ol className="loan-steps" aria-label={texts.stepsLabel}>
+        {config.rounds.map(({ title }, i) => (
           <li
             key={title}
             className={round === i ? "active" : ""}
@@ -163,19 +152,19 @@ export function LoanDetectiveMiniGame({
       </ol>
       <div className="loan-round-title">
         <h3 ref={heading} tabIndex={-1}>
-          Màn {round + 1} · {titles[round]}
+          {fill(texts.roundTitle, { n: round + 1, title: step.title })}
         </h3>
-        <span>{finished ? "Đã nộp đáp án" : "Chưa nộp đáp án"}</span>
+        <span>{finished ? texts.submitted : texts.notSubmitted}</span>
       </div>
       <p className="loan-instruction">
-        <b>Cách chơi</b>
-        {instruction}
+        <b>{texts.howto}</b>
+        {step.instruction}
       </p>
 
-      {round === 0 && (
+      {step.view === "totals" && (
         <div className="loan-workbench">
           <div className="loan-total-cards">
-            {loanOffers.map((offer) => {
+            {offers.map((offer) => {
               const result = history[`receipt${offer.id}`];
               return (
                 <article
@@ -188,9 +177,9 @@ export function LoanDetectiveMiniGame({
                       : ""
                   }
                 >
-                  <h4>Gói vay {offer.id}</h4>
+                  <h4>{fill(texts.offerName, { id: offer.id })}</h4>
                   <label htmlFor={`total-${offer.id}`}>
-                    Bạn tính tổng phải trả
+                    {config.totals.inputLabel}
                     <input
                       id={`total-${offer.id}`}
                       data-total-input={offer.id}
@@ -198,7 +187,7 @@ export function LoanDetectiveMiniGame({
                       min="0"
                       step="1"
                       inputMode="numeric"
-                      placeholder="Nhập số đồng"
+                      placeholder={config.totals.placeholder}
                       value={totals[offer.id] ?? ""}
                       disabled={finished}
                       onChange={(event) =>
@@ -219,13 +208,18 @@ export function LoanDetectiveMiniGame({
                           : "loan-answer-hint"
                       }
                     >
-                      <b>{result.finalCorrect ? "✓ Đúng" : "× Chưa đúng"}</b>
+                      <b>
+                        {result.finalCorrect ? texts.correct : texts.incorrect}
+                      </b>
                       <p>
-                        {offer.periods} lần × {cash(offer.installment)} ={" "}
+                        {fill(config.totals.explanation, {
+                          periods: offer.periods,
+                          installment: cash(offer.installment),
+                        })}{" "}
                         <strong>{cash(loanTotal(offer))}</strong>.
                       </p>
-                      {offer.id === "C" && (
-                        <p>Mỗi tháng trả hai lần: 8 tháng là 16 lần trả.</p>
+                      {config.totals.notes[offer.id] && (
+                        <p>{config.totals.notes[offer.id]}</p>
                       )}
                     </div>
                   )}
@@ -234,21 +228,18 @@ export function LoanDetectiveMiniGame({
             })}
           </div>
           <button data-review-offers onClick={() => setReviewOffers(true)}>
-            Xem lại thông tin ba gói vay
+            {config.totals.review}
           </button>
           <details className="loan-calc-help">
-            <summary>Gợi ý cách tính</summary>
-            <p>
-              Tổng tiền phải trả = số lần trả × số tiền mỗi lần. Nhớ phân biệt
-              số tháng với số lần thanh toán.
-            </p>
+            <summary>{config.totals.helpTitle}</summary>
+            <p>{config.totals.help}</p>
           </details>
           <button
             data-submit-totals
             className="loan-primary"
             disabled={
               finished ||
-              !loanOffers.every(
+              !offers.every(
                 (offer) =>
                   String(totals[offer.id] ?? "").trim() &&
                   Number.isFinite(Number(totals[offer.id])) &&
@@ -257,46 +248,42 @@ export function LoanDetectiveMiniGame({
             }
             onClick={() => dispatch({ type: "TOTAL" })}
           >
-            {finished ? "Đã nộp đáp án" : "Nộp kết quả ba gói"}
+            {finished ? texts.submitted : config.totals.submit}
           </button>
           {finished && (
-            <p className="loan-comparison-note">
-              Gói B có tổng trả thấp nhất. Tổng tiền chưa đủ để quyết định: màn
-              sau còn xét tiền thực nhận và khả năng trả mỗi tháng.
-            </p>
+            <p className="loan-comparison-note">{config.totals.comparison}</p>
           )}
         </div>
       )}
 
-      {round === 1 && (
+      {step.view === "sort" && (
         <div className="loan-workbench loan-sort-board">
-          <aside className="loan-budget-note">
-            Laptop giá <b>6.000.000đ</b>. An đang có <b>0đ</b> và có thể dành{" "}
-            <b>1.000.000đ/tháng</b> sau sinh hoạt.
-          </aside>
+          <aside className="loan-budget-note">{rich(sort.budgetNote)}</aside>
           <div className="loan-placement-status" aria-live="polite">
-            <b>Đã đặt {Object.keys(sorted).length}/3 thẻ</b>
+            <b>
+              {fill(sort.placedCount, {
+                placed: Object.keys(sorted).length,
+                total: offers.length,
+              })}
+            </b>
             <span>
               {finished
-                ? "Các thẻ đã được khóa theo bài nộp."
+                ? sort.lockedStatus
                 : selected
-                  ? `Đang cầm gói ${selected} — chọn khay để đặt.`
-                  : "Thẻ đã đặt sẽ nằm ngay trong khay, không còn ở hàng trên."}
+                  ? fill(sort.holdingStatus, { id: selected })
+                  : sort.idleStatus}
             </span>
           </div>
           <div className="loan-sort-pool">
-            {loanOffers
+            {offers
               .filter((offer) => !sorted[offer.id])
               .map((offer) => offerCard(offer))}
           </div>
-          {Object.keys(sorted).length === 3 && !finished && (
-            <p className="loan-note">
-              Đã xếp hết. Chạm thẻ trong khay để chuyển nếu bạn muốn đổi ý, hoặc
-              nộp bài bên dưới.
-            </p>
+          {Object.keys(sorted).length === offers.length && !finished && (
+            <p className="loan-note">{sort.allPlaced}</p>
           )}
           <div className="loan-sort-zones">
-            {trays.map(([id, label, help]) => (
+            {sort.trays.map(({ id, label, help }) => (
               <article
                 key={id}
                 className={`loan-sort-zone${selected && !finished ? " can-place" : ""}`}
@@ -306,7 +293,7 @@ export function LoanDetectiveMiniGame({
                 <h4>{label}</h4>
                 <p>{help}</p>
                 <div className="loan-zone-cards">
-                  {loanOffers
+                  {offers
                     .filter((offer) => sorted[offer.id] === id)
                     .map((offer) => (
                       <div key={offer.id}>
@@ -319,7 +306,7 @@ export function LoanDetectiveMiniGame({
                               dispatch({ type: "UNSORT", id: offer.id })
                             }
                           >
-                            Lấy thẻ ra
+                            {sort.removeCard}
                           </button>
                         )}
                       </div>
@@ -334,10 +321,10 @@ export function LoanDetectiveMiniGame({
                   }
                 >
                   {selected
-                    ? `Đặt gói ${selected} vào khay này`
+                    ? fill(sort.placeHere, { id: selected })
                     : Object.values(sorted).includes(id)
-                      ? "Chọn thẻ khác để đặt thêm"
-                      : "Khay trống · chọn thẻ để đặt"}
+                      ? sort.placeMore
+                      : sort.emptyTray}
                 </button>
               </article>
             ))}
@@ -345,28 +332,30 @@ export function LoanDetectiveMiniGame({
           <button
             data-submit-sort
             className="loan-primary"
-            disabled={finished || Object.keys(sorted).length !== 3}
+            disabled={finished || Object.keys(sorted).length !== offers.length}
             onClick={() => dispatch({ type: "SUBMIT_SORT" })}
           >
-            {finished ? "Đã nộp đáp án" : "Kiểm tra cách xếp của tôi"}
+            {finished ? texts.submitted : sort.submit}
           </button>
           {finished && (
             <div className="loan-sort-explanations">
-              <h4>Đối chiếu đáp án</h4>
-              {loanOffers.map((offer) => (
+              <h4>{sort.answersTitle}</h4>
+              {offers.map((offer) => (
                 <article key={offer.id} data-sort-explanation={offer.id}>
                   <b>
                     {history[`sort${offer.id}`].finalCorrect
-                      ? "✓ Đúng"
-                      : "× Chưa đúng"}{" "}
-                    · Gói vay {offer.id}
+                      ? texts.correct
+                      : texts.incorrect}{" "}
+                    · {fill(texts.offerName, { id: offer.id })}
                   </b>
-                  <p>Bạn xếp: {trayName(sorted[offer.id])}.</p>
+                  <p>{fill(sort.yourTray, { tray: trayName(sorted[offer.id]) })}</p>
                   <p>
                     <strong>
-                      Khay đúng: {trayName(sortTargets[offer.id])}.
+                      {fill(sort.correctTray, {
+                        tray: trayName(sort.targets[offer.id]),
+                      })}
                     </strong>{" "}
-                    {sortReason[offer.id]}
+                    {sort.reasons[offer.id]}
                   </p>
                 </article>
               ))}
@@ -375,47 +364,44 @@ export function LoanDetectiveMiniGame({
         </div>
       )}
 
-      {round === 2 && (
+      {step.view === "cart" && (
         <div className="loan-workbench">
-          <aside className="loan-budget-note">
-            <b>Bài thử riêng: mua sắm để học online.</b>
-            <br />
-            Mỗi tháng có 500.000đ sau sinh hoạt. Riêng tháng 2 đã có khoản khác
-            đến hạn 200.000đ. Các món dưới đây đều trả ba lần, mỗi tháng một
-            lần, 0% lãi và không có phí trong bài thử.
-          </aside>
+          <aside className="loan-budget-note">{rich(cart.budgetNote)}</aside>
           <div className="loan-shop">
-            {bnplItems.map((item) => (
+            {cart.items.map((item) => (
               <article
                 key={item.id}
                 className={state.basket.includes(item.id) ? "in-basket" : ""}
               >
                 <img className="loan-product-image" src={item.image} alt="" />
                 <h4>{item.label}</h4>
-                <p>Giá {cash(item.price)}</p>
-                <strong>{cash(item.installment)}/tháng × 3</strong>
+                <p>{fill(cart.price, { price: cash(item.price) })}</p>
+                <strong>
+                  {fill(cart.installment, {
+                    installment: cash(item.installment),
+                  })}
+                </strong>
                 <button
                   data-item={item.id}
                   aria-pressed={state.basket.includes(item.id)}
                   disabled={finished}
                   onClick={() => dispatch({ type: "TOGGLE_ITEM", id: item.id })}
                 >
-                  {state.basket.includes(item.id)
-                    ? "Bỏ khỏi giỏ"
-                    : "Thêm vào giỏ"}
+                  {state.basket.includes(item.id) ? cart.remove : cart.add}
                 </button>
               </article>
             ))}
           </div>
           <div className="loan-basket" aria-live="polite">
-            <h4>Giỏ của bạn · {state.basket.length} món</h4>
+            <h4>{fill(cart.basketTitle, { count: state.basket.length })}</h4>
             <p>
               {basket.items.length
-                ? basket.items.map((item) => item.label).join(" + ")
-                : "Chưa có món nào."}
+                ? basket.items.map((item) => item.label).join(cart.basketJoin)
+                : cart.basketEmpty}
             </p>
             <p>
-              Mỗi tháng cần trả: <strong>{cash(basket.monthly)}</strong>
+              {cart.monthlyLabel}
+              <strong>{cash(basket.monthly)}</strong>
             </p>
           </div>
           <button
@@ -424,91 +410,60 @@ export function LoanDetectiveMiniGame({
             disabled={finished || !state.basket.length}
             onClick={() => dispatch({ type: "BUY_CART" })}
           >
-            {finished ? "Đã chốt giỏ hàng" : "Chốt giỏ và xem lịch trả"}
+            {finished ? cart.submitted : cart.submit}
           </button>
           {finished && (
             <div data-cart-result>
               <div className="loan-plan-months">
                 {basket.months.map((month) => (
                   <article key={month.month}>
-                    <h4>Tháng {month.month}</h4>
-                    <p>Có: {cash(month.available)}</p>
-                    <p>Giỏ trả sau: − {cash(month.payment)}</p>
-                    <p>Khoản khác: − {cash(month.other)}</p>
+                    <h4>{fill(cart.month, { month: month.month })}</h4>
+                    <p>{fill(cart.have, { amount: cash(month.available) })}</p>
+                    <p>{fill(cart.payment, { amount: cash(month.payment) })}</p>
+                    <p>{fill(cart.other, { amount: cash(month.other) })}</p>
                     <output>
-                      {month.remaining >= 0 ? "Còn" : "Thiếu"}{" "}
+                      {month.remaining >= 0 ? cart.remaining : cart.short}{" "}
                       <b>{cash(Math.abs(month.remaining))}</b>
                     </output>
                   </article>
                 ))}
               </div>
               <div className="loan-comparison-note">
-                <p>
-                  {basket.meetsNeed
-                    ? "✓ Đúng: có tai nghe và ít nhất một món thêm như mục tiêu."
-                    : "× Chưa đúng mục tiêu: giỏ cần có tai nghe và ít nhất một món thêm."}
-                </p>
-                <p>
-                  {basket.affordable
-                    ? "✓ Đúng: không tháng nào vượt số tiền có thể dùng."
-                    : "× Chưa đúng ngân sách: lịch trả có tháng thiếu tiền. Nhiều món 0% lãi vẫn cộng thành khoản phải trả lớn."}
-                </p>
-                <p>
-                  Ví dụ đáp ứng cả hai mục tiêu: tai nghe + bộ sổ và bút, trả
-                  300.000đ/tháng. Tháng 2 cộng khoản khác 200.000đ là vừa đủ
-                  500.000đ.
-                </p>
+                <p>{basket.meetsNeed ? cart.needOk : cart.needBad}</p>
+                <p>{basket.affordable ? cart.budgetOk : cart.budgetBad}</p>
+                <p>{cart.example}</p>
               </div>
             </div>
           )}
         </div>
       )}
 
-      {round === 3 && (
+      {step.view === "statement" && (
         <div className="loan-workbench">
-          <h4>Bạn sẽ dùng bao nhiêu tiền trong ví để trả nợ thẻ?</h4>
+          <h4>{st.question}</h4>
           <dl className="loan-statement-facts">
-            <div>
-              <dt>Tiền trong ví</dt>
-              <dd>1.200.000đ</dd>
-            </div>
-            <div>
-              <dt>Tổng tiền đang nợ</dt>
-              <dd>1.000.000đ</dd>
-            </div>
-            <div>
-              <dt>Sinh hoạt sắp tới cần</dt>
-              <dd>400.000đ</dd>
-            </div>
-            <div>
-              <dt>Mức trả tối thiểu kỳ này</dt>
-              <dd>100.000đ</dd>
-            </div>
+            {st.facts.map((fact) => (
+              <div key={fact.label}>
+                <dt>{fact.label}</dt>
+                <dd>{fact.value}</dd>
+              </div>
+            ))}
           </dl>
           <aside className="loan-budget-note">
-            <b>Cần đạt cả hai mục tiêu:</b>
+            <b>{st.goalsTitle}</b>
             <ul>
-              <li>
-                Trả nợ xong vẫn giữ đủ <b>400.000đ</b> sinh hoạt.
-              </li>
-              <li>
-                Tiền lãi tháng sau <b>không quá 5.000đ</b>.
-              </li>
+              {st.goals.map((goal, i) => (
+                <li key={i}>{rich(goal)}</li>
+              ))}
             </ul>
           </aside>
           <div className="loan-comparison-note">
-            <b>Cách tính trong bài thử</b>
-            <p>
-              Phần nợ chưa trả sẽ thêm <b>2% tiền lãi</b> vào tháng sau. Ví dụ:
-              còn nợ 100.000đ thì thêm 2.000đ lãi.
-            </p>
-            <p className="loan-note">
-              Chỉ là quy tắc giả lập; không tính chi tiêu mới hay phí khác,
-              không đại diện cho thẻ ngân hàng cụ thể.
-            </p>
+            <b>{st.ruleTitle}</b>
+            <p>{rich(st.rule)}</p>
+            <p className="loan-note">{st.ruleNote}</p>
           </div>
           <div className="loan-statement-options">
-            {statementOptions.map((option) => (
+            {st.options.map((option) => (
               <button
                 key={option.id}
                 data-statement-choice={option.id}
@@ -518,7 +473,7 @@ export function LoanDetectiveMiniGame({
                   dispatch({ type: "STATEMENT_CHOICE", id: option.id })
                 }
               >
-                <span aria-hidden="true">✉</span>
+                <span aria-hidden="true">{st.optionIcon}</span>
                 <b>{option.label}</b>
                 <strong>{cash(option.amount)}</strong>
               </button>
@@ -531,7 +486,7 @@ export function LoanDetectiveMiniGame({
               disabled={!statement}
               onClick={() => dispatch({ type: "CONFIRM_STATEMENT" })}
             >
-              Chốt cách trả và xem kết quả
+              {st.confirm}
             </button>
           )}
           {state.statementStep >= 1 && (
@@ -539,18 +494,18 @@ export function LoanDetectiveMiniGame({
               <article>
                 <span className="loan-event-number">1</span>
                 <div>
-                  <h4>Hôm nay · trích tiền trả nợ</h4>
+                  <h4>{st.todayTitle}</h4>
                   <dl className="loan-statement-calculation">
                     <div>
-                      <dt>Ví ban đầu</dt>
-                      <dd>1.200.000đ</dd>
+                      <dt>{st.walletStart}</dt>
+                      <dd>{st.walletStartValue}</dd>
                     </div>
                     <div>
-                      <dt>Trả nợ</dt>
-                      <dd>− {cash(statement.amount)}</dd>
+                      <dt>{st.pay}</dt>
+                      <dd>{fill(st.payValue, { amount: cash(statement.amount) })}</dd>
                     </div>
                     <div>
-                      <dt>Ví còn</dt>
+                      <dt>{st.walletLeft}</dt>
                       <dd>{cash(statement.walletLeft)}</dd>
                     </div>
                   </dl>
@@ -559,12 +514,17 @@ export function LoanDetectiveMiniGame({
               <article data-living-event>
                 <span className="loan-event-number">2</span>
                 <div>
-                  <h4>Tiếp theo · chi sinh hoạt</h4>
+                  <h4>{st.livingTitle}</h4>
                   <p>
-                    Cần 400.000đ.{" "}
+                    {st.livingNeed}{" "}
                     {statement.livingCovered
-                      ? `Ví còn đủ để chi, sau đó còn ${cash(statement.afterLiving)}.`
-                      : `Ví chỉ có ${cash(statement.walletLeft)}, còn thiếu ${cash(statement.livingShortfall)}.`}
+                      ? fill(st.livingOk, {
+                          amount: cash(statement.afterLiving),
+                        })
+                      : fill(st.livingShort, {
+                          wallet: cash(statement.walletLeft),
+                          shortfall: cash(statement.livingShortfall),
+                        })}
                   </p>
                 </div>
               </article>
@@ -574,7 +534,7 @@ export function LoanDetectiveMiniGame({
                   className="loan-primary"
                   onClick={() => dispatch({ type: "REVEAL_STATEMENT" })}
                 >
-                  Xem khoản nợ tháng sau
+                  {st.reveal}
                 </button>
               )}
               {finished && (
@@ -582,45 +542,51 @@ export function LoanDetectiveMiniGame({
                   <article data-debt-event>
                     <span className="loan-event-number">3</span>
                     <div>
-                      <h4>Tháng sau · cộng lãi vào nợ còn lại</h4>
+                      <h4>{st.debtTitle}</h4>
                       <dl className="loan-statement-calculation">
                         <div>
-                          <dt>Nợ chưa trả</dt>
+                          <dt>{st.debtLeft}</dt>
                           <dd>{cash(statement.debtLeft)}</dd>
                         </div>
                         <div>
-                          <dt>Thêm lãi 2%</dt>
-                          <dd>+ {cash(statement.interest)}</dd>
+                          <dt>{st.interest}</dt>
+                          <dd>
+                            {fill(st.interestValue, {
+                              amount: cash(statement.interest),
+                            })}
+                          </dd>
                         </div>
                         <div>
-                          <dt>Tổng còn phải trả</dt>
+                          <dt>{st.nextDebt}</dt>
                           <dd>{cash(statement.nextDebt)}</dd>
                         </div>
                       </dl>
                       <p className="loan-note">
                         {statement.livingCovered
-                          ? `Tiền còn trong ví là ${cash(statement.afterLiving)}; chưa dùng để trả khoản nợ này.`
-                          : `Khoản sinh hoạt thiếu ${cash(statement.livingShortfall)} vẫn chưa được giải quyết.`}
+                          ? fill(st.noteOk, {
+                              amount: cash(statement.afterLiving),
+                            })
+                          : fill(st.noteShort, {
+                              amount: cash(statement.livingShortfall),
+                            })}
                       </p>
                     </div>
                   </article>
                   <div className="loan-comparison-note">
                     <p>
                       {statement.livingCovered
-                        ? "✓ Đúng: giữ đủ tiền sinh hoạt."
-                        : "× Chưa đúng: còn thiếu tiền sinh hoạt."}
+                        ? st.livingResultOk
+                        : st.livingResultBad}
                     </p>
                     <p>
-                      {statement.costCovered
-                        ? `✓ Đúng: lãi ${cash(statement.interest)}, không vượt 5.000đ.`
-                        : `× Chưa đúng: lãi ${cash(statement.interest)}, vượt mục tiêu 5.000đ.`}
+                      {fill(
+                        statement.costCovered
+                          ? st.costResultOk
+                          : st.costResultBad,
+                        { amount: cash(statement.interest) },
+                      )}
                     </p>
-                    <p>
-                      Trả 750.000đ hoặc 800.000đ đều đáp ứng hai mục tiêu: giữ
-                      đủ tiền sinh hoạt và lãi không quá 5.000đ. Trả tối thiểu
-                      không làm hết nợ; trả hết ngay cũng cần xem còn đủ tiền
-                      sống không.
-                    </p>
+                    <p>{st.summary}</p>
                   </div>
                 </>
               )}
@@ -630,39 +596,28 @@ export function LoanDetectiveMiniGame({
       )}
 
       <p className="loan-feedback" role="status">
-        {feedback ||
-          (round === 1
-            ? "Chưa chấm bài. Bạn được tự do xếp và chuyển thẻ."
-            : "Chỉ kiểm tra sau khi bạn xác nhận. Không có lượt nộp lại.")}
+        {feedback || step.idleFeedback}
       </p>
       <footer className="loan-footer">
-        <span>
-          {finished
-            ? "Đã xem kết quả · có thể tiếp tục"
-            : "Không đếm giờ · nộp một lần"}
-        </span>
+        <span>{finished ? texts.footerDone : texts.footerIdle}</span>
         <button
           className="loan-primary"
           disabled={!finished}
           onClick={() => {
-            if (round < game.rounds.at(-1)) {
+            if (round < lastRound) {
               dispatch({ type: "ROUND", round: round + 1 });
               requestAnimationFrame(() => heading.current?.focus());
               return;
             }
             if (submitted.current) return;
             submitted.current = true;
-            onComplete({ ...loanResult(history, game.rounds), ui: state });
+            onComplete({ ...loanResult(config, history, game.rounds), ui: state });
           }}
         >
-          {round === game.rounds.at(-1)
-            ? "Trở lại câu chuyện"
-            : "Sang màn tiếp theo →"}
+          {round === lastRound ? texts.finish : texts.next}
         </button>
       </footer>
-      <p className="loan-note">
-        Tiền trong bài thử là giả lập, không thay đổi số dư hiện tại của An.
-      </p>
+      <p className="loan-note">{texts.note}</p>
       {reviewOffers && game.reference && (
         <InspectCardsDialog
           inspect={{ ...game.reference, reviewOnly: true }}
