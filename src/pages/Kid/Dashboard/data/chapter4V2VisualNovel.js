@@ -271,6 +271,152 @@ const reflection = (id, prompt, nextSceneId, answers) =>
     },
   );
 
+// Mini-game mua máy (khung SMART_SHOPPING): mọi chữ / số / luật hiển thị nằm ở đây, component chỉ là khung
+// (spec bộ khuôn 24/10, cách A). Chữ có "{x}" là mẫu, khung điền vào. Danh mục máy = `phones` ở trên.
+const smartShoppingConfig = {
+  ariaLabel: "Nhiệm vụ mua máy: bốn lượt kiểm tra",
+  eyebrow: "HỒ SƠ MUA SẮM / A / B / C",
+  heading: "Bốn lượt. Một quyết định.",
+  tagline: "Đừng mua lời quảng cáo. Hãy mua thứ bạn đã kiểm chứng.",
+  brief:
+    "Nhiệm vụ: kiểm chứng ba máy A/B/C trong câu chuyện, chọn theo nhu cầu học và giữ đủ quỹ sau một năm. Giá và điều kiện giống phương án mua của An.",
+  steps: ["Điều tra", "Chốt giao dịch", "Một năm sau"],
+  checkTokens: 4,
+  passMinScore: 3,
+  trialDeadlineDay: 29,
+  inspections: [
+    { id: "app", label: "Chạy thử ứng dụng học", icon: "smartphone" },
+    { id: "battery", label: "Kiểm định pin & bảo hành", icon: "battery" },
+    { id: "terms", label: "Đọc hợp đồng dịch vụ", icon: "file" },
+  ],
+  invoiceExtra: { id: "fee", label: "Phí dịch vụ", amount: 100000 },
+  ledger: {
+    phone: "Máy",
+    subscription: "Thuê bao {months} tháng",
+    battery: "Thay pin",
+    fee: "Chênh lệch hóa đơn chưa xử lý",
+  },
+  aftercare: {
+    cancelled: "Đã hủy trước gia hạn và lưu xác nhận.",
+    notCancelled: "Chưa hủy trước gia hạn; phát sinh {months} tháng thuê bao.",
+    batteryReplaced: "Đã thay pin, tính đủ chi phí; độ trễ đa nhiệm vẫn còn.",
+    batteryKept:
+      "Giữ pin cũ và mang sạc cho buổi học; không phát sinh phí thay pin.",
+    batteryUnmanaged: "Chưa đo pin hoặc chưa chọn kế hoạch cho buổi học 4 giờ.",
+    noSubscription:
+      "Máy không kèm thuê bao; các tính năng thêm vẫn làm giảm quỹ hoạt động.",
+  },
+  criteria: {
+    needs: { title: "Dùng được cho việc học" },
+    budget: {
+      title: "Giữ được quỹ hoạt động trường",
+      passed: "Tổng tiền máy, thuê bao và phí thực trả vẫn giữ đủ quỹ.",
+      failed: "Thiếu {shortfall} cho hoạt động trường. {reason}",
+      reasonExceedsNeeds:
+        "Máy C đáp ứng việc học nhưng tính năng vượt nhu cầu khiến chi phí vượt mục tiêu.",
+      reasonHiddenCosts: "Cần tính cả thuê bao và phí ngoài báo giá.",
+    },
+    evidence: {
+      title: "Mua dựa trên bằng chứng",
+      detail: "Đã kiểm tra {checked}/{total} hồ sơ của máy mua. {note}",
+      incomplete:
+        "Kết quả tốt do may mắn chưa thay thế việc kiểm tra trước mua.",
+      complete: "Đã thử ứng dụng, xem pin và đọc hợp đồng.",
+    },
+    rights: {
+      title: "Xử lý phí và kế hoạch sử dụng",
+      feePaid: "Đã trả thêm {fee} ngoài báo giá.",
+      feeRemoved: "Đã đối chiếu và bỏ phí ngoài báo giá {fee}.",
+    },
+  },
+  decision: {
+    subscription: {
+      title: "Lịch hủy dùng thử",
+      text: "Chọn thời điểm gửi yêu cầu. Gia hạn vào ngày 30; yêu cầu hợp lệ được lưu xác nhận.",
+      label: "Thời điểm trong tháng dùng thử",
+      placeholder: "Chọn thời điểm",
+      days: [
+        { value: "1", label: "Đầu tháng · ngày 1" },
+        { value: "15", label: "Giữa tháng · ngày 15" },
+        { value: "30", label: "Cuối tháng · ngày 30" },
+      ],
+    },
+    battery: {
+      title: "Pin cũ có đủ cho bạn?",
+      text: "Một buổi học kéo dài 4 giờ. Hãy đo pin trước khi quyết định; bảo hành không bao gồm hao mòn pin.",
+      check: "Chạy kiểm tra pin",
+      checked: "Đã đo pin",
+      meterLabel: "Dung lượng pin còn lại",
+      planLegend: "Kế hoạch cho buổi học",
+      keep: "Giữ pin, mang sạc và sạc trong giờ nghỉ · 0đ",
+      replace: "Thay pin · {cost}",
+      note: "Thay pin tăng thời lượng sử dụng, không làm máy chạy đa nhiệm nhanh hơn.",
+    },
+    features: {
+      title: "Tính năng thêm hay quỹ hoạt động?",
+      text: "Máy C học tốt, nhưng camera cao cấp và trò chơi không phải nhu cầu học hiện tại.",
+      balanceLabel: "Sau khi trả tiền máy",
+      shortfall:
+        "Thiếu {shortfall} so với quỹ cần giữ. Chưa tính phí ngoài báo giá.",
+    },
+  },
+  texts: {
+    attempt: "Lần thử {n}",
+    wallet: "Ví mô phỏng",
+    reserve: "Phải giữ cho hoạt động trường",
+    stepsLabel: "Tiến trình",
+    investigateTitle: "Bạn muốn kiểm chứng máy nào trước?",
+    investigateText:
+      "Chỉ có 4 lượt kiểm tra cho 3 máy. Cả ba chạy được ứng dụng học; hãy kiểm tra chất lượng, điều kiện và tổng chi thay vì chỉ nhìn giá. Hồ sơ đã mở được đọc lại miễn phí.",
+    tokensLabel: "Còn {left} lượt kiểm tra",
+    tokens: "{left}/{total} lượt",
+    phoneAlt: "Điện thoại tại {name}",
+    claim: "“{claim}”",
+    quoteNote: "Báo giá: chỉ gồm máy. Phụ phí cần được đồng ý trước.",
+    reread: "Đọc lại",
+    costsCheck: "−1 lượt",
+    selected: "Đã chọn máy {id}",
+    select: "Chọn máy {id}",
+    lockNote: "Sang thanh toán sẽ khóa lựa chọn máy và lượt điều tra.",
+    lockIn: "Chốt {phone}",
+    lockPhone: "máy {id}",
+    lockPhoneNone: "máy",
+    checkoutTitle: "Tự kiểm tra trước khi trả tiền.",
+    checkoutText:
+      "Xử lý chênh lệch hóa đơn nếu có và tự lên lịch dịch vụ. Khi thanh toán, một năm sử dụng sẽ được mô phỏng ngay.",
+    invoiceEyebrow: "HÓA ĐƠN TẠM TÍNH / {name}",
+    invoiceTitle: "Kiểm tra từng dòng",
+    savedQuote: "Báo giá đã lưu: ",
+    savedQuoteAfter: " cho máy, chưa thỏa thuận phụ phí.",
+    invoiceCheck: "Kiểm tra",
+    invoiceChecked: "Đã kiểm tra",
+    disputeLegend: "Đánh dấu một dòng cần yêu cầu đối chiếu (nếu có).",
+    noDispute: "Không yêu cầu đối chiếu",
+    invoiceTotal: "Tổng tạm tính",
+    disputeNote:
+      "Yêu cầu được gửi cùng lúc thanh toán. Cửa hàng chỉ sửa khi dòng đánh dấu thực sự lệch báo giá.",
+    savedFiles: "Hồ sơ đã thu thập",
+    noHints: "Không có gợi ý đúng/sai trước khi thanh toán.",
+    pay: "Thanh toán & xem một năm sau",
+    resultEyebrow: "MỘT NĂM SAU",
+    resultPerfect: "Bạn đã mua bằng hiểu biết.",
+    resultImperfect: "Giá trên nhãn chưa kể hết câu chuyện.",
+    resultSubtitle: "{name} · Xem lại từng tiêu chí bên dưới.",
+    ledgerTitle: "Tiền đã đi đâu?",
+    actualTotal: "Tổng chi thực tế",
+    walletLeft: "Ví còn lại",
+    reserveNeeded: "Quỹ cần giữ: {amount}",
+    passed: "Đúng",
+    failed: "Chưa đúng",
+    retryNote:
+      "Bạn có thể thử phương án khác để so sánh. Kết quả đúng/sai của lần nộp đầu được dùng để xét kết thúc chương.",
+    retry: "Thử phương án khác",
+    finish: "Trở lại câu chuyện",
+    simulationNote:
+      "Mô phỏng luyện tập · Các thao tác ở đây không trừ tiền trong câu chuyện của An.",
+  },
+};
+
 export const chapter4V2GameData = {
   id: "CH04_V2",
   title: "Mua thông minh",
@@ -645,8 +791,10 @@ export const chapter4V2GameData = {
       characters: [],
       game: {
         id: "SMART_SHOPPING_CH04",
+        kind: "SMART_SHOPPING",
         title: "Bốn lượt. Một quyết định.",
         phones,
+        config: smartShoppingConfig,
         instruction:
           "Kiểm tra đúng ba máy A/B/C với bốn lượt, xử lý phí ngoài báo giá và theo dõi chi phí năm đầu.",
         budget: 2500000,

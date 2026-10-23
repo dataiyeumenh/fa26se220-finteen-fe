@@ -14,7 +14,6 @@ import {
   chapterFiveLearning,
 } from "../src/pages/Kid/Dashboard/components/game/compoundTimelineRules.js";
 import {
-  loanTasks,
   loanResult,
   chapterSixLearning,
 } from "../src/pages/Kid/Dashboard/components/game/loanDetectiveRules.js";
@@ -24,13 +23,11 @@ import {
   chapterSevenLearning,
 } from "../src/pages/Kid/Dashboard/components/game/scamOrSafeRules.js";
 import {
-  futureTasks,
   futureResult,
   createFutureState,
   chapterEightLearning,
   applyFutureAction,
   budgetFeedback,
-  planMonths,
 } from "../src/pages/Kid/Dashboard/components/game/futurePlanRules.js";
 
 const safeFlags = {
@@ -53,6 +50,17 @@ const timelineConfig = ch5.scenes.find(
   (scene) => scene.game?.kind === "COMPOUND_TIMELINE",
 ).game.config;
 const challenges = timelineConfig.questions;
+const loanConfig = ch6.scenes.find(
+  (scene) => scene.game?.kind === "LOAN_DETECTIVE",
+).game.config;
+const safetyConfig = ch7.scenes.find(
+  (scene) => scene.game?.kind === "SCAM_OR_SAFE",
+).game.config;
+const futurePlanConfig = ch8.scenes.find(
+  (scene) => scene.game?.kind === "FUTURE_PLAN",
+).game.config;
+const cfg = (mode) => ({ ...futurePlanConfig, mode });
+const { portfolio, planner } = futurePlanConfig;
 const cases = [
   [ch4, null, [{ id: "shopping" }], () => ({ total: 4 }), null],
   [
@@ -65,8 +73,8 @@ const cases = [
   [
     ch6,
     chapterSixLearning,
-    loanTasks,
-    (history, rounds) => loanResult(history, rounds),
+    loanConfig.tasks,
+    (history, rounds) => loanResult(loanConfig, history, rounds),
     [
       [0, 1],
       [2, 3],
@@ -75,15 +83,15 @@ const cases = [
   [
     ch7,
     chapterSevenLearning,
-    safetyTasks,
-    (history, rounds) => safetyResult(history, rounds),
+    safetyTasks(safetyConfig),
+    (history, rounds) => safetyResult(safetyConfig, history, rounds),
     [[0], [1, 2]],
   ],
   [
     ch8,
     chapterEightLearning,
-    futureTasks.map((id) => ({ id })),
-    (history, kind) => futureResult({ ...createFutureState(kind), history }),
+    futurePlanConfig.tasks.map((id) => ({ id })),
+    (history, kind) => futureResult(futurePlanConfig, { ...createFutureState(cfg(kind)), history }),
     ["portfolio", "claims", "planner"],
   ],
 ];
@@ -220,30 +228,30 @@ test("only required completed games count, with a fixed denominator and no round
 });
 
 test("chapter 8 budget submissions require money for the goal as well as staying within income", () => {
-  let state = createFutureState("planner");
-  state = applyFutureAction(state, { type: "SUBMIT_MONTH" });
-  assert.equal(futureResult(state).score, 0);
+  let state = createFutureState(cfg("planner"));
+  state = applyFutureAction(futurePlanConfig, state, { type: "SUBMIT_MONTH" });
+  assert.equal(futureResult(futurePlanConfig, state).score, 0);
   assert.ok(
-    budgetFeedback(planMonths[0], state.budgets[0])
+    budgetFeedback(planner, planner.months[0], state.budgets[0])
       .join(" ")
       .includes("chưa dành tiền"),
   );
   assert.equal(
-    applyFutureAction(state, { type: "BUDGET", id: "goal", delta: 100000 }),
+    applyFutureAction(futurePlanConfig, state, { type: "BUDGET", id: "goal", delta: 100000 }),
     state,
   );
-  const draft = applyFutureAction(createFutureState("planner"), {
+  const draft = applyFutureAction(futurePlanConfig, createFutureState(cfg("planner")), {
     type: "BUDGET",
     id: "goal",
     delta: 100000,
   });
-  const submitted = applyFutureAction(draft, { type: "SUBMIT_MONTH" });
-  assert.equal(futureResult(submitted).score, 1);
+  const submitted = applyFutureAction(futurePlanConfig, draft, { type: "SUBMIT_MONTH" });
+  assert.equal(futureResult(futurePlanConfig, submitted).score, 1);
   assert.equal(
     recordMiniGameResult(
       {},
       { chapterId: "CH08", sceneId: "planner", gameId: "LIFE_PLAN_CH08" },
-      futureResult(submitted),
+      futureResult(futurePlanConfig, submitted),
     ).planner.correctCount,
     1,
   );

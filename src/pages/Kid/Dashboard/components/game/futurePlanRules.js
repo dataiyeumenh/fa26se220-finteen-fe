@@ -1,149 +1,60 @@
 // Classroom scenarios, not forecasts. One independent draw per asset and per playthrough.
-export const FUTURE_ART = "/images/finteen-v2/chapter-08";
-export const legacyMarketScenario = {
-  period: "sau ba tháng",
-  cash: 0,
-  bonds: 2,
-  equity: -10,
-};
-export function drawMarketScenario(random = Math.random) {
+// Dữ liệu mini-game (tài sản, thị trường, thẻ kiểm tra, tháng, mục tiêu, chữ) nằm trong JSON chương: game.config
+// (khung FUTURE_PLAN, config.mode = portfolio | claims | planner). File này chỉ còn luật.
+const fill = (template, values) =>
+  template.replace(/\{(\w+)\}/g, (_, key) => values[key]);
+const cash = (value) => `${value.toLocaleString("vi-VN")}đ`;
+export function drawMarketScenario(market, random = Math.random) {
+  const max = market.maxMove;
   const draw = () =>
-    Math.max(-10, Math.min(10, Math.floor(random() * 21) - 10));
-  return { period: "sau ba tháng", cash: 0, bonds: draw(), equity: draw() };
+    Math.max(-max, Math.min(max, Math.floor(random() * (2 * max + 1)) - max));
+  return {
+    period: market.period,
+    ...market.fixed,
+    ...Object.fromEntries(market.drawn.map((id) => [id, draw()])),
+  };
 }
-export function validMarket(market) {
+export function validMarket(market, value) {
   return Boolean(
-    market &&
-    market.cash === 0 &&
-    ["bonds", "equity"].every(
-      (id) => Number.isInteger(market[id]) && Math.abs(market[id]) <= 10,
+    value &&
+    Object.entries(market.fixed).every(([id, move]) => value[id] === move) &&
+    market.drawn.every(
+      (id) => Number.isInteger(value[id]) && Math.abs(value[id]) <= market.maxMove,
     ),
   );
 }
-export const annualGoal = {
-  amount: 7200000,
-  label: "Quỹ học tập cho năm sau",
-  description:
-    "Dành cho sách, dụng cụ và các lớp học trong năm sau. Khoản này khác với 3.000.000đ học phí đã tính ở đầu chương.",
-};
-export const allocationAssets = [
-  {
-    id: "cash",
-    label: "Tiền dễ rút",
-    image: "liquid-money",
-    description: "Để dùng khi cần. Trong lượt thử này, giá trị giữ nguyên.",
-  },
-  {
-    id: "bonds",
-    label: "Trái phiếu",
-    image: "bond",
-    description:
-      "Cho công ty hoặc Chính phủ vay tiền. Có cam kết trả lãi, nhưng vẫn có rủi ro không được trả đủ.",
-  },
-  {
-    id: "equity",
-    label: "Cổ phiếu",
-    image: "equity",
-    description: "Sở hữu một phần công ty. Giá có thể tăng hoặc giảm.",
-  },
-];
-export const sampleAllocations = {
-  balanced: { cash: 30, bonds: 40, equity: 30 },
-  concentrated: { cash: 10, bonds: 0, equity: 90 },
-};
-export function allocationValue(allocation, market = legacyMarketScenario) {
-  const total = allocationAssets.reduce(
+export function allocationValue(
+  portfolio,
+  allocation,
+  market = portfolio.market.legacy,
+) {
+  const total = portfolio.assets.reduce(
     (sum, asset) => sum + allocation[asset.id],
     0,
   );
-  const delta = allocationAssets.reduce(
+  const delta = portfolio.assets.reduce(
     (sum, asset) =>
-      sum + (allocation[asset.id] * 100000 * market[asset.id]) / 100,
+      sum + (allocation[asset.id] * portfolio.pointValue * market[asset.id]) / 100,
     0,
   );
   return {
     total,
     delta,
-    final: 10000000 + delta,
-    nearMoney: allocation.cash * 100000,
+    final: portfolio.startingAmount + delta,
+    nearMoney: allocation[portfolio.nearAsset] * portfolio.pointValue,
   };
 }
-export const claimChecks = [
-  {
-    id: "risk",
-    label: "Điều kiện bán, rút tiền và các rủi ro",
-    detail:
-      "Những thông tin này giúp biết lúc nào lấy tiền ra được và vì sao có thể bị lỗ.",
-    correct: true,
-  },
-  {
-    id: "ranking",
-    label: "Danh sách những người đang dẫn đầu",
-    detail:
-      "Kết quả của người khác không cho biết khoản đầu tư có phù hợp với An hay không.",
-    correct: false,
-  },
-  {
-    id: "commission",
-    label: "Khoản hoa hồng người giới thiệu được nhận",
-    detail:
-      "Người nhận tiền khi An tham gia có thể chỉ nhấn mạnh mặt hấp dẫn của sản phẩm.",
-    correct: true,
-  },
-  {
-    id: "likes",
-    label: "Lượt thích và chia sẻ của bài quảng cáo",
-    detail:
-      "Được chú ý nhiều chưa chứng minh lời hứa về lợi nhuận hay tác động môi trường.",
-    correct: false,
-  },
-  {
-    id: "esg",
-    label: "Báo cáo về hoạt động bảo vệ môi trường",
-    detail:
-      "Cần xem số liệu, cách đo và ai kiểm tra báo cáo; hình chiếc lá không thay cho bằng chứng.",
-    correct: true,
-  },
-  {
-    id: "recent",
-    label: "Biểu đồ giá tăng trong tuần vừa rồi",
-    detail:
-      "Giá đã tăng không bảo đảm sẽ tiếp tục tăng, cũng không giải thích lời quảng cáo “xanh”.",
-    correct: false,
-  },
-];
-export const planMonths = [
-  {
-    id: "normal",
-    label: "Tháng bình thường",
-    income: 3000000,
-    essential: 2000000,
-    description:
-      "An muốn để dành 600.000đ, phần còn lại dùng cho đi chơi và mua sắm.",
-  },
-  {
-    id: "low",
-    label: "Tháng ít việc",
-    income: 2600000,
-    essential: 2000000,
-    description:
-      "Thu nhập giảm. An vẫn muốn giữ mức để dành 600.000đ nếu có thể.",
-  },
-  {
-    id: "prices",
-    label: "Ít việc, giá lại tăng",
-    income: 2600000,
-    essential: 2200000,
-    description:
-      "Chi phí thiết yếu tăng 200.000đ. Chưa có nguồn thu thêm nào được xác nhận.",
-  },
-];
-// Three situations represent ten ordinary months and two more difficult months in a sample year.
-export function planProjection(budgets) {
-  const yearSavings = budgets[0].goal * 10 + budgets[1].goal + budgets[2].goal;
-  const shortfall = Math.max(0, annualGoal.amount - yearSavings);
+// Mỗi loại tháng lặp yearCount lần trong năm mẫu (10 tháng bình thường + 2 tháng khó).
+export function planProjection(planner, budgets) {
+  const yearSavings = planner.months.reduce(
+    (sum, month, index) => sum + budgets[index].goal * month.yearCount,
+    0,
+  );
+  const shortfall = Math.max(0, planner.goal.amount - yearSavings);
   const feasible =
-    planMonths.every((month, index) => feasibleBudget(month, budgets[index])) &&
+    planner.months.every((month, index) =>
+      feasibleBudget(month, budgets[index]),
+    ) &&
     yearSavings > 0 &&
     (shortfall === 0 || budgets[0].goal > 0);
   return {
@@ -168,72 +79,98 @@ export function clampBudget(month, budget) {
     flexible: Math.min(available - goal, Math.max(0, budget.flexible)),
   };
 }
-export function budgetFeedback(month, budget) {
-  const cash = (value) => `${value.toLocaleString("vi-VN")}đ`;
+export function budgetFeedback(planner, month, budget) {
+  const t = planner.feedback;
   const balance = planBalance(month, budget);
   return [
-    `Sau chi bắt buộc, bạn có ${cash(availableBudget(month))}. Bạn dành ${cash(budget.goal)} cho quỹ học tập và ${cash(budget.flexible)} cho đi chơi, mua sắm.`,
-    `${cash(budget.goal)} + ${cash(budget.flexible)} = ${cash(budget.goal + budget.flexible)}. ${balance < 0 ? `Vượt ngân sách ${cash(-balance)}.` : balance === 0 ? "Hai khoản vừa đủ ngân sách, không bị thiếu tiền." : `Còn ${cash(balance)} giữ dự phòng.`}`,
-    budget.goal === 0
-      ? "Bạn chưa dành tiền cho quỹ học tập trong tình huống này, nên chưa đạt yêu cầu vừa cân ngân sách vừa tích lũy cho mục tiêu. Khoản chưa chia vẫn là tiền dự phòng, chưa được tính vào quỹ học tập."
-      : "Để đạt yêu cầu, hai khoản không vượt tiền đang có và có tiền đưa vào quỹ học tập. Không bắt buộc một mức để dành cụ thể; bảng cuối dùng mức bạn chọn để tính thời gian đạt mục tiêu.",
+    fill(t.summary, {
+      available: cash(availableBudget(month)),
+      goal: cash(budget.goal),
+      flexible: cash(budget.flexible),
+    }),
+    fill(t.sum, {
+      goal: cash(budget.goal),
+      flexible: cash(budget.flexible),
+      total: cash(budget.goal + budget.flexible),
+      balance:
+        balance < 0
+          ? fill(t.over, { amount: cash(-balance) })
+          : balance === 0
+            ? t.exact
+            : fill(t.spare, { amount: cash(balance) }),
+    }),
+    budget.goal === 0 ? t.noGoal : t.withGoal,
   ];
 }
-export function buildPlanReview(state) {
+export function buildPlanReview(planner, state) {
   if (!state?.budgets) return {};
-  const cash = (value) => `${value.toLocaleString("vi-VN")}đ`;
-  const projection = planProjection(state.budgets);
+  const t = planner.review;
+  const projection = planProjection(planner, state.budgets);
   return {
-    cards: planMonths.map((month, index) => {
+    cards: planner.months.map((month, index) => {
       const budget = state.budgets[index],
         balance = planBalance(month, budget);
       return {
         id: month.id,
         label: month.label,
-        image: `${FUTURE_ART}/asset-mini-game/life-planner/${index === 0 ? "income-envelope" : "price-change"}.png`,
+        image: month.reviewImage,
         facts: [
           [
-            "Thu nhập / chi bắt buộc",
+            t.incomeLabel,
             `${cash(month.income)} / ${cash(month.essential)}`,
           ],
-          ["Bạn dành cho học tập", cash(budget.goal)],
-          ["Bạn dành cho đi chơi, mua sắm", cash(budget.flexible)],
+          [t.goalLabel, cash(budget.goal)],
+          [t.flexibleLabel, cash(budget.flexible)],
           [
-            balance < 0 ? "Chưa có tiền bù" : "Tiền giữ dự phòng",
+            balance < 0 ? t.missingLabel : t.spareLabel,
             cash(Math.abs(balance)),
           ],
         ],
       };
     }),
     shared: {
-      label: "Theo số tiền bạn vừa chọn",
+      label: t.sharedLabel,
       items: [
-        `Mục tiêu học tập: ${cash(annualGoal.amount)}. Theo lịch thử, bạn dự kiến để dành ${cash(projection.yearSavings)} trong năm.`,
+        fill(t.goalLine, {
+          goal: cash(planner.goal.amount),
+          year: cash(projection.yearSavings),
+        }),
         !projection.feasible
-          ? "Kế hoạch còn phần chưa thực hiện được. Cần cân lại khoản chi hoặc mức để dành trước khi dùng tổng dự kiến."
+          ? t.infeasible
           : projection.shortfall
-            ? `Còn thiếu ${cash(projection.shortfall)}. Nếu sau đó để dành ${cash(state.budgets[0].goal)}/tháng thì cần thêm khoảng ${projection.extraMonths} tháng.`
-            : "Theo các giả định này, tiền dự kiến đủ mục tiêu trong 12 tháng. Hãy kiểm tra lại bằng thu chi thực tế mỗi tháng.",
+            ? fill(t.shortfall, {
+                shortfall: cash(projection.shortfall),
+                perMonth: cash(state.budgets[0].goal),
+                months: projection.extraMonths,
+              })
+            : t.enough,
       ],
     },
   };
 }
-export function chapterEightSettlement(results, flags) {
-  const saved = results.CH08_GAME_PORTFOLIO?.ui?.market;
+export function chapterEightSettlement(portfolio, results, flags) {
+  const { settlement } = portfolio;
+  const saved = results[settlement.resultFrom]?.ui?.market;
   // Existing submitted 1.1 checkpoints used the old fixed market and must keep their result.
-  const market = validMarket(saved) ? saved : legacyMarketScenario;
-  const allocation = flags.portfolio_fit
-    ? sampleAllocations.balanced
-    : sampleAllocations.concentrated;
+  const market = validMarket(portfolio.market, saved)
+    ? saved
+    : portfolio.market.legacy;
+  const allocation = flags[settlement.fitFlag]
+    ? settlement.fitAllocation
+    : settlement.otherAllocation;
   return {
-    ...allocationValue(allocation, market),
+    ...allocationValue(portfolio, allocation, market),
     market,
-    eventId: "CH08_MARKET_SETTLEMENT",
+    eventId: settlement.eventId,
   };
 }
-export function resolveFutureScene(scene, results, flags) {
-  const { market, delta, final } = chapterEightSettlement(results, flags);
-  const cash = (value) => `${value.toLocaleString("vi-VN")}đ`;
+// ponytail: lời thoại câu chuyện phụ thuộc kết quả thị trường vẫn viết ở đây (thuộc chương, không thuộc khung mini-game).
+export function resolveFutureScene(portfolio, scene, results, flags) {
+  const { market, delta, final } = chapterEightSettlement(
+    portfolio,
+    results,
+    flags,
+  );
   const movement = (value) =>
     value > 0
       ? `tăng ${value}%`
@@ -276,46 +213,42 @@ export function resolveFutureScene(scene, results, flags) {
       }[scene.id];
   return text ? { ...scene, title: text, text } : scene;
 }
-export const futureTasks = [
-  "allocation_near",
-  "allocation_spread",
-  "claim_risk",
-  "claim_commission",
-  "claim_esg",
-  "plan_normal",
-  "plan_low",
-  "plan_prices",
-];
-export function createFutureState(kind) {
+export function createFutureState(config) {
   return {
-    kind,
-    market: kind === "portfolio" ? drawMarketScenario() : null,
-    allocation: { cash: 0, bonds: 0, equity: 0 },
+    kind: config.mode,
+    market:
+      config.mode === "portfolio"
+        ? drawMarketScenario(config.portfolio.market)
+        : null,
+    allocation: Object.fromEntries(
+      config.portfolio.assets.map((asset) => [asset.id, 0]),
+    ),
     allocationSubmitted: false,
     checks: [],
     checksSubmitted: false,
     month: 0,
-    budgets: planMonths.map(() => ({ goal: 0, flexible: 0 })),
+    budgets: config.planner.months.map(() => ({ goal: 0, flexible: 0 })),
     submittedMonths: {},
     history: {},
   };
 }
-export function restoreFutureState(kind, saved) {
-  if (!saved) return createFutureState(kind);
+export function restoreFutureState(config, saved) {
+  if (!saved) return createFutureState(config);
+  const { market } = config.portfolio;
   return {
     ...saved,
     market:
-      kind !== "portfolio"
+      config.mode !== "portfolio"
         ? null
-        : validMarket(saved.market)
+        : validMarket(market, saved.market)
           ? saved.market
           : saved.allocationSubmitted
-            ? { ...legacyMarketScenario }
-            : drawMarketScenario(),
+            ? { ...market.legacy }
+            : drawMarketScenario(market),
     budgets: saved.budgets.map((budget, index) =>
       saved.submittedMonths[index]
         ? budget
-        : clampBudget(planMonths[index], budget),
+        : clampBudget(config.planner.months[index], budget),
     ),
   };
 }
@@ -336,17 +269,19 @@ export function feasibleBudget(month, budget) {
     planBalance(month, budget) >= 0
   );
 }
-export function applyFutureAction(state, action) {
+export function applyFutureAction(config, state, action) {
+  const { portfolio, claims, planner } = config;
   if (state.kind === "portfolio") {
     if (state.allocationSubmitted) return state;
     if (
       action.type === "ALLOCATE" &&
-      allocationAssets.some((asset) => asset.id === action.id) &&
-      [-10, 10].includes(action.delta)
+      portfolio.assets.some((asset) => asset.id === action.id) &&
+      [-portfolio.step, portfolio.step].includes(action.delta)
     ) {
       if (
         state.allocation[action.id] + action.delta < 0 ||
-        allocationValue(state.allocation).total + action.delta > 100
+        allocationValue(portfolio, state.allocation).total + action.delta >
+          portfolio.totalPoints
       )
         return state;
       return {
@@ -359,15 +294,17 @@ export function applyFutureAction(state, action) {
     }
     if (
       action.type === "SUBMIT_ALLOCATION" &&
-      allocationValue(state.allocation).total === 100
+      allocationValue(portfolio, state.allocation).total === portfolio.totalPoints
     )
       return {
         ...state,
         allocationSubmitted: true,
         history: {
-          allocation_near: record(state.allocation.cash >= 30),
+          allocation_near: record(
+            state.allocation[portfolio.nearAsset] >= portfolio.nearMinPoints,
+          ),
           allocation_spread: record(
-            state.allocation.bonds > 0 && state.allocation.equity > 0,
+            portfolio.spreadAssets.every((id) => state.allocation[id] > 0),
           ),
         },
       };
@@ -377,11 +314,11 @@ export function applyFutureAction(state, action) {
     state.kind === "claims" &&
     action.type === "CHECK" &&
     !state.checksSubmitted &&
-    claimChecks.some((check) => check.id === action.id)
+    claims.checks.some((check) => check.id === action.id)
   ) {
     const checks = state.checks.includes(action.id)
       ? state.checks.filter((id) => id !== action.id)
-      : state.checks.length < 3
+      : state.checks.length < claims.pickCount
         ? [...state.checks, action.id]
         : state.checks;
     return checks === state.checks ? state : { ...state, checks };
@@ -390,7 +327,7 @@ export function applyFutureAction(state, action) {
     state.kind === "claims" &&
     action.type === "SUBMIT_CHECKS" &&
     !state.checksSubmitted &&
-    state.checks.length === 3
+    state.checks.length === claims.pickCount
   )
     return {
       ...state,
@@ -398,7 +335,7 @@ export function applyFutureAction(state, action) {
       history: {
         ...state.history,
         ...Object.fromEntries(
-          claimChecks
+          claims.checks
             .filter((check) => check.correct)
             .map((check) => [
               `claim_${check.id}`,
@@ -408,14 +345,15 @@ export function applyFutureAction(state, action) {
       },
     };
   if (state.kind !== "planner") return state;
+  const months = planner.months;
   if (
     action.type === "BUDGET" &&
     !state.submittedMonths[state.month] &&
     ["goal", "flexible"].includes(action.id) &&
-    [-100000, 100000].includes(action.delta)
+    [-planner.step, planner.step].includes(action.delta)
   ) {
     const value = state.budgets[state.month][action.id] + action.delta;
-    const available = availableBudget(planMonths[state.month]);
+    const available = availableBudget(months[state.month]);
     if (value < 0 || value > available) return state;
     const other = action.id === "goal" ? "flexible" : "goal";
     const budget = {
@@ -435,8 +373,8 @@ export function applyFutureAction(state, action) {
       submittedMonths: { ...state.submittedMonths, [state.month]: true },
       history: {
         ...state.history,
-        [`plan_${planMonths[state.month].id}`]: record(
-          feasibleBudget(planMonths[state.month], state.budgets[state.month]) &&
+        [`plan_${months[state.month].id}`]: record(
+          feasibleBudget(months[state.month], state.budgets[state.month]) &&
             state.budgets[state.month].goal > 0,
         ),
       },
@@ -444,7 +382,7 @@ export function applyFutureAction(state, action) {
   if (
     action.type === "NEXT_MONTH" &&
     state.submittedMonths[state.month] &&
-    state.month < planMonths.length - 1
+    state.month < months.length - 1
   )
     return {
       ...state,
@@ -455,14 +393,14 @@ export function applyFutureAction(state, action) {
     };
   return state;
 }
-export function futureResult(state) {
+export function futureResult(config, state) {
   const prefix =
     state.kind === "portfolio"
       ? "allocation_"
       : state.kind === "claims"
         ? "claim_"
         : "plan_";
-  const tasks = futureTasks.filter((id) => id.startsWith(prefix));
+  const tasks = config.tasks.filter((id) => id.startsWith(prefix));
   const score = tasks.filter((id) => state.history[id]?.finalCorrect).length;
   return {
     score,
