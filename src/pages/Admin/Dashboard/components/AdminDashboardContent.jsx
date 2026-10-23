@@ -5,6 +5,8 @@ import {
   CreditCard,
   Gift,
   History,
+  KeyRound,
+  LayoutGrid,
   LogOut,
   RefreshCw,
   Save,
@@ -24,6 +26,7 @@ import useAdminDashboard, {
   useAdminRoles,
   useAdminTransactions,
 } from "../hooks/useAdminDashboard";
+import AiKeysTab from "./AiKeysTab";
 import "../styles/admin.css";
 import "../styles/admin-modern.css";
 
@@ -39,6 +42,7 @@ const TABS = [
   ["roles", "Phân quyền", UserCog],
   ["role-logs", "Nhật ký phân quyền", History],
   ["grant", "Cấp gói", Gift],
+  ["ai-keys", "Khoá AI", KeyRound],
 ];
 const ROLE_OPTIONS = [
   {
@@ -1121,6 +1125,8 @@ export default function AdminDashboardContent({ actor }) {
       <RoleLogsTab />
     ) : tab === "grant" ? (
       <GrantTab />
+    ) : tab === "ai-keys" ? (
+      <AiKeysTab />
     ) : (
       <PlansTab />
     );
@@ -1154,6 +1160,10 @@ export default function AdminDashboardContent({ actor }) {
             </button>
           ))}
         </nav>
+        {/* Bản demo 24/10: Studio nội dung (đăng nhập nội bộ riêng) — team FE gộp giao diện sau. */}
+        <a className="admin-logout" href="/studio">
+          <LayoutGrid size={18} /> Studio nội dung
+        </a>
         <button className="admin-logout" onClick={logout}>
           <LogOut size={18} /> Đăng xuất
         </button>
