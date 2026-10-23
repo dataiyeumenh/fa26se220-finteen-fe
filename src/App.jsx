@@ -2,6 +2,8 @@
 
 import { lazy, Suspense } from "react";
 const InternalApp = lazy(() => import("@/features/internal/InternalApp"));
+// Studio nội dung — bản demo 24/10 (đăng nhập nội bộ riêng); team FE gộp với /internal sau.
+const StudioApp = lazy(() => import("@/features/studio/StudioApp"));
 
 // Trang công khai và xác thực
 import Homepage from "@/pages/Homepage";
@@ -71,6 +73,14 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route
+          path="/studio/*"
+          element={
+            <Suspense fallback={<p role="status">Đang tải Studio…</p>}>
+              <StudioApp />
+            </Suspense>
+          }
+        />
         <Route
           path="/internal/*"
           element={

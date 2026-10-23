@@ -210,6 +210,13 @@ export function createAuthClient({ baseUrl, storage, contextStorage = storage, f
       authenticated: true,
     }),
     listAdminRoles: () => request('/api/admin/roles', { authenticated: true }),
+    // Khoá AI (24/10, BE PR #38): chỉ ADMIN; API không bao giờ trả khoá thật, chỉ masked "••••abcd".
+    listAiKeys: () => request('/api/admin/ai-keys', { authenticated: true }),
+    addAiKey: ({ provider, alias, key, priority }) => request('/api/admin/ai-keys', {
+      authenticated: true, body: { provider, alias: alias.trim(), key: key.trim(), priority: priority === '' || priority == null ? null : Number(priority) },
+    }),
+    aiKeyAction: (id, action) => request(`/api/admin/ai-keys/${encodeURIComponent(id)}/${action}`, { authenticated: true, method: 'POST' }),
+    deleteAiKey: id => request(`/api/admin/ai-keys/${encodeURIComponent(id)}`, { authenticated: true, method: 'DELETE' }),
     listAdminRoleLogs: ({ subjectId = '', page = 0, size = 50 } = {}) => {
       const query = new URLSearchParams({ page: String(page), size: String(size) })
       if (subjectId.trim()) query.set('subjectId', subjectId.trim())
