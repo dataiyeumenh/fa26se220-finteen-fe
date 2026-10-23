@@ -268,6 +268,13 @@ function EndingReport({ report }) {
 }
 
 export function VisualNovelPlayer({ data }) {
+  // Cấu hình mini-game FUTURE_PLAN của chương (nếu có): settlement / bảng kế hoạch cấp chương đọc số liệu từ đây.
+  const futurePlan = useMemo(
+    () =>
+      data.scenes.find((item) => item.game?.kind === "FUTURE_PLAN")?.game
+        .config,
+    [data],
+  );
   const [savedProgress] = useState(() => {
     return loadBrowserNovelProgress(data);
   });
@@ -289,7 +296,12 @@ export function VisualNovelPlayer({ data }) {
     new Set(savedProgress?.committedDecisions || []),
   );
   const marketSettlementAppliedRef = useRef(
-    Boolean(savedProgress?.moneyEventsApplied?.CH08_MARKET_SETTLEMENT),
+    Boolean(
+      futurePlan &&
+      savedProgress?.moneyEventsApplied?.[
+        futurePlan.portfolio.settlement.eventId
+      ],
+    ),
   );
   const preloadedImageStateRef = useRef(new Map());
   const preloadingImageRef = useRef(new Map());
@@ -358,7 +370,12 @@ export function VisualNovelPlayer({ data }) {
   const totalScenes = data.scenes.length;
   const scene =
     data.metadata?.chapterId === "CH08"
-      ? resolveFutureScene(data.scenes[sceneIndex], miniGameResults, flags)
+      ? resolveFutureScene(
+          futurePlan.portfolio,
+          data.scenes[sceneIndex],
+          miniGameResults,
+          flags,
+        )
       : data.scenes[sceneIndex];
   const progress = Math.round(((sceneIndex + 1) / totalScenes) * 100);
 
@@ -565,7 +582,11 @@ export function VisualNovelPlayer({ data }) {
     if (!canGoNext && !completedRequired) return;
 
     if (data.metadata?.chapterId === "CH08" && scene.marketSettlement) {
-      const settlement = chapterEightSettlement(miniGameResults, flags);
+      const settlement = chapterEightSettlement(
+        futurePlan.portfolio,
+        miniGameResults,
+        flags,
+      );
       if (
         !moneyEventsApplied[settlement.eventId] &&
         !marketSettlementAppliedRef.current
@@ -620,7 +641,10 @@ export function VisualNovelPlayer({ data }) {
       inspect.planResultFrom
         ? {
             ...inspect,
-            ...buildPlanReview(miniGameResults[inspect.planResultFrom]?.ui),
+            ...buildPlanReview(
+              futurePlan.planner,
+              miniGameResults[inspect.planResultFrom]?.ui,
+            ),
           }
         : inspect,
     );
@@ -786,12 +810,22 @@ export function VisualNovelPlayer({ data }) {
 
   const handleMiniGameComplete = (result) => {
     if (isReviewing) return;
-    if (scene.game?.id === "LIFE_PLAN_CH08" && result?.ui?.budgets) {
-      const projection = planProjection(result.ui.budgets);
+    // Cờ lấy từ bảng dự kiến năm: tên cờ do JSON khai (config.planner.projectionFlags), không gán theo id.
+    const projectionFlags = scene.game?.config?.planner?.projectionFlags;
+    if (
+      scene.game?.kind === "FUTURE_PLAN" &&
+      scene.game.config.mode === "planner" &&
+      projectionFlags &&
+      result?.ui?.budgets
+    ) {
+      const projection = planProjection(
+        scene.game.config.planner,
+        result.ui.budgets,
+      );
       setFlags((prev) => ({
         ...prev,
-        plan_draft_feasible: projection.feasible,
-        plan_year_savings: projection.yearSavings,
+        [projectionFlags.feasible]: projection.feasible,
+        [projectionFlags.yearSavings]: projection.yearSavings,
       }));
     }
     // Cờ bật khi xong mini-game do JSON chương khai (game.onComplete.setFlags), không gán theo id.
@@ -1481,11 +1515,7 @@ export function VisualNovelPlayer({ data }) {
                 onComplete={handleMiniGameComplete}
                 className="h-full"
               />
-            ) : [
-                "PORTFOLIO_CH08",
-                "CLAIM_REVIEW_CH08",
-                "LIFE_PLAN_CH08",
-              ].includes(scene.game?.id) ? (
+            ) : scene.game?.kind === "FUTURE_PLAN" ? (
               <FuturePlanMiniGame
                 key={`${scene.id}-${scenePath.length}`}
                 game={scene.game}

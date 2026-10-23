@@ -4,7 +4,6 @@ import { VisualNovelPlayer } from "../../src/pages/Kid/Dashboard/components/game
 import { chapter8V2GameData as data } from "../../src/pages/Kid/Dashboard/data/chapter8V2VisualNovel.js";
 import {
   availableBudget,
-  planMonths,
   createFutureState,
   chapterEightSettlement,
   validMarket,
@@ -12,6 +11,11 @@ import {
 } from "../../src/pages/Kid/Dashboard/components/game/futurePlanRules.js";
 import { progressKey } from "../../src/pages/Kid/Dashboard/components/game/visualNovelProgress.js";
 import "../../src/index.css";
+const futurePlanConfig = data.scenes.find(
+  (scene) => scene.game?.kind === "FUTURE_PLAN",
+).game.config;
+const { portfolio, planner } = futurePlanConfig;
+const planMonths = planner.months;
 const params = new URLSearchParams(location.search),
   route = params.get("route") || "goal",
   snapshot = params.get("snapshot");
@@ -85,7 +89,7 @@ async function run() {
       !document
         .querySelector(".vn-dialogue")
         .textContent.includes(
-          resolveFutureScene(scene, saved().miniGameResults, saved().flags)
+          resolveFutureScene(portfolio, scene, saved().miniGameResults, saved().flags)
             .text,
         )
     )
@@ -101,7 +105,7 @@ async function run() {
     if (route === "resume" && reloads === 1 && scene.id === "CH08_PROMISE_1") {
       if (
         saved().money !==
-        chapterEightSettlement(saved().miniGameResults, saved().flags).final
+        chapterEightSettlement(portfolio, saved().miniGameResults, saved().flags).final
       )
         throw Error("Settlement before reload incorrect");
       reload(2);
@@ -176,8 +180,8 @@ async function run() {
         throw Error("Real data input or score exposed");
       const state =
         saved().miniGameResults?.[scene.id]?.ui ||
-        createFutureState(scene.game.kind);
-      if (scene.game.kind === "portfolio") {
+        createFutureState(scene.game.config);
+      if (scene.game.config.mode === "portfolio") {
         if (!host.querySelector("[data-allocation-results]")) {
           const current = state?.allocation || { cash: 0, bonds: 0, equity: 0 };
           const target = wrong
@@ -218,7 +222,7 @@ async function run() {
           )
             throw Error("Portfolio preview transacted");
           const market = saved().miniGameResults[scene.id].ui.market;
-          if (!validMarket(market))
+          if (!validMarket(portfolio.market, market))
             throw Error("Market exceeded the permitted range");
           const previous = sessionStorage.getItem("ch8:market");
           if (previous && previous !== JSON.stringify(market))
@@ -229,7 +233,7 @@ async function run() {
             return;
           }
         }
-      } else if (scene.game.kind === "claims") {
+      } else if (scene.game.config.mode === "claims") {
         if (!state?.checksSubmitted) {
           for (const id of wrong || route === "claimsWrong"
             ? ["ranking", "likes", "recent"]
@@ -381,7 +385,7 @@ async function run() {
   if (ending !== expected) throw Error(`Expected ${expected}; got ${ending}`);
   if (
     checkpoint.money !==
-      chapterEightSettlement(checkpoint.miniGameResults, checkpoint.flags)
+      chapterEightSettlement(portfolio, checkpoint.miniGameResults, checkpoint.flags)
         .final ||
     Object.keys(checkpoint.moneyEventsApplied).length !== 1
   )

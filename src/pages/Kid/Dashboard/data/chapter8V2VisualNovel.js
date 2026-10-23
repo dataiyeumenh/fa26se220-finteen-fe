@@ -212,6 +212,320 @@ const assetShared = {
     "Xem mỗi loại để biết tiền có thể tăng, giảm và lấy ra thế nào. Mini-game chỉ dùng ba giỏ: tiền dễ rút, trái phiếu và cổ phiếu; quỹ và bất động sản là phần tìm hiểu thêm.",
   ],
 };
+// Mini-game "Kế hoạch tương lai" (khung FUTURE_PLAN): mọi chữ / số / đáp án / ảnh nằm ở đây, component chỉ là khung
+// (spec bộ khuôn 24/10, cách A). Ba màn (config.mode = portfolio | claims | planner) dùng chung một hình dạng trạng thái
+// (budgets 3 tháng có ở mọi màn — giữ tương thích tiến độ đã lưu), nên mỗi game mang trọn cấu hình chung.
+// Chữ có "{x}" là mẫu, khung điền số vào.
+const MINI = `${BASE}/asset-mini-game`;
+const futurePlanConfig = {
+  tasks: [
+    "allocation_near",
+    "allocation_spread",
+    "claim_risk",
+    "claim_commission",
+    "claim_esg",
+    "plan_normal",
+    "plan_low",
+    "plan_prices",
+  ],
+  texts: {
+    eyebrow: "GÓC THỰC HÀNH CỦA AN",
+    referenceButton: "Xem lại thông tin tài sản",
+    decrease: "Giảm {label}",
+    increase: "Tăng {label}",
+    correct: "Đúng",
+    incorrect: "Chưa đúng",
+    footerDone: "Đã nộp · có thể đọc lời giải rồi tiếp tục",
+    footerOpen: "Không đếm giờ · có thể sửa trước khi nộp",
+    finish: "Trở lại câu chuyện →",
+    disclaimer:
+      "Số tiền và diễn biến đều giả lập. Các thao tác trong bài tập không mua sản phẩm thật và không làm thay đổi ví của An.",
+  },
+  portfolio: {
+    heroImage: `${MINI}/portfolio-builder/diversified-fund.png`,
+    intro: "Chia tiền theo ngày cần dùng, rồi xem kết quả sau ba tháng.",
+    toolbar: "10.000.000đ · 100 điểm",
+    startingAmount: 10000000,
+    pointValue: 100000,
+    totalPoints: 100,
+    step: 10,
+    unit: "điểm",
+    nearAsset: "cash",
+    nearMinPoints: 30,
+    courseCost: 3000000,
+    spreadAssets: ["bonds", "equity"],
+    assets: [
+      {
+        id: "cash",
+        label: "Tiền dễ rút",
+        image: `${MINI}/portfolio-builder/liquid-money.png`,
+        description: "Để dùng khi cần. Trong lượt thử này, giá trị giữ nguyên.",
+      },
+      {
+        id: "bonds",
+        label: "Trái phiếu",
+        image: `${MINI}/portfolio-builder/bond.png`,
+        description:
+          "Cho công ty hoặc Chính phủ vay tiền. Có cam kết trả lãi, nhưng vẫn có rủi ro không được trả đủ.",
+      },
+      {
+        id: "equity",
+        label: "Cổ phiếu",
+        image: `${MINI}/portfolio-builder/equity.png`,
+        description: "Sở hữu một phần công ty. Giá có thể tăng hoặc giảm.",
+      },
+    ],
+    market: {
+      period: "sau ba tháng",
+      maxMove: 10,
+      fixed: { cash: 0 },
+      drawn: ["bonds", "equity"],
+      legacy: { period: "sau ba tháng", cash: 0, bonds: 2, equity: -10 },
+    },
+    settlement: {
+      resultFrom: "CH08_GAME_PORTFOLIO",
+      fitFlag: "portfolio_fit",
+      fitAllocation: { cash: 30, bonds: 40, equity: 30 },
+      otherAllocation: { cash: 10, bonds: 0, equity: 90 },
+      eventId: "CH08_MARKET_SETTLEMENT",
+    },
+    noteTitle: "Khóa học cần 3.000.000đ sau ba tháng.",
+    noteText:
+      "Chia đủ 100 điểm vào ba giỏ. 1 điểm = 100.000đ; mỗi lần bấm thêm hoặc bớt 10 điểm (1.000.000đ). Bạn tự quyết định phần nào giữ dễ rút, phần nào chấp nhận biến động.",
+    poolLabel: "Điểm chưa chia",
+    submit: "Chốt phân bổ và xem biến động",
+    resultsTitle: "Kết quả sau ba tháng trong tình huống này",
+    resultsIntro:
+      "Trái phiếu và cổ phiếu được chọn mức biến động độc lập từ −10% đến +10% cho mỗi lượt chơi mới. Tình huống của lượt này được giữ nguyên khi xem lại hoặc tải lại trang; tiền dễ rút không đổi.",
+    resultsFine:
+      "Đây là thay đổi tổng giá trị sau ba tháng, không phải lãi suất cố định mỗi tháng. Hai nhóm có thể cùng tăng, cùng giảm hoặc đi ngược chiều. Giới hạn 10% chỉ dùng cho bài tập; thực tế có thể biến động ngoài khoảng này.",
+    marketRow: "{label} · {sign}{percent}% {period}",
+    before: "Ban đầu: {amount}",
+    after: "Sau đó: {amount}",
+    change: "Chênh lệch: {amount}",
+    changeLead: "Từ 10.000.000đ, thay đổi",
+    changeMid: ". Nếu bán hết trong bài thử:",
+    changeEnd: ".",
+    nearTitle: "Tiền khóa học",
+    nearLine: "Giỏ dễ rút có {amount}.",
+    nearOk: "Đủ 3.000.000đ để không phải chờ bán tài sản đúng ngày đóng học phí.",
+    nearShort:
+      "Còn thiếu {amount} cho khóa học; nếu tài sản giảm giá, An có thể phải bán lúc bất lợi.",
+    spreadTitle: "Chia phần đầu tư",
+    spreadText:
+      "Chia giữa trái phiếu và cổ phiếu giúp giảm phụ thuộc vào một nhóm trong bài này. Vẫn có thể lỗ; không có một tỷ lệ đúng cho mọi người.",
+    closing:
+      "Đây là lượt tập. Ví 10.000.000đ của An sẽ được cập nhật theo phương án bạn chọn trong câu chuyện tiếp theo, không trừ thêm kết quả ở đây.",
+  },
+  claims: {
+    heroImage: `${MINI}/life-planner/month-calendar.png`,
+    intro: "Chọn những thông tin cần xem trước khi trả lời lời mời đầu tư.",
+    toolbar: "Đọc quảng cáo · chọn ba thông tin cần kiểm tra",
+    pickCount: 3,
+    ad: {
+      image: `${BASE}/props/esg-claim-inspection.png`,
+      eyebrow: "QUẢNG CÁO GIẢ LẬP",
+      title: "“Đầu tư xanh, lợi nhuận chắc chắn!”",
+      text: "Ứng dụng còn báo “mua ngay để lên hạng”. Người giới thiệu nhận hoa hồng nếu bạn tham gia.",
+    },
+    question: "Bạn sẽ tìm hiểu ba thông tin nào?",
+    instruction:
+      "An muốn biết lời mời có đáng cân nhắc không. Chọn ba thông tin giúp kiểm tra rủi ro và lời quảng cáo, rồi nộp để xem giải thích.",
+    checks: [
+      {
+        id: "risk",
+        label: "Điều kiện bán, rút tiền và các rủi ro",
+        detail:
+          "Những thông tin này giúp biết lúc nào lấy tiền ra được và vì sao có thể bị lỗ.",
+        correct: true,
+      },
+      {
+        id: "ranking",
+        label: "Danh sách những người đang dẫn đầu",
+        detail:
+          "Kết quả của người khác không cho biết khoản đầu tư có phù hợp với An hay không.",
+        correct: false,
+      },
+      {
+        id: "commission",
+        label: "Khoản hoa hồng người giới thiệu được nhận",
+        detail:
+          "Người nhận tiền khi An tham gia có thể chỉ nhấn mạnh mặt hấp dẫn của sản phẩm.",
+        correct: true,
+      },
+      {
+        id: "likes",
+        label: "Lượt thích và chia sẻ của bài quảng cáo",
+        detail:
+          "Được chú ý nhiều chưa chứng minh lời hứa về lợi nhuận hay tác động môi trường.",
+        correct: false,
+      },
+      {
+        id: "esg",
+        label: "Báo cáo về hoạt động bảo vệ môi trường",
+        detail:
+          "Cần xem số liệu, cách đo và ai kiểm tra báo cáo; hình chiếc lá không thay cho bằng chứng.",
+        correct: true,
+      },
+      {
+        id: "recent",
+        label: "Biểu đồ giá tăng trong tuần vừa rồi",
+        detail:
+          "Giá đã tăng không bảo đảm sẽ tiếp tục tăng, cũng không giải thích lời quảng cáo “xanh”.",
+        correct: false,
+      },
+    ],
+    chosen: " · Bạn đã chọn",
+    notChosen: " · Bạn không chọn",
+    selected: "Đã chọn",
+    select: "Chọn thẻ",
+    submit: "Nộp ba điều muốn kiểm tra",
+    submitted: "Đã kiểm tra quảng cáo",
+  },
+  planner: {
+    heroImage: `${MINI}/life-planner/month-calendar.png`,
+    intro: "Giúp An để dành tiền học cho năm sau mà vẫn đủ tiền sinh hoạt.",
+    toolbar: "Tình huống {n}/{total} · Cân lại ngân sách",
+    step: 100000,
+    goal: {
+      amount: 7200000,
+      label: "Quỹ học tập cho năm sau",
+      description:
+        "Dành cho sách, dụng cụ và các lớp học trong năm sau. Khoản này khác với 3.000.000đ học phí đã tính ở đầu chương.",
+    },
+    goalLine: "{label}: {amount}",
+    goalIntro: "An muốn có số tiền này sau 12 tháng.",
+    howto:
+      "Mỗi tình huống bắt đầu với hai khoản ở 0đ để bạn tự chia. Hai khoản dùng chung số tiền còn sau chi bắt buộc. Tăng một khoản vượt phần còn trống thì khoản kia tự giảm. Giảm một khoản sẽ để lại tiền dự phòng.",
+    monthsLabel: "Ba tình huống trong kế hoạch năm",
+    // yearCount: số tháng loại này trong năm mẫu (10 bình thường, 1 ít việc, 1 ít việc + giá tăng).
+    months: [
+      {
+        id: "normal",
+        label: "Tháng bình thường",
+        income: 3000000,
+        essential: 2000000,
+        description:
+          "An muốn để dành 600.000đ, phần còn lại dùng cho đi chơi và mua sắm.",
+        prompt:
+          "Sau chi bắt buộc, An còn 1.000.000đ. Bạn muốn dành bao nhiêu cho quỹ học tập và bao nhiêu để đi chơi, mua sắm?",
+        yearCount: 10,
+        yearLabel: "Bình thường",
+        reviewImage: `${MINI}/life-planner/income-envelope.png`,
+      },
+      {
+        id: "low",
+        label: "Tháng ít việc",
+        income: 2600000,
+        essential: 2000000,
+        description:
+          "Thu nhập giảm. An vẫn muốn giữ mức để dành 600.000đ nếu có thể.",
+        prompt:
+          "An nhận ít việc hơn, thu nhập giảm 400.000đ. Với 600.000đ còn lại sau chi bắt buộc, bạn sẽ chia hai khoản thế nào?",
+        yearCount: 1,
+        yearLabel: "Ít việc",
+        reviewImage: `${MINI}/life-planner/price-change.png`,
+      },
+      {
+        id: "prices",
+        label: "Ít việc, giá lại tăng",
+        income: 2600000,
+        essential: 2200000,
+        description:
+          "Chi phí thiết yếu tăng 200.000đ. Chưa có nguồn thu thêm nào được xác nhận.",
+        prompt:
+          "Thu nhập vẫn thấp, tiền ăn ở và đi lại tăng thêm 200.000đ. Lần này chỉ còn 400.000đ để chia. Bạn muốn dành bao nhiêu cho mỗi khoản?",
+        yearCount: 1,
+        yearLabel: "Ít việc, giá tăng",
+        reviewImage: `${MINI}/life-planner/price-change.png`,
+      },
+    ],
+    incomeLabel: "Thu nhập dự kiến",
+    essentialLabel: "Chi bắt buộc",
+    remainingLabel: "Còn sau chi bắt buộc",
+    essentialNote:
+      "Chi bắt buộc gồm tiền ăn ở, đi lại và 300.000đ trả góp cũ. Tổng ở trên đã tính cả khoản trả góp, không cộng thêm lần nữa.",
+    goalBox: {
+      image: `${MINI}/life-planner/course-goal.png`,
+      title: "Bỏ vào quỹ học tập",
+      counter: "Tiền để dành",
+    },
+    flexibleBox: {
+      image: `${MINI}/life-planner/flexible-expenses.png`,
+      title: "Đi chơi, mua sắm",
+      counter: "Chi linh hoạt",
+    },
+    balanceShort: "Ngân sách đang thiếu",
+    balanceExact: "Đã chia vừa số tiền còn lại",
+    balanceSpare: "Còn giữ dự phòng",
+    balanceFormula:
+      "Tiền còn sau chi bắt buộc − tiền cho quỹ học tập − tiền đi chơi, mua sắm = {amount}.",
+    submitMonth: "Chốt ngân sách tháng này",
+    monthSubmitted: "Đã chốt tháng này",
+    nextMonth: "Thử tháng tiếp theo →",
+    feedback: {
+      summary:
+        "Sau chi bắt buộc, bạn có {available}. Bạn dành {goal} cho quỹ học tập và {flexible} cho đi chơi, mua sắm.",
+      sum: "{goal} + {flexible} = {total}. {balance}",
+      over: "Vượt ngân sách {amount}.",
+      exact: "Hai khoản vừa đủ ngân sách, không bị thiếu tiền.",
+      spare: "Còn {amount} giữ dự phòng.",
+      noGoal:
+        "Bạn chưa dành tiền cho quỹ học tập trong tình huống này, nên chưa đạt yêu cầu vừa cân ngân sách vừa tích lũy cho mục tiêu. Khoản chưa chia vẫn là tiền dự phòng, chưa được tính vào quỹ học tập.",
+      withGoal:
+        "Để đạt yêu cầu, hai khoản không vượt tiền đang có và có tiền đưa vào quỹ học tập. Không bắt buộc một mức để dành cụ thể; bảng cuối dùng mức bạn chọn để tính thời gian đạt mục tiêu.",
+    },
+    year: {
+      title: "Bản kế hoạch 12 tháng của bạn",
+      intro:
+        "Lịch thử gồm 10 tháng bình thường, một tháng ít việc và một tháng ít việc kèm tăng giá. Mỗi ô dùng mức để dành bạn vừa chọn; không đoán trước tháng nào thực tế sẽ khó.",
+      goalLabel: "Mục tiêu: {amount}",
+      progressLabel: "Quỹ học tập dự kiến cuối năm",
+      projected: "Dự kiến: {amount}",
+      infeasibleTitle: "Bản kế hoạch chưa đủ điều kiện để thực hiện.",
+      infeasibleOverspent:
+        "Có tháng chi quá thu nhập, nên tổng để dành trên giấy chưa có đủ tiền để làm theo.",
+      infeasibleNoSaving:
+        "Chưa có mức để dành đều đặn để tính ngày đủ quỹ học tập.",
+      infeasibleEnd:
+        "Khi xem lại, cần cân lại khoản chi hoặc xác định nguồn tiền và thời hạn phù hợp.",
+      shortfallLead: "Cuối tháng 12, quỹ còn thiếu",
+      shortfallMid:
+        ". Nếu sau đó mỗi tháng để dành {perMonth}, cần thêm khoảng",
+      shortfallMonths: "{months} tháng",
+      shortfallEnd:
+        ". Bạn có thể ghi lại thời hạn mới, thay vì lấy lợi nhuận đầu tư chưa có để bù vào.",
+      enough:
+        "Với các giả định này, bạn có thể đủ tiền cho quỹ học tập trong 12 tháng. Hãy kiểm tra lại mỗi tháng bằng số tiền thực nhận và đã chi.",
+      detailsSummary: "Xem mức để dành của từng tháng",
+      monthLabel: "Tháng {n}",
+      closing:
+        "Đây là tiền dự kiến để dành từ công việc, chưa được cộng vào ví. Khoản học phí 3.000.000đ ở đầu chương không dùng để bù cho bảng này.",
+    },
+    review: {
+      incomeLabel: "Thu nhập / chi bắt buộc",
+      goalLabel: "Bạn dành cho học tập",
+      flexibleLabel: "Bạn dành cho đi chơi, mua sắm",
+      missingLabel: "Chưa có tiền bù",
+      spareLabel: "Tiền giữ dự phòng",
+      sharedLabel: "Theo số tiền bạn vừa chọn",
+      goalLine:
+        "Mục tiêu học tập: {goal}. Theo lịch thử, bạn dự kiến để dành {year} trong năm.",
+      infeasible:
+        "Kế hoạch còn phần chưa thực hiện được. Cần cân lại khoản chi hoặc mức để dành trước khi dùng tổng dự kiến.",
+      shortfall:
+        "Còn thiếu {shortfall}. Nếu sau đó để dành {perMonth}/tháng thì cần thêm khoảng {months} tháng.",
+      enough:
+        "Theo các giả định này, tiền dự kiến đủ mục tiêu trong 12 tháng. Hãy kiểm tra lại bằng thu chi thực tế mỗi tháng.",
+    },
+    // Cờ chương bật khi xong màn kế hoạch, giá trị lấy từ bảng dự kiến năm.
+    projectionFlags: {
+      feasible: "plan_draft_feasible",
+      yearSavings: "plan_year_savings",
+    },
+  },
+};
+
 export const chapter8V2GameData = {
   id: "CH08_V2",
   version: "1.1",
@@ -441,7 +755,8 @@ export const chapter8V2GameData = {
       game: {
         id: "PORTFOLIO_CH08",
         title: "Chia giỏ tiền",
-        kind: "portfolio",
+        kind: "FUTURE_PLAN",
+        config: { mode: "portfolio", ...futurePlanConfig },
         reference: {
           buttonText: "Thông tin tài sản",
           cards: assetCards,
@@ -801,7 +1116,8 @@ export const chapter8V2GameData = {
       game: {
         id: "CLAIM_REVIEW_CH08",
         title: "Tìm hiểu lời mời đầu tư",
-        kind: "claims",
+        kind: "FUTURE_PLAN",
+        config: { mode: "claims", ...futurePlanConfig },
       },
       nextSceneId: "CH08_SC03",
     }),
@@ -966,7 +1282,8 @@ export const chapter8V2GameData = {
       game: {
         id: "LIFE_PLAN_CH08",
         title: "Bản kế hoạch của An",
-        kind: "planner",
+        kind: "FUTURE_PLAN",
+        config: { mode: "planner", ...futurePlanConfig },
       },
       nextSceneId: "CH08_AFTER_PLAN_1",
     }),
