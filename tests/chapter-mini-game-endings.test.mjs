@@ -53,6 +53,9 @@ const timelineConfig = ch5.scenes.find(
   (scene) => scene.game?.kind === "COMPOUND_TIMELINE",
 ).game.config;
 const challenges = timelineConfig.questions;
+const safetyConfig = ch7.scenes.find(
+  (scene) => scene.game?.kind === "SCAM_OR_SAFE",
+).game.config;
 const cases = [
   [ch4, null, [{ id: "shopping" }], () => ({ total: 4 }), null],
   [
@@ -75,8 +78,8 @@ const cases = [
   [
     ch7,
     chapterSevenLearning,
-    safetyTasks,
-    (history, rounds) => safetyResult(history, rounds),
+    safetyTasks(safetyConfig),
+    (history, rounds) => safetyResult(safetyConfig, history, rounds),
     [[0], [1, 2]],
   ],
   [

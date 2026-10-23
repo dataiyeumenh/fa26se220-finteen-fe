@@ -1502,9 +1502,7 @@ export function VisualNovelPlayer({ data }) {
                 }
                 onComplete={handleMiniGameComplete}
               />
-            ) : ["INSURANCE_DESK_CH07", "SCAM_OR_SAFE_CH07"].includes(
-                scene.game?.id,
-              ) ? (
+            ) : scene.game?.kind === "SCAM_OR_SAFE" ? (
               <ScamOrSafeMiniGame
                 key={`${scene.id}-${scenePath.length}`}
                 game={scene.game}
