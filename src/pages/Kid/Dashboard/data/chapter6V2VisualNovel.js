@@ -1,7 +1,326 @@
-import { loanApr, loanOffers } from "../components/game/loanDetectiveRules.js";
+import { loanApr } from "../components/game/loanDetectiveRules.js";
 
 const BASE = "/images/finteen-v2/chapter-06";
 const MINI = `${BASE}/asset-mini-game/loan-detective`;
+// Mini-game "Thám tử khoản vay" (khung LOAN_DETECTIVE, dùng cho LOAN_OFFERS_CH06 + LOAN_REPAYMENT_CH06): mọi chữ / số /
+// đáp án / ảnh nằm ở đây, component chỉ là khung (spec bộ khuôn 24/10, cách A). Chữ có "{x}" là mẫu, khung điền vào.
+// Mảng rich: chuỗi = chữ thường, {b} = đậm, {strong} = nhấn, {br} = xuống dòng.
+const loanOffers = [
+  {
+    id: "A",
+    periods: 6,
+    installment: 1120000,
+    upfront: 0,
+    principal: 6000000,
+    received: 6000000,
+    intervalMonths: 1,
+  },
+  {
+    id: "B",
+    periods: 12,
+    installment: 550000,
+    upfront: 0,
+    principal: 6000000,
+    received: 6000000,
+    intervalMonths: 1,
+  },
+  {
+    id: "C",
+    periods: 16,
+    installment: 500000,
+    upfront: 0,
+    principal: 6000000,
+    received: 5400000,
+    intervalMonths: 0.5,
+  },
+];
+const loanDetectiveConfig = {
+  eyebrow: "CÙNG AN THỬ MỘT KẾ HOẠCH",
+  heading: "Thám tử khoản vay",
+  subheading: "Biết tổng chi · tính cả những lần trả sau",
+  rounds: [
+    {
+      view: "totals",
+      title: "Tính tổng trả",
+      picture: `${MINI}/loan-offers-inspection.png`,
+      instruction:
+        "Nhập tổng tiền phải trả của cả ba gói rồi nộp một lần. Sau khi chấm, bạn sẽ thấy phép tính đúng và được tiếp tục dù có câu sai.",
+      idleFeedback:
+        "Chỉ kiểm tra sau khi bạn xác nhận. Không có lượt nộp lại.",
+    },
+    {
+      view: "sort",
+      title: "Xếp gói vay",
+      picture: `${MINI}/laptop-goal.png`,
+      instruction:
+        "Đặt cả ba thẻ vào khay theo nhận định của bạn. Có thể chuyển thẻ trước khi bấm kiểm tra; hệ thống chỉ chấm sau khi bạn nộp.",
+      idleFeedback: "Chưa chấm bài. Bạn được tự do xếp và chuyển thẻ.",
+    },
+    {
+      view: "cart",
+      neutral: true,
+      title: "Giỏ hàng trả sau",
+      picture: `${MINI}/repayment-calendar.png`,
+      instruction:
+        "Chọn tai nghe để học online và thêm ít nhất một món bạn muốn mua. Hãy cân đối giỏ hàng để ba tháng tới không thiếu tiền, rồi chốt giỏ một lần.",
+      idleFeedback:
+        "Chỉ kiểm tra sau khi bạn xác nhận. Không có lượt nộp lại.",
+    },
+    {
+      view: "statement",
+      neutral: true,
+      title: "Trả nợ thẻ",
+      picture: `${MINI}/card-and-statement.png`,
+      instruction:
+        "Chọn số tiền trả nợ hôm nay. Sau đó xem bạn còn đủ tiền sinh hoạt không và tháng sau còn phải trả bao nhiêu.",
+      idleFeedback:
+        "Chỉ kiểm tra sau khi bạn xác nhận. Không có lượt nộp lại.",
+    },
+  ],
+  tasks: [
+    { id: "receiptA", round: 0 },
+    { id: "receiptB", round: 0 },
+    { id: "receiptC", round: 0 },
+    { id: "sortA", round: 1 },
+    { id: "sortB", round: 1 },
+    { id: "sortC", round: 1 },
+    { id: "cartNeed", round: 2 },
+    { id: "cartBudget", round: 2 },
+    { id: "statementLiving", round: 3 },
+    { id: "statementCost", round: 3 },
+  ],
+  offers: loanOffers,
+  offerImage: `${MINI}/loan-offers-inspection.png`,
+  intervalLabels: { 0.5: "nửa tháng", 1: "tháng" },
+  totals: {
+    inputLabel: "Bạn tính tổng phải trả",
+    placeholder: "Nhập số đồng",
+    explanation: "{periods} lần × {installment} =",
+    notes: { C: "Mỗi tháng trả hai lần: 8 tháng là 16 lần trả." },
+    review: "Xem lại thông tin ba gói vay",
+    helpTitle: "Gợi ý cách tính",
+    help: "Tổng tiền phải trả = số lần trả × số tiền mỗi lần. Nhớ phân biệt số tháng với số lần thanh toán.",
+    submit: "Nộp kết quả ba gói",
+    comparison:
+      "Gói B có tổng trả thấp nhất. Tổng tiền chưa đủ để quyết định: màn sau còn xét tiền thực nhận và khả năng trả mỗi tháng.",
+  },
+  sort: {
+    targets: { A: "over", B: "fit", C: "shortfall" },
+    trays: [
+      {
+        id: "shortfall",
+        label: "Chưa đủ tiền mua máy",
+        help: "Tiền thực nhận dưới 6.000.000đ",
+      },
+      {
+        id: "over",
+        label: "Khoản trả vượt ngân sách",
+        help: "Cần trả hơn 1.000.000đ mỗi tháng",
+      },
+      {
+        id: "fit",
+        label: "Đủ tiền mua, trả vừa ngân sách",
+        help: "Nhận đủ 6.000.000đ; trả không quá 1.000.000đ/tháng",
+      },
+    ],
+    reasons: {
+      A: "Nhận đủ tiền mua máy nhưng cần trả 1.120.000đ/tháng, cao hơn ngân sách 120.000đ.",
+      B: "Nhận đủ 6.000.000đ và trả 550.000đ/tháng, còn 450.000đ trong ngân sách tháng.",
+      C: "Chỉ nhận 5.400.000đ, còn thiếu 600.000đ mua máy. Mỗi tháng có hai lần trả 500.000đ.",
+    },
+    budgetNote: [
+      "Laptop giá ",
+      { b: "6.000.000đ" },
+      ". An đang có ",
+      { b: "0đ" },
+      " và có thể dành ",
+      { b: "1.000.000đ/tháng" },
+      " sau sinh hoạt.",
+    ],
+    placedCount: "Đã đặt {placed}/{total} thẻ",
+    lockedStatus: "Các thẻ đã được khóa theo bài nộp.",
+    holdingStatus: "Đang cầm gói {id} — chọn khay để đặt.",
+    idleStatus: "Thẻ đã đặt sẽ nằm ngay trong khay, không còn ở hàng trên.",
+    allPlaced:
+      "Đã xếp hết. Chạm thẻ trong khay để chuyển nếu bạn muốn đổi ý, hoặc nộp bài bên dưới.",
+    removeCard: "Lấy thẻ ra",
+    placeHere: "Đặt gói {id} vào khay này",
+    placeMore: "Chọn thẻ khác để đặt thêm",
+    emptyTray: "Khay trống · chọn thẻ để đặt",
+    submit: "Kiểm tra cách xếp của tôi",
+    answersTitle: "Đối chiếu đáp án",
+    yourTray: "Bạn xếp: {tray}.",
+    correctTray: "Khay đúng: {tray}.",
+  },
+  card: {
+    perPeriod: "{installment}/{interval}",
+    received: "Thực nhận: {amount}",
+    total: "Tổng trả: {amount}",
+    schedule: "{periods} lần trả · {months} tháng",
+    apr: "APR ≈ {apr}%/năm",
+    holding: "Đang cầm thẻ · chọn một khay",
+    placed: "Đã đặt · chạm để chuyển khay",
+    idle: "Chạm hoặc kéo để xếp",
+  },
+  cart: {
+    months: 3,
+    available: 500000,
+    otherDue: { 2: 200000 },
+    requiredItemId: "headphones",
+    minItems: 2,
+    budgetNote: [
+      { b: "Bài thử riêng: mua sắm để học online." },
+      { br: true },
+      "Mỗi tháng có 500.000đ sau sinh hoạt. Riêng tháng 2 đã có khoản khác đến hạn 200.000đ. Các món dưới đây đều trả ba lần, mỗi tháng một lần, 0% lãi và không có phí trong bài thử.",
+    ],
+    items: [
+      {
+        id: "headphones",
+        label: "Tai nghe học online",
+        image:
+          "/images/finteen-v2/chapter-01/asset-mini-game/needs-or-wants/04-replacement-headphones.png",
+        price: 600000,
+        installment: 200000,
+      },
+      {
+        id: "decoration",
+        label: "Mèo trang trí bàn học",
+        image:
+          "/images/finteen-v2/chapter-01/asset-mini-game/needs-or-wants/06-desk-decoration.png",
+        price: 450000,
+        installment: 150000,
+      },
+      {
+        id: "notebook",
+        label: "Bộ sổ và bút",
+        image: "/images/c1/mini-game/c1_item_student_book.png",
+        price: 300000,
+        installment: 100000,
+      },
+      {
+        id: "artClass",
+        label: "Lớp học vẽ",
+        image:
+          "/images/finteen-v2/chapter-01/asset-mini-game/needs-or-wants/03-art-class-booking.png",
+        price: 750000,
+        installment: 250000,
+      },
+    ],
+    price: "Giá {price}",
+    installment: "{installment}/tháng × 3",
+    remove: "Bỏ khỏi giỏ",
+    add: "Thêm vào giỏ",
+    basketTitle: "Giỏ của bạn · {count} món",
+    basketJoin: " + ",
+    basketEmpty: "Chưa có món nào.",
+    monthlyLabel: "Mỗi tháng cần trả: ",
+    submit: "Chốt giỏ và xem lịch trả",
+    submitted: "Đã chốt giỏ hàng",
+    month: "Tháng {month}",
+    have: "Có: {amount}",
+    payment: "Giỏ trả sau: − {amount}",
+    other: "Khoản khác: − {amount}",
+    remaining: "Còn",
+    short: "Thiếu",
+    needOk: "✓ Đúng: có tai nghe và ít nhất một món thêm như mục tiêu.",
+    needBad:
+      "× Chưa đúng mục tiêu: giỏ cần có tai nghe và ít nhất một món thêm.",
+    budgetOk: "✓ Đúng: không tháng nào vượt số tiền có thể dùng.",
+    budgetBad:
+      "× Chưa đúng ngân sách: lịch trả có tháng thiếu tiền. Nhiều món 0% lãi vẫn cộng thành khoản phải trả lớn.",
+    example:
+      "Ví dụ đáp ứng cả hai mục tiêu: tai nghe + bộ sổ và bút, trả 300.000đ/tháng. Tháng 2 cộng khoản khác 200.000đ là vừa đủ 500.000đ.",
+  },
+  statement: {
+    wallet: 1200000,
+    debt: 1000000,
+    living: 400000,
+    interestRate: 0.02,
+    maxInterest: 5000,
+    options: [
+      { id: "minimum", label: "Chỉ trả mức tối thiểu", amount: 100000 },
+      { id: "half", label: "Trả một nửa số nợ", amount: 500000 },
+      { id: "threeQuarters", label: "Trả ba phần tư số nợ", amount: 750000 },
+      { id: "partial", label: "Trả phần lớn số nợ", amount: 800000 },
+      { id: "almostFull", label: "Trả gần hết số nợ", amount: 900000 },
+      { id: "full", label: "Trả hết số đang nợ", amount: 1000000 },
+    ],
+    question: "Bạn sẽ dùng bao nhiêu tiền trong ví để trả nợ thẻ?",
+    facts: [
+      { label: "Tiền trong ví", value: "1.200.000đ" },
+      { label: "Tổng tiền đang nợ", value: "1.000.000đ" },
+      { label: "Sinh hoạt sắp tới cần", value: "400.000đ" },
+      { label: "Mức trả tối thiểu kỳ này", value: "100.000đ" },
+    ],
+    goalsTitle: "Cần đạt cả hai mục tiêu:",
+    goals: [
+      ["Trả nợ xong vẫn giữ đủ ", { b: "400.000đ" }, " sinh hoạt."],
+      ["Tiền lãi tháng sau ", { b: "không quá 5.000đ" }, "."],
+    ],
+    ruleTitle: "Cách tính trong bài thử",
+    rule: [
+      "Phần nợ chưa trả sẽ thêm ",
+      { b: "2% tiền lãi" },
+      " vào tháng sau. Ví dụ: còn nợ 100.000đ thì thêm 2.000đ lãi.",
+    ],
+    ruleNote:
+      "Chỉ là quy tắc giả lập; không tính chi tiêu mới hay phí khác, không đại diện cho thẻ ngân hàng cụ thể.",
+    optionIcon: "✉",
+    confirm: "Chốt cách trả và xem kết quả",
+    todayTitle: "Hôm nay · trích tiền trả nợ",
+    walletStart: "Ví ban đầu",
+    walletStartValue: "1.200.000đ",
+    pay: "Trả nợ",
+    payValue: "− {amount}",
+    walletLeft: "Ví còn",
+    livingTitle: "Tiếp theo · chi sinh hoạt",
+    livingNeed: "Cần 400.000đ.",
+    livingOk: "Ví còn đủ để chi, sau đó còn {amount}.",
+    livingShort: "Ví chỉ có {wallet}, còn thiếu {shortfall}.",
+    reveal: "Xem khoản nợ tháng sau",
+    debtTitle: "Tháng sau · cộng lãi vào nợ còn lại",
+    debtLeft: "Nợ chưa trả",
+    interest: "Thêm lãi 2%",
+    interestValue: "+ {amount}",
+    nextDebt: "Tổng còn phải trả",
+    noteOk: "Tiền còn trong ví là {amount}; chưa dùng để trả khoản nợ này.",
+    noteShort: "Khoản sinh hoạt thiếu {amount} vẫn chưa được giải quyết.",
+    livingResultOk: "✓ Đúng: giữ đủ tiền sinh hoạt.",
+    livingResultBad: "× Chưa đúng: còn thiếu tiền sinh hoạt.",
+    costResultOk: "✓ Đúng: lãi {amount}, không vượt 5.000đ.",
+    costResultBad: "× Chưa đúng: lãi {amount}, vượt mục tiêu 5.000đ.",
+    summary:
+      "Trả 750.000đ hoặc 800.000đ đều đáp ứng hai mục tiêu: giữ đủ tiền sinh hoạt và lãi không quá 5.000đ. Trả tối thiểu không làm hết nợ; trả hết ngay cũng cần xem còn đủ tiền sống không.",
+  },
+  texts: {
+    stepsLabel: "Các màn chơi",
+    roundTitle: "Màn {n} · {title}",
+    submitted: "Đã nộp đáp án",
+    notSubmitted: "Chưa nộp đáp án",
+    howto: "Cách chơi",
+    offerName: "Gói vay {id}",
+    correct: "✓ Đúng",
+    incorrect: "× Chưa đúng",
+    footerDone: "Đã xem kết quả · có thể tiếp tục",
+    footerIdle: "Không đếm giờ · nộp một lần",
+    finish: "Trở lại câu chuyện",
+    next: "Sang màn tiếp theo →",
+    note: "Tiền trong bài thử là giả lập, không thay đổi số dư hiện tại của An.",
+    feedback: {
+      totals:
+        "Đã nhận câu trả lời của bạn. Xem phép tính đúng ở từng gói rồi tiếp tục nhé.",
+      sorted:
+        "Đã đặt gói vay {id}. Bạn có thể chuyển thẻ trước khi kiểm tra.",
+      sortChecked:
+        "Đã kiểm tra. Vị trí bạn xếp được giữ nguyên; xem đáp án và lý do bên dưới.",
+      cart: "Giỏ hàng đã được chốt trong bài thử. Xem cả ba tháng để biết các khoản trả góp cộng dồn thế nào.",
+      statementConfirmed:
+        "Đã ghi nhận cách thanh toán. Bây giờ đến khoản sinh hoạt 400.000đ; lựa chọn vừa rồi được giữ nguyên.",
+      statementRevealed:
+        "Đã kiểm tra hai mục tiêu: đủ tiền sinh hoạt và lãi kỳ sau không quá 5.000đ. Bạn tiếp tục với kết quả này.",
+    },
+  },
+};
 const backgrounds = [
   "bg10-design-lab",
   "bg10b-offer-comparison-board",
@@ -170,8 +489,10 @@ const game = (id, n, gameId, rounds, nextSceneId) =>
     title: "Thám tử khoản vay",
     game: {
       id: gameId,
+      kind: "LOAN_DETECTIVE",
       title: "Thám tử khoản vay",
       rounds,
+      config: loanDetectiveConfig,
       reference: rounds.includes(0)
         ? {
             buttonText: "So ba gói vay",

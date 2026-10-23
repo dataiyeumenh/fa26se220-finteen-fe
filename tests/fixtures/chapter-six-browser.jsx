@@ -3,13 +3,15 @@ import { createRoot } from "react-dom/client";
 import { MemoryRouter } from "react-router-dom";
 import { VisualNovelPlayer } from "../../src/pages/Kid/Dashboard/components/game/VisualNovelPlayer";
 import { chapter6V2GameData as data } from "../../src/pages/Kid/Dashboard/data/chapter6V2VisualNovel";
-import {
-  loanOffers,
-  loanTotal,
-  sortTargets,
-} from "../../src/pages/Kid/Dashboard/components/game/loanDetectiveRules.js";
+import { loanTotal } from "../../src/pages/Kid/Dashboard/components/game/loanDetectiveRules.js";
 import { progressKey } from "../../src/pages/Kid/Dashboard/components/game/visualNovelProgress.js";
 import "../../src/index.css";
+
+const loanConfig = data.scenes.find(
+  (scene) => scene.game?.kind === "LOAN_DETECTIVE",
+).game.config;
+const loanOffers = loanConfig.offers;
+const sortTargets = loanConfig.sort.targets;
 
 const params = new URLSearchParams(location.search);
 const route = params.get("route") || "goal";

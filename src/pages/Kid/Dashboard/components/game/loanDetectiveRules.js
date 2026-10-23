@@ -1,33 +1,5 @@
 import { chapterMiniGameSummary } from "./miniGameRules.js";
-export const loanOffers = [
-  {
-    id: "A",
-    periods: 6,
-    installment: 1120000,
-    upfront: 0,
-    principal: 6000000,
-    received: 6000000,
-    intervalMonths: 1,
-  },
-  {
-    id: "B",
-    periods: 12,
-    installment: 550000,
-    upfront: 0,
-    principal: 6000000,
-    received: 6000000,
-    intervalMonths: 1,
-  },
-  {
-    id: "C",
-    periods: 16,
-    installment: 500000,
-    upfront: 0,
-    principal: 6000000,
-    received: 5400000,
-    intervalMonths: 0.5,
-  },
-];
+// Dữ liệu mini-game (gói vay, khay, giỏ hàng, sao kê, chữ) nằm trong JSON chương: game.config (khung LOAN_DETECTIVE).
 export const loanTotal = (offer) => offer.periods * offer.installment;
 export const loanMonthlyPayment = (offer) =>
   offer.installment / offer.intervalMonths;
@@ -59,97 +31,49 @@ export const affordabilityAt = (
   repayment,
   remaining: income - essentials - repayment,
 });
-export const loanTasks = [
-  { id: "receiptA", round: 0 },
-  { id: "receiptB", round: 0 },
-  { id: "receiptC", round: 0 },
-  { id: "sortA", round: 1 },
-  { id: "sortB", round: 1 },
-  { id: "sortC", round: 1 },
-  { id: "cartNeed", round: 2 },
-  { id: "cartBudget", round: 2 },
-  { id: "statementLiving", round: 3 },
-  { id: "statementCost", round: 3 },
-];
-export const sortTargets = { A: "over", B: "fit", C: "shortfall" };
-export const bnplItems = [
-  {
-    id: "headphones",
-    label: "Tai nghe học online",
-    image:
-      "/images/finteen-v2/chapter-01/asset-mini-game/needs-or-wants/04-replacement-headphones.png",
-    price: 600000,
-    installment: 200000,
-  },
-  {
-    id: "decoration",
-    label: "Mèo trang trí bàn học",
-    image:
-      "/images/finteen-v2/chapter-01/asset-mini-game/needs-or-wants/06-desk-decoration.png",
-    price: 450000,
-    installment: 150000,
-  },
-  {
-    id: "notebook",
-    label: "Bộ sổ và bút",
-    image: "/images/c1/mini-game/c1_item_student_book.png",
-    price: 300000,
-    installment: 100000,
-  },
-  {
-    id: "artClass",
-    label: "Lớp học vẽ",
-    image:
-      "/images/finteen-v2/chapter-01/asset-mini-game/needs-or-wants/03-art-class-booking.png",
-    price: 750000,
-    installment: 250000,
-  },
-];
-export function cartForecast(ids) {
-  const items = bnplItems.filter((item) => ids.includes(item.id));
+export function cartForecast({ cart }, ids) {
+  const items = cart.items.filter((item) => ids.includes(item.id));
   const monthly = items.reduce((sum, item) => sum + item.installment, 0);
-  const months = [1, 2, 3].map((month) => ({
-    month,
-    available: 500000,
-    other: month === 2 ? 200000 : 0,
-    payment: monthly,
-    remaining: 500000 - monthly - (month === 2 ? 200000 : 0),
-  }));
+  const months = Array.from({ length: cart.months }, (_, i) => i + 1).map(
+    (month) => {
+      const other = cart.otherDue[month] || 0;
+      return {
+        month,
+        available: cart.available,
+        other,
+        payment: monthly,
+        remaining: cart.available - monthly - other,
+      };
+    },
+  );
   return {
     items,
     monthly,
-    total: monthly * 3,
+    total: monthly * cart.months,
     months,
     meetsNeed:
-      items.some((item) => item.id === "headphones") && items.length >= 2,
+      items.some((item) => item.id === cart.requiredItemId) &&
+      items.length >= cart.minItems,
     affordable: months.every((month) => month.remaining >= 0),
   };
 }
-export const statementOptions = [
-  { id: "minimum", label: "Chỉ trả mức tối thiểu", amount: 100000 },
-  { id: "half", label: "Trả một nửa số nợ", amount: 500000 },
-  { id: "threeQuarters", label: "Trả ba phần tư số nợ", amount: 750000 },
-  { id: "partial", label: "Trả phần lớn số nợ", amount: 800000 },
-  { id: "almostFull", label: "Trả gần hết số nợ", amount: 900000 },
-  { id: "full", label: "Trả hết số đang nợ", amount: 1000000 },
-];
-export function statementOutcome(id) {
-  const option = statementOptions.find((option) => option.id === id);
+export function statementOutcome({ statement }, id) {
+  const option = statement.options.find((option) => option.id === id);
   if (!option) return null;
-  const walletLeft = 1200000 - option.amount;
-  const debtLeft = 1000000 - option.amount;
+  const walletLeft = statement.wallet - option.amount;
+  const debtLeft = statement.debt - option.amount;
   // Explicit teaching rule, not a model of any actual credit-card contract.
-  const interest = Math.round(debtLeft * 0.02);
+  const interest = Math.round(debtLeft * statement.interestRate);
   return {
     ...option,
     walletLeft,
     debtLeft,
-    afterLiving: walletLeft - 400000,
-    livingShortfall: Math.max(0, 400000 - walletLeft),
+    afterLiving: walletLeft - statement.living,
+    livingShortfall: Math.max(0, statement.living - walletLeft),
     interest,
     nextDebt: debtLeft + interest,
-    livingCovered: walletLeft >= 400000,
-    costCovered: interest <= 5000,
+    livingCovered: walletLeft >= statement.living,
+    costCovered: interest <= statement.maxInterest,
   };
 }
 export function createLoanState(rounds) {
@@ -179,7 +103,10 @@ function recordTask(history, id, correct) {
 }
 // Drafts never score. A submission records all criteria once, including wrong answers.
 // Completion and correctness are separate: feedback never blocks story progression.
-export function applyLoanAction(state, action) {
+export function applyLoanAction(config, state, action) {
+  const { offers, sort } = config;
+  const texts = config.texts.feedback;
+  const view = config.rounds[state.round]?.view;
   let next = { ...state, feedback: "" };
   const complete = (id, correct) => {
     next.history = recordTask(next.history, id, correct);
@@ -196,14 +123,14 @@ export function applyLoanAction(state, action) {
   if (state.submittedRounds[state.round]) return state;
   if (
     action.type === "TOTAL_DRAFT" &&
-    state.round === 0 &&
-    loanOffers.some((o) => o.id === action.id)
+    view === "totals" &&
+    offers.some((o) => o.id === action.id)
   ) {
     return { ...next, totals: { ...state.totals, [action.id]: action.value } };
   }
-  if (action.type === "TOTAL" && state.round === 0) {
+  if (action.type === "TOTAL" && view === "totals") {
     if (
-      !loanOffers.every(
+      !offers.every(
         (o) =>
           String(state.totals[o.id] ?? "").trim() &&
           Number.isFinite(Number(state.totals[o.id])) &&
@@ -211,96 +138,91 @@ export function applyLoanAction(state, action) {
       )
     )
       return state;
-    for (const offer of loanOffers)
+    for (const offer of offers)
       complete(
         `receipt${offer.id}`,
         Number(state.totals[offer.id]) === loanTotal(offer),
       );
     submit();
-    next.feedback =
-      "Đã nhận câu trả lời của bạn. Xem phép tính đúng ở từng gói rồi tiếp tục nhé.";
+    next.feedback = texts.totals;
   } else if (
     action.type === "SELECT" &&
-    state.round === 1 &&
-    loanOffers.some((o) => o.id === action.id)
+    view === "sort" &&
+    offers.some((o) => o.id === action.id)
   ) {
     next.selected = action.id;
   } else if (
     action.type === "SORT" &&
-    state.round === 1 &&
-    sortTargets[action.id] &&
-    Object.values(sortTargets).includes(action.target)
+    view === "sort" &&
+    sort.targets[action.id] &&
+    Object.values(sort.targets).includes(action.target)
   ) {
     next.sorted = { ...state.sorted, [action.id]: action.target };
     next.selected = null;
-    next.feedback = `Đã đặt gói vay ${action.id}. Bạn có thể chuyển thẻ trước khi kiểm tra.`;
+    next.feedback = texts.sorted.replace("{id}", action.id);
   } else if (
     action.type === "UNSORT" &&
-    state.round === 1 &&
+    view === "sort" &&
     state.sorted[action.id]
   ) {
     next.sorted = { ...state.sorted };
     delete next.sorted[action.id];
     next.selected = action.id;
-  } else if (action.type === "SUBMIT_SORT" && state.round === 1) {
-    if (!loanOffers.every((o) => state.sorted[o.id])) return state;
-    for (const offer of loanOffers)
+  } else if (action.type === "SUBMIT_SORT" && view === "sort") {
+    if (!offers.every((o) => state.sorted[o.id])) return state;
+    for (const offer of offers)
       complete(
         `sort${offer.id}`,
-        state.sorted[offer.id] === sortTargets[offer.id],
+        state.sorted[offer.id] === sort.targets[offer.id],
       );
     submit();
-    next.feedback =
-      "Đã kiểm tra. Vị trí bạn xếp được giữ nguyên; xem đáp án và lý do bên dưới.";
+    next.feedback = texts.sortChecked;
   } else if (
     action.type === "TOGGLE_ITEM" &&
-    state.round === 2 &&
-    bnplItems.some((item) => item.id === action.id)
+    view === "cart" &&
+    config.cart.items.some((item) => item.id === action.id)
   ) {
     next.basket = state.basket.includes(action.id)
       ? state.basket.filter((id) => id !== action.id)
       : [...state.basket, action.id];
-  } else if (action.type === "BUY_CART" && state.round === 2) {
+  } else if (action.type === "BUY_CART" && view === "cart") {
     if (!state.basket.length) return state;
-    const forecast = cartForecast(state.basket);
+    const forecast = cartForecast(config, state.basket);
     complete("cartNeed", forecast.meetsNeed);
     complete("cartBudget", forecast.affordable);
     submit();
-    next.feedback =
-      "Giỏ hàng đã được chốt trong bài thử. Xem cả ba tháng để biết các khoản trả góp cộng dồn thế nào.";
+    next.feedback = texts.cart;
   } else if (
     action.type === "STATEMENT_CHOICE" &&
-    state.round === 3 &&
+    view === "statement" &&
     state.statementStep === 0 &&
-    statementOutcome(action.id)
+    statementOutcome(config, action.id)
   ) {
     next.statementChoice = action.id;
   } else if (
     action.type === "CONFIRM_STATEMENT" &&
-    state.round === 3 &&
+    view === "statement" &&
     state.statementStep === 0 &&
-    statementOutcome(state.statementChoice)
+    statementOutcome(config, state.statementChoice)
   ) {
     next.statementStep = 1;
-    next.feedback =
-      "Đã ghi nhận cách thanh toán. Bây giờ đến khoản sinh hoạt 400.000đ; lựa chọn vừa rồi được giữ nguyên.";
+    next.feedback = texts.statementConfirmed;
   } else if (
     action.type === "REVEAL_STATEMENT" &&
-    state.round === 3 &&
+    view === "statement" &&
     state.statementStep === 1
   ) {
-    const outcome = statementOutcome(state.statementChoice);
+    const outcome = statementOutcome(config, state.statementChoice);
     complete("statementLiving", outcome.livingCovered);
     complete("statementCost", outcome.costCovered);
     next.statementStep = 2;
     submit();
-    next.feedback =
-      "Đã kiểm tra hai mục tiêu: đủ tiền sinh hoạt và lãi kỳ sau không quá 5.000đ. Bạn tiếp tục với kết quả này.";
+    next.feedback = texts.statementRevealed;
   } else return state;
   return next;
 }
-export function loanResult(history, rounds) {
-  const tasks = loanTasks.filter(
+export function loanResult({ tasks: allTasks }, history, rounds) {
+  const tasks = allTasks.filter(
     (t) => rounds.includes(t.round) && t.required !== false,
   );
   const score = tasks.filter((t) => history[t.id]?.finalCorrect).length;

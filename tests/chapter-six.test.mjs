@@ -4,14 +4,11 @@ import { existsSync } from "node:fs";
 import { chapter6V2GameData as data } from "../src/pages/Kid/Dashboard/data/chapter6V2VisualNovel.js";
 import {
   loanApr,
-  loanOffers,
   loanTotal,
   loanMonthlyPayment,
   monthlyCapacity,
-  bnplItems,
   cartForecast,
   statementOutcome,
-  loanTasks,
   applyLoanAction,
   createLoanState,
   loanResult,
@@ -25,6 +22,12 @@ import {
 } from "../src/pages/Kid/Dashboard/components/game/visualNovelProgress.js";
 
 const scenes = new Map(data.scenes.map((s) => [s.id, s]));
+const loanConfig = data.scenes.find(
+  (scene) => scene.game?.kind === "LOAN_DETECTIVE",
+).game.config;
+const loanOffers = loanConfig.offers;
+const bnplItems = loanConfig.cart.items;
+const loanTasks = loanConfig.tasks;
 const option = (id) =>
   data.scenes.flatMap((s) => s.options || []).find((o) => o.id === id);
 function completedGames() {
@@ -40,7 +43,7 @@ function completedGames() {
       ["LOAN_REPAYMENT_CH06", [2, 3]],
     ].map(([gameId, rounds]) => [
       gameId,
-      { ...loanResult(history, rounds), gameId, completed: true },
+      { ...loanResult(loanConfig, history, rounds), gameId, completed: true },
     ]),
   );
 }
@@ -216,58 +219,58 @@ test("pre-game Inspect has exactly the requested shared context and never reveal
 test("totals submit once, retain wrong answers and score without requiring correction", () => {
   let state = createLoanState([0, 1]);
   for (const offer of loanOffers)
-    state = applyLoanAction(state, {
+    state = applyLoanAction(loanConfig, state, {
       type: "TOTAL_DRAFT",
       id: offer.id,
       value: String(offer.id === "C" ? 8600000 : loanTotal(offer)),
     });
   assert.deepEqual(state.history, {});
-  state = applyLoanAction(state, { type: "TOTAL" });
+  state = applyLoanAction(loanConfig, state, { type: "TOTAL" });
   assert.equal(state.submittedRounds[0], true);
   assert.equal(state.totals.C, "8600000");
-  const result = loanResult(state.history, [0]);
+  const result = loanResult(loanConfig, state.history, [0]);
   assert.equal(result.completed, true);
   assert.equal(result.passed, false);
   assert.equal(result.score, 2);
   assert.equal(result.firstPercent, 67);
   assert.equal(
-    applyLoanAction(state, { type: "TOTAL_DRAFT", id: "C", value: "8000000" }),
+    applyLoanAction(loanConfig, state, { type: "TOTAL_DRAFT", id: "C", value: "8000000" }),
     state,
   );
-  assert.equal(applyLoanAction(state, { type: "TOTAL" }), state);
-  assert.equal(applyLoanAction(state, { type: "ROUND", round: 1 }).round, 1);
+  assert.equal(applyLoanAction(loanConfig, state, { type: "TOTAL" }), state);
+  assert.equal(applyLoanAction(loanConfig, state, { type: "ROUND", round: 1 }).round, 1);
 });
 test("blank, incomplete or invalid totals cannot be submitted and unfinished rounds cannot be skipped", () => {
   let state = createLoanState([0, 1]);
-  assert.equal(applyLoanAction(state, { type: "TOTAL" }), state);
-  assert.equal(applyLoanAction(state, { type: "ROUND", round: 1 }), state);
+  assert.equal(applyLoanAction(loanConfig, state, { type: "TOTAL" }), state);
+  assert.equal(applyLoanAction(loanConfig, state, { type: "ROUND", round: 1 }), state);
   for (const [id, value] of [
     ["A", "6720000"],
     ["B", "6600000"],
     ["C", "Infinity"],
   ])
-    state = applyLoanAction(state, { type: "TOTAL_DRAFT", id, value });
-  assert.equal(applyLoanAction(state, { type: "TOTAL" }), state);
+    state = applyLoanAction(loanConfig, state, { type: "TOTAL_DRAFT", id, value });
+  assert.equal(applyLoanAction(loanConfig, state, { type: "TOTAL" }), state);
   assert.deepEqual(state.history, {});
 });
 test("sorting accepts wrong placements and moves freely before one explicit submission", () => {
   let state = { ...createLoanState([0, 1]), round: 1 };
-  assert.equal(applyLoanAction(state, { type: "SUBMIT_SORT" }), state);
-  state = applyLoanAction(state, { type: "SORT", id: "A", target: "fit" });
+  assert.equal(applyLoanAction(loanConfig, state, { type: "SUBMIT_SORT" }), state);
+  state = applyLoanAction(loanConfig, state, { type: "SORT", id: "A", target: "fit" });
   assert.equal(state.sorted.A, "fit");
   assert.deepEqual(state.history, {});
-  state = applyLoanAction(state, { type: "SORT", id: "A", target: "over" });
-  state = applyLoanAction(state, { type: "UNSORT", id: "A" });
+  state = applyLoanAction(loanConfig, state, { type: "SORT", id: "A", target: "over" });
+  state = applyLoanAction(loanConfig, state, { type: "UNSORT", id: "A" });
   assert.equal(state.sorted.A, undefined);
   assert.equal(state.selected, "A");
   for (const id of ["A", "B", "C"])
-    state = applyLoanAction(state, { type: "SORT", id, target: "fit" });
+    state = applyLoanAction(loanConfig, state, { type: "SORT", id, target: "fit" });
   assert.deepEqual(state.sorted, { A: "fit", B: "fit", C: "fit" });
   assert.deepEqual(state.history, {});
-  state = applyLoanAction(state, { type: "SUBMIT_SORT" });
+  state = applyLoanAction(loanConfig, state, { type: "SUBMIT_SORT" });
   assert.equal(state.submittedRounds[1], true);
-  assert.equal(loanResult(state.history, [1]).score, 1);
-  assert.equal(loanResult(state.history, [1]).completed, true);
+  assert.equal(loanResult(loanConfig, state.history, [1]).score, 1);
+  assert.equal(loanResult(loanConfig, state.history, [1]).completed, true);
   assert.equal(state.history.sortA.firstAttemptCorrect, false);
   assert.equal(state.history.sortA.attemptCount, 1);
   for (const action of [
@@ -276,21 +279,21 @@ test("sorting accepts wrong placements and moves freely before one explicit subm
     { type: "SELECT", id: "C" },
     { type: "SUBMIT_SORT" },
   ])
-    assert.equal(applyLoanAction(state, action), state);
+    assert.equal(applyLoanAction(loanConfig, state, action), state);
 });
 test("moving drafts before submission does not count as a wrong attempt", () => {
   let state = { ...createLoanState([0, 1]), round: 1 };
-  state = applyLoanAction(state, { type: "SORT", id: "A", target: "fit" });
+  state = applyLoanAction(loanConfig, state, { type: "SORT", id: "A", target: "fit" });
   for (const [id, target] of [
     ["A", "over"],
     ["B", "fit"],
     ["C", "shortfall"],
   ])
-    state = applyLoanAction(state, { type: "SORT", id, target });
-  state = applyLoanAction(state, { type: "SUBMIT_SORT" });
-  assert.equal(loanResult(state.history, [1]).score, 3);
-  assert.equal(loanResult(state.history, [1]).firstPercent, 100);
-  assert.equal(loanResult(state.history, [1]).revised, false);
+    state = applyLoanAction(loanConfig, state, { type: "SORT", id, target });
+  state = applyLoanAction(loanConfig, state, { type: "SUBMIT_SORT" });
+  assert.equal(loanResult(loanConfig, state.history, [1]).score, 3);
+  assert.equal(loanResult(loanConfig, state.history, [1]).firstPercent, 100);
+  assert.equal(loanResult(loanConfig, state.history, [1]).revised, false);
 });
 test("shopping cart stacks monthly obligations with an existing month-two payment", () => {
   for (const item of bnplItems) {
@@ -298,48 +301,48 @@ test("shopping cart stacks monthly obligations with an existing month-two paymen
     assert.equal(item.price, item.installment * 3);
   }
   assert.deepEqual(
-    cartForecast(["headphones", "notebook"]).months.map(
+    cartForecast(loanConfig, ["headphones", "notebook"]).months.map(
       (month) => month.remaining,
     ),
     [200000, 0, 200000],
   );
-  assert.equal(cartForecast(["headphones", "notebook"]).meetsNeed, true);
-  assert.equal(cartForecast(["headphones", "notebook"]).affordable, true);
+  assert.equal(cartForecast(loanConfig, ["headphones", "notebook"]).meetsNeed, true);
+  assert.equal(cartForecast(loanConfig, ["headphones", "notebook"]).affordable, true);
   assert.equal(
-    cartForecast(["headphones", "decoration"]).months[1].remaining,
+    cartForecast(loanConfig, ["headphones", "decoration"]).months[1].remaining,
     -50000,
   );
-  assert.equal(cartForecast(["headphones", "decoration"]).affordable, false);
-  assert.equal(cartForecast(["notebook", "decoration"]).meetsNeed, false);
-  assert.equal(cartForecast(["headphones"]).meetsNeed, false);
+  assert.equal(cartForecast(loanConfig, ["headphones", "decoration"]).affordable, false);
+  assert.equal(cartForecast(loanConfig, ["notebook", "decoration"]).meetsNeed, false);
+  assert.equal(cartForecast(loanConfig, ["headphones"]).meetsNeed, false);
   assert.equal(
-    cartForecast(["headphones", "headphones", "missing"]).monthly,
+    cartForecast(loanConfig, ["headphones", "headphones", "missing"]).monthly,
     200000,
   );
 });
 test("cart only scores at checkout and wrong budgets are preserved without replay", () => {
   let state = createLoanState([2, 3]);
-  assert.equal(applyLoanAction(state, { type: "BUY_CART" }), state);
+  assert.equal(applyLoanAction(loanConfig, state, { type: "BUY_CART" }), state);
   for (const id of ["headphones", "decoration", "notebook", "notebook"])
-    state = applyLoanAction(state, { type: "TOGGLE_ITEM", id });
+    state = applyLoanAction(loanConfig, state, { type: "TOGGLE_ITEM", id });
   assert.deepEqual(state.basket, ["headphones", "decoration"]);
   assert.deepEqual(state.history, {});
-  state = applyLoanAction(state, { type: "BUY_CART" });
+  state = applyLoanAction(loanConfig, state, { type: "BUY_CART" });
   assert.equal(state.history.cartNeed.finalCorrect, true);
   assert.equal(state.history.cartBudget.finalCorrect, false);
-  assert.equal(loanResult(state.history, [2]).completed, true);
-  assert.equal(loanResult(state.history, [2]).score, 1);
+  assert.equal(loanResult(loanConfig, state.history, [2]).completed, true);
+  assert.equal(loanResult(loanConfig, state.history, [2]).score, 1);
   assert.equal(
-    applyLoanAction(state, { type: "TOGGLE_ITEM", id: "decoration" }),
+    applyLoanAction(loanConfig, state, { type: "TOGGLE_ITEM", id: "decoration" }),
     state,
   );
-  assert.equal(applyLoanAction(state, { type: "BUY_CART" }), state);
-  assert.equal(applyLoanAction(state, { type: "ROUND", round: 3 }).round, 3);
+  assert.equal(applyLoanAction(loanConfig, state, { type: "BUY_CART" }), state);
+  assert.equal(applyLoanAction(loanConfig, state, { type: "ROUND", round: 3 }).round, 3);
 });
 test("statement choices have distinct consequences for living costs, interest and next-month debt", () => {
-  const minimum = statementOutcome("minimum"),
-    full = statementOutcome("full"),
-    partial = statementOutcome("partial");
+  const minimum = statementOutcome(loanConfig, "minimum"),
+    full = statementOutcome(loanConfig, "full"),
+    partial = statementOutcome(loanConfig, "partial");
   assert.equal(minimum.walletLeft, 1100000);
   assert.equal(minimum.debtLeft, 900000);
   assert.equal(minimum.interest, 18000);
@@ -356,12 +359,12 @@ test("statement choices have distinct consequences for living costs, interest an
   assert.equal(partial.livingCovered && partial.costCovered, true);
   assert.equal(partial.interest, 4000);
   assert.equal(partial.nextDebt, 204000);
-  assert.equal(statementOutcome("half").interest, 10000);
-  assert.equal(statementOutcome("threeQuarters").interest, 5000);
-  assert.equal(statementOutcome("threeQuarters").afterLiving, 50000);
-  assert.equal(statementOutcome("threeQuarters").costCovered, true);
-  assert.equal(statementOutcome("almostFull").livingShortfall, 100000);
-  assert.equal(statementOutcome("missing"), null);
+  assert.equal(statementOutcome(loanConfig, "half").interest, 10000);
+  assert.equal(statementOutcome(loanConfig, "threeQuarters").interest, 5000);
+  assert.equal(statementOutcome(loanConfig, "threeQuarters").afterLiving, 50000);
+  assert.equal(statementOutcome(loanConfig, "threeQuarters").costCovered, true);
+  assert.equal(statementOutcome(loanConfig, "almostFull").livingShortfall, 100000);
+  assert.equal(statementOutcome(loanConfig, "missing"), null);
 });
 test("statement locks on confirmation, reveals events sequentially, scores once and never transacts", () => {
   for (const [id, score] of [
@@ -373,25 +376,25 @@ test("statement locks on confirmation, reveals events sequentially, scores once 
     ["full", 1],
   ]) {
     let state = { ...createLoanState([2, 3]), round: 3 };
-    assert.equal(applyLoanAction(state, { type: "CONFIRM_STATEMENT" }), state);
-    assert.equal(applyLoanAction(state, { type: "REVEAL_STATEMENT" }), state);
-    state = applyLoanAction(state, { type: "STATEMENT_CHOICE", id });
+    assert.equal(applyLoanAction(loanConfig, state, { type: "CONFIRM_STATEMENT" }), state);
+    assert.equal(applyLoanAction(loanConfig, state, { type: "REVEAL_STATEMENT" }), state);
+    state = applyLoanAction(loanConfig, state, { type: "STATEMENT_CHOICE", id });
     assert.deepEqual(state.history, {});
-    state = applyLoanAction(state, { type: "CONFIRM_STATEMENT" });
+    state = applyLoanAction(loanConfig, state, { type: "CONFIRM_STATEMENT" });
     assert.equal(state.statementStep, 1);
     assert.deepEqual(state.history, {});
     assert.equal(
-      applyLoanAction(state, {
+      applyLoanAction(loanConfig, state, {
         type: "STATEMENT_CHOICE",
         id: id === "partial" ? "full" : "partial",
       }),
       state,
     );
-    state = applyLoanAction(state, { type: "REVEAL_STATEMENT" });
+    state = applyLoanAction(loanConfig, state, { type: "REVEAL_STATEMENT" });
     assert.equal(state.statementStep, 2);
-    assert.equal(loanResult(state.history, [3]).score, score);
-    assert.equal(loanResult(state.history, [3]).completed, true);
-    assert.equal(applyLoanAction(state, { type: "REVEAL_STATEMENT" }), state);
+    assert.equal(loanResult(loanConfig, state.history, [3]).score, score);
+    assert.equal(loanResult(loanConfig, state.history, [3]).completed, true);
+    assert.equal(applyLoanAction(loanConfig, state, { type: "REVEAL_STATEMENT" }), state);
     assert.equal(state.money, undefined);
   }
   assert.equal(loanTasks.length, data.endingReport.miniGameMax);
@@ -569,7 +572,7 @@ test("checkpoint round trips and rejects invalid/old snapshots; unavailable stor
   ])
     snapshot[key] = {};
   snapshot.miniGameResults.offers = {
-    ...loanResult({}, [0, 1]),
+    ...loanResult(loanConfig, {}, [0, 1]),
     ui: { round: 1 },
   };
   saveNovelProgress(storage, data, snapshot);
