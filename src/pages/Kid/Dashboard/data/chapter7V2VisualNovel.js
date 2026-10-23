@@ -163,13 +163,275 @@ const sharedInsurance = {
     "An đã được chăm sóc y tế. Bạn sẽ giúp An tính tiền cần trả và chuẩn bị giấy tờ bảo hiểm.",
   ],
 };
+// Mini-game "Bình tĩnh trước rủi ro" (khung SCAM_OR_SAFE, dùng cho cả INSURANCE_DESK_CH07 lẫn SCAM_OR_SAFE_CH07 — mỗi game
+// chọn màn bằng `rounds`): mọi chữ / số / đáp án / ảnh nằm ở đây, component chỉ là khung (spec bộ khuôn 24/10, cách A).
+// Chữ có "{x}" là mẫu, khung điền vào. Đoạn có định dạng là mảng: chuỗi = chữ thường, {b} / {strong} = chữ đậm, {br} = xuống dòng.
+const scamOrSafeConfig = {
+  eyebrow: "CÙNG AN XỬ LÝ TỪNG VIỆC",
+  heading: "Bình tĩnh trước rủi ro",
+  subheading: "Đọc kỹ điều kiện · xem ai đang liên hệ · giữ kín thông tin",
+  rounds: [
+    {
+      title: "Quầy hồ sơ",
+      image: `${BASE}/props/insurance-terms-folder.png`,
+      instruction:
+        "Chọn số tiền cần thanh toán hôm nay và những giấy tờ gửi theo thẻ bảo hiểm. Có thể thay đổi trước khi nộp. Bài thử chưa trừ tiền của An.",
+    },
+    {
+      title: "Hộp thư cần kiểm tra",
+      image: `${MINI}/message-phone.png`,
+      instruction:
+        "Đọc cả nội dung lẫn bối cảnh của từng tin. Chọn cách xử lý cho cả sáu tin rồi nộp một lần; trước khi nộp, chạm số để xem hoặc đổi câu trả lời.",
+    },
+    {
+      title: "Ưu tiên xử lý",
+      image: `${MINI}/message-phone.png`,
+      instruction:
+        "Có giao dịch lạ sau khi lộ mã xác thực. Chọn bốn hành động và xếp theo thứ tự sẽ làm. Có thể lấy thẻ ra để đổi trước khi nộp.",
+    },
+  ],
+  insurance: {
+    note: [
+      { b: "Hóa đơn y tế: 300.000đ, cần thanh toán trong ngày." },
+      { br: true },
+      "Ví bài thử có 1.500.000đ. Khoản xét chi trả tối đa 200.000đ từ bảo hiểm chưa được duyệt; phí bảo hiểm đã đóng từ trước.",
+    ],
+    referenceButton: "Xem lại điều kiện bảo hiểm và hồ sơ",
+    paymentQuestion: "Bạn đưa bao nhiêu tiền để thanh toán hôm nay?",
+    payments: [100000, 200000, 300000, 500000],
+    correctPayment: 300000,
+    documentQuestion: "Bạn giữ những giấy tờ nào để gửi yêu cầu chi trả?",
+    documents: [
+      {
+        id: "receipt",
+        label: "Hóa đơn đã thanh toán",
+        image: `${BASE}/props/medical-receipt.png`,
+      },
+      {
+        id: "appointment",
+        label: "Lịch hẹn buổi sau",
+        image: `${MINI}/time-pressure.png`,
+      },
+      {
+        id: "medicalRecord",
+        label: "Giấy ghi nhận xử lý y tế",
+        image: `${BASE}/props/medical-receipt.png`,
+      },
+      {
+        id: "otp",
+        label: "Mã OTP người nhắn tin hỏi",
+        image: `${MINI}/message-phone.png`,
+      },
+      {
+        id: "claim",
+        label: "Mẫu yêu cầu chi trả",
+        image: `${BASE}/props/insurance-terms-folder.png`,
+      },
+    ],
+    requiredDocuments: ["receipt", "medicalRecord", "claim"],
+    documentSelected: "Đã chọn",
+    documentPick: "Chọn giấy tờ",
+    submit: "Nộp cách thanh toán và hồ sơ",
+    submitted: "Đã nhận bài nộp",
+    feedback:
+      "Đã nhận bài nộp. Xem phần tiền cần trả hôm nay và hồ sơ cần giữ bên dưới.",
+    paymentLabel: "Tiền thanh toán hôm nay",
+    paymentExplanation: [
+      "Cần trả đủ 300.000đ. Ví bài thử còn 1.500.000đ − 300.000đ =",
+      " ",
+      { strong: "1.200.000đ" },
+      ". Phần tự trả 100.000đ không có nghĩa hôm nay chỉ thanh toán 100.000đ; khoản bảo hiểm 200.000đ chưa được nhận.",
+    ],
+    packetLabel: "Hồ sơ theo thẻ này",
+    packetExplanation:
+      "Cần hóa đơn đã thanh toán, giấy ghi nhận xử lý y tế và mẫu yêu cầu chi trả. Lịch hẹn không thay chứng từ trong thẻ này; không gửi OTP cho người hỏi. Nộp đủ hồ sơ vẫn cần chờ bên bảo hiểm xem xét theo điều kiện đã ghi; lúc này An chưa nhận được tiền.",
+  },
+  inbox: {
+    navLabel: "Sáu tin nhắn",
+    navItem: "Tin {n}, {status}",
+    statusCorrect: "Đúng",
+    statusIncorrect: "Chưa đúng",
+    statusPicked: "Đã chọn",
+    statusOpen: "Chưa chọn",
+    image: `${MINI}/message-phone.png`,
+    counter: "Tin {n}/{total}",
+    contextLabel: "Bối cảnh:",
+    answerOrder: ["continue", "check"],
+    answerLabels: {
+      check: "Chưa làm theo, tìm nơi khác để hỏi lại",
+      continue: "Tiếp tục làm theo hướng dẫn",
+    },
+    youChose: "Bạn chọn: {answer}.",
+    progress: "Đã chọn cách xử lý {count}/{total} tin.",
+    progressDone: "Có thể mở từng tin để đọc lời giải.",
+    progressOpen: "Chưa kiểm tra đúng sai; bạn có thể đổi trước khi nộp.",
+    submit: "Nộp cách xử lý sáu tin",
+    submitted: "Đã kiểm tra hộp thư",
+    feedback: "Đã kiểm tra hộp thư. Chọn từng tin để xem dấu hiệu và lý do.",
+    messages: [
+      {
+        id: "instantRefund",
+        channel: "SMS từ số chưa lưu",
+        text: "Hồ sơ được hoàn 200.000đ. Gửi mã OTP để nhận ngay; sau 5 phút quyền nhận tiền sẽ hết.",
+        context: "An không yêu cầu giao dịch nào. Người gửi muốn nhận mã xác thực.",
+        answer: "check",
+        explanation:
+          "Yêu cầu OTP và thúc ép thời gian là dấu hiệu cần dừng. Tự mở ứng dụng hoặc dùng thông tin liên hệ đã có trong hợp đồng, không gọi theo tin nhắn.",
+      },
+      {
+        id: "claimStatus",
+        channel: "Ứng dụng bảo hiểm An đang dùng",
+        text: "Hồ sơ đã tiếp nhận, đang chờ xét. Bạn có thể xem danh sách chứng từ tại mục Hồ sơ của tôi.",
+        context:
+          "Ứng dụng đã cài từ trước; An mở trực tiếp, không qua đường dẫn trong tin lạ.",
+        answer: "continue",
+        explanation:
+          "Có thể tiếp tục xem trạng thái trong ứng dụng bảo hiểm An tự mở. Đã tiếp nhận vẫn chưa đồng nghĩa được duyệt hay đã nhận tiền.",
+      },
+      {
+        id: "fakeLink",
+        channel: "Tin nhắn tự xưng hỗ trợ bảo hiểm",
+        text: "Bổ sung hồ sơ tại bao-hiem-hoan-tien.example/xac-minh, nhập mật khẩu ngân hàng để đối chiếu.",
+        context:
+          "Địa chỉ không trùng trang web ghi trong hợp đồng. Đây chỉ là tên miền giả lập, không phải liên kết để mở.",
+        answer: "check",
+        explanation:
+          "Tên người gửi và chữ “bảo hiểm” trong địa chỉ chưa đủ để biết ai đứng sau tin nhắn. Hồ sơ y tế không cần gửi mật khẩu ngân hàng cho người nhắn tin.",
+      },
+      {
+        id: "officialDesk",
+        channel: "Bàn hỗ trợ của trường",
+        text: "Mang hóa đơn và giấy xử lý y tế đến bàn hướng dẫn. Không gửi ảnh giấy tờ vào nhóm chat công khai.",
+        context: "An và Cô Linh đang đứng tại bàn đã được nhà trường giới thiệu.",
+        answer: "continue",
+        explanation:
+          "An đang hỏi trực tiếp tại bàn do nhà trường giới thiệu nên có thể tiếp tục và đưa giấy tờ cần thiết. Người hướng dẫn giúp chuẩn bị hồ sơ, nhưng không quyết định bên bảo hiểm có trả tiền hay không.",
+      },
+      {
+        id: "remoteApp",
+        channel: "Cuộc gọi từ người lạ",
+        text: "Cài ứng dụng hỗ trợ từ tệp tôi gửi và bật quyền điều khiển màn hình, tôi sẽ làm hồ sơ thay.",
+        context:
+          "An chưa từng liên hệ người này; An không tìm thấy ứng dụng này trên kho ứng dụng hay trang web của bên bảo hiểm.",
+        answer: "check",
+        explanation:
+          "Không cài tệp lạ hay cấp quyền điều khiển thiết bị. Dừng cuộc gọi, rồi tự tìm số hỗ trợ trong hợp đồng để hỏi lại bên bảo hiểm.",
+      },
+      {
+        id: "verifiedSupport",
+        channel: "Mục hỗ trợ của ứng dụng bảo hiểm",
+        text: "Bạn có thể gửi yêu cầu giải thích hồ sơ, kèm mã hồ sơ và hóa đơn. Không gửi mật khẩu hoặc OTP cho nhân viên.",
+        context:
+          "An tự mở ứng dụng bảo hiểm đã dùng từ trước rồi vào mục hỗ trợ.",
+        answer: "continue",
+        explanation:
+          "An đã tự mở ứng dụng bảo hiểm và được hướng dẫn gửi giấy tờ liên quan, nên có thể tiếp tục. Chỉ gửi những gì hồ sơ yêu cầu và chờ phản hồi; nộp hồ sơ chưa có nghĩa chắc chắn được trả tiền.",
+      },
+    ],
+  },
+  response: {
+    note: [
+      { b: "Tình huống:" },
+      " vừa thấy giao dịch không do bạn thực hiện sau khi gửi mã cho người lạ. Bạn có ứng dụng ngân hàng đang dùng và số hỗ trợ ghi trên thẻ. Đây là bài giả lập, không nhập dữ liệu thật.",
+    ],
+    title: "Bốn bước bạn sẽ làm",
+    slots: 4,
+    remove: "Lấy ra",
+    removeLabel: "Lấy bước {n} ra",
+    emptySlot: "Chọn một thẻ bên dưới để đặt bước {n}",
+    placed: "Đã xếp bước {n}",
+    add: "Thêm vào kế hoạch",
+    submit: "Nộp kế hoạch ứng phó",
+    submitted: "Đã nhận kế hoạch",
+    feedback:
+      "Đã nhận kế hoạch. Báo ngân hàng và khóa thẻ hoặc tài khoản đều cần làm ngay. Việc nào làm được trước thì làm, đừng đợi gom đủ giấy tờ.",
+    actions: [
+      {
+        id: "save",
+        label: "Lưu chứng từ, thời điểm và gửi báo cáo",
+        image: `${MINI}/save-evidence.png`,
+      },
+      {
+        id: "payFee",
+        label: "Chuyển phí cho người hứa lấy lại tiền",
+        image: `${MINI}/message-phone.png`,
+      },
+      {
+        id: "protect",
+        label: "Khóa thẻ hoặc tài khoản trong ứng dụng ngân hàng",
+        image: `${MINI}/protect-account.png`,
+      },
+      {
+        id: "stop",
+        label: "Dừng lại, không gửi thêm mã hay thông tin",
+        image: `${MINI}/stop-transaction.png`,
+      },
+      {
+        id: "reply",
+        label: "Trả lời số lạ để nhờ họ xử lý tiếp",
+        image: `${MINI}/message-phone.png`,
+      },
+      {
+        id: "contact",
+        label: "Báo ngân hàng qua số trên thẻ hoặc ứng dụng",
+        image: `${MINI}/official-contact.png`,
+      },
+    ],
+    // Mỗi hành động đúng được chấm theo vị trí (0 = bước 1) nó được xếp.
+    grading: [
+      {
+        id: "stop",
+        positions: [0],
+        review: "Dừng ngay thao tác và không gửi thêm thông tin.",
+      },
+      {
+        id: "contact",
+        positions: [1, 2],
+        review: "Báo ngân hàng qua số trên thẻ hoặc mục hỗ trợ trong ứng dụng.",
+      },
+      {
+        id: "protect",
+        positions: [1, 2],
+        review: "Dùng chức năng khóa thẻ hoặc tài khoản trong ứng dụng ngân hàng.",
+      },
+      {
+        id: "save",
+        positions: [3],
+        review:
+          "Lưu tin nhắn và thông tin giao dịch để gửi ngân hàng; đừng đợi gom đủ mới báo và khóa.",
+      },
+    ],
+    reviewTitle: "Xem lại các bước đã chọn",
+    reviewSummary:
+      "Báo ngân hàng và khóa thẻ hoặc tài khoản đều cần làm sớm. Việc nào làm được trước thì làm trước. Đừng chuyển thêm phí hay nhờ lại người lạ. Dù đã báo ngân hàng, bạn vẫn chưa chắc lấy lại được tiền.",
+  },
+  texts: {
+    stepsLabel: "Các phần chơi",
+    roundTitle: "Màn {n} · {title}",
+    submittedBadge: "Đã nộp đáp án",
+    openBadge: "Chưa nộp đáp án",
+    howto: "Cách chơi",
+    correct: "✓ Đúng",
+    incorrect: "× Chưa đúng",
+    verdictLine: " · {label}",
+    defaultFeedback:
+      "Nộp một lần; sau đó đọc lời giải và tiếp tục, kể cả khi có câu chưa đúng.",
+    footerDone: "Đã xem kết quả · có thể tiếp tục",
+    footerOpen: "Không đếm giờ · chưa nộp đáp án",
+    next: "Sang màn tiếp theo →",
+    finish: "Trở lại câu chuyện",
+    note: "Các thao tác trong bài thử không mở liên kết, gửi tin, tạo khoản vay hay thay đổi ví của An. Không nhập OTP, mật khẩu hoặc thông tin cá nhân thật.",
+  },
+};
 const game = (id, n, gameId, rounds, nextSceneId) =>
   scene(id, n, "minigame", {
     title: "Bình tĩnh trước rủi ro",
     game: {
       id: gameId,
+      kind: "SCAM_OR_SAFE",
       title: "Bình tĩnh trước rủi ro",
       rounds,
+      config: scamOrSafeConfig,
       reference: rounds.includes(0)
         ? {
             buttonText: "Khoản chi và điều kiện bảo hiểm",
