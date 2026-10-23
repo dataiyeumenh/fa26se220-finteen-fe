@@ -1558,7 +1558,7 @@ export function VisualNovelPlayer({ data }) {
                 onComplete={handleMiniGameComplete}
                 className="h-full"
               />
-            ) : scene.game?.id === "SMART_SHOPPING_CH04" ? (
+            ) : scene.game?.kind === "SMART_SHOPPING" ? (
               <SmartShoppingMiniGame
                 key={`${scene.id}-${scenePath.length}`}
                 game={scene.game}
