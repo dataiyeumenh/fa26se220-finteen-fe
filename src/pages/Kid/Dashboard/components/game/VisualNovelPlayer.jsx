@@ -794,8 +794,9 @@ export function VisualNovelPlayer({ data }) {
         plan_year_savings: projection.yearSavings,
       }));
     }
-    if (scene.game?.id === "COMPOUND_TIMELINE_CH05")
-      setFlags((prev) => ({ ...prev, mini_game_completed: true }));
+    // Cờ bật khi xong mini-game do JSON chương khai (game.onComplete.setFlags), không gán theo id.
+    if (scene.game?.onComplete?.setFlags)
+      setFlags((prev) => ({ ...prev, ...scene.game.onComplete.setFlags }));
     if (result?.allocations) setBudgetAllocations(result.allocations);
     setMiniGameResults((previous) =>
       recordMiniGameResult(
@@ -1539,7 +1540,7 @@ export function VisualNovelPlayer({ data }) {
                 }
                 onComplete={handleMiniGameComplete}
               />
-            ) : scene.game?.id === "COMPOUND_TIMELINE_CH05" ? (
+            ) : scene.game?.kind === "COMPOUND_TIMELINE" ? (
               <CompoundTimelineMiniGame
                 key={`${scene.id}-${scenePath.length}`}
                 game={scene.game}

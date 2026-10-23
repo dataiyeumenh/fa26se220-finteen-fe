@@ -1,16 +1,9 @@
 import { chapterMiniGameSummary } from "./miniGameRules.js";
-export const timelineAt = (year) => ({
-  compound: Math.round(1000000 * 1.05 ** year),
-  simple: Math.round(1000000 * (1 + 0.05 * year)),
+// Dữ liệu mini-game (câu hỏi, số liệu) nằm trong JSON chương: game.config (khung COMPOUND_TIMELINE).
+export const timelineAt = (year, { principal, ratePercent }) => ({
+  compound: Math.round(principal * (1 + ratePercent / 100) ** year),
+  simple: Math.round(principal * (1 + (ratePercent / 100) * year)),
 });
-export const accountForecast = {
-  aInterest: 7500,
-  aFees: 15000,
-  aBalance: 992500,
-  aGap: 7500,
-  bInterest: 5000,
-  bBalance: 1005000,
-};
 export function gradeReflection(activity, answer) {
   if (activity === "reflection1") {
     const has = (key) => answer.selected.includes(key);
@@ -48,96 +41,15 @@ export function gradeReflection(activity, answer) {
     P: feasible && timely ? 2 : timely ? 1 : 0,
   };
 }
-export const challenges = [
-  {
-    id: "growth",
-    round: 0,
-    competency: "calculation",
-    prompt: "Năm 2 có phải chỉ thêm đúng 50.000đ không?",
-    options: ["Đúng", "Không"],
-    answer: "Không",
-    feedback: "Năm 2 tăng 52.500đ: lãi tính trên 1.050.000đ đã gồm lãi năm 1.",
-  },
-  {
-    id: "simple",
-    round: 1,
-    competency: "information",
-    prompt: "Bảng X: ghép cách tính.",
-    options: ["Lãi chỉ trên vốn ban đầu", "Lãi trên vốn và lãi trước đó"],
-    answer: "Lãi chỉ trên vốn ban đầu",
-    feedback: "X là lãi đơn: mỗi năm tính 5% trên vốn ban đầu.",
-  },
-  {
-    id: "compound",
-    round: 1,
-    competency: "information",
-    prompt: "Bảng Y: ghép cách tính.",
-    options: ["Lãi chỉ trên vốn ban đầu", "Lãi trên vốn và lãi trước đó"],
-    answer: "Lãi trên vốn và lãi trước đó",
-    feedback: "Y là lãi kép: lãi được giữ lại để tính lãi kỳ tiếp theo.",
-  },
-  {
-    id: "difference",
-    round: 1,
-    competency: "calculation",
-    prompt: "Cuối năm 2, Y hơn X bao nhiêu đồng?",
-    answer: 2500,
-    feedback: "1.102.500 − 1.100.000 = 2.500đ.",
-  },
-  {
-    id: "basket",
-    round: 2,
-    competency: "planning",
-    prompt: "Nếu hôm nay mua được món đó, một năm nữa thì sao?",
-    options: ["Đủ mua", "Thiếu 30.000đ", "Dư 30.000đ"],
-    answer: "Thiếu 30.000đ",
-    feedback: "Tiền tăng 50.000đ nhưng giá tăng 80.000đ, nên thiếu 30.000đ.",
-  },
-  {
-    id: "power",
-    round: 2,
-    competency: "information",
-    prompt: "Dữ kiện nào giải thích quyết định của bạn?",
-    options: [
-      "Chỉ cần tiền cuối năm cao hơn vốn",
-      "Cần so tiền có được với giá món hàng cùng thời điểm",
-    ],
-    answer: "Cần so tiền có được với giá món hàng cùng thời điểm",
-    feedback: "Tiền danh nghĩa tăng nhưng sức mua đối với món hàng này giảm.",
-  },
-  ...Object.entries(accountForecast).map(([id, answer]) => ({
-    id,
-    answer,
-    round: 3,
-    competency: id === "aGap" ? "planning" : "calculation",
-    prompt: {
-      aInterest:
-        "Nếu gửi 1.000.000đ vào tài khoản A với lãi suất 3%/năm, sau 3 tháng An nhận được bao nhiêu tiền lãi?",
-      aFees:
-        "Tài khoản A thu phí 5.000đ mỗi tháng. Sau 3 tháng, An phải trả tổng cộng bao nhiêu tiền phí?",
-      aBalance:
-        "Sau 3 tháng gửi tiền vào tài khoản A, An có thể rút được bao nhiêu tiền, tính cả tiền lãi và trừ toàn bộ phí?",
-      aGap: "Khóa học cần 1.000.000đ. So với số tiền có thể rút từ tài khoản A sau 3 tháng, An còn thiếu bao nhiêu tiền?",
-      bInterest:
-        "An gửi 1.000.000đ vào tài khoản B nhưng rút sau 3 tháng. Với lãi suất rút trước hạn 2%/năm, An nhận được bao nhiêu tiền lãi?",
-      bBalance:
-        "Tài khoản B không thu phí. Nếu rút sau 3 tháng, An nhận được tổng cộng bao nhiêu tiền gốc và tiền lãi?",
-    }[id],
-    feedback: {
-      aInterest: "1.000.000 × 3% × 3/12 = 7.500đ.",
-      aFees: "5.000 × 3 = 15.000đ.",
-      aBalance: "1.000.000 + 7.500 − 15.000 = 992.500đ.",
-      aGap: "1.000.000 − 992.500 = 7.500đ.",
-      bInterest:
-        "Rút sớm dùng 2%/năm: 1.000.000 × 2% × 3/12 = 5.000đ; không dùng 6%.",
-      bBalance:
-        "1.000.000 + 5.000 = 1.005.000đ dự kiến, không phải tiền nhận vào ví.",
-    }[id],
-  })),
-];
-export function gradeRound(round, answers, history = {}, inspectedItems = []) {
+export function gradeRound(
+  questions,
+  round,
+  answers,
+  history = {},
+  inspectedItems = [],
+) {
   const next = { ...history };
-  for (const q of challenges.filter((item) => item.round === round)) {
+  for (const q of questions.filter((item) => item.round === round)) {
     if (history[q.id]) continue; // Submitted answers are final for this chapter run.
     const answer = answers[q.id];
     const correct =
@@ -160,14 +72,14 @@ export function gradeRound(round, answers, history = {}, inspectedItems = []) {
   }
   return next;
 }
-export function timelineResult(history) {
-  const score = challenges.filter((q) => history[q.id]?.finalCorrect).length;
-  const first = challenges.filter(
+export function timelineResult({ questions, competencies: keys }, history) {
+  const score = questions.filter((q) => history[q.id]?.finalCorrect).length;
+  const first = questions.filter(
     (q) => history[q.id]?.firstAttemptCorrect,
   ).length;
   const competencies = Object.fromEntries(
-    ["information", "calculation", "planning"].map((key) => {
-      const group = challenges.filter((q) => q.competency === key);
+    keys.map((key) => {
+      const group = questions.filter((q) => q.competency === key);
       return [
         key,
         {
@@ -179,14 +91,14 @@ export function timelineResult(history) {
   );
   return {
     score,
-    total: challenges.length,
-    completed: challenges.every((q) => Boolean(history[q.id])),
-    passed: score === challenges.length,
+    total: questions.length,
+    completed: questions.every((q) => Boolean(history[q.id])),
+    passed: score === questions.length,
     answers: history,
     firstAttempt: Object.fromEntries(
-      challenges.map((q) => [q.id, history[q.id]?.firstAttempt]),
+      questions.map((q) => [q.id, history[q.id]?.firstAttempt]),
     ),
-    firstPercent: Math.round((100 * first) / challenges.length),
+    firstPercent: Math.round((100 * first) / questions.length),
     competencies,
     attemptCount: Math.max(
       0,

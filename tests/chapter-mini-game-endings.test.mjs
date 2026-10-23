@@ -10,7 +10,6 @@ import {
   recordMiniGameResult,
 } from "../src/pages/Kid/Dashboard/components/game/miniGameRules.js";
 import {
-  challenges,
   timelineResult,
   chapterFiveLearning,
 } from "../src/pages/Kid/Dashboard/components/game/compoundTimelineRules.js";
@@ -50,13 +49,17 @@ const safeFlags = {
   claims_checked: true,
   life_plan_feasible: true,
 };
+const timelineConfig = ch5.scenes.find(
+  (scene) => scene.game?.kind === "COMPOUND_TIMELINE",
+).game.config;
+const challenges = timelineConfig.questions;
 const cases = [
   [ch4, null, [{ id: "shopping" }], () => ({ total: 4 }), null],
   [
     ch5,
     chapterFiveLearning,
     challenges,
-    (history) => timelineResult(history),
+    (history) => timelineResult(timelineConfig, history),
     null,
   ],
   [
