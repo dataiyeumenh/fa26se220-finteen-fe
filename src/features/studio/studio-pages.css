@@ -178,7 +178,7 @@ textarea.sp-input { min-height: 88px; resize: vertical; line-height: 1.5; }
 .sp-tech { font-size: 13px; color: var(--sp-muted); }
 .sp-tech summary { cursor: pointer; font-weight: 500; }
 .sp-tech .sp-field { margin-top: 10px; font-size: 13px; }
-.sp-drop { display: grid; place-items: center; gap: 6px; text-align: center; padding: 28px 16px; border: 2px dashed var(--sp-line-strong); border-radius: 12px; background: var(--sp-wash); cursor: pointer; font-size: 14px; color: var(--sp-muted); }
+.sp-drop { position: relative; display: grid; place-items: center; gap: 6px; text-align: center; padding: 28px 16px; border: 2px dashed var(--sp-line-strong); border-radius: 12px; background: var(--sp-wash); cursor: pointer; font-size: 14px; color: var(--sp-muted); }
 .sp-drop:hover, .sp-drop:focus-within { border-color: var(--sp-accent); }
 .sp-drop strong { color: var(--sp-ink); font-weight: 600; }
 .sp-drop input { position: absolute; width: 1px; height: 1px; opacity: 0; }
