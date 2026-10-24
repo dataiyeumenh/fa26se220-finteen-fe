@@ -1,68 +1,107 @@
 import { useCallback, useState } from 'react'
+import { Check, Plus, X } from 'lucide-react'
 import { auth } from '../../api/auth.api'
 import { canWriteLibrary } from './permissions'
 import { studioApi } from './studioClient'
 import { useStudioAction, useStudioResource } from './useStudioResource'
-import { Btn, Panel, Tag } from './ui'
-import { inputCls } from './styles'
+import { Btn, ConfirmDialog, PageHeader, StateBox, StudioDialog, Tag } from './ui'
 import Pagination from './Pagination'
+
+const LETTERS = 'ABCDEFGH'
+const MORE_FIELDS = { standard: ['Chuẩn kiến thức', 'Ví dụ CEE-V'], concept: ['Khái niệm', 'Ví dụ D04.03'], source: ['Nguồn', 'Câu lấy từ đâu'], license: ['Giấy phép', 'Ví dụ FinTeen team, 2026'], externalId: ['Mã câu hỏi', 'Để trống thì hệ thống tự đặt'], replacesId: ['Thay cho câu nào', 'Mã câu cũ, nếu câu này thay câu đã dùng trong đề'] }
 
 function QuestionForm({ question, notify, onClose, onSaved }) {
   const [options, setOptions] = useState(question?.options || ['', '', '', ''])
   const [correctIndex, setCorrectIndex] = useState(question?.correctIndex || 0)
-  const { busy, run } = useStudioAction(notify)
-  const fields = { externalId: 'Mã câu hỏi', pool: 'Kho (pool)', chapter: 'Chương (số)', standard: 'Chuẩn kiến thức', concept: 'Khái niệm', source: 'Nguồn', license: 'Giấy phép', replacesId: 'ID câu được thay thế (nếu có)' }
-  return <Panel title={question ? 'Sửa câu hỏi' : 'Tạo câu hỏi'}><form onSubmit={event => {
-    event.preventDefault()
-    const values = new FormData(event.currentTarget)
-    const body = Object.fromEntries(Object.keys(fields).map(key => [key, String(values.get(key) || '').trim() || null]))
-    body.chapter = body.chapter ? Number(body.chapter) : null
-    body.stem = String(values.get('stem')).trim()
-    body.options = options.map(option => option.trim())
-    body.correctIndex = correctIndex
-    if (!body.stem || body.options.length < 2 || body.options.some(option => !option)) return notify('Nhập câu hỏi và ít nhất hai lựa chọn có nội dung.')
-    void run(() => question?.id ? studioApi.put(`/api/studio/questions/${encodeURIComponent(question.id)}`, body) : studioApi.post('/api/studio/questions', body), 'Đã lưu câu hỏi.', onSaved)
-  }}><fieldset disabled={busy} className="grid gap-3">
-    <label>Nội dung câu hỏi<textarea name="stem" className={`${inputCls} w-full`} rows={3} required defaultValue={question?.stem || ''} /></label>
-    <p className="text-xs text-slate-500">Chọn nút tròn trước đáp án đúng.</p>
-    {options.map((option, index) => <label className="flex items-center gap-2" key={index}><input type="radio" name="correct" aria-label={`Đáp án đúng là lựa chọn ${index + 1}`} checked={correctIndex === index} onChange={() => setCorrectIndex(index)} /><span>{index + 1}.</span><input className={`${inputCls} min-w-0 flex-1`} aria-label={`Nội dung lựa chọn ${index + 1}`} value={option} required onChange={event => setOptions(values => values.map((value, i) => i === index ? event.target.value : value))} /></label>)}
-    <div className="flex gap-2"><Btn disabled={busy || options.length >= 8} onClick={() => setOptions(values => [...values, ''])}>Thêm lựa chọn</Btn><Btn disabled={busy || options.length <= 2} onClick={() => { setOptions(values => values.slice(0, -1)); setCorrectIndex(value => Math.min(value, options.length - 2)) }}>Bớt lựa chọn cuối</Btn></div>
-    <div className="grid gap-3 sm:grid-cols-2">{Object.entries(fields).map(([key, label]) => <label key={key}>{label}<input className={`${inputCls} w-full`} name={key} defaultValue={question?.[key] ?? (key === 'pool' ? 'CEE' : '')} type={key === 'chapter' ? 'number' : 'text'} min={key === 'chapter' ? 1 : undefined} step={key === 'chapter' ? 1 : undefined} required={key === 'pool'} /></label>)}</div>
-    <p className="text-xs text-slate-500">Câu đã dùng trong đề phát hành có thể bị giới hạn sửa nội dung. Tạo câu mới và điền ID câu được thay thế khi cần.</p>
-    <div className="flex gap-2"><Btn type="submit" disabled={busy} tone="primary">{busy ? 'Đang lưu…' : 'Lưu câu hỏi'}</Btn><Btn disabled={busy} onClick={onClose}>Hủy</Btn></div>
-  </fieldset></form></Panel>
+  const { busy, run, error } = useStudioAction(notify)
+  const remove = index => { setOptions(values => values.filter((_, i) => i !== index)); setCorrectIndex(value => value === index ? 0 : value > index ? value - 1 : value) }
+  return <StudioDialog title={question ? 'Sửa câu hỏi' : 'Thêm câu hỏi'} onClose={onClose} busy={busy} wide>
+    <form className="sp-dialog-body" onSubmit={event => {
+      event.preventDefault()
+      const values = new FormData(event.currentTarget)
+      const body = Object.fromEntries(['pool', ...Object.keys(MORE_FIELDS)].map(key => [key, String(values.get(key) || '').trim() || null]))
+      body.chapter = values.get('chapter') ? Number(values.get('chapter')) : null
+      body.stem = String(values.get('stem')).trim()
+      body.options = options.map(option => option.trim())
+      body.correctIndex = correctIndex
+      if (!body.stem || body.options.length < 2 || body.options.some(option => !option)) return notify('Nhập câu hỏi và ít nhất hai lựa chọn có nội dung.')
+      void run(() => question?.id ? studioApi.put(`/api/studio/questions/${encodeURIComponent(question.id)}`, body) : studioApi.post('/api/studio/questions', body), 'Đã lưu câu hỏi.', onSaved)
+    }}><fieldset disabled={busy} className="sp-dialog-body">
+      <label className="sp-field">Nội dung câu hỏi<textarea name="stem" className="sp-input" rows={3} required defaultValue={question?.stem || ''} /></label>
+      <fieldset className="sp-choices"><legend>Các lựa chọn (đánh dấu đáp án đúng)</legend>
+        {options.map((option, index) => <div className="sp-option-row" key={index}>
+          <label><input type="radio" name="correct" aria-label={`Đáp án đúng là lựa chọn ${index + 1}`} checked={correctIndex === index} onChange={() => setCorrectIndex(index)} />Đúng</label>
+          <b aria-hidden="true">{LETTERS[index]}.</b>
+          <input className="sp-input" aria-label={`Nội dung lựa chọn ${index + 1}`} value={option} required onChange={event => setOptions(values => values.map((value, i) => i === index ? event.target.value : value))} />
+          <Btn tone="quiet" aria-label={`Bỏ lựa chọn ${index + 1}`} title="Bỏ lựa chọn này" disabled={options.length <= 2} onClick={() => remove(index)}><X size={16} aria-hidden="true" /></Btn>
+        </div>)}
+        <div><Btn tone="quiet" disabled={options.length >= 8} onClick={() => setOptions(values => [...values, ''])}><Plus size={16} aria-hidden="true" />Thêm lựa chọn</Btn></div>
+      </fieldset>
+      <div className="sp-grid-2">
+        <label className="sp-field">Chương<small>Để trống nếu là câu dùng chung.</small><input className="sp-input" name="chapter" type="number" min={1} step={1} defaultValue={question?.chapter ?? ''} /></label>
+        <label className="sp-field">Kho<small>Nhóm câu hỏi, ví dụ CEE hoặc FINTEEN_POST.</small><input className="sp-input" name="pool" required defaultValue={question?.pool ?? 'CEE'} /></label>
+      </div>
+      <details className="sp-more" open={Boolean(question?.replacesId)}><summary>Thông tin thêm (không bắt buộc)</summary>
+        <div className="sp-grid-2">{Object.entries(MORE_FIELDS).map(([key, [label, hint]]) => <label className="sp-field" key={key}>{label}<small>{hint}</small><input className="sp-input" name={key} defaultValue={question?.[key] ?? ''} /></label>)}</div>
+      </details>
+      <p className="sp-hint">Câu đã nằm trong đề đã phát thì không đổi được chữ, lựa chọn hay đáp án. Khi cần, thêm câu mới và ghi mã câu cũ ở "Thay cho câu nào".</p>
+      {error && <div className="sp-inline-error" role="alert">{error}</div>}
+      <div className="sp-dialog-actions"><Btn onClick={onClose}>Huỷ</Btn><Btn type="submit" tone="primary">{busy ? 'Đang lưu…' : 'Lưu câu hỏi'}</Btn></div>
+    </fieldset></form>
+  </StudioDialog>
 }
 
-export default function QuestionsPage({ notify }) {
+export default function QuestionsPage({ notify, title = 'Kho câu hỏi', intro }) {
   const [filters, setFilters] = useState({})
   const [editing, setEditing] = useState(undefined)
+  const [retiring, setRetiring] = useState(null)
   const [page, setPage] = useState(0)
-  const [size, setSize] = useState(10)
+  const [size, setSize] = useState(20)
   const write = canWriteLibrary(auth.getSnapshot().actor)
   const loader = useCallback(() => {
     const query = new URLSearchParams(Object.entries(filters).filter(([, value]) => value !== ''))
     return studioApi.get(`/api/studio/questions?${query}`)
   }, [filters])
   const query = useStudioResource(loader)
-  const { busy, run } = useStudioAction(notify)
+  const { busy, run, error, clearError } = useStudioAction(notify)
   const rows = query.data || []
   const activePage = Math.min(page, Math.max(0, Math.ceil(rows.length / size) - 1))
+  const filtered = Object.entries(filters).some(([key, value]) => value && key !== 'includeRetired')
+  const toggle = question => void run(() => studioApi.post(`/api/studio/questions/${encodeURIComponent(question.id)}/${question.retiredAt ? 'restore' : 'retire'}`),
+    question.retiredAt ? 'Đã khôi phục câu hỏi.' : 'Đã ngừng dùng câu hỏi.', () => { setRetiring(null); query.reload() })
   return <>
-    {editing !== undefined && write && <QuestionForm key={editing?.id || 'new'} question={editing} notify={notify} onClose={() => setEditing(undefined)} onSaved={() => { setEditing(undefined); query.reload() }} />}
-    <Panel title="Ngân hàng câu hỏi" actions={<><Btn onClick={query.reload} disabled={query.loading || busy}>Tải lại</Btn>{write && <Btn tone="primary" disabled={busy} onClick={() => setEditing(null)}>+ Câu hỏi mới</Btn>}</>}>
-      <form className="mb-4 flex flex-wrap items-end gap-3" onSubmit={event => { event.preventDefault(); setFilters(Object.fromEntries(new FormData(event.currentTarget))); setPage(0) }}>
-        {['q', 'chapter', 'pool', 'standard', 'concept'].map((key, index) => <label key={key}>{['Tìm từ khóa', 'Chương', 'Kho', 'Chuẩn', 'Khái niệm'][index]}<input className={`${inputCls} w-32`} name={key} type={key === 'chapter' ? 'number' : 'text'} min={key === 'chapter' ? 1 : undefined} /></label>)}
-        <label><input name="includeRetired" type="checkbox" value="true" /> Cả câu ngừng dùng</label><Btn type="submit">Lọc</Btn>
-      </form>
-      {query.loading ? <p role="status">Đang tải câu hỏi…</p> : query.error ? <p role="alert" className="text-red-700">{query.error}</p> : <>
-        <div className="studio-library-scroll studio-question-scroll" tabIndex={0} role="region" aria-label="Danh sách câu hỏi"><table className="w-full text-sm"><thead><tr>{['Mã / Kho', 'Nội dung và lựa chọn', 'Đáp án', 'Nhãn', 'Thao tác'].map(label => <th key={label} className="p-2 text-left">{label}</th>)}</tr></thead><tbody>
-          {rows.slice(activePage * size, (activePage + 1) * size).map(question => <tr key={question.id} className="border-t border-slate-100 align-top"><td className="p-2">{question.externalId || question.id}<small className="block">{question.pool} · Chương {question.chapter || '—'}</small>{question.retiredAt && <Tag tone="REJECTED">Ngừng dùng</Tag>}</td><td className="p-2">{question.stem}<ol className="ml-5 list-decimal text-xs text-slate-500">{question.options?.map((option, index) => <li key={index}>{option}</li>)}</ol></td><td className="p-2">{question.correctIndex + 1}</td><td className="p-2">{question.standard} {question.concept}</td><td className="p-2">{write && <div className="flex gap-2"><Btn disabled={busy} onClick={() => setEditing(question)}>Sửa</Btn><Btn disabled={busy} tone="danger" onClick={() => {
-            if (window.confirm(`${question.retiredAt ? 'Khôi phục' : 'Ngừng sử dụng'} câu hỏi này?`)) void run(() => studioApi.post(`/api/studio/questions/${encodeURIComponent(question.id)}/${question.retiredAt ? 'restore' : 'retire'}`), 'Đã cập nhật câu hỏi.', query.reload)
-          }}>{question.retiredAt ? 'Khôi phục' : 'Ngừng dùng'}</Btn></div>}</td></tr>)}
-          {!rows.length && <tr><td colSpan={5} className="p-4">Không có câu hỏi phù hợp.</td></tr>}
+    <PageHeader title={title} intro={intro} actions={write && <Btn tone="primary" disabled={busy} onClick={() => setEditing(null)}><Plus size={17} aria-hidden="true" />Thêm câu hỏi</Btn>} />
+    <form className="sp-filters" role="search" onSubmit={event => { event.preventDefault(); setFilters(Object.fromEntries(new FormData(event.currentTarget))); setPage(0) }}>
+      <label className="sp-field">Tìm trong câu hỏi<input className="sp-input" name="q" type="search" placeholder="Ví dụ: tiết kiệm" style={{ width: 240 }} /></label>
+      <label className="sp-field">Chương<input className="sp-input" name="chapter" type="number" min={1} style={{ width: 96 }} /></label>
+      <details className="sp-more"><summary>Lọc thêm</summary><div className="sp-head-actions">
+        {[['pool', 'Kho'], ['standard', 'Chuẩn'], ['concept', 'Khái niệm']].map(([key, label]) => <label className="sp-field" key={key}>{label}<input className="sp-input" name={key} style={{ width: 140 }} /></label>)}
+      </div></details>
+      <label className="sp-check"><input name="includeRetired" type="checkbox" value="true" />Hiện cả câu đã ngừng dùng</label>
+      <Btn type="submit">Lọc</Btn>
+    </form>
+    {query.loading && !query.data ? <StateBox kind="loading">Đang tải câu hỏi…</StateBox>
+      : query.error ? <StateBox kind="error" title="Chưa tải được kho câu hỏi" actions={<Btn onClick={query.reload}>Thử lại</Btn>}>{query.error}</StateBox>
+      : !rows.length ? <StateBox title={filtered ? 'Không có câu hỏi khớp bộ lọc' : 'Kho chưa có câu hỏi nào'} actions={write && !filtered && <Btn tone="primary" onClick={() => setEditing(null)}>Thêm câu hỏi</Btn>}>
+          {filtered ? 'Thử từ khoá khác, hoặc xoá bớt điều kiện lọc rồi bấm Lọc.' : 'Câu hỏi thêm vào sẽ dùng được cho bài kiểm tra của giáo viên.'}</StateBox>
+      : <>
+        <div className="sp-scroll" tabIndex={0} role="region" aria-label="Danh sách câu hỏi"><table className="sp-table"><thead><tr><th>Câu hỏi và đáp án</th>{write && <th><span className="sr-only">Thao tác</span></th>}</tr></thead><tbody>
+          {rows.slice(activePage * size, (activePage + 1) * size).map(question => <tr key={question.id} className={question.retiredAt ? 'is-retired' : undefined}>
+            <td><p className="sp-q-stem">{question.stem}</p>
+              <ol className="sp-q-options">{question.options?.map((option, index) => <li key={index} className={index === question.correctIndex ? 'is-correct' : undefined}>
+                <b>{LETTERS[index]}.</b>{option}{index === question.correctIndex && <><Check size={16} aria-hidden="true" /><span className="sr-only">(đáp án đúng)</span></>}</li>)}</ol>
+              <div className="sp-q-meta">{question.retiredAt && <Tag tone="REJECTED">Đã ngừng dùng</Tag>}<span>Mã {question.externalId || question.id}</span><span>Kho {question.pool}</span><span>{question.chapter ? `Chương ${question.chapter}` : 'Dùng chung'}</span>
+                {question.standard && <span>Chuẩn {question.standard}</span>}{question.concept && <span>Khái niệm {question.concept}</span>}</div></td>
+            {write && <td style={{ width: 150 }}><div className="sp-q-actions"><Btn disabled={busy} onClick={() => setEditing(question)}>Sửa</Btn>
+              {question.retiredAt ? <Btn disabled={busy} onClick={() => toggle(question)}>Khôi phục</Btn> : <Btn tone="danger" disabled={busy} onClick={() => { clearError(); setRetiring(question) }}>Ngừng dùng</Btn>}</div></td>}
+          </tr>)}
         </tbody></table></div>
         <Pagination total={rows.length} page={activePage} size={size} sizes={[10, 20, 50]} onPage={setPage} onSize={value => { setSize(value); setPage(0) }} noun="câu hỏi" />
       </>}
-    </Panel>
+    {editing !== undefined && write && <QuestionForm key={editing?.id || 'new'} question={editing} notify={notify} onClose={() => setEditing(undefined)} onSaved={() => { setEditing(undefined); query.reload() }} />}
+    {retiring && <ConfirmDialog tone="danger" title="Ngừng dùng câu hỏi này?" confirmLabel="Ngừng dùng" busy={busy} error={error} onConfirm={() => toggle(retiring)} onClose={() => setRetiring(null)}>
+      <p style={{ margin: '0 0 6px', fontWeight: 600 }}>{retiring.stem}</p>
+      <ul><li>Đề mới và kho của giáo viên sẽ không thấy câu này nữa.</li><li>Đề đã phát giữ nguyên.</li><li>Có thể khôi phục lại bất cứ lúc nào.</li></ul>
+    </ConfirmDialog>}
   </>
 }

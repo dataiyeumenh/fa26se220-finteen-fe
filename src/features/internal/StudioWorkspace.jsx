@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback } from 'react'
 import { Link, NavLink, Navigate, useLocation } from 'react-router-dom'
 import { BookOpen, CheckCheck, ChevronRight, Image, History, LayoutDashboard, Layers3, LogOut, PenLine, Rocket, ShieldCheck } from 'lucide-react'
 import { auth } from '../../api/auth.api'
@@ -9,58 +9,58 @@ import AssetsPage from '../studio/AssetsPage'
 import QuestionsPage from '../studio/QuestionsPage'
 import { getStudioMenu } from '../studio/portalMenu'
 import RoleOverview from '../studio/RoleOverview'
+import { ROLE_LABELS, turnOf } from '../studio/chapterWork'
+import { studioApi } from '../studio/studioClient'
+import { useStudioResource } from '../studio/useStudioResource'
 import { useToast } from '../studio/useToast'
 import './studio-workspace.css'
 
 const menuIcons = { chapter: PenLine, review: CheckCheck, release: Rocket, history: History, asset: Image, question: BookOpen }
-const roleLabels = { ADMIN: 'Quản trị viên', GAME_EDITOR: 'Biên tập viên', GAME_REVIEWER: 'Kiểm duyệt viên', GAME_MANAGER: 'Quản lý nội dung' }
 
-function MenuIcon({ name }) { const Icon = menuIcons[name]; return <Icon size={19} /> }
+function MenuIcon({ name }) { const Icon = menuIcons[name]; return <Icon size={19} aria-hidden="true" /> }
 
 export default function StudioWorkspace({ actor }) {
   const { pathname } = useLocation()
   const { notify, view } = useToast()
   const roleChoices = ['GAME_EDITOR', 'GAME_REVIEWER', 'GAME_MANAGER'].filter(role => actor.roles.includes('ADMIN') || actor.roles.includes(role))
-  const [chosenRole, setChosenRole] = useState(roleChoices[0])
-  const activeRole = roleChoices.includes(chosenRole) ? chosenRole : roleChoices[0]
   const available = getStudioMenu(actor)
   const primary = available.filter(section => section.group !== 'library')
   const shared = available.filter(section => section.group === 'library')
   const editorCode = /^\/internal\/editor\/(CH\d{2})$/.exec(pathname)?.[1]
   const current = available.find(section => section.path === pathname || (editorCode && section.path === '/internal/chapters'))
+  // Số chương đang chờ chính mình, hiện cạnh mục menu; tải lại mỗi lần đổi màn để số luôn đúng.
+  const loader = useCallback(() => pathname && studioApi.get('/api/studio/chapters'), [pathname])
+  const chapters = useStudioResource(loader).data
+  const count = turn => (Array.isArray(chapters) ? chapters : []).filter(draft => turnOf(actor, draft) === turn).length
+  const counts = { review: count('review'), release: count('publish') }
   if (pathname !== '/internal' && pathname !== '/internal/' && !current) return <Navigate to="/internal" replace />
   const name = actor.displayName || actor.name || actor.email
+  const pageProps = { notify, title: current?.title, intro: current?.description }
   return <div className={`studio-workspace${editorCode ? ' studio-workspace-editing' : ''}`}>
     <aside className="studio-sidebar">
-      <Link className="studio-brand" to="/internal"><span><Layers3 size={23} /></span><div>finteen<small>CONTENT STUDIO</small></div></Link>
-      <div className="studio-profile"><span>{name.slice(0, 1).toUpperCase()}</span><div><strong>{name}</strong><small>{actor.roles.map(role => roleLabels[role]).filter(Boolean).join(' · ')}</small></div></div>
-      {roleChoices.length > 1 && pathname === '/internal' && <label className="studio-role-switch">Tổng quan theo vai trò<select value={activeRole} onChange={event => setChosenRole(event.target.value)}>{roleChoices.map(role => <option value={role} key={role}>{roleLabels[role]}</option>)}</select></label>}
-      <p className="studio-nav-label">KHÔNG GIAN LÀM VIỆC</p>
+      <Link className="studio-brand" to="/internal" aria-label="FinTeen Studio, về Tổng quan"><span><Layers3 size={22} aria-hidden="true" /></span><div>FinTeen<small>Studio nội dung</small></div></Link>
+      <div className="studio-profile"><span aria-hidden="true">{name.slice(0, 1).toUpperCase()}</span><div><strong title={name}>{name}</strong><small>{actor.roles.map(role => ROLE_LABELS[role]).filter(Boolean).join(', ')}</small></div></div>
       <nav aria-label="Điều hướng Studio">
-        <NavLink end to="/internal"><LayoutDashboard size={19} /> Tổng quan</NavLink>
-        {primary.map(({ path, title, icon }) => <NavLink key={path} to={path} className={editorCode && path === '/internal/chapters' ? 'active' : undefined}><MenuIcon name={icon} />{title}</NavLink>)}
-        <p className="studio-nav-group-label">TÀI NGUYÊN DÙNG CHUNG</p>
-        {shared.map(({ path, title, icon }) => <NavLink key={path} to={path}><MenuIcon name={icon} />{title}</NavLink>)}
-        {actor.roles.includes('ADMIN') && <Link to="/internal/admin"><ShieldCheck size={19} /> Quản trị hệ thống</Link>}
+        <NavLink end to="/internal" title="Tổng quan"><LayoutDashboard size={19} aria-hidden="true" />Tổng quan</NavLink>
+        {primary.map(({ path, title, icon }) => <NavLink key={path} to={path} title={title} className={editorCode && path === '/internal/chapters' ? 'active' : undefined}>
+          <MenuIcon name={icon} />{title}{counts[icon] > 0 && <span className="sp-nav-count" aria-label={`${counts[icon]} chương chờ bạn`}>{counts[icon]}</span>}
+        </NavLink>)}
+        <p className="studio-nav-group-label">Thư viện dùng chung</p>
+        {shared.map(({ path, title, icon }) => <NavLink key={path} to={path} title={title}><MenuIcon name={icon} />{title}</NavLink>)}
+        {actor.roles.includes('ADMIN') && <Link to="/internal/admin" title="Quản trị hệ thống"><ShieldCheck size={19} aria-hidden="true" />Quản trị hệ thống</Link>}
       </nav>
-      <div className="studio-sidebar-bottom"><span><ShieldCheck size={16} /> Truy cập nội bộ</span><button onClick={() => auth.logout()}><LogOut size={18} /> Đăng xuất</button></div>
+      <div className="studio-sidebar-bottom"><button type="button" title="Đăng xuất" onClick={() => auth.logout()}><LogOut size={18} aria-hidden="true" />Đăng xuất</button></div>
     </aside>
     <div className="studio-main">
-      <header className="studio-topbar"><span>Workspace <ChevronRight size={14} /> <strong>{current?.title || 'Tổng quan'}</strong></span><span className="studio-member-tag">FinTeen Team</span></header>
+      {editorCode && <nav className="studio-topbar" aria-label="Vị trí"><Link to="/internal/chapters">{current?.title || 'Chương'}</Link><ChevronRight size={14} aria-hidden="true" /><strong>{editorCode}</strong></nav>}
       <main className={`studio-content${editorCode ? ' studio-content-editor' : ''}`}>
-        {!editorCode && <><span className="studio-eyebrow">CONTENT STUDIO</span>
-        <h1>{current ? current.title : `Chào ${name}!`}</h1>
-        <p className="studio-intro">{current ? current.description : 'Chọn một công việc để bắt đầu xây dựng trải nghiệm học tập cho các bạn nhỏ.'}</p></>}
-        {current ? <div className="studio-api-content">
-          {editorCode ? <EditorPage key={editorCode} code={editorCode} notify={notify} />
-            : pathname === '/internal/assets' ? <AssetsPage notify={notify} />
-            : pathname === '/internal/releases' ? <ReleasesPage key={pathname} notify={notify} mode="plan" />
-            : pathname === '/internal/history' ? <ReleasesPage key={pathname} notify={notify} mode="history" />
-            : pathname === '/internal/questions' ? <QuestionsPage notify={notify} />
-            : <ChaptersPage key={pathname} notify={notify} reviewOnly={pathname === '/internal/reviews'} />}
-        </div> : <>
-          <RoleOverview role={activeRole} />
-        </>}
+        {editorCode ? <div className="studio-api-content"><EditorPage key={editorCode} code={editorCode} notify={notify} /></div>
+          : !current ? <RoleOverview actor={actor} name={name} roles={roleChoices} />
+          : pathname === '/internal/assets' ? <AssetsPage {...pageProps} />
+          : pathname === '/internal/releases' ? <ReleasesPage key={pathname} {...pageProps} mode="plan" />
+          : pathname === '/internal/history' ? <ReleasesPage key={pathname} {...pageProps} mode="history" />
+          : pathname === '/internal/questions' ? <QuestionsPage {...pageProps} />
+          : <ChaptersPage key={pathname} {...pageProps} reviewOnly={pathname === '/internal/reviews'} />}
       </main>
       {view}
     </div>

@@ -50,13 +50,13 @@ test("internal routes require the shared ACCOUNT login instead of seeded credent
     assert.match(combined, /href="\/internal\/chapters"/);
     assert.match(combined, /href="\/internal\/reviews"/);
     assert.match(combined, /value="GAME_REVIEWER"/);
-    assert.match(combined, /KHÔNG GIAN BIÊN TẬP/);
+    assert.match(combined, /Bạn soạn chương/);
     const admin = menuFor(['ADMIN']);
     assert.match(admin, /href="\/internal\/admin"/);
     assert.match(admin, /href="\/internal\/history"/);
     assert.match(admin, /value="GAME_REVIEWER"/);
-    assert.match(menuFor(['GAME_REVIEWER']), /KHÔNG GIAN KIỂM DUYỆT/);
-    assert.match(menuFor(['GAME_MANAGER']), /KHÔNG GIAN PHÁT HÀNH/);
+    assert.match(menuFor(['GAME_REVIEWER']), /Bạn chơi thử chương người khác gửi lên/);
+    assert.match(menuFor(['GAME_MANAGER']), /Bạn đưa các chương đã duyệt vào game/);
   } finally {
     await server.close();
   }
