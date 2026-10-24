@@ -1,4 +1,5 @@
 import { FuturePlanMiniGame } from "./FuturePlanMiniGame.jsx";
+import { evaluateCondition, optionLockReason } from "./conditions.js";
 import {
   buildPlanReview,
   chapterEightLearning,
@@ -64,49 +65,6 @@ function applyStatEffects(current, effects = {}) {
   return next;
 }
 
-function evaluateCondition(stats, condition, flags = {}) {
-  if (condition?.check || condition?.expression || condition?.formula) {
-    const expression = String(
-      condition.check || condition.expression || condition.formula || "",
-    ).trim();
-
-    if (!expression) return false;
-
-    try {
-      const evaluator = new Function(
-        "stats",
-        "flags",
-        `const { WEALTH = 0, SAVINGS = 0, SAVING = 0, FIQ = 0, HAPPINESS = 0, RISK = 0, GOAL = 0 } = stats || {}; return Boolean(${expression});`,
-      );
-      return evaluator(stats || {}, flags || {});
-    } catch {
-      return false;
-    }
-  }
-
-  if (!condition?.field) return false;
-
-  const left = Number(stats?.[condition.field] ?? 0);
-  const right = Number(condition.value ?? 0);
-
-  switch (condition.operator) {
-    case ">":
-      return left > right;
-    case ">=":
-      return left >= right;
-    case "<":
-      return left < right;
-    case "<=":
-      return left <= right;
-    case "==":
-    case "=":
-      return left === right;
-    case "!=":
-      return left !== right;
-    default:
-      return false;
-  }
-}
 
 function CharacterSprite({ src, alt, position, dimmed = false }) {
   const [broken, setBroken] = useState(false);
@@ -387,6 +345,16 @@ export function VisualNovelPlayer({ data }) {
     return mapping;
   }, [data.scenes]);
 
+  // Ngữ cảnh điều kiện dùng chung cho rẽ tự động, khoá lựa chọn, kết chương (module conditions.js).
+  const conditionContext = () => ({
+    stats,
+    flags,
+    money,
+    miniGameScore,
+    inspectedIds,
+    choiceLedger,
+  });
+
   const resolveNavigableSceneIndex = (startIndex) => {
     let index = startIndex;
     let guard = 0;
@@ -397,7 +365,7 @@ export function VisualNovelPlayer({ data }) {
 
       if (candidate.type !== "conditional") return index;
 
-      const branchResult = evaluateCondition(stats, candidate.condition, flags);
+      const branchResult = evaluateCondition(candidate.condition, conditionContext(), "scene");
       const targetId = branchResult
         ? candidate.ifTrueSceneId
         : candidate.ifFalseSceneId;
@@ -625,13 +593,7 @@ export function VisualNovelPlayer({ data }) {
   const getOptionLock = (option) => {
     const reserveLock = flexibleReserveLock(option, budgetAllocations);
     if (reserveLock) return reserveLock;
-    const requires = option.requires;
-    if (!requires) return null;
-    const unmet =
-      (requires.minMoney != null && money < requires.minMoney) ||
-      (requires.flags || []).some((key) => !flags[key]) ||
-      (requires.inspected || []).some((key) => !inspectedIds[key]);
-    return unmet ? requires.lockedReason || "Chưa đủ điều kiện để chọn." : null;
+    return optionLockReason(option, conditionContext());
   };
 
   const openInspect = (inspect) => {
@@ -891,64 +853,36 @@ export function VisualNovelPlayer({ data }) {
     setInspectPopup(null);
   };
 
-  const evaluateEndingCondition = (condition) => {
-    if (condition === "DEFAULT_FALLBACK") return true;
-
-    if (typeof condition === "string") {
-      try {
-        const evaluator = new Function(
-          "flag",
-          "evidenceScore",
-          "miniGameCompleted",
-          "stats",
-          "money",
-          "miniGameScore",
-          "flags",
-          "reflectionScore",
-          "choicePercent",
-          "learningScore",
-          "coreCalculationsCorrect",
-          "reflectionCompleted",
-          "miniGameGoalEligible",
-          "miniGameNeedsPractice",
-          `const { SAVING = 0, HAPPINESS = 0, RISK = 0, GOAL = 0 } = stats || {}; return Boolean(${condition});`,
-        );
-
-        const totalEvidenceScore =
-          (evidenceScores.I || 0) +
-          (evidenceScores.C || 0) +
-          (evidenceScores.P || 0);
-
-        const learning = data.endingReport?.choiceGroupMaxima
-          ? learningSummary(choiceLedger, miniGameResults, data.endingReport)
-          : {};
-        const miniGames = chapterMiniGameSummary(
-          miniGameResults,
-          data.endingReport || {},
-        );
-        return evaluator(
-          gameFlag,
-          totalEvidenceScore,
-          miniGameCompleted,
-          stats,
-          money,
-          miniGameScore,
-          flags,
-          reflectionScore,
-          learning.choicePercent,
-          learning.learningScore,
-          learning.coreCalculationsCorrect,
-          learning.reflectionCompleted,
-          miniGames.miniGameGoalEligible,
-          miniGames.miniGameNeedsPractice,
-        );
-      } catch {
-        return false;
-      }
-    }
-
-    return false;
+  // Biến chỉ kết chương / dòng báo cáo dùng — tính khi cần (không tính mỗi lần rẽ / khoá).
+  const endingDerived = () => {
+    const learning = data.endingReport?.choiceGroupMaxima
+      ? learningSummary(choiceLedger, miniGameResults, data.endingReport)
+      : {};
+    const miniGames = chapterMiniGameSummary(
+      miniGameResults,
+      data.endingReport || {},
+    );
+    return {
+      gameFlag,
+      evidenceScore:
+        (evidenceScores.I || 0) + (evidenceScores.C || 0) + (evidenceScores.P || 0),
+      miniGameCompleted,
+      reflectionScore,
+      choicePercent: learning.choicePercent,
+      learningScore: learning.learningScore,
+      coreCalculationsCorrect: learning.coreCalculationsCorrect,
+      reflectionCompleted: learning.reflectionCompleted,
+      miniGameGoalEligible: miniGames.miniGameGoalEligible,
+      miniGameNeedsPractice: miniGames.miniGameNeedsPractice,
+    };
   };
+
+  const evaluateEndingCondition = (condition) =>
+    evaluateCondition(
+      condition,
+      { ...conditionContext(), derived: endingDerived() },
+      "ending",
+    );
 
   const resolveEnding = () => {
     if (!data.endingRules?.endings) return null;
