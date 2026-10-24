@@ -79,3 +79,10 @@
 @media(max-width: 1100px) { .scene-save-state { display: none; } .scene-editor-body { grid-template-columns: minmax(0, 1fr) 250px; } .scene-inspector-scroll { padding: 15px; } .scene-editor-canvas { padding: 20px 15px; } .scene-editor-document-icon { display: none; } .scene-editor-toolbar { padding: 15px; } }
 @media(max-width: 850px) { .scene-editor { height: auto; min-height: 0; } .scene-editor-body { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto auto; grid-template-areas: 'canvas' 'timeline' 'inspector'; flex: auto; } .scene-inspector { border-left: 0; border-top: 1px solid #dfe7e2; max-height: 480px; } .scene-editor-toolbar { align-items: flex-start; flex-wrap: wrap; gap: 13px; } .scene-editor-canvas { min-height: 240px; } .scene-editor-canvas-heading { padding-inline: 14px; } .studio-content.studio-content-editor { padding: 15px; } }
 @media(max-width: 580px) { .studio-workspace-editing .studio-sidebar { position: static; height: auto; } .scene-editor-document h1 { font-size: 14px; } .scene-editor-document-actions { width: 100%; justify-content: flex-end; } .scene-editor-canvas { padding: 12px 10px 18px; } .scene-editor-canvas-heading small { display: none; } .scene-editor-canvas-footer { font-size: 8px; padding-inline: 12px; } .scene-editor-preview button { padding: 4px 6px; font-size: 9px; } .scene-json-editor { padding: 12px; } }
+
+/* Giọng đọc của câu thoại (cách đọc, nghe, tắt) */
+.scene-voice-fields { display: grid; gap: 8px; padding: 10px; border: 1px dashed #cbd5e1; border-radius: 10px; }
+.scene-voice-fields small { color: #64748b; font-weight: 400; margin-left: 4px; }
+.scene-voice-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.scene-voice-row audio { height: 32px; max-width: 100%; }
+.scene-voice-off { display: flex; align-items: center; gap: 6px; font-size: 13px; }

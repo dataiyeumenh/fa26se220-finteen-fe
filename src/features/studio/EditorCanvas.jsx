@@ -1,4 +1,4 @@
-import { ChevronLeft, ChevronRight, Code2, Copy, ImagePlus, Layers3, MessageSquare, Plus, Save, Trash2 } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Code2, Copy, ImagePlus, Layers3, MessageSquare, Mic, Plus, Save, Trash2 } from 'lucide-react'
 import { useEffect, useRef } from 'react'
 import { STATUS_LABEL } from './studioClient'
 import { Tag } from './ui'
@@ -16,7 +16,20 @@ function Thumbnail({ scene }) {
   </span>
 }
 
-export default function EditorCanvas({ code, content, meta, scenes, scene, idx, setIdx, preview, write, busy, dirty, json, setJson, toggleJson, save, update, addScene, duplicateScene, deleteScene, onPick, schemaQuery, warnings = [], refreshError = '', conditionDrafts = {}, editCondition }) {
+/** Giọng đọc của một câu thoại: cách đọc (spokenText), nghe giọng đã có, tắt giọng. BE tự gắn / gỡ giọng khi lưu nháp. */
+function VoiceFields({ scene, update }) {
+  return <div className="scene-voice-fields">
+    <label>Cách đọc cho giọng <small>để trống = đọc đúng lời thoại</small>
+      <input value={scene.spokenText || ''} onChange={event => update({ spokenText: event.target.value || undefined })} placeholder="Ví dụ: năm trăm nghìn đồng" />
+    </label>
+    <div className="scene-voice-row">
+      {scene.voice === 'off' ? <small>Câu này không đọc</small> : scene.voiceUrl ? <audio controls preload="none" src={scene.voiceUrl} aria-label="Nghe giọng đọc" /> : <small>Chưa có giọng đọc</small>}
+      <label className="scene-voice-off"><input type="checkbox" checked={scene.voice === 'off'} onChange={event => update({ voice: event.target.checked ? 'off' : undefined })} /> Tắt giọng câu này</label>
+    </div>
+  </div>
+}
+
+export default function EditorCanvas({ code, content, meta, scenes, scene, idx, setIdx, preview, write, busy, dirty, json, setJson, toggleJson, save, update, addScene, duplicateScene, deleteScene, onPick, schemaQuery, warnings = [], refreshError = '', conditionDrafts = {}, editCondition, onSuggestVoice }) {
   const trackRef = useRef(null)
   const visualMode = json === null
   useEffect(() => {
@@ -47,7 +60,7 @@ export default function EditorCanvas({ code, content, meta, scenes, scene, idx, 
   return <section className="scene-editor" aria-label="Trình biên tập chương">
     <header className="scene-editor-toolbar">
       <div className="scene-editor-document"><span className="scene-editor-document-icon"><Layers3 size={20} /></span><div><h1>{content.title || code}</h1><p>{code}<span>·</span><Tag tone={meta?.status}>{STATUS_LABEL[meta?.status] || meta?.status}</Tag><span>·</span>Rev {meta?.revision}</p></div></div>
-      <div className="scene-editor-document-actions"><span className={`scene-save-state ${dirty ? 'dirty' : ''}`}><span />{dirty ? 'Có thay đổi chưa lưu' : 'Đã tải từ máy chủ'}</span><button type="button" disabled={busy} onClick={toggleJson}><Code2 size={16} />{json === null ? 'JSON' : 'Theo cảnh / Chơi thử'}</button>{write && <button type="button" className="scene-primary" disabled={busy} onClick={save}><Save size={16} />{busy ? 'Đang lưu…' : 'Lưu nháp'}</button>}</div>
+      <div className="scene-editor-document-actions"><span className={`scene-save-state ${dirty ? 'dirty' : ''}`}><span />{dirty ? 'Có thay đổi chưa lưu' : 'Đã tải từ máy chủ'}</span><button type="button" disabled={busy} onClick={toggleJson}><Code2 size={16} />{json === null ? 'JSON' : 'Theo cảnh / Chơi thử'}</button>{write && onSuggestVoice && <button type="button" disabled={busy || dirty} title={dirty ? 'Lưu nháp trước để AI đọc bản mới nhất' : 'AI đề xuất cách đọc cho câu có số, ký hiệu, chữ viết tắt'} onClick={onSuggestVoice}><Mic size={16} />Gợi ý cách đọc (AI)</button>}{write && <button type="button" className="scene-primary" disabled={busy} onClick={save}><Save size={16} />{busy ? 'Đang lưu…' : 'Lưu nháp'}</button>}</div>
     </header>
     {meta?.status === 'SUBMITTED' && <p className="scene-editor-notice">Nháp đang chờ duyệt. Người biên tập cần rút nháp trước khi chỉnh sửa.</p>}
     {meta?.status === 'RELEASED' && write && <p className="scene-editor-notice">Lưu thay đổi sẽ tạo nháp revision {meta.revision + 1}; bản phát hành hiện tại vẫn được giữ nguyên.</p>}
@@ -68,6 +81,7 @@ export default function EditorCanvas({ code, content, meta, scenes, scene, idx, 
             <label>Tiêu đề cảnh<input value={scene.title || ''} onChange={event => update({ title: event.target.value })} placeholder="Đặt tên cho cảnh" /></label>
             <label>Người nói<input value={scene.speaker || ''} onChange={event => update({ speaker: event.target.value })} placeholder="Ví dụ: An" /></label>
             <label>Lời thoại<textarea rows={5} value={scene.text || ''} onChange={event => update({ text: event.target.value })} placeholder="Nhập lời thoại…" /></label>
+            {(scene.speaker || scene.speakerId) && scene.text && <VoiceFields scene={scene} update={update} />}
             <div className="scene-inspector-divider" />
             <label>Ảnh nền<input value={scene.background || ''} onChange={event => update({ background: event.target.value })} placeholder="URL hoặc ref ảnh" /></label>
             <button type="button" className="scene-pick-background" onClick={onPick}><ImagePlus size={17} /> Chọn ảnh từ thư viện</button>

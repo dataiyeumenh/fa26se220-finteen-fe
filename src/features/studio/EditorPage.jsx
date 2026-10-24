@@ -85,6 +85,28 @@ function Stage({ scene, go }) {
   )
 }
 
+/** Gợi ý cách đọc của AI: mỗi câu Nhận (ghi spokenText vào nháp, cần Lưu nháp) hoặc Bỏ; ghi rõ AI nào sinh ra. */
+function VoiceHints({ hints, scenes, write, onAccept, onDrop, onOpen, onClose }) {
+  const number = id => scenes.findIndex(s => s.id === id) + 1
+  return <Panel title="Gợi ý cách đọc cho giọng" actions={<>
+    {write && hints.suggestions.length > 1 && <Btn tone="primary" onClick={() => onAccept(null, true)}>Nhận tất cả</Btn>}
+    <Btn onClick={onClose}>Đóng</Btn>
+  </>}>
+    <p className="mb-3 text-xs text-slate-500">
+      {hints.source ? `Gợi ý từ ${hints.source === 'GEMINI' ? 'Gemini' : 'OpenRouter'} (${hints.model}) · ` : ''}
+      {hints.lines} câu thoại · {hints.sentToAi} câu có số / ký hiệu gửi AI · {hints.aiCalls} lần gọi. AI chỉ gợi ý — bấm Nhận rồi Lưu nháp mới ghi.
+    </p>
+    {!hints.suggestions.length && <p>Không còn gợi ý nào.</p>}
+    <ul className="grid gap-2">{hints.suggestions.map(hint => <li key={hint.sceneId} className="rounded-lg border border-slate-200 p-3">
+      <button type="button" className="text-xs text-blue-700 underline" onClick={() => onOpen(hint.sceneId)}>Cảnh {number(hint.sceneId)}</button>
+      <p className="mt-1 text-sm text-slate-500">{hint.text}</p>
+      <p className="mt-1 text-sm font-semibold">Đọc là: {hint.suggestion}</p>
+      {!!hint.reasons?.length && <p className="text-xs text-slate-500">Vì: {hint.reasons.join(', ')}</p>}
+      {write && <div className="mt-2 flex gap-2"><Btn tone="primary" onClick={() => onAccept(hint)}>Nhận</Btn><Btn onClick={() => onDrop(hint)}>Bỏ</Btn></div>}
+    </li>)}</ul>
+  </Panel>
+}
+
 export default function EditorPage({ notify, code }) {
   const [search, setSearch] = useSearchParams()
   const [meta, setMeta] = useState(null)
@@ -98,6 +120,7 @@ export default function EditorPage({ notify, code }) {
   const [warnings, setWarnings] = useState([])
   const [refreshError, setRefreshError] = useState('')
   const [conditionDrafts, setConditionDrafts] = useState({})
+  const [voiceHints, setVoiceHints] = useState(null) // gợi ý cách đọc của AI — chưa ghi vào nháp tới khi người soạn bấm Nhận
   const { busy, run } = useStudioAction(notify)
   const write = canEdit(auth.getSnapshot().actor) && meta?.status !== 'SUBMITTED'
   const schemaLoader = useCallback(() => studioApi.get('/api/studio/scene-schema'), [])
@@ -141,6 +164,20 @@ export default function EditorPage({ notify, code }) {
       }) })
     } catch { /* Keep incomplete JSON visible until the author fixes it. */ }
   }
+  const suggestVoice = () => void run(
+    () => studioApi.post(`/api/studio/chapters/${encodeURIComponent(code)}/voice/suggest`),
+    result => result.aiCalls ? `AI gợi ý ${result.suggestions.length} câu (${result.aiCalls} lần gọi)` : 'Không có câu nào cần đổi cách đọc.',
+    result => setVoiceHints(result),
+  )
+  const acceptHint = (hint, all = false) => {
+    if (!write) return
+    const picked = all ? voiceHints.suggestions : [hint]
+    const byId = Object.fromEntries(picked.map(item => [item.sceneId, item.suggestion]))
+    setContent({ ...content, scenes: scenes.map(s => (s.id in byId ? { ...s, spokenText: byId[s.id] } : s)) })
+    setDirty(true)
+    setVoiceHints(all ? null : { ...voiceHints, suggestions: voiceHints.suggestions.filter(item => item !== hint) })
+  }
+  const dropHint = hint => setVoiceHints({ ...voiceHints, suggestions: voiceHints.suggestions.filter(item => item !== hint) })
   const go = (id) => {
     const i = ids.indexOf(id)
     if (i < 0) notify(`Cảnh "${id}" không tồn tại`)
@@ -212,7 +249,8 @@ export default function EditorPage({ notify, code }) {
       preview={<Stage scene={scene} go={go} />} write={write} busy={busy} dirty={dirty} json={json}
       setJson={value => { setJson(value); setDirty(true) }} toggleJson={toggleJson} save={save} update={update}
       addScene={addScene} duplicateScene={duplicateScene} deleteScene={deleteScene} onPick={() => setPicking(true)} schemaQuery={schemaQuery}
-      warnings={warnings} refreshError={refreshError} conditionDrafts={conditionDrafts} editCondition={editCondition} />
+      warnings={warnings} refreshError={refreshError} conditionDrafts={conditionDrafts} editCondition={editCondition} onSuggestVoice={suggestVoice} />
+    {voiceHints && <VoiceHints hints={voiceHints} scenes={scenes} write={write} onAccept={acceptHint} onDrop={dropHint} onOpen={id => go(id)} onClose={() => setVoiceHints(null)} />}
     {picking && <AssetPicker chapter={code} notify={notify} onClose={() => setPicking(false)} onPick={asset => { update({ background: asset.url }); setPicking(false) }} />}
   </>
 }
