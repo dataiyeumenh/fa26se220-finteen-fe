@@ -1,10 +1,13 @@
 import { useRef, useState } from "react";
+import { Link } from 'react-router-dom';
 import {
   BadgeDollarSign,
+  BookOpen,
   CheckCircle2,
   CreditCard,
   Gift,
   History,
+  KeyRound,
   LogOut,
   RefreshCw,
   Save,
@@ -26,6 +29,7 @@ import useAdminDashboard, {
 } from "../hooks/useAdminDashboard";
 import "../styles/admin.css";
 import "../styles/admin-modern.css";
+import AiKeysPage from '../../../../features/studio/AiKeysPage';
 
 const PLAN_KINDS = ["PARENT", "TEACHER"];
 const STATUS_LABELS = {
@@ -39,6 +43,7 @@ const TABS = [
   ["roles", "Phân quyền", UserCog],
   ["role-logs", "Nhật ký phân quyền", History],
   ["grant", "Cấp gói", Gift],
+  ["ai-keys", "Khóa AI", KeyRound],
 ];
 const ROLE_OPTIONS = [
   {
@@ -1120,7 +1125,7 @@ export default function AdminDashboardContent({ actor }) {
   const [tab, setTab] = useState("plans");
   const { logout } = useAdminDashboard();
   const content =
-    tab === "transactions" ? (
+    tab === "ai-keys" ? <AiKeysPage /> : tab === "transactions" ? (
       <TransactionsTab />
     ) : tab === "roles" ? (
       <RolesTab actor={actor} />
@@ -1150,6 +1155,7 @@ export default function AdminDashboardContent({ actor }) {
           </div>
         </div>
         <nav aria-label="Điều hướng quản trị">
+          <Link className="admin-studio-link" to="/internal/chapters"><BookOpen size={19} /> Content Studio</Link>
           {TABS.map(([id, label, Icon]) => (
             <button
               key={id}

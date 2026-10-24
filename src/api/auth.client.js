@@ -138,6 +138,11 @@ export function createAuthClient({ baseUrl, storage, contextStorage = storage, f
   return {
     subscribe: fn => { listeners.add(fn); return () => listeners.delete(fn) }, getSnapshot: () => state,
     logout, logoutSlot, refresh, ensureEntitlements, ensureLearnerDashboard, hasSession: () => Boolean(session || slotSession),
+    // Studio shares the ACCOUNT session, expiry and ApiResponse handling.
+    studioRequest: (path, options = {}) => {
+      if (!path.startsWith('/api/studio/') && !path.startsWith('/api/admin/ai-keys')) throw new ApiError('Đường dẫn Studio không hợp lệ.')
+      return request(path, { ...options, authenticated: true, slotAuthenticated: false })
+    },
     checkExpiry: () => { if (slotSession && slotSession.expiresAt <= now()) logoutSlot('Phiên học tập đã hết hạn. Vui lòng đăng nhập lại.'); else if (session && session.expiresAt <= now()) expired() },
     register: ({ email, password, displayName, phone }) => request('/api/auth/register', { body: { email: email.trim(), password, displayName: displayName.trim(), ...(phone?.trim() ? { phone: phone.trim() } : {}) } }),
     login: (email, password) => signIn('/api/auth/login', { email: email.trim(), password }),

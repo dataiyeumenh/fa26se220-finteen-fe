@@ -30,7 +30,7 @@ Không được tự động trộn hai tuyến chỉ vì số chương giống 
 - `src/pages/User/Dashboard/components/game/ChapterFourMiniGame.jsx`: demo chương 4 tuyến Minh cũ; không phải chương 4 “Mua thông minh” của bộ art v2.
 - `public/images/c1`, `public/images/c2`: asset gameplay tuyến Tí đang chạy.
 - `public/images/finteen-v2`: asset An/Minh được tài liệu hóa để xây tuyến mới.
-- `src/features/internal`: Content Studio/frontend mô phỏng quy trình biên tập; không phải backend sản xuất.
+- `src/features/internal`: layout và phân quyền portal nội bộ. `src/features/studio`: các màn/API chương, duyệt, phát hành, tài nguyên, câu hỏi và khóa AI; dùng phiên ACCOUNT hiện có. Hướng dẫn và ma trận quyền tại [`docs/STUDIO.md`](docs/STUDIO.md).
 
 ## Contract tối thiểu khi biến một chương v2 thành game
 

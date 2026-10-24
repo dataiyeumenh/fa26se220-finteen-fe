@@ -40,13 +40,23 @@ test("internal routes require the shared ACCOUNT login instead of seeded credent
       const menu = menuFor([role]);
       assert.match(menu, new RegExp(`href="/internal/${path}"`));
       assert.match(menu, /href="\/internal\/assets"/);
-      for (const other of ['chapters', 'reviews', 'releases'].filter(value => value !== path)) {
-        assert.doesNotMatch(menu, new RegExp(`href="/internal/${other}"`));
-      }
+      assert.match(menu, /href="\/internal\/chapters"/);
+      if (role === 'GAME_MANAGER') assert.match(menu, /href="\/internal\/releases"/);
+      else assert.doesNotMatch(menu, /href="\/internal\/releases"/);
+      assert.match(menu, /href="\/internal\/questions"/);
+      if (role !== 'GAME_REVIEWER') assert.doesNotMatch(menu, /href="\/internal\/reviews"/);
     }
     const combined = menuFor(['GAME_EDITOR', 'GAME_REVIEWER']);
     assert.match(combined, /href="\/internal\/chapters"/);
     assert.match(combined, /href="\/internal\/reviews"/);
+    assert.match(combined, /value="GAME_REVIEWER"/);
+    assert.match(combined, /KHÔNG GIAN BIÊN TẬP/);
+    const admin = menuFor(['ADMIN']);
+    assert.match(admin, /href="\/internal\/admin"/);
+    assert.match(admin, /href="\/internal\/history"/);
+    assert.match(admin, /value="GAME_REVIEWER"/);
+    assert.match(menuFor(['GAME_REVIEWER']), /KHÔNG GIAN KIỂM DUYỆT/);
+    assert.match(menuFor(['GAME_MANAGER']), /KHÔNG GIAN PHÁT HÀNH/);
   } finally {
     await server.close();
   }
