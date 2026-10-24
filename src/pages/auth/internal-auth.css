@@ -1,0 +1,39 @@
+.internal-auth { --ft-link: #087c72; --ft-muted: #627e79; min-height: 100dvh; background: radial-gradient(ellipse at 12% 35%, #dff5e9 0, transparent 55%), #f3faf7; color: #193c35; font-family: 'Be Vietnam Pro', sans-serif; }
+.internal-auth-header { max-width: 1320px; margin: auto; min-height: 100px; padding: 24px 48px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.internal-auth-brand { display: flex; align-items: center; gap: 10px; color: #193c35; text-decoration: none; font-size: 26px; font-weight: 800; letter-spacing: -1px; }
+.internal-auth-brand > span:first-child { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 12px; color: #0d8778; background: #d9f3e8; }
+.internal-auth-brand .internal-auth-brand-divider { width: 1px; height: 22px; margin: 0 4px; background: #cee4da; }
+.internal-auth-brand small { font-size: 10px; letter-spacing: 2px; color: #688279; font-weight: 600; }
+.internal-auth-back { display: inline-flex; align-items: center; gap: 8px; color: #52766d; font-size: 12px; text-decoration: none; }
+.internal-auth-main { max-width: 1224px; padding: 24px 48px 40px; margin: auto; display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 80px; }
+.internal-auth-eyebrow { display: inline-flex; align-items: center; gap: 9px; color: #147c6d; font-size: 10px; letter-spacing: 2px; font-weight: 700; }
+.internal-auth-eyebrow > span { width: 7px; height: 7px; border-radius: 50%; background: #27ac8e; }
+.internal-auth-story h2 { margin: 26px 0 20px; font-size: clamp(30px, 3.3vw, 44px); line-height: 1.4; font-weight: 650; letter-spacing: -1.6px; }
+.internal-auth-story h2 em { font-style: normal; color: #0c917b; }
+.internal-auth-story > p { max-width: 410px; color: #5e7c73; font-size: 13px; line-height: 1.9; }
+.internal-auth-roles { display: grid; grid-template-columns: 1fr 1fr; gap: 23px 18px; margin: 24px 0; }
+.internal-auth-roles > div { display: flex; align-items: center; gap: 12px; }
+.internal-auth-roles > div > span { display: grid; place-items: center; width: 40px; height: 40px; flex-shrink: 0; border: 1px solid #cde9db; border-radius: 11px; background: #e1f5ea; color: #17846e; }
+.internal-auth-roles strong, .internal-auth-roles small { display: block; }
+.internal-auth-roles strong { font-size: 12px; font-weight: 600; }
+.internal-auth-roles small { margin-top: 5px; font-size: 10px; color: #657f76; }
+.internal-auth-access-note { display: flex; align-items: center; gap: 10px; border-top: 1px solid #d0e8dc; padding-top: 22px; color: #5d7e72; }
+.internal-auth-access-note p { margin: 0; font-size: 11px; line-height: 1.7; }
+.internal-auth-card { background: white; border: 1px solid #d8e9e1; padding: 36px; border-radius: 22px; box-shadow: 0 16px 50px #14543b0d; }
+.internal-auth-lock { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 15px; background: #dff5eb; color: #128573; margin-bottom: 24px; }
+.internal-auth .ft-auth-form h1 { font-size: 27px; letter-spacing: -.8px; margin: 12px 0; color: #193c35; }
+.internal-auth .ft-small-label { font-size: 9px; letter-spacing: 1.6px; color: #38816e; }
+.internal-auth .ft-auth-intro { font-size: 12px; line-height: 1.9; color: #647f75; margin-bottom: 26px; }
+.internal-auth .ft-account-fields label, .internal-auth .ft-field-group > label { font-size: 12px; font-weight: 600; color: #3f6458; }
+.internal-auth .ft-account-fields input { border-radius: 9px; background: #f8fcfa; border-color: #d3e5dc; font-size: 13px; }
+.internal-auth .ft-account-fields input:focus { outline: 2px solid #65c9ad; outline-offset: 2px; }
+.internal-auth .ft-primary { background: #128573; color: #fff; border-radius: 9px; box-shadow: 0 4px 10px #12857320; }
+.internal-auth .ft-primary:hover:not(:disabled) { background: #096c5e; }
+.internal-auth .ft-auth-switch { border-top: 1px solid #e2eee7; padding-top: 18px; font-size: 10px; color: #657f76; line-height: 1.9; }
+.internal-auth-user-link { text-align: center; font-size: 10px; line-height: 2; color: #647f75; margin: 20px 0 0; }
+.internal-auth-user-link a { display: inline-flex; align-items: center; gap: 3px; color: #0d806e; text-decoration: none; }
+.internal-auth-footer { max-width: 1224px; margin: auto; padding: 24px 48px; display: flex; justify-content: space-between; gap: 16px; color: #6a897c; font-size: 10px; border-top: 1px solid #d7e9de; }
+.internal-auth a:focus-visible, .internal-auth button:focus-visible { outline: 3px solid #65c9ad; outline-offset: 4px; }
+@media (max-width: 900px) { .internal-auth-main { gap: 32px; padding-inline: 28px; } .internal-auth-header { padding-inline: 28px; } .internal-auth-card { padding: 28px; } .internal-auth-roles { grid-template-columns: 1fr; gap: 14px; } }
+@media (max-width: 680px) { .internal-auth-header { min-height: 80px; padding: 18px 20px; } .internal-auth-brand { font-size: 22px; } .internal-auth-brand small { font-size: 8px; letter-spacing: 1px; } .internal-auth-main { grid-template-columns: minmax(0, 460px); justify-content: center; padding: 16px 20px 32px; gap: 26px; } .internal-auth-story h2 { font-size: 30px; margin: 14px 0; } .internal-auth-story h2 br { display: none; } .internal-auth-story h2 br::after { content: ' '; } .internal-auth-story > p { margin-bottom: 0; } .internal-auth-roles, .internal-auth-access-note { display: none; } .internal-auth-card { padding: 26px 22px; border-radius: 18px; } .internal-auth-footer { margin: 0 20px; padding: 20px 0; flex-wrap: wrap; } }
+

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   BadgeDollarSign,
   CheckCircle2,
@@ -630,6 +630,7 @@ function InternalAccounts({
 
 function RolesTab({ actor }) {
   const [reason, setReason] = useState("");
+  const reasonRef = useRef(null);
   const [pending, setPending] = useState(null);
   const roles = useAdminRoles();
   const { account, busy, notice, listVersion, changeRole, setNotice } = roles;
@@ -644,6 +645,7 @@ function RolesTab({ actor }) {
         type: "error",
         text: "Vui lòng nhập lý do trước khi thay đổi vai trò.",
       });
+      reasonRef.current?.focus();
       return;
     }
     setNotice(null);
@@ -684,7 +686,7 @@ function RolesTab({ actor }) {
         </div>
         <AccountSearch onFound={chooseAccount} disabled={busy} />
       </section>
-      <Notice type={notice?.type}>{notice?.text}</Notice>
+      {!account && <Notice type={notice?.type}>{notice?.text}</Notice>}
       {account && (
         <div
           className="admin-role-modal"
@@ -719,14 +721,18 @@ function RolesTab({ actor }) {
                 <label className="admin-reason">
                   Lý do thay đổi
                   <textarea
+                    ref={reasonRef}
                     value={reason}
                     onChange={(event) => setReason(event.target.value)}
+                    aria-invalid={notice?.type === "error" && !reason.trim() ? true : undefined}
+                    aria-describedby={notice && !pending ? "role-change-notice" : undefined}
                     maxLength="255"
                     required
                     placeholder="Ghi rõ lý do cấp hoặc thu hồi vai trò…"
                   />
                   <small>{reason.length}/255 ký tự</small>
                 </label>
+                {!pending && notice && <div id="role-change-notice"><Notice type={notice.type}>{notice.text}</Notice></div>}
                 <div className="admin-role-grid">
                   {ROLE_OPTIONS.map((role) => {
                     const active = account.roles?.includes(role.id);
@@ -805,6 +811,7 @@ function RolesTab({ actor }) {
               ngay lập tức.
             </p>
             <blockquote>{reason}</blockquote>
+            <Notice type={notice?.type}>{notice?.text}</Notice>
             {pending.role === "ADMIN" && pending.action === "grant" && (
               <p className="admin-confirm-warning">
                 Vai trò ADMIN có toàn quyền quản trị hệ thống. Hãy chắc chắn đây

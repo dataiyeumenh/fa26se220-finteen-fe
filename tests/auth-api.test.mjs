@@ -49,6 +49,41 @@ function setup() {
     },
   };
 }
+
+test('internal login uses its dedicated endpoint; Studio multipart preserves file and bearer', async () => {
+  const { auth, calls, queue } = setup();
+  queue.push({ code: 0, result: token }, { code: 0, result: me });
+  await auth.internalLogin(' staff@example.com ', 'password');
+  assert.ok(calls[0].url.endsWith('/api/auth/internal/login'));
+  assert.deepEqual(JSON.parse(calls[0].body), { email: 'staff@example.com', password: 'password' });
+  const asset = { id: 'asset-1', ref: '{{ASSET_BASE}}/a/hash.webp', url: 'https://example.com/a/hash.webp' };
+  queue.push({ code: 0, result: { asset, duplicate: true } });
+  const file = new Blob(['image-bytes'], { type: 'image/png' });
+  const result = await auth.uploadStudioAsset(file, { label: ' Living room ', chapterCode: ' CH04 ' });
+  assert.equal(result.duplicate, true);
+  assert.equal(result.asset.ref, asset.ref);
+  const upload = calls.at(-1);
+  assert.ok(upload.url.endsWith('/finteen/api/studio/assets'));
+  assert.equal(upload.method, 'POST');
+  assert.equal(upload.headers.Authorization, 'Bearer account-token');
+  assert.equal(upload.headers['Content-Type'], undefined);
+  assert.ok(upload.body instanceof FormData);
+  assert.equal(upload.body.get('file').size, file.size);
+  assert.equal(upload.body.get('label'), 'Living room');
+  assert.equal(upload.body.get('chapterCode'), 'CH04');
+  queue.push({ code: 0, result: [asset] });
+  assert.deepEqual(await auth.listStudioAssets({ chapter: 'CH04', q: 'An & nhà' }), [asset]);
+  const url = new URL(calls.at(-1).url);
+  assert.equal(url.searchParams.get('kind'), 'IMAGE');
+  assert.equal(url.searchParams.get('chapter'), 'CH04');
+  assert.equal(url.searchParams.get('q'), 'An & nhà');
+  const count = calls.length;
+  assert.throws(() => auth.uploadStudioAsset(new Blob(['x'], { type: 'text/plain' })), /PNG/);
+  assert.throws(() => auth.uploadStudioAsset(new Blob([new Uint8Array(5 * 1024 * 1024 + 1)], { type: 'image/png' })), /5 MB/);
+  assert.equal(calls.length, count);
+  queue.push({ code: 3004, message: 'Forbidden' });
+  await assert.rejects(auth.uploadStudioAsset(file), error => error.code === 3004);
+});
 test("registration has no session; resend uses encoded query and no body; forgot is public JSON", async () => {
   const { auth, calls, queue } = setup();
   queue.push({ code: 0, result: me }, { code: 0 }, { code: 0 });

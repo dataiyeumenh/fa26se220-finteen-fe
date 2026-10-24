@@ -21,6 +21,32 @@ test("internal routes require the shared ACCOUNT login instead of seeded credent
     );
     assert.equal(html, "");
     assert.doesNotMatch(html, /FinTeenDemo!|@finteen.demo|<form/);
+    const { default: AuthForm } = await server.ssrLoadModule('/src/features/workspace/AuthForm.jsx');
+    const login = renderToString(React.createElement(MemoryRouter, { initialEntries: ['/internal/login?as=kid'] }, React.createElement(AuthForm, { internal: true })));
+    assert.match(login, /Đăng nhập nội bộ/);
+    assert.match(login, /type="email"/);
+    assert.match(login, /Game Editor, Game Reviewer/);
+    assert.doesNotMatch(login, /Loại tài khoản|href="\/register"|Mã PIN/);
+    const { accountDestination, hasInternalAccess } = await server.ssrLoadModule('/src/features/internal/access.js');
+    for (const role of ['ADMIN', 'GAME_EDITOR', 'GAME_REVIEWER', 'GAME_MANAGER']) {
+      assert.equal(hasInternalAccess({ roles: [role] }), true);
+      assert.equal(accountDestination({ roles: [role] }), '/internal');
+    }
+    assert.equal(hasInternalAccess({ roles: ['PARENT'] }), false);
+    assert.equal(accountDestination({ role: 'kid' }), '/dashboard/kid');
+    const { default: StudioWorkspace } = await server.ssrLoadModule('/src/features/internal/StudioWorkspace.jsx');
+    const menuFor = roles => renderToString(React.createElement(MemoryRouter, { initialEntries: ['/internal'] }, React.createElement(StudioWorkspace, { actor: { roles, displayName: 'Studio User' } })));
+    for (const [role, path] of [['GAME_EDITOR', 'chapters'], ['GAME_REVIEWER', 'reviews'], ['GAME_MANAGER', 'releases']]) {
+      const menu = menuFor([role]);
+      assert.match(menu, new RegExp(`href="/internal/${path}"`));
+      assert.match(menu, /href="\/internal\/assets"/);
+      for (const other of ['chapters', 'reviews', 'releases'].filter(value => value !== path)) {
+        assert.doesNotMatch(menu, new RegExp(`href="/internal/${other}"`));
+      }
+    }
+    const combined = menuFor(['GAME_EDITOR', 'GAME_REVIEWER']);
+    assert.match(combined, /href="\/internal\/chapters"/);
+    assert.match(combined, /href="\/internal\/reviews"/);
   } finally {
     await server.close();
   }

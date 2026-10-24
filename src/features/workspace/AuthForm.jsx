@@ -6,6 +6,8 @@ import { auth } from '../../api/auth.api'
 import { googleIdToken, googleReady } from '../../api/firebase'
 import { useWorkspace } from './useWorkspace'
 import OtpForm from '../auth/OtpForm'
+import { accountDestination, hasInternalAccess } from '../internal/access'
+import { completeLogin, wrongLoginMessage } from '../auth/loginPolicy'
 import '@/components/public/public.css'
 
 function PasswordField({ id, label, hint, ...inputProps }) {
@@ -23,11 +25,11 @@ function PasswordField({ id, label, hint, ...inputProps }) {
   </div>
 }
 
-export default function AuthForm({ registration = false }) {
+export default function AuthForm({ registration = false, internal = false }) {
   const { actor, loading } = useWorkspace()
   const navigate = useNavigate()
   const [params, setParams] = useSearchParams()
-  const kind = !registration && params.get('as') === 'kid' ? 'learner' : 'adult'
+  const kind = !internal && !registration && params.get('as') === 'kid' ? 'learner' : 'adult'
   const kid = kind === 'learner'
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
@@ -45,15 +47,19 @@ export default function AuthForm({ registration = false }) {
     setError('')
     setMessage(''); setOtpMode(null)
   }
-  if (loading && !otpMode) return <p role="status">Đang kiểm tra phiên đăng nhập…</p>
-  const destination = current => current?.roles?.includes('ADMIN') ? '/internal' : current?.role === 'kid' ? '/dashboard/kid' : '/dashboard'
-  if (actor) return <Navigate replace to={destination(actor)} />
+  if (loading && !otpMode && !busy) return <p role="status">Đang kiểm tra phiên đăng nhập…</p>
+  const destination = accountDestination
+  if (actor && !busy && !otpMode && hasInternalAccess(actor) === internal) return <Navigate replace to={destination(actor)} />
+  if (actor && !busy && !otpMode) return <section className="ft-auth-form"><h1>Không đúng trang đăng nhập</h1><p role="alert">{wrongLoginMessage(internal)}</p><button className="ft-button ft-primary" onClick={() => auth.logout()}>Đăng nhập tài khoản khác</button><p><Link to={internal ? '/login' : '/internal/login'}>Đến trang đăng nhập phù hợp</Link></p></section>
   if (otpMode) return <OtpForm email={email} mode={otpMode} cooldown={cooldown} onCooldown={setCooldown}
-    onBack={() => { setOtpMode(null); setError(''); setMessage(''); navigate('/login') }}
+    onBack={() => { setOtpMode(null); setError(''); setMessage(''); navigate(internal ? '/internal/login' : '/login') }}
     onSuccess={reset => {
       setOtpMode(null)
-      if (reset) { setMessage('Đã đặt lại mật khẩu. Hãy đăng nhập bằng mật khẩu mới.'); navigate('/login', { replace: true }) }
-      else navigate(destination(auth.getSnapshot().actor), { replace: true })
+      if (reset) { setMessage('Đã đặt lại mật khẩu. Hãy đăng nhập bằng mật khẩu mới.'); navigate(internal ? '/internal/login' : '/login', { replace: true }) }
+      else {
+        try { navigate(completeLogin(auth, internal), { replace: true }) }
+        catch (err) { setError(err.message) }
+      }
     }} />
 
   const onSubmit = async event => {
@@ -67,8 +73,9 @@ export default function AuthForm({ registration = false }) {
         setEmail(String(form.get('identifier')).trim()); setOtpMode('verify'); setCooldown(60)
         return
       } else if (kid) { await auth.slotLogin(form.get('identifier'), form.get('secret')) }
+      else if (internal) { await auth.internalLogin(form.get('identifier'), form.get('secret')) }
       else { await auth.login(form.get('identifier'), form.get('secret')) }
-      navigate(destination(auth.getSnapshot().actor), { replace: true })
+      navigate(completeLogin(auth, internal), { replace: true })
     } catch (err) {
       const kidErrors = { 3002: 'Sai PIN, bạn thử lại nhé.', 3007: 'Không tìm thấy mã này. Hãy kiểm tra lại mã được cấp.', 3008: 'PIN đã bị khóa do nhập sai nhiều lần. Vui lòng đợi 15 phút rồi thử lại.', 3009: 'Nhóm hoặc lớp học đã kết thúc. Mã này không còn sử dụng được.' }
       setError(kid && kidErrors[err.code] ? kidErrors[err.code] : err.code === 3016 ? 'Tài khoản tạm khóa do nhập sai nhiều lần. Vui lòng thử lại sau 15 phút.' : err.message)
@@ -87,16 +94,16 @@ export default function AuthForm({ registration = false }) {
   }
   const googleLogin = async () => {
     setBusy(true); setError(''); setMessage('')
-    try { const token = await googleIdToken(); await auth.googleLogin(token); navigate(destination(auth.getSnapshot().actor), { replace: true }) }
+    try { const token = await googleIdToken(); await auth.googleLogin(token); navigate(completeLogin(auth, internal), { replace: true }) }
     catch (err) { setError(err.code === 3020 ? 'Email này đã đăng ký bằng mật khẩu. Hãy đăng nhập bằng mật khẩu, rồi vào Tài khoản để liên kết Google.' : err.message) }
     finally { setBusy(false) }
   }
 
   return <section className="ft-auth-form">
-    <span className="ft-small-label">{registration ? 'BẮT ĐẦU MỘT HÀNH TRÌNH' : 'HẸN GẶP BẠN Ở CHƯƠNG TIẾP THEO'}</span>
-    <h1>{registration ? 'Tạo tài khoản mới.' : kid ? 'Chào bạn, nhà khám phá!' : 'Chào mừng trở lại!'}</h1>
-    <p className="ft-auth-intro">{registration ? 'Dành cho phụ huynh và giáo viên. Tạo tài khoản để cùng các bạn nhỏ khám phá FinTeen.' : kid ? 'Nhập mã và PIN được cấp để vào góc học tập của bạn.' : 'Đăng nhập để đồng hành cùng con và học sinh.'}</p>
-    {!registration && <div className="ft-auth-tabs" role="group" aria-label="Loại tài khoản">
+    <span className="ft-small-label">{internal ? 'FINTEEN · NỘI BỘ' : registration ? 'BẮT ĐẦU MỘT HÀNH TRÌNH' : 'HẸN GẶP BẠN Ở CHƯƠNG TIẾP THEO'}</span>
+    <h1>{internal ? 'Đăng nhập nội bộ' : registration ? 'Tạo tài khoản mới.' : kid ? 'Chào bạn, nhà khám phá!' : 'Chào mừng trở lại!'}</h1>
+    <p className="ft-auth-intro">{internal ? 'Dành cho Admin, Game Editor, Game Reviewer và Game Manager. Sử dụng tài khoản đã được quản trị viên cấp quyền.' : registration ? 'Dành cho phụ huynh và giáo viên. Tạo tài khoản để cùng các bạn nhỏ khám phá FinTeen.' : kid ? 'Nhập mã và PIN được cấp để vào góc học tập của bạn.' : 'Đăng nhập để đồng hành cùng con và học sinh.'}</p>
+    {!internal && !registration && <div className="ft-auth-tabs" role="group" aria-label="Loại tài khoản">
       <button type="button" disabled={busy} aria-pressed={!kid} onClick={() => chooseKind('adult')}><Users size={19} aria-hidden="true" /><span>Người lớn<small>Phụ huynh / Giáo viên</small></span></button>
       <button type="button" disabled={busy} aria-pressed={kid} onClick={() => chooseKind('learner')}><GraduationCap size={20} aria-hidden="true" /><span>Trẻ em<small>Học sinh 13–18 tuổi</small></span></button>
     </div>}
@@ -116,7 +123,7 @@ export default function AuthForm({ registration = false }) {
     {message && <p className="ft-free-note" role="status">{message}</p>}
     {!kid && <div className="ft-auth-alternatives">
       {!registration && <button type="button" className="ft-auth-text-action" disabled={busy || cooldown > 0} onClick={() => emailAction('forgot')}>Quên mật khẩu?{cooldown > 0 ? ` (${cooldown}s)` : ''}</button>}
-      <div className="ft-auth-divider"><span>hoặc</span></div>
+      {!internal && <><div className="ft-auth-divider"><span>hoặc</span></div>
       <button type="button" className="ft-google-button" disabled={busy || !googleReady} title={!googleReady ? 'Đăng nhập Google chưa được cấu hình' : undefined} onClick={googleLogin}>
         <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
           <path fill="#4285F4" d="M21.6 12.23c0-.71-.06-1.39-.18-2.05H12v3.88h5.38a4.6 4.6 0 0 1-2 3.02v2.51h3.24c1.89-1.74 2.98-4.3 2.98-7.36Z"/>
@@ -125,9 +132,9 @@ export default function AuthForm({ registration = false }) {
           <path fill="#EA4335" d="M12 5.96c1.47 0 2.79.51 3.82 1.51l2.87-2.87A9.6 9.6 0 0 0 12 2a10 10 0 0 0-8.93 5.49l3.34 2.59C7.2 7.72 9.4 5.96 12 5.96Z"/>
         </svg>
         <span>Tiếp tục với Google</span>
-      </button>
+      </button></>}
       {auth.getSnapshot().error && !error && <p role="alert">{auth.getSnapshot().error}</p>}
     </div>}
-    <p className="ft-auth-switch">{registration ? 'Bạn đã có tài khoản?' : 'Bạn là phụ huynh hoặc giáo viên mới?'} <Link to={registration ? '/login' : '/register'}>{registration ? 'Đăng nhập' : 'Đăng ký ngay'} <ArrowUpRight size={15} aria-hidden="true" /></Link></p>
+    {internal ? <p className="ft-auth-switch">Quyền nội bộ do quản trị viên cấp. <Link to="/login">Đăng nhập người dùng</Link></p> : <p className="ft-auth-switch">{registration ? 'Bạn đã có tài khoản?' : 'Bạn là phụ huynh hoặc giáo viên mới?'} <Link to={registration ? '/login' : '/register'}>{registration ? 'Đăng nhập' : 'Đăng ký ngay'} <ArrowUpRight size={15} aria-hidden="true" /></Link></p>}
   </section>
 }
