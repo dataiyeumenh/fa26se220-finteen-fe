@@ -27,11 +27,11 @@ function AddKeyDialog({ busy, error, onClose, onAdd }) {
         <label className="sp-field">Nhà cung cấp<select name="provider" className="sp-input">{Object.entries(PROVIDERS).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label>
         <label className="sp-field">Tên gợi nhớ<input name="alias" className="sp-input" required placeholder="Ví dụ: Gemini của Hưng" /></label>
       </div>
-      <label className="sp-field">Khóa bí mật<input name="key" type="password" autoComplete="off" className="sp-input" required /></label>
+      <label className="sp-field">Khoá bí mật<input name="key" type="password" autoComplete="off" className="sp-input" required /></label>
       <label className="sp-field">Thứ tự dùng<small>Số nhỏ được dùng trước. Để 0 nếu không cần.</small><input name="priority" type="number" step="1" defaultValue="0" className="sp-input" required style={{ maxWidth: 140 }} /></label>
       <p className="sp-hint">Khoá được thử ngay khi thêm. Sau khi lưu, khoá thật không bao giờ hiện lại; danh sách chỉ hiện 4 ký tự cuối.</p>
       {error && <div className="sp-inline-error" role="alert">{error}</div>}
-      <div className="sp-dialog-actions"><Btn onClick={onClose}>Huỷ</Btn><Btn type="submit" tone="primary">{busy ? 'Đang thêm…' : 'Thêm khóa'}</Btn></div>
+      <div className="sp-dialog-actions"><Btn onClick={onClose}>Huỷ</Btn><Btn type="submit" tone="primary">{busy ? 'Đang thêm…' : 'Thêm khoá'}</Btn></div>
     </fieldset></form>
   </StudioDialog>
 }
@@ -55,7 +55,7 @@ export default function AiKeysPage() {
       actions={<Btn tone="primary" disabled={busy} onClick={() => { clearError(); setAdding(true) }}><Plus size={17} aria-hidden="true" />Thêm khoá</Btn>} />
     {query.loading && !query.data ? <StateBox kind="loading">Đang tải khoá AI…</StateBox>
       : query.error ? <StateBox kind="error" title="Chưa tải được danh sách khoá" actions={<Btn onClick={query.reload}>Thử lại</Btn>}>{query.error}</StateBox>
-      : !rows.length ? <StateBox title="Chưa có khóa AI." actions={<Btn tone="primary" onClick={() => setAdding(true)}>Thêm khoá đầu tiên</Btn>}>Khi chưa có khoá, gợi ý giọng đọc chỉ dùng luật có sẵn.</StateBox>
+      : !rows.length ? <StateBox title="Chưa có khoá AI" actions={<Btn tone="primary" onClick={() => setAdding(true)}>Thêm khoá đầu tiên</Btn>}>Khi chưa có khoá, gợi ý giọng đọc chỉ dùng luật có sẵn.</StateBox>
       : <ul className="sp-keys" aria-label="Danh sách khoá AI">{rows.map(key => {
         const state = keyState(key)
         return <li className="sp-key" key={key.id}>

@@ -27,7 +27,7 @@ export function statusLine(draft) {
     case 'SUBMITTED': return `${editor} gửi duyệt ${time(draft.submittedAt)}. Đang chờ người duyệt chơi thử.`
     case 'APPROVED': return `${reviewer} chấm Đạt ${time(draft.reviewedAt)}. Chờ phát hành vào game.`
     case 'REJECTED': return `${reviewer} trả về ${time(draft.reviewedAt)}. Người soạn cần sửa rồi gửi lại.`
-    case 'RELEASED': return `Đã vào game. ${editor} soạn, ${reviewer} duyệt.`
+    case 'RELEASED': return ['Đã vào game.', draft.editorName && `${draft.editorName} soạn`, draft.reviewerName && `${draft.reviewerName} duyệt`].filter(Boolean).join(' ').replace(' soạn ', ' soạn, ') + (draft.editorName || draft.reviewerName ? '.' : '')
     default: return `${editor} sửa lần cuối ${time(draft.updatedAt)}.`
   }
 }
