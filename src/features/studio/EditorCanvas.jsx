@@ -171,7 +171,7 @@ export default function EditorCanvas(props) {
             {write && <button type="button" className="scene-text-button is-danger" onClick={() => update({ options: scene.options.filter((_, k) => k !== index) })}>Bỏ lựa chọn này</button>}
           </div>)}
           {write && <button type="button" className="scene-text-button" onClick={() => update({ options: [...(scene.options || []), { id: `${scene.id}_OPT${(scene.options?.length || 0) + 1}_${Date.now().toString(36)}`, text: '', nextSceneId: scene.options?.[0]?.nextSceneId ?? null }] })}><Plus size={15} />Thêm lựa chọn</button>}</div>}
-          {type === 'minigame' && <p className="scene-hint">Loại trò chơi: {schema?.minigameKinds?.[scene.game?.kind]?.label || scene.game?.kind || 'chưa chọn'}. Chữ và đáp án của trò chơi sửa ở JSON.</p>}
+          {type === 'minigame' && <div className="scene-target"><span>Mini-game: {schema?.minigameKinds?.[scene.game?.kind]?.label || scene.game?.kind || 'chưa chọn loại'}</span><button type="button" onClick={() => openDialog({ kind: 'minigame' })}>Soạn chữ, đáp án, con số</button></div>}
           {(scene.speaker || scene.speakerId) && scene.text && <VoiceFields scene={scene} update={update} />}
         </fieldset>
         {write && <div className="scene-inspector-actions"><button type="button" disabled={busy} onClick={onDuplicate}><Copy size={15} />Nhân đôi cảnh</button><button type="button" className="scene-delete" disabled={busy} onClick={onDelete}><Trash2 size={15} />Xóa cảnh</button></div>}

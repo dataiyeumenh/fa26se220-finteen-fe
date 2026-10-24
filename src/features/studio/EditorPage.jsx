@@ -9,6 +9,7 @@ import { useStudioAction, useStudioResource } from './useStudioResource'
 import EditorCanvas from './EditorCanvas'
 import { nextSceneId } from './sceneEditing'
 import { TYPE_LABEL, duplicateLinked, insertLinked, isLinear, removeLinked, storyIssues } from './storyOps'
+import MinigameDialog from './MinigameDialog'
 import { AddSceneDialog, CharacterDialog, ConditionDialog, EffectDialog, PlayDialog, ScenePickerDialog } from './SceneDialogs'
 import { prepareDraftV2, parseCondition } from './draftV2'
 import { AssetPicker } from './AssetsPage'
@@ -290,7 +291,8 @@ export default function EditorPage({ notify, code }) {
       onAddCharacter={() => setDialog({ kind: 'character' })} onPlay={() => setDialog({ kind: 'play' })} openDialog={setDialog} onBranch={createBranch} onLaneEnd={addLaneEnd} />
     {voiceHints && <VoiceHints hints={voiceHints} scenes={scenes} write={write} onAccept={acceptHint} onDrop={dropHint} onOpen={id => go(id)} onClose={() => setVoiceHints(null)} />}
     {picking && <AssetPicker chapter={code} notify={notify} onClose={() => setPicking(false)} onPick={asset => {
-      if (picking === 'character') update({ characters: [...(scene.characters || []), { id: asset.label || 'NHAN_VAT', src: asset.url, position: 'center' }] })
+      if (typeof picking === 'function') picking(asset.url)
+      else if (picking === 'character') update({ characters: [...(scene.characters || []), { id: asset.label || 'NHAN_VAT', src: asset.url, position: 'center' }] })
       else update({ background: asset.url })
       setPicking(false)
     }} />}
@@ -305,6 +307,8 @@ export default function EditorPage({ notify, code }) {
     {dialog?.kind === 'character' && <CharacterDialog sprites={content.sprites} present={(scene.characters || []).map(item => item.id)} onClose={close}
       onLibrary={() => { close(); setPicking('character') }}
       onPick={(id, src, expression) => { const used = new Set((scene.characters || []).map(item => String(item.position).toLowerCase())); update({ characters: [...(scene.characters || []), { id, expression, src, position: ['center', 'right', 'left'].find(p => !used.has(p)) || 'right' }] }); close() }} />}
+    {dialog?.kind === 'minigame' && <MinigameDialog game={scene.game} kind={schemaQuery.data?.minigameKinds?.[scene.game?.kind]} onClose={close}
+      onPickImage={apply => setPicking(() => apply)} onSave={game => { update({ game }); close(); notify('Đã cập nhật mini-game.', true) }} />}
     {dialog?.kind === 'play' && <PlayDialog content={content} startIndex={idx} stats={stats} onClose={close} onEdit={index => { setIdx(index); close() }} />}
   </>
 }

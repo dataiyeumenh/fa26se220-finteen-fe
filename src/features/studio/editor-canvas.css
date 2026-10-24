@@ -254,3 +254,24 @@ textarea.stage-text:focus { background: #fff; }
 .map-empty { margin: 0; font-size: 12px; color: var(--muted); border: 1px dashed var(--line); border-radius: 8px; padding: 6px 8px; text-align: center; background: #fff; }
 .scene-editor .map-add { border-style: dashed; color: var(--accent-strong); font-size: 12px; min-height: 30px; }
 .map-join { display: flex; align-items: center; gap: 6px; margin: 0; font-size: 13px; color: var(--accent-strong); font-weight: 600; }
+
+/* soạn mini-game */
+.studio-tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+.studio-dialog .studio-tabs button { border: 0; border-bottom: 2px solid transparent; border-radius: 0; padding: 8px 12px; }
+.studio-dialog .studio-tabs button[aria-selected=true] { border-bottom-color: var(--accent); color: var(--accent-strong); font-weight: 600; }
+.studio-mg-groups, .studio-mg-answers, .studio-mg-settings { display: grid; gap: 10px; }
+.studio-mg-group { border: 1px solid var(--line); border-radius: 8px; padding: 8px 12px; }
+.studio-mg-group > summary { cursor: pointer; font-weight: 600; }
+.studio-mg-group > summary small { font-weight: 400; color: var(--muted); }
+.studio-mg-group .studio-block-field { margin-top: 10px; font-size: 13px; color: var(--muted); }
+.studio-mg-group textarea { width: 100%; resize: vertical; color: var(--ink); }
+.studio-answer { border: 0; border-bottom: 1px solid var(--line); padding: 0 0 10px; margin: 0; display: grid; gap: 6px; }
+.studio-answer legend { font-weight: 600; padding: 0; margin-bottom: 6px; }
+.studio-answer-choices { display: flex; flex-wrap: wrap; gap: 6px; }
+.studio-answer-choices label { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line); border-radius: 8px; padding: 4px 10px; cursor: pointer; }
+.studio-answer-choices label.is-on { border-color: var(--accent); background: var(--accent-wash); font-weight: 600; }
+.studio-mg-images { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+.studio-mg-images figure { margin: 0; display: grid; gap: 4px; }
+.studio-mg-images img { width: 100%; aspect-ratio: 4 / 3; object-fit: contain; background: var(--wash); border-radius: 6px; }
+.studio-mg-images figcaption { font-size: 12px; color: var(--muted); }
+.studio-dialog textarea.studio-code { width: 100%; font: 12px/1.6 ui-monospace, Consolas, monospace; }
