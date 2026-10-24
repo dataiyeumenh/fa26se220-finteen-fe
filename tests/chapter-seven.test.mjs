@@ -1,7 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
-import { chapter7V2GameData as data } from "../src/pages/Kid/Dashboard/data/chapter7V2VisualNovel.js";
+import { chapter7V2GameData as content } from "./fixtures/content/index.mjs";
+import { endingId, isStructured, lockReason, normalizeChapter } from "./helpers/story.mjs";
 import {
   applySafetyAction,
   createSafetyState,
@@ -15,6 +16,8 @@ import {
   saveNovelProgress,
 } from "../src/pages/Kid/Dashboard/components/game/visualNovelProgress.js";
 import { CHAPTERS } from "../src/features/workspace/model.js";
+// Dữ liệu như game thấy (VisualNovelPlayer chuẩn hoá: inspect → scene, reflection → activity).
+const data = normalizeChapter(content);
 const scenes = new Map(data.scenes.map((scene) => [scene.id, scene]));
 const safetyConfig = data.scenes.find(
   (scene) => scene.game?.kind === "SCAM_OR_SAFE",
@@ -60,14 +63,7 @@ function ending(
     ...chapterSevenLearning(ledger, results, data.endingReport),
     miniGameCompleted: true,
   };
-  return data.endingRules.endings.find(
-    (rule) =>
-      rule.condition === "DEFAULT_FALLBACK" ||
-      new Function(
-        ...Object.keys(context),
-        `return Boolean(${rule.condition})`,
-      )(...Object.values(context)),
-  ).id;
+  return endingId(data, context);
 }
 const safeFlags = {
   incident_resolved: true,
@@ -148,7 +144,7 @@ test("story remains substantial and supports all four settings without reflectio
   for (const scene of data.scenes.filter(
     (scene) => scene.type === "conditional",
   ))
-    assert.ok(scene.condition.expression);
+    assert.ok(isStructured(scene.condition), scene.id);
 });
 test("insurance and privacy concepts have explicit names, conditions and no automatic claim credit", () => {
   const text = JSON.stringify(data);
@@ -177,7 +173,13 @@ test("insurance and privacy concepts have explicit names, conditions and no auto
     data.scenes.some((scene) => scene.inspect?.moneyEvents?.length),
     false,
   );
-  assert.equal(option("CH07_SC02_A").requires.minMoney, 300000);
+  assert.deepEqual(option("CH07_SC02_A").condition, {
+    var: "money",
+    op: ">=",
+    value: 300000,
+  });
+  assert.ok(lockReason(option("CH07_SC02_A"), { money: 299999 }));
+  assert.equal(lockReason(option("CH07_SC02_A"), { money: 300000 }), null);
   assert.deepEqual(
     option("CH07_SC02_B").moneyEvents.map((event) => event.amount),
     [300000, -300000],
@@ -420,9 +422,10 @@ test("chapter-seven checkpoint preserves drafts and decisions; route and card ex
     ),
   );
   assert.ok(
+    // Một nguồn: chương 7 (CH07) tải từ bản phát hành BE như mọi chương, không còn file chương tĩnh.
     readFileSync("src/pages/Kid/Dashboard/KidGames.jsx", "utf8").includes(
-      "chapter7V2VisualNovel",
-    ),
+      "getChapterContent(chapterCode(chapterNumber))",
+    ) && !existsSync("src/pages/Kid/Dashboard/data/chapter7V2VisualNovel.js"),
   );
   assert.ok(progressKey(data).includes("CH07_V2"));
 });

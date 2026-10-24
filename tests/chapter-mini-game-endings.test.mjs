@@ -1,10 +1,10 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { chapter4V2GameData as ch4 } from "../src/pages/Kid/Dashboard/data/chapter4V2VisualNovel.js";
-import { chapter5V2GameData as ch5 } from "../src/pages/Kid/Dashboard/data/chapter5V2VisualNovel.js";
-import { chapter6V2GameData as ch6 } from "../src/pages/Kid/Dashboard/data/chapter6V2VisualNovel.js";
-import { chapter7V2GameData as ch7 } from "../src/pages/Kid/Dashboard/data/chapter7V2VisualNovel.js";
-import { chapter8V2GameData as ch8 } from "../src/pages/Kid/Dashboard/data/chapter8V2VisualNovel.js";
+import { chapter4V2GameData as ch4 } from "./fixtures/content/index.mjs";
+import { chapter5V2GameData as ch5 } from "./fixtures/content/index.mjs";
+import { chapter6V2GameData as ch6 } from "./fixtures/content/index.mjs";
+import { chapter7V2GameData as ch7 } from "./fixtures/content/index.mjs";
+import { chapter8V2GameData as ch8 } from "./fixtures/content/index.mjs";
 import {
   chapterMiniGameSummary,
   recordMiniGameResult,
@@ -29,6 +29,7 @@ import {
   applyFutureAction,
   budgetFeedback,
 } from "../src/pages/Kid/Dashboard/components/game/futurePlanRules.js";
+import { endingId } from "./helpers/story.mjs";
 
 const safeFlags = {
   purchase_fit: true,
@@ -142,14 +143,7 @@ function resolve(data, results, learning, flags = safeFlags) {
     ...chapterMiniGameSummary(results, data.endingReport),
     ...(learning ? learning(ledger, results, data.endingReport) : {}),
   };
-  return data.endingRules.endings.find(
-    (ending) =>
-      ending.condition === "DEFAULT_FALLBACK" ||
-      new Function(
-        ...Object.keys(context),
-        `return Boolean(${ending.condition})`,
-      )(...Object.values(context)),
-  ).id;
+  return endingId(data, context);
 }
 
 for (const [data, learning, tasks, resultFor, groups] of cases) {

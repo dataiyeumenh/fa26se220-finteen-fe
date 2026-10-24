@@ -1,8 +1,9 @@
 import { createRoot } from "react-dom/client";
 import { MemoryRouter } from "react-router-dom";
 import { VisualNovelPlayer } from "../../src/pages/Kid/Dashboard/components/game/VisualNovelPlayer";
-import { chapter5V2GameData as data } from "../../src/pages/Kid/Dashboard/data/chapter5V2VisualNovel.js";
-import { chapter8V2GameData as other } from "../../src/pages/Kid/Dashboard/data/chapter8V2VisualNovel.js";
+import { chapter5V2GameData as content } from "./content/index.mjs";
+import { normalizeChapter } from "../../src/pages/Kid/Dashboard/components/game/chapterShape.js";
+import { chapter8V2GameData as other } from "./content/index.mjs";
 import {
   clearBrowserNovelProgress,
   initialNovelProgress,
@@ -11,6 +12,8 @@ import {
 } from "../../src/pages/Kid/Dashboard/components/game/visualNovelProgress.js";
 import { timelineResult } from "../../src/pages/Kid/Dashboard/components/game/compoundTimelineRules.js";
 import "../../src/index.css";
+// Dữ liệu như game thấy (VisualNovelPlayer chuẩn hoá: inspect → scene, reflection → activity).
+const data = normalizeChapter(content);
 
 const timelineConfig = data.scenes.find(
   (scene) => scene.game?.kind === "COMPOUND_TIMELINE",

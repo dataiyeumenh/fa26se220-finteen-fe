@@ -2,11 +2,11 @@ import { createRoot } from "react-dom/client";
 import { MemoryRouter } from "react-router-dom";
 import { VisualNovelPlayer } from "../../src/pages/Kid/Dashboard/components/game/VisualNovelPlayer";
 import { SmartShoppingMiniGame } from "../../src/pages/Kid/Dashboard/components/game/SmartShoppingMiniGame";
-import { chapter4V2GameData as ch4 } from "../../src/pages/Kid/Dashboard/data/chapter4V2VisualNovel.js";
-import { chapter5V2GameData as ch5 } from "../../src/pages/Kid/Dashboard/data/chapter5V2VisualNovel.js";
-import { chapter6V2GameData as ch6 } from "../../src/pages/Kid/Dashboard/data/chapter6V2VisualNovel.js";
-import { chapter7V2GameData as ch7 } from "../../src/pages/Kid/Dashboard/data/chapter7V2VisualNovel.js";
-import { chapter8V2GameData as ch8 } from "../../src/pages/Kid/Dashboard/data/chapter8V2VisualNovel.js";
+import { chapter4V2GameData as ch4 } from "./content/index.mjs";
+import { chapter5V2GameData as ch5 } from "./content/index.mjs";
+import { chapter6V2GameData as ch6 } from "./content/index.mjs";
+import { chapter7V2GameData as ch7 } from "./content/index.mjs";
+import { chapter8V2GameData as ch8 } from "./content/index.mjs";
 import { saveNovelProgress } from "../../src/pages/Kid/Dashboard/components/game/visualNovelProgress.js";
 import "../../src/index.css";
 

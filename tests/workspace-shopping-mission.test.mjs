@@ -7,7 +7,7 @@ import {
   purchaseLedger,
 } from "../src/pages/Kid/Dashboard/components/game/shoppingMissionRules.js";
 
-import { chapter4V2GameData } from "../src/pages/Kid/Dashboard/data/chapter4V2VisualNovel.js";
+import { chapter4V2GameData } from "./fixtures/content/index.mjs";
 const game = chapter4V2GameData.scenes.find(
   (scene) => scene.game?.id === "SMART_SHOPPING_CH04",
 ).game;

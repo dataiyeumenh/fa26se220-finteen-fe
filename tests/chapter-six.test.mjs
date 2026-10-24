@@ -1,7 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { existsSync } from "node:fs";
-import { chapter6V2GameData as data } from "../src/pages/Kid/Dashboard/data/chapter6V2VisualNovel.js";
+import { chapter6V2GameData as content } from "./fixtures/content/index.mjs";
+import { branchTarget, endingId, isStructured, lockReason, normalizeChapter } from "./helpers/story.mjs";
 import {
   loanApr,
   loanTotal,
@@ -20,6 +21,9 @@ import {
   readNovelProgress,
   saveNovelProgress,
 } from "../src/pages/Kid/Dashboard/components/game/visualNovelProgress.js";
+
+// Dữ liệu như game thấy (VisualNovelPlayer chuẩn hoá: inspect → scene, reflection → activity).
+const data = normalizeChapter(content);
 
 const scenes = new Map(data.scenes.map((s) => [s.id, s]));
 const loanConfig = data.scenes.find(
@@ -64,13 +68,7 @@ function resolveEnding(
       0,
     ),
   };
-  return data.endingRules.endings.find(
-    (e) =>
-      e.condition === "DEFAULT_FALLBACK" ||
-      new Function(...Object.keys(args), `return ${e.condition}`)(
-        ...Object.values(args),
-      ),
-  ).id;
+  return endingId(data, args);
 }
 const ledger = {
   CH06_PLAN: { evidenceScores: { I: 2, C: 2, P: 2 } },
@@ -141,7 +139,9 @@ test("chapter has sustained dialogue in all four scenes, with no forced borrowin
   );
   assert.equal(option("CH06_SIGN_B"), undefined);
   assert.equal(scenes.get("CH06_FINAL_B_1").setFlags.credit_plan_fit, true);
-  assert.equal(option("CH06_SC02_B").requires, undefined);
+  // B luôn chọn được: không có điều kiện khoá.
+  assert.equal(option("CH06_SC02_B").condition, undefined);
+  assert.equal(lockReason(option("CH06_SC02_B"), {}), null);
 });
 test("loan labels and abbreviations are explained in the story", () => {
   const dialogue = data.scenes
@@ -297,7 +297,14 @@ test("moving drafts before submission does not count as a wrong attempt", () => 
 });
 test("shopping cart stacks monthly obligations with an existing month-two payment", () => {
   for (const item of bnplItems) {
-    assert.ok(existsSync(`public${item.image}`), item.image);
+    // Ảnh nằm trong kho ảnh VPS (tên = hash) hoặc còn trong public/images.
+    if (item.image.startsWith("/images/"))
+      assert.ok(existsSync(`public${item.image}`), item.image);
+    else
+      assert.match(
+        item.image,
+        /^https:\/\/kidzeconomy\.com\.vn\/finteen\/assets\/a\/[0-9a-f]{20}\.webp$/,
+      );
     assert.equal(item.price, item.installment * 3);
   }
   assert.deepEqual(
@@ -508,15 +515,10 @@ test("bad final decisions have feedback but no repair choice, loop or route back
   );
 });
 test("conditional story branches use expressions understood by the shared player and retain the original plan", () => {
-  const evaluate = (id, flags) => {
+  const evaluate = (id, flags, choiceLedger = {}) => {
     const scene = scenes.get(id);
-    assert.equal(typeof scene.condition.expression, "string");
-    return new Function(
-      "flags",
-      `return Boolean(${scene.condition.expression})`,
-    )(flags)
-      ? scene.ifTrueSceneId
-      : scene.ifFalseSceneId;
+    assert.ok(isStructured(scene.condition), id);
+    return branchTarget(scene, { flags, choiceLedger });
   };
   assert.equal(
     evaluate("CH06_FINAL_ROUTE", { credit_plan_fit: true }),
@@ -534,18 +536,32 @@ test("conditional story branches use expressions understood by the shared player
     evaluate("CH06_FINAL_ROUTE_B", { credit_unverified: true }),
     "CH06_FINAL_C_1",
   );
+  // Đã hiểu cách trả nợ = chọn CH06_SC03_A (lựa chọn duy nhất bật repayment_understood; B tắt cờ) → khuôn rẽ theo choice:CH06_REPAYMENT.
+  const repayment = scenes.get("CH06_SC03");
+  assert.equal(repayment.choiceGroup, "CH06_REPAYMENT");
+  assert.deepEqual(
+    repayment.options.map((item) => [item.id, item.setFlags.repayment_understood]),
+    [
+      ["CH06_SC03_A", true],
+      ["CH06_SC03_B", false],
+    ],
+  );
   assert.equal(
-    evaluate("CH06_REPAY_CHECK", { repayment_understood: true }),
+    evaluate("CH06_REPAY_CHECK", { repayment_understood: true }, {
+      CH06_REPAYMENT: { optionId: "CH06_SC03_A" },
+    }),
     "CH06_RECAP_1",
   );
   assert.equal(
-    evaluate("CH06_REPAY_CHECK", { repayment_understood: false }),
+    evaluate("CH06_REPAY_CHECK", { repayment_understood: false }, {
+      CH06_REPAYMENT: { optionId: "CH06_SC03_B" },
+    }),
     "CH06_MINIMUM_REVIEW_1",
   );
   for (const scene of data.scenes.filter(
     (scene) => scene.type === "conditional",
   ))
-    assert.ok(scene.condition.expression);
+    assert.ok(isStructured(scene.condition), scene.id);
 });
 test("checkpoint round trips and rejects invalid/old snapshots; unavailable storage is harmless", () => {
   const memory = new Map();

@@ -1,13 +1,13 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { chapter1V2GameData as ch1 } from "../src/pages/Kid/Dashboard/data/chapter1V2VisualNovel.js";
-import { chapter2V2GameData as ch2 } from "../src/pages/Kid/Dashboard/data/chapter2V2VisualNovel.js";
-import { chapter3V2GameData as ch3 } from "../src/pages/Kid/Dashboard/data/chapter3V2VisualNovel.js";
-import { chapter4V2GameData as ch4 } from "../src/pages/Kid/Dashboard/data/chapter4V2VisualNovel.js";
-import { chapter5V2GameData as ch5 } from "../src/pages/Kid/Dashboard/data/chapter5V2VisualNovel.js";
-import { chapter6V2GameData as ch6 } from "../src/pages/Kid/Dashboard/data/chapter6V2VisualNovel.js";
-import { chapter7V2GameData as ch7 } from "../src/pages/Kid/Dashboard/data/chapter7V2VisualNovel.js";
-import { chapter8V2GameData as ch8 } from "../src/pages/Kid/Dashboard/data/chapter8V2VisualNovel.js";
+import { chapter1V2GameData as ch1 } from "./fixtures/content/index.mjs";
+import { chapter2V2GameData as ch2 } from "./fixtures/content/index.mjs";
+import { chapter3V2GameData as ch3 } from "./fixtures/content/index.mjs";
+import { chapter4V2GameData as ch4 } from "./fixtures/content/index.mjs";
+import { chapter5V2GameData as ch5 } from "./fixtures/content/index.mjs";
+import { chapter6V2GameData as ch6 } from "./fixtures/content/index.mjs";
+import { chapter7V2GameData as ch7 } from "./fixtures/content/index.mjs";
+import { chapter8V2GameData as ch8 } from "./fixtures/content/index.mjs";
 import {
   progressKey,
   readNovelProgress,
