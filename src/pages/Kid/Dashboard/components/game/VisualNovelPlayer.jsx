@@ -55,6 +55,7 @@ import {
   recordMiniGameResult,
   summarizeMiniGames,
 } from "./miniGameRules";
+import { buildChapterBatch, flushPendingBatches, submitChapterBatch } from "./playBatch.js";
 
 // Khung mini-game theo `game.kind` (bộ khuôn BE: scene-schema.json → minigameKinds). Dữ liệu cũ chưa có kind (bản 1.1.0)
 // tra theo id cũ (legacyIds của khuôn). Kind lạ → báo chưa có khung, không rơi im lặng vào Cần / Muốn.
@@ -278,6 +279,7 @@ export function VisualNovelPlayer({ data }) {
           : chapterFiveLearning;
   const gameContainerRef = useRef(null);
   const menuDetailsRef = useRef(null);
+  const batchSentRef = useRef(false); // lô cuối chương đã gửi trong lần chơi này
   const stageRef = useRef(null);
   const dialogueRef = useRef(null);
   const pendingTransitionRef = useRef(null);
@@ -512,6 +514,21 @@ export function VisualNovelPlayer({ data }) {
     });
   }, [data.sprites, scene.characters]);
 
+  // Tới cảnh kết → gửi lô lên BE (POST /api/play/chapter); mở game → gửi bù lô còn treo. Không chặn trẻ chơi tiếp.
+  useEffect(() => {
+    void flushPendingBatches();
+  }, []);
+  useEffect(() => {
+    if (scene?.type !== "ending" || isReviewing || batchSentRef.current) return;
+    batchSentRef.current = true;
+    const batch = buildChapterBatch(data, choiceLedger, miniGameResults);
+    if (import.meta.env.DEV) window.__finteenLastBatch = batch;
+    void submitChapterBatch(batch).then((outcome) => {
+      if (import.meta.env.DEV) window.__finteenLastSubmit = outcome;
+      if (outcome.failed) console.warn("Chưa gửi được kết quả chương, sẽ gửi lại sau:", outcome.failed);
+    });
+  }, [scene?.type, isReviewing, data, choiceLedger, miniGameResults]);
+
   const miniGameKind = scene?.type === "minigame" ? miniGameKindOf(scene.game) : undefined;
   const MiniGameFrame = MINI_GAME_FRAMES[miniGameKind];
   const hasChoiceOptions =
@@ -723,6 +740,7 @@ export function VisualNovelPlayer({ data }) {
           answer: option.answer || null,
           firstOptionId: previous?.firstOptionId || option.id,
           firstLabel: previous?.firstLabel || option.label || scene.title,
+          chosenAt: new Date().toISOString(),
           firstEvidenceScores: previous
             ? previous.firstEvidenceScores
             : option.evidenceScores || null,
@@ -835,7 +853,7 @@ export function VisualNovelPlayer({ data }) {
           sceneId: scene.id,
           gameId: scene.game?.id || scene.id,
         },
-        result || {},
+        { ...(result || {}), playedAt: new Date().toISOString() },
       ),
     );
     setMiniGameDoneByScene((prev) => ({
@@ -875,6 +893,7 @@ export function VisualNovelPlayer({ data }) {
     setGameFlag(null);
     setFlags({});
     setChoiceLedger({});
+    batchSentRef.current = false;
     setFirstChoiceScores({});
     setInspectedIds({});
     setMoneyEventsApplied({});

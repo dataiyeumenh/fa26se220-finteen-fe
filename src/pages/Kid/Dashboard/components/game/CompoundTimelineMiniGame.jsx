@@ -1,6 +1,7 @@
 import { Fragment, useEffect, useRef, useState } from "react";
 import { gradeRound, timelineAt, timelineResult } from "./compoundTimelineRules";
 import "./compound-timeline.css";
+import { timelineInputs } from "./miniGameInputs.js";
 // Khung COMPOUND_TIMELINE: chữ, số, đáp án, ảnh đều đọc từ game.config (JSON chương) — khung không giữ nội dung.
 const cash = (n) => `${n.toLocaleString("vi-VN")}đ`;
 const fill = (template, values) =>
@@ -436,6 +437,7 @@ export function CompoundTimelineMiniGame({
               submitted.current = true;
               onComplete?.({
                 ...result,
+                inputs: timelineInputs(history),
                 visitedYears: visited,
                 ui: { round, year, visited, answers, inspected },
               });

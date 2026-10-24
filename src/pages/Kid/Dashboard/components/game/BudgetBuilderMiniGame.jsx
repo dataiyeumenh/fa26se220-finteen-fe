@@ -9,11 +9,13 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import "./chapter-two-minigames.css";
+import { compactInputs } from "./miniGameInputs.js";
 
 export function BudgetBuilderMiniGame({ game, onComplete, className }) {
   const [assignments, setAssignments] = useState({});
   const [selectedAmountId, setSelectedAmountId] = useState(null);
   const [submitted, setSubmitted] = useState(false);
+  const [firstCheck, setFirstCheck] = useState(null); // ô → mã thẻ lúc Kiểm tra lần đầu
 
   const usedAmountIds = useMemo(
     () => new Set(Object.values(assignments)),
@@ -74,6 +76,7 @@ export function BudgetBuilderMiniGame({ game, onComplete, className }) {
 
   const check = () => {
     setSubmitted(true);
+    setFirstCheck((first) => first ?? { ...assignments });
   };
 
   return (
@@ -258,6 +261,7 @@ export function BudgetBuilderMiniGame({ game, onComplete, className }) {
                   passed,
                   score: correctCount,
                   total: game.dropZones.length,
+                  inputs: compactInputs(firstCheck ?? assignments),
                   allocations: Object.fromEntries(
                     game.dropZones.map((zone) => [
                       zone.id,

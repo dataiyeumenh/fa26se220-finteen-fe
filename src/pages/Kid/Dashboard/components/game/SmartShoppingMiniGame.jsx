@@ -22,6 +22,7 @@ import {
 } from "./shoppingMissionRules";
 import "./chapter-two-minigames.css";
 import "./smart-shopping.css";
+import { compactInputs } from "./miniGameInputs.js";
 
 const money = (value) => `${value.toLocaleString("vi-VN")}đ`;
 // Khung SMART_SHOPPING: chữ, số, luật hiển thị đọc từ game.config (JSON chương). Biểu tượng chọn theo tên trong config.
@@ -165,6 +166,7 @@ export function SmartShoppingMiniGame({
   );
   const [report, setReport] = useState(saved?.report ?? null);
   const [firstReport, setFirstReport] = useState(saved?.firstReport ?? null);
+  const [firstInputs, setFirstInputs] = useState(saved?.firstInputs ?? null);
   const [attempt, setAttempt] = useState(saved?.attempt ?? 1);
   const submitted = useRef(false);
   const { budget, reserve } = game;
@@ -194,6 +196,15 @@ export function SmartShoppingMiniGame({
     });
     setReport(result);
     if (!firstReport) setFirstReport(result);
+    const inputs = firstInputs ?? compactInputs({
+      phone: selectedId,
+      inspected,
+      cancelDay: cancellationDay === "" ? undefined : Number(cancellationDay),
+      disputed: disputedLine,
+      batteryChecked,
+      batteryPlan,
+    });
+    if (!firstInputs) setFirstInputs(inputs);
     setStep(2);
     const first = firstReport || result;
     onProgress?.({
@@ -211,6 +222,7 @@ export function SmartShoppingMiniGame({
         invoiceOpened,
         report: result,
         firstReport: first,
+        firstInputs: inputs,
         attempt,
       },
     });
@@ -246,6 +258,7 @@ export function SmartShoppingMiniGame({
       batteryPlan,
       totalCost: report.totalCost,
       criteria: firstReport.criteria,
+      inputs: firstInputs,
       ui: {
         step: 2,
         inspected,

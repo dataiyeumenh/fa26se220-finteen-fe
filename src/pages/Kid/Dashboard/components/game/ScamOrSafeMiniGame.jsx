@@ -7,6 +7,7 @@ import {
 } from "./scamOrSafeRules.js";
 import "./loan-detective.css";
 import "./scam-or-safe.css";
+import { safetyInputs } from "./miniGameInputs.js";
 
 // Khung SCAM_OR_SAFE: chữ, số, đáp án, ảnh đều đọc từ game.config (JSON chương) — khung không giữ nội dung.
 const cash = (value) => `${value.toLocaleString("vi-VN")}đ`;
@@ -380,6 +381,7 @@ export function ScamOrSafeMiniGame({
             completed.current = true;
             onComplete({
               ...safetyResult(config, history, game.rounds),
+              inputs: safetyInputs(config, state, game.rounds),
               ui: state,
             });
           }}

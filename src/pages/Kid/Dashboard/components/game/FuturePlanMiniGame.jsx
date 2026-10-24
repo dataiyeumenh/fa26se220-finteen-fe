@@ -11,6 +11,7 @@ import {
   planBalance,
 } from "./futurePlanRules.js";
 import "./future-plan.css";
+import { futureInputs } from "./miniGameInputs.js";
 // Khung FUTURE_PLAN: chữ, số, đáp án, ảnh đều đọc từ game.config (JSON chương) — khung không giữ nội dung.
 
 const cash = (amount) => `${amount.toLocaleString("vi-VN")}đ`;
@@ -103,7 +104,7 @@ export function FuturePlanMiniGame({
   const finish = () => {
     if (!result.completed || completed.current) return;
     completed.current = true;
-    onComplete(result);
+    onComplete({ ...result, inputs: futureInputs(game.config, state) });
   };
   return (
     <section className="future-game" aria-label={game.title}>

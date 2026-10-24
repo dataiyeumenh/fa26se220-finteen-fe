@@ -3,6 +3,7 @@ import { BriefcaseBusiness, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import "./chapter-two-minigames.css";
 import "./chapter-three.css";
+import { compactInputs } from "./miniGameInputs.js";
 
 const STEPS = [
   { id: "fit", label: "1. Ghép việc với thời gian" },
@@ -20,6 +21,8 @@ export function CareerMatchMiniGame({ game, onComplete, className }) {
   const [fitFirstScore, setFitFirstScore] = useState(null);
   const [fitSolved, setFitSolved] = useState(false);
   const [picked, setPicked] = useState({});
+  const [firstVerdicts, setFirstVerdicts] = useState(null);
+  const [firstPicks, setFirstPicks] = useState({});
 
   const [feedback, setFeedback] = useState({
     tone: "info",
@@ -49,6 +52,7 @@ export function CareerMatchMiniGame({ game, onComplete, className }) {
     });
     setWrongJobs(wrong);
     if (fitFirstScore === null) setFitFirstScore(correct);
+    setFirstVerdicts((first) => first ?? { ...verdicts });
     setFitSolved(true);
     if (correct === jobs.length) {
       setFitSolved(true);
@@ -67,6 +71,7 @@ export function CareerMatchMiniGame({ game, onComplete, className }) {
   const answer = (question, option) => {
     if (picked[question.id] === question.correctId) return;
     setPicked((current) => ({ ...current, [question.id]: option.id }));
+    setFirstPicks((current) => (question.id in current ? current : { ...current, [question.id]: option.id }));
     if (option.id === question.correctId) {
       setFeedback({ tone: "good", text: question.explain });
     } else {
@@ -91,6 +96,7 @@ export function CareerMatchMiniGame({ game, onComplete, className }) {
         ),
       score: (fitFirstScore ?? 0) + calcScore,
       total: jobs.length + questions.length,
+      inputs: compactInputs({ ...(firstVerdicts ?? verdicts), ...firstPicks }),
     });
   };
 

@@ -10,6 +10,7 @@ import {
 } from "./loanDetectiveRules.js";
 import { InspectCardsDialog } from "./ChapterFiveActivities.jsx";
 import "./loan-detective.css";
+import { loanInputs } from "./miniGameInputs.js";
 
 // Khung LOAN_DETECTIVE: chữ, số, đáp án, ảnh đều đọc từ game.config (JSON chương) — khung không giữ nội dung.
 const cash = (n) => `${n.toLocaleString("vi-VN")}đ`;
@@ -611,7 +612,11 @@ export function LoanDetectiveMiniGame({
             }
             if (submitted.current) return;
             submitted.current = true;
-            onComplete({ ...loanResult(config, history, game.rounds), ui: state });
+            onComplete({
+              ...loanResult(config, history, game.rounds),
+              inputs: loanInputs(config, state, game.rounds),
+              ui: state,
+            });
           }}
         >
           {round === lastRound ? texts.finish : texts.next}
