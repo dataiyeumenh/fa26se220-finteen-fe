@@ -65,8 +65,14 @@ export async function submitChapterBatch(batch) {
     try { localStorage.removeItem(pendingKey(code, batch)); } catch { /* bộ nhớ trình duyệt bị chặn */ }
     return { sent: true, result };
   } catch (error) {
-    try { localStorage.setItem(pendingKey(code, batch), JSON.stringify(batch)); } catch { /* bộ nhớ trình duyệt bị chặn */ }
-    return { failed: error?.message || String(error), code: error?.code };
+    // Chỉ giữ để gửi lại khi mất mạng / máy chủ lỗi; BE từ chối hẳn (4xx — vd 7003 sai thứ tự chương với trẻ đã chơi trước khi
+    // FE biết gửi) thì bỏ lô, không gửi lại mãi.
+    const retry = !error?.status || error.status >= 500;
+    try {
+      if (retry) localStorage.setItem(pendingKey(code, batch), JSON.stringify(batch));
+      else localStorage.removeItem(pendingKey(code, batch));
+    } catch { /* bộ nhớ trình duyệt bị chặn */ }
+    return { failed: error?.message || String(error), code: error?.code, retry };
   }
 }
 
