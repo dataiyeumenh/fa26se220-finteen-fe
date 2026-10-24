@@ -11,9 +11,9 @@ export function useStudioResource(loader) {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setValue(previous => ({ ...previous, loading: true, error: '' }))
     Promise.resolve().then(loader).then(data => {
-      if (active) setValue({ data, loading: false, error: '' })
+      if (active) setValue({ data, loading: false, error: '', errorCode: null })
     }, error => {
-      if (active) setValue({ data: null, loading: false, error: formatError(error) })
+      if (active) setValue({ data: null, loading: false, error: formatError(error), errorCode: error?.code ?? null })
     })
     return () => { active = false }
   }, [loader, revision])
@@ -36,7 +36,7 @@ export function useStudioAction(notify) {
       after?.(result)
       return true
     } catch (error) {
-      setError(error.message)
+      setError(formatError(error))
       notify(formatError(error))
       return false
     } finally {

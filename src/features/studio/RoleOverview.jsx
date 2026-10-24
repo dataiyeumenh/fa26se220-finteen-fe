@@ -1,30 +1,50 @@
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowRight, CheckCheck, PenLine, Rocket } from 'lucide-react'
-import { studioApi, STATUS_LABEL } from './studioClient'
+import { studioApi } from './studioClient'
 import { useStudioResource } from './useStudioResource'
-import { Tag } from './ui'
+import { ROLE_LABELS, TURN_LABEL, statusLine, turnOf } from './chapterWork'
+import { Btn, PageHeader, StateBox } from './ui'
 
+// Mỗi vai: một câu nói vai làm gì, việc nào là "đến lượt mình", và nút dẫn tới đúng màn.
 const work = {
-  GAME_EDITOR: { label: 'KHÔNG GIAN BIÊN TẬP', title: 'Hoàn thiện từng cảnh.\nKể những câu chuyện hay.', description: 'Soạn nội dung, chỉnh sửa chương được trả về và gửi bản nháp hoàn chỉnh cho đội kiểm duyệt.', action: 'Mở bàn biên tập', path: '/internal/chapters', icon: PenLine, states: ['DRAFT', 'REJECTED'], metrics: [['DRAFT', 'Nháp đang soạn'], ['REJECTED', 'Cần chỉnh sửa'], ['SUBMITTED', 'Đang chờ duyệt']], steps: ['Soạn cảnh và chọn tài nguyên', 'Chơi thử, kiểm tra nội dung', 'Gửi nháp đi duyệt'], queue: 'Chương cần biên tập' },
-  GAME_REVIEWER: { label: 'KHÔNG GIAN KIỂM DUYỆT', title: 'Đọc kỹ từng câu chuyện.\nGiữ chất lượng nội dung.', description: 'Xem và chơi thử nháp được gửi đến. Ghi nhận xét, đánh giá Đạt hoặc trả về để biên tập viên hoàn thiện.', action: 'Mở hàng chờ duyệt', path: '/internal/reviews', icon: CheckCheck, states: ['SUBMITTED'], metrics: [['SUBMITTED', 'Chờ đánh giá'], ['APPROVED', 'Đã duyệt đạt'], ['REJECTED', 'Đã trả về']], steps: ['Mở nháp đang chờ duyệt', 'Chơi thử và kiểm tra chất lượng', 'Đánh giá kèm nhận xét'], queue: 'Hàng chờ kiểm duyệt' },
-  GAME_MANAGER: { label: 'KHÔNG GIAN PHÁT HÀNH', title: 'Sẵn sàng phát hành.\nĐưa nội dung đến người học.', description: 'Kiểm tra kế hoạch phát hành, quản lý phiên bản đang chạy và thu hồi khi phát hiện vấn đề.', action: 'Mở quản lý phát hành', path: '/internal/releases', icon: Rocket, states: ['APPROVED'], metrics: [['APPROVED', 'Sẵn sàng phát hành'], ['SUBMITTED', 'Đang chờ kiểm duyệt'], ['RELEASED', 'Đã phát hành']], steps: ['Kiểm tra các nháp đã duyệt', 'Xác nhận kế hoạch phát hành', 'Theo dõi và quản lý phiên bản'], queue: 'Nội dung đã duyệt chờ phát hành' },
+  GAME_EDITOR: { about: 'Bạn soạn chương, chơi thử, rồi gửi đi duyệt. Chương bị trả về sẽ quay lại đây kèm góp ý.', mine: [0], open: 'Mở danh sách chương', path: '/internal/chapters', empty: 'Không có chương nào đang chờ bạn soạn hay sửa', note: 'Sau khi bạn gửi, người duyệt chơi thử và chấm. Chương đạt sẽ được người phát hành đưa vào game.' },
+  GAME_REVIEWER: { about: 'Bạn chơi thử chương người khác gửi lên, rồi chấm Đạt hoặc Trả về kèm góp ý.', mine: [1], open: 'Mở danh sách chờ duyệt', path: '/internal/reviews', empty: 'Không có chương nào đang chờ bạn duyệt', note: 'Bạn không duyệt được chương do chính mình sửa. Kho ảnh và kho câu hỏi chỉ để tra cứu.' },
+  GAME_MANAGER: { about: 'Bạn đưa các chương đã duyệt vào game, chọn bản game đang dùng và thu hồi bản có lỗi.', mine: [2, 3], open: 'Mở màn phát hành', path: '/internal/releases', empty: 'Không có chương đã duyệt nào đang chờ phát hành', note: 'Bạn không phát hành được bản có chương do chính mình sửa.' },
 }
+const steps = [['Đang soạn', ['DRAFT', 'REJECTED']], ['Chờ duyệt', ['SUBMITTED']], ['Đã duyệt, chờ phát hành', ['APPROVED']], ['Đã phát hành', ['RELEASED']]]
+const turnAction = { submit: 'Soạn tiếp', fix: 'Sửa theo góp ý', review: 'Chơi thử và chấm', publish: 'Phát hành' }
 
-export default function RoleOverview({ role }) {
+export default function RoleOverview({ actor, name, roles }) {
+  const [chosen, setChosen] = useState(roles[0])
+  const role = roles.includes(chosen) ? chosen : roles[0]
   const config = work[role] || work.GAME_EDITOR
   const loader = useCallback(() => studioApi.get('/api/studio/chapters'), [])
   const query = useStudioResource(loader)
   const rows = query.data || []
-  const queue = rows.filter(draft => config.states.includes(draft.status))
-  const Icon = config.icon
+  // Xem theo đúng một vai: người nhiều vai chọn vai ở trên.
+  const asRole = { ...actor, roles: [role] }
+  const mine = rows.filter(draft => turnOf(asRole, draft))
+  const linkFor = (draft, turn) => turn === 'review' ? '/internal/reviews' : turn === 'publish' ? '/internal/releases' : `/internal/editor/${encodeURIComponent(draft.code)}`
   return <div className={`studio-role-overview role-${role.toLowerCase()}`}>
-    <section className="studio-role-hero"><div><span>{config.label}</span><h2>{config.title}</h2><p>{config.description}</p><Link to={config.path}>{config.action}<ArrowRight size={17} /></Link></div><Icon size={100} strokeWidth={1} aria-hidden="true" /></section>
-    <section className="studio-role-metrics" aria-label="Tình trạng công việc">{config.metrics.map(([status, label]) => <div key={status}><span>{label}</span><strong>{query.loading || query.error ? '—' : rows.filter(draft => draft.status === status).length}</strong></div>)}</section>
-    <section className="studio-role-process" aria-label="Quy trình công việc">{config.steps.map((step, index) => <div key={step}><b>{String(index + 1).padStart(2, '0')}</b><span>{step}</span></div>)}</section>
-    <section className="studio-role-queue"><header><h2>{config.queue}</h2><Link to={config.path}>Xem tất cả <ArrowRight size={14} /></Link></header>
-      {query.loading ? <p role="status">Đang tải công việc…</p> : query.error ? <p role="alert">{query.error} <button onClick={query.reload}>Thử lại</button></p> : queue.length ? queue.slice(0, 5).map(draft => <Link key={draft.code} className="studio-role-queue-item" to={role === 'GAME_EDITOR' ? `/internal/editor/${encodeURIComponent(draft.code)}` : config.path}><span><strong>{draft.title || draft.code}</strong><small>{draft.code} · Revision {draft.revision}</small></span><Tag tone={draft.status}>{STATUS_LABEL[draft.status]}</Tag><ArrowRight size={16} /></Link>) : <p>Hiện không có chương cần xử lý trong hàng công việc này.</p>}
-    </section>
-    <p className="studio-role-help">{role === 'GAME_REVIEWER' ? 'Kho ảnh và câu hỏi chỉ để tra cứu. Bạn không chỉnh sửa bản nháp hoặc phát hành nội dung.' : role === 'GAME_MANAGER' ? 'Bản nháp do Editor soạn và Reviewer đánh giá. Bạn quản lý phát hành cùng kho tài nguyên.' : 'Reviewer đánh giá bản nháp sau khi gửi; Manager phụ trách phát hành nội dung đã được duyệt.'}</p>
+    <PageHeader title={`Chào ${name.split('@')[0]}`} intro={config.about} actions={roles.length > 1 && <label className="sp-overview-role">Xem việc của vai
+      <select value={role} onChange={event => setChosen(event.target.value)}>{roles.map(value => <option value={value} key={value}>{ROLE_LABELS[value]}</option>)}</select></label>} />
+    {query.loading ? <StateBox kind="loading">Đang tải tình hình các chương…</StateBox>
+      : query.error ? <StateBox kind="error" title="Chưa tải được tình hình các chương" actions={<Btn onClick={query.reload}>Thử lại</Btn>}>{query.error}</StateBox>
+      : <>
+        <ol className="sp-pipeline" aria-label="Các chương đang ở bước nào">
+          {steps.map(([label, statuses], index) => {
+            const count = rows.filter(draft => statuses.includes(draft.status)).length
+            const rejected = index === 0 ? rows.filter(draft => draft.status === 'REJECTED').length : 0
+            return <li key={label} className={config.mine.includes(index) ? 'is-mine' : undefined}><strong>{count}</strong><span>{label}</span>{rejected > 0 && <small>{rejected} bị trả về</small>}</li>
+          })}
+        </ol>
+        <h2 className="sp-group-title">Đến lượt bạn</h2>
+        {mine.length ? <ul className="sp-todo">{mine.map(draft => {
+          const turn = turnOf(asRole, draft)
+          return <li key={draft.code}><div><strong>Chương {draft.chapterNumber ?? draft.code.slice(2)}: {draft.title || draft.code}</strong><span>{TURN_LABEL[turn]}. {statusLine(draft)}</span></div>
+            <Link className={`sp-btn${turn === 'fix' || turn === 'review' ? ' is-primary' : ''}`} to={linkFor(draft, turn)}>{turnAction[turn]}</Link></li>
+        })}</ul> : <StateBox title={config.empty} actions={<Link className="sp-btn" to={config.path}>{config.open}</Link>} />}
+        <p className="sp-role-note">{config.note}</p>
+      </>}
   </div>
 }

@@ -1,5 +1,6 @@
 import { canEdit, canManage, canWriteLibrary } from './permissions.js'
 
+// Mô tả viết cho người soạn nội dung: màn này để làm gì, bằng lời thường.
 export function getStudioMenu(actor) {
   const roles = actor?.roles || []
   if (!roles.some(role => ['ADMIN', 'GAME_EDITOR', 'GAME_REVIEWER', 'GAME_MANAGER'].includes(role))) return []
@@ -8,12 +9,12 @@ export function getStudioMenu(actor) {
   const review = roles.includes('ADMIN') || roles.includes('GAME_REVIEWER')
   const writeLibrary = canWriteLibrary(actor)
   const items = [
-    ...(review ? [{ path: '/internal/reviews', title: 'Chờ duyệt', icon: 'review', description: 'Xem và chơi thử nháp SUBMITTED, đánh giá Đạt hoặc Trả về kèm lý do.' }] : []),
-    { path: '/internal/chapters', title: edit ? 'Chương' : 'Chương (xem / chơi thử)', icon: 'chapter', description: edit ? 'Soạn và sửa nháp, gửi duyệt hoặc rút nháp đang chờ do mình gửi.' : 'Xem nội dung và chơi thử bản nháp. Không có chức năng soạn hoặc gửi duyệt.' },
-    ...(manage ? [{ path: '/internal/releases', title: 'Phát hành', icon: 'release', description: 'Xem kế hoạch phát hành và phát hành các nháp đã duyệt; backend tự tính phiên bản.' }] : []),
-    ...(manage || review ? [{ path: '/internal/history', title: 'Lịch sử bản', icon: 'history', description: manage ? 'Theo dõi các bản, đổi bản đang chạy và thu hồi bản lỗi kèm lý do.' : 'Xem lịch sử và trạng thái các bản phát hành.' }] : []),
-    { path: '/internal/assets', title: writeLibrary ? 'Kho ảnh' : 'Kho ảnh (xem)', icon: 'asset', group: 'library', description: writeLibrary ? 'Tải ảnh, sửa thông tin và xóa tài nguyên chưa được sử dụng.' : 'Tra cứu, xem trước và lấy ref ảnh. Không được tải, sửa hoặc xóa ảnh.' },
-    { path: '/internal/questions', title: writeLibrary ? 'Kho câu hỏi' : 'Kho câu hỏi (xem)', icon: 'question', group: 'library', description: writeLibrary ? 'Thêm, sửa, ngừng dùng hoặc khôi phục câu hỏi.' : 'Tra cứu câu hỏi và đáp án. Không được thay đổi kho câu hỏi.' },
+    ...(review ? [{ path: '/internal/reviews', title: 'Chờ duyệt', icon: 'review', description: 'Chương người khác gửi lên. Chơi thử, rồi chấm Đạt hoặc Trả về kèm góp ý cho người soạn.' }] : []),
+    { path: '/internal/chapters', title: edit ? 'Chương' : 'Chương (xem)', icon: 'chapter', description: edit ? 'Mọi chương của game và chương đang ở bước nào. Mở chương để soạn; soạn xong thì gửi đi duyệt.' : 'Mọi chương của game và chương đang ở bước nào. Bạn xem và chơi thử được, không sửa.' },
+    ...(manage ? [{ path: '/internal/releases', title: 'Phát hành', icon: 'release', description: 'Đưa các chương đã duyệt vào game. Số bản do hệ thống tự tính.' }] : []),
+    ...(manage || review ? [{ path: '/internal/history', title: 'Lịch sử bản', icon: 'history', description: manage ? 'Các bản đã phát hành. Chọn bản game đang dùng, hoặc thu hồi bản có lỗi.' : 'Các bản đã phát hành và bản nào đang chạy trong game.' }] : []),
+    { path: '/internal/assets', title: writeLibrary ? 'Kho ảnh' : 'Kho ảnh (xem)', icon: 'asset', group: 'library', description: writeLibrary ? 'Ảnh dùng trong các chương. Tải ảnh mới, đặt tên dễ nhớ, xoá ảnh không còn dùng.' : 'Ảnh dùng trong các chương. Bạn xem và sao chép mã ảnh, không tải lên hay xoá.' },
+    { path: '/internal/questions', title: writeLibrary ? 'Kho câu hỏi' : 'Kho câu hỏi (xem)', icon: 'question', group: 'library', description: writeLibrary ? 'Câu hỏi trắc nghiệm cho bài kiểm tra. Thêm, sửa, ngừng dùng hoặc khôi phục câu hỏi.' : 'Câu hỏi trắc nghiệm cho bài kiểm tra. Bạn xem câu hỏi và đáp án, không sửa.' },
   ]
   const order = manage && !edit && !review
     ? ['release', 'history', 'chapter', 'asset', 'question']
