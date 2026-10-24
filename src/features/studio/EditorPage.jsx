@@ -1,13 +1,15 @@
 // Soạn chương + chơi thử (bản demo). Nội dung đúng hình dạng chapterNV2GameData; GET …/draft trả URL ảnh thật, lưu lại
 // nguyên vậy BE tự đổi về {{ASSET_BASE}}. Sửa nhanh các trường hay đổi; trường khác sửa ở chế độ JSON.
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { auth } from '../../api/auth.api'
 import { canEdit } from './permissions'
 import { studioApi, formatError } from './studioClient'
 import { useStudioAction, useStudioResource } from './useStudioResource'
 import EditorCanvas from './EditorCanvas'
-import { nextSceneId, insertScene, copyScene } from './sceneEditing'
+import { nextSceneId } from './sceneEditing'
+import { TYPE_LABEL, duplicateLinked, insertLinked, isLinear, removeLinked, storyIssues } from './storyOps'
+import { AddSceneDialog, CharacterDialog, ConditionDialog, EffectDialog, PlayDialog, ScenePickerDialog } from './SceneDialogs'
 import { prepareDraftV2, parseCondition } from './draftV2'
 import { AssetPicker } from './AssetsPage'
 import { Btn, Panel } from './ui'
@@ -40,49 +42,6 @@ function template(code) {
     ],
     endingRules: { priorityOrder: [], endings: [] },
   }
-}
-
-/** Màn chơi thử: nền, nhân vật, lời thoại, lựa chọn / mini-game giả lập — bấm để đi qua các cảnh. */
-function Stage({ scene, go }) {
-  if (!scene) return <p className="p-6">Chưa có cảnh để xem. Thêm cảnh hoặc nhập nội dung JSON.</p>
-  const next = (id) => (
-    <button type="button" className="rounded bg-white px-3 py-1.5 text-left text-slate-800" disabled={!id} onClick={() => go(id)}>
-      {id ? `Tiếp → ${id}` : 'Hết chương'}
-    </button>
-  )
-  let opts = null
-  if (scene.type === 'choice')
-    opts = (scene.options || []).map((o) => (
-      <button key={o.id} type="button" className="rounded bg-white px-3 py-1.5 text-left text-slate-800" onClick={() => go(o.nextSceneId)}>
-        {o.text || o.label}
-      </button>
-    ))
-  else if (scene.type === 'minigame')
-    opts = (
-      <>
-        <div>🎮 {scene.game?.title || 'Mini-game'} ({scene.game?.mechanic})</div>
-        <button type="button" className="rounded bg-white px-3 py-1.5 text-slate-800" onClick={() => go(scene.onPassSceneId || scene.nextSceneId)}>
-          Giả lập: qua
-        </button>
-        <button type="button" className="rounded bg-white px-3 py-1.5 text-slate-800" onClick={() => go(scene.id)}>
-          Giả lập: thử lại
-        </button>
-      </>
-    )
-  else if (scene.type !== 'ending') opts = next(scene.nextSceneId)
-  return (
-    <div className="relative aspect-video overflow-hidden rounded-xl bg-slate-800 bg-cover bg-center" style={{ backgroundImage: scene.background ? `url("${scene.background}")` : 'none' }}>
-      <div className="absolute inset-0 flex items-end justify-between px-[6%]">
-        {(scene.characters || []).map((c, i) => c.src && <img key={i} src={c.src} alt={c.id || ''} className="max-h-[78%]" />)}
-      </div>
-      <div className="absolute right-[3%] bottom-[3%] left-[3%] rounded-xl bg-slate-900/85 p-3 text-white">
-        {scene.speaker && <b className="text-amber-200">{scene.speaker}: </b>}
-        {scene.text || scene.inspect?.dataText || scene.title}
-        {scene.type === 'ending' && <div>🏁 Kết thúc chương</div>}
-        <div className="mt-2 flex flex-col gap-1.5">{opts}</div>
-      </div>
-    </div>
-  )
 }
 
 /** Gợi ý cách đọc của AI: mỗi câu Nhận (ghi spokenText vào nháp, cần Lưu nháp) hoặc Bỏ; ghi rõ AI nào sinh ra. */
@@ -121,6 +80,10 @@ export default function EditorPage({ notify, code }) {
   const [refreshError, setRefreshError] = useState('')
   const [conditionDrafts, setConditionDrafts] = useState({})
   const [voiceHints, setVoiceHints] = useState(null) // gợi ý cách đọc của AI — chưa ghi vào nháp tới khi người soạn bấm Nhận
+  const [history, setHistory] = useState({ past: [], future: [] })
+  const [notice, setNotice] = useState(null) // ví dụ "Đã xoá cảnh 3" kèm nút Hoàn tác
+  const [dialog, setDialog] = useState(null)
+  const lastEdit = useRef({ key: null, at: 0 })
   const { busy, run } = useStudioAction(notify)
   const write = canEdit(auth.getSnapshot().actor) && meta?.status !== 'SUBMITTED'
   const schemaLoader = useCallback(() => studioApi.get('/api/studio/scene-schema'), [])
@@ -143,12 +106,45 @@ export default function EditorPage({ notify, code }) {
     return () => window.removeEventListener('beforeunload', warn)
   }, [dirty])
 
-  if (loadError) return <Panel title={code}><p role="alert">{loadError}</p><Btn onClick={() => { setLoadError(''); setAttempt(value => value + 1) }}>Thử lại</Btn></Panel>
-  if (!content) return <p role="status">Đang tải {code}…</p>
-  const scenes = content.scenes || []
+  const scenes = content?.scenes || []
   const scene = scenes[idx] || scenes[0]
-  const ids = scenes.map((s) => s.id)
-  const update = (patch) => { if (!write || busy) return; setDirty(true); setContent({ ...content, scenes: scenes.map((s, i) => (i === idx ? { ...s, ...patch } : s)) }) }
+  const stats = schemaQuery.data?.stats || []
+  const canChange = write && !busy && !!content
+  /* hoàn tác / làm lại: chụp cả chương trước mỗi thay đổi; gõ liên tục vào cùng một ô gộp thành một bước */
+  const remember = (mergeKey) => {
+    const now = Date.now(), last = lastEdit.current
+    lastEdit.current = { key: mergeKey, at: now }
+    if (mergeKey && last.key === mergeKey && now - last.at < 1500) return
+    setHistory(h => ({ past: [...h.past.slice(-79), { content, idx }], future: [] }))
+  }
+  const commit = (next, nextIdx = idx, mergeKey) => { if (!canChange) return; remember(mergeKey); setContent(next); setIdx(nextIdx); setDirty(true) }
+  const update = (patch) => commit({ ...content, scenes: scenes.map((s, i) => (i === idx ? { ...s, ...patch } : s)) }, idx, `${scene?.id}:${Object.keys(patch).join(',')}`)
+  const step = (from, to) => {
+    if (!history[from].length || !canChange) return
+    const target = history[from].at(-1)
+    setHistory(h => ({ [from]: h[from].slice(0, -1), [to]: [...h[to], { content, idx }] }))
+    lastEdit.current = { key: null, at: 0 }
+    setContent(target.content); setIdx(Math.min(target.idx, (target.content.scenes?.length || 1) - 1)); setDirty(true); setNotice(null)
+  }
+  const undo = () => step('past', 'future')
+  const redo = () => step('future', 'past')
+  const announce = text => setNotice({ text, undo: () => { undo(); setNotice(null) } })
+  useEffect(() => {
+    const onKey = event => {
+      if (!(event.ctrlKey || event.metaKey) || !['z', 'y'].includes(event.key.toLowerCase()) || json !== null) return
+      if (event.target.closest?.('input, textarea, select, [contenteditable]')) return // ô đang gõ: để trình duyệt tự hoàn tác chữ
+      event.preventDefault()
+      if (event.key.toLowerCase() === 'y' || event.shiftKey) redo(); else undo()
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  })
+  useEffect(() => {
+    if (!notice) return
+    const timer = setTimeout(() => setNotice(null), 8000)
+    return () => clearTimeout(timer)
+  }, [notice])
+
   const editCondition = (index, raw) => {
     if (!write || busy) return
     setConditionDrafts(previous => ({ ...previous, [`${scene.id}/${index}`]: raw }))
@@ -179,8 +175,8 @@ export default function EditorPage({ notify, code }) {
   }
   const dropHint = hint => setVoiceHints({ ...voiceHints, suggestions: voiceHints.suggestions.filter(item => item !== hint) })
   const go = (id) => {
-    const i = ids.indexOf(id)
-    if (i < 0) notify(`Cảnh "${id}" không tồn tại`)
+    const i = scenes.findIndex(s => s.id === id)
+    if (i < 0) notify(`Không tìm thấy cảnh "${id}"`)
     else setIdx(i)
   }
 
@@ -210,29 +206,50 @@ export default function EditorPage({ notify, code }) {
       } catch (error) { return { saved, refreshError: formatError(error) } }
     }, 'Đã lưu nháp ' + code, result => {
       if (result.refreshed) setMeta(result.refreshed.draft)
-      setContent(prepareDraftV2(result.refreshed?.content || body)); setIdx(0); setJson(null); setDirty(false); setConditionDrafts({})
+      setContent(prepareDraftV2(result.refreshed?.content || body)); setJson(null); setHistory({ past: [], future: [] }); setDirty(false); setConditionDrafts({})
       setWarnings(result.saved?.warnings || []); setRefreshError(result.refreshError || '')
       if (search.has('new') && result.refreshed) setSearch({}, { replace: true })
     })
   }
 
-  const addScene = () => {
-    if (!write || busy) return
+  /* chèn / xoá / nhân đôi không làm đứt mạch: câu hỏi mới thì mọi lựa chọn về cảnh kế cũ, xoá thì cảnh trước nối sang cảnh sau */
+  const addScene = (type, gameKind) => {
     const id = nextSceneId(code, scenes)
-    const result = insertScene(scenes, idx, { id, type: 'dialogue', title: '', background: scene?.background || '', characters: [], speaker: '', text: '', nextSceneId: scene?.nextSceneId ?? null })
-    setContent({ ...content, scenes: result.scenes }); setIdx(result.index); setDirty(true)
+    const fresh = { id, type, title: '', background: scene?.background || '', characters: structuredClone(scene?.characters || []) }
+    if (['dialogue', 'summary', 'cutscene', 'ending', 'choice', 'inspect'].includes(type)) fresh.text = ''
+    if (type === 'reflection') fresh.prompt = ''
+    if (type === 'choice') fresh.options = [{ id: `${id}_OPT1`, text: '' }, { id: `${id}_OPT2`, text: '' }]
+    if (type === 'inspect') fresh.inspect = { id: `${id}_INS`, buttonText: 'Bấm để xem', dataText: '' }
+    if (type === 'conditional') fresh.condition = { all: [] }
+    if (type === 'minigame') {
+      const sample = scenes.find(s => s.game?.kind === gameKind)?.game
+      fresh.game = { ...(sample ? structuredClone(sample) : { title: schemaQuery.data?.minigameKinds?.[gameKind]?.label || 'Mini-game' }), id: `${id}_GAME`, kind: gameKind }
+    }
+    const result = insertLinked(scenes, idx, fresh)
+    commit({ ...content, scenes: result.scenes }, result.index)
+    setDialog(null)
+    announce(type === 'choice' ? 'Đã thêm câu hỏi. Mọi lựa chọn tạm đi về cảnh kế cũ; đổi “Bấm xong thì sang” để tạo nhánh riêng.' : `Đã thêm ${(TYPE_LABEL[type] || 'cảnh').toLowerCase()} ở cảnh ${result.index + 1}.`)
   }
   const duplicateScene = () => {
-    if (!write || busy || !scene) return
-    const result = insertScene(scenes, idx, copyScene(scene, nextSceneId(code, scenes)))
-    setContent({ ...content, scenes: result.scenes }); setIdx(result.index); setDirty(true)
+    if (!scene) return
+    const result = duplicateLinked(scenes, idx, nextSceneId(code, scenes))
+    commit({ ...content, scenes: result.scenes }, result.index)
+    announce(`Đã nhân đôi thành cảnh ${result.index + 1}.`)
   }
   const deleteScene = () => {
-    if (!write || busy || !scene) return
-    if (!window.confirm(`Xóa cảnh ${scene.id}? Bạn cần cập nhật các cảnh đang trỏ đến cảnh này trước khi lưu.`)) return
-    setContent({ ...content, scenes: scenes.filter((_, i) => i !== idx) })
-    setIdx(Math.max(0, idx - 1)); setDirty(true)
+    if (!scene) return
+    if (scenes.length <= 1) return notify('Chương cần ít nhất một cảnh.')
+    const result = removeLinked(scenes, idx)
+    commit({ ...content, scenes: result.scenes }, result.index)
+    announce(`Đã xoá cảnh ${idx + 1}${result.to ? '. Cảnh trước nối thẳng sang cảnh sau' : ''}.`)
   }
+  const setOption = (index, patch) => update({ options: scene.options.map((option, k) => {
+    if (k !== index) return option
+    const next = { ...option, ...patch }
+    for (const key of Object.keys(patch)) if (patch[key] === undefined) delete next[key]
+    return next
+  }) })
+
   const toggleJson = () => {
     if (json === null) {
       for (const raw of Object.values(conditionDrafts)) { try { parseCondition(raw) } catch { return notify('Hãy sửa JSON điều kiện chưa hợp lệ trước khi đổi chế độ.') } }
@@ -241,16 +258,38 @@ export default function EditorPage({ notify, code }) {
     try {
       const parsed = JSON.parse(json)
       if (!parsed || !Array.isArray(parsed.scenes)) throw new Error('Cần mảng scenes trong nội dung chương.')
-      setContent(prepareDraftV2(parsed)); setIdx(0); setJson(null); setConditionDrafts({})
+      setContent(prepareDraftV2(parsed)); setIdx(0); setJson(null); setConditionDrafts({}); setHistory({ past: [], future: [] })
     } catch (error) { notify('JSON: ' + error.message) }
   }
+  if (loadError) return <Panel title={code}><p role="alert">{loadError}</p><Btn onClick={() => { setLoadError(''); setAttempt(value => value + 1) }}>Thử lại</Btn></Panel>
+  if (!content) return <p role="status">Đang tải {code}…</p>
+  const option = dialog?.index != null ? scene?.options?.[dialog.index] : null
+  const close = () => setDialog(null)
   return <>
     <EditorCanvas code={code} content={content} meta={meta} scenes={scenes} scene={scene} idx={idx} setIdx={setIdx}
-      preview={<Stage scene={scene} go={go} />} write={write} busy={busy} dirty={dirty} json={json}
-      setJson={value => { setJson(value); setDirty(true) }} toggleJson={toggleJson} save={save} update={update}
-      addScene={addScene} duplicateScene={duplicateScene} deleteScene={deleteScene} onPick={() => setPicking(true)} schemaQuery={schemaQuery}
-      warnings={warnings} refreshError={refreshError} conditionDrafts={conditionDrafts} editCondition={editCondition} onSuggestVoice={suggestVoice} />
+      write={write} busy={busy} dirty={dirty} json={json}
+      setJson={value => { setJson(value); setDirty(true) }} toggleJson={toggleJson} save={save} update={update} schemaQuery={schemaQuery}
+      warnings={warnings} refreshError={refreshError} conditionDrafts={conditionDrafts} editCondition={editCondition} onSuggestVoice={suggestVoice}
+      history={{ undo, redo, canUndo: history.past.length > 0, canRedo: history.future.length > 0 }} notice={notice} issues={storyIssues(scenes)}
+      onAdd={() => setDialog({ kind: 'add' })} onDuplicate={duplicateScene} onDelete={deleteScene} onPickBackground={() => setPicking('background')}
+      onAddCharacter={() => setDialog({ kind: 'character' })} onPlay={() => setDialog({ kind: 'play' })} openDialog={setDialog} />
     {voiceHints && <VoiceHints hints={voiceHints} scenes={scenes} write={write} onAccept={acceptHint} onDrop={dropHint} onOpen={id => go(id)} onClose={() => setVoiceHints(null)} />}
-    {picking && <AssetPicker chapter={code} notify={notify} onClose={() => setPicking(false)} onPick={asset => { update({ background: asset.url }); setPicking(false) }} />}
+    {picking && <AssetPicker chapter={code} notify={notify} onClose={() => setPicking(false)} onPick={asset => {
+      if (picking === 'character') update({ characters: [...(scene.characters || []), { id: asset.label || 'NHAN_VAT', src: asset.url, position: 'center' }] })
+      else update({ background: asset.url })
+      setPicking(false)
+    }} />}
+    {dialog?.kind === 'add' && <AddSceneDialog schema={schemaQuery.data} linear={!scene || isLinear(scene)} number={idx + 1} onAdd={addScene} onClose={close} />}
+    {dialog?.kind === 'target' && <ScenePickerDialog title={dialog.title} scenes={scenes} currentId={dialog.currentId} onClose={close} onPick={id => { dialog.apply(id); close() }} />}
+    {dialog?.kind === 'effect' && option && <EffectDialog option={option} stats={stats} onClose={close} onSave={patch => { setOption(dialog.index, patch); close(); notify('Đã cập nhật ảnh hưởng của lựa chọn.', true) }} />}
+    {dialog?.kind === 'lock' && option && <ConditionDialog title={`Khoá lựa chọn “${String(option.text || option.label || '').slice(0, 50)}”`} withReason value={option.condition} reason={option.lockedReason} scenes={scenes} stats={stats} contextId={scene.id}
+      onClose={close} onRemove={() => { setOption(dialog.index, { condition: undefined, lockedReason: undefined }); close() }}
+      onSave={(condition, lockedReason) => { setOption(dialog.index, { condition, lockedReason }); close(); notify('Đã khoá lựa chọn.', true) }} />}
+    {dialog?.kind === 'condition' && <ConditionDialog title="Điều kiện rẽ nhánh" value={scene.condition} scenes={scenes} stats={stats} contextId={scene.id}
+      onClose={close} onRemove={() => { update({ condition: { all: [] } }); close() }} onSave={condition => { update({ condition }); close() }} />}
+    {dialog?.kind === 'character' && <CharacterDialog sprites={content.sprites} present={(scene.characters || []).map(item => item.id)} onClose={close}
+      onLibrary={() => { close(); setPicking('character') }}
+      onPick={(id, src, expression) => { const used = new Set((scene.characters || []).map(item => String(item.position).toLowerCase())); update({ characters: [...(scene.characters || []), { id, expression, src, position: ['center', 'right', 'left'].find(p => !used.has(p)) || 'right' }] }); close() }} />}
+    {dialog?.kind === 'play' && <PlayDialog content={content} startIndex={idx} stats={stats} onClose={close} onEdit={index => { setIdx(index); close() }} />}
   </>
 }

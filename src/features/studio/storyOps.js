@@ -5,6 +5,8 @@
 export const REF_KEYS = ['nextSceneId', 'onPassSceneId', 'ifTrueSceneId', 'ifFalseSceneId']
 const TYPE_ALIASES = { scene: 'inspect', activity: 'reflection' }
 export const typeOf = scene => TYPE_ALIASES[scene?.type] || scene?.type
+export const TYPE_LABEL = { dialogue: 'Lời thoại', choice: 'Câu hỏi lựa chọn', inspect: 'Bấm để xem', minigame: 'Mini-game', conditional: 'Rẽ nhánh tự động', reflection: 'Câu hỏi suy ngẫm', summary: 'Tổng kết', cutscene: 'Cảnh chuyển', ending: 'Kết chương' }
+export const sceneLabel = scene => scene?.title || String(scene?.text || scene?.prompt || scene?.inspect?.buttonText || scene?.game?.title || '').slice(0, 60) || TYPE_LABEL[typeOf(scene)] || 'Cảnh'
 
 /** cảnh một đường: đi tiếp bằng đúng một cảnh kế (không phải câu hỏi, rẽ nhánh, kết) */
 export const isLinear = scene => !['choice', 'conditional', 'ending'].includes(typeOf(scene))
@@ -120,7 +122,7 @@ export function storyIssues(scenes) {
         if (!String(option.text || option.label || '').trim()) out.push({ index, text: `${name}: lựa chọn ${k + 1} chưa có chữ` })
         if (!option.nextSceneId) out.push({ index, text: `${name}: lựa chọn ${k + 1} chưa chọn “bấm xong thì sang”` })
         else if (!ids.has(option.nextSceneId)) out.push({ index, text: `${name}: lựa chọn ${k + 1} dẫn tới cảnh không còn` })
-        if (option.condition && !String(option.lockedReason || '').trim()) out.push({ index, text: `${name}: lựa chọn ${k + 1} bị khoá nhưng chưa có câu nhắn cho trẻ` })
+        if (isStructured(option.condition) && !String(option.lockedReason || '').trim()) out.push({ index, text: `${name}: lựa chọn ${k + 1} bị khoá nhưng chưa có câu nhắn cho trẻ` })
       })
     }
   })
