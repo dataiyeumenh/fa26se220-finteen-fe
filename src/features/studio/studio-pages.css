@@ -198,7 +198,7 @@ textarea.sp-input { min-height: 88px; resize: vertical; line-height: 1.5; }
 .sp-q-options li svg { align-self: center; flex-shrink: 0; }
 .sp-q-meta { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 13px; color: var(--sp-muted); }
 .sp-q-actions { display: flex; flex-direction: column; gap: 8px; align-items: stretch; }
-.sp-scroll { max-height: max(320px, calc(100dvh - 330px)); overflow: auto; border: 1px solid var(--sp-line); border-radius: 12px; background: #fff; scrollbar-width: thin; }
+.sp-scroll { position: relative; max-height: max(320px, calc(100dvh - 330px)); overflow: auto; border: 1px solid var(--sp-line); border-radius: 12px; background: #fff; scrollbar-width: thin; }
 .sp-option-row { display: grid; grid-template-columns: auto auto minmax(0, 1fr) auto; gap: 8px; align-items: center; }
 .sp-option-row > label:first-child { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--sp-muted); cursor: pointer; }
 .sp-option-row > label:first-child input { width: 17px; height: 17px; accent-color: var(--sp-accent); }
