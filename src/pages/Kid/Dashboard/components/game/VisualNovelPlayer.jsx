@@ -56,6 +56,7 @@ import {
   summarizeMiniGames,
 } from "./miniGameRules";
 import { buildChapterBatch, flushPendingBatches, submitChapterBatch } from "./playBatch.js";
+import { normalizeChapter } from "./chapterShape.js";
 
 // Khung mini-game theo `game.kind` (bộ khuôn BE: scene-schema.json → minigameKinds). Dữ liệu cũ chưa có kind (bản 1.1.0)
 // tra theo id cũ (legacyIds của khuôn). Kind lạ → báo chưa có khung, không rơi im lặng vào Cần / Muốn.
@@ -257,7 +258,8 @@ function EndingReport({ report }) {
   );
 }
 
-export function VisualNovelPlayer({ data }) {
+export function VisualNovelPlayer({ data: rawData }) {
+  const data = useMemo(() => normalizeChapter(rawData), [rawData]);
   // Cấu hình mini-game FUTURE_PLAN của chương (nếu có): settlement / bảng kế hoạch cấp chương đọc số liệu từ đây.
   const futurePlan = useMemo(
     () =>
@@ -944,7 +946,8 @@ export function VisualNovelPlayer({ data }) {
 
     for (const endingId of priorityOrder) {
       const ending = endingRules.endings.find((e) => e.id === endingId);
-      if (ending && evaluateEndingCondition(ending.condition)) {
+      // Kết dự phòng (khuôn: "fallback": true) luôn đúng — thay chuỗi DEFAULT_FALLBACK cũ.
+      if (ending && (ending.fallback === true || evaluateEndingCondition(ending.condition))) {
         return ending;
       }
     }
