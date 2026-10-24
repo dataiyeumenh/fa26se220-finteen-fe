@@ -5,8 +5,9 @@ import { Tag } from './ui'
 import SchemaFields from './SchemaFields'
 import ChoiceConditions from './ChoiceConditions'
 import StoryMap from './StoryMap'
+import { ChoicePanel, InspectPanel } from './ScenePanels'
 import { SceneThumb } from './SceneDialogs'
-import { TYPE_LABEL, conditionSentence, isLinear, nextKeyOf, sceneLabel, typeOf, vnd } from './storyOps'
+import { TYPE_LABEL, branchSummary, conditionSentence, isLinear, nextKeyOf, sceneLabel, typeOf } from './storyOps'
 import './editor-canvas.css'
 
 function Thumbnail({ scene }) {
@@ -40,11 +41,11 @@ function SceneStage({ scene, scenes, sprites, write, update, onBackground, onAdd
   const setCharacter = patch => update({ characters: scene.characters.map((item, index) => (index === picked ? { ...item, ...patch } : item)) })
   const textKey = type === 'reflection' ? 'prompt' : 'text'
   return <div className="stage-frame" style={{ backgroundImage: scene.background ? `url(${JSON.stringify(scene.background)})` : undefined }}>
-    {!scene.background && <span className="stage-empty">Chưa có ảnh nền</span>}
+    {!scene.background && type !== 'conditional' && <span className="stage-empty">Chưa có ảnh nền</span>}
     {(scene.characters || []).map((item, index) => item.src && (write
       ? <button type="button" key={index} className={`stage-character pos-${String(item.position || 'center').toLowerCase()}${picked === index ? ' is-picked' : ''}`} aria-label={`Nhân vật ${item.id || index + 1}: đổi vị trí hoặc nét mặt`} onClick={() => setPicked(picked === index ? null : index)}><img src={item.src} alt="" /></button>
       : <img key={index} src={item.src} alt="" className={`stage-character pos-${String(item.position || 'center').toLowerCase()}`} />))}
-    {write && <div className="stage-tools">
+    {write && type !== 'conditional' && <div className="stage-tools">
       <button type="button" onClick={onBackground}><ImagePlus size={16} />Đổi ảnh nền</button>
       <button type="button" onClick={onAddCharacter}><UserPlus size={16} />Thêm nhân vật</button>
     </div>}
@@ -82,11 +83,10 @@ function TargetButton({ label, targetId, scenes, write, onOpen }) {
     </button></div>
 }
 
-const effectText = (option, labels) => [...Object.entries(option.deltaStats || {}).map(([key, value]) => `${labels[key] || key} ${value > 0 ? '+' : ''}${value}`), ...(option.moneyEvents || []).map(event => `Tiền ${event.amount > 0 ? '+' : ''}${vnd(event.amount)}`)].join(', ') || 'Không đổi gì'
 
 export default function EditorCanvas(props) {
   const { code, content, meta, scenes, scene, idx, setIdx, write, busy, dirty, json, setJson, toggleJson, save, update, schemaQuery, warnings = [], refreshError = '', conditionDrafts = {}, editCondition, onSuggestVoice,
-    history, notice, issues, onAdd, onDuplicate, onDelete, onPickBackground, onAddCharacter, onPlay, openDialog, onBranch, onLaneEnd } = props
+    history, notice, issues, onAdd, onDuplicate, onDelete, onPickBackground, onAddCharacter, onPlay, openDialog, onBranch, onLaneEnd, onPickImage } = props
   const trackRef = useRef(null)
   const [panel, setPanel] = useState(true)
   const [view, setView] = useState('frame') // khung hình | bản đồ truyện
@@ -119,8 +119,9 @@ export default function EditorCanvas(props) {
     else if (item.right > bounds.right) track.scrollLeft += item.right - bounds.right + 18
   }, [idx, scenes.length, json])
   const type = typeOf(scene)
-  const pickTarget = (label, current, apply) => openDialog({ kind: 'target', title: label, currentId: current, apply })
+  const issueScenes = new Set(issues.map(issue => issue.index))
   const setOption = (index, patch) => update({ options: scene.options.map((value, k) => (k === index ? { ...value, ...patch } : value)) })
+  const pickTarget = (label, current, apply) => openDialog({ kind: 'target', title: label, currentId: current, apply })
   return <section className="scene-editor" aria-label="Trình biên tập chương">
     <header className="scene-editor-toolbar">
       <div className="scene-editor-document"><h1>{content.title || code}</h1><p><Tag tone={meta?.status}>{STATUS_LABEL[meta?.status] || meta?.status}</Tag><span>Bản nháp số {meta?.revision ?? 0}</span><span className={`scene-save-state${dirty ? ' dirty' : ''}`}>{dirty ? 'Có thay đổi chưa lưu' : 'Đã lưu'}</span></p></div>
@@ -128,8 +129,8 @@ export default function EditorCanvas(props) {
         {write && visualMode && <><button type="button" className="scene-icon-button" disabled={busy || !history.canUndo} onClick={history.undo} aria-label="Hoàn tác" title="Hoàn tác (Ctrl+Z)"><Undo2 size={18} /></button>
           <button type="button" className="scene-icon-button" disabled={busy || !history.canRedo} onClick={history.redo} aria-label="Làm lại" title="Làm lại (Ctrl+Y)"><Redo2 size={18} /></button></>}
         {visualMode && scene && <button type="button" onClick={onPlay}><Play size={16} />Chơi thử từ cảnh này</button>}
-        {write && onSuggestVoice && <button type="button" disabled={busy || dirty} title={dirty ? 'Lưu nháp trước để AI đọc bản mới nhất' : 'AI đề xuất cách đọc cho câu có số, ký hiệu, chữ viết tắt'} onClick={onSuggestVoice}><Mic size={16} />Gợi ý cách đọc (AI)</button>}
-        <button type="button" disabled={busy} onClick={toggleJson}><Code2 size={16} />{json === null ? 'JSON' : 'Theo cảnh / Chơi thử'}</button>
+        {write && onSuggestVoice && <button type="button" className="scene-quiet" disabled={busy || dirty} title={dirty ? 'Lưu nháp trước để AI đọc bản mới nhất' : 'AI đề xuất cách đọc cho câu có số, ký hiệu, chữ viết tắt'} onClick={onSuggestVoice}><Mic size={16} />Gợi ý cách đọc (AI)</button>}
+        <button type="button" className="scene-quiet" disabled={busy} onClick={toggleJson}><Code2 size={16} />{json === null ? 'JSON' : 'Theo cảnh / Chơi thử'}</button>
         {write && <button type="button" className="scene-primary" disabled={busy} onClick={save}><Save size={16} />{busy ? 'Đang lưu…' : 'Lưu nháp'}</button>}
       </div>
     </header>
@@ -142,39 +143,45 @@ export default function EditorCanvas(props) {
     {visualMode && !!issues.length && <details className="scene-issues"><summary><AlertTriangle size={16} aria-hidden="true" />Cần sửa trước khi gửi duyệt ({issues.length}) <small>Lưu nháp vẫn được.</small></summary>
       <ul>{issues.slice(0, 40).map((issue, index) => <li key={index}><span>{issue.text}</span><button type="button" onClick={() => setIdx(issue.index)}>Tới chỗ sửa</button></li>)}</ul></details>}
     {json !== null ? <div className="scene-json-editor"><div><Code2 size={16} /> Nội dung JSON <small>Toàn bộ cấu trúc chương</small></div><textarea aria-label="JSON nội dung chương" readOnly={!write || busy} value={json} onChange={event => setJson(event.target.value)} spellCheck={false} /></div> : <div className={`scene-editor-body${panel && view === 'frame' ? '' : ' is-wide'}`}>
-      <div className={`scene-editor-workbench${view === 'map' ? ' is-map' : ''}`}>
-        <div className="scene-editor-canvas-heading">
-          <div className="scene-view-switch" role="group" aria-label="Cách xem"><button type="button" aria-pressed={view === 'frame'} onClick={() => setView('frame')}>Khung hình</button><button type="button" aria-pressed={view === 'map'} onClick={() => setView('map')}>Bản đồ truyện</button></div>
-          {view === 'frame' && <div className="scene-nav"><button type="button" aria-label="Cảnh trước" disabled={idx === 0 || !scenes.length} onClick={() => setIdx(idx - 1)}><ChevronLeft size={18} /></button>
-            <span>Cảnh {scenes.length ? idx + 1 : 0} / {scenes.length}</span>
-            <button type="button" aria-label="Cảnh sau" disabled={idx >= scenes.length - 1} onClick={() => setIdx(idx + 1)}><ChevronRight size={18} /></button></div>}
-          {view === 'frame' && <button type="button" className="scene-panel-toggle" onClick={() => setPanel(!panel)} aria-expanded={panel}>{panel ? <PanelRightClose size={17} /> : <PanelRightOpen size={17} />}{panel ? 'Thu gọn bảng bên' : 'Mở bảng bên'}</button>}
+      <div className={`scene-editor-workbench${view === 'map' ? ' is-map' : ''}${view === 'frame' && (type === 'choice' || (type === 'inspect' && scene?.inspect)) ? ' has-panel' : ''}`}>
+        <div className="stage-well">
+          <div className="scene-editor-canvas-heading">
+            <div className="scene-view-switch" role="group" aria-label="Cách xem"><button type="button" aria-pressed={view === 'frame'} onClick={() => setView('frame')}>Khung hình</button><button type="button" aria-pressed={view === 'map'} onClick={() => setView('map')}>Bản đồ truyện</button></div>
+            {view === 'frame' && <div className="scene-nav"><button type="button" aria-label="Cảnh trước" disabled={idx === 0 || !scenes.length} onClick={() => setIdx(idx - 1)}><ChevronLeft size={18} /></button>
+              <span>Cảnh {scenes.length ? idx + 1 : 0} / {scenes.length}</span>
+              <button type="button" aria-label="Cảnh sau" disabled={idx >= scenes.length - 1} onClick={() => setIdx(idx + 1)}><ChevronRight size={18} /></button></div>}
+            {view === 'frame' && <button type="button" className="scene-panel-toggle" onClick={() => setPanel(!panel)} aria-expanded={panel}>{panel ? <PanelRightClose size={17} /> : <PanelRightOpen size={17} />}{panel ? 'Thu gọn bảng bên' : 'Mở bảng bên'}</button>}
+          </div>
+          {view === 'map' ? <StoryMap scenes={scenes} currentIndex={idx} write={write && !busy} onOpen={index => { setIdx(index); setView('frame') }} onBranch={(...args) => { onBranch(...args); setView('frame') }} onLaneEnd={index => { onLaneEnd(index); setView('frame') }} />
+            : <div className="scene-editor-canvas">{scene ? <SceneStage key={scene.id} scene={scene} scenes={scenes} sprites={content.sprites} write={write && !busy} update={update} onBackground={onPickBackground} onAddCharacter={onAddCharacter} onOpenLock={index => openDialog({ kind: 'lock', index })} /> : <p className="scene-schema-status">Chương chưa có cảnh nào. Bấm “Thêm cảnh” để bắt đầu.</p>}</div>}
         </div>
-        {view === 'map' ? <StoryMap scenes={scenes} write={write && !busy} onOpen={index => { setIdx(index); setView('frame') }} onBranch={(...args) => { onBranch(...args); setView('frame') }} onLaneEnd={index => { onLaneEnd(index); setView('frame') }} />
-          : <div className="scene-editor-canvas">{scene ? <SceneStage key={scene.id} scene={scene} scenes={scenes} sprites={content.sprites} write={write && !busy} update={update} onBackground={onPickBackground} onAddCharacter={onAddCharacter} onOpenLock={index => openDialog({ kind: 'lock', index })} /> : <p className="scene-schema-status">Chương chưa có cảnh nào. Bấm “Thêm cảnh” để bắt đầu.</p>}</div>}
+        {view === 'frame' && scene && type === 'choice' && <ChoicePanel scene={scene} scenes={scenes} write={write && !busy} statLabels={statLabels} setOptions={options => update({ options })} openDialog={openDialog} pickTarget={pickTarget} />}
+        {view === 'frame' && scene && type === 'inspect' && scene.inspect && <InspectPanel scene={scene} write={write && !busy} update={update} onPickImage={onPickImage} />}
       </div>
       {panel && view === 'frame' && <aside className="scene-inspector" aria-label="Thuộc tính cảnh">{scene ? <>
         <div className="scene-inspector-heading"><h2>Cảnh {idx + 1}</h2><span>{TYPE_LABEL[type] || type}</span><code title="Mã cảnh, không đổi khi chèn hoặc xoá cảnh khác">{scene.id}</code></div>
-        <fieldset disabled={!write || busy}>
+        <fieldset disabled={!write || busy} className="inspector-group">
           <label>Tiêu đề cảnh<input value={scene.title || ''} onChange={event => update({ title: event.target.value })} placeholder="Tên ngắn để bạn dễ tìm" /></label>
-          {isLinear(scene) && <TargetButton label="Sau cảnh này sang" targetId={scene[nextKeyOf(scene)]} scenes={scenes} write={write} onOpen={() => pickTarget('Sau cảnh này sang cảnh nào?', scene[nextKeyOf(scene)], id => update({ [nextKeyOf(scene)]: id }))} />}
-          {type === 'conditional' && <>
-            <div className="scene-target"><span>Điều kiện</span><button type="button" onClick={() => openDialog({ kind: 'condition' })}>{conditionSentence(scene.condition, scenes, statLabels)}</button></div>
-            <TargetButton label="Nếu đúng thì sang" targetId={scene.ifTrueSceneId} scenes={scenes} write={write} onOpen={() => pickTarget('Nếu đúng thì sang cảnh nào?', scene.ifTrueSceneId, id => update({ ifTrueSceneId: id }))} />
-            <TargetButton label="Nếu không thì sang" targetId={scene.ifFalseSceneId} scenes={scenes} write={write} onOpen={() => pickTarget('Nếu không thì sang cảnh nào?', scene.ifFalseSceneId, id => update({ ifFalseSceneId: id }))} />
-          </>}
-          {type === 'choice' && <div className="scene-options">{(scene.options || []).map((option, index) => <div className="scene-option" key={option.id || index}>
-            <h3>Lựa chọn {index + 1}: <span>{option.text || option.label || 'chưa có chữ'}</span></h3>
-            <TargetButton label="Bấm xong thì sang" targetId={option.nextSceneId} scenes={scenes} write={write} onOpen={() => pickTarget(`Bấm “${String(option.text || '').slice(0, 40)}” xong thì sang cảnh nào?`, option.nextSceneId, id => setOption(index, { nextSceneId: id }))} />
-            <div className="scene-target"><span>Ảnh hưởng</span><button type="button" onClick={() => openDialog({ kind: 'effect', index })}>{effectText(option, statLabels)}</button></div>
-            <div className="scene-target"><span>Khoá</span><button type="button" onClick={() => openDialog({ kind: 'lock', index })}>{option.condition ? `Mở khi ${conditionSentence(option.condition, scenes, statLabels)}` : 'Không khoá'}</button></div>
-            {write && <button type="button" className="scene-text-button is-danger" onClick={() => update({ options: scene.options.filter((_, k) => k !== index) })}>Bỏ lựa chọn này</button>}
-          </div>)}
-          {write && <button type="button" className="scene-text-button" onClick={() => update({ options: [...(scene.options || []), { id: `${scene.id}_OPT${(scene.options?.length || 0) + 1}_${Date.now().toString(36)}`, text: '', nextSceneId: scene.options?.[0]?.nextSceneId ?? null }] })}><Plus size={15} />Thêm lựa chọn</button>}</div>}
-          {type === 'minigame' && <div className="scene-target"><span>Mini-game: {schema?.minigameKinds?.[scene.game?.kind]?.label || scene.game?.kind || 'chưa chọn loại'}</span><button type="button" onClick={() => openDialog({ kind: 'minigame' })}>Soạn chữ, đáp án, con số</button></div>}
-          {(scene.speaker || scene.speakerId) && scene.text && <VoiceFields scene={scene} update={update} />}
         </fieldset>
-        {write && <div className="scene-inspector-actions"><button type="button" disabled={busy} onClick={onDuplicate}><Copy size={15} />Nhân đôi cảnh</button><button type="button" className="scene-delete" disabled={busy} onClick={onDelete}><Trash2 size={15} />Xóa cảnh</button></div>}
+        {type === 'conditional' && <section className="inspector-group" aria-labelledby="group-cond"><h3 id="group-cond">Điều kiện rẽ</h3>
+          <div className="scene-target"><span>Game đi hướng “đúng” khi</span><button type="button" disabled={!write || busy} onClick={() => openDialog({ kind: 'condition' })}>{conditionSentence(scene.condition, scenes, statLabels)}</button></div></section>}
+        <section className="inspector-group" aria-labelledby="group-next"><h3 id="group-next">Đi tiếp</h3>
+          {isLinear(scene) && <TargetButton label="Sau cảnh này sang" targetId={scene[nextKeyOf(scene)]} scenes={scenes} write={write && !busy} onOpen={() => pickTarget('Sau cảnh này sang cảnh nào?', scene[nextKeyOf(scene)], id => update({ [nextKeyOf(scene)]: id }))} />}
+          {type === 'choice' && (() => { const summary = branchSummary(scenes, scene); return <div className="branch-summary">
+            <p><b>{summary.options} lựa chọn</b> dẫn tới <b>{summary.targets} {summary.targets === 1 ? 'đích' : 'đích khác nhau'}</b>{summary.straight ? `, ${summary.straight} lựa chọn đi thẳng về điểm nhập` : ''}.</p>
+            <p>{summary.join != null ? <>Các nhánh nhập lại ở <b>cảnh {summary.join + 1}</b>{scenes[summary.join] ? `: ${sceneLabel(scenes[summary.join])}` : ''}.</> : 'Các nhánh không nhập lại (mỗi nhánh tự đi tới kết).'}</p>
+            <button type="button" className="scene-text-button" onClick={() => setView('map')}>Xem trên bản đồ truyện</button></div> })()}
+          {type === 'conditional' && <>
+            <TargetButton label="Nếu đúng thì sang" targetId={scene.ifTrueSceneId} scenes={scenes} write={write && !busy} onOpen={() => pickTarget('Nếu đúng thì sang cảnh nào?', scene.ifTrueSceneId, id => update({ ifTrueSceneId: id }))} />
+            <TargetButton label="Nếu không thì sang" targetId={scene.ifFalseSceneId} scenes={scenes} write={write && !busy} onOpen={() => pickTarget('Nếu không thì sang cảnh nào?', scene.ifFalseSceneId, id => update({ ifFalseSceneId: id }))} />
+          </>}
+          {type === 'ending' && <p className="scene-hint">Hết chương. Game chọn kết theo kết quả chơi của trẻ.</p>}
+        </section>
+        {type === 'minigame' && <section className="inspector-group" aria-labelledby="group-game"><h3 id="group-game">Mini-game</h3>
+          <p className="scene-hint">{schema?.minigameKinds?.[scene.game?.kind]?.label || scene.game?.kind || 'Chưa chọn loại'}{schema?.minigameKinds?.[scene.game?.kind] ? (schema.minigameKinds[scene.game.kind].graded ? ', có chấm điểm' : ', luyện tập') : ''}</p>
+          <button type="button" className="inspector-wide" onClick={() => openDialog({ kind: 'minigame' })}>Soạn chữ, đáp án, con số</button></section>}
+        {(scene.speaker || scene.speakerId) && scene.text && <section className="inspector-group" aria-labelledby="group-voice"><h3 id="group-voice">Giọng đọc</h3><fieldset disabled={!write || busy}><VoiceFields scene={scene} update={update} /></fieldset></section>}
+        {write && <div className="scene-inspector-actions inspector-group"><button type="button" disabled={busy} onClick={onDuplicate}><Copy size={15} />Nhân đôi cảnh</button><button type="button" className="scene-delete" disabled={busy} onClick={onDelete}><Trash2 size={15} />Xóa cảnh</button></div>}
         <details className="scene-advanced"><summary>Nâng cao</summary>
           <fieldset disabled={!write || busy}>
             <label>Người nói (tên hiển thị)<input value={scene.speaker || ''} onChange={event => update({ speaker: event.target.value })} placeholder="Ví dụ: An" /></label>
@@ -188,7 +195,7 @@ export default function EditorCanvas(props) {
       <section className="scene-timeline" aria-label="Các cảnh trong chương">
         <div className="scene-timeline-heading"><span>Các cảnh <b>{scenes.length}</b></span>{write && <button type="button" disabled={busy} onClick={onAdd}><Plus size={15} /> Thêm cảnh</button>}</div>
         <div className="scene-timeline-track" ref={trackRef}>{scenes.map((item, index) => <button type="button" className={`scene-thumbnail ${index === idx ? 'selected' : ''}`} key={item.id} aria-label={`Cảnh ${index + 1}: ${item.title || item.id}`} aria-pressed={index === idx} onClick={() => setIdx(index)}>
-          <span className="scene-thumbnail-index">{index + 1}</span><Thumbnail scene={item} /><span className="scene-thumbnail-label">{sceneLabel(item)}</span>
+          <span className="scene-thumbnail-index">{index + 1}</span>{issueScenes.has(index) && <span className="scene-thumbnail-alert" title="Cảnh này còn chỗ cần sửa" />}<Thumbnail scene={item} /><span className="scene-thumbnail-label">{sceneLabel(item)}</span>
         </button>)}{write && <button type="button" className="scene-add-page" disabled={busy} onClick={onAdd} aria-label="Thêm cảnh sau cảnh đang chọn"><Plus size={22} /></button>}</div>
       </section>
     </div>}

@@ -279,3 +279,90 @@ textarea.stage-text:focus { background: #fff; }
 /* màn rất rộng: khung cảnh không cao quá màn hình, dải cảnh vẫn nhìn thấy */
 .stage-frame { max-width: min(100%, calc((100dvh - 300px) * 16 / 9)); margin-inline: auto; }
 .scene-target > button > span:last-child { overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+
+/* ---------- đợt 3: vùng rõ ràng — khung cảnh (nền tối) | nội dung cảnh (nền sáng, dưới khung) | thuộc tính theo nhóm ---------- */
+.scene-editor-workbench { background: var(--wash); padding: 0; display: flex; flex-direction: column; }
+.scene-editor-workbench.is-map { background: var(--wash); }
+.stage-well { background: var(--mat); padding: 10px 16px 16px; }
+.is-map .stage-well { background: var(--wash); }
+
+/* khối nội dung dưới khung cảnh */
+.content-panel { padding: 16px 16px 20px; display: grid; gap: 12px; }
+.content-panel-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.content-panel-head h2 { margin: 0; font-size: 16px; font-weight: 650; display: flex; align-items: center; gap: 8px; }
+.content-panel-head h2 span { display: inline-grid; place-items: center; min-width: 24px; height: 24px; padding: 0 6px; border-radius: 12px; background: var(--accent-wash); color: var(--accent-strong); font-size: 13px; }
+
+/* mỗi lựa chọn là một khối: chữ lựa chọn lớn nhất → đích → ảnh hưởng → khoá; mã lùi xuống cuối, nhạt */
+.choice-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr)); gap: 12px; }
+.choice-card { position: relative; display: grid; gap: 10px; align-content: start; background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; }
+.choice-card.has-problem { border-color: #e6a29b; box-shadow: inset 3px 0 0 var(--bad); }
+.choice-card.is-dragging { opacity: .5; }
+.choice-top { display: flex; align-items: flex-start; gap: 8px; }
+.choice-grip { color: #9fb2a8; cursor: grab; padding-top: 4px; }
+.choice-number { display: inline-grid; place-items: center; flex-shrink: 0; width: 28px; height: 28px; border-radius: 14px; background: var(--accent); color: #fff; font-weight: 700; font-size: 14px; }
+.choice-text { flex: 1; min-width: 0; margin: 0; font: inherit; font-size: 16px; font-weight: 600; line-height: 1.4; color: var(--ink); }
+textarea.choice-text { border: 1px solid transparent; border-radius: 6px; padding: 2px 6px; resize: none; field-sizing: content; background: transparent; }
+textarea.choice-text:hover { border-color: var(--line); }
+textarea.choice-text:focus { border-color: var(--accent); background: #fff; outline: none; }
+.choice-tools { display: flex; gap: 2px; flex-shrink: 0; }
+.scene-editor .choice-tools button { width: 32px; min-height: 32px; padding: 0; border-color: transparent; background: transparent; color: var(--muted); }
+.scene-editor .choice-tools button:hover:not(:disabled) { background: var(--wash); border-color: transparent; color: var(--ink); }
+.scene-editor .choice-tools button.is-danger:hover:not(:disabled) { color: var(--bad); }
+.choice-problem { display: flex; align-items: center; gap: 6px; margin: 0; padding: 6px 10px; border-radius: 6px; background: var(--bad-wash); color: var(--bad); font-size: 13px; font-weight: 600; }
+.choice-facts { display: grid; gap: 8px; margin: 0; }
+.choice-facts > div { display: grid; grid-template-columns: 120px minmax(0, 1fr); align-items: center; gap: 10px; }
+.choice-facts dt { font-size: 13px; color: var(--muted); }
+.choice-facts dd { margin: 0; min-width: 0; }
+.scene-editor .choice-target { width: 100%; justify-content: flex-start; gap: 10px; text-align: left; min-height: 44px; padding: 4px 8px 4px 4px; background: var(--wash); border-color: transparent; }
+.scene-editor .choice-target.is-missing { background: var(--bad-wash); color: var(--bad); font-weight: 600; }
+.choice-target .studio-thumb { width: 64px; }
+.choice-target > span:last-child { overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.choice-inline { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.choice-badges { display: flex; flex-wrap: wrap; gap: 6px; }
+.choice-badge { display: inline-flex; align-items: center; height: 26px; padding: 0 10px; border-radius: 13px; background: var(--wash); border: 1px solid var(--line); font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.choice-badge.is-money { background: #fff8e8; border-color: #ecd9a8; color: var(--warn-ink); }
+.choice-none { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); }
+.choice-lock { display: flex; align-items: flex-start; gap: 8px; min-width: 0; color: var(--warn-ink); }
+.choice-lock svg { margin-top: 3px; flex-shrink: 0; }
+.choice-lock b { display: block; font-size: 13px; }
+.choice-lock small { display: block; font-size: 13px; color: var(--muted); }
+.scene-editor .choice-link { min-height: 30px; padding: 2px 10px; flex-shrink: 0; color: var(--accent-strong); }
+.choice-id { justify-self: end; font-size: 11px; color: #8a9a92; }
+
+/* cảnh Bấm để xem */
+.inspect-body { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 16px; align-items: start; }
+.inspect-image { margin: 0; display: grid; gap: 8px; }
+.inspect-image img, .inspect-image > span { width: 100%; aspect-ratio: 4 / 3; object-fit: contain; background: #fff; border: 1px solid var(--line); border-radius: 8px; display: grid; place-items: center; font-size: 13px; color: var(--muted); }
+.inspect-text { display: grid; gap: 6px; font-size: 13px; color: var(--muted); }
+.inspect-text textarea { border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; font: inherit; font-size: 15px; color: var(--ink); background: #fff; resize: vertical; }
+
+/* bảng thuộc tính: nhóm có tiêu đề, cách nhau bằng đường kẻ — không lồng thẻ */
+.scene-inspector { gap: 0; padding: 0; }
+.scene-inspector-heading { padding: 16px 18px 12px; }
+.inspector-group { display: grid; gap: 10px; padding: 14px 18px; border-top: 1px solid var(--line); margin: 0; border-left: 0; border-right: 0; border-bottom: 0; min-width: 0; }
+.inspector-group h3 { margin: 0; font-size: 14px; font-weight: 650; color: var(--ink); }
+.scene-inspector > fieldset.inspector-group { border-top: 0; padding-top: 0; }
+.scene-inspector .scene-advanced { padding: 12px 18px 16px; border-top: 1px solid var(--line); }
+.scene-editor .inspector-wide { width: 100%; }
+.branch-summary { display: grid; gap: 4px; font-size: 14px; }
+.branch-summary p { margin: 0; }
+.scene-inspector .scene-voice-fields { border-top: 0; padding-top: 0; }
+
+/* dải cảnh: cảnh còn lỗi có chấm đỏ */
+.scene-thumbnail-alert { position: absolute; z-index: 1; right: 6px; top: 6px; width: 10px; height: 10px; border-radius: 50%; background: var(--bad); border: 2px solid #fff; }
+
+/* bản đồ: cảnh đang soạn nổi bật */
+.scene-editor .map-node.is-current { border: 2px solid var(--ink); background: var(--accent-wash); }
+
+@media (max-width: 850px) { .inspect-body { grid-template-columns: minmax(0, 1fr); } .choice-facts > div { grid-template-columns: minmax(0, 1fr); gap: 4px; } }
+.scene-inspector .inspector-group { padding: 14px 18px; }
+.scene-inspector > fieldset.inspector-group { padding-top: 0; }
+.scene-inspector .scene-inspector-actions.inspector-group { display: flex; gap: 8px; }
+.scene-inspector .scene-inspector-actions.inspector-group button { flex: 1; }
+.choice-facts > div { grid-template-columns: 108px minmax(0, 1fr); }
+
+.scene-inspector .scene-inspector-actions.inspector-group button { white-space: nowrap; padding-inline: 8px; }
+.scene-editor .scene-quiet { border-color: transparent; background: transparent; color: var(--muted); }
+.scene-editor .scene-quiet:hover:not(:disabled) { background: var(--wash); border-color: transparent; color: var(--ink); }
+/* cảnh có khối nội dung bên dưới (lựa chọn, thẻ xem): khung cảnh thấp hơn một chút để khối đó lộ ra ngay màn đầu */
+.has-panel .stage-frame { max-width: min(100%, calc((100dvh - 380px) * 16 / 9)); }
