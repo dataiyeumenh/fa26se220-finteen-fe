@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import {
   ArrowLeft,
   ArrowRight,
@@ -14,13 +14,8 @@ import { advanceFallingItems } from "./miniGameRules";
 const formatMoney = (value) => `${value.toLocaleString("vi-VN")}đ`;
 const clamp = (value) => Math.max(0, Math.min(1, value));
 const spriteBase = "/images/finteen-v2/chapter-02/asset-mini-game/savings-race";
-const freshCoin = () => ({
-  x: 0.1 + Math.random() * 0.8,
-  y: 0,
-  value: (1 + Math.floor(Math.random() * 10)) * 50000,
-});
-const duration = 60;
-const expenses = [
+// Tham số đọc từ JSON chương (game.durationSeconds, expenses, expenseChance, coinStep, coinMaxSteps); thiếu → giá trị bản 1.1.0.
+const DEFAULT_EXPENSES = [
   {
     label: "Trò chơi",
     image:
@@ -40,27 +35,39 @@ const expenses = [
     value: -100000,
   },
 ];
-const freshItem = () =>
-  Math.random() < 0.25
+const raceConfig = (game) => ({
+  duration: game.durationSeconds ?? 60,
+  expenses: game.expenses ?? DEFAULT_EXPENSES,
+  expenseChance: game.expenseChance ?? 0.25,
+  coinStep: game.coinStep ?? 50000,
+  coinMaxSteps: game.coinMaxSteps ?? 10,
+});
+const freshCoin = (cfg) => ({
+  x: 0.1 + Math.random() * 0.8,
+  y: 0,
+  value: (1 + Math.floor(Math.random() * cfg.coinMaxSteps)) * cfg.coinStep,
+});
+const freshItem = (cfg) =>
+  Math.random() < cfg.expenseChance
     ? {
-        ...freshCoin(),
-        ...expenses[Math.floor(Math.random() * expenses.length)],
+        ...freshCoin(cfg),
+        ...cfg.expenses[Math.floor(Math.random() * cfg.expenses.length)],
       }
     : {
-        ...freshCoin(),
+        ...freshCoin(cfg),
         label: "Tiền tiết kiệm",
         image: `${spriteBase}/gold-coin.png`,
       };
-const freshWave = (wave) =>
+const freshWave = (cfg, wave) =>
   Array.from({ length: 2 + Math.floor(Math.random() * 2) }, (_, index) => ({
-    ...freshItem(),
+    ...freshItem(cfg),
     id: `${wave}-${index}`,
     x: 0.15 + index * 0.3 + Math.random() * 0.1,
     y: -index * 0.12,
   }));
-const freshEngine = () => ({
+const freshEngine = (cfg) => ({
   basket: 0.5,
-  items: freshWave(0),
+  items: freshWave(cfg, 0),
   wave: 0,
   saved: 0,
   elapsed: 0,
@@ -70,7 +77,9 @@ export function SavingsRaceMiniGame({ game, onComplete, className }) {
   const stageRef = useRef(null);
   const engine = useRef(null);
   const keys = useRef(new Set());
-  const [frame, setFrame] = useState(freshEngine);
+  const cfg = useMemo(() => raceConfig(game), [game]);
+  const { duration } = cfg;
+  const [frame, setFrame] = useState(() => freshEngine(cfg));
   const [catchFx, setCatchFx] = useState(null);
   const [status, setStatus] = useState("ready");
   const [feedback, setFeedback] = useState(
@@ -126,7 +135,7 @@ export function SavingsRaceMiniGame({ game, onComplete, className }) {
       }
       if (!next.won && !state.items.length) {
         state.wave += 1;
-        state.items = freshWave(state.wave);
+        state.items = freshWave(cfg, state.wave);
       }
       setFrame({ ...state });
       if (state.saved >= game.targetAmount) {
@@ -152,7 +161,7 @@ export function SavingsRaceMiniGame({ game, onComplete, className }) {
       window.removeEventListener("blur", pause);
       document.removeEventListener("visibilitychange", hide);
     };
-  }, [status, game.targetAmount]);
+  }, [status, game.targetAmount, cfg, duration]);
 
   const start = () => {
     engine.current ??= { ...frame };
@@ -160,7 +169,7 @@ export function SavingsRaceMiniGame({ game, onComplete, className }) {
     stageRef.current?.focus();
   };
   const reset = () => {
-    engine.current = freshEngine();
+    engine.current = freshEngine(cfg);
     keys.current.clear();
     setFrame({ ...engine.current });
     setCatchFx(null);
@@ -193,7 +202,7 @@ export function SavingsRaceMiniGame({ game, onComplete, className }) {
           <h2>Gom tiền nhỏ, chạm ước mơ</h2>
           <p>
             Hứng tiền, tránh trò chơi, tai nghe xịn và tượng mèo trang trí. Đủ
-            mục tiêu hoặc hết 90 giây sẽ kết thúc.
+            mục tiêu hoặc hết {duration} giây sẽ kết thúc.
           </p>
         </div>
         <span
@@ -359,7 +368,7 @@ export function SavingsRaceMiniGame({ game, onComplete, className }) {
               {status === "won"
                 ? "Bạn đã tiết kiệm đủ tiền mua laptop!"
                 : status === "timeout"
-                  ? `Hết 90 giây. Bạn tiết kiệm được ${formatMoney(frame.saved)}; vẫn có thể tiếp tục câu chuyện.`
+                  ? `Hết ${duration} giây. Bạn tiết kiệm được ${formatMoney(frame.saved)}; vẫn có thể tiếp tục câu chuyện.`
                   : "Dùng phím ← → hoặc kéo hũ để hứng tiền. Tránh trò chơi, tai nghe xịn và tượng mèo trang trí để giữ tiền tiết kiệm!"}
             </p>
             {finished ? (

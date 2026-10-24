@@ -5,9 +5,6 @@ import { chapter7V2GameData as data } from "../src/pages/Kid/Dashboard/data/chap
 import {
   applySafetyAction,
   createSafetyState,
-  safetyMessages,
-  insuranceDocuments,
-  responseActions,
   safetyTasks,
   safetyResult,
   chapterSevenLearning,
@@ -19,12 +16,19 @@ import {
 } from "../src/pages/Kid/Dashboard/components/game/visualNovelProgress.js";
 import { CHAPTERS } from "../src/features/workspace/model.js";
 const scenes = new Map(data.scenes.map((scene) => [scene.id, scene]));
+const safetyConfig = data.scenes.find(
+  (scene) => scene.game?.kind === "SCAM_OR_SAFE",
+).game.config;
+const safetyMessages = safetyConfig.inbox.messages;
+const insuranceDocuments = safetyConfig.insurance.documents;
+const responseActions = safetyConfig.response.actions;
+const tasks = safetyTasks(safetyConfig);
 const option = (id) =>
   data.scenes
     .flatMap((scene) => scene.options || [])
     .find((option) => option.id === id);
 const fullHistory = Object.fromEntries(
-  safetyTasks.map((task) => [
+  tasks.map((task) => [
     task.id,
     { finalCorrect: true, firstAttemptCorrect: true, attemptCount: 1 },
   ]),
@@ -36,7 +40,7 @@ const games = () =>
       ["SCAM_OR_SAFE_CH07", [1, 2]],
     ].map(([gameId, rounds]) => [
       gameId,
-      { ...safetyResult(fullHistory, rounds), gameId, completed: true },
+      { ...safetyResult(safetyConfig, fullHistory, rounds), gameId, completed: true },
     ]),
   );
 const goodLedger = {
@@ -245,80 +249,80 @@ test("correct financial choice preserves savings stat; losses do not become scor
 });
 test("insurance checkout records both criteria once and allows wrong submission to finish", () => {
   let state = createSafetyState([0]);
-  assert.equal(applySafetyAction(state, { type: "SUBMIT_INSURANCE" }), state);
-  state = applySafetyAction(state, { type: "PAYMENT", amount: 100000 });
-  state = applySafetyAction(state, { type: "DOCUMENT", id: "otp" });
+  assert.equal(applySafetyAction(safetyConfig, state, { type: "SUBMIT_INSURANCE" }), state);
+  state = applySafetyAction(safetyConfig, state, { type: "PAYMENT", amount: 100000 });
+  state = applySafetyAction(safetyConfig, state, { type: "DOCUMENT", id: "otp" });
   assert.deepEqual(state.history, {});
-  state = applySafetyAction(state, { type: "SUBMIT_INSURANCE" });
+  state = applySafetyAction(safetyConfig, state, { type: "SUBMIT_INSURANCE" });
   assert.equal(state.submittedRounds[0], true);
-  assert.equal(safetyResult(state.history, [0]).completed, true);
-  assert.equal(safetyResult(state.history, [0]).score, 0);
+  assert.equal(safetyResult(safetyConfig, state.history, [0]).completed, true);
+  assert.equal(safetyResult(safetyConfig, state.history, [0]).score, 0);
   for (const action of [
     { type: "PAYMENT", amount: 300000 },
     { type: "DOCUMENT", id: "receipt" },
     { type: "SUBMIT_INSURANCE" },
   ])
-    assert.equal(applySafetyAction(state, action), state);
+    assert.equal(applySafetyAction(safetyConfig, state, action), state);
   let correct = createSafetyState([0]);
-  correct = applySafetyAction(correct, { type: "PAYMENT", amount: 300000 });
+  correct = applySafetyAction(safetyConfig, correct, { type: "PAYMENT", amount: 300000 });
   for (const id of ["receipt", "medicalRecord", "claim"])
-    correct = applySafetyAction(correct, { type: "DOCUMENT", id });
-  correct = applySafetyAction(correct, { type: "SUBMIT_INSURANCE" });
-  assert.equal(safetyResult(correct.history, [0]).score, 2);
+    correct = applySafetyAction(safetyConfig, correct, { type: "DOCUMENT", id });
+  correct = applySafetyAction(safetyConfig, correct, { type: "SUBMIT_INSURANCE" });
+  assert.equal(safetyResult(safetyConfig, correct.history, [0]).score, 2);
 });
 test("insurance packet must match the actual stated terms and rejects extra data", () => {
   let state = createSafetyState([0]);
-  state = applySafetyAction(state, { type: "PAYMENT", amount: 300000 });
+  state = applySafetyAction(safetyConfig, state, { type: "PAYMENT", amount: 300000 });
   for (const id of ["receipt", "medicalRecord", "claim", "otp"])
-    state = applySafetyAction(state, { type: "DOCUMENT", id });
-  state = applySafetyAction(state, { type: "SUBMIT_INSURANCE" });
-  assert.equal(safetyResult(state.history, [0]).score, 1);
+    state = applySafetyAction(safetyConfig, state, { type: "DOCUMENT", id });
+  state = applySafetyAction(safetyConfig, state, { type: "SUBMIT_INSURANCE" });
+  assert.equal(safetyResult(safetyConfig, state.history, [0]).score, 1);
   assert.equal(state.money, undefined);
 });
 test("inbox drafts do not score, can be changed and are graded only after all six", () => {
   let state = createSafetyState([1, 2]);
-  assert.equal(applySafetyAction(state, { type: "ROUND", round: 2 }), state);
-  state = applySafetyAction(state, {
+  assert.equal(applySafetyAction(safetyConfig, state, { type: "ROUND", round: 2 }), state);
+  state = applySafetyAction(safetyConfig, state, {
     type: "ANSWER_MESSAGE",
     id: safetyMessages[0].id,
     answer: "continue",
   });
   assert.deepEqual(state.history, {});
-  assert.equal(applySafetyAction(state, { type: "SUBMIT_MESSAGES" }), state);
+  assert.equal(applySafetyAction(safetyConfig, state, { type: "SUBMIT_MESSAGES" }), state);
   for (const message of safetyMessages)
-    state = applySafetyAction(state, {
+    state = applySafetyAction(safetyConfig, state, {
       type: "ANSWER_MESSAGE",
       id: message.id,
       answer: message.answer,
     });
-  state = applySafetyAction(state, { type: "SUBMIT_MESSAGES" });
-  assert.equal(safetyResult(state.history, [1]).score, 6);
-  assert.equal(safetyResult(state.history, [1]).firstPercent, 100);
+  state = applySafetyAction(safetyConfig, state, { type: "SUBMIT_MESSAGES" });
+  assert.equal(safetyResult(safetyConfig, state.history, [1]).score, 6);
+  assert.equal(safetyResult(safetyConfig, state.history, [1]).firstPercent, 100);
   assert.equal(
-    applySafetyAction(state, {
+    applySafetyAction(safetyConfig, state, {
       type: "ANSWER_MESSAGE",
       id: safetyMessages[0].id,
       answer: "continue",
     }),
     state,
   );
-  const review = applySafetyAction(state, { type: "MESSAGE", index: 0 });
+  const review = applySafetyAction(safetyConfig, state, { type: "MESSAGE", index: 0 });
   assert.deepEqual(review.history, state.history);
   assert.equal(review.activeMessage, 0);
 });
 test("wrong inbox is completed without rewriting answers or granting correct evidence", () => {
   let state = createSafetyState([1, 2]);
   for (const message of safetyMessages)
-    state = applySafetyAction(state, {
+    state = applySafetyAction(safetyConfig, state, {
       type: "ANSWER_MESSAGE",
       id: message.id,
       answer: message.answer === "check" ? "continue" : "check",
     });
-  state = applySafetyAction(state, { type: "SUBMIT_MESSAGES" });
-  assert.equal(safetyResult(state.history, [1]).score, 0);
-  assert.equal(safetyResult(state.history, [1]).completed, true);
-  assert.equal(safetyResult(state.history, [1]).passed, false);
-  assert.equal(applySafetyAction(state, { type: "ROUND", round: 2 }).round, 2);
+  state = applySafetyAction(safetyConfig, state, { type: "SUBMIT_MESSAGES" });
+  assert.equal(safetyResult(safetyConfig, state.history, [1]).score, 0);
+  assert.equal(safetyResult(safetyConfig, state.history, [1]).completed, true);
+  assert.equal(safetyResult(safetyConfig, state.history, [1]).passed, false);
+  assert.equal(applySafetyAction(safetyConfig, state, { type: "ROUND", round: 2 }).round, 2);
 });
 test("response accepts immediate protection or official contact in either middle order", () => {
   for (const ids of [
@@ -327,30 +331,30 @@ test("response accepts immediate protection or official contact in either middle
   ]) {
     let state = createSafetyState([2]);
     for (const id of ids)
-      state = applySafetyAction(state, { type: "ADD_RESPONSE", id });
+      state = applySafetyAction(safetyConfig, state, { type: "ADD_RESPONSE", id });
     assert.deepEqual(state.history, {});
-    state = applySafetyAction(state, { type: "SUBMIT_RESPONSE" });
-    assert.equal(safetyResult(state.history, [2]).score, 4);
+    state = applySafetyAction(safetyConfig, state, { type: "SUBMIT_RESPONSE" });
+    assert.equal(safetyResult(safetyConfig, state.history, [2]).score, 4);
     assert.equal(
-      applySafetyAction(state, { type: "REMOVE_RESPONSE", id: "stop" }),
+      applySafetyAction(safetyConfig, state, { type: "REMOVE_RESPONSE", id: "stop" }),
       state,
     );
-    assert.equal(applySafetyAction(state, { type: "SUBMIT_RESPONSE" }), state);
+    assert.equal(applySafetyAction(safetyConfig, state, { type: "SUBMIT_RESPONSE" }), state);
   }
 });
 test("response permits unsafe drafts but freezes their partial credit and consequences on submission", () => {
   let state = createSafetyState([2]);
-  state = applySafetyAction(state, { type: "ADD_RESPONSE", id: "reply" });
-  state = applySafetyAction(state, { type: "REMOVE_RESPONSE", id: "reply" });
+  state = applySafetyAction(safetyConfig, state, { type: "ADD_RESPONSE", id: "reply" });
+  state = applySafetyAction(safetyConfig, state, { type: "REMOVE_RESPONSE", id: "reply" });
   for (const id of ["stop", "payFee", "reply", "save"])
-    state = applySafetyAction(state, { type: "ADD_RESPONSE", id });
+    state = applySafetyAction(safetyConfig, state, { type: "ADD_RESPONSE", id });
   assert.equal(
-    applySafetyAction(state, { type: "ADD_RESPONSE", id: "protect" }),
+    applySafetyAction(safetyConfig, state, { type: "ADD_RESPONSE", id: "protect" }),
     state,
   );
-  state = applySafetyAction(state, { type: "SUBMIT_RESPONSE" });
-  assert.equal(safetyResult(state.history, [2]).score, 2);
-  assert.equal(safetyResult(state.history, [2]).completed, true);
+  state = applySafetyAction(safetyConfig, state, { type: "SUBMIT_RESPONSE" });
+  assert.equal(safetyResult(safetyConfig, state.history, [2]).score, 2);
+  assert.equal(safetyResult(safetyConfig, state.history, [2]).completed, true);
   assert.deepEqual(state.response, ["stop", "payFee", "reply", "save"]);
   assert.equal(state.money, undefined);
 });
@@ -362,7 +366,7 @@ test("normalized report needs both games, has no reflections and keeps all endin
   assert.equal(report.firstPercent, 100);
   assert.equal(report.reflectionPercent, null);
   assert.equal(data.endingReport.weights.reflection, 0);
-  assert.equal(data.endingReport.miniGameMax, safetyTasks.length);
+  assert.equal(data.endingReport.miniGameMax, tasks.length);
   assert.equal(ending(safeFlags), "A_GOAL_ACHIEVED");
   delete results.SCAM_OR_SAFE_CH07;
   assert.equal(ending(safeFlags, goodLedger, results), "B_BALANCED");

@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import {
   buildShoppingOffers,
-  INSPECTIONS,
+  fill,
   inspectOffer,
   invoiceFor,
   evaluatePurchase,
@@ -22,12 +22,18 @@ import {
 } from "./shoppingMissionRules";
 import "./chapter-two-minigames.css";
 import "./smart-shopping.css";
+import { compactInputs } from "./miniGameInputs.js";
 
 const money = (value) => `${value.toLocaleString("vi-VN")}đ`;
-const icons = { app: Smartphone, battery: BatteryCharging, terms: FileText };
-const STEPS = ["Điều tra", "Chốt giao dịch", "Một năm sau"];
+// Khung SMART_SHOPPING: chữ, số, luật hiển thị đọc từ game.config (JSON chương). Biểu tượng chọn theo tên trong config.
+const icons = {
+  smartphone: Smartphone,
+  battery: BatteryCharging,
+  file: FileText,
+};
 
 function PhoneDecision({
+  decision,
   offer,
   budget,
   reserve,
@@ -42,13 +48,10 @@ function PhoneDecision({
     return (
       <>
         <CalendarDays size={30} />
-        <h3>Lịch hủy dùng thử</h3>
-        <p>
-          Chọn thời điểm gửi yêu cầu. Gia hạn vào ngày 30; yêu cầu hợp lệ được
-          lưu xác nhận.
-        </p>
+        <h3>{decision.subscription.title}</h3>
+        <p>{decision.subscription.text}</p>
         <label htmlFor="mission-cancel-day">
-          Thời điểm trong tháng dùng thử
+          {decision.subscription.label}
         </label>
         <select
           id="mission-cancel-day"
@@ -56,11 +59,13 @@ function PhoneDecision({
           onChange={(event) => setCancellationDay(event.target.value)}
         >
           <option value="" disabled>
-            Chọn thời điểm
+            {decision.subscription.placeholder}
           </option>
-          <option value="1">Đầu tháng · ngày 1</option>
-          <option value="15">Giữa tháng · ngày 15</option>
-          <option value="30">Cuối tháng · ngày 30</option>
+          {decision.subscription.days.map((day) => (
+            <option key={day.value} value={day.value}>
+              {day.label}
+            </option>
+          ))}
         </select>
       </>
     );
@@ -68,18 +73,15 @@ function PhoneDecision({
     return (
       <>
         <BatteryCharging size={30} />
-        <h3>Pin cũ có đủ cho bạn?</h3>
-        <p>
-          Một buổi học kéo dài 4 giờ. Hãy đo pin trước khi quyết định; bảo hành
-          không bao gồm hao mòn pin.
-        </p>
+        <h3>{decision.battery.title}</h3>
+        <p>{decision.battery.text}</p>
         <button
           type="button"
           className="c2-secondary"
           disabled={batteryChecked}
           onClick={() => setBatteryChecked(true)}
         >
-          {batteryChecked ? "Đã đo pin" : "Chạy kiểm tra pin"}
+          {batteryChecked ? decision.battery.checked : decision.battery.check}
         </button>
         {batteryChecked && (
           <div className="mission-battery-result" role="status">
@@ -87,11 +89,11 @@ function PhoneDecision({
               min="0"
               max="100"
               value={offer.shopping.batteryHealth}
-              aria-label="Dung lượng pin còn lại"
+              aria-label={decision.battery.meterLabel}
             />
             <p>{offer.shopping.batteryTest}</p>
             <fieldset>
-              <legend>Kế hoạch cho buổi học</legend>
+              <legend>{decision.battery.planLegend}</legend>
               <label>
                 <input
                   type="radio"
@@ -99,7 +101,7 @@ function PhoneDecision({
                   checked={batteryPlan === "keep"}
                   onChange={() => setBatteryPlan("keep")}
                 />
-                Giữ pin, mang sạc và sạc trong giờ nghỉ · 0đ
+                {decision.battery.keep}
               </label>
               <label>
                 <input
@@ -108,13 +110,12 @@ function PhoneDecision({
                   checked={batteryPlan === "replace"}
                   onChange={() => setBatteryPlan("replace")}
                 />
-                Thay pin · {money(offer.shopping.batteryReplacementCost)}
+                {fill(decision.battery.replace, {
+                  cost: money(offer.shopping.batteryReplacementCost),
+                })}
               </label>
             </fieldset>
-            <small>
-              Thay pin tăng thời lượng sử dụng, không làm máy chạy đa nhiệm
-              nhanh hơn.
-            </small>
+            <small>{decision.battery.note}</small>
           </div>
         )}
       </>
@@ -122,17 +123,15 @@ function PhoneDecision({
   return (
     <>
       <Wallet size={30} />
-      <h3>Tính năng thêm hay quỹ hoạt động?</h3>
-      <p>
-        Máy C học tốt, nhưng camera cao cấp và trò chơi không phải nhu cầu học
-        hiện tại.
-      </p>
+      <h3>{decision.features.title}</h3>
+      <p>{decision.features.text}</p>
       <div className="mission-balance is-risk">
-        <span>Sau khi trả tiền máy</span>
+        <span>{decision.features.balanceLabel}</span>
         <strong>{money(budget - offer.price)}</strong>
         <small>
-          Thiếu {money(Math.max(0, reserve - (budget - offer.price)))} so với
-          quỹ cần giữ. Chưa tính phí ngoài báo giá.
+          {fill(decision.features.shortfall, {
+            shortfall: money(Math.max(0, reserve - (budget - offer.price))),
+          })}
         </small>
       </div>
     </>
@@ -146,7 +145,9 @@ export function SmartShoppingMiniGame({
   onComplete,
   className = "",
 }) {
-  const offers = buildShoppingOffers(game.phones || []);
+  const config = game.config;
+  const { texts, inspections } = config;
+  const offers = buildShoppingOffers(game.phones, config);
   const saved = initialResult?.ui;
   const [step, setStep] = useState(saved?.step ?? 0);
   const [inspected, setInspected] = useState(saved?.inspected ?? []);
@@ -165,12 +166,13 @@ export function SmartShoppingMiniGame({
   );
   const [report, setReport] = useState(saved?.report ?? null);
   const [firstReport, setFirstReport] = useState(saved?.firstReport ?? null);
+  const [firstInputs, setFirstInputs] = useState(saved?.firstInputs ?? null);
   const [attempt, setAttempt] = useState(saved?.attempt ?? 1);
   const submitted = useRef(false);
-  const budget = game.budget ?? 2500000;
-  const reserve = game.reserve ?? 500000;
+  const { budget, reserve } = game;
   const offer = offers.find((item) => item.id === selectedId);
-  const checksLeft = 4 - inspected.length;
+  const checksLeft = config.checkTokens - inspected.length;
+  const percent = (score, total) => (score * 100) / total;
 
   function inspect(item, type) {
     const key = `${item.id}:${type}`;
@@ -182,6 +184,7 @@ export function SmartShoppingMiniGame({
   }
   function purchase() {
     const result = evaluatePurchase({
+      config,
       offer,
       inspected,
       cancellationDay,
@@ -193,12 +196,21 @@ export function SmartShoppingMiniGame({
     });
     setReport(result);
     if (!firstReport) setFirstReport(result);
+    const inputs = firstInputs ?? compactInputs({
+      phone: selectedId,
+      inspected,
+      cancelDay: cancellationDay === "" ? undefined : Number(cancellationDay),
+      disputed: disputedLine,
+      batteryChecked,
+      batteryPlan,
+    });
+    if (!firstInputs) setFirstInputs(inputs);
     setStep(2);
     const first = firstReport || result;
     onProgress?.({
       score: first.score,
-      total: 4,
-      firstPercent: first.score * 25,
+      total: first.total,
+      firstPercent: percent(first.score, first.total),
       ui: {
         step: 2,
         inspected,
@@ -210,6 +222,7 @@ export function SmartShoppingMiniGame({
         invoiceOpened,
         report: result,
         firstReport: first,
+        firstInputs: inputs,
         attempt,
       },
     });
@@ -232,9 +245,9 @@ export function SmartShoppingMiniGame({
     submitted.current = true;
     onComplete?.({
       score: firstReport.score,
-      total: 4,
-      passed: firstReport.score >= 3,
-      firstPercent: firstReport.score * 25,
+      total: firstReport.total,
+      passed: firstReport.score >= config.passMinScore,
+      firstPercent: percent(firstReport.score, firstReport.total),
       revised: attempt > 1,
       attempt,
       selectedPhone: selectedId,
@@ -245,6 +258,7 @@ export function SmartShoppingMiniGame({
       batteryPlan,
       totalCost: report.totalCost,
       criteria: firstReport.criteria,
+      inputs: firstInputs,
       ui: {
         step: 2,
         inspected,
@@ -264,39 +278,39 @@ export function SmartShoppingMiniGame({
   return (
     <section
       className={`c2-game shopping-mission ${className}`}
-      aria-label="Nhiệm vụ mua máy: bốn lượt kiểm tra"
+      aria-label={config.ariaLabel}
     >
       <header className="mission-header">
         <div>
           <span className="c2-eyebrow">
-            <Search size={16} /> HỒ SƠ MUA SẮM / A / B / C
+            <Search size={16} /> {config.eyebrow}
           </span>
-          <h2>Bốn lượt. Một quyết định.</h2>
-          <p>Đừng mua lời quảng cáo. Hãy mua thứ bạn đã kiểm chứng.</p>
+          <h2>{config.heading}</h2>
+          <p>{config.tagline}</p>
         </div>
-        <span className="mission-attempt">Lần thử {attempt}</span>
+        <span className="mission-attempt">
+          {fill(texts.attempt, { n: attempt })}
+        </span>
       </header>
       <div className="mission-brief">
         <div>
           <Wallet size={21} />
           <span>
-            Ví mô phỏng<strong>{money(budget)}</strong>
+            {texts.wallet}
+            <strong>{money(budget)}</strong>
           </span>
         </div>
         <div>
           <ShieldCheck size={21} />
           <span>
-            Phải giữ cho hoạt động trường<strong>{money(reserve)}</strong>
+            {texts.reserve}
+            <strong>{money(reserve)}</strong>
           </span>
         </div>
-        <p>
-          Nhiệm vụ: kiểm chứng ba máy A/B/C trong câu chuyện, chọn theo nhu cầu
-          học và giữ đủ quỹ sau một năm. Giá và điều kiện giống phương án mua
-          của An.
-        </p>
+        <p>{config.brief}</p>
       </div>
-      <nav className="mission-steps" aria-label="Tiến trình">
-        {STEPS.map((label, index) => (
+      <nav className="mission-steps" aria-label={texts.stepsLabel}>
+        {config.steps.map((label, index) => (
           <span
             key={label}
             aria-current={index === step ? "step" : undefined}
@@ -314,24 +328,25 @@ export function SmartShoppingMiniGame({
         <>
           <div className="mission-section-heading">
             <div>
-              <h3>Bạn muốn kiểm chứng máy nào trước?</h3>
-              <p>
-                Chỉ có 4 lượt kiểm tra cho 3 máy. Cả ba chạy được ứng dụng học;
-                hãy kiểm tra chất lượng, điều kiện và tổng chi thay vì chỉ nhìn
-                giá. Hồ sơ đã mở được đọc lại miễn phí.
-              </p>
+              <h3>{texts.investigateTitle}</h3>
+              <p>{texts.investigateText}</p>
             </div>
             <div
               className="mission-tokens"
-              aria-label={`Còn ${checksLeft} lượt kiểm tra`}
+              aria-label={fill(texts.tokensLabel, { left: checksLeft })}
             >
-              {Array.from({ length: 4 }, (_, index) => (
+              {Array.from({ length: config.checkTokens }, (_, index) => (
                 <i
                   key={index}
                   className={index < checksLeft ? "" : "is-used"}
                 />
               ))}
-              <strong>{checksLeft}/4 lượt</strong>
+              <strong>
+                {fill(texts.tokens, {
+                  left: checksLeft,
+                  total: config.checkTokens,
+                })}
+              </strong>
             </div>
           </div>
           <div className="mission-offers">
@@ -342,20 +357,23 @@ export function SmartShoppingMiniGame({
               >
                 <div className="mission-offer-art">
                   <span>{item.name}</span>
-                  <img src={item.image} alt={`Điện thoại tại ${item.name}`} />
+                  <img
+                    src={item.image}
+                    alt={fill(texts.phoneAlt, { name: item.name })}
+                  />
                 </div>
                 <div className="mission-offer-body">
-                  <p className="mission-ad">“{item.claim}”</p>
+                  <p className="mission-ad">
+                    {fill(texts.claim, { claim: item.claim })}
+                  </p>
                   <strong className="mission-price">{money(item.price)}</strong>
-                  <small>
-                    Báo giá: chỉ gồm máy. Phụ phí cần được đồng ý trước.
-                  </small>
+                  <small>{texts.quoteNote}</small>
                   <div className="mission-inspections">
-                    {INSPECTIONS.map((check) => {
+                    {inspections.map((check) => {
                       const opened = inspected.includes(
                         `${item.id}:${check.id}`,
                       );
-                      const Icon = icons[check.id];
+                      const Icon = icons[check.icon];
                       return (
                         <button
                           key={check.id}
@@ -365,7 +383,9 @@ export function SmartShoppingMiniGame({
                         >
                           <Icon size={17} />
                           <span>{check.label}</span>
-                          <small>{opened ? "Đọc lại" : "−1 lượt"}</small>
+                          <small>
+                            {opened ? texts.reread : texts.costsCheck}
+                          </small>
                         </button>
                       );
                     })}
@@ -375,7 +395,7 @@ export function SmartShoppingMiniGame({
                       <div>
                         <h4>
                           {
-                            INSPECTIONS.find(
+                            inspections.find(
                               (check) => check.id === activeFile.type,
                             ).label
                           }
@@ -395,9 +415,10 @@ export function SmartShoppingMiniGame({
                     ) : (
                       <Smartphone size={17} />
                     )}
-                    {selectedId === item.id
-                      ? `Đã chọn máy ${item.id}`
-                      : `Chọn máy ${item.id}`}
+                    {fill(
+                      selectedId === item.id ? texts.selected : texts.select,
+                      { id: item.id },
+                    )}
                   </button>
                 </div>
               </article>
@@ -405,8 +426,7 @@ export function SmartShoppingMiniGame({
           </div>
           <footer className="mission-footer">
             <p>
-              <LockKeyhole size={16} /> Sang thanh toán sẽ khóa lựa chọn máy và
-              lượt điều tra.
+              <LockKeyhole size={16} /> {texts.lockNote}
             </p>
             <button
               type="button"
@@ -417,7 +437,12 @@ export function SmartShoppingMiniGame({
                 setActiveFile(null);
               }}
             >
-              Chốt {offer ? `máy ${offer.id}` : "máy"} <ArrowRight size={17} />
+              {fill(texts.lockIn, {
+                phone: offer
+                  ? fill(texts.lockPhone, { id: offer.id })
+                  : texts.lockPhoneNone,
+              })}{" "}
+              <ArrowRight size={17} />
             </button>
           </footer>
         </>
@@ -427,20 +452,18 @@ export function SmartShoppingMiniGame({
         <>
           <div className="mission-section-heading">
             <div>
-              <h3>Tự kiểm tra trước khi trả tiền.</h3>
-              <p>
-                Xử lý chênh lệch hóa đơn nếu có và tự lên lịch dịch vụ. Khi
-                thanh toán, một năm sử dụng sẽ được mô phỏng ngay.
-              </p>
+              <h3>{texts.checkoutTitle}</h3>
+              <p>{texts.checkoutText}</p>
             </div>
           </div>
           <div className="mission-checkout">
             <div className="mission-paper">
-              <span>HÓA ĐƠN TẠM TÍNH / {offer.name}</span>
-              <h3>Kiểm tra từng dòng</h3>
+              <span>{fill(texts.invoiceEyebrow, { name: offer.name })}</span>
+              <h3>{texts.invoiceTitle}</h3>
               <p>
-                Báo giá đã lưu: <strong>{money(offer.price)}</strong> cho máy,
-                chưa thỏa thuận phụ phí.
+                {texts.savedQuote}
+                <strong>{money(offer.price)}</strong>
+                {texts.savedQuoteAfter}
               </p>
               <button
                 type="button"
@@ -451,15 +474,13 @@ export function SmartShoppingMiniGame({
                 disabled={invoiceOpened}
               >
                 <Search size={16} />
-                {invoiceOpened ? "Đã kiểm tra" : "Kiểm tra"}
+                {invoiceOpened ? texts.invoiceChecked : texts.invoiceCheck}
               </button>
               {invoiceOpened && (
                 <div id="mission-invoice-details">
                   <fieldset>
-                    <legend>
-                      Đánh dấu một dòng cần yêu cầu đối chiếu (nếu có).
-                    </legend>
-                    {invoiceFor(offer).map((line) => (
+                    <legend>{texts.disputeLegend}</legend>
+                    {invoiceFor(offer, config).map((line) => (
                       <label
                         key={line.id}
                         className={disputedLine === line.id ? "is-marked" : ""}
@@ -480,28 +501,26 @@ export function SmartShoppingMiniGame({
                     className="mission-text-button"
                     onClick={() => setDisputedLine("")}
                   >
-                    Không yêu cầu đối chiếu
+                    {texts.noDispute}
                   </button>
                   <p className="mission-invoice-total">
-                    Tổng tạm tính
+                    {texts.invoiceTotal}
                     <strong>
                       {money(
-                        invoiceFor(offer).reduce(
+                        invoiceFor(offer, config).reduce(
                           (sum, line) => sum + line.amount,
                           0,
                         ),
                       )}
                     </strong>
                   </p>
-                  <small>
-                    Yêu cầu được gửi cùng lúc thanh toán. Cửa hàng chỉ sửa khi
-                    dòng đánh dấu thực sự lệch báo giá.
-                  </small>
+                  <small>{texts.disputeNote}</small>
                 </div>
               )}
             </div>
             <div className="mission-planner">
               <PhoneDecision
+                decision={config.decision}
                 offer={offer}
                 budget={budget}
                 reserve={reserve}
@@ -512,8 +531,8 @@ export function SmartShoppingMiniGame({
                 batteryPlan={batteryPlan}
                 setBatteryPlan={setBatteryPlan}
               />
-              <h4>Hồ sơ đã thu thập</h4>
-              {INSPECTIONS.filter((check) =>
+              <h4>{texts.savedFiles}</h4>
+              {inspections.filter((check) =>
                 inspected.includes(`${offer.id}:${check.id}`),
               ).map((check) => (
                 <div className="mission-saved-file" key={check.id}>
@@ -524,9 +543,9 @@ export function SmartShoppingMiniGame({
             </div>
           </div>
           <footer className="mission-footer">
-            <p>Không có gợi ý đúng/sai trước khi thanh toán.</p>
+            <p>{texts.noHints}</p>
             <button type="button" className="c2-primary" onClick={purchase}>
-              Thanh toán & xem một năm sau <ArrowRight size={17} />
+              {texts.pay} <ArrowRight size={17} />
             </button>
           </footer>
         </>
@@ -535,32 +554,35 @@ export function SmartShoppingMiniGame({
       {step === 2 && report && (
         <>
           <div className="mission-result-heading">
-            <span>MỘT NĂM SAU</span>
+            <span>{texts.resultEyebrow}</span>
             <h3>
-              {report.score === 4
-                ? "Bạn đã mua bằng hiểu biết."
-                : "Giá trên nhãn chưa kể hết câu chuyện."}
+              {report.score === report.total
+                ? texts.resultPerfect
+                : texts.resultImperfect}
             </h3>
-            <p>{offer.name} · Xem lại từng tiêu chí bên dưới.</p>
+            <p>{fill(texts.resultSubtitle, { name: offer.name })}</p>
           </div>
           <div className="mission-results">
             <div className="mission-paper">
-              <h3>Tiền đã đi đâu?</h3>
-              {purchaseLedger(offer, report).map((row) => (
+              <h3>{texts.ledgerTitle}</h3>
+              {purchaseLedger(offer, report, config).map((row) => (
                 <p className="mission-ledger-row" key={row.label}>
                   <span>{row.label}</span>
                   <strong>{money(row.amount)}</strong>
                 </p>
               ))}
               <p className="mission-invoice-total">
-                Tổng chi thực tế<strong>{money(report.totalCost)}</strong>
+                {texts.actualTotal}
+                <strong>{money(report.totalCost)}</strong>
               </p>
               <div
                 className={`mission-balance ${report.remaining >= reserve ? "is-good" : "is-risk"}`}
               >
-                <span>Ví còn lại</span>
+                <span>{texts.walletLeft}</span>
                 <strong>{money(report.remaining)}</strong>
-                <small>Quỹ cần giữ: {money(reserve)}</small>
+                <small>
+                  {fill(texts.reserveNeeded, { amount: money(reserve) })}
+                </small>
               </div>
             </div>
             <div className="mission-outcomes">
@@ -569,7 +591,7 @@ export function SmartShoppingMiniGame({
                   key={item.id}
                   className={item.passed ? "is-good" : "is-risk"}
                 >
-                  <span>{item.passed ? "Đúng" : "Chưa đúng"}</span>
+                  <span>{item.passed ? texts.passed : texts.failed}</span>
                   <h4>{item.title}</h4>
                   <p>{item.detail}</p>
                 </article>
@@ -577,25 +599,19 @@ export function SmartShoppingMiniGame({
             </div>
           </div>
           <footer className="mission-footer">
-            <p>
-              Bạn có thể thử phương án khác để so sánh. Kết quả đúng/sai của lần
-              nộp đầu được dùng để xét kết thúc chương.
-            </p>
+            <p>{texts.retryNote}</p>
             <div>
               <button type="button" className="c2-secondary" onClick={retry}>
-                <RotateCcw size={16} /> Thử phương án khác
+                <RotateCcw size={16} /> {texts.retry}
               </button>
               <button type="button" className="c2-primary" onClick={complete}>
-                Trở lại câu chuyện <ArrowRight size={16} />
+                {texts.finish} <ArrowRight size={16} />
               </button>
             </div>
           </footer>
         </>
       )}
-      <p className="mission-simulation-note">
-        Mô phỏng luyện tập · Các thao tác ở đây không trừ tiền trong câu chuyện
-        của An.
-      </p>
+      <p className="mission-simulation-note">{texts.simulationNote}</p>
     </section>
   );
 }

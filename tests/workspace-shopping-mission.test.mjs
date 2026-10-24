@@ -2,7 +2,6 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   buildShoppingOffers,
-  INSPECTIONS,
   evaluatePurchase,
   invoiceFor,
   purchaseLedger,
@@ -12,9 +11,12 @@ import { chapter4V2GameData } from "../src/pages/Kid/Dashboard/data/chapter4V2Vi
 const game = chapter4V2GameData.scenes.find(
   (scene) => scene.game?.id === "SMART_SHOPPING_CH04",
 ).game;
-const offers = buildShoppingOffers(game.phones);
+const config = game.config;
+const INSPECTIONS = config.inspections;
+const offers = buildShoppingOffers(game.phones, config);
 function buy(offer, changes = {}) {
   return evaluatePurchase({
+    config,
     offer,
     inspected: INSPECTIONS.map((check) => `${offer.id}:${check.id}`),
     cancellationDay: String(offer.deadline || ""),
@@ -77,7 +79,7 @@ test("C works for school but leaves a 300000 reserve shortfall", () => {
 test("all invoices add the story service fee; only disputing that row removes it", () => {
   for (const offer of offers) {
     assert.equal(
-      invoiceFor(offer).reduce((sum, row) => sum + row.amount, 0),
+      invoiceFor(offer, config).reduce((sum, row) => sum + row.amount, 0),
       offer.price + 100000,
     );
     assert.equal(buy(offer).fee, 0);
@@ -118,7 +120,7 @@ test("results ledger can format every cost and reconciles with the purchase tota
     for (const cancellationDay of ["", "29", "30"]) {
       for (const disputedLine of ["", "fee", "price"]) {
         const report = buy(offer, { cancellationDay, disputedLine });
-        const rows = purchaseLedger(offer, report);
+        const rows = purchaseLedger(offer, report, config);
         for (const row of rows) {
           assert.ok(Number.isFinite(row.amount), `${offer.id}: ${row.label}`);
           assert.doesNotThrow(() => row.amount.toLocaleString("vi-VN"));
@@ -147,7 +149,7 @@ test("B requires a battery check and an explicit usage plan", () => {
   assert.equal(replace.totalCost, 1550000);
   assert.equal(replace.remaining, 950000);
   assert.equal(
-    purchaseLedger(offers[1], replace).reduce(
+    purchaseLedger(offers[1], replace, config).reduce(
       (sum, row) => sum + row.amount,
       0,
     ),

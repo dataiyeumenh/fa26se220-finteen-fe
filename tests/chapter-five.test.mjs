@@ -3,15 +3,18 @@ import assert from "node:assert/strict";
 import { existsSync } from "node:fs";
 import { chapter5V2GameData as data } from "../src/pages/Kid/Dashboard/data/chapter5V2VisualNovel.js";
 import {
-  challenges,
   gradeRound,
   timelineAt,
   timelineResult,
-  accountForecast,
   chapterFiveLearning,
   gradeReflection,
 } from "../src/pages/Kid/Dashboard/components/game/compoundTimelineRules.js";
 const scenes = new Map(data.scenes.map((scene) => [scene.id, scene]));
+const timelineConfig = data.scenes.find(
+  (scene) => scene.game?.kind === "COMPOUND_TIMELINE",
+).game.config;
+const challenges = timelineConfig.questions;
+const answerOf = (id) => challenges.find((q) => q.id === id).answer;
 const option = (id) =>
   data.scenes
     .flatMap((scene) => scene.options || [])
@@ -22,7 +25,7 @@ const perfectAnswers = Object.fromEntries(
 function perfectHistory() {
   let history = {};
   for (let round = 0; round < 4; round++)
-    history = gradeRound(round, perfectAnswers, history, [
+    history = gradeRound(challenges, round, perfectAnswers, history, [
       "A",
       "B",
       "deadline",
@@ -30,7 +33,7 @@ function perfectHistory() {
   return history;
 }
 const game = {
-  ...timelineResult(perfectHistory()),
+  ...timelineResult(timelineConfig, perfectHistory()),
   gameId: "COMPOUND_TIMELINE_CH05",
 };
 const ledger = {
@@ -137,27 +140,27 @@ test("primary branches preserve the specified stats, pending state and mutually 
   assert.equal(scenes.has("CH05_PROVIDER_REVIEW"), false);
 });
 test("timeline, inflation and early withdrawal arithmetic match the spec", () => {
-  assert.deepEqual(timelineAt(1), { compound: 1050000, simple: 1050000 });
-  assert.deepEqual(timelineAt(2), { compound: 1102500, simple: 1100000 });
-  assert.equal(timelineAt(2).compound - timelineAt(2).simple, 2500);
-  assert.equal(1080000 - timelineAt(1).compound, 30000);
+  assert.deepEqual(timelineAt(1, timelineConfig.timeline), { compound: 1050000, simple: 1050000 });
+  assert.deepEqual(timelineAt(2, timelineConfig.timeline), { compound: 1102500, simple: 1100000 });
+  assert.equal(timelineAt(2, timelineConfig.timeline).compound - timelineAt(2, timelineConfig.timeline).simple, 2500);
+  assert.equal(1080000 - timelineAt(1, timelineConfig.timeline).compound, 30000);
   assert.equal(
-    accountForecast.aBalance,
+    answerOf("aBalance"),
     1000000 + (1000000 * 0.03 * 3) / 12 - 5000 * 3,
   );
-  assert.equal(accountForecast.bBalance, 1000000 + (1000000 * 0.02 * 3) / 12);
+  assert.equal(answerOf("bBalance"), 1000000 + (1000000 * 0.02 * 3) / 12);
 });
 test("submitted mini-game answers cannot be changed or graded again", () => {
   const wrong = { ...perfectAnswers, aInterest: 0, bInterest: 15000 };
-  const first = gradeRound(3, wrong, {}, ["A"]);
-  const revised = gradeRound(3, perfectAnswers, first, ["B"]);
+  const first = gradeRound(challenges, 3, wrong, {}, ["A"]);
+  const revised = gradeRound(challenges, 3, perfectAnswers, first, ["B"]);
   assert.equal(revised.bInterest.firstAttempt, 15000);
   assert.equal(revised.bInterest.firstAttemptCorrect, false);
   assert.equal(revised.bInterest.finalCorrect, false);
   assert.equal(revised.bInterest.attemptCount, 1);
   assert.deepEqual(revised.bInterest.inspectedItems, ["A"]);
   assert.deepEqual(revised, first);
-  const result = timelineResult(perfectHistory());
+  const result = timelineResult(timelineConfig, perfectHistory());
   assert.equal(result.score, 12);
   assert.equal(result.total, challenges.length);
   assert.equal(result.passed, true);
@@ -165,7 +168,7 @@ test("submitted mini-game answers cannot be changed or graded again", () => {
     Object.values(result.competencies).reduce((n, c) => n + c.total, 0),
     result.total,
   );
-  assert.equal(timelineResult({}).passed, false);
+  assert.equal(timelineResult(timelineConfig, {}).passed, false);
 });
 test("account comparison has two named accounts and a separate course reference; no age or replay choice", () => {
   for (const id of ["CH05_SC01_INSPECT", "CH05_SC04_DATA"]) {

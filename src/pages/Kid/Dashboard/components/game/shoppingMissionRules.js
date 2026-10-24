@@ -1,5 +1,10 @@
 // Use the chapter's phone catalog directly so prices and conditions stay aligned.
-export function buildShoppingOffers(phones) {
+// Chữ / số của mini-game nằm trong JSON chương: game.config (khung SMART_SHOPPING).
+const money = (value) => `${value.toLocaleString("vi-VN")}đ`;
+export const fill = (template, values) =>
+  template.replace(/\{(\w+)\}/g, (_, key) => values[key]);
+
+export function buildShoppingOffers(phones, config) {
   return phones.map((phone) => ({
     ...phone,
     name: phone.label,
@@ -7,43 +12,45 @@ export function buildShoppingOffers(phones) {
     monthly: phone.monthlySubscription || 0,
     billedMonths: phone.billedMonthsFirstYear || 0,
     // The practice calendar models a 30-day trial, with renewal on day 30.
-    deadline: phone.trialMonths ? 29 : null,
-    error: "fee",
+    deadline: phone.trialMonths ? config.trialDeadlineDay : null,
+    error: config.invoiceExtra.id,
     claim: phone.shopping.claim,
   }));
 }
-
-export const INSPECTIONS = [
-  { id: "app", label: "Chạy thử ứng dụng học" },
-  { id: "battery", label: "Kiểm định pin & bảo hành" },
-  { id: "terms", label: "Đọc hợp đồng dịch vụ" },
-];
 
 export function inspectOffer(offer, type) {
   return offer.shopping[type];
 }
 
-export function invoiceFor(offer) {
+export function invoiceFor(offer, config) {
+  const { id, label, amount } = config.invoiceExtra;
   return [
     { id: "price", label: offer.label, amount: offer.price },
-    { id: "fee", label: "Phí dịch vụ", amount: 100000 },
+    { id, label, amount },
   ];
 }
 
-export function purchaseLedger(offer, report) {
+export function purchaseLedger(offer, report, config) {
+  const { ledger } = config;
   return [
-    { label: "Máy", amount: offer.price },
+    { label: ledger.phone, amount: offer.price },
     ...(offer.monthly
-      ? [{ label: "Thuê bao 11 tháng", amount: report.subscription }]
+      ? [
+          {
+            label: fill(ledger.subscription, { months: offer.billedMonths }),
+            amount: report.subscription,
+          },
+        ]
       : []),
     ...(report.batteryCost
-      ? [{ label: "Thay pin", amount: report.batteryCost }]
+      ? [{ label: ledger.battery, amount: report.batteryCost }]
       : []),
-    { label: "Chênh lệch hóa đơn chưa xử lý", amount: report.fee },
+    { label: ledger.fee, amount: report.fee },
   ];
 }
 
 export function evaluatePurchase({
+  config,
   offer,
   inspected,
   cancellationDay,
@@ -53,6 +60,8 @@ export function evaluatePurchase({
   batteryChecked = false,
   batteryPlan = "",
 }) {
+  const { aftercare: care, criteria: text, inspections } = config;
+  const extraFee = config.invoiceExtra.amount;
   const cancelled =
     !!offer.monthly &&
     cancellationDay !== "" &&
@@ -61,57 +70,67 @@ export function evaluatePurchase({
     Number(cancellationDay) <= offer.deadline;
   const subscription =
     offer.monthly && !cancelled ? offer.monthly * offer.billedMonths : 0;
-  const fee = disputedLine === offer.error ? 0 : 100000;
+  const fee = disputedLine === offer.error ? 0 : extraFee;
   const batteryCost =
     offer.inspectionRequired && batteryPlan === "replace"
       ? offer.shopping.batteryReplacementCost
       : 0;
   const totalCost = offer.price + subscription + fee + batteryCost;
   const remaining = budget - totalCost;
-  const relevantChecks = INSPECTIONS.filter((check) =>
+  const relevantChecks = inspections.filter((check) =>
     inspected.includes(`${offer.id}:${check.id}`),
   ).length;
+  const allChecks = relevantChecks === inspections.length;
   const batteryManaged =
     !offer.inspectionRequired ||
     (batteryChecked && ["keep", "replace"].includes(batteryPlan));
   const aftercare = offer.monthly
     ? cancelled
-      ? "Đã hủy trước gia hạn và lưu xác nhận."
-      : "Chưa hủy trước gia hạn; phát sinh 11 tháng thuê bao."
+      ? care.cancelled
+      : fill(care.notCancelled, { months: offer.billedMonths })
     : offer.inspectionRequired
       ? batteryManaged
         ? batteryPlan === "replace"
-          ? "Đã thay pin, tính đủ chi phí; độ trễ đa nhiệm vẫn còn."
-          : "Giữ pin cũ và mang sạc cho buổi học; không phát sinh phí thay pin."
-        : "Chưa đo pin hoặc chưa chọn kế hoạch cho buổi học 4 giờ."
-      : "Máy không kèm thuê bao; các tính năng thêm vẫn làm giảm quỹ hoạt động.";
+          ? care.batteryReplaced
+          : care.batteryKept
+        : care.batteryUnmanaged
+      : care.noSubscription;
   const criteria = [
     {
       id: "needs",
       passed: offer.works,
-      title: "Dùng được cho việc học",
+      title: text.needs.title,
       detail: offer.shopping.app,
     },
     {
       id: "budget",
       passed: remaining >= reserve,
-      title: "Giữ được quỹ hoạt động trường",
+      title: text.budget.title,
       detail:
         remaining >= reserve
-          ? "Tổng tiền máy, thuê bao và phí thực trả vẫn giữ đủ quỹ."
-          : `Thiếu ${(reserve - remaining).toLocaleString("vi-VN")}đ cho hoạt động trường. ${offer.exceedsNeeds ? "Máy C đáp ứng việc học nhưng tính năng vượt nhu cầu khiến chi phí vượt mục tiêu." : "Cần tính cả thuê bao và phí ngoài báo giá."}`,
+          ? text.budget.passed
+          : fill(text.budget.failed, {
+              shortfall: money(reserve - remaining),
+              reason: offer.exceedsNeeds
+                ? text.budget.reasonExceedsNeeds
+                : text.budget.reasonHiddenCosts,
+            }),
     },
     {
       id: "evidence",
-      passed: relevantChecks === 3,
-      title: "Mua dựa trên bằng chứng",
-      detail: `Đã kiểm tra ${relevantChecks}/3 hồ sơ của máy mua. ${relevantChecks < 3 ? "Kết quả tốt do may mắn chưa thay thế việc kiểm tra trước mua." : "Đã thử ứng dụng, xem pin và đọc hợp đồng."}`,
+      passed: allChecks,
+      title: text.evidence.title,
+      detail: fill(text.evidence.detail, {
+        checked: relevantChecks,
+        total: inspections.length,
+        note: allChecks ? text.evidence.complete : text.evidence.incomplete,
+      }),
     },
     {
       id: "rights",
       passed: fee === 0 && (!offer.monthly || cancelled) && batteryManaged,
-      title: "Xử lý phí và kế hoạch sử dụng",
-      detail: `${fee ? "Đã trả thêm 100.000đ ngoài báo giá." : "Đã đối chiếu và bỏ phí ngoài báo giá 100.000đ."} ${aftercare}`,
+      title: text.rights.title,
+      detail: `${fill(fee ? text.rights.feePaid : text.rights.feeRemoved, { fee: money(extraFee) })} ${aftercare}`,
     },
   ];
   return {
@@ -123,6 +142,6 @@ export function evaluatePurchase({
     cancelled,
     criteria,
     score: criteria.filter((item) => item.passed).length,
-    total: 4,
+    total: criteria.length,
   };
 }

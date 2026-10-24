@@ -9,11 +9,13 @@ import {
   progressKey,
   saveNovelProgress,
 } from "../../src/pages/Kid/Dashboard/components/game/visualNovelProgress.js";
-import {
-  challenges,
-  timelineResult,
-} from "../../src/pages/Kid/Dashboard/components/game/compoundTimelineRules.js";
+import { timelineResult } from "../../src/pages/Kid/Dashboard/components/game/compoundTimelineRules.js";
 import "../../src/index.css";
+
+const timelineConfig = data.scenes.find(
+  (scene) => scene.game?.kind === "COMPOUND_TIMELINE",
+).game.config;
+const challenges = timelineConfig.questions;
 
 const root = createRoot(document.getElementById("root")),
   output = document.getElementById("progress-result");
@@ -155,7 +157,7 @@ async function run() {
       scenePath: [...checkpoint.scenePath, gameIndex],
       miniGameResults: {
         [game.id]: {
-          ...timelineResult(history),
+          ...timelineResult(timelineConfig, history),
           gameId: game.game.id,
           completed: false,
           ui: {

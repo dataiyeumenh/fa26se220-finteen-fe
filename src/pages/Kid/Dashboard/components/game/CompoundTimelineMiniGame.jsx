@@ -1,53 +1,11 @@
-import { useEffect, useRef, useState } from "react";
-import {
-  challenges,
-  gradeRound,
-  timelineAt,
-  timelineResult,
-} from "./compoundTimelineRules";
+import { Fragment, useEffect, useRef, useState } from "react";
+import { gradeRound, timelineAt, timelineResult } from "./compoundTimelineRules";
 import "./compound-timeline.css";
-const BASE = "/images/finteen-v2/chapter-05/asset-mini-game/compound-timeline";
+import { timelineInputs } from "./miniGameInputs.js";
+// Khung COMPOUND_TIMELINE: chữ, số, đáp án, ảnh đều đọc từ game.config (JSON chương) — khung không giữ nội dung.
 const cash = (n) => `${n.toLocaleString("vi-VN")}đ`;
-const steps = [
-  "Mốc thời gian",
-  "Hai cách tính lãi",
-  "Tiền và sức mua",
-  "Ngày cần tiền",
-];
-const missions = [
-  [
-    "Đi một vòng cùng tiền của bạn",
-    "Bấm Năm 1 rồi Năm 2 để xem tiền thay đổi. Sau đó chọn câu trả lời bên dưới.",
-    "time-calendar",
-  ],
-  [
-    "Hai bảng tăng tiền khác nhau thế nào?",
-    "Nhìn số tiền ở bảng X và Y. Ghép cách tính cho từng bảng, rồi tính phần chênh lệch.",
-    "nominal-money",
-  ],
-  [
-    "Một năm nữa, mình có mua được không?",
-    "So số tiền bạn có với giá của cùng món hàng. Chọn kết quả và lý do của bạn.",
-    "purchasing-power-basket",
-  ],
-  [
-    "Giúp An chuẩn bị tiền học",
-    "So sánh tài khoản A và tài khoản B, rồi đối chiếu lịch đóng học phí bên dưới. Nhập số tiền bằng đồng, không cần dấu chấm. Ví dụ: 20000 là 20.000đ.",
-    "flexible-account",
-  ],
-];
-const facts = {
-  A: [
-    "flexible-account",
-    "Tài khoản A · Rút linh hoạt",
-    "Vốn 1.000.000đ, lãi đơn minh họa 3%/năm, phí 5.000đ/tháng. Có thể rút khi cần.",
-  ],
-  B: [
-    "term-account",
-    "Tài khoản B · Kỳ hạn 12 tháng",
-    "Vốn 1.000.000đ, lãi niêm yết 6%/năm nếu đủ hạn, không phí. Rút sau 3 tháng áp dụng 2%/năm.",
-  ],
-};
+const fill = (template, values) =>
+  template.replace(/\{(\w+)\}/g, (_, key) => values[key]);
 export function CompoundTimelineMiniGame({
   game = {},
   initialResult,
@@ -55,6 +13,8 @@ export function CompoundTimelineMiniGame({
   onComplete,
   className = "",
 }) {
+  const config = game.config;
+  const { rounds, questions: allQuestions, texts, timeline } = config;
   const saved = initialResult?.ui;
   const [round, setRound] = useState(saved?.round ?? 0);
   const [year, setYear] = useState(saved?.year ?? 0);
@@ -74,9 +34,9 @@ export function CompoundTimelineMiniGame({
   const [history, setHistory] = useState(initialResult?.answers || {});
   const [checked, setChecked] = useState(() =>
     Object.fromEntries(
-      [0, 1, 2, 3].map((n) => [
+      rounds.map((_, n) => [
         n,
-        challenges
+        allQuestions
           .filter((q) => q.round === n)
           .every((q) => Boolean(initialResult?.answers?.[q.id])),
       ]),
@@ -93,33 +53,44 @@ export function CompoundTimelineMiniGame({
   }, [onProgress]);
   useEffect(() => {
     progressCallback.current?.({
-      ...timelineResult(history),
+      ...timelineResult(config, history),
       visitedYears: visited,
       ui: { round, year, visited, answers, inspected },
     });
-  }, [round, year, visited, answers, inspected, history]);
-  const questions = challenges.filter((q) => q.round === round);
+  }, [config, round, year, visited, answers, inspected, history]);
+  const step = rounds[round];
+  const lastRound = rounds.length - 1;
+  const questions = allQuestions.filter((q) => q.round === round);
+  const mustVisit = step.mustVisitYears || [];
+  const factIds = (step.facts || []).map((f) => f.id);
   const complete =
     questions.every(
       (q) => answers[q.id] !== undefined && String(answers[q.id]).trim() !== "",
     ) &&
-    (round !== 0 || [1, 2].every((n) => visited.includes(n))) &&
-    (round !== 3 || ["A", "B"].every((id) => inspected.includes(id)));
-  const result = timelineResult(history);
+    mustVisit.every((n) => visited.includes(n)) &&
+    factIds.every((id) => inspected.includes(id));
+  const result = timelineResult(config, history);
   const answeredCount = questions.filter(
     (q) => answers[q.id] !== undefined && String(answers[q.id]).trim() !== "",
   ).length;
-  const missingYears = [1, 2].filter((n) => !visited.includes(n));
-  const missingCards = ["A", "B"].filter((id) => !inspected.includes(id));
+  const missingYears = mustVisit.filter((n) => !visited.includes(n));
+  const missingCards = factIds.filter((id) => !inspected.includes(id));
   const nextTask = checked[round]
-    ? "Đã ghi nhận câu trả lời. Đọc giải thích rồi bấm Tiếp tục."
-    : round === 0 && missingYears.length
-      ? `Hãy ghé ${missingYears.map((n) => `năm ${n}`).join(" và ")} trước nhé.`
-      : round === 3 && missingCards.length
-        ? `Còn ${missingCards.length} thẻ tài khoản chưa mở. Bấm các thẻ phía trên để xem dữ kiện.`
+    ? texts.taskChecked
+    : missingYears.length
+      ? fill(texts.taskVisitYears, {
+          years: missingYears
+            .map((n) => fill(texts.taskYear, { n }))
+            .join(texts.taskYearJoin),
+        })
+      : missingCards.length
+        ? fill(texts.taskOpenFacts, { n: missingCards.length })
         : answeredCount < questions.length
-          ? `Bạn đã trả lời ${answeredCount}/${questions.length} câu. Hoàn thành các câu còn lại rồi bấm Kiểm tra.`
-          : "Đã điền đủ! Bấm Kiểm tra để xem kết quả.";
+          ? fill(texts.taskAnswer, {
+              answered: answeredCount,
+              total: questions.length,
+            })
+          : texts.taskReady;
   function move(next) {
     setRound(next);
     setActiveFact(null);
@@ -137,21 +108,20 @@ export function CompoundTimelineMiniGame({
     setYear(next);
     setVisited((prev) => [...new Set([...prev, next])]);
   }
+  const years = timeline.years;
+  const activeFactData = step.facts?.find((f) => f.id === activeFact);
   return (
     <section
       className={`compound-game ${className}`}
       aria-label={game.title || "Compound Timeline"}
     >
       <header>
-        <span>CHƯƠNG 5 · COMPOUND TIMELINE</span>
-        <h2>Cỗ máy thời gian của tiền</h2>
-        <p>
-          Cùng An thử 4 nhiệm vụ nhỏ. Tiền trong bài tập là giả lập; ví của An
-          vẫn giữ 1.000.000đ.
-        </p>
+        <span>{config.eyebrow}</span>
+        <h2>{config.heading}</h2>
+        <p>{config.intro}</p>
       </header>
-      <ol className="compound-stepper" aria-label="Tiến trình">
-        {steps.map((label, i) => (
+      <ol className="compound-stepper" aria-label={texts.progressLabel}>
+        {rounds.map(({ label }, i) => (
           <li
             key={label}
             aria-current={round === i ? "step" : undefined}
@@ -163,80 +133,73 @@ export function CompoundTimelineMiniGame({
         ))}
       </ol>
       <h3 ref={titleRef} tabIndex={-1}>
-        Vòng {round + 1}: {steps[round]}
+        {fill(texts.roundTitle, { n: round + 1, label: step.label })}
       </h3>
       <aside className="compound-mission">
-        <img src={`${BASE}/${missions[round][2]}.png`} alt="" />
+        <img src={step.mission.image} alt="" />
         <div>
-          <span>NHIỆM VỤ CỦA BẠN</span>
-          <h4>{missions[round][0]}</h4>
-          <p>{missions[round][1]}</p>
+          <span>{texts.missionEyebrow}</span>
+          <h4>{step.mission.title}</h4>
+          <p>{step.mission.text}</p>
         </div>
       </aside>
-      <div className="compound-howto" aria-label="Cách chơi">
-        <span>
-          <b>1</b> Xem dữ kiện
-        </span>
-        <span>
-          <b>2</b> Trả lời
-        </span>
-        <span>
-          <b>3</b> Bấm Kiểm tra
-        </span>
+      <div className="compound-howto" aria-label={texts.howtoLabel}>
+        {config.howto.map((label, i) => (
+          <span key={label}>
+            <b>{i + 1}</b> {label}
+          </span>
+        ))}
       </div>
-      {round === 0 && (
+      {step.view === "timeline" && (
         <div className="compound-panel">
-          <p>
-            Vốn 1.000.000đ · lãi kép cố định 5%/năm. Hãy ghé cả năm 1 và năm 2.
-          </p>
-          <label htmlFor="compound-year">Mốc hiện tại: năm {year}</label>
+          <p>{step.intro}</p>
+          <label htmlFor="compound-year">
+            {fill(step.yearLabel, { year })}
+          </label>
           <input
             id="compound-year"
             type="range"
-            min="0"
-            max="2"
+            min={years[0]}
+            max={years[years.length - 1]}
             step="1"
             value={year}
             onChange={(e) => inspectYear(Number(e.target.value))}
           />
           <div className="compound-actions">
-            {[0, 1, 2].map((n) => (
+            {years.map((n) => (
               <button
                 key={n}
                 aria-pressed={n === year}
                 onClick={() => inspectYear(n)}
               >
-                Năm {n}
+                {fill(texts.yearButton, { n })}
                 {visited.includes(n) ? " ✓" : ""}
               </button>
             ))}
           </div>
           <output className="compound-amount" htmlFor="compound-year">
-            {cash(timelineAt(year).compound)}
+            {cash(timelineAt(year, timeline).compound)}
           </output>
-          <p>
-            Mô hình chưa xét phí, thuế hay biến động. Mức 5% này không phải lãi
-            A hoặc B.
-          </p>
+          <p>{step.note}</p>
         </div>
       )}
-      {round === 1 && (
+      {step.view === "table" && (
         <div className="compound-panel">
           <table>
-            <caption>Cùng vốn 1.000.000đ và mức 5%/năm</caption>
+            <caption>{step.caption}</caption>
             <thead>
               <tr>
-                <th>Mốc</th>
-                <th>Bảng X</th>
-                <th>Bảng Y</th>
+                {step.columns.map((label) => (
+                  <th key={label}>{label}</th>
+                ))}
               </tr>
             </thead>
             <tbody>
-              {[0, 1, 2].map((n) => (
+              {years.map((n) => (
                 <tr key={n}>
-                  <th>Năm {n}</th>
-                  <td>{cash(timelineAt(n).simple)}</td>
-                  <td>{cash(timelineAt(n).compound)}</td>
+                  <th>{fill(texts.yearButton, { n })}</th>
+                  <td>{cash(timelineAt(n, timeline).simple)}</td>
+                  <td>{cash(timelineAt(n, timeline).compound)}</td>
                 </tr>
               ))}
             </tbody>
@@ -255,64 +218,47 @@ export function CompoundTimelineMiniGame({
                 ?
               </span>
               <span>
-                Hai cách tính khác nhau ở đâu?
-                <small>Nhấn để khám phá lãi đơn và lãi kép</small>
+                {step.help.title}
+                <small>{step.help.hint}</small>
               </span>
               <span className="compound-help-toggle" aria-hidden="true">
                 +
               </span>
             </summary>
             <div className="compound-interest-answers">
-              <article>
-                <span>01</span>
-                <h4>Lãi đơn</h4>
-                <p>
-                  Tiền lãi mỗi năm chỉ được tính trên{" "}
-                  <strong>số tiền gửi ban đầu</strong>.
-                </p>
-              </article>
-              <article>
-                <span>02</span>
-                <h4>Lãi kép</h4>
-                <p>
-                  Tiền lãi mỗi năm được tính trên{" "}
-                  <strong>tiền gửi ban đầu và cả phần lãi đã tích lũy</strong>.
-                </p>
-              </article>
+              {step.help.items.map((item) => (
+                <article key={item.number}>
+                  <span>{item.number}</span>
+                  <h4>{item.title}</h4>
+                  <p>
+                    {item.text} <strong>{item.strong}</strong>.
+                  </p>
+                </article>
+              ))}
             </div>
-            <p className="compound-interest-tip">
-              Hãy so số tiền tăng thêm ở từng năm trong hai bảng để tìm cách
-              tính phù hợp.
-            </p>
+            <p className="compound-interest-tip">{step.help.tip}</p>
           </details>
         </div>
       )}
-      {round === 2 && (
+      {step.view === "cards" && (
         <div className="compound-values">
-          <article>
-            <img src={`${BASE}/nominal-money.png`} alt="" />
-            <h4>Tiền sau một năm</h4>
-            <strong>1.050.000đ</strong>
-            <p>Vốn 1.000.000đ · tăng 5%</p>
-          </article>
-          <article>
-            <img src={`${BASE}/purchasing-power-basket.png`} alt="" />
-            <h4>Cùng món hàng</h4>
-            <strong>1.080.000đ</strong>
-            <p>Giá cũ 1.000.000đ · tăng 8%</p>
-          </article>
+          {step.cards.map((card) => (
+            <article key={card.title}>
+              <img src={card.image} alt="" />
+              <h4>{card.title}</h4>
+              <strong>{card.amount}</strong>
+              <p>{card.note}</p>
+            </article>
+          ))}
         </div>
       )}
-      {round === 3 && (
+      {step.view === "facts" && (
         <>
           <div className="compound-panel">
-            <h4>So sánh hai loại tài khoản</h4>
-            <p>
-              A là tài khoản rút linh hoạt; B là tài khoản gửi có kỳ hạn 12
-              tháng. Mở từng thẻ để xem lãi suất, phí và điều kiện rút.
-            </p>
+            <h4>{step.title}</h4>
+            <p>{step.intro}</p>
             <div className="compound-actions">
-              {Object.entries(facts).map(([id, [, label]]) => (
+              {step.facts.map(({ id, label }) => (
                 <button
                   key={id}
                   aria-label={label}
@@ -326,56 +272,49 @@ export function CompoundTimelineMiniGame({
                 </button>
               ))}
             </div>
-            {activeFact && (
+            {activeFactData && (
               <article className="compound-fact">
-                <img src={`${BASE}/${facts[activeFact][0]}.png`} alt="" />
-                <h4>{facts[activeFact][1]}</h4>
-                <p>{facts[activeFact][2]}</p>
+                <img src={activeFactData.image} alt="" />
+                <h4>{activeFactData.label}</h4>
+                <p>{activeFactData.text}</p>
               </article>
             )}
           </div>
           <aside
             className="ch5-course-reference"
-            aria-label="Đối chiếu lịch đóng học phí"
+            aria-label={step.reference.label}
           >
-            <img src={`${BASE}/time-calendar.png`} alt="" />
+            <img src={step.reference.image} alt="" />
             <div>
-              <span>MỐC ĐỂ ĐỐI CHIẾU</span>
-              <h4>Lịch đóng học phí</h4>
-              <p>
-                An cần đủ 1.000.000đ vào cuối tháng 3. Hãy dùng thời hạn này để
-                tính số tiền có thể rút từ từng tài khoản.
-              </p>
+              <span>{step.reference.eyebrow}</span>
+              <h4>{step.reference.title}</h4>
+              <p>{step.reference.text}</p>
             </div>
           </aside>
         </>
       )}
       <div className="compound-answer-heading">
-        <span>ĐẾN LƯỢT BẠN</span>
+        <span>{texts.answerEyebrow}</span>
         <b>
-          {answeredCount}/{questions.length} câu đã trả lời
+          {fill(texts.answeredCount, {
+            answered: answeredCount,
+            total: questions.length,
+          })}
         </b>
       </div>
-      {round === 3 && (
+      {step.formula && (
         <details className="compound-formula">
-          <summary>Cần gợi ý cách tính?</summary>
-          <p>
-            Lãi = tiền ban đầu × lãi suất năm × 3 ÷ 12.
-            <br />
-            Phí = phí mỗi tháng × 3.
-            <br />
-            Tiền dùng được = tiền ban đầu + lãi − phí.
-            <br />
-            Khoản thiếu = học phí − tiền dùng được, nếu kết quả lớn hơn 0.
-          </p>
-          <p>
-            Khi tính, đổi phần trăm thành số: 3% = 0,03; 2% = 0,02. Ba tháng là
-            3/12 của một năm.
-          </p>
-          <p>
-            Chú ý: chọn mức lãi phù hợp ngày rút, không chỉ dòng quảng cáo lớn
-            nhất.
-          </p>
+          <summary>{step.formula.title}</summary>
+          {step.formula.paragraphs.map((lines, i) => (
+            <p key={i}>
+              {lines.map((line, j) => (
+                <Fragment key={j}>
+                  {j > 0 && <br />}
+                  {line}
+                </Fragment>
+              ))}
+            </p>
+          ))}
         </details>
       )}
       <div className="compound-questions">
@@ -409,14 +348,14 @@ export function CompoundTimelineMiniGame({
               ))
             ) : (
               <label>
-                Số tiền (đồng)
+                {texts.moneyLabel}
                 <span className="compound-money-input">
                   <input
                     type="number"
                     min="0"
                     step="1"
                     inputMode="numeric"
-                    placeholder="Nhập số tiền"
+                    placeholder={texts.moneyPlaceholder}
                     value={answers[q.id] ?? ""}
                     onChange={(e) => change(q.id, e.target.value)}
                   />
@@ -424,14 +363,16 @@ export function CompoundTimelineMiniGame({
                 </span>
                 {String(answers[q.id] ?? "").trim() !== "" && (
                   <output className="compound-money-preview">
-                    Bạn nhập: {cash(Number(answers[q.id]))}
+                    {fill(texts.moneyPreview, {
+                      amount: cash(Number(answers[q.id])),
+                    })}
                   </output>
                 )}
               </label>
             )}
             {checked[round] && (
               <p className={history[q.id]?.finalCorrect ? "correct" : "retry"}>
-                {history[q.id]?.finalCorrect ? "✓ Đúng rồi! " : "✗ Chưa đúng. "}
+                {history[q.id]?.finalCorrect ? texts.correct : texts.retry}
                 {q.feedback}
               </p>
             )}
@@ -446,9 +387,9 @@ export function CompoundTimelineMiniGame({
         {checked[round] && (
           <p>
             {questions.every((q) => history[q.id]?.finalCorrect)
-              ? "✦ Bạn đã trả lời đúng các câu trong vòng này."
-              : "Có câu trả lời chưa đúng. Phần giải thích dưới mỗi câu cho biết cách tính và kết quả đúng."}{" "}
-            Câu trả lời đã được ghi nhận và không thể thay đổi.
+              ? texts.roundAllCorrect
+              : texts.roundSomeWrong}{" "}
+            {texts.roundLocked}
           </p>
         )}
       </div>
@@ -461,14 +402,20 @@ export function CompoundTimelineMiniGame({
           disabled={round === 0}
           onClick={() => move(round - 1)}
         >
-          Quay lại
+          {texts.back}
         </button>
         <button
           className="compound-check"
           disabled={!complete || checked[round]}
           onClick={() => {
             if (checked[round] || !complete) return;
-            const nextHistory = gradeRound(round, answers, history, inspected);
+            const nextHistory = gradeRound(
+              allQuestions,
+              round,
+              answers,
+              history,
+              inspected,
+            );
             setHistory(nextHistory);
             setChecked((prev) => ({ ...prev, [round]: true }));
             requestAnimationFrame(() =>
@@ -479,30 +426,28 @@ export function CompoundTimelineMiniGame({
             );
           }}
         >
-          Kiểm tra
+          {texts.check}
         </button>
         <button
           className="compound-next"
           disabled={!checked[round]}
           onClick={() => {
-            if (round < 3) move(round + 1);
+            if (round < lastRound) move(round + 1);
             else if (!submitted.current) {
               submitted.current = true;
               onComplete?.({
                 ...result,
+                inputs: timelineInputs(history),
                 visitedYears: visited,
                 ui: { round, year, visited, answers, inspected },
               });
             }
           }}
         >
-          {round === 3 ? "Trở lại câu chuyện" : "Tiếp tục"}
+          {round === lastRound ? texts.finish : texts.next}
         </button>
       </footer>
-      <p className="compound-note">
-        Mỗi vòng được nộp một lần. Bạn có thể xem lại dữ kiện và giải thích,
-        nhưng không sửa câu trả lời sau khi bấm Kiểm tra.
-      </p>
+      <p className="compound-note">{texts.note}</p>
     </section>
   );
 }

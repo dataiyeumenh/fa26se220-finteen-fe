@@ -1,4 +1,5 @@
 import { FuturePlanMiniGame } from "./FuturePlanMiniGame.jsx";
+import { evaluateCondition, optionLockReason } from "./conditions.js";
 import {
   buildPlanReview,
   chapterEightLearning,
@@ -54,6 +55,38 @@ import {
   recordMiniGameResult,
   summarizeMiniGames,
 } from "./miniGameRules";
+import { buildChapterBatch, flushPendingBatches, submitChapterBatch } from "./playBatch.js";
+
+// Khung mini-game theo `game.kind` (bộ khuôn BE: scene-schema.json → minigameKinds). Dữ liệu cũ chưa có kind (bản 1.1.0)
+// tra theo id cũ (legacyIds của khuôn). Kind lạ → báo chưa có khung, không rơi im lặng vào Cần / Muốn.
+const MINI_GAME_FRAMES = {
+  NEED_WANT: NeedWantMiniGame,
+  BUDGET_BUILDER: BudgetBuilderMiniGame,
+  SAVINGS_RACE: SavingsRaceMiniGame,
+  CAREER_MATCH: CareerMatchMiniGame,
+  SMART_SHOPPING: SmartShoppingMiniGame,
+  COMPOUND_TIMELINE: CompoundTimelineMiniGame,
+  LOAN_DETECTIVE: LoanDetectiveMiniGame,
+  SCAM_OR_SAFE: ScamOrSafeMiniGame,
+  FUTURE_PLAN: FuturePlanMiniGame,
+};
+const LEGACY_KIND = {
+  NEEDS_OR_WANTS_CH01: "NEED_WANT",
+  BUDGET_BUILDER_CH02: "BUDGET_BUILDER",
+  SAVINGS_RACE_CH02: "SAVINGS_RACE",
+  CAREER_MATCH_CH03: "CAREER_MATCH",
+};
+// Khung lưu tiến độ giữa chừng (onProgress / initialResult) và props riêng — giữ đúng như khi còn chọn theo id.
+const PROGRESS_KINDS = new Set(["SMART_SHOPPING", "COMPOUND_TIMELINE", "LOAN_DETECTIVE", "SCAM_OR_SAFE", "FUTURE_PLAN"]);
+const MINI_GAME_PROPS = {
+  NEED_WANT: { className: "h-full", immersive: true },
+  BUDGET_BUILDER: { className: "h-full" },
+  SAVINGS_RACE: { className: "h-full" },
+  CAREER_MATCH: { className: "h-full" },
+  SMART_SHOPPING: { className: "h-full" },
+  COMPOUND_TIMELINE: { className: "h-full" },
+};
+const miniGameKindOf = (game) => game?.kind || LEGACY_KIND[game?.id];
 
 function applyStatEffects(current, effects = {}) {
   const next = { ...current };
@@ -64,49 +97,6 @@ function applyStatEffects(current, effects = {}) {
   return next;
 }
 
-function evaluateCondition(stats, condition, flags = {}) {
-  if (condition?.check || condition?.expression || condition?.formula) {
-    const expression = String(
-      condition.check || condition.expression || condition.formula || "",
-    ).trim();
-
-    if (!expression) return false;
-
-    try {
-      const evaluator = new Function(
-        "stats",
-        "flags",
-        `const { WEALTH = 0, SAVINGS = 0, SAVING = 0, FIQ = 0, HAPPINESS = 0, RISK = 0, GOAL = 0 } = stats || {}; return Boolean(${expression});`,
-      );
-      return evaluator(stats || {}, flags || {});
-    } catch {
-      return false;
-    }
-  }
-
-  if (!condition?.field) return false;
-
-  const left = Number(stats?.[condition.field] ?? 0);
-  const right = Number(condition.value ?? 0);
-
-  switch (condition.operator) {
-    case ">":
-      return left > right;
-    case ">=":
-      return left >= right;
-    case "<":
-      return left < right;
-    case "<=":
-      return left <= right;
-    case "==":
-    case "=":
-      return left === right;
-    case "!=":
-      return left !== right;
-    default:
-      return false;
-  }
-}
 
 function CharacterSprite({ src, alt, position, dimmed = false }) {
   const [broken, setBroken] = useState(false);
@@ -268,6 +258,13 @@ function EndingReport({ report }) {
 }
 
 export function VisualNovelPlayer({ data }) {
+  // Cấu hình mini-game FUTURE_PLAN của chương (nếu có): settlement / bảng kế hoạch cấp chương đọc số liệu từ đây.
+  const futurePlan = useMemo(
+    () =>
+      data.scenes.find((item) => item.game?.kind === "FUTURE_PLAN")?.game
+        .config,
+    [data],
+  );
   const [savedProgress] = useState(() => {
     return loadBrowserNovelProgress(data);
   });
@@ -282,6 +279,7 @@ export function VisualNovelPlayer({ data }) {
           : chapterFiveLearning;
   const gameContainerRef = useRef(null);
   const menuDetailsRef = useRef(null);
+  const batchSentRef = useRef(false); // lô cuối chương đã gửi trong lần chơi này
   const stageRef = useRef(null);
   const dialogueRef = useRef(null);
   const pendingTransitionRef = useRef(null);
@@ -289,7 +287,12 @@ export function VisualNovelPlayer({ data }) {
     new Set(savedProgress?.committedDecisions || []),
   );
   const marketSettlementAppliedRef = useRef(
-    Boolean(savedProgress?.moneyEventsApplied?.CH08_MARKET_SETTLEMENT),
+    Boolean(
+      futurePlan &&
+      savedProgress?.moneyEventsApplied?.[
+        futurePlan.portfolio.settlement.eventId
+      ],
+    ),
   );
   const preloadedImageStateRef = useRef(new Map());
   const preloadingImageRef = useRef(new Map());
@@ -358,7 +361,12 @@ export function VisualNovelPlayer({ data }) {
   const totalScenes = data.scenes.length;
   const scene =
     data.metadata?.chapterId === "CH08"
-      ? resolveFutureScene(data.scenes[sceneIndex], miniGameResults, flags)
+      ? resolveFutureScene(
+          futurePlan.portfolio,
+          data.scenes[sceneIndex],
+          miniGameResults,
+          flags,
+        )
       : data.scenes[sceneIndex];
   const progress = Math.round(((sceneIndex + 1) / totalScenes) * 100);
 
@@ -370,6 +378,16 @@ export function VisualNovelPlayer({ data }) {
     return mapping;
   }, [data.scenes]);
 
+  // Ngữ cảnh điều kiện dùng chung cho rẽ tự động, khoá lựa chọn, kết chương (module conditions.js).
+  const conditionContext = () => ({
+    stats,
+    flags,
+    money,
+    miniGameScore,
+    inspectedIds,
+    choiceLedger,
+  });
+
   const resolveNavigableSceneIndex = (startIndex) => {
     let index = startIndex;
     let guard = 0;
@@ -380,7 +398,7 @@ export function VisualNovelPlayer({ data }) {
 
       if (candidate.type !== "conditional") return index;
 
-      const branchResult = evaluateCondition(stats, candidate.condition, flags);
+      const branchResult = evaluateCondition(candidate.condition, conditionContext(), "scene");
       const targetId = branchResult
         ? candidate.ifTrueSceneId
         : candidate.ifFalseSceneId;
@@ -496,6 +514,23 @@ export function VisualNovelPlayer({ data }) {
     });
   }, [data.sprites, scene.characters]);
 
+  // Tới cảnh kết → gửi lô lên BE (POST /api/play/chapter); mở game → gửi bù lô còn treo. Không chặn trẻ chơi tiếp.
+  useEffect(() => {
+    void flushPendingBatches();
+  }, []);
+  useEffect(() => {
+    if (scene?.type !== "ending" || isReviewing || batchSentRef.current) return;
+    batchSentRef.current = true;
+    const batch = buildChapterBatch(data, choiceLedger, miniGameResults);
+    if (import.meta.env.DEV) window.__finteenLastBatch = batch;
+    void submitChapterBatch(batch).then((outcome) => {
+      if (import.meta.env.DEV) window.__finteenLastSubmit = outcome;
+      if (outcome.failed) console.warn("Chưa gửi được kết quả chương, sẽ gửi lại sau:", outcome.failed);
+    });
+  }, [scene?.type, isReviewing, data, choiceLedger, miniGameResults]);
+
+  const miniGameKind = scene?.type === "minigame" ? miniGameKindOf(scene.game) : undefined;
+  const MiniGameFrame = MINI_GAME_FRAMES[miniGameKind];
   const hasChoiceOptions =
     Array.isArray(scene.options) && scene.options.length > 0;
   const isSceneOnlyScreen = scene.type === "cutscene" || scene.type === "scene";
@@ -565,7 +600,11 @@ export function VisualNovelPlayer({ data }) {
     if (!canGoNext && !completedRequired) return;
 
     if (data.metadata?.chapterId === "CH08" && scene.marketSettlement) {
-      const settlement = chapterEightSettlement(miniGameResults, flags);
+      const settlement = chapterEightSettlement(
+        futurePlan.portfolio,
+        miniGameResults,
+        flags,
+      );
       if (
         !moneyEventsApplied[settlement.eventId] &&
         !marketSettlementAppliedRef.current
@@ -604,13 +643,7 @@ export function VisualNovelPlayer({ data }) {
   const getOptionLock = (option) => {
     const reserveLock = flexibleReserveLock(option, budgetAllocations);
     if (reserveLock) return reserveLock;
-    const requires = option.requires;
-    if (!requires) return null;
-    const unmet =
-      (requires.minMoney != null && money < requires.minMoney) ||
-      (requires.flags || []).some((key) => !flags[key]) ||
-      (requires.inspected || []).some((key) => !inspectedIds[key]);
-    return unmet ? requires.lockedReason || "Chưa đủ điều kiện để chọn." : null;
+    return optionLockReason(option, conditionContext());
   };
 
   const openInspect = (inspect) => {
@@ -620,7 +653,10 @@ export function VisualNovelPlayer({ data }) {
       inspect.planResultFrom
         ? {
             ...inspect,
-            ...buildPlanReview(miniGameResults[inspect.planResultFrom]?.ui),
+            ...buildPlanReview(
+              futurePlan.planner,
+              miniGameResults[inspect.planResultFrom]?.ui,
+            ),
           }
         : inspect,
     );
@@ -704,6 +740,7 @@ export function VisualNovelPlayer({ data }) {
           answer: option.answer || null,
           firstOptionId: previous?.firstOptionId || option.id,
           firstLabel: previous?.firstLabel || option.label || scene.title,
+          chosenAt: new Date().toISOString(),
           firstEvidenceScores: previous
             ? previous.firstEvidenceScores
             : option.evidenceScores || null,
@@ -786,16 +823,27 @@ export function VisualNovelPlayer({ data }) {
 
   const handleMiniGameComplete = (result) => {
     if (isReviewing) return;
-    if (scene.game?.id === "LIFE_PLAN_CH08" && result?.ui?.budgets) {
-      const projection = planProjection(result.ui.budgets);
+    // Cờ lấy từ bảng dự kiến năm: tên cờ do JSON khai (config.planner.projectionFlags), không gán theo id.
+    const projectionFlags = scene.game?.config?.planner?.projectionFlags;
+    if (
+      scene.game?.kind === "FUTURE_PLAN" &&
+      scene.game.config.mode === "planner" &&
+      projectionFlags &&
+      result?.ui?.budgets
+    ) {
+      const projection = planProjection(
+        scene.game.config.planner,
+        result.ui.budgets,
+      );
       setFlags((prev) => ({
         ...prev,
-        plan_draft_feasible: projection.feasible,
-        plan_year_savings: projection.yearSavings,
+        [projectionFlags.feasible]: projection.feasible,
+        [projectionFlags.yearSavings]: projection.yearSavings,
       }));
     }
-    if (scene.game?.id === "COMPOUND_TIMELINE_CH05")
-      setFlags((prev) => ({ ...prev, mini_game_completed: true }));
+    // Cờ bật khi xong mini-game do JSON chương khai (game.onComplete.setFlags), không gán theo id.
+    if (scene.game?.onComplete?.setFlags)
+      setFlags((prev) => ({ ...prev, ...scene.game.onComplete.setFlags }));
     if (result?.allocations) setBudgetAllocations(result.allocations);
     setMiniGameResults((previous) =>
       recordMiniGameResult(
@@ -805,7 +853,7 @@ export function VisualNovelPlayer({ data }) {
           sceneId: scene.id,
           gameId: scene.game?.id || scene.id,
         },
-        result || {},
+        { ...(result || {}), playedAt: new Date().toISOString() },
       ),
     );
     setMiniGameDoneByScene((prev) => ({
@@ -845,6 +893,7 @@ export function VisualNovelPlayer({ data }) {
     setGameFlag(null);
     setFlags({});
     setChoiceLedger({});
+    batchSentRef.current = false;
     setFirstChoiceScores({});
     setInspectedIds({});
     setMoneyEventsApplied({});
@@ -856,64 +905,36 @@ export function VisualNovelPlayer({ data }) {
     setInspectPopup(null);
   };
 
-  const evaluateEndingCondition = (condition) => {
-    if (condition === "DEFAULT_FALLBACK") return true;
-
-    if (typeof condition === "string") {
-      try {
-        const evaluator = new Function(
-          "flag",
-          "evidenceScore",
-          "miniGameCompleted",
-          "stats",
-          "money",
-          "miniGameScore",
-          "flags",
-          "reflectionScore",
-          "choicePercent",
-          "learningScore",
-          "coreCalculationsCorrect",
-          "reflectionCompleted",
-          "miniGameGoalEligible",
-          "miniGameNeedsPractice",
-          `const { SAVING = 0, HAPPINESS = 0, RISK = 0, GOAL = 0 } = stats || {}; return Boolean(${condition});`,
-        );
-
-        const totalEvidenceScore =
-          (evidenceScores.I || 0) +
-          (evidenceScores.C || 0) +
-          (evidenceScores.P || 0);
-
-        const learning = data.endingReport?.choiceGroupMaxima
-          ? learningSummary(choiceLedger, miniGameResults, data.endingReport)
-          : {};
-        const miniGames = chapterMiniGameSummary(
-          miniGameResults,
-          data.endingReport || {},
-        );
-        return evaluator(
-          gameFlag,
-          totalEvidenceScore,
-          miniGameCompleted,
-          stats,
-          money,
-          miniGameScore,
-          flags,
-          reflectionScore,
-          learning.choicePercent,
-          learning.learningScore,
-          learning.coreCalculationsCorrect,
-          learning.reflectionCompleted,
-          miniGames.miniGameGoalEligible,
-          miniGames.miniGameNeedsPractice,
-        );
-      } catch {
-        return false;
-      }
-    }
-
-    return false;
+  // Biến chỉ kết chương / dòng báo cáo dùng — tính khi cần (không tính mỗi lần rẽ / khoá).
+  const endingDerived = () => {
+    const learning = data.endingReport?.choiceGroupMaxima
+      ? learningSummary(choiceLedger, miniGameResults, data.endingReport)
+      : {};
+    const miniGames = chapterMiniGameSummary(
+      miniGameResults,
+      data.endingReport || {},
+    );
+    return {
+      gameFlag,
+      evidenceScore:
+        (evidenceScores.I || 0) + (evidenceScores.C || 0) + (evidenceScores.P || 0),
+      miniGameCompleted,
+      reflectionScore,
+      choicePercent: learning.choicePercent,
+      learningScore: learning.learningScore,
+      coreCalculationsCorrect: learning.coreCalculationsCorrect,
+      reflectionCompleted: learning.reflectionCompleted,
+      miniGameGoalEligible: miniGames.miniGameGoalEligible,
+      miniGameNeedsPractice: miniGames.miniGameNeedsPractice,
+    };
   };
+
+  const evaluateEndingCondition = (condition) =>
+    evaluateCondition(
+      condition,
+      { ...conditionContext(), derived: endingDerived() },
+      "ending",
+    );
 
   const resolveEnding = () => {
     if (!data.endingRules?.endings) return null;
@@ -1465,131 +1486,32 @@ export function VisualNovelPlayer({ data }) {
           </div>
         ) : scene.type === "minigame" ? (
           <div className="vn-minigame-host">
-            {scene.game?.id === "BUDGET_BUILDER_CH02" ? (
-              <BudgetBuilderMiniGame
+            {MiniGameFrame ? (
+              <MiniGameFrame
                 key={`${scene.id}-${scenePath.length}`}
                 game={scene.game}
                 onComplete={handleMiniGameComplete}
-                className="h-full"
-              />
-            ) : scene.game?.id === "SAVINGS_RACE_CH02" ? (
-              <SavingsRaceMiniGame
-                key={`${scene.id}-${scenePath.length}`}
-                game={scene.game}
-                planFlag={gameFlag}
-                onComplete={handleMiniGameComplete}
-                className="h-full"
-              />
-            ) : [
-                "PORTFOLIO_CH08",
-                "CLAIM_REVIEW_CH08",
-                "LIFE_PLAN_CH08",
-              ].includes(scene.game?.id) ? (
-              <FuturePlanMiniGame
-                key={`${scene.id}-${scenePath.length}`}
-                game={scene.game}
-                initialResult={miniGameResults[scene.id]}
-                onProgress={(result) =>
-                  setMiniGameResults((prev) => ({
-                    ...prev,
-                    [scene.id]: {
-                      ...result,
-                      gameId: scene.game.id,
-                      completed: false,
-                    },
-                  }))
-                }
-                onComplete={handleMiniGameComplete}
-              />
-            ) : ["INSURANCE_DESK_CH07", "SCAM_OR_SAFE_CH07"].includes(
-                scene.game?.id,
-              ) ? (
-              <ScamOrSafeMiniGame
-                key={`${scene.id}-${scenePath.length}`}
-                game={scene.game}
-                initialResult={miniGameResults[scene.id]}
-                onProgress={(result) =>
-                  setMiniGameResults((prev) => ({
-                    ...prev,
-                    [scene.id]: {
-                      ...result,
-                      gameId: scene.game.id,
-                      completed: false,
-                    },
-                  }))
-                }
-                onComplete={handleMiniGameComplete}
-              />
-            ) : ["LOAN_OFFERS_CH06", "LOAN_REPAYMENT_CH06"].includes(
-                scene.game?.id,
-              ) ? (
-              <LoanDetectiveMiniGame
-                key={`${scene.id}-${scenePath.length}`}
-                game={scene.game}
-                initialResult={miniGameResults[scene.id]}
-                onProgress={(result) =>
-                  setMiniGameResults((prev) => ({
-                    ...prev,
-                    [scene.id]: {
-                      ...result,
-                      gameId: scene.game.id,
-                      completed: false,
-                    },
-                  }))
-                }
-                onComplete={handleMiniGameComplete}
-              />
-            ) : scene.game?.id === "COMPOUND_TIMELINE_CH05" ? (
-              <CompoundTimelineMiniGame
-                key={`${scene.id}-${scenePath.length}`}
-                game={scene.game}
-                initialResult={miniGameResults[scene.id]}
-                onProgress={(result) =>
-                  setMiniGameResults((prev) => ({
-                    ...prev,
-                    [scene.id]: {
-                      ...result,
-                      gameId: scene.game.id,
-                      completed: false,
-                    },
-                  }))
-                }
-                onComplete={handleMiniGameComplete}
-                className="h-full"
-              />
-            ) : scene.game?.id === "SMART_SHOPPING_CH04" ? (
-              <SmartShoppingMiniGame
-                key={`${scene.id}-${scenePath.length}`}
-                game={scene.game}
-                initialResult={miniGameResults[scene.id]}
-                onProgress={(result) =>
-                  setMiniGameResults((prev) => ({
-                    ...prev,
-                    [scene.id]: {
-                      ...result,
-                      gameId: scene.game.id,
-                      completed: false,
-                    },
-                  }))
-                }
-                onComplete={handleMiniGameComplete}
-                className="h-full"
-              />
-            ) : scene.game?.id === "CAREER_MATCH_CH03" ? (
-              <CareerMatchMiniGame
-                key={`${scene.id}-${scenePath.length}`}
-                game={scene.game}
-                onComplete={handleMiniGameComplete}
-                className="h-full"
+                {...(MINI_GAME_PROPS[miniGameKind] || {})}
+                {...(miniGameKind === "SAVINGS_RACE" ? { planFlag: gameFlag } : {})}
+                {...(PROGRESS_KINDS.has(miniGameKind)
+                  ? {
+                      initialResult: miniGameResults[scene.id],
+                      onProgress: (result) =>
+                        setMiniGameResults((prev) => ({
+                          ...prev,
+                          [scene.id]: {
+                            ...result,
+                            gameId: scene.game.id,
+                            completed: false,
+                          },
+                        })),
+                    }
+                  : {})}
               />
             ) : (
-              <NeedWantMiniGame
-                key={`${scene.id}-${scenePath.length}`}
-                game={scene.game}
-                onComplete={handleMiniGameComplete}
-                className="h-full"
-                immersive
-              />
+              <p className="vn-minigame-unknown" role="alert">
+                Mini-game loại "{miniGameKind || "chưa khai"}" chưa có khung hiển thị.
+              </p>
             )}
           </div>
         ) : hasChoiceOptions ? (

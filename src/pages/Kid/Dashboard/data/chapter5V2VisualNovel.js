@@ -213,6 +213,282 @@ const providerCheck = (id, next) => ({
   nextSceneId: next,
 });
 
+// Mini-game lãi kép (khung COMPOUND_TIMELINE): mọi chữ / số / đáp án / ảnh nằm ở đây, component chỉ là khung
+// (spec bộ khuôn 24/10, cách A). Chữ có "{x}" là mẫu, khung điền số vào.
+const compoundTimelineConfig = {
+  eyebrow: "CHƯƠNG 5 · COMPOUND TIMELINE",
+  heading: "Cỗ máy thời gian của tiền",
+  intro:
+    "Cùng An thử 4 nhiệm vụ nhỏ. Tiền trong bài tập là giả lập; ví của An vẫn giữ 1.000.000đ.",
+  howto: ["Xem dữ kiện", "Trả lời", "Bấm Kiểm tra"],
+  timeline: { principal: 1000000, ratePercent: 5, years: [0, 1, 2] },
+  competencies: ["information", "calculation", "planning"],
+  rounds: [
+    {
+      label: "Mốc thời gian",
+      mission: {
+        title: "Đi một vòng cùng tiền của bạn",
+        text: "Bấm Năm 1 rồi Năm 2 để xem tiền thay đổi. Sau đó chọn câu trả lời bên dưới.",
+        image: `${MINI}/time-calendar.png`,
+      },
+      view: "timeline",
+      mustVisitYears: [1, 2],
+      intro: "Vốn 1.000.000đ · lãi kép cố định 5%/năm. Hãy ghé cả năm 1 và năm 2.",
+      yearLabel: "Mốc hiện tại: năm {year}",
+      note: "Mô hình chưa xét phí, thuế hay biến động. Mức 5% này không phải lãi A hoặc B.",
+    },
+    {
+      label: "Hai cách tính lãi",
+      mission: {
+        title: "Hai bảng tăng tiền khác nhau thế nào?",
+        text: "Nhìn số tiền ở bảng X và Y. Ghép cách tính cho từng bảng, rồi tính phần chênh lệch.",
+        image: `${MINI}/nominal-money.png`,
+      },
+      view: "table",
+      caption: "Cùng vốn 1.000.000đ và mức 5%/năm",
+      columns: ["Mốc", "Bảng X", "Bảng Y"],
+      help: {
+        title: "Hai cách tính khác nhau ở đâu?",
+        hint: "Nhấn để khám phá lãi đơn và lãi kép",
+        items: [
+          {
+            number: "01",
+            title: "Lãi đơn",
+            text: "Tiền lãi mỗi năm chỉ được tính trên",
+            strong: "số tiền gửi ban đầu",
+          },
+          {
+            number: "02",
+            title: "Lãi kép",
+            text: "Tiền lãi mỗi năm được tính trên",
+            strong: "tiền gửi ban đầu và cả phần lãi đã tích lũy",
+          },
+        ],
+        tip: "Hãy so số tiền tăng thêm ở từng năm trong hai bảng để tìm cách tính phù hợp.",
+      },
+    },
+    {
+      label: "Tiền và sức mua",
+      mission: {
+        title: "Một năm nữa, mình có mua được không?",
+        text: "So số tiền bạn có với giá của cùng món hàng. Chọn kết quả và lý do của bạn.",
+        image: `${MINI}/purchasing-power-basket.png`,
+      },
+      view: "cards",
+      cards: [
+        {
+          image: `${MINI}/nominal-money.png`,
+          title: "Tiền sau một năm",
+          amount: "1.050.000đ",
+          note: "Vốn 1.000.000đ · tăng 5%",
+        },
+        {
+          image: `${MINI}/purchasing-power-basket.png`,
+          title: "Cùng món hàng",
+          amount: "1.080.000đ",
+          note: "Giá cũ 1.000.000đ · tăng 8%",
+        },
+      ],
+    },
+    {
+      label: "Ngày cần tiền",
+      mission: {
+        title: "Giúp An chuẩn bị tiền học",
+        text: "So sánh tài khoản A và tài khoản B, rồi đối chiếu lịch đóng học phí bên dưới. Nhập số tiền bằng đồng, không cần dấu chấm. Ví dụ: 20000 là 20.000đ.",
+        image: `${MINI}/flexible-account.png`,
+      },
+      view: "facts",
+      title: "So sánh hai loại tài khoản",
+      intro:
+        "A là tài khoản rút linh hoạt; B là tài khoản gửi có kỳ hạn 12 tháng. Mở từng thẻ để xem lãi suất, phí và điều kiện rút.",
+      facts: [
+        {
+          id: "A",
+          image: `${MINI}/flexible-account.png`,
+          label: "Tài khoản A · Rút linh hoạt",
+          text: "Vốn 1.000.000đ, lãi đơn minh họa 3%/năm, phí 5.000đ/tháng. Có thể rút khi cần.",
+        },
+        {
+          id: "B",
+          image: `${MINI}/term-account.png`,
+          label: "Tài khoản B · Kỳ hạn 12 tháng",
+          text: "Vốn 1.000.000đ, lãi niêm yết 6%/năm nếu đủ hạn, không phí. Rút sau 3 tháng áp dụng 2%/năm.",
+        },
+      ],
+      reference: {
+        label: "Đối chiếu lịch đóng học phí",
+        image: `${MINI}/time-calendar.png`,
+        eyebrow: "MỐC ĐỂ ĐỐI CHIẾU",
+        title: "Lịch đóng học phí",
+        text: "An cần đủ 1.000.000đ vào cuối tháng 3. Hãy dùng thời hạn này để tính số tiền có thể rút từ từng tài khoản.",
+      },
+      formula: {
+        title: "Cần gợi ý cách tính?",
+        paragraphs: [
+          [
+            "Lãi = tiền ban đầu × lãi suất năm × 3 ÷ 12.",
+            "Phí = phí mỗi tháng × 3.",
+            "Tiền dùng được = tiền ban đầu + lãi − phí.",
+            "Khoản thiếu = học phí − tiền dùng được, nếu kết quả lớn hơn 0.",
+          ],
+          [
+            "Khi tính, đổi phần trăm thành số: 3% = 0,03; 2% = 0,02. Ba tháng là 3/12 của một năm.",
+          ],
+          [
+            "Chú ý: chọn mức lãi phù hợp ngày rút, không chỉ dòng quảng cáo lớn nhất.",
+          ],
+        ],
+      },
+    },
+  ],
+  questions: [
+    {
+      id: "growth",
+      round: 0,
+      competency: "calculation",
+      prompt: "Năm 2 có phải chỉ thêm đúng 50.000đ không?",
+      options: ["Đúng", "Không"],
+      answer: "Không",
+      feedback: "Năm 2 tăng 52.500đ: lãi tính trên 1.050.000đ đã gồm lãi năm 1.",
+    },
+    {
+      id: "simple",
+      round: 1,
+      competency: "information",
+      prompt: "Bảng X: ghép cách tính.",
+      options: ["Lãi chỉ trên vốn ban đầu", "Lãi trên vốn và lãi trước đó"],
+      answer: "Lãi chỉ trên vốn ban đầu",
+      feedback: "X là lãi đơn: mỗi năm tính 5% trên vốn ban đầu.",
+    },
+    {
+      id: "compound",
+      round: 1,
+      competency: "information",
+      prompt: "Bảng Y: ghép cách tính.",
+      options: ["Lãi chỉ trên vốn ban đầu", "Lãi trên vốn và lãi trước đó"],
+      answer: "Lãi trên vốn và lãi trước đó",
+      feedback: "Y là lãi kép: lãi được giữ lại để tính lãi kỳ tiếp theo.",
+    },
+    {
+      id: "difference",
+      round: 1,
+      competency: "calculation",
+      prompt: "Cuối năm 2, Y hơn X bao nhiêu đồng?",
+      answer: 2500,
+      feedback: "1.102.500 − 1.100.000 = 2.500đ.",
+    },
+    {
+      id: "basket",
+      round: 2,
+      competency: "planning",
+      prompt: "Nếu hôm nay mua được món đó, một năm nữa thì sao?",
+      options: ["Đủ mua", "Thiếu 30.000đ", "Dư 30.000đ"],
+      answer: "Thiếu 30.000đ",
+      feedback: "Tiền tăng 50.000đ nhưng giá tăng 80.000đ, nên thiếu 30.000đ.",
+    },
+    {
+      id: "power",
+      round: 2,
+      competency: "information",
+      prompt: "Dữ kiện nào giải thích quyết định của bạn?",
+      options: [
+        "Chỉ cần tiền cuối năm cao hơn vốn",
+        "Cần so tiền có được với giá món hàng cùng thời điểm",
+      ],
+      answer: "Cần so tiền có được với giá món hàng cùng thời điểm",
+      feedback: "Tiền danh nghĩa tăng nhưng sức mua đối với món hàng này giảm.",
+    },
+    {
+      id: "aInterest",
+      round: 3,
+      competency: "calculation",
+      prompt:
+        "Nếu gửi 1.000.000đ vào tài khoản A với lãi suất 3%/năm, sau 3 tháng An nhận được bao nhiêu tiền lãi?",
+      answer: 7500,
+      feedback: "1.000.000 × 3% × 3/12 = 7.500đ.",
+    },
+    {
+      id: "aFees",
+      round: 3,
+      competency: "calculation",
+      prompt:
+        "Tài khoản A thu phí 5.000đ mỗi tháng. Sau 3 tháng, An phải trả tổng cộng bao nhiêu tiền phí?",
+      answer: 15000,
+      feedback: "5.000 × 3 = 15.000đ.",
+    },
+    {
+      id: "aBalance",
+      round: 3,
+      competency: "calculation",
+      prompt:
+        "Sau 3 tháng gửi tiền vào tài khoản A, An có thể rút được bao nhiêu tiền, tính cả tiền lãi và trừ toàn bộ phí?",
+      answer: 992500,
+      feedback: "1.000.000 + 7.500 − 15.000 = 992.500đ.",
+    },
+    {
+      id: "aGap",
+      round: 3,
+      competency: "planning",
+      prompt:
+        "Khóa học cần 1.000.000đ. So với số tiền có thể rút từ tài khoản A sau 3 tháng, An còn thiếu bao nhiêu tiền?",
+      answer: 7500,
+      feedback: "1.000.000 − 992.500 = 7.500đ.",
+    },
+    {
+      id: "bInterest",
+      round: 3,
+      competency: "calculation",
+      prompt:
+        "An gửi 1.000.000đ vào tài khoản B nhưng rút sau 3 tháng. Với lãi suất rút trước hạn 2%/năm, An nhận được bao nhiêu tiền lãi?",
+      answer: 5000,
+      feedback:
+        "Rút sớm dùng 2%/năm: 1.000.000 × 2% × 3/12 = 5.000đ; không dùng 6%.",
+    },
+    {
+      id: "bBalance",
+      round: 3,
+      competency: "calculation",
+      prompt:
+        "Tài khoản B không thu phí. Nếu rút sau 3 tháng, An nhận được tổng cộng bao nhiêu tiền gốc và tiền lãi?",
+      answer: 1005000,
+      feedback:
+        "1.000.000 + 5.000 = 1.005.000đ dự kiến, không phải tiền nhận vào ví.",
+    },
+  ],
+  texts: {
+    progressLabel: "Tiến trình",
+    roundTitle: "Vòng {n}: {label}",
+    missionEyebrow: "NHIỆM VỤ CỦA BẠN",
+    howtoLabel: "Cách chơi",
+    yearButton: "Năm {n}",
+    answerEyebrow: "ĐẾN LƯỢT BẠN",
+    answeredCount: "{answered}/{total} câu đã trả lời",
+    moneyLabel: "Số tiền (đồng)",
+    moneyPlaceholder: "Nhập số tiền",
+    moneyPreview: "Bạn nhập: {amount}",
+    correct: "✓ Đúng rồi! ",
+    retry: "✗ Chưa đúng. ",
+    roundAllCorrect: "✦ Bạn đã trả lời đúng các câu trong vòng này.",
+    roundSomeWrong:
+      "Có câu trả lời chưa đúng. Phần giải thích dưới mỗi câu cho biết cách tính và kết quả đúng.",
+    roundLocked: "Câu trả lời đã được ghi nhận và không thể thay đổi.",
+    taskChecked: "Đã ghi nhận câu trả lời. Đọc giải thích rồi bấm Tiếp tục.",
+    taskVisitYears: "Hãy ghé {years} trước nhé.",
+    taskYear: "năm {n}",
+    taskYearJoin: " và ",
+    taskOpenFacts:
+      "Còn {n} thẻ tài khoản chưa mở. Bấm các thẻ phía trên để xem dữ kiện.",
+    taskAnswer:
+      "Bạn đã trả lời {answered}/{total} câu. Hoàn thành các câu còn lại rồi bấm Kiểm tra.",
+    taskReady: "Đã điền đủ! Bấm Kiểm tra để xem kết quả.",
+    back: "Quay lại",
+    check: "Kiểm tra",
+    next: "Tiếp tục",
+    finish: "Trở lại câu chuyện",
+    note: "Mỗi vòng được nộp một lần. Bạn có thể xem lại dữ kiện và giải thích, nhưng không sửa câu trả lời sau khi bấm Kiểm tra.",
+  },
+};
+
 export const chapter5V2GameData = {
   id: "CH05_V2",
   title: "Ngân hàng và lãi",
@@ -537,7 +813,13 @@ export const chapter5V2GameData = {
       title: "Compound Timeline",
       background: bg(3),
       characters: [],
-      game: { id: "COMPOUND_TIMELINE_CH05", title: "Compound Timeline" },
+      game: {
+        id: "COMPOUND_TIMELINE_CH05",
+        kind: "COMPOUND_TIMELINE",
+        title: "Compound Timeline",
+        onComplete: { setFlags: { mini_game_completed: true } },
+        config: compoundTimelineConfig,
+      },
       nextSceneId: "CH05_AFTER_GAME_1",
       knowledgeUnits: knowledge(3),
     },

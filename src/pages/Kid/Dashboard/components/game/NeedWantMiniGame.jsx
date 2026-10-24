@@ -8,8 +8,10 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import "./need-want.css";
+import { compactInputs } from "./miniGameInputs.js";
 
-const zones = [
+// Quầy + các giỏ: game.zones trong JSON chương; thiếu → bộ bản 1.1.0 (giỏ Cần / Muốn).
+const DEFAULT_ZONES = [
   {
     id: "inventory",
     title: "Quầy hàng",
@@ -72,11 +74,13 @@ export function NeedWantMiniGame({
   className,
   immersive = false,
 }) {
+  const zones = game.zones ?? DEFAULT_ZONES;
   const [placements, setPlacements] = useState({});
   const [selected, setSelected] = useState(null);
   const [dragZone, setDragZone] = useState(null);
   const [submitted, setSubmitted] = useState(false);
   const [finished, setFinished] = useState(false);
+  const [firstCheck, setFirstCheck] = useState(null); // vị trí thẻ lúc bấm Kiểm tra lần đầu — BE chấm theo lần này
   const grouped = Object.fromEntries(
     zones.map((zone) => [
       zone.id,
@@ -114,7 +118,12 @@ export function NeedWantMiniGame({
   const finish = () => {
     if (finished) return;
     setFinished(true);
-    onComplete?.({ score: correct, total: game.items.length, passed });
+    onComplete?.({
+      score: correct,
+      total: game.items.length,
+      passed,
+      inputs: compactInputs(firstCheck ?? placements),
+    });
   };
 
   return (
@@ -277,6 +286,7 @@ export function NeedWantMiniGame({
               onClick={() => {
                 setSubmitted(true);
                 setSelected(null);
+                setFirstCheck((first) => first ?? { ...placements });
               }}
             >
               Kiểm tra <Check size={19} />

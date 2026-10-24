@@ -4,8 +4,12 @@ import { MemoryRouter } from "react-router-dom";
 import { VisualNovelPlayer } from "../../src/pages/Kid/Dashboard/components/game/VisualNovelPlayer";
 import { chapter5V2GameData as data } from "../../src/pages/Kid/Dashboard/data/chapter5V2VisualNovel";
 import { progressKey } from "../../src/pages/Kid/Dashboard/components/game/visualNovelProgress.js";
-import { challenges } from "../../src/pages/Kid/Dashboard/components/game/compoundTimelineRules";
 import "../../src/index.css";
+
+const timelineConfig = data.scenes.find(
+  (scene) => scene.game?.kind === "COMPOUND_TIMELINE",
+).game.config;
+const challenges = timelineConfig.questions;
 
 const resultNode = document.getElementById("ch5-browser-result");
 const errors = [];
