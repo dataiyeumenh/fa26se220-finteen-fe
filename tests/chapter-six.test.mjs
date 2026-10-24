@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { existsSync } from "node:fs";
-import { chapter6V2GameData as data } from "../src/pages/Kid/Dashboard/data/chapter6V2VisualNovel.js";
+import { chapter6V2GameData as data } from "./fixtures/content/index.mjs";
 import {
   loanApr,
   loanTotal,

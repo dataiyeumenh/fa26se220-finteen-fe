@@ -1,103 +1,47 @@
 import { Gamepad2 } from "lucide-react";
-import { lazy, Suspense, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import useKidDashboard from "./hooks/useKidDashboard";
 import { VisualNovelPlayer } from "./components/game/VisualNovelPlayer";
-import { loadChapter1V2RuntimeData } from "./data/chapter1V2RuntimeAdapter";
-import { loadChapter2V2RuntimeData } from "./data/chapter2V2RuntimeAdapter";
-import { loadChapter3V2RuntimeData } from "./data/chapter3V2RuntimeAdapter";
-import { usePublishedChapters } from "@/features/internal/hooks";
+import { getChapterContent, getCurrentRelease } from "@/api/content.api";
 
-const StoryPlayer = lazy(() => import("@/features/internal/StoryPlayer"));
+// MỘT nguồn nội dung (Hưng 24/10: "tất cả phải đồng nhất"): mọi chương tải từ bản phát hành hiện tại của BE
+// (GET /api/content/releases/{version}/chapters/{code}) — không còn file tĩnh trong FE, không còn đường StoryPlayer nội bộ.
+const chapterCode = (number) => `CH${String(number).padStart(2, "0")}`;
 
 export default function KidGames() {
   const [searchParams] = useSearchParams();
-  const chapterId = searchParams.get("chapter") || "1";
-  const isChapterOne = chapterId === "1";
-  const isChapterTwo = chapterId === "2";
-  const isChapterThree = chapterId === "3";
-  const isChapterFour = chapterId === "4";
-  const isChapterFive = chapterId === "5";
-  const isChapterSix = chapterId === "6";
-  const isChapterSeven = chapterId === "7";
-  const isChapterEight = chapterId === "8";
-  const published = usePublishedChapters().find(
-    (chapter) => chapter.number === Number(chapterId),
-  );
+  const chapterParam = searchParams.get("chapter") || "1";
+  const chapterNumber = Number(chapterParam);
+  const validChapter = Number.isInteger(chapterNumber) && chapterNumber >= 1 && chapterNumber <= 99;
   const { loading, error } = useKidDashboard();
   const [gameData, setGameData] = useState(null);
   const [runtimeError, setRuntimeError] = useState("");
-  const [loadedChapterId, setLoadedChapterId] = useState(null);
+  const [loadedChapter, setLoadedChapter] = useState(null);
+  const [chapters, setChapters] = useState([]);
 
   useEffect(() => {
     let mounted = true;
-
-    const loadRuntime = async () => {
-      try {
-        const runtimeData = isChapterOne
-          ? await loadChapter1V2RuntimeData()
-          : isChapterTwo
-            ? await loadChapter2V2RuntimeData()
-            : isChapterThree
-              ? await loadChapter3V2RuntimeData()
-              : isChapterFour
-                ? (await import("./data/chapter4V2VisualNovel"))
-                    .chapter4V2GameData
-                : isChapterFive
-                  ? (await import("./data/chapter5V2VisualNovel"))
-                      .chapter5V2GameData
-                  : isChapterSix
-                    ? (await import("./data/chapter6V2VisualNovel"))
-                        .chapter6V2GameData
-                    : isChapterSeven
-                      ? (await import("./data/chapter7V2VisualNovel"))
-                          .chapter7V2GameData
-                      : isChapterEight
-                        ? (await import("./data/chapter8V2VisualNovel"))
-                            .chapter8V2GameData
-                        : null;
-        if (mounted) {
-          if (runtimeData) {
-            setGameData(runtimeData);
-            setLoadedChapterId(chapterId);
-            setRuntimeError("");
-          }
-        }
-      } catch (e) {
-        if (mounted) {
-          setRuntimeError(
-            e.message ||
-              "Runtime data không hợp lệ, đang dùng dữ liệu fallback.",
-          );
-        }
-      }
-    };
-
-    if (
-      isChapterOne ||
-      isChapterTwo ||
-      isChapterThree ||
-      isChapterFour ||
-      isChapterFive ||
-      isChapterSix ||
-      isChapterSeven ||
-      isChapterEight
-    )
-      loadRuntime();
+    if (!validChapter) {
+      getCurrentRelease()
+        .then((release) => mounted && setChapters(release.chapters || []))
+        .catch((e) => mounted && setRuntimeError(e.message));
+      return () => {
+        mounted = false;
+      };
+    }
+    getChapterContent(chapterCode(chapterNumber))
+      .then((content) => {
+        if (!mounted) return;
+        setGameData({ ...content, loadedAt: new Date().toISOString() });
+        setLoadedChapter(chapterNumber);
+        setRuntimeError("");
+      })
+      .catch((e) => mounted && setRuntimeError(e.message || "Không tải được chương."));
     return () => {
       mounted = false;
     };
-  }, [
-    chapterId,
-    isChapterOne,
-    isChapterTwo,
-    isChapterThree,
-    isChapterFour,
-    isChapterFive,
-    isChapterSix,
-    isChapterSeven,
-    isChapterEight,
-  ]);
+  }, [chapterNumber, validChapter]);
 
   return (
     <>
@@ -120,7 +64,7 @@ export default function KidGames() {
         </div>
       )}
 
-      {!loading && !error && !published && isChapterOne && runtimeError && (
+      {!loading && !error && runtimeError && (
         <div
           className="border-2 rounded-2xl p-4 mb-6 text-sm font-bold"
           style={{
@@ -133,102 +77,33 @@ export default function KidGames() {
         </div>
       )}
 
-      {!loading && !error && published && (
-        <Suspense fallback={<p role="status">Đang tải chương đã phát hành…</p>}>
-          <StoryPlayer
-            key={`${published.id}-${published.version.number}`}
-            version={published.version}
-          />
-        </Suspense>
+      {!loading && !error && validChapter && gameData && loadedChapter === chapterNumber && (
+        <VisualNovelPlayer key={gameData.id} data={gameData} />
       )}
-      {!loading &&
-        !error &&
-        !published &&
-        gameData &&
-        loadedChapterId === chapterId &&
-        (isChapterOne ||
-          isChapterTwo ||
-          isChapterThree ||
-          isChapterFour ||
-          isChapterFive ||
-          isChapterSix ||
-          isChapterSeven ||
-          isChapterEight) && (
-          <VisualNovelPlayer key={gameData.id} data={gameData} />
-        )}
 
-      {!loading &&
-        !error &&
-        !published &&
-        !isChapterOne &&
-        !isChapterTwo &&
-        !isChapterThree &&
-        !isChapterFour &&
-        !isChapterFive &&
-        !isChapterSix &&
-        !isChapterSeven &&
-        !isChapterEight && (
-          <div className="mx-auto max-w-5xl space-y-4">
-            <div className="rounded-3xl border border-amber-200 bg-white p-8 text-center">
-              <Gamepad2 className="mx-auto mb-4 h-12 w-12 text-amber-500" />
-              <h1 className="text-2xl font-bold text-gray-800">
-                Chọn chương để bắt đầu
-              </h1>
-              <p className="mt-3 text-gray-600">
-                Chọn một chương để vào visual novel tương ứng.
-              </p>
-            </div>
-
-            <div className="grid gap-4 md:grid-cols-2">
+      {!loading && !error && !validChapter && (
+        <div className="mx-auto max-w-5xl space-y-4">
+          <div className="rounded-3xl border border-amber-200 bg-white p-8 text-center">
+            <Gamepad2 className="mx-auto mb-4 h-12 w-12 text-amber-500" />
+            <h1 className="text-2xl font-bold text-gray-800">Chọn chương để bắt đầu</h1>
+            <p className="mt-3 text-gray-600">Chọn một chương để vào visual novel tương ứng.</p>
+          </div>
+          <div className="grid gap-4 md:grid-cols-2">
+            {chapters.map((chapter) => (
               <Link
-                to="/dashboard/demo/play?chapter=1"
+                key={chapter.code}
+                to={`/dashboard/demo/play?chapter=${chapter.chapterNumber}`}
                 className="rounded-3xl border border-amber-200 bg-white p-6 text-left transition hover:-translate-y-0.5 hover:shadow-lg"
               >
                 <div className="text-xs font-bold uppercase tracking-widest text-amber-600">
-                  Chapter 1
+                  Chương {chapter.chapterNumber}
                 </div>
-                <h2 className="mt-2 text-2xl font-black text-gray-900">
-                  Khám phá tiền tệ
-                </h2>
-                <p className="mt-2 text-sm text-gray-600">
-                  Hành trình đầu tiên về nhu cầu, mong muốn và tư duy tài chính.
-                </p>
+                <h2 className="mt-2 text-2xl font-black text-gray-900">{chapter.title}</h2>
               </Link>
-
-              <Link
-                to="/dashboard/demo/play?chapter=2"
-                className="rounded-3xl border border-sky-200 bg-white p-6 text-left transition hover:-translate-y-0.5 hover:shadow-lg"
-              >
-                <div className="text-xs font-bold uppercase tracking-widest text-sky-600">
-                  Chapter 2
-                </div>
-                <h2 className="mt-2 text-2xl font-black text-gray-900">
-                  Quản lý chi tiêu
-                </h2>
-                <p className="mt-2 text-sm text-gray-600">
-                  Trải nghiệm trọ học, flash sale và bài học tiết kiệm trong đời
-                  sống cấp 3.
-                </p>
-              </Link>
-
-              <Link
-                to="/dashboard/demo/play?chapter=3"
-                className="rounded-3xl border border-violet-200 bg-white p-6 text-left transition hover:-translate-y-0.5 hover:shadow-lg"
-              >
-                <div className="text-xs font-bold uppercase tracking-widest text-violet-600">
-                  Chapter 3
-                </div>
-                <h2 className="mt-2 text-2xl font-black text-gray-900">
-                  Công việc đầu tiên
-                </h2>
-                <p className="mt-2 text-sm text-gray-600">
-                  Tìm kiếm cơ hội việc làm, so sánh việc thiết kế hoặc làm hoa
-                  hồng.
-                </p>
-              </Link>
-            </div>
+            ))}
           </div>
-        )}
+        </div>
+      )}
     </>
   );
 }

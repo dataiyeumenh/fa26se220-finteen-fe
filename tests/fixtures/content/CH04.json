@@ -1,0 +1,3195 @@
+{
+ "id": "CH04_V2",
+ "title": "Mua thông minh",
+ "version": "2.1-expanded",
+ "initialMoney": 2500000,
+ "initialStats": {
+  "SAVING": 50,
+  "HAPPINESS": 50,
+  "RISK": 30,
+  "GOAL": 50,
+  "WEALTH": 0
+ },
+ "metadata": {
+  "chapterId": "CH04",
+  "persistProgress": true,
+  "targetAge": 16,
+  "goalDescription": "Mua điện thoại đáp ứng học tập, tổng chi phí năm đầu tối đa 2.000.000đ; kiểm tra chứng từ và thuê bao.",
+  "coreKnowledgeUnits": [
+   "D03.04",
+   "D03.06",
+   "D03.07",
+   "D03.08"
+  ],
+  "allKnowledgeUnits": [
+   "D03.04",
+   "D03.05",
+   "D03.06",
+   "D03.07",
+   "D03.08",
+   "D03.09",
+   "D07.08",
+   "D07.09",
+   "D08.02"
+  ],
+  "reservedMoney": 500000,
+  "firstYearBudget": 2000000,
+  "initialStatsSource": "Giá trị khởi tạo theo cấu trúc các chương hiện có; kịch bản chỉ chốt các delta và ngưỡng ending.",
+  "integrationRequirements": [
+   "Đăng ký SMART_SHOPPING_CH04 trong VisualNovelPlayer trước khi chạy chương.",
+   "Reflection hiện dùng lựa chọn theo mức rubric; cần UI trả lời mở nếu muốn chấm câu trả lời tự do.",
+   "Mini-game Smart Shopping v3 sử dụng 4 vòng: Inspect, Total Cost, Compare, Explain."
+  ]
+ },
+ "sprites": {
+  "AN": {
+   "an-neutral.png": "/images/finteen-v2/chapter-04/char/an/an-neutral.png",
+   "an-thinking.png": "/images/finteen-v2/chapter-04/char/an/an-thinking.png",
+   "an-worried-money.png": "/images/finteen-v2/chapter-04/char/an/an-worried-money.png",
+   "an-relieved.png": "/images/finteen-v2/chapter-04/char/an/an-relieved.png"
+  },
+  "MINH": {
+   "minh-neutral.png": "/images/finteen-v2/chapter-04/char/minh/minh-neutral.png",
+   "minh-inviting.png": "/images/finteen-v2/chapter-04/char/minh/minh-inviting.png"
+  },
+  "CO_LINH": {
+   "co-linh-neutral.png": "/images/finteen-v2/chapter-04/char/co-linh/co-linh-neutral.png",
+   "co-linh-explaining.png": "/images/finteen-v2/chapter-04/char/co-linh/co-linh-explaining.png",
+   "co-linh-encouraging.png": "/images/finteen-v2/chapter-04/char/co-linh/co-linh-encouraging.png"
+  },
+  "SHOP_ASSISTANT": {
+   "shop-assistant-neutral.png": "/images/finteen-v2/chapter-04/char/shop-assistant/shop-assistant-neutral.png",
+   "shop-assistant-explaining.png": "/images/finteen-v2/chapter-04/char/shop-assistant/shop-assistant-explaining.png"
+  }
+ },
+ "scenes": [
+  {
+   "id": "CH04_SC01_ART",
+   "type": "inspect",
+   "title": "Mua thông minh",
+   "background": "/images/finteen-v2/chapter-04/scene/sc01-phone-needs.png",
+   "sceneArt": "/images/finteen-v2/chapter-04/scene/sc01-phone-needs.png",
+   "characters": [],
+   "nextSceneId": "CH04_SC01_B01",
+   "knowledgeUnits": [
+    "D03.04",
+    "D03.05",
+    "D03.06",
+    "D03.09"
+   ]
+  },
+  {
+   "id": "CH04_SC01_B01",
+   "type": "dialogue",
+   "title": "Lại hết pin giữa giờ học rồi. Ứng dụng học cũng không cập nhật được nữa... Mình phải mua máy khác thôi.",
+   "background": "/images/finteen-v2/chapter-04/bg/bg08-phone-shop.png",
+   "speaker": "An",
+   "speakerId": "AN",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "worried-money",
+     "src": "/images/finteen-v2/chapter-04/char/an/an-worried-money.png",
+     "position": "center"
+    }
+   ],
+   "text": "Lại hết pin giữa giờ học rồi. Ứng dụng học cũng không cập nhật được nữa... Mình phải mua máy khác thôi.",
+   "nextSceneId": "CH04_SC01_B02",
+   "knowledgeUnits": [
+    "D03.04",
+    "D03.05",
+    "D03.06",
+    "D03.09"
+   ]
+  },
+  {
+   "id": "CH04_SC01_B02",
+   "type": "dialogue",
+   "title": "Mẹ cho mình tự quản 2 triệu rưỡi. Nhưng tháng sau còn hoạt động ở trường cần 500 ngàn.",
+   "background": "/images/finteen-v2/chapter-04/bg/bg08-phone-shop.png",
+   "speaker": "An",
+   "speakerId": "AN",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "thinking",
+     "src": "/images/finteen-v2/chapter-04/char/an/an-thinking.png",
+     "position": "center"
+    }
+   ],
+   "text": "Mẹ cho mình tự quản 2 triệu rưỡi. Nhưng tháng sau còn hoạt động ở trường cần 500 ngàn.",
+   "nextSceneId": "CH04_SC01_B03",
+   "knowledgeUnits": [
+    "D03.04",
+    "D03.05",
+    "D03.06",
+    "D03.09"
+   ],
+   "inspect": {
+    "id": "ch04_needs",
+    "buttonText": "Xem nhu cầu và ngân sách",
+    "popupImage": "/images/finteen-v2/chapter-04/props/shopping-budget-envelope.png",
+    "dataText": "Tiền: 2.500.000đ. Cần giữ 500.000đ cho hoạt động trường; giới hạn chi phí: 2.000.000đ. Máy phải chạy được ứng dụng học, pin sử dụng ổn và có điều kiện bảo hành rõ ràng. Không có nguồn tiền bổ sung chắc chắn."
+   }
+  },
+  {
+   "id": "CH04_SC01_B03",
+   "type": "dialogue",
+   "title": "Ê An! Tớ mới xem mẫu C, camera đẹp và chơi game rất mượt. Mua giống tớ đi, cả nhóm dùng chung mẫu cho vui!",
+   "background": "/images/finteen-v2/chapter-04/bg/bg08-phone-shop.png",
+   "speaker": "Minh",
+   "speakerId": "MINH",
+   "characters": [
+    {
+     "id": "MINH",
+     "expression": "inviting",
+     "src": "/images/finteen-v2/chapter-04/char/minh/minh-inviting.png",
+     "position": "center"
+    }
+   ],
+   "text": "Ê An! Tớ mới xem mẫu C, camera đẹp và chơi game rất mượt. Mua giống tớ đi, cả nhóm dùng chung mẫu cho vui!",
+   "nextSceneId": "CH04_SC01_B04",
+   "knowledgeUnits": [
+    "D03.04",
+    "D03.05",
+    "D03.06",
+    "D03.09"
+   ]
+  },
+  {
+   "id": "CH04_SC01_B04",
+   "type": "dialogue",
+   "title": "Nhưng tớ chỉ cần dùng ứng dụng học, liên lạc và xem video. Tớ không chắc cần nhiều tính năng như thế.",
+   "background": "/images/finteen-v2/chapter-04/bg/bg08-phone-shop.png",
+   "speaker": "An",
+   "speakerId": "AN",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "thinking",
+     "src": "/images/finteen-v2/chapter-04/char/an/an-thinking.png",
+     "position": "center"
+    }
+   ],
+   "text": "Nhưng tớ chỉ cần dùng ứng dụng học, liên lạc và xem video. Tớ không chắc cần nhiều tính năng như thế.",
+   "nextSceneId": "CH04_SC01_B05",
+   "knowledgeUnits": [
+    "D03.04",
+    "D03.05",
+    "D03.06",
+    "D03.09"
+   ]
+  },
+  {
+   "id": "CH04_SC01_B05",
+   "type": "dialogue",
+   "title": "Máy này mạnh hơn, cậu lo gì mà không chạy được ứng dụng học.",
+   "background": "/images/finteen-v2/chapter-04/bg/bg08-phone-shop.png",
+   "speaker": "Minh",
+   "speakerId": "MINH",
+   "characters": [
+    {
+     "id": "MINH",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-04/char/minh/minh-neutral.png",
+     "position": "center"
+    }
+   ],
+   "text": "Máy này mạnh hơn, cậu lo gì mà không chạy được ứng dụng học.",
+   "nextSceneId": "CH04_SC01_B06",
+   "knowledgeUnits": [
+    "D03.04",
+    "D03.05",
+    "D03.06",
+    "D03.09"
+   ]
+  },
+  {
+   "id": "CH04_SC01_B06",
+   "type": "dialogue",
+   "title": "Cả ba mẫu đều chạy được ứng dụng học. Em nên xem nhu cầu, giá, pin, bảo hành và các chi phí kèm theo.",
+   "background": "/images/finteen-v2/chapter-04/bg/bg08-phone-shop.png",
+   "speaker": "Nhân viên",
+   "speakerId": "SHOP_ASSISTANT",
+   "characters": [
+    {
+     "id": "SHOP_ASSISTANT",
+     "expression": "explaining",
+     "src": "/images/finteen-v2/chapter-04/char/shop-assistant/shop-assistant-explaining.png",
+     "position": "center"
+    }
+   ],
+   "text": "Cả ba mẫu đều chạy được ứng dụng học. Em nên xem nhu cầu, giá, pin, bảo hành và các chi phí kèm theo.",
+   "nextSceneId": "CH04_SC01_PRIORITY",
+   "knowledgeUnits": [
+    "D03.04",
+    "D03.05",
+    "D03.06",
+    "D03.09"
+   ]
+  },
+  {
+   "id": "CH04_SC01_PRIORITY",
+   "type": "choice",
+   "title": "Điều nào quan trọng nhất với hoàn cảnh của An?",
+   "background": "/images/finteen-v2/chapter-04/bg/bg08-phone-shop.png",
+   "characters": [],
+   "speaker": "An",
+   "speakerId": "AN",
+   "text": "Điều nào quan trọng nhất với hoàn cảnh của An?",
+   "prompt": "Điều nào quan trọng nhất với hoàn cảnh của An?",
+   "options": [
+    {
+     "id": "CH04_PRIORITY_NEEDS",
+     "label": "Đủ ứng dụng học, pin và bảo hành phù hợp với tổng ngân sách",
+     "setFlags": {
+      "priorities_checked": true
+     },
+     "nextSceneId": "CH04_SC01_PRIORITY_OK"
+    },
+    {
+     "id": "CH04_PRIORITY_FRIENDS",
+     "label": "Mẫu mà bạn bè đang dùng, vì chắc chắn hợp với mình",
+     "setFlags": {
+      "priorities_checked": true
+     },
+     "nextSceneId": "CH04_SC01_PRIORITY_PEER"
+    },
+    {
+     "id": "CH04_PRIORITY_CHEAP",
+     "label": "Mẫu nào càng rẻ càng tốt",
+     "setFlags": {
+      "priorities_checked": true
+     },
+     "nextSceneId": "CH04_SC01_PRIORITY_CHEAP_FB"
+    }
+   ],
+   "knowledgeUnits": [
+    "D03.04",
+    "D03.05",
+    "D03.06",
+    "D03.09"
+   ],
+   "choiceGroup": "CH04_PRIORITY_WARMUP"
+  },
+  {
+   "id": "CH04_SC01_PRIORITY_OK",
+   "type": "dialogue",
+   "title": "Đúng rồi! Giá chỉ là một phần. Máy phải đáp ứng học tập và không vượt kế hoạch trường.",
+   "background": "/images/finteen-v2/chapter-04/bg/bg08-phone-shop.png",
+   "speaker": "An",
+   "speakerId": "AN",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "relieved",
+     "src": "/images/finteen-v2/chapter-04/char/an/an-relieved.png",
+     "position": "center"
+    }
+   ],
+   "text": "Đúng rồi! Giá chỉ là một phần. Máy phải đáp ứng học tập và không vượt kế hoạch trường.",
+   "nextSceneId": "CH04_SC02_ART",
+   "knowledgeUnits": [
+    "D03.04",
+    "D03.05",
+    "D03.06",
+    "D03.09"
+   ]
+  },
+  {
+   "id": "CH04_SC01_PRIORITY_PEER",
+   "type": "dialogue",
+   "title": "Minh muốn mua máy C, nhưng nhu cầu và khoản tiền cần giữ của hai đứa khác nhau. Mình nên cân nhắc thật kĩ.",
+   "background": "/images/finteen-v2/chapter-04/bg/bg08-phone-shop.png",
+   "speaker": "An",
+   "speakerId": "AN",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "thinking",
+     "src": "/images/finteen-v2/chapter-04/char/an/an-thinking.png",
+     "position": "center"
+    }
+   ],
+   "text": "Minh muốn mua máy C, nhưng nhu cầu và khoản tiền cần giữ của hai đứa khác nhau. Mình nên cân nhắc thật kĩ.",
+   "nextSceneId": "CH04_SC02_ART",
+   "knowledgeUnits": [
+    "D03.04",
+    "D03.05",
+    "D03.06",
+    "D03.09"
+   ]
+  },
+  {
+   "id": "CH04_SC01_PRIORITY_CHEAP_FB",
+   "type": "dialogue",
+   "title": "Giá thấp chưa nói đủ. Máy cũ cần xem tình trạng pin, sửa chữa và bảo hành để biết giá trị sử dụng.",
+   "background": "/images/finteen-v2/chapter-04/bg/bg08-phone-shop.png",
+   "speaker": "Nhân viên",
+   "speakerId": "SHOP_ASSISTANT",
+   "characters": [
+    {
+     "id": "SHOP_ASSISTANT",
+     "expression": "explaining",
+     "src": "/images/finteen-v2/chapter-04/char/shop-assistant/shop-assistant-explaining.png",
+     "position": "center"
+    }
+   ],
+   "text": "Giá thấp chưa nói đủ. Máy cũ cần xem tình trạng pin, sửa chữa và bảo hành để biết giá trị sử dụng.",
+   "nextSceneId": "CH04_SC02_ART",
+   "knowledgeUnits": [
+    "D03.04",
+    "D03.05",
+    "D03.06",
+    "D03.09"
+   ]
+  },
+  {
+   "id": "CH04_SC02_ART",
+   "type": "inspect",
+   "title": "Mua thông minh",
+   "background": "/images/finteen-v2/chapter-04/scene/sc02-comparing-three-phones.png",
+   "sceneArt": "/images/finteen-v2/chapter-04/scene/sc02-comparing-three-phones.png",
+   "characters": [],
+   "nextSceneId": "CH04_SC02_B01",
+   "knowledgeUnits": [
+    "D03.04",
+    "D03.07",
+    "D03.08",
+    "D03.09",
+    "D08.02"
+   ],
+   "inspect": {
+    "id": "ch04_comparison",
+    "buttonText": "Xem nhu cầu, giá và điều kiện ba máy",
+    "popupImages": [
+     {
+      "src": "/images/finteen-v2/chapter-04/asset-mini-game/smart-shopping/phone-a-new.png",
+      "caption": "Máy A (mới)",
+      "description": "1.600.000đ"
+     },
+     {
+      "src": "/images/finteen-v2/chapter-04/asset-mini-game/smart-shopping/phone-b-used.png",
+      "caption": "Máy B (đã qua sử dụng)",
+      "description": "1.300.000đ"
+     },
+     {
+      "src": "/images/finteen-v2/chapter-04/asset-mini-game/smart-shopping/phone-c-premium.png",
+      "caption": "Máy C (nhiều tính năng)",
+      "description": "2.300.000đ"
+     }
+    ],
+    "dataText": "Máy A: 1.600.000đ, bảo hành 12 tháng. Dùng thử một tháng, tự gia hạn nếu không hủy.\nGiữ thuê bao: 1.600.000 + 11 × 50.000 = 2.150.000đ. Hủy trước gia hạn: 1.600.000đ.\nMáy B: 1.300.000đ, bảo hành máy 6 tháng, không gồm hao mòn pin. Chạy được ứng dụng học nhưng chậm khi đa nhiệm. Cần kiểm tra pin; có thể giữ pin và mang sạc hoặc thay pin 250.000đ.\nMáy C: 2.300.000đ, nhiều tính năng vượt nhu cầu và vượt mục tiêu chi.",
+    "hotspot": {
+     "x": 20.4,
+     "y": 63.2,
+     "width": 36.1,
+     "height": 23.8
+    },
+    "autoNextSceneOnClose": true
+   }
+  },
+  {
+   "id": "CH04_SC02_B01",
+   "type": "dialogue",
+   "title": "Máy A mới giá 1 triệu 600, bảo hành 12 tháng và được dùng thử một tháng dịch vụ đi kèm.",
+   "background": "/images/finteen-v2/chapter-04/bg/bg08b-phone-comparison-counter.png",
+   "speaker": "Nhân viên",
+   "speakerId": "SHOP_ASSISTANT",
+   "characters": [
+    {
+     "id": "SHOP_ASSISTANT",
+     "expression": "explaining",
+     "src": "/images/finteen-v2/chapter-04/char/shop-assistant/shop-assistant-explaining.png",
+     "position": "center"
+    }
+   ],
+   "text": "Máy A mới giá 1 triệu 600, bảo hành 12 tháng và được dùng thử một tháng dịch vụ đi kèm.",
+   "nextSceneId": "CH04_SC02_B02",
+   "knowledgeUnits": [
+    "D03.04",
+    "D03.07",
+    "D03.08",
+    "D03.09",
+    "D08.02"
+   ]
+  },
+  {
+   "id": "CH04_SC02_B02",
+   "type": "dialogue",
+   "title": "Có quà dùng thử nữa à? Máy A nghe cũng hời đấy!",
+   "background": "/images/finteen-v2/chapter-04/bg/bg08b-phone-comparison-counter.png",
+   "speaker": "Minh",
+   "speakerId": "MINH",
+   "characters": [
+    {
+     "id": "MINH",
+     "expression": "inviting",
+     "src": "/images/finteen-v2/chapter-04/char/minh/minh-inviting.png",
+     "position": "center"
+    }
+   ],
+   "text": "Có quà dùng thử nữa à? Máy A nghe cũng hời đấy!",
+   "nextSceneId": "CH04_SC02_B03",
+   "knowledgeUnits": [
+    "D03.04",
+    "D03.07",
+    "D03.08",
+    "D03.09",
+    "D08.02"
+   ]
+  },
+  {
+   "id": "CH04_SC02_B03",
+   "type": "dialogue",
+   "title": "Dùng thử xong thì sao ạ?",
+   "background": "/images/finteen-v2/chapter-04/bg/bg08b-phone-comparison-counter.png",
+   "speaker": "An",
+   "speakerId": "AN",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "thinking",
+     "src": "/images/finteen-v2/chapter-04/char/an/an-thinking.png",
+     "position": "center"
+    }
+   ],
+   "text": "Dùng thử xong thì sao ạ?",
+   "nextSceneId": "CH04_SC02_B04",
+   "knowledgeUnits": [
+    "D03.04",
+    "D03.07",
+    "D03.08",
+    "D03.09",
+    "D08.02"
+   ]
+  },
+  {
+   "id": "CH04_SC02_B04",
+   "type": "dialogue",
+   "title": "Nếu không hủy trước kỳ gia hạn, từ tháng thứ hai sẽ thu 50 ngàn mỗi tháng.",
+   "background": "/images/finteen-v2/chapter-04/bg/bg08b-phone-comparison-counter.png",
+   "speaker": "Nhân viên",
+   "speakerId": "SHOP_ASSISTANT",
+   "characters": [
+    {
+     "id": "SHOP_ASSISTANT",
+     "expression": "explaining",
+     "src": "/images/finteen-v2/chapter-04/char/shop-assistant/shop-assistant-explaining.png",
+     "position": "center"
+    }
+   ],
+   "text": "Nếu không hủy trước kỳ gia hạn, từ tháng thứ hai sẽ thu 50 ngàn mỗi tháng.",
+   "nextSceneId": "CH04_SC02_B05",
+   "knowledgeUnits": [
+    "D03.04",
+    "D03.07",
+    "D03.08",
+    "D03.09",
+    "D08.02"
+   ]
+  },
+  {
+   "id": "CH04_SC02_B05",
+   "type": "dialogue",
+   "title": "50 ngàn mỗi tháng á? Giữ cả năm thì số tiền sẽ chênh lên khá cao, vượt giới hạn của mình.",
+   "background": "/images/finteen-v2/chapter-04/bg/bg08b-phone-comparison-counter.png",
+   "speaker": "An",
+   "speakerId": "AN",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "thinking",
+     "src": "/images/finteen-v2/chapter-04/char/an/an-thinking.png",
+     "position": "center"
+    }
+   ],
+   "text": "50 ngàn mỗi tháng á? Giữ cả năm thì số tiền sẽ chênh lên khá cao, vượt giới hạn của mình.",
+   "nextSceneId": "CH04_SC02_B06",
+   "knowledgeUnits": [
+    "D03.04",
+    "D03.07",
+    "D03.08",
+    "D03.09",
+    "D08.02"
+   ]
+  },
+  {
+   "id": "CH04_SC02_B06",
+   "type": "dialogue",
+   "title": "Nhưng máy C xịn nhất thật mà. Biết đâu sau này cậu xin thêm tiền được?",
+   "background": "/images/finteen-v2/chapter-04/bg/bg08b-phone-comparison-counter.png",
+   "speaker": "Minh",
+   "speakerId": "MINH",
+   "characters": [
+    {
+     "id": "MINH",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-04/char/minh/minh-neutral.png",
+     "position": "center"
+    }
+   ],
+   "text": "Nhưng máy C xịn nhất thật mà. Biết đâu sau này cậu xin thêm tiền được?",
+   "nextSceneId": "CH04_SC02_B07",
+   "knowledgeUnits": [
+    "D03.04",
+    "D03.07",
+    "D03.08",
+    "D03.09",
+    "D08.02"
+   ]
+  },
+  {
+   "id": "CH04_SC02_B07",
+   "type": "dialogue",
+   "title": "Nếu mua máy C giá 2 triệu 300, mình chỉ còn 200 ngàn; khoản hoạt động trường sẽ thiếu 300 ngàn. Mình chưa có nguồn bù chắc chắn.",
+   "background": "/images/finteen-v2/chapter-04/bg/bg08b-phone-comparison-counter.png",
+   "speaker": "An",
+   "speakerId": "AN",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "thinking",
+     "src": "/images/finteen-v2/chapter-04/char/an/an-thinking.png",
+     "position": "center"
+    }
+   ],
+   "text": "Nếu mua máy C giá 2 triệu 300, mình chỉ còn 200 ngàn; khoản hoạt động trường sẽ thiếu 300 ngàn. Mình chưa có nguồn bù chắc chắn.",
+   "nextSceneId": "CH04_SC02_B08",
+   "knowledgeUnits": [
+    "D03.04",
+    "D03.07",
+    "D03.08",
+    "D03.09",
+    "D08.02"
+   ]
+  },
+  {
+   "id": "CH04_SC02_B08",
+   "type": "dialogue",
+   "title": "Máy B đã qua sử dụng giá 1 triệu 300, bảo hành 6 tháng. Em có thể xem tình trạng máy, pin và điều kiện bảo hành.",
+   "background": "/images/finteen-v2/chapter-04/bg/bg08b-phone-comparison-counter.png",
+   "speaker": "Nhân viên",
+   "speakerId": "SHOP_ASSISTANT",
+   "characters": [
+    {
+     "id": "SHOP_ASSISTANT",
+     "expression": "explaining",
+     "src": "/images/finteen-v2/chapter-04/char/shop-assistant/shop-assistant-explaining.png",
+     "position": "center"
+    }
+   ],
+   "text": "Máy B đã qua sử dụng giá 1 triệu 300, bảo hành 6 tháng. Em có thể xem tình trạng máy, pin và điều kiện bảo hành.",
+   "nextSceneId": "CH04_SC02_B09",
+   "knowledgeUnits": [
+    "D03.04",
+    "D03.07",
+    "D03.08",
+    "D03.09",
+    "D08.02"
+   ]
+  },
+  {
+   "id": "CH04_SC02_B09",
+   "type": "dialogue",
+   "title": "Máy cũ chưa chắc đã tệ, máy mới cũng chưa chắc đã ngon. Mình sẽ so tổng chi và điều kiện trước khi chọn.",
+   "background": "/images/finteen-v2/chapter-04/bg/bg08b-phone-comparison-counter.png",
+   "speaker": "An",
+   "speakerId": "AN",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "thinking",
+     "src": "/images/finteen-v2/chapter-04/char/an/an-thinking.png",
+     "position": "center"
+    }
+   ],
+   "text": "Máy cũ chưa chắc đã tệ, máy mới cũng chưa chắc đã ngon. Mình sẽ so tổng chi và điều kiện trước khi chọn.",
+   "nextSceneId": "CH04_SC02",
+   "knowledgeUnits": [
+    "D03.04",
+    "D03.07",
+    "D03.08",
+    "D03.09",
+    "D08.02"
+   ]
+  },
+  {
+   "id": "CH04_SC02",
+   "type": "choice",
+   "title": "Nếu dùng trong cả một năm thì em thấy phương án nào hợp lý hơn?",
+   "background": "/images/finteen-v2/chapter-04/bg/bg08b-phone-comparison-counter.png",
+   "characters": [],
+   "speaker": "An",
+   "speakerId": "AN",
+   "text": "Nếu dùng trong cả một năm thì em thấy phương án nào hợp lý hơn?",
+   "prompt": "Nếu dùng trong cả một năm thì em thấy phương án nào hợp lý hơn?",
+   "options": [
+    {
+     "id": "CH04_SC02_A",
+     "label": "Chọn máy A",
+     "moneyEvents": [],
+     "deltaStats": {
+      "RISK": -2,
+      "GOAL": 2
+     },
+     "evidenceScores": {
+      "I": 2,
+      "C": 2,
+      "P": 2
+     },
+     "flag": "purchase_fit",
+     "setFlags": {
+      "phone_a": true,
+      "phone_b": false,
+      "phone_c": false,
+      "purchase_fit": true,
+      "purchase_over_budget": false,
+      "budget_adjusted": true,
+      "reminder_set": true,
+      "cancellation_confirmed": false
+     },
+     "nextSceneId": "CH04_SC02_A_FEEDBACK",
+     "condition": {
+      "var": "inspected:ch04_comparison",
+      "op": "==",
+      "value": true
+     },
+     "lockedReason": "Hãy xem bảng dữ kiện bắt buộc trước khi xác nhận."
+    },
+    {
+     "id": "CH04_SC02_B",
+     "label": "Chọn máy B",
+     "moneyEvents": [],
+     "deltaStats": {
+      "RISK": -2,
+      "GOAL": 2
+     },
+     "evidenceScores": {
+      "I": 2,
+      "C": 2,
+      "P": 2
+     },
+     "flag": "purchase_fit",
+     "setFlags": {
+      "phone_a": false,
+      "phone_b": true,
+      "phone_c": false,
+      "purchase_fit": true,
+      "purchase_over_budget": false,
+      "budget_adjusted": true,
+      "used_phone_checked": true,
+      "reminder_set": false
+     },
+     "nextSceneId": "CH04_SC02_B_FEEDBACK",
+     "condition": {
+      "var": "inspected:ch04_comparison",
+      "op": "==",
+      "value": true
+     },
+     "lockedReason": "Hãy xem bảng dữ kiện bắt buộc trước khi xác nhận."
+    },
+    {
+     "id": "CH04_SC02_C",
+     "label": "Chọn máy C",
+     "moneyEvents": [],
+     "deltaStats": {
+      "HAPPINESS": 4,
+      "GOAL": -5
+     },
+     "evidenceScores": {
+      "I": 0,
+      "C": 0,
+      "P": 0
+     },
+     "flag": "purchase_over_budget",
+     "setFlags": {
+      "phone_a": false,
+      "phone_b": false,
+      "phone_c": true,
+      "purchase_fit": false,
+      "purchase_over_budget": true,
+      "budget_adjusted": false,
+      "reminder_set": false
+     },
+     "nextSceneId": "CH04_SC02_C_FEEDBACK",
+     "condition": {
+      "var": "inspected:ch04_comparison",
+      "op": "==",
+      "value": true
+     },
+     "lockedReason": "Hãy xem bảng dữ kiện bắt buộc trước khi xác nhận."
+    }
+   ],
+   "knowledgeUnits": [
+    "D03.04",
+    "D03.07",
+    "D03.08",
+    "D03.09",
+    "D08.02"
+   ],
+   "choiceGroup": "CH04_PURCHASE",
+   "reviewAction": {
+    "label": "Xem lại nhu cầu, giá và điều kiện ba máy",
+    "targetSceneId": "CH04_SC02_ART"
+   }
+  },
+  {
+   "id": "CH04_SC02_A_FEEDBACK",
+   "type": "dialogue",
+   "title": "Mình quyết định mua máy A, nhưng sẽ không để thuê bao tự động gia hạn. Mình sẽ đặt nhắc lịch trước. Đặt nhắc chưa phải đã hủy, mình cần xác nhận hủy đúng hạn.",
+   "background": "/images/finteen-v2/chapter-04/bg/bg08b-phone-comparison-counter.png",
+   "speaker": "An",
+   "speakerId": "AN",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "relieved",
+     "src": "/images/finteen-v2/chapter-04/char/an/an-relieved.png",
+     "position": "center"
+    }
+   ],
+   "text": "Mình quyết định mua máy A, nhưng sẽ không để thuê bao tự động gia hạn. Mình sẽ đặt nhắc lịch trước. Đặt nhắc chưa phải đã hủy, mình cần xác nhận hủy đúng hạn.",
+   "nextSceneId": "CH04_SC02_A_FB2",
+   "knowledgeUnits": [
+    "D03.04",
+    "D03.07",
+    "D03.08",
+    "D03.09",
+    "D08.02"
+   ]
+  },
+  {
+   "id": "CH04_SC02_A_FB2",
+   "type": "dialogue",
+   "title": "Đừng nhầm việc đặt nhắc lịch với hủy thành công nhé. Em phải thực hiện hủy và lưu xác nhận đúng hạn. Không thôi vẫn sẽ bị trừ tiền đấy nhé!",
+   "background": "/images/finteen-v2/chapter-04/bg/bg08b-phone-comparison-counter.png",
+   "speaker": "Nhân viên",
+   "speakerId": "SHOP_ASSISTANT",
+   "characters": [
+    {
+     "id": "SHOP_ASSISTANT",
+     "expression": "explaining",
+     "src": "/images/finteen-v2/chapter-04/char/shop-assistant/shop-assistant-explaining.png",
+     "position": "center"
+    }
+   ],
+   "text": "Đừng nhầm việc đặt nhắc lịch với hủy thành công nhé. Em phải thực hiện hủy và lưu xác nhận đúng hạn. Không thôi vẫn sẽ bị trừ tiền đấy nhé!",
+   "nextSceneId": "CH04_SC02_GAME",
+   "knowledgeUnits": [
+    "D03.04",
+    "D03.07",
+    "D03.08",
+    "D03.09",
+    "D08.02"
+   ]
+  },
+  {
+   "id": "CH04_SC02_B_FEEDBACK",
+   "type": "dialogue",
+   "title": "Máy B tuy rẻ hơn, nhưng mình phải kiểm tra pin, bảo hành và tình trạng máy trước khi quyết định mua.",
+   "background": "/images/finteen-v2/chapter-04/bg/bg08b-phone-comparison-counter.png",
+   "speaker": "An",
+   "speakerId": "AN",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "thinking",
+     "src": "/images/finteen-v2/chapter-04/char/an/an-thinking.png",
+     "position": "center"
+    }
+   ],
+   "text": "Máy B tuy rẻ hơn, nhưng mình phải kiểm tra pin, bảo hành và tình trạng máy trước khi quyết định mua.",
+   "nextSceneId": "CH04_SC02_B_FB2",
+   "knowledgeUnits": [
+    "D03.04",
+    "D03.07",
+    "D03.08",
+    "D03.09",
+    "D08.02"
+   ]
+  },
+  {
+   "id": "CH04_SC02_B_FB2",
+   "type": "dialogue",
+   "title": "Em nhớ giữ lại giấy kiểm tra pin và phiếu bảo hành nhé. Máy rẻ hơn cũng tốt, miễn là chất lượng ổn và đáp ứng được nhu cầu của em.",
+   "background": "/images/finteen-v2/chapter-04/bg/bg08b-phone-comparison-counter.png",
+   "speaker": "Nhân viên",
+   "speakerId": "SHOP_ASSISTANT",
+   "characters": [
+    {
+     "id": "SHOP_ASSISTANT",
+     "expression": "explaining",
+     "src": "/images/finteen-v2/chapter-04/char/shop-assistant/shop-assistant-explaining.png",
+     "position": "center"
+    }
+   ],
+   "text": "Em nhớ giữ lại giấy kiểm tra pin và phiếu bảo hành nhé. Máy rẻ hơn cũng tốt, miễn là chất lượng ổn và đáp ứng được nhu cầu của em.",
+   "nextSceneId": "CH04_SC02_GAME",
+   "knowledgeUnits": [
+    "D03.04",
+    "D03.07",
+    "D03.08",
+    "D03.09",
+    "D08.02"
+   ]
+  },
+  {
+   "id": "CH04_SC02_C_FEEDBACK",
+   "type": "dialogue",
+   "title": "Máy C đúng là đẹp, chơi game cũng mượt nữa. Nhưng nếu mua thì mình sẽ không còn đủ tiền!",
+   "background": "/images/finteen-v2/chapter-04/bg/bg08b-phone-comparison-counter.png",
+   "speaker": "An",
+   "speakerId": "AN",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "worried-money",
+     "src": "/images/finteen-v2/chapter-04/char/an/an-worried-money.png",
+     "position": "center"
+    }
+   ],
+   "text": "Máy C đúng là đẹp, chơi game cũng mượt nữa. Nhưng nếu mua thì mình sẽ không còn đủ tiền!",
+   "nextSceneId": "CH04_SC02_C_FB2",
+   "knowledgeUnits": [
+    "D03.04",
+    "D03.07",
+    "D03.08",
+    "D03.09",
+    "D08.02"
+   ]
+  },
+  {
+   "id": "CH04_SC02_C_FB2",
+   "type": "dialogue",
+   "title": "Tớ vẫn thấy máy C đẹp nhất. Nhưng mà... cậu chắc muốn mua nó chứ?",
+   "background": "/images/finteen-v2/chapter-04/bg/bg08b-phone-comparison-counter.png",
+   "speaker": "Minh",
+   "speakerId": "MINH",
+   "characters": [
+    {
+     "id": "MINH",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-04/char/minh/minh-neutral.png",
+     "position": "center"
+    }
+   ],
+   "text": "Tớ vẫn thấy máy C đẹp nhất. Nhưng mà... cậu chắc muốn mua nó chứ?",
+   "nextSceneId": "CH04_SC02_GAME",
+   "knowledgeUnits": [
+    "D03.04",
+    "D03.07",
+    "D03.08",
+    "D03.09",
+    "D08.02"
+   ]
+  },
+  {
+   "id": "CH04_SC02_GAME",
+   "type": "minigame",
+   "title": "Smart Shopping",
+   "background": "/images/finteen-v2/chapter-04/bg/bg08b-phone-comparison-counter.png",
+   "characters": [],
+   "game": {
+    "id": "SMART_SHOPPING_CH04",
+    "kind": "SMART_SHOPPING",
+    "title": "Bốn lượt. Một quyết định.",
+    "phones": [
+     {
+      "id": "A",
+      "label": "Máy A (mới)",
+      "image": "/images/finteen-v2/chapter-04/asset-mini-game/smart-shopping/phone-a-new.png",
+      "price": 1600000,
+      "warrantyMonths": 12,
+      "meetsLearningNeeds": true,
+      "trialMonths": 1,
+      "monthlySubscription": 50000,
+      "billedMonthsFirstYear": 11,
+      "firstYearCostIfCancelled": 1600000,
+      "firstYearCostIfKept": 2150000,
+      "shopping": {
+       "claim": "Máy mới · Một tháng dùng thử",
+       "app": "Ứng dụng học và gọi video chạy mượt khi mở cùng lúc.",
+       "battery": "Pin mới, đủ một ngày học. Bảo hành máy 12 tháng.",
+       "terms": "Dùng thử 1 tháng, sau đó 50.000đ/tháng. Gia hạn ngày 30 trong lịch mô phỏng; hủy trước ngày này và lưu xác nhận."
+      }
+     },
+     {
+      "id": "B",
+      "label": "Máy B (đã qua sử dụng)",
+      "image": "/images/finteen-v2/chapter-04/asset-mini-game/smart-shopping/phone-b-used.png",
+      "price": 1300000,
+      "warrantyMonths": 6,
+      "meetsLearningNeeds": true,
+      "inspectionRequired": true,
+      "firstYearCost": 1300000,
+      "shopping": {
+       "claim": "Giá thấp hơn · Chấp nhận đánh đổi máy cũ",
+       "app": "Mở được ứng dụng học. Chuyển giữa lớp video và tài liệu có độ trễ; dùng từng ứng dụng ổn định hơn.",
+       "battery": "Pin đã hao mòn. Cần đo thời lượng thực tế trước khi quyết định giữ pin hay thay.",
+       "terms": "Bảo hành máy 6 tháng, không gồm hao mòn pin. Không có thuê bao. Thay pin không khắc phục độ trễ khi mở nhiều ứng dụng.",
+       "batteryHealth": 78,
+       "batteryHours": 3,
+       "batteryReplacementCost": 250000,
+       "batteryTest": "Pin còn 78% dung lượng, dùng học liên tục khoảng 3 giờ. Không phồng pin. Có thể giữ và mang sạc, hoặc thay pin 250.000đ; bảo hành máy 6 tháng không trả khoản này."
+      }
+     },
+     {
+      "id": "C",
+      "label": "Máy C (nhiều tính năng)",
+      "image": "/images/finteen-v2/chapter-04/asset-mini-game/smart-shopping/phone-c-premium.png",
+      "price": 2300000,
+      "meetsLearningNeeds": true,
+      "exceedsNeeds": true,
+      "firstYearCost": 2300000,
+      "shopping": {
+       "claim": "Màn hình đẹp · Camera và trò chơi tốt hơn",
+       "app": "Ứng dụng học chạy mượt. Camera cao cấp và cấu hình trò chơi không cần cho bài học hiện tại.",
+       "battery": "Máy đáp ứng một ngày học. Cần xác nhận bảo hành bằng văn bản trước khi thanh toán.",
+       "terms": "Không có thuê bao. Giá 2.300.000đ để lại 200.000đ, trong khi hoạt động trường cần 500.000đ."
+      }
+     }
+    ],
+    "config": {
+     "ariaLabel": "Nhiệm vụ mua máy: bốn lượt kiểm tra",
+     "eyebrow": "HỒ SƠ MUA SẮM / A / B / C",
+     "heading": "Bốn lượt. Một quyết định.",
+     "tagline": "Đừng mua lời quảng cáo. Hãy mua thứ bạn đã kiểm chứng.",
+     "brief": "Nhiệm vụ: kiểm chứng ba máy A/B/C trong câu chuyện, chọn theo nhu cầu học và giữ đủ quỹ sau một năm. Giá và điều kiện giống phương án mua của An.",
+     "steps": [
+      "Điều tra",
+      "Chốt giao dịch",
+      "Một năm sau"
+     ],
+     "checkTokens": 4,
+     "passMinScore": 3,
+     "trialDeadlineDay": 29,
+     "inspections": [
+      {
+       "id": "app",
+       "label": "Chạy thử ứng dụng học",
+       "icon": "smartphone"
+      },
+      {
+       "id": "battery",
+       "label": "Kiểm định pin & bảo hành",
+       "icon": "battery"
+      },
+      {
+       "id": "terms",
+       "label": "Đọc hợp đồng dịch vụ",
+       "icon": "file"
+      }
+     ],
+     "invoiceExtra": {
+      "id": "fee",
+      "label": "Phí dịch vụ",
+      "amount": 100000
+     },
+     "ledger": {
+      "phone": "Máy",
+      "subscription": "Thuê bao {months} tháng",
+      "battery": "Thay pin",
+      "fee": "Chênh lệch hóa đơn chưa xử lý"
+     },
+     "aftercare": {
+      "cancelled": "Đã hủy trước gia hạn và lưu xác nhận.",
+      "notCancelled": "Chưa hủy trước gia hạn; phát sinh {months} tháng thuê bao.",
+      "batteryReplaced": "Đã thay pin, tính đủ chi phí; độ trễ đa nhiệm vẫn còn.",
+      "batteryKept": "Giữ pin cũ và mang sạc cho buổi học; không phát sinh phí thay pin.",
+      "batteryUnmanaged": "Chưa đo pin hoặc chưa chọn kế hoạch cho buổi học 4 giờ.",
+      "noSubscription": "Máy không kèm thuê bao; các tính năng thêm vẫn làm giảm quỹ hoạt động."
+     },
+     "criteria": {
+      "needs": {
+       "title": "Dùng được cho việc học"
+      },
+      "budget": {
+       "title": "Giữ được quỹ hoạt động trường",
+       "passed": "Tổng tiền máy, thuê bao và phí thực trả vẫn giữ đủ quỹ.",
+       "failed": "Thiếu {shortfall} cho hoạt động trường. {reason}",
+       "reasonExceedsNeeds": "Máy C đáp ứng việc học nhưng tính năng vượt nhu cầu khiến chi phí vượt mục tiêu.",
+       "reasonHiddenCosts": "Cần tính cả thuê bao và phí ngoài báo giá.",
+       "grade": {
+        "id": "budget",
+        "rule": {
+         "any": [
+          {
+           "all": [
+            {
+             "input": "phone",
+             "eq": "A"
+            },
+            {
+             "input": "cancelDay",
+             "min": 1,
+             "max": 29
+            }
+           ]
+          },
+          {
+           "input": "phone",
+           "eq": "B"
+          }
+         ]
+        }
+       }
+      },
+      "evidence": {
+       "title": "Mua dựa trên bằng chứng",
+       "detail": "Đã kiểm tra {checked}/{total} hồ sơ của máy mua. {note}",
+       "incomplete": "Kết quả tốt do may mắn chưa thay thế việc kiểm tra trước mua.",
+       "complete": "Đã thử ứng dụng, xem pin và đọc hợp đồng.",
+       "grade": {
+        "id": "evidence",
+        "rule": {
+         "any": [
+          {
+           "all": [
+            {
+             "input": "phone",
+             "eq": "A"
+            },
+            {
+             "input": "inspected",
+             "has": [
+              "A:app",
+              "A:battery",
+              "A:terms"
+             ]
+            }
+           ]
+          },
+          {
+           "all": [
+            {
+             "input": "phone",
+             "eq": "B"
+            },
+            {
+             "input": "inspected",
+             "has": [
+              "B:app",
+              "B:battery",
+              "B:terms"
+             ]
+            }
+           ]
+          },
+          {
+           "all": [
+            {
+             "input": "phone",
+             "eq": "C"
+            },
+            {
+             "input": "inspected",
+             "has": [
+              "C:app",
+              "C:battery",
+              "C:terms"
+             ]
+            }
+           ]
+          }
+         ]
+        }
+       }
+      },
+      "rights": {
+       "title": "Xử lý phí và kế hoạch sử dụng",
+       "feePaid": "Đã trả thêm {fee} ngoài báo giá.",
+       "feeRemoved": "Đã đối chiếu và bỏ phí ngoài báo giá {fee}.",
+       "grade": {
+        "id": "rights",
+        "rule": {
+         "all": [
+          {
+           "input": "disputed",
+           "eq": "fee"
+          },
+          {
+           "any": [
+            {
+             "input": "phone",
+             "in": [
+              "B",
+              "C"
+             ]
+            },
+            {
+             "input": "cancelDay",
+             "min": 1,
+             "max": 29
+            }
+           ]
+          },
+          {
+           "any": [
+            {
+             "input": "phone",
+             "in": [
+              "A",
+              "C"
+             ]
+            },
+            {
+             "all": [
+              {
+               "input": "batteryChecked",
+               "eq": true
+              },
+              {
+               "input": "batteryPlan",
+               "in": [
+                "keep",
+                "replace"
+               ]
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+       }
+      }
+     },
+     "decision": {
+      "subscription": {
+       "title": "Lịch hủy dùng thử",
+       "text": "Chọn thời điểm gửi yêu cầu. Gia hạn vào ngày 30; yêu cầu hợp lệ được lưu xác nhận.",
+       "label": "Thời điểm trong tháng dùng thử",
+       "placeholder": "Chọn thời điểm",
+       "days": [
+        {
+         "value": "1",
+         "label": "Đầu tháng · ngày 1"
+        },
+        {
+         "value": "15",
+         "label": "Giữa tháng · ngày 15"
+        },
+        {
+         "value": "30",
+         "label": "Cuối tháng · ngày 30"
+        }
+       ]
+      },
+      "battery": {
+       "title": "Pin cũ có đủ cho bạn?",
+       "text": "Một buổi học kéo dài 4 giờ. Hãy đo pin trước khi quyết định; bảo hành không bao gồm hao mòn pin.",
+       "check": "Chạy kiểm tra pin",
+       "checked": "Đã đo pin",
+       "meterLabel": "Dung lượng pin còn lại",
+       "planLegend": "Kế hoạch cho buổi học",
+       "keep": "Giữ pin, mang sạc và sạc trong giờ nghỉ · 0đ",
+       "replace": "Thay pin · {cost}",
+       "note": "Thay pin tăng thời lượng sử dụng, không làm máy chạy đa nhiệm nhanh hơn."
+      },
+      "features": {
+       "title": "Tính năng thêm hay quỹ hoạt động?",
+       "text": "Máy C học tốt, nhưng camera cao cấp và trò chơi không phải nhu cầu học hiện tại.",
+       "balanceLabel": "Sau khi trả tiền máy",
+       "shortfall": "Thiếu {shortfall} so với quỹ cần giữ. Chưa tính phí ngoài báo giá."
+      }
+     },
+     "texts": {
+      "attempt": "Lần thử {n}",
+      "wallet": "Ví mô phỏng",
+      "reserve": "Phải giữ cho hoạt động trường",
+      "stepsLabel": "Tiến trình",
+      "investigateTitle": "Bạn muốn kiểm chứng máy nào trước?",
+      "investigateText": "Chỉ có 4 lượt kiểm tra cho 3 máy. Cả ba chạy được ứng dụng học; hãy kiểm tra chất lượng, điều kiện và tổng chi thay vì chỉ nhìn giá. Hồ sơ đã mở được đọc lại miễn phí.",
+      "tokensLabel": "Còn {left} lượt kiểm tra",
+      "tokens": "{left}/{total} lượt",
+      "phoneAlt": "Điện thoại tại {name}",
+      "claim": "“{claim}”",
+      "quoteNote": "Báo giá: chỉ gồm máy. Phụ phí cần được đồng ý trước.",
+      "reread": "Đọc lại",
+      "costsCheck": "−1 lượt",
+      "selected": "Đã chọn máy {id}",
+      "select": "Chọn máy {id}",
+      "lockNote": "Sang thanh toán sẽ khóa lựa chọn máy và lượt điều tra.",
+      "lockIn": "Chốt {phone}",
+      "lockPhone": "máy {id}",
+      "lockPhoneNone": "máy",
+      "checkoutTitle": "Tự kiểm tra trước khi trả tiền.",
+      "checkoutText": "Xử lý chênh lệch hóa đơn nếu có và tự lên lịch dịch vụ. Khi thanh toán, một năm sử dụng sẽ được mô phỏng ngay.",
+      "invoiceEyebrow": "HÓA ĐƠN TẠM TÍNH / {name}",
+      "invoiceTitle": "Kiểm tra từng dòng",
+      "savedQuote": "Báo giá đã lưu: ",
+      "savedQuoteAfter": " cho máy, chưa thỏa thuận phụ phí.",
+      "invoiceCheck": "Kiểm tra",
+      "invoiceChecked": "Đã kiểm tra",
+      "disputeLegend": "Đánh dấu một dòng cần yêu cầu đối chiếu (nếu có).",
+      "noDispute": "Không yêu cầu đối chiếu",
+      "invoiceTotal": "Tổng tạm tính",
+      "disputeNote": "Yêu cầu được gửi cùng lúc thanh toán. Cửa hàng chỉ sửa khi dòng đánh dấu thực sự lệch báo giá.",
+      "savedFiles": "Hồ sơ đã thu thập",
+      "noHints": "Không có gợi ý đúng/sai trước khi thanh toán.",
+      "pay": "Thanh toán & xem một năm sau",
+      "resultEyebrow": "MỘT NĂM SAU",
+      "resultPerfect": "Bạn đã mua bằng hiểu biết.",
+      "resultImperfect": "Giá trên nhãn chưa kể hết câu chuyện.",
+      "resultSubtitle": "{name} · Xem lại từng tiêu chí bên dưới.",
+      "ledgerTitle": "Tiền đã đi đâu?",
+      "actualTotal": "Tổng chi thực tế",
+      "walletLeft": "Ví còn lại",
+      "reserveNeeded": "Quỹ cần giữ: {amount}",
+      "passed": "Đúng",
+      "failed": "Chưa đúng",
+      "retryNote": "Bạn có thể thử phương án khác để so sánh. Kết quả đúng/sai của lần nộp đầu được dùng để xét kết thúc chương.",
+      "retry": "Thử phương án khác",
+      "finish": "Trở lại câu chuyện",
+      "simulationNote": "Mô phỏng luyện tập · Các thao tác ở đây không trừ tiền trong câu chuyện của An."
+     }
+    },
+    "instruction": "Kiểm tra đúng ba máy A/B/C với bốn lượt, xử lý phí ngoài báo giá và theo dõi chi phí năm đầu.",
+    "budget": 2500000,
+    "reserve": 500000,
+    "firstYearBudget": 2000000,
+    "estimatedMinutes": 5,
+    "maxScore": 4
+   },
+   "nextSceneId": "CH04_SC03_ART",
+   "onPassSceneId": "CH04_SC03_ART",
+   "knowledgeUnits": [
+    "D03.04",
+    "D03.07",
+    "D03.08",
+    "D03.09",
+    "D08.02"
+   ]
+  },
+  {
+   "id": "CH04_SC03_ART",
+   "type": "inspect",
+   "title": "Mua thông minh",
+   "background": "/images/finteen-v2/chapter-04/scene/sc03-questioning-receipt.png",
+   "sceneArt": "/images/finteen-v2/chapter-04/scene/sc03-questioning-receipt.png",
+   "characters": [],
+   "nextSceneId": "CH04_SC03_B01",
+   "knowledgeUnits": [
+    "D03.06",
+    "D03.07",
+    "D03.08",
+    "D07.08",
+    "D07.09"
+   ]
+  },
+  {
+   "id": "CH04_SC03_B01",
+   "type": "dialogue",
+   "title": "Trước khi chốt, em kiểm tra lại xem đúng máy mình chọn chưa, giá bao nhiêu và sẽ thanh toán bằng cách nào nhé.",
+   "background": "/images/finteen-v2/chapter-04/bg/bg08c-checkout-documents.png",
+   "speaker": "Nhân viên",
+   "speakerId": "SHOP_ASSISTANT",
+   "characters": [
+    {
+     "id": "SHOP_ASSISTANT",
+     "expression": "explaining",
+     "src": "/images/finteen-v2/chapter-04/char/shop-assistant/shop-assistant-explaining.png",
+     "position": "center"
+    }
+   ],
+   "text": "Trước khi chốt, em kiểm tra lại xem đúng máy mình chọn chưa, giá bao nhiêu và sẽ thanh toán bằng cách nào nhé.",
+   "nextSceneId": "CH04_SC03_B02",
+   "knowledgeUnits": [
+    "D03.06",
+    "D03.07",
+    "D03.08",
+    "D07.08",
+    "D07.09"
+   ]
+  },
+  {
+   "id": "CH04_SC03_B02",
+   "type": "dialogue",
+   "title": "Mình chọn cách nào nhỉ? Nếu chuyển khoản thì phải xem đúng người nhận chưa. Còn trả tiền mặt thì nhớ lấy hóa đơn. À, phải kiểm tra cả số tiền nữa.",
+   "background": "/images/finteen-v2/chapter-04/bg/bg08c-checkout-documents.png",
+   "speaker": "An",
+   "speakerId": "AN",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "thinking",
+     "src": "/images/finteen-v2/chapter-04/char/an/an-thinking.png",
+     "position": "center"
+    }
+   ],
+   "text": "Mình chọn cách nào nhỉ? Nếu chuyển khoản thì phải xem đúng người nhận chưa. Còn trả tiền mặt thì nhớ lấy hóa đơn. À, phải kiểm tra cả số tiền nữa.",
+   "nextSceneId": "CH04_SC03_ROUTE_A",
+   "knowledgeUnits": [
+    "D03.06",
+    "D03.07",
+    "D03.08",
+    "D07.08",
+    "D07.09"
+   ]
+  },
+  {
+   "id": "CH04_SC03_ROUTE_A",
+   "type": "conditional",
+   "condition": {
+    "var": "choice:CH04_PURCHASE",
+    "op": "==",
+    "value": "CH04_SC02_A"
+   },
+   "ifTrueSceneId": "CH04_SC03_PAY_A",
+   "ifFalseSceneId": "CH04_SC03_ROUTE_B"
+  },
+  {
+   "id": "CH04_SC03_ROUTE_B",
+   "type": "conditional",
+   "condition": {
+    "var": "choice:CH04_PURCHASE",
+    "op": "==",
+    "value": "CH04_SC02_B"
+   },
+   "ifTrueSceneId": "CH04_SC03_PAY_B",
+   "ifFalseSceneId": "CH04_SC03_PAY_C"
+  },
+  {
+   "id": "CH04_SC03_PAY_A",
+   "type": "choice",
+   "title": "Kiểm tra giá và tên máy trước khi xác nhận: Máy A (mới), 1.600.000đ.",
+   "background": "/images/finteen-v2/chapter-04/bg/bg08c-checkout-documents.png",
+   "characters": [],
+   "speaker": "An",
+   "speakerId": "AN",
+   "text": "Kiểm tra giá và tên máy trước khi xác nhận: Máy A (mới), 1.600.000đ.",
+   "prompt": "Kiểm tra giá và tên máy trước khi xác nhận: Máy A (mới), 1.600.000đ.",
+   "options": [
+    {
+     "id": "CH04_SC03_CONFIRM_A",
+     "label": "Xác nhận mua Máy A (mới): 1.600.000đ",
+     "moneyEvents": [],
+     "setFlags": {
+      "purchase_confirmed": true
+     },
+     "nextSceneId": "CH04_SC03_PAID_ROUTE",
+     "condition": {
+      "var": "money",
+      "op": ">=",
+      "value": 1600000
+     },
+     "lockedReason": "Chưa đủ tiền: quay lại so sánh hoặc sửa kế hoạch trước khi mua."
+    },
+    {
+     "id": "CH04_SC03_BACK_A",
+     "label": "Chưa mua: xem lại dữ kiện và sửa kế hoạch",
+     "nextSceneId": "CH04_SC02"
+    }
+   ],
+   "knowledgeUnits": [
+    "D03.06",
+    "D03.07",
+    "D03.08",
+    "D07.08",
+    "D07.09"
+   ],
+   "reviewAction": {
+    "label": "Xem lại dữ kiện / sửa kế hoạch",
+    "targetSceneId": "CH04_SC02"
+   }
+  },
+  {
+   "id": "CH04_SC03_PAY_B",
+   "type": "choice",
+   "title": "Kiểm tra giá và tên máy trước khi xác nhận: Máy B (đã qua sử dụng), 1.300.000đ.",
+   "background": "/images/finteen-v2/chapter-04/bg/bg08c-checkout-documents.png",
+   "characters": [],
+   "speaker": "An",
+   "speakerId": "AN",
+   "text": "Kiểm tra giá và tên máy trước khi xác nhận: Máy B (đã qua sử dụng), 1.300.000đ.",
+   "prompt": "Kiểm tra giá và tên máy trước khi xác nhận: Máy B (đã qua sử dụng), 1.300.000đ.",
+   "options": [
+    {
+     "id": "CH04_SC03_CONFIRM_B",
+     "label": "Xác nhận mua Máy B (đã qua sử dụng): 1.300.000đ",
+     "moneyEvents": [],
+     "setFlags": {
+      "purchase_confirmed": true
+     },
+     "nextSceneId": "CH04_SC03_PAID_ROUTE",
+     "condition": {
+      "var": "money",
+      "op": ">=",
+      "value": 1300000
+     },
+     "lockedReason": "Chưa đủ tiền: quay lại so sánh hoặc sửa kế hoạch trước khi mua."
+    },
+    {
+     "id": "CH04_SC03_BACK_B",
+     "label": "Chưa mua: xem lại dữ kiện và sửa kế hoạch",
+     "nextSceneId": "CH04_SC02"
+    }
+   ],
+   "knowledgeUnits": [
+    "D03.06",
+    "D03.07",
+    "D03.08",
+    "D07.08",
+    "D07.09"
+   ],
+   "reviewAction": {
+    "label": "Xem lại dữ kiện / sửa kế hoạch",
+    "targetSceneId": "CH04_SC02"
+   }
+  },
+  {
+   "id": "CH04_SC03_PAY_C",
+   "type": "choice",
+   "title": "Kiểm tra giá và tên máy trước khi xác nhận: Máy C (nhiều tính năng), 2.300.000đ.",
+   "background": "/images/finteen-v2/chapter-04/bg/bg08c-checkout-documents.png",
+   "characters": [],
+   "speaker": "An",
+   "speakerId": "AN",
+   "text": "Kiểm tra giá và tên máy trước khi xác nhận: Máy C (nhiều tính năng), 2.300.000đ.",
+   "prompt": "Kiểm tra giá và tên máy trước khi xác nhận: Máy C (nhiều tính năng), 2.300.000đ.",
+   "options": [
+    {
+     "id": "CH04_SC03_CONFIRM_C",
+     "label": "Xác nhận mua Máy C (nhiều tính năng): 2.300.000đ",
+     "moneyEvents": [],
+     "setFlags": {
+      "purchase_confirmed": true
+     },
+     "nextSceneId": "CH04_SC03_PAID_ROUTE",
+     "condition": {
+      "var": "money",
+      "op": ">=",
+      "value": 2300000
+     },
+     "lockedReason": "Chưa đủ tiền: quay lại so sánh hoặc sửa kế hoạch trước khi mua."
+    },
+    {
+     "id": "CH04_SC03_BACK_C",
+     "label": "Chưa mua: xem lại dữ kiện và sửa kế hoạch",
+     "nextSceneId": "CH04_SC02"
+    }
+   ],
+   "knowledgeUnits": [
+    "D03.06",
+    "D03.07",
+    "D03.08",
+    "D07.08",
+    "D07.09"
+   ],
+   "reviewAction": {
+    "label": "Xem lại dữ kiện / sửa kế hoạch",
+    "targetSceneId": "CH04_SC02"
+   }
+  },
+  {
+   "id": "CH04_SC03_PAID_ROUTE",
+   "type": "conditional",
+   "condition": {
+    "var": "choice:CH04_PURCHASE",
+    "op": "==",
+    "value": "CH04_SC02_A"
+   },
+   "ifTrueSceneId": "CH04_SC03_PAID_A",
+   "ifFalseSceneId": "CH04_SC03_PAID_ROUTE_B"
+  },
+  {
+   "id": "CH04_SC03_PAID_ROUTE_B",
+   "type": "conditional",
+   "condition": {
+    "var": "choice:CH04_PURCHASE",
+    "op": "==",
+    "value": "CH04_SC02_B"
+   },
+   "ifTrueSceneId": "CH04_SC03_PAID_B",
+   "ifFalseSceneId": "CH04_SC03_PAID_C"
+  },
+  {
+   "id": "CH04_SC03_PAID_A",
+   "type": "dialogue",
+   "title": "Mình đã xác nhận máy A giá 1.600.000đ, sẽ thanh toán sau khi kiểm tra hóa đơn. Gói dùng thử chưa phát sinh phí; phải theo dõi kỳ gia hạn.",
+   "background": "/images/finteen-v2/chapter-04/bg/bg08c-checkout-documents.png",
+   "speaker": "An",
+   "speakerId": "AN",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "relieved",
+     "src": "/images/finteen-v2/chapter-04/char/an/an-relieved.png",
+     "position": "center"
+    }
+   ],
+   "text": "Mình đã xác nhận máy A giá 1.600.000đ, sẽ thanh toán sau khi kiểm tra hóa đơn. Gói dùng thử chưa phát sinh phí; phải theo dõi kỳ gia hạn.",
+   "nextSceneId": "CH04_SC03_RECEIPT",
+   "knowledgeUnits": [
+    "D03.06",
+    "D03.07",
+    "D03.08",
+    "D07.08",
+    "D07.09"
+   ]
+  },
+  {
+   "id": "CH04_SC03_PAID_B",
+   "type": "dialogue",
+   "title": "Mình đã xác nhận máy B giá 1.300.000đ, sẽ thanh toán sau khi kiểm tra hóa đơn. Nhớ giữ biên bản pin và bảo hành sáu tháng.",
+   "background": "/images/finteen-v2/chapter-04/bg/bg08c-checkout-documents.png",
+   "speaker": "An",
+   "speakerId": "AN",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "relieved",
+     "src": "/images/finteen-v2/chapter-04/char/an/an-relieved.png",
+     "position": "center"
+    }
+   ],
+   "text": "Mình đã xác nhận máy B giá 1.300.000đ, sẽ thanh toán sau khi kiểm tra hóa đơn. Nhớ giữ biên bản pin và bảo hành sáu tháng.",
+   "nextSceneId": "CH04_SC03_RECEIPT",
+   "knowledgeUnits": [
+    "D03.06",
+    "D03.07",
+    "D03.08",
+    "D07.08",
+    "D07.09"
+   ]
+  },
+  {
+   "id": "CH04_SC03_PAID_C",
+   "type": "dialogue",
+   "title": "Mình đã xác nhận máy C giá 2.300.000đ, sau khi thanh toán sẽ còn 200.000đ. Hoạt động trường cần 500.000đ, nghĩa là thiếu 300.000đ.",
+   "background": "/images/finteen-v2/chapter-04/bg/bg08c-checkout-documents.png",
+   "speaker": "An",
+   "speakerId": "AN",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "worried-money",
+     "src": "/images/finteen-v2/chapter-04/char/an/an-worried-money.png",
+     "position": "center"
+    }
+   ],
+   "text": "Mình đã xác nhận máy C giá 2.300.000đ, sau khi thanh toán sẽ còn 200.000đ. Hoạt động trường cần 500.000đ, nghĩa là thiếu 300.000đ.",
+   "nextSceneId": "CH04_SC03_RECEIPT",
+   "knowledgeUnits": [
+    "D03.06",
+    "D03.07",
+    "D03.08",
+    "D07.08",
+    "D07.09"
+   ]
+  },
+  {
+   "id": "CH04_SC03_RECEIPT",
+   "type": "dialogue",
+   "title": "Ủa, hóa đơn lại có thêm phí dịch vụ 100.000đ? Báo giá ban đầu đâu có dòng này.",
+   "background": "/images/finteen-v2/chapter-04/bg/bg08c-checkout-documents.png",
+   "speaker": "An",
+   "speakerId": "AN",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "thinking",
+     "src": "/images/finteen-v2/chapter-04/char/an/an-thinking.png",
+     "position": "center"
+    }
+   ],
+   "text": "Ủa, hóa đơn lại có thêm phí dịch vụ 100.000đ? Báo giá ban đầu đâu có dòng này.",
+   "nextSceneId": "CH04_SC03_RECEIPT_B2",
+   "knowledgeUnits": [
+    "D03.06",
+    "D03.07",
+    "D03.08",
+    "D07.08",
+    "D07.09"
+   ],
+   "inspect": {
+    "id": "ch04_receipt",
+    "buttonText": "Đối chiếu báo giá và hóa đơn",
+    "popupImage": "/images/finteen-v2/chapter-04/props/receipt-and-quotation.png",
+    "dataText": "Giá máy theo phương án đã xác nhận: A 1.600.000đ; B 1.300.000đ; C 2.300.000đ. Hóa đơn thêm 100.000đ không có trong báo giá. Chưa tự trả khoản đang tranh chấp. Lưu cả hai bản và hỏi bộ phận chăm sóc khách hàng của cửa hàng."
+   }
+  },
+  {
+   "id": "CH04_SC03_RECEIPT_B2",
+   "type": "dialogue",
+   "title": "Em đợi chị xem lại một chút nhé. Chị sẽ kiểm tra khoản phí này để đảm bảo không bị tính nhầm.",
+   "background": "/images/finteen-v2/chapter-04/bg/bg08c-checkout-documents.png",
+   "speaker": "Nhân viên",
+   "speakerId": "SHOP_ASSISTANT",
+   "characters": [
+    {
+     "id": "SHOP_ASSISTANT",
+     "expression": "explaining",
+     "src": "/images/finteen-v2/chapter-04/char/shop-assistant/shop-assistant-explaining.png",
+     "position": "center"
+    }
+   ],
+   "text": "Em đợi chị xem lại một chút nhé. Chị sẽ kiểm tra khoản phí này để đảm bảo không bị tính nhầm.",
+   "nextSceneId": "CH04_SC03_RECEIPT_B3",
+   "knowledgeUnits": [
+    "D03.06",
+    "D03.07",
+    "D03.08",
+    "D07.08",
+    "D07.09"
+   ]
+  },
+  {
+   "id": "CH04_SC03_RECEIPT_B3",
+   "type": "dialogue",
+   "title": "Có một trăm nghìn thôi mà, hay trả luôn cho xong? Nhưng tớ cũng không rõ là phí gì.",
+   "background": "/images/finteen-v2/chapter-04/bg/bg08c-checkout-documents.png",
+   "speaker": "Minh",
+   "speakerId": "MINH",
+   "characters": [
+    {
+     "id": "MINH",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-04/char/minh/minh-neutral.png",
+     "position": "center"
+    }
+   ],
+   "text": "Có một trăm nghìn thôi mà, hay trả luôn cho xong? Nhưng tớ cũng không rõ là phí gì.",
+   "nextSceneId": "CH04_SC03_RECEIPT_B4",
+   "knowledgeUnits": [
+    "D03.06",
+    "D03.07",
+    "D03.08",
+    "D07.08",
+    "D07.09"
+   ]
+  },
+  {
+   "id": "CH04_SC03_RECEIPT_B4",
+   "type": "dialogue",
+   "title": "Tớ thấy khoản này hơi lạ. Không phải tớ muốn làm khó ai đâu, chỉ là muốn biết sao mình lại phải trả thêm thôi.",
+   "background": "/images/finteen-v2/chapter-04/bg/bg08c-checkout-documents.png",
+   "speaker": "An",
+   "speakerId": "AN",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "thinking",
+     "src": "/images/finteen-v2/chapter-04/char/an/an-thinking.png",
+     "position": "center"
+    }
+   ],
+   "text": "Tớ thấy khoản này hơi lạ. Không phải tớ muốn làm khó ai đâu, chỉ là muốn biết sao mình lại phải trả thêm thôi.",
+   "nextSceneId": "CH04_SC03_RECEIPT_ROUTE_A",
+   "knowledgeUnits": [
+    "D03.06",
+    "D03.07",
+    "D03.08",
+    "D07.08",
+    "D07.09"
+   ]
+  },
+  {
+   "id": "CH04_SC03_RECEIPT_ROUTE_A",
+   "type": "conditional",
+   "condition": {
+    "var": "choice:CH04_PURCHASE",
+    "op": "==",
+    "value": "CH04_SC02_A"
+   },
+   "ifTrueSceneId": "CH04_SC03",
+   "ifFalseSceneId": "CH04_SC03_RECEIPT_ROUTE_B"
+  },
+  {
+   "id": "CH04_SC03_RECEIPT_ROUTE_B",
+   "type": "conditional",
+   "condition": {
+    "var": "choice:CH04_PURCHASE",
+    "op": "==",
+    "value": "CH04_SC02_B"
+   },
+   "ifTrueSceneId": "CH04_SC03_B_RECEIPT",
+   "ifFalseSceneId": "CH04_SC03_C_RECEIPT"
+  },
+  {
+   "id": "CH04_SC03",
+   "type": "choice",
+   "title": "Cửa hàng yêu cầu thêm 100.000đ ngoài báo giá ban đầu. Em sẽ làm gì?",
+   "background": "/images/finteen-v2/chapter-04/bg/bg08c-checkout-documents.png",
+   "characters": [],
+   "speaker": "An",
+   "speakerId": "AN",
+   "text": "Cửa hàng yêu cầu thêm 100.000đ ngoài báo giá ban đầu. Em sẽ làm gì?",
+   "prompt": "Cửa hàng yêu cầu thêm 100.000đ ngoài báo giá ban đầu. Em sẽ làm gì?",
+   "options": [
+    {
+     "id": "CH04_SC03_A",
+     "label": "Khoan đã, mình muốn hỏi rõ khoản phí này trước.",
+     "moneyEvents": [
+      {
+       "eventId": "EV_CH04_PHONE_PURCHASE",
+       "amount": -1600000,
+       "description": "Thanh toán máy A"
+      }
+     ],
+     "deltaStats": {
+      "RISK": -1,
+      "GOAL": 1
+     },
+     "evidenceScores": {
+      "I": 2,
+      "C": 2,
+      "P": 2
+     },
+     "flag": "receipt_resolved",
+     "setFlags": {
+      "receipt_resolved": true,
+      "receipt_unresolved": false
+     },
+     "nextSceneId": "CH04_SC03_A_FEEDBACK",
+     "condition": {
+      "var": "money",
+      "op": ">=",
+      "value": 1600000
+     },
+     "lockedReason": "Chưa đủ điều kiện để chọn."
+    },
+    {
+     "id": "CH04_SC03_B",
+     "label": "Chắc là phí phát sinh thôi, mình trả luôn cho xong.",
+     "moneyEvents": [
+      {
+       "eventId": "EV_CH04_PHONE_PURCHASE",
+       "amount": -1600000,
+       "description": "Thanh toán máy A"
+      },
+      {
+       "eventId": "EV_CH04_DISPUTED_FEE",
+       "amount": -100000,
+       "description": "Đồng ý trả phí ngoài báo giá"
+      }
+     ],
+     "deltaStats": {
+      "RISK": 1
+     },
+     "evidenceScores": {
+      "I": 0,
+      "C": 0,
+      "P": 0
+     },
+     "flag": "receipt_unresolved",
+     "setFlags": {
+      "receipt_resolved": false,
+      "receipt_unresolved": true
+     },
+     "nextSceneId": "CH04_SC03_B_FEEDBACK",
+     "condition": {
+      "var": "money",
+      "op": ">=",
+      "value": 1700000
+     },
+     "lockedReason": "Cần đủ tiền máy và 100.000đ phí phát sinh để thanh toán."
+    }
+   ],
+   "knowledgeUnits": [
+    "D03.06",
+    "D03.07",
+    "D03.08",
+    "D07.08",
+    "D07.09"
+   ],
+   "choiceGroup": "CH04_RECEIPT"
+  },
+  {
+   "id": "CH04_SC03_B_RECEIPT",
+   "type": "choice",
+   "title": "Cửa hàng yêu cầu thêm 100.000đ ngoài báo giá ban đầu. Em sẽ làm gì?",
+   "background": "/images/finteen-v2/chapter-04/bg/bg08c-checkout-documents.png",
+   "characters": [],
+   "speaker": "An",
+   "speakerId": "AN",
+   "text": "Cửa hàng yêu cầu thêm 100.000đ ngoài báo giá ban đầu. Em sẽ làm gì?",
+   "prompt": "Cửa hàng yêu cầu thêm 100.000đ ngoài báo giá ban đầu. Em sẽ làm gì?",
+   "options": [
+    {
+     "id": "CH04_SC03_A",
+     "label": "Khoan đã, mình muốn hỏi rõ khoản phí này trước.",
+     "moneyEvents": [
+      {
+       "eventId": "EV_CH04_PHONE_PURCHASE",
+       "amount": -1300000,
+       "description": "Thanh toán máy B"
+      }
+     ],
+     "deltaStats": {
+      "RISK": -1,
+      "GOAL": 1
+     },
+     "evidenceScores": {
+      "I": 2,
+      "C": 2,
+      "P": 2
+     },
+     "flag": "receipt_resolved",
+     "setFlags": {
+      "receipt_resolved": true,
+      "receipt_unresolved": false
+     },
+     "nextSceneId": "CH04_SC03_A_FEEDBACK",
+     "condition": {
+      "var": "money",
+      "op": ">=",
+      "value": 1300000
+     },
+     "lockedReason": "Chưa đủ điều kiện để chọn."
+    },
+    {
+     "id": "CH04_SC03_B",
+     "label": "Chắc là phí phát sinh thôi, mình trả luôn cho xong.",
+     "moneyEvents": [
+      {
+       "eventId": "EV_CH04_PHONE_PURCHASE",
+       "amount": -1300000,
+       "description": "Thanh toán máy B"
+      },
+      {
+       "eventId": "EV_CH04_DISPUTED_FEE",
+       "amount": -100000,
+       "description": "Đồng ý trả phí ngoài báo giá"
+      }
+     ],
+     "deltaStats": {
+      "RISK": 1
+     },
+     "evidenceScores": {
+      "I": 0,
+      "C": 0,
+      "P": 0
+     },
+     "flag": "receipt_unresolved",
+     "setFlags": {
+      "receipt_resolved": false,
+      "receipt_unresolved": true
+     },
+     "nextSceneId": "CH04_SC03_B_FEEDBACK",
+     "condition": {
+      "var": "money",
+      "op": ">=",
+      "value": 1400000
+     },
+     "lockedReason": "Cần đủ tiền máy và 100.000đ phí phát sinh để thanh toán."
+    }
+   ],
+   "knowledgeUnits": [
+    "D03.06",
+    "D03.07",
+    "D03.08",
+    "D07.08",
+    "D07.09"
+   ],
+   "choiceGroup": "CH04_RECEIPT"
+  },
+  {
+   "id": "CH04_SC03_C_RECEIPT",
+   "type": "choice",
+   "title": "Cửa hàng yêu cầu thêm 100.000đ ngoài báo giá ban đầu. Em sẽ làm gì?",
+   "background": "/images/finteen-v2/chapter-04/bg/bg08c-checkout-documents.png",
+   "characters": [],
+   "speaker": "An",
+   "speakerId": "AN",
+   "text": "Cửa hàng yêu cầu thêm 100.000đ ngoài báo giá ban đầu. Em sẽ làm gì?",
+   "prompt": "Cửa hàng yêu cầu thêm 100.000đ ngoài báo giá ban đầu. Em sẽ làm gì?",
+   "options": [
+    {
+     "id": "CH04_SC03_A",
+     "label": "Khoan đã, mình muốn hỏi rõ khoản phí này trước.",
+     "moneyEvents": [
+      {
+       "eventId": "EV_CH04_PHONE_PURCHASE",
+       "amount": -2300000,
+       "description": "Thanh toán máy C"
+      }
+     ],
+     "deltaStats": {
+      "RISK": -1,
+      "GOAL": 1
+     },
+     "evidenceScores": {
+      "I": 2,
+      "C": 2,
+      "P": 2
+     },
+     "flag": "receipt_resolved",
+     "setFlags": {
+      "receipt_resolved": true,
+      "receipt_unresolved": false
+     },
+     "nextSceneId": "CH04_SC03_A_FEEDBACK",
+     "condition": {
+      "var": "money",
+      "op": ">=",
+      "value": 2300000
+     },
+     "lockedReason": "Chưa đủ điều kiện để chọn."
+    },
+    {
+     "id": "CH04_SC03_B",
+     "label": "Chắc là phí phát sinh thôi, mình trả luôn cho xong.",
+     "moneyEvents": [
+      {
+       "eventId": "EV_CH04_PHONE_PURCHASE",
+       "amount": -2300000,
+       "description": "Thanh toán máy C"
+      },
+      {
+       "eventId": "EV_CH04_DISPUTED_FEE",
+       "amount": -100000,
+       "description": "Đồng ý trả phí ngoài báo giá"
+      }
+     ],
+     "deltaStats": {
+      "RISK": 1
+     },
+     "evidenceScores": {
+      "I": 0,
+      "C": 0,
+      "P": 0
+     },
+     "flag": "receipt_unresolved",
+     "setFlags": {
+      "receipt_resolved": false,
+      "receipt_unresolved": true
+     },
+     "nextSceneId": "CH04_SC03_B_FEEDBACK",
+     "condition": {
+      "var": "money",
+      "op": ">=",
+      "value": 2400000
+     },
+     "lockedReason": "Cần đủ tiền máy và 100.000đ phí phát sinh để thanh toán."
+    }
+   ],
+   "knowledgeUnits": [
+    "D03.06",
+    "D03.07",
+    "D03.08",
+    "D07.08",
+    "D07.09"
+   ],
+   "choiceGroup": "CH04_RECEIPT"
+  },
+  {
+   "id": "CH04_SC03_A_FEEDBACK",
+   "type": "dialogue",
+   "title": "Chị kiểm tra lại rồi nhé. Đúng là bên chị có chút nhầm lẫn khi tính phí. Chị đã sửa lại hóa đơn cho em rồi, em giữ lại cả báo giá ban đầu để tiện đối chiếu nha.",
+   "background": "/images/finteen-v2/chapter-04/bg/bg08c-checkout-documents.png",
+   "speaker": "Nhân viên",
+   "speakerId": "SHOP_ASSISTANT",
+   "characters": [
+    {
+     "id": "SHOP_ASSISTANT",
+     "expression": "explaining",
+     "src": "/images/finteen-v2/chapter-04/char/shop-assistant/shop-assistant-explaining.png",
+     "position": "center"
+    }
+   ],
+   "text": "Chị kiểm tra lại rồi nhé. Đúng là bên chị có chút nhầm lẫn khi tính phí. Chị đã sửa lại hóa đơn cho em rồi, em giữ lại cả báo giá ban đầu để tiện đối chiếu nha.",
+   "nextSceneId": "CH04_SC03_A_FB2",
+   "knowledgeUnits": [
+    "D03.06",
+    "D03.07",
+    "D03.08",
+    "D07.08",
+    "D07.09"
+   ]
+  },
+  {
+   "id": "CH04_SC03_A_FB2",
+   "type": "dialogue",
+   "title": "Ban đầu mình cũng ngại hỏi thật, nhưng may mà đã kiểm tra lại. Không thì mất thêm 100 ngàn rồi.",
+   "background": "/images/finteen-v2/chapter-04/bg/bg08c-checkout-documents.png",
+   "speaker": "An",
+   "speakerId": "AN",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "relieved",
+     "src": "/images/finteen-v2/chapter-04/char/an/an-relieved.png",
+     "position": "center"
+    }
+   ],
+   "text": "Ban đầu mình cũng ngại hỏi thật, nhưng may mà đã kiểm tra lại. Không thì mất thêm 100 ngàn rồi.",
+   "nextSceneId": "CH04_SC04_ART",
+   "knowledgeUnits": [
+    "D03.06",
+    "D03.07",
+    "D03.08",
+    "D07.08",
+    "D07.09"
+   ]
+  },
+  {
+   "id": "CH04_SC03_B_FEEDBACK",
+   "type": "dialogue",
+   "title": "Mình trả tiền luôn cho nhanh, giờ nghĩ lại thấy hơi sai sai. Không biết có bị tính nhầm không nhỉ?",
+   "background": "/images/finteen-v2/chapter-04/bg/bg08c-checkout-documents.png",
+   "speaker": "An",
+   "speakerId": "AN",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "worried-money",
+     "src": "/images/finteen-v2/chapter-04/char/an/an-worried-money.png",
+     "position": "center"
+    }
+   ],
+   "text": "Mình trả tiền luôn cho nhanh, giờ nghĩ lại thấy hơi sai sai. Không biết có bị tính nhầm không nhỉ?",
+   "nextSceneId": "CH04_SC03_B_FB2",
+   "knowledgeUnits": [
+    "D03.06",
+    "D03.07",
+    "D03.08",
+    "D07.08",
+    "D07.09"
+   ]
+  },
+  {
+   "id": "CH04_SC03_B_FB2",
+   "type": "dialogue",
+   "title": "Em cứ giữ lại hóa đơn nhé. Nếu vẫn thắc mắc về khoản phí này, em có thể liên hệ bộ phận hỗ trợ để được kiểm tra lại.",
+   "background": "/images/finteen-v2/chapter-04/bg/bg08c-checkout-documents.png",
+   "speaker": "Nhân viên",
+   "speakerId": "SHOP_ASSISTANT",
+   "characters": [
+    {
+     "id": "SHOP_ASSISTANT",
+     "expression": "explaining",
+     "src": "/images/finteen-v2/chapter-04/char/shop-assistant/shop-assistant-explaining.png",
+     "position": "center"
+    }
+   ],
+   "text": "Em cứ giữ lại hóa đơn nhé. Nếu vẫn thắc mắc về khoản phí này, em có thể liên hệ bộ phận hỗ trợ để được kiểm tra lại.",
+   "nextSceneId": "CH04_SC04_ART",
+   "knowledgeUnits": [
+    "D03.06",
+    "D03.07",
+    "D03.08",
+    "D07.08",
+    "D07.09"
+   ]
+  },
+  {
+   "id": "CH04_SC04_ART",
+   "type": "inspect",
+   "title": "Mua thông minh",
+   "background": "/images/finteen-v2/chapter-04/scene/sc04-following-renewal.png",
+   "sceneArt": "/images/finteen-v2/chapter-04/scene/sc04-following-renewal.png",
+   "characters": [],
+   "nextSceneId": "CH04_SC04_B0",
+   "knowledgeUnits": [
+    "D03.07",
+    "D03.08",
+    "D03.09",
+    "D07.08",
+    "D07.09"
+   ]
+  },
+  {
+   "id": "CH04_SC04_B0",
+   "type": "dialogue",
+   "title": "Về nhà rồi. Mẹ hỏi mình đã dựa vào điều gì để chọn điện thoại, và còn khoản nào phải theo dõi.",
+   "background": "/images/finteen-v2/chapter-04/bg/bg07-study-desk.png",
+   "speaker": "An",
+   "speakerId": "AN",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "thinking",
+     "src": "/images/finteen-v2/chapter-04/char/an/an-thinking.png",
+     "position": "center"
+    }
+   ],
+   "text": "Về nhà rồi. Mẹ hỏi mình đã dựa vào điều gì để chọn điện thoại, và còn khoản nào phải theo dõi.",
+   "nextSceneId": "CH04_SC04_B1",
+   "knowledgeUnits": [
+    "D03.07",
+    "D03.08",
+    "D03.09",
+    "D07.08",
+    "D07.09"
+   ]
+  },
+  {
+   "id": "CH04_SC04_B1",
+   "type": "dialogue",
+   "title": "Mình giữ hóa đơn, nhắc lịch và kiểm tra máy đáp ứng ứng dụng học.",
+   "background": "/images/finteen-v2/chapter-04/bg/bg07-study-desk.png",
+   "speaker": "An",
+   "speakerId": "AN",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "thinking",
+     "src": "/images/finteen-v2/chapter-04/char/an/an-thinking.png",
+     "position": "center"
+    }
+   ],
+   "text": "Mình giữ hóa đơn, nhắc lịch và kiểm tra máy đáp ứng ứng dụng học.",
+   "nextSceneId": "CH04_SC04_B2",
+   "knowledgeUnits": [
+    "D03.07",
+    "D03.08",
+    "D03.09",
+    "D07.08",
+    "D07.09"
+   ]
+  },
+  {
+   "id": "CH04_SC04_B2",
+   "type": "dialogue",
+   "title": "Em đã đánh đổi điều gì giữa giá, chất lượng và cách sử dụng?",
+   "background": "/images/finteen-v2/chapter-04/bg/bg07-study-desk.png",
+   "speaker": "Cô Linh",
+   "speakerId": "CO_LINH",
+   "characters": [
+    {
+     "id": "CO_LINH",
+     "expression": "explaining",
+     "src": "/images/finteen-v2/chapter-04/char/co-linh/co-linh-explaining.png",
+     "position": "center"
+    }
+   ],
+   "text": "Em đã đánh đổi điều gì giữa giá, chất lượng và cách sử dụng?",
+   "nextSceneId": "CH04_SC04_BRANCH_A",
+   "knowledgeUnits": [
+    "D03.07",
+    "D03.08",
+    "D03.09",
+    "D07.08",
+    "D07.09"
+   ]
+  },
+  {
+   "id": "CH04_SC04_BRANCH_A",
+   "type": "conditional",
+   "condition": {
+    "var": "choice:CH04_PURCHASE",
+    "op": "==",
+    "value": "CH04_SC02_A"
+   },
+   "ifTrueSceneId": "CH04_SC04_TALK_A",
+   "ifFalseSceneId": "CH04_SC04_BRANCH_B"
+  },
+  {
+   "id": "CH04_SC04_BRANCH_B",
+   "type": "conditional",
+   "condition": {
+    "var": "choice:CH04_PURCHASE",
+    "op": "==",
+    "value": "CH04_SC02_B"
+   },
+   "ifTrueSceneId": "CH04_SC04_TALK_B",
+   "ifFalseSceneId": "CH04_SC04_TALK_C"
+  },
+  {
+   "id": "CH04_SC04_TALK_A",
+   "type": "dialogue",
+   "title": "Máy A mới, bảo hành 12 tháng. Mình lưu thông tin hủy nhưng phải thực hiện hủy đúng hạn, không chỉ đặt lời nhắc.",
+   "background": "/images/finteen-v2/chapter-04/bg/bg07-study-desk.png",
+   "speaker": "An",
+   "speakerId": "AN",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "thinking",
+     "src": "/images/finteen-v2/chapter-04/char/an/an-thinking.png",
+     "position": "center"
+    }
+   ],
+   "text": "Máy A mới, bảo hành 12 tháng. Mình lưu thông tin hủy nhưng phải thực hiện hủy đúng hạn, không chỉ đặt lời nhắc.",
+   "nextSceneId": "CH04_SC04_ROUTE",
+   "knowledgeUnits": [
+    "D03.07",
+    "D03.08",
+    "D03.09",
+    "D07.08",
+    "D07.09"
+   ]
+  },
+  {
+   "id": "CH04_SC04_TALK_B",
+   "type": "dialogue",
+   "title": "Máy B tiết kiệm được nhiều tiền hơn. Mình sẽ theo dõi pin, cập nhật phần mềm và điều kiện bảo hành sáu tháng.",
+   "background": "/images/finteen-v2/chapter-04/bg/bg07-study-desk.png",
+   "speaker": "An",
+   "speakerId": "AN",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "thinking",
+     "src": "/images/finteen-v2/chapter-04/char/an/an-thinking.png",
+     "position": "center"
+    }
+   ],
+   "text": "Máy B tiết kiệm được nhiều tiền hơn. Mình sẽ theo dõi pin, cập nhật phần mềm và điều kiện bảo hành sáu tháng.",
+   "nextSceneId": "CH04_SC04_ROUTE",
+   "knowledgeUnits": [
+    "D03.07",
+    "D03.08",
+    "D03.09",
+    "D07.08",
+    "D07.09"
+   ]
+  },
+  {
+   "id": "CH04_SC04_TALK_C",
+   "type": "dialogue",
+   "title": "Mình thật sự thích máy C, nhưng tiền cho hoạt động trường vẫn thiếu 300.000đ. Không thể mặc định sẽ xin thêm được.",
+   "background": "/images/finteen-v2/chapter-04/bg/bg07-study-desk.png",
+   "speaker": "An",
+   "speakerId": "AN",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "worried-money",
+     "src": "/images/finteen-v2/chapter-04/char/an/an-worried-money.png",
+     "position": "center"
+    }
+   ],
+   "text": "Mình thật sự thích máy C, nhưng tiền cho hoạt động trường vẫn thiếu 300.000đ. Không thể mặc định sẽ xin thêm được.",
+   "nextSceneId": "CH04_SC04_ROUTE",
+   "knowledgeUnits": [
+    "D03.07",
+    "D03.08",
+    "D03.09",
+    "D07.08",
+    "D07.09"
+   ]
+  },
+  {
+   "id": "CH04_SC04_ROUTE",
+   "type": "conditional",
+   "condition": {
+    "var": "choice:CH04_PURCHASE",
+    "op": "==",
+    "value": "CH04_SC02_A"
+   },
+   "ifTrueSceneId": "CH04_SC04_SUBSCRIPTION",
+   "ifFalseSceneId": "CH04_SC04_RECAP"
+  },
+  {
+   "id": "CH04_SC04_SUBSCRIPTION",
+   "type": "choice",
+   "title": "Đến trước ngày gia hạn: nhắc lịch chưa đồng nghĩa đã hủy. Em làm gì?",
+   "background": "/images/finteen-v2/chapter-04/bg/bg07-study-desk.png",
+   "characters": [],
+   "speaker": "An",
+   "speakerId": "AN",
+   "text": "Đến trước ngày gia hạn: nhắc lịch chưa đồng nghĩa đã hủy. Em làm gì?",
+   "prompt": "Đến trước ngày gia hạn: nhắc lịch chưa đồng nghĩa đã hủy. Em làm gì?",
+   "options": [
+    {
+     "id": "CH04_CANCEL",
+     "label": "Thực hiện hủy trước gia hạn và lưu xác nhận thành công",
+     "moneyEvents": [],
+     "setFlags": {
+      "cancellation_confirmed": true,
+      "subscription_kept": false,
+      "budget_adjusted": true
+     },
+     "nextSceneId": "CH04_SC04_CANCELLED"
+    },
+    {
+     "id": "CH04_KEEP",
+     "label": "Giữ thuê bao: xem từng tháng phí thực sự phát sinh",
+     "moneyEvents": [],
+     "setFlags": {
+      "cancellation_confirmed": false,
+      "subscription_kept": true,
+      "budget_adjusted": false
+     },
+     "nextSceneId": "CH04_SC04_MONTH_2"
+    }
+   ],
+   "knowledgeUnits": [
+    "D03.07",
+    "D03.08",
+    "D03.09",
+    "D07.08",
+    "D07.09"
+   ],
+   "inspect": {
+    "id": "ch04_renewal",
+    "buttonText": "Xem lịch gia hạn",
+    "popupImage": "/images/finteen-v2/chapter-04/asset-mini-game/smart-shopping/renewal-calendar.png",
+    "dataText": "Tháng đầu dùng thử. Nếu giữ thuê bao, mỗi tháng từ tháng 2 đến tháng 12 trả 50.000đ. Tổng 550.000đ là dự báo, không trừ trước. Hủy phải thực hiện trước gia hạn và có xác nhận."
+   }
+  },
+  {
+   "id": "CH04_SC04_CANCELLED",
+   "type": "dialogue",
+   "title": "Mình đã hủy đúng hạn và lưu xác nhận: tổng năm đầu là 1.600.000đ, còn 900.000đ trước các phí khác.",
+   "background": "/images/finteen-v2/chapter-04/bg/bg07-study-desk.png",
+   "speaker": "An",
+   "speakerId": "AN",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "relieved",
+     "src": "/images/finteen-v2/chapter-04/char/an/an-relieved.png",
+     "position": "center"
+    }
+   ],
+   "text": "Mình đã hủy đúng hạn và lưu xác nhận: tổng năm đầu là 1.600.000đ, còn 900.000đ trước các phí khác.",
+   "nextSceneId": "CH04_SC04_RECAP",
+   "knowledgeUnits": [
+    "D03.07",
+    "D03.08",
+    "D03.09",
+    "D07.08",
+    "D07.09"
+   ]
+  },
+  {
+   "id": "CH04_SC04_MONTH_2",
+   "type": "choice",
+   "title": "Tháng 2: thuê bao đang được giữ. Phí của tháng này là 50.000đ.",
+   "background": "/images/finteen-v2/chapter-04/bg/bg07-study-desk.png",
+   "characters": [],
+   "speaker": "An",
+   "speakerId": "AN",
+   "text": "Tháng 2: thuê bao đang được giữ. Phí của tháng này là 50.000đ.",
+   "prompt": "Tháng 2: thuê bao đang được giữ. Phí của tháng này là 50.000đ.",
+   "options": [
+    {
+     "id": "CH04_SC04_PAY_MONTH_2",
+     "label": "Xác nhận tháng 2 đã đi qua: thanh toán 50.000đ",
+     "moneyEvents": [
+      {
+       "eventId": "EV_CH04_SUBSCRIPTION_MONTH_2",
+       "amount": -50000,
+       "description": "Thuê bao tháng 2"
+      }
+     ],
+     "nextSceneId": "CH04_SC04_MONTH_3",
+     "condition": {
+      "var": "money",
+      "op": ">=",
+      "value": 50000
+     },
+     "lockedReason": "Chưa đủ điều kiện để chọn."
+    }
+   ],
+   "knowledgeUnits": [
+    "D03.07",
+    "D03.08",
+    "D03.09",
+    "D07.08",
+    "D07.09"
+   ]
+  },
+  {
+   "id": "CH04_SC04_MONTH_3",
+   "type": "choice",
+   "title": "Tháng 3: thuê bao đang được giữ. Phí của tháng này là 50.000đ.",
+   "background": "/images/finteen-v2/chapter-04/bg/bg07-study-desk.png",
+   "characters": [],
+   "speaker": "An",
+   "speakerId": "AN",
+   "text": "Tháng 3: thuê bao đang được giữ. Phí của tháng này là 50.000đ.",
+   "prompt": "Tháng 3: thuê bao đang được giữ. Phí của tháng này là 50.000đ.",
+   "options": [
+    {
+     "id": "CH04_SC04_PAY_MONTH_3",
+     "label": "Xác nhận tháng 3 đã đi qua: thanh toán 50.000đ",
+     "moneyEvents": [
+      {
+       "eventId": "EV_CH04_SUBSCRIPTION_MONTH_3",
+       "amount": -50000,
+       "description": "Thuê bao tháng 3"
+      }
+     ],
+     "nextSceneId": "CH04_SC04_MONTH_4",
+     "condition": {
+      "var": "money",
+      "op": ">=",
+      "value": 50000
+     },
+     "lockedReason": "Chưa đủ điều kiện để chọn."
+    }
+   ],
+   "knowledgeUnits": [
+    "D03.07",
+    "D03.08",
+    "D03.09",
+    "D07.08",
+    "D07.09"
+   ]
+  },
+  {
+   "id": "CH04_SC04_MONTH_4",
+   "type": "choice",
+   "title": "Tháng 4: thuê bao đang được giữ. Phí của tháng này là 50.000đ.",
+   "background": "/images/finteen-v2/chapter-04/bg/bg07-study-desk.png",
+   "characters": [],
+   "speaker": "An",
+   "speakerId": "AN",
+   "text": "Tháng 4: thuê bao đang được giữ. Phí của tháng này là 50.000đ.",
+   "prompt": "Tháng 4: thuê bao đang được giữ. Phí của tháng này là 50.000đ.",
+   "options": [
+    {
+     "id": "CH04_SC04_PAY_MONTH_4",
+     "label": "Xác nhận tháng 4 đã đi qua: thanh toán 50.000đ",
+     "moneyEvents": [
+      {
+       "eventId": "EV_CH04_SUBSCRIPTION_MONTH_4",
+       "amount": -50000,
+       "description": "Thuê bao tháng 4"
+      }
+     ],
+     "nextSceneId": "CH04_SC04_MONTH_5",
+     "condition": {
+      "var": "money",
+      "op": ">=",
+      "value": 50000
+     },
+     "lockedReason": "Chưa đủ điều kiện để chọn."
+    }
+   ],
+   "knowledgeUnits": [
+    "D03.07",
+    "D03.08",
+    "D03.09",
+    "D07.08",
+    "D07.09"
+   ]
+  },
+  {
+   "id": "CH04_SC04_MONTH_5",
+   "type": "choice",
+   "title": "Tháng 5: thuê bao đang được giữ. Phí của tháng này là 50.000đ.",
+   "background": "/images/finteen-v2/chapter-04/bg/bg07-study-desk.png",
+   "characters": [],
+   "speaker": "An",
+   "speakerId": "AN",
+   "text": "Tháng 5: thuê bao đang được giữ. Phí của tháng này là 50.000đ.",
+   "prompt": "Tháng 5: thuê bao đang được giữ. Phí của tháng này là 50.000đ.",
+   "options": [
+    {
+     "id": "CH04_SC04_PAY_MONTH_5",
+     "label": "Xác nhận tháng 5 đã đi qua: thanh toán 50.000đ",
+     "moneyEvents": [
+      {
+       "eventId": "EV_CH04_SUBSCRIPTION_MONTH_5",
+       "amount": -50000,
+       "description": "Thuê bao tháng 5"
+      }
+     ],
+     "nextSceneId": "CH04_SC04_MONTH_6",
+     "condition": {
+      "var": "money",
+      "op": ">=",
+      "value": 50000
+     },
+     "lockedReason": "Chưa đủ điều kiện để chọn."
+    }
+   ],
+   "knowledgeUnits": [
+    "D03.07",
+    "D03.08",
+    "D03.09",
+    "D07.08",
+    "D07.09"
+   ]
+  },
+  {
+   "id": "CH04_SC04_MONTH_6",
+   "type": "choice",
+   "title": "Tháng 6: thuê bao đang được giữ. Phí của tháng này là 50.000đ.",
+   "background": "/images/finteen-v2/chapter-04/bg/bg07-study-desk.png",
+   "characters": [],
+   "speaker": "An",
+   "speakerId": "AN",
+   "text": "Tháng 6: thuê bao đang được giữ. Phí của tháng này là 50.000đ.",
+   "prompt": "Tháng 6: thuê bao đang được giữ. Phí của tháng này là 50.000đ.",
+   "options": [
+    {
+     "id": "CH04_SC04_PAY_MONTH_6",
+     "label": "Xác nhận tháng 6 đã đi qua: thanh toán 50.000đ",
+     "moneyEvents": [
+      {
+       "eventId": "EV_CH04_SUBSCRIPTION_MONTH_6",
+       "amount": -50000,
+       "description": "Thuê bao tháng 6"
+      }
+     ],
+     "nextSceneId": "CH04_SC04_MONTH_7",
+     "condition": {
+      "var": "money",
+      "op": ">=",
+      "value": 50000
+     },
+     "lockedReason": "Chưa đủ điều kiện để chọn."
+    }
+   ],
+   "knowledgeUnits": [
+    "D03.07",
+    "D03.08",
+    "D03.09",
+    "D07.08",
+    "D07.09"
+   ]
+  },
+  {
+   "id": "CH04_SC04_MONTH_7",
+   "type": "choice",
+   "title": "Tháng 7: thuê bao đang được giữ. Phí của tháng này là 50.000đ.",
+   "background": "/images/finteen-v2/chapter-04/bg/bg07-study-desk.png",
+   "characters": [],
+   "speaker": "An",
+   "speakerId": "AN",
+   "text": "Tháng 7: thuê bao đang được giữ. Phí của tháng này là 50.000đ.",
+   "prompt": "Tháng 7: thuê bao đang được giữ. Phí của tháng này là 50.000đ.",
+   "options": [
+    {
+     "id": "CH04_SC04_PAY_MONTH_7",
+     "label": "Xác nhận tháng 7 đã đi qua: thanh toán 50.000đ",
+     "moneyEvents": [
+      {
+       "eventId": "EV_CH04_SUBSCRIPTION_MONTH_7",
+       "amount": -50000,
+       "description": "Thuê bao tháng 7"
+      }
+     ],
+     "nextSceneId": "CH04_SC04_MONTH_8",
+     "condition": {
+      "var": "money",
+      "op": ">=",
+      "value": 50000
+     },
+     "lockedReason": "Chưa đủ điều kiện để chọn."
+    }
+   ],
+   "knowledgeUnits": [
+    "D03.07",
+    "D03.08",
+    "D03.09",
+    "D07.08",
+    "D07.09"
+   ]
+  },
+  {
+   "id": "CH04_SC04_MONTH_8",
+   "type": "choice",
+   "title": "Tháng 8: thuê bao đang được giữ. Phí của tháng này là 50.000đ.",
+   "background": "/images/finteen-v2/chapter-04/bg/bg07-study-desk.png",
+   "characters": [],
+   "speaker": "An",
+   "speakerId": "AN",
+   "text": "Tháng 8: thuê bao đang được giữ. Phí của tháng này là 50.000đ.",
+   "prompt": "Tháng 8: thuê bao đang được giữ. Phí của tháng này là 50.000đ.",
+   "options": [
+    {
+     "id": "CH04_SC04_PAY_MONTH_8",
+     "label": "Xác nhận tháng 8 đã đi qua: thanh toán 50.000đ",
+     "moneyEvents": [
+      {
+       "eventId": "EV_CH04_SUBSCRIPTION_MONTH_8",
+       "amount": -50000,
+       "description": "Thuê bao tháng 8"
+      }
+     ],
+     "nextSceneId": "CH04_SC04_MONTH_9",
+     "condition": {
+      "var": "money",
+      "op": ">=",
+      "value": 50000
+     },
+     "lockedReason": "Chưa đủ điều kiện để chọn."
+    }
+   ],
+   "knowledgeUnits": [
+    "D03.07",
+    "D03.08",
+    "D03.09",
+    "D07.08",
+    "D07.09"
+   ]
+  },
+  {
+   "id": "CH04_SC04_MONTH_9",
+   "type": "choice",
+   "title": "Tháng 9: thuê bao đang được giữ. Phí của tháng này là 50.000đ.",
+   "background": "/images/finteen-v2/chapter-04/bg/bg07-study-desk.png",
+   "characters": [],
+   "speaker": "An",
+   "speakerId": "AN",
+   "text": "Tháng 9: thuê bao đang được giữ. Phí của tháng này là 50.000đ.",
+   "prompt": "Tháng 9: thuê bao đang được giữ. Phí của tháng này là 50.000đ.",
+   "options": [
+    {
+     "id": "CH04_SC04_PAY_MONTH_9",
+     "label": "Xác nhận tháng 9 đã đi qua: thanh toán 50.000đ",
+     "moneyEvents": [
+      {
+       "eventId": "EV_CH04_SUBSCRIPTION_MONTH_9",
+       "amount": -50000,
+       "description": "Thuê bao tháng 9"
+      }
+     ],
+     "nextSceneId": "CH04_SC04_MONTH_10",
+     "condition": {
+      "var": "money",
+      "op": ">=",
+      "value": 50000
+     },
+     "lockedReason": "Chưa đủ điều kiện để chọn."
+    }
+   ],
+   "knowledgeUnits": [
+    "D03.07",
+    "D03.08",
+    "D03.09",
+    "D07.08",
+    "D07.09"
+   ]
+  },
+  {
+   "id": "CH04_SC04_MONTH_10",
+   "type": "choice",
+   "title": "Tháng 10: thuê bao đang được giữ. Phí của tháng này là 50.000đ.",
+   "background": "/images/finteen-v2/chapter-04/bg/bg07-study-desk.png",
+   "characters": [],
+   "speaker": "An",
+   "speakerId": "AN",
+   "text": "Tháng 10: thuê bao đang được giữ. Phí của tháng này là 50.000đ.",
+   "prompt": "Tháng 10: thuê bao đang được giữ. Phí của tháng này là 50.000đ.",
+   "options": [
+    {
+     "id": "CH04_SC04_PAY_MONTH_10",
+     "label": "Xác nhận tháng 10 đã đi qua: thanh toán 50.000đ",
+     "moneyEvents": [
+      {
+       "eventId": "EV_CH04_SUBSCRIPTION_MONTH_10",
+       "amount": -50000,
+       "description": "Thuê bao tháng 10"
+      }
+     ],
+     "nextSceneId": "CH04_SC04_MONTH_11",
+     "condition": {
+      "var": "money",
+      "op": ">=",
+      "value": 50000
+     },
+     "lockedReason": "Chưa đủ điều kiện để chọn."
+    }
+   ],
+   "knowledgeUnits": [
+    "D03.07",
+    "D03.08",
+    "D03.09",
+    "D07.08",
+    "D07.09"
+   ]
+  },
+  {
+   "id": "CH04_SC04_MONTH_11",
+   "type": "choice",
+   "title": "Tháng 11: thuê bao đang được giữ. Phí của tháng này là 50.000đ.",
+   "background": "/images/finteen-v2/chapter-04/bg/bg07-study-desk.png",
+   "characters": [],
+   "speaker": "An",
+   "speakerId": "AN",
+   "text": "Tháng 11: thuê bao đang được giữ. Phí của tháng này là 50.000đ.",
+   "prompt": "Tháng 11: thuê bao đang được giữ. Phí của tháng này là 50.000đ.",
+   "options": [
+    {
+     "id": "CH04_SC04_PAY_MONTH_11",
+     "label": "Xác nhận tháng 11 đã đi qua: thanh toán 50.000đ",
+     "moneyEvents": [
+      {
+       "eventId": "EV_CH04_SUBSCRIPTION_MONTH_11",
+       "amount": -50000,
+       "description": "Thuê bao tháng 11"
+      }
+     ],
+     "nextSceneId": "CH04_SC04_MONTH_12",
+     "condition": {
+      "var": "money",
+      "op": ">=",
+      "value": 50000
+     },
+     "lockedReason": "Chưa đủ điều kiện để chọn."
+    }
+   ],
+   "knowledgeUnits": [
+    "D03.07",
+    "D03.08",
+    "D03.09",
+    "D07.08",
+    "D07.09"
+   ]
+  },
+  {
+   "id": "CH04_SC04_MONTH_12",
+   "type": "choice",
+   "title": "Tháng 12: thuê bao đang được giữ. Phí của tháng này là 50.000đ.",
+   "background": "/images/finteen-v2/chapter-04/bg/bg07-study-desk.png",
+   "characters": [],
+   "speaker": "An",
+   "speakerId": "AN",
+   "text": "Tháng 12: thuê bao đang được giữ. Phí của tháng này là 50.000đ.",
+   "prompt": "Tháng 12: thuê bao đang được giữ. Phí của tháng này là 50.000đ.",
+   "options": [
+    {
+     "id": "CH04_SC04_PAY_MONTH_12",
+     "label": "Xác nhận tháng 12 đã đi qua: thanh toán 50.000đ",
+     "moneyEvents": [
+      {
+       "eventId": "EV_CH04_SUBSCRIPTION_MONTH_12",
+       "amount": -50000,
+       "description": "Thuê bao tháng 12"
+      }
+     ],
+     "nextSceneId": "CH04_SC04_OVER_BUDGET",
+     "condition": {
+      "var": "money",
+      "op": ">=",
+      "value": 50000
+     },
+     "lockedReason": "Chưa đủ điều kiện để chọn."
+    }
+   ],
+   "knowledgeUnits": [
+    "D03.07",
+    "D03.08",
+    "D03.09",
+    "D07.08",
+    "D07.09"
+   ]
+  },
+  {
+   "id": "CH04_SC04_OVER_BUDGET",
+   "type": "dialogue",
+   "title": "Mười một tháng đã đi qua: phí thuê bao thực tế là 550.000đ. Tổng năm đầu 2.150.000đ vượt mục tiêu 2.000.000đ; mình cần điều chỉnh kế hoạch.",
+   "background": "/images/finteen-v2/chapter-04/bg/bg07-study-desk.png",
+   "speaker": "An",
+   "speakerId": "AN",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "worried-money",
+     "src": "/images/finteen-v2/chapter-04/char/an/an-worried-money.png",
+     "position": "center"
+    }
+   ],
+   "text": "Mười một tháng đã đi qua: phí thuê bao thực tế là 550.000đ. Tổng năm đầu 2.150.000đ vượt mục tiêu 2.000.000đ; mình cần điều chỉnh kế hoạch.",
+   "nextSceneId": "CH04_SC04_RECAP",
+   "knowledgeUnits": [
+    "D03.07",
+    "D03.08",
+    "D03.09",
+    "D07.08",
+    "D07.09"
+   ]
+  },
+  {
+   "id": "CH04_SC04_RECAP",
+   "type": "choice",
+   "title": "Nhìn lại chứng từ và kế hoạch chi phí",
+   "background": "/images/finteen-v2/chapter-04/bg/bg07-study-desk.png",
+   "characters": [],
+   "speaker": "An",
+   "speakerId": "AN",
+   "text": "Nhìn lại chứng từ và kế hoạch chi phí",
+   "prompt": "Nhìn lại chứng từ và kế hoạch chi phí",
+   "options": [
+    {
+     "id": "CH04_RECAP_KEEP",
+     "label": "Ghi nhận đúng tình trạng hiện tại và suy ngẫm",
+     "nextSceneId": "CH04_SC04_R1"
+    },
+    {
+     "id": "CH04_RECAP_RECEIPT",
+     "label": "Nhờ bộ phận chăm sóc khách hàng giải thích phí và kiểm tra lại hóa đơn",
+     "setFlags": {
+      "receipt_resolved": true,
+      "receipt_unresolved": false,
+      "receipt_revised": true
+     },
+     "nextSceneId": "CH04_SC04_RECEIPT_FIXED",
+     "condition": {
+      "var": "flag:receipt_unresolved",
+      "op": "==",
+      "value": true
+     },
+     "lockedReason": "Chứng từ đã được kiểm tra và xử lý."
+    },
+    {
+     "id": "CH04_RECAP_BUDGET",
+     "label": "Ghi nhận thiếu 300.000đ, điều chỉnh kế hoạch với nguồn bù và thời hạn kiểm chứng",
+     "setFlags": {
+      "budget_adjusted": true,
+      "budget_revised": true
+     },
+     "nextSceneId": "CH04_SC04_BUDGET_FIXED",
+     "condition": {
+      "var": "choice:CH04_PURCHASE",
+      "op": "==",
+      "value": "CH04_SC02_C"
+     },
+     "lockedReason": "Lựa chọn máy hiện tại không vượt mục tiêu; có thể kiểm tra thuê bao bên dưới."
+    },
+    {
+     "id": "CH04_RECAP_SUBSCRIPTION",
+     "label": "Điều chỉnh kế hoạch cho chi phí thuê bao đã phát sinh",
+     "setFlags": {
+      "budget_adjusted": true,
+      "budget_revised": true
+     },
+     "nextSceneId": "CH04_SC04_BUDGET_FIXED",
+     "condition": {
+      "var": "choice:CH04_SC04_SUBSCRIPTION",
+      "op": "==",
+      "value": "CH04_KEEP"
+     },
+     "lockedReason": "Không có thuê bao đang được giữ."
+    }
+   ],
+   "knowledgeUnits": [
+    "D03.07",
+    "D03.08",
+    "D03.09",
+    "D07.08",
+    "D07.09"
+   ]
+  },
+  {
+   "id": "CH04_SC04_RECEIPT_FIXED",
+   "type": "dialogue",
+   "title": "Mình đã nhận giải thích và kiểm tra chứng từ. Khoản đã trả không tự được hoàn lại; cần theo điều kiện tình huống. Lần sau mình sẽ hỏi trước khi thanh toán.",
+   "background": "/images/finteen-v2/chapter-04/bg/bg07-study-desk.png",
+   "speaker": "An",
+   "speakerId": "AN",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "thinking",
+     "src": "/images/finteen-v2/chapter-04/char/an/an-thinking.png",
+     "position": "center"
+    }
+   ],
+   "text": "Mình đã nhận giải thích và kiểm tra chứng từ. Khoản đã trả không tự được hoàn lại; cần theo điều kiện tình huống. Lần sau mình sẽ hỏi trước khi thanh toán.",
+   "nextSceneId": "CH04_SC04_RECAP",
+   "knowledgeUnits": [
+    "D03.07",
+    "D03.08",
+    "D03.09",
+    "D07.08",
+    "D07.09"
+   ]
+  },
+  {
+   "id": "CH04_SC04_BUDGET_FIXED",
+   "type": "dialogue",
+   "title": "Mình phải ghi rõ số tiền thiếu, nguồn bù và ngày kiểm tra. Kế hoạch chỉ được coi là khả thi khi có dữ kiện xác nhận, không chỉ hy vọng.",
+   "background": "/images/finteen-v2/chapter-04/bg/bg07-study-desk.png",
+   "speaker": "An",
+   "speakerId": "AN",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "thinking",
+     "src": "/images/finteen-v2/chapter-04/char/an/an-thinking.png",
+     "position": "center"
+    }
+   ],
+   "text": "Mình phải ghi rõ số tiền thiếu, nguồn bù và ngày kiểm tra. Kế hoạch chỉ được coi là khả thi khi có dữ kiện xác nhận, không chỉ hy vọng.",
+   "nextSceneId": "CH04_SC04_RECAP",
+   "knowledgeUnits": [
+    "D03.07",
+    "D03.08",
+    "D03.09",
+    "D07.08",
+    "D07.09"
+   ]
+  },
+  {
+   "id": "CH04_SC04_R1",
+   "type": "choice",
+   "title": "Dữ kiện nào quyết định lựa chọn của bạn và phép tính nào cần kiểm tra?",
+   "background": "/images/finteen-v2/chapter-04/bg/bg07-study-desk.png",
+   "characters": [],
+   "speaker": "An",
+   "speakerId": "AN",
+   "text": "Dữ kiện nào quyết định lựa chọn của bạn và phép tính nào cần kiểm tra?",
+   "prompt": "Dữ kiện nào quyết định lựa chọn của bạn và phép tính nào cần kiểm tra?",
+   "options": [
+    {
+     "id": "CH04_SC04_R1_1",
+     "label": "Đối chiếu nhu cầu học, pin/bảo hành và tổng năm đầu; A giữ thuê bao là 1.600.000 + 11 × 50.000 = 2.150.000đ, hủy đúng hạn là 1.600.000đ; B cần bằng chứng kiểm tra.",
+     "reflectionScore": 2,
+     "nextSceneId": "CH04_SC04_R2"
+    },
+    {
+     "id": "CH04_SC04_R1_2",
+     "label": "Mình có nhìn giá máy và bảo hành nhưng chưa tính đầy đủ thuê bao hoặc điều kiện.",
+     "reflectionScore": 1,
+     "nextSceneId": "CH04_SC04_R2"
+    },
+    {
+     "id": "CH04_SC04_R1_3",
+     "label": "Mình chỉ nhìn mẫu máy bạn bè thích, chưa nêu được dữ kiện hay phép tính.",
+     "reflectionScore": 0,
+     "nextSceneId": "CH04_SC04_R2"
+    }
+   ],
+   "knowledgeUnits": [
+    "D03.07",
+    "D03.08",
+    "D03.09",
+    "D07.08",
+    "D07.09"
+   ],
+   "rubric": {
+    "maxScore": 2,
+    "criteria": [
+     "Nêu căn cứ cụ thể từ quyết định thực",
+     "Giải thích phép tính, đánh đổi hoặc bước theo dõi"
+    ],
+    "acceptEquivalentReasoning": true
+   }
+  },
+  {
+   "id": "CH04_SC04_R2",
+   "type": "choice",
+   "title": "Bạn đã đánh đổi gì, hậu quả nào cần theo dõi và bước tiếp theo là gì?",
+   "background": "/images/finteen-v2/chapter-04/bg/bg07-study-desk.png",
+   "characters": [],
+   "speaker": "An",
+   "speakerId": "AN",
+   "text": "Bạn đã đánh đổi gì, hậu quả nào cần theo dõi và bước tiếp theo là gì?",
+   "prompt": "Bạn đã đánh đổi gì, hậu quả nào cần theo dõi và bước tiếp theo là gì?",
+   "options": [
+    {
+     "id": "CH04_SC04_R2_1",
+     "label": "Mình cân bằng giá, chất lượng và nhu cầu; giữ chứng từ, xác nhận hủy nếu có và cập nhật kế hoạch theo khoản chi thực tế.",
+     "reflectionScore": 2,
+     "nextSceneId": "CH04_ENDING"
+    },
+    {
+     "id": "CH04_SC04_R2_2",
+     "label": "Mình nhận ra có đánh đổi nhưng mới nêu được một phần hậu quả, chưa có bước theo dõi cụ thể.",
+     "reflectionScore": 1,
+     "nextSceneId": "CH04_ENDING"
+    },
+    {
+     "id": "CH04_SC04_R2_3",
+     "label": "Mình chưa xác định đánh đổi, hậu quả hay bước tiếp theo.",
+     "reflectionScore": 0,
+     "nextSceneId": "CH04_ENDING"
+    }
+   ],
+   "knowledgeUnits": [
+    "D03.07",
+    "D03.08",
+    "D03.09",
+    "D07.08",
+    "D07.09"
+   ],
+   "rubric": {
+    "maxScore": 2,
+    "criteria": [
+     "Nêu căn cứ cụ thể từ quyết định thực",
+     "Giải thích phép tính, đánh đổi hoặc bước theo dõi"
+    ],
+    "acceptEquivalentReasoning": true
+   }
+  },
+  {
+   "id": "CH04_ENDING",
+   "type": "ending",
+   "title": "Kết thúc Chương 4 — Mua thông minh",
+   "background": "/images/finteen-v2/chapter-04/bg/bg07-study-desk.png",
+   "characters": [],
+   "text": null,
+   "nextSceneId": null
+  }
+ ],
+ "endingRules": {
+  "priorityOrder": [
+   "C_RECOVERY",
+   "A_GOAL_ACHIEVED",
+   "B_BALANCED"
+  ],
+  "endings": [
+   {
+    "id": "C_RECOVERY",
+    "title": "Ending C: Recovery",
+    "condition": {
+     "any": [
+      {
+       "var": "miniGameNeedsPractice",
+       "op": "==",
+       "value": true
+      },
+      {
+       "var": "flag:receipt_resolved",
+       "op": "!=",
+       "value": true
+      },
+      {
+       "var": "flag:budget_adjusted",
+       "op": "!=",
+       "value": true
+      },
+      {
+       "var": "RISK",
+       "op": ">",
+       "value": 55
+      },
+      {
+       "var": "SAVING",
+       "op": "<",
+       "value": 40
+      }
+     ]
+    },
+    "storyText": "An còn phần cần luyện về tổng chi, hóa đơn hoặc kế hoạch sử dụng máy. Hãy đối chiếu lời giải với các khoản tiền và điều kiện đã cho.",
+    "characterSprite": "/images/finteen-v2/chapter-04/char/an/an-worried-money.png",
+    "position": "center",
+    "backgroundId": "BG07"
+   },
+   {
+    "id": "A_GOAL_ACHIEVED",
+    "title": "Ending A: Goal Achieved",
+    "condition": {
+     "all": [
+      {
+       "var": "flag:purchase_fit",
+       "op": "==",
+       "value": true
+      },
+      {
+       "var": "flag:receipt_resolved",
+       "op": "==",
+       "value": true
+      },
+      {
+       "any": [
+        {
+         "var": "flag:phone_a",
+         "op": "!=",
+         "value": true
+        },
+        {
+         "var": "flag:cancellation_confirmed",
+         "op": "==",
+         "value": true
+        }
+       ]
+      },
+      {
+       "var": "flag:subscription_kept",
+       "op": "!=",
+       "value": true
+      },
+      {
+       "var": "flag:purchase_over_budget",
+       "op": "!=",
+       "value": true
+      },
+      {
+       "var": "evidenceScore",
+       "op": ">=",
+       "value": 9
+      },
+      {
+       "var": "miniGameCompleted",
+       "op": "==",
+       "value": true
+      },
+      {
+       "var": "miniGameGoalEligible",
+       "op": "==",
+       "value": true
+      },
+      {
+       "var": "reflectionScore",
+       "op": ">=",
+       "value": 3
+      }
+     ]
+    },
+    "storyText": "An có máy đủ học và chứng từ rõ: “Mình biết cả giá máy lẫn phí sau đó.”",
+    "characterSprite": "/images/finteen-v2/chapter-04/char/an/an-relieved.png",
+    "position": "center",
+    "backgroundId": "BG07"
+   },
+   {
+    "id": "B_BALANCED",
+    "title": "Ending B: Balanced",
+    "storyText": "An chọn phương án khác và sửa mục chi có lý do: “Mình đã chấp nhận đánh đổi và cập nhật kế hoạch.”",
+    "characterSprite": "/images/finteen-v2/chapter-04/char/an/an-thinking.png",
+    "position": "center",
+    "backgroundId": "BG07",
+    "fallback": true
+   }
+  ]
+ },
+ "endingReport": {
+  "maxChoiceScore": 12,
+  "requiredGameIds": [
+   "SMART_SHOPPING_CH04"
+  ],
+  "miniGameMax": 4,
+  "reflectionMax": 4,
+  "weights": {
+   "choices": 0.6,
+   "miniGame": 0.3,
+   "reflection": 0.1
+  },
+  "bands": [
+   {
+    "min": 85,
+    "label": "Đã thể hiện vững"
+   },
+   {
+    "min": 60,
+    "label": "Đang hình thành"
+   },
+   {
+    "min": 0,
+    "label": "Cần luyện thêm"
+   }
+  ],
+  "achieved": [
+   {
+    "when": "flags.receipt_resolved",
+    "text": "Bạn đã nhờ bộ phận chăm sóc khách hàng kiểm tra và sửa lại hóa đơn."
+   },
+   {
+    "when": "flags.purchase_fit",
+    "text": "Phương án máy đáp ứng nhu cầu học và mục tiêu chi đã đặt."
+   },
+   {
+    "text": "Bạn đã tiếp cận các dữ kiện của chương; chỉ lựa chọn và hoạt động được chấm mới là bằng chứng năng lực."
+   }
+  ],
+  "practice": [
+   {
+    "when": "miniGameNeedsPractice",
+    "text": "Bài thực hành còn nhiều câu chưa đúng. Xem lại cách tính tổng chi, đối chiếu hóa đơn và giữ đủ tiền cho hoạt động trường."
+   },
+   {
+    "when": "!flags.receipt_resolved",
+    "text": "Lưu báo giá, hóa đơn và hỏi rõ khoản phí trước khi đồng ý trả."
+   },
+   {
+    "when": "!flags.budget_adjusted",
+    "text": "Tính tổng chi năm đầu và điều chỉnh kế hoạch nếu vượt mục tiêu."
+   },
+   {
+    "text": "Nhắc lịch khác với xác nhận hủy; tiền dự báo khác với giao dịch thực tế. Quyết định một lần không định nghĩa bạn là người tốt hay xấu."
+   }
+  ],
+  "nextStep": "Giữ thói quen đối chiếu nhu cầu, bằng chứng và tổng chi phí khi mua sắm."
+ },
+ "releaseVersion": "2.0.0"
+}

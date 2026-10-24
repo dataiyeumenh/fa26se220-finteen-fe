@@ -2,7 +2,7 @@
 import { createRoot } from "react-dom/client";
 import { MemoryRouter } from "react-router-dom";
 import { VisualNovelPlayer } from "../../src/pages/Kid/Dashboard/components/game/VisualNovelPlayer";
-import { chapter5V2GameData as data } from "../../src/pages/Kid/Dashboard/data/chapter5V2VisualNovel";
+import { chapter5V2GameData as data } from "./content/index.mjs";
 import { progressKey } from "../../src/pages/Kid/Dashboard/components/game/visualNovelProgress.js";
 import "../../src/index.css";
 

@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
-import { chapter8V2GameData as data } from "../src/pages/Kid/Dashboard/data/chapter8V2VisualNovel.js";
+import { chapter8V2GameData as data } from "./fixtures/content/index.mjs";
 import {
   availableBudget,
   budgetFeedback,

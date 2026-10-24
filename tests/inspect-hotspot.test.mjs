@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { normalizeHotspot } from "../src/pages/Kid/Dashboard/components/game/inspectHotspot.js";
-import { chapter4V2GameData } from "../src/pages/Kid/Dashboard/data/chapter4V2VisualNovel.js";
+import { chapter4V2GameData } from "./fixtures/content/index.mjs";
 
 test("hotspot stays within image bounds after moving and resizing", () => {
   assert.deepEqual(normalizeHotspot({ x: 95, y: -20, width: 30, height: 20 }), {

@@ -1,7 +1,7 @@
 import { createRoot } from "react-dom/client";
 import { MemoryRouter } from "react-router-dom";
 import { VisualNovelPlayer } from "../../src/pages/Kid/Dashboard/components/game/VisualNovelPlayer";
-import { chapter8V2GameData as data } from "../../src/pages/Kid/Dashboard/data/chapter8V2VisualNovel.js";
+import { chapter8V2GameData as data } from "./content/index.mjs";
 import {
   availableBudget,
   createFutureState,

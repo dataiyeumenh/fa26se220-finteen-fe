@@ -1,8 +1,8 @@
 import { createRoot } from "react-dom/client";
 import { MemoryRouter } from "react-router-dom";
 import { VisualNovelPlayer } from "../../src/pages/Kid/Dashboard/components/game/VisualNovelPlayer";
-import { chapter5V2GameData as data } from "../../src/pages/Kid/Dashboard/data/chapter5V2VisualNovel.js";
-import { chapter8V2GameData as other } from "../../src/pages/Kid/Dashboard/data/chapter8V2VisualNovel.js";
+import { chapter5V2GameData as data } from "./content/index.mjs";
+import { chapter8V2GameData as other } from "./content/index.mjs";
 import {
   clearBrowserNovelProgress,
   initialNovelProgress,

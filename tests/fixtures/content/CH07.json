@@ -1,0 +1,5771 @@
+{
+ "id": "CH07_V2",
+ "version": "1.0",
+ "title": "Biến cố bất ngờ",
+ "initialMoney": 1500000,
+ "initialStats": {
+  "SAVING": 50,
+  "HAPPINESS": 50,
+  "RISK": 30,
+  "GOAL": 50
+ },
+ "metadata": {
+  "chapterId": "CH07",
+  "age": 17,
+  "persistProgress": true,
+  "preserveFirstChoiceStats": true,
+  "lockDecisions": true,
+  "goalDescription": "Xử lý khoản chi y tế, đọc điều kiện bảo hiểm và bảo vệ thông tin trước tin nhắn giả mạo.",
+  "coreKnowledgeUnits": [
+   "D07.02",
+   "D07.04",
+   "D07.06",
+   "D07.10"
+  ],
+  "allKnowledgeUnits": [
+   "D07.01",
+   "D07.02",
+   "D07.03",
+   "D07.04",
+   "D07.05",
+   "D07.06",
+   "D07.08",
+   "D07.09",
+   "D07.10",
+   "D08.01",
+   "D08.06"
+  ]
+ },
+ "scenes": [
+  {
+   "id": "CH07_SC01_ART",
+   "type": "inspect",
+   "background": "/images/finteen-v2/chapter-07/scene/sc01-understanding-medical-cost.png",
+   "characters": [],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Một khoản chi bất ngờ",
+   "sceneArt": "/images/finteen-v2/chapter-07/scene/sc01-understanding-medical-cost.png",
+   "nextSceneId": "CH07_OPEN_1"
+  },
+  {
+   "id": "CH07_OPEN_1",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11-school-infirmary.png",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "worried-money",
+     "src": "/images/finteen-v2/chapter-07/char/an/an-worried-money.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Lúc chạy còn tưởng chỉ trượt một chút. Giờ ngồi đây mới thấy buổi thể thao hôm nay khác hẳn kế hoạch.",
+   "text": "Lúc chạy còn tưởng chỉ trượt một chút. Giờ ngồi đây mới thấy buổi thể thao hôm nay khác hẳn kế hoạch.",
+   "speaker": "An",
+   "speakerId": "AN",
+   "nextSceneId": "CH07_OPEN_2"
+  },
+  {
+   "id": "CH07_OPEN_2",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11-school-infirmary.png",
+   "characters": [
+    {
+     "id": "MINH",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/minh/minh-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Tớ lấy cặp cho cậu rồi. Bài vẽ nhóm để tối mình tính tiếp, giờ cậu cứ theo hướng dẫn của cô y tế nhé.",
+   "text": "Tớ lấy cặp cho cậu rồi. Bài vẽ nhóm để tối mình tính tiếp, giờ cậu cứ theo hướng dẫn của cô y tế nhé.",
+   "speaker": "Minh",
+   "speakerId": "MINH",
+   "nextSceneId": "CH07_OPEN_3"
+  },
+  {
+   "id": "CH07_OPEN_3",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11-school-infirmary.png",
+   "characters": [
+    {
+     "id": "CO_LINH",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/co-linh/co-linh-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Phần chăm sóc đã có người hỗ trợ và liên hệ gia đình. Cô ngồi cùng hai em xem phần chi phí trong tình huống này.",
+   "text": "Phần chăm sóc đã có người hỗ trợ và liên hệ gia đình. Cô ngồi cùng hai em xem phần chi phí trong tình huống này.",
+   "speaker": "Cô Linh",
+   "speakerId": "CO_LINH",
+   "nextSceneId": "CH07_OPEN_4"
+  },
+  {
+   "id": "CH07_OPEN_4",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11-school-infirmary.png",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "thinking",
+     "src": "/images/finteen-v2/chapter-07/char/an/an-thinking.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Dạ. Tờ giấy ghi ba trăm nghìn cần trả trong ngày. Em không ngờ hôm nay lại có khoản đó.",
+   "text": "Dạ. Tờ giấy ghi ba trăm nghìn cần trả trong ngày. Em không ngờ hôm nay lại có khoản đó.",
+   "speaker": "An",
+   "speakerId": "AN",
+   "nextSceneId": "CH07_OPEN_5"
+  },
+  {
+   "id": "CH07_OPEN_5",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11-school-infirmary.png",
+   "characters": [
+    {
+     "id": "MINH",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/minh/minh-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Trong kế hoạch của cậu có tiền để dành cho việc bất ngờ mà?",
+   "text": "Trong kế hoạch của cậu có tiền để dành cho việc bất ngờ mà?",
+   "speaker": "Minh",
+   "speakerId": "MINH",
+   "nextSceneId": "CH07_OPEN_6"
+  },
+  {
+   "id": "CH07_OPEN_6",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11-school-infirmary.png",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/an/an-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Có. Tớ đang có một triệu rưỡi, trong đó dự tính giữ ba trăm nghìn cho những việc như thế này.",
+   "text": "Có. Tớ đang có một triệu rưỡi, trong đó dự tính giữ ba trăm nghìn cho những việc như thế này.",
+   "speaker": "An",
+   "speakerId": "AN",
+   "nextSceneId": "CH07_OPEN_7"
+  },
+  {
+   "id": "CH07_OPEN_7",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11-school-infirmary.png",
+   "characters": [
+    {
+     "id": "MINH",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/minh/minh-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Vậy ngoài một triệu rưỡi còn thêm ba trăm nghìn nữa à?",
+   "text": "Vậy ngoài một triệu rưỡi còn thêm ba trăm nghìn nữa à?",
+   "speaker": "Minh",
+   "speakerId": "MINH",
+   "nextSceneId": "CH07_OPEN_8"
+  },
+  {
+   "id": "CH07_OPEN_8",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11-school-infirmary.png",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "thinking",
+     "src": "/images/finteen-v2/chapter-07/char/an/an-thinking.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Không, ba trăm nằm trong một triệu rưỡi. Tớ chỉ ghi mục đích sử dụng, chứ không có thêm một ví tiền nào.",
+   "text": "Không, ba trăm nằm trong một triệu rưỡi. Tớ chỉ ghi mục đích sử dụng, chứ không có thêm một ví tiền nào.",
+   "speaker": "An",
+   "speakerId": "AN",
+   "nextSceneId": "CH07_OPEN_9"
+  },
+  {
+   "id": "CH07_OPEN_9",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11-school-infirmary.png",
+   "characters": [
+    {
+     "id": "CO_LINH",
+     "expression": "explaining",
+     "src": "/images/finteen-v2/chapter-07/char/co-linh/co-linh-explaining.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Đúng rồi. Ghi một khoản dự trù giúp em chuẩn bị cách chi, nhưng không tự làm tổng tiền tăng lên.",
+   "text": "Đúng rồi. Ghi một khoản dự trù giúp em chuẩn bị cách chi, nhưng không tự làm tổng tiền tăng lên.",
+   "speaker": "Cô Linh",
+   "speakerId": "CO_LINH",
+   "nextSceneId": "CH07_OPEN_10"
+  },
+  {
+   "id": "CH07_OPEN_10",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11-school-infirmary.png",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "thinking",
+     "src": "/images/finteen-v2/chapter-07/char/an/an-thinking.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Dùng đến khoản đó vẫn thấy tiếc. Nhìn tiền trong ví giảm xuống chắc em sẽ hơi lo.",
+   "text": "Dùng đến khoản đó vẫn thấy tiếc. Nhìn tiền trong ví giảm xuống chắc em sẽ hơi lo.",
+   "speaker": "An",
+   "speakerId": "AN",
+   "nextSceneId": "CH07_OPEN_11"
+  },
+  {
+   "id": "CH07_OPEN_11",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11-school-infirmary.png",
+   "characters": [
+    {
+     "id": "CO_LINH",
+     "expression": "encouraging",
+     "src": "/images/finteen-v2/chapter-07/char/co-linh/co-linh-encouraging.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Có một khoản cần xử lý và mình đã chuẩn bị được tiền cho nó cũng là ích lợi của kế hoạch. Không phải mọi lần dùng tiền đều là tiêu quá tay.",
+   "text": "Có một khoản cần xử lý và mình đã chuẩn bị được tiền cho nó cũng là ích lợi của kế hoạch. Không phải mọi lần dùng tiền đều là tiêu quá tay.",
+   "speaker": "Cô Linh",
+   "speakerId": "CO_LINH",
+   "nextSceneId": "CH07_OPEN_12"
+  },
+  {
+   "id": "CH07_OPEN_12",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11-school-infirmary.png",
+   "characters": [
+    {
+     "id": "MINH",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/minh/minh-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Nhưng cậu có bảo hiểm trong ví dụ này nữa. Có khi chỉ cần đưa thẻ là xong?",
+   "text": "Nhưng cậu có bảo hiểm trong ví dụ này nữa. Có khi chỉ cần đưa thẻ là xong?",
+   "speaker": "Minh",
+   "speakerId": "MINH",
+   "nextSceneId": "CH07_OPEN_13"
+  },
+  {
+   "id": "CH07_OPEN_13",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11-school-infirmary.png",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "thinking",
+     "src": "/images/finteen-v2/chapter-07/char/an/an-thinking.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Tớ cũng đang nghĩ vậy. Nếu bảo hiểm trả thì hôm nay mình cần bỏ ra bao nhiêu?",
+   "text": "Tớ cũng đang nghĩ vậy. Nếu bảo hiểm trả thì hôm nay mình cần bỏ ra bao nhiêu?",
+   "speaker": "An",
+   "speakerId": "AN",
+   "nextSceneId": "CH07_OPEN_14"
+  },
+  {
+   "id": "CH07_OPEN_14",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11-school-infirmary.png",
+   "characters": [
+    {
+     "id": "CO_LINH",
+     "expression": "explaining",
+     "src": "/images/finteen-v2/chapter-07/char/co-linh/co-linh-explaining.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Mình mở điều kiện trước nhé. Có thẻ không có nghĩa mọi khoản đều thuộc phạm vi, hay tiền được chuyển ngay khi em đưa thẻ.",
+   "text": "Mình mở điều kiện trước nhé. Có thẻ không có nghĩa mọi khoản đều thuộc phạm vi, hay tiền được chuyển ngay khi em đưa thẻ.",
+   "speaker": "Cô Linh",
+   "speakerId": "CO_LINH",
+   "nextSceneId": "CH07_OPEN_15"
+  },
+  {
+   "id": "CH07_OPEN_15",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11-school-infirmary.png",
+   "characters": [
+    {
+     "id": "MINH",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/minh/minh-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Để tớ giữ tờ chi phí, cậu mở phần điều kiện. Mình đọc hai thứ cạnh nhau cho đỡ lẫn.",
+   "text": "Để tớ giữ tờ chi phí, cậu mở phần điều kiện. Mình đọc hai thứ cạnh nhau cho đỡ lẫn.",
+   "speaker": "Minh",
+   "speakerId": "MINH",
+   "nextSceneId": "CH07_OPEN_16"
+  },
+  {
+   "id": "CH07_OPEN_16",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11-school-infirmary.png",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/an/an-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Dạ. Em muốn biết khoản nào phải trả hôm nay và khoản nào mới đang chờ xét.",
+   "text": "Dạ. Em muốn biết khoản nào phải trả hôm nay và khoản nào mới đang chờ xét.",
+   "speaker": "An",
+   "speakerId": "AN",
+   "nextSceneId": "CH07_INSURANCE"
+  },
+  {
+   "id": "CH07_INSURANCE",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11-school-infirmary.png",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "thinking",
+     "src": "/images/finteen-v2/chapter-07/char/an/an-thinking.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Khoản chi và điều kiện bảo hiểm",
+   "text": "Khoản chi và điều kiện bảo hiểm",
+   "speaker": "An",
+   "requiredInspections": [
+    "ch07_insurance"
+   ],
+   "nextSceneId": "CH07_TERMS_1",
+   "inspect": {
+    "id": "ch07_insurance",
+    "buttonText": "Khoản chi và điều kiện bảo hiểm",
+    "cards": [
+     {
+      "id": "bill",
+      "label": "Khoản cần trả hôm nay",
+      "image": "/images/finteen-v2/chapter-07/props/medical-receipt.png",
+      "facts": [
+       [
+        "Hóa đơn y tế",
+        "300.000đ, An cần trả đủ trong ngày"
+       ],
+       [
+        "Tiền An hiện có",
+        "1.500.000đ"
+       ],
+       [
+        "Tiền dành cho việc bất ngờ",
+        "300.000đ đã nằm trong 1.500.000đ trên, không phải tiền có thêm"
+       ]
+      ]
+     },
+     {
+      "id": "cover",
+      "label": "Thẻ bảo hiểm giả định",
+      "image": "/images/finteen-v2/chapter-07/props/insurance-terms-folder.png",
+      "facts": [
+       [
+        "Phí bảo hiểm",
+        "An đã đóng từ trước, hôm nay không đóng thêm"
+       ],
+       [
+        "Phạm vi",
+        "Chỉ chi trả chi phí xử lý chấn thương được bảo hiểm theo thẻ này"
+       ],
+       [
+        "Phần An tự trả",
+        "100.000đ trong hóa đơn 300.000đ, bảo hiểm không hoàn phần này"
+       ],
+       [
+        "Bảo hiểm có thể hoàn",
+        "Tối đa 200.000đ sau khi hồ sơ được duyệt; chưa nhận ngay hôm nay"
+       ],
+       [
+        "Không được bảo hiểm trả",
+        "Đồ dùng cá nhân bị hỏng và chi phí không thuộc điều kiện của thẻ"
+       ]
+      ]
+     },
+     {
+      "id": "claim",
+      "label": "Giấy tờ và trạng thái",
+      "image": "/images/finteen-v2/chapter-07/props/medical-receipt.png",
+      "facts": [
+       [
+        "Giấy tờ cần nộp",
+        "Hóa đơn đã thanh toán, giấy ghi nhận xử lý y tế và mẫu yêu cầu chi trả"
+       ],
+       [
+        "Cách nộp",
+        "Nộp theo hướng dẫn trong tài liệu bảo hiểm"
+       ],
+       [
+        "Tình trạng hồ sơ",
+        "Chưa được duyệt nên An chưa nhận được tiền bảo hiểm"
+       ],
+       [
+        "Nếu thiếu hoặc bị từ chối",
+        "Hỏi bộ phận hỗ trợ bảo hiểm về lý do và giấy tờ cần bổ sung"
+       ]
+      ]
+     }
+    ],
+    "shared": {
+     "label": "Lưu ý cho tình huống này",
+     "items": [
+      "Các điều kiện bảo hiểm dưới đây được đặt ra cho bài học; hợp đồng thực tế có thể khác.",
+      "An đã được chăm sóc y tế. Bạn sẽ giúp An tính tiền cần trả và chuẩn bị giấy tờ bảo hiểm."
+     ]
+    },
+    "autoNextSceneOnClose": true
+   }
+  },
+  {
+   "id": "CH07_TERMS_1",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11-school-infirmary.png",
+   "characters": [
+    {
+     "id": "MINH",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/minh/minh-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Ở đây ghi phần tự trả một trăm nghìn, tối đa xét chi trả hai trăm nghìn. Hai số cộng lại là ba trăm.",
+   "text": "Ở đây ghi phần tự trả một trăm nghìn, tối đa xét chi trả hai trăm nghìn. Hai số cộng lại là ba trăm.",
+   "speaker": "Minh",
+   "speakerId": "MINH",
+   "nextSceneId": "CH07_TERMS_2"
+  },
+  {
+   "id": "CH07_TERMS_2",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11-school-infirmary.png",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "thinking",
+     "src": "/images/finteen-v2/chapter-07/char/an/an-thinking.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Vậy có phải hôm nay tớ chỉ cần đưa một trăm nghìn không?",
+   "text": "Vậy có phải hôm nay tớ chỉ cần đưa một trăm nghìn không?",
+   "speaker": "An",
+   "speakerId": "AN",
+   "nextSceneId": "CH07_TERMS_3"
+  },
+  {
+   "id": "CH07_TERMS_3",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11-school-infirmary.png",
+   "characters": [
+    {
+     "id": "CO_LINH",
+     "expression": "explaining",
+     "src": "/images/finteen-v2/chapter-07/char/co-linh/co-linh-explaining.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Trong trường hợp này, hôm nay em vẫn phải trả đủ ba trăm nghìn. Sau đó mình mới nộp hồ sơ để bên bảo hiểm xem xét.",
+   "text": "Trong trường hợp này, hôm nay em vẫn phải trả đủ ba trăm nghìn. Sau đó mình mới nộp hồ sơ để bên bảo hiểm xem xét.",
+   "speaker": "Cô Linh",
+   "speakerId": "CO_LINH",
+   "nextSceneId": "CH07_TERMS_4"
+  },
+  {
+   "id": "CH07_TERMS_4",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11-school-infirmary.png",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/an/an-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Tức là em cần có đủ tiền trả trước. Khoản hai trăm nghìn chưa thể coi là tiền trong ví.",
+   "text": "Tức là em cần có đủ tiền trả trước. Khoản hai trăm nghìn chưa thể coi là tiền trong ví.",
+   "speaker": "An",
+   "speakerId": "AN",
+   "nextSceneId": "CH07_TERMS_5"
+  },
+  {
+   "id": "CH07_TERMS_5",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11-school-infirmary.png",
+   "characters": [
+    {
+     "id": "CO_LINH",
+     "expression": "explaining",
+     "src": "/images/finteen-v2/chapter-07/char/co-linh/co-linh-explaining.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Đúng. Phần tự trả là chi phí em phải chịu trong khoản đủ điều kiện. Khoản được xét còn phụ thuộc phạm vi, chứng từ và giới hạn đã ghi.",
+   "text": "Đúng. Phần tự trả là chi phí em phải chịu trong khoản đủ điều kiện. Khoản được xét còn phụ thuộc phạm vi, chứng từ và giới hạn đã ghi.",
+   "speaker": "Cô Linh",
+   "speakerId": "CO_LINH",
+   "nextSceneId": "CH07_TERMS_6"
+  },
+  {
+   "id": "CH07_TERMS_6",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11-school-infirmary.png",
+   "characters": [
+    {
+     "id": "MINH",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/minh/minh-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Nếu hôm nay trả ba trăm nghìn, sau này hồ sơ được duyệt đủ hai trăm thì cuối cùng tự chịu một trăm. Nhưng chưa biết lúc nào và có được duyệt đủ không.",
+   "text": "Nếu hôm nay trả ba trăm nghìn, sau này hồ sơ được duyệt đủ hai trăm thì cuối cùng tự chịu một trăm. Nhưng chưa biết lúc nào và có được duyệt đủ không.",
+   "speaker": "Minh",
+   "speakerId": "MINH",
+   "nextSceneId": "CH07_TERMS_7"
+  },
+  {
+   "id": "CH07_TERMS_7",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11-school-infirmary.png",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "thinking",
+     "src": "/images/finteen-v2/chapter-07/char/an/an-thinking.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Tớ sẽ không cộng trước hai trăm vào số tiền còn lại. Nếu không, nhìn ví cứ tưởng có nhiều hơn thực tế.",
+   "text": "Tớ sẽ không cộng trước hai trăm vào số tiền còn lại. Nếu không, nhìn ví cứ tưởng có nhiều hơn thực tế.",
+   "speaker": "An",
+   "speakerId": "AN",
+   "nextSceneId": "CH07_TERMS_8"
+  },
+  {
+   "id": "CH07_TERMS_8",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11-school-infirmary.png",
+   "characters": [
+    {
+     "id": "CO_LINH",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/co-linh/co-linh-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Phí bảo hiểm đã đóng từ trước rồi. Hôm nay em không phải đóng lại khoản đó.",
+   "text": "Phí bảo hiểm đã đóng từ trước rồi. Hôm nay em không phải đóng lại khoản đó.",
+   "speaker": "Cô Linh",
+   "speakerId": "CO_LINH",
+   "nextSceneId": "CH07_TERMS_9"
+  },
+  {
+   "id": "CH07_TERMS_9",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11-school-infirmary.png",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/an/an-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Còn hóa đơn, giấy xử lý y tế và mẫu yêu cầu chi trả, em cần giữ đủ ba loại.",
+   "text": "Còn hóa đơn, giấy xử lý y tế và mẫu yêu cầu chi trả, em cần giữ đủ ba loại.",
+   "speaker": "An",
+   "speakerId": "AN",
+   "nextSceneId": "CH07_TERMS_10"
+  },
+  {
+   "id": "CH07_TERMS_10",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11-school-infirmary.png",
+   "characters": [
+    {
+     "id": "MINH",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/minh/minh-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Nếu người ta hỏi OTP ngân hàng để bổ sung hồ sơ thì sao?",
+   "text": "Nếu người ta hỏi OTP ngân hàng để bổ sung hồ sơ thì sao?",
+   "speaker": "Minh",
+   "speakerId": "MINH",
+   "nextSceneId": "CH07_TERMS_11"
+  },
+  {
+   "id": "CH07_TERMS_11",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11-school-infirmary.png",
+   "characters": [
+    {
+     "id": "CO_LINH",
+     "expression": "explaining",
+     "src": "/images/finteen-v2/chapter-07/char/co-linh/co-linh-explaining.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "OTP là mã xác thực dùng một lần, thường để xác nhận một thao tác cụ thể. Nó không phải chứng từ điều trị; mình không gửi cho người đang nhắn hay gọi đến.",
+   "text": "OTP là mã xác thực dùng một lần, thường để xác nhận một thao tác cụ thể. Nó không phải chứng từ điều trị; mình không gửi cho người đang nhắn hay gọi đến.",
+   "speaker": "Cô Linh",
+   "speakerId": "CO_LINH",
+   "nextSceneId": "CH07_TERMS_12"
+  },
+  {
+   "id": "CH07_TERMS_12",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11-school-infirmary.png",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "thinking",
+     "src": "/images/finteen-v2/chapter-07/char/an/an-thinking.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Vậy trước hết em thử xếp phần tiền cần trả và giấy tờ phải giữ. Đừng để có thẻ mà lại bỏ sót hóa đơn.",
+   "text": "Vậy trước hết em thử xếp phần tiền cần trả và giấy tờ phải giữ. Đừng để có thẻ mà lại bỏ sót hóa đơn.",
+   "speaker": "An",
+   "speakerId": "AN",
+   "nextSceneId": "CH07_GAME_INSURANCE"
+  },
+  {
+   "id": "CH07_GAME_INSURANCE",
+   "type": "minigame",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11-school-infirmary.png",
+   "characters": [],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Bình tĩnh trước rủi ro",
+   "game": {
+    "id": "INSURANCE_DESK_CH07",
+    "kind": "SCAM_OR_SAFE",
+    "title": "Bình tĩnh trước rủi ro",
+    "rounds": [
+     0
+    ],
+    "config": {
+     "eyebrow": "CÙNG AN XỬ LÝ TỪNG VIỆC",
+     "heading": "Bình tĩnh trước rủi ro",
+     "subheading": "Đọc kỹ điều kiện · xem ai đang liên hệ · giữ kín thông tin",
+     "rounds": [
+      {
+       "title": "Quầy hồ sơ",
+       "image": "/images/finteen-v2/chapter-07/props/insurance-terms-folder.png",
+       "instruction": "Chọn số tiền cần thanh toán hôm nay và những giấy tờ gửi theo thẻ bảo hiểm. Có thể thay đổi trước khi nộp. Bài thử chưa trừ tiền của An."
+      },
+      {
+       "title": "Hộp thư cần kiểm tra",
+       "image": "/images/finteen-v2/chapter-07/asset-mini-game/scam-or-safe/message-phone.png",
+       "instruction": "Đọc cả nội dung lẫn bối cảnh của từng tin. Chọn cách xử lý cho cả sáu tin rồi nộp một lần; trước khi nộp, chạm số để xem hoặc đổi câu trả lời."
+      },
+      {
+       "title": "Ưu tiên xử lý",
+       "image": "/images/finteen-v2/chapter-07/asset-mini-game/scam-or-safe/message-phone.png",
+       "instruction": "Có giao dịch lạ sau khi lộ mã xác thực. Chọn bốn hành động và xếp theo thứ tự sẽ làm. Có thể lấy thẻ ra để đổi trước khi nộp."
+      }
+     ],
+     "insurance": {
+      "note": [
+       {
+        "b": "Hóa đơn y tế: 300.000đ, cần thanh toán trong ngày."
+       },
+       {
+        "br": true
+       },
+       "Ví bài thử có 1.500.000đ. Khoản xét chi trả tối đa 200.000đ từ bảo hiểm chưa được duyệt; phí bảo hiểm đã đóng từ trước."
+      ],
+      "referenceButton": "Xem lại điều kiện bảo hiểm và hồ sơ",
+      "paymentQuestion": "Bạn đưa bao nhiêu tiền để thanh toán hôm nay?",
+      "payments": [
+       100000,
+       200000,
+       300000,
+       500000
+      ],
+      "correctPayment": 300000,
+      "documentQuestion": "Bạn giữ những giấy tờ nào để gửi yêu cầu chi trả?",
+      "documents": [
+       {
+        "id": "receipt",
+        "label": "Hóa đơn đã thanh toán",
+        "image": "/images/finteen-v2/chapter-07/props/medical-receipt.png"
+       },
+       {
+        "id": "appointment",
+        "label": "Lịch hẹn buổi sau",
+        "image": "/images/finteen-v2/chapter-07/asset-mini-game/scam-or-safe/time-pressure.png"
+       },
+       {
+        "id": "medicalRecord",
+        "label": "Giấy ghi nhận xử lý y tế",
+        "image": "/images/finteen-v2/chapter-07/props/medical-receipt.png"
+       },
+       {
+        "id": "otp",
+        "label": "Mã OTP người nhắn tin hỏi",
+        "image": "/images/finteen-v2/chapter-07/asset-mini-game/scam-or-safe/message-phone.png"
+       },
+       {
+        "id": "claim",
+        "label": "Mẫu yêu cầu chi trả",
+        "image": "/images/finteen-v2/chapter-07/props/insurance-terms-folder.png"
+       }
+      ],
+      "requiredDocuments": [
+       "receipt",
+       "medicalRecord",
+       "claim"
+      ],
+      "documentSelected": "Đã chọn",
+      "documentPick": "Chọn giấy tờ",
+      "submit": "Nộp cách thanh toán và hồ sơ",
+      "submitted": "Đã nhận bài nộp",
+      "feedback": "Đã nhận bài nộp. Xem phần tiền cần trả hôm nay và hồ sơ cần giữ bên dưới.",
+      "paymentLabel": "Tiền thanh toán hôm nay",
+      "paymentExplanation": [
+       "Cần trả đủ 300.000đ. Ví bài thử còn 1.500.000đ − 300.000đ =",
+       " ",
+       {
+        "strong": "1.200.000đ"
+       },
+       ". Phần tự trả 100.000đ không có nghĩa hôm nay chỉ thanh toán 100.000đ; khoản bảo hiểm 200.000đ chưa được nhận."
+      ],
+      "packetLabel": "Hồ sơ theo thẻ này",
+      "packetExplanation": "Cần hóa đơn đã thanh toán, giấy ghi nhận xử lý y tế và mẫu yêu cầu chi trả. Lịch hẹn không thay chứng từ trong thẻ này; không gửi OTP cho người hỏi. Nộp đủ hồ sơ vẫn cần chờ bên bảo hiểm xem xét theo điều kiện đã ghi; lúc này An chưa nhận được tiền.",
+      "questions": [
+       {
+        "id": "insurancePayment",
+        "grade": {
+         "part": 0,
+         "input": "payment",
+         "rule": {
+          "eq": 300000
+         }
+        }
+       },
+       {
+        "id": "insurancePacket",
+        "grade": {
+         "part": 0,
+         "input": "documents",
+         "rule": {
+          "sets": [
+           [
+            "receipt",
+            "medicalRecord",
+            "claim"
+           ]
+          ]
+         }
+        }
+       }
+      ]
+     },
+     "inbox": {
+      "navLabel": "Sáu tin nhắn",
+      "navItem": "Tin {n}, {status}",
+      "statusCorrect": "Đúng",
+      "statusIncorrect": "Chưa đúng",
+      "statusPicked": "Đã chọn",
+      "statusOpen": "Chưa chọn",
+      "image": "/images/finteen-v2/chapter-07/asset-mini-game/scam-or-safe/message-phone.png",
+      "counter": "Tin {n}/{total}",
+      "contextLabel": "Bối cảnh:",
+      "answerOrder": [
+       "continue",
+       "check"
+      ],
+      "answerLabels": {
+       "check": "Chưa làm theo, tìm nơi khác để hỏi lại",
+       "continue": "Tiếp tục làm theo hướng dẫn"
+      },
+      "youChose": "Bạn chọn: {answer}.",
+      "progress": "Đã chọn cách xử lý {count}/{total} tin.",
+      "progressDone": "Có thể mở từng tin để đọc lời giải.",
+      "progressOpen": "Chưa kiểm tra đúng sai; bạn có thể đổi trước khi nộp.",
+      "submit": "Nộp cách xử lý sáu tin",
+      "submitted": "Đã kiểm tra hộp thư",
+      "feedback": "Đã kiểm tra hộp thư. Chọn từng tin để xem dấu hiệu và lý do.",
+      "messages": [
+       {
+        "id": "instantRefund",
+        "channel": "SMS từ số chưa lưu",
+        "text": "Hồ sơ được hoàn 200.000đ. Gửi mã OTP để nhận ngay; sau 5 phút quyền nhận tiền sẽ hết.",
+        "context": "An không yêu cầu giao dịch nào. Người gửi muốn nhận mã xác thực.",
+        "answer": "check",
+        "explanation": "Yêu cầu OTP và thúc ép thời gian là dấu hiệu cần dừng. Tự mở ứng dụng hoặc dùng thông tin liên hệ đã có trong hợp đồng, không gọi theo tin nhắn.",
+        "grade": {
+         "part": 1,
+         "rule": {
+          "eq": "check"
+         }
+        }
+       },
+       {
+        "id": "claimStatus",
+        "channel": "Ứng dụng bảo hiểm An đang dùng",
+        "text": "Hồ sơ đã tiếp nhận, đang chờ xét. Bạn có thể xem danh sách chứng từ tại mục Hồ sơ của tôi.",
+        "context": "Ứng dụng đã cài từ trước; An mở trực tiếp, không qua đường dẫn trong tin lạ.",
+        "answer": "continue",
+        "explanation": "Có thể tiếp tục xem trạng thái trong ứng dụng bảo hiểm An tự mở. Đã tiếp nhận vẫn chưa đồng nghĩa được duyệt hay đã nhận tiền.",
+        "grade": {
+         "part": 1,
+         "rule": {
+          "eq": "continue"
+         }
+        }
+       },
+       {
+        "id": "fakeLink",
+        "channel": "Tin nhắn tự xưng hỗ trợ bảo hiểm",
+        "text": "Bổ sung hồ sơ tại bao-hiem-hoan-tien.example/xac-minh, nhập mật khẩu ngân hàng để đối chiếu.",
+        "context": "Địa chỉ không trùng trang web ghi trong hợp đồng. Đây chỉ là tên miền giả lập, không phải liên kết để mở.",
+        "answer": "check",
+        "explanation": "Tên người gửi và chữ “bảo hiểm” trong địa chỉ chưa đủ để biết ai đứng sau tin nhắn. Hồ sơ y tế không cần gửi mật khẩu ngân hàng cho người nhắn tin.",
+        "grade": {
+         "part": 1,
+         "rule": {
+          "eq": "check"
+         }
+        }
+       },
+       {
+        "id": "officialDesk",
+        "channel": "Bàn hỗ trợ của trường",
+        "text": "Mang hóa đơn và giấy xử lý y tế đến bàn hướng dẫn. Không gửi ảnh giấy tờ vào nhóm chat công khai.",
+        "context": "An và Cô Linh đang đứng tại bàn đã được nhà trường giới thiệu.",
+        "answer": "continue",
+        "explanation": "An đang hỏi trực tiếp tại bàn do nhà trường giới thiệu nên có thể tiếp tục và đưa giấy tờ cần thiết. Người hướng dẫn giúp chuẩn bị hồ sơ, nhưng không quyết định bên bảo hiểm có trả tiền hay không.",
+        "grade": {
+         "part": 1,
+         "rule": {
+          "eq": "continue"
+         }
+        }
+       },
+       {
+        "id": "remoteApp",
+        "channel": "Cuộc gọi từ người lạ",
+        "text": "Cài ứng dụng hỗ trợ từ tệp tôi gửi và bật quyền điều khiển màn hình, tôi sẽ làm hồ sơ thay.",
+        "context": "An chưa từng liên hệ người này; An không tìm thấy ứng dụng này trên kho ứng dụng hay trang web của bên bảo hiểm.",
+        "answer": "check",
+        "explanation": "Không cài tệp lạ hay cấp quyền điều khiển thiết bị. Dừng cuộc gọi, rồi tự tìm số hỗ trợ trong hợp đồng để hỏi lại bên bảo hiểm.",
+        "grade": {
+         "part": 1,
+         "rule": {
+          "eq": "check"
+         }
+        }
+       },
+       {
+        "id": "verifiedSupport",
+        "channel": "Mục hỗ trợ của ứng dụng bảo hiểm",
+        "text": "Bạn có thể gửi yêu cầu giải thích hồ sơ, kèm mã hồ sơ và hóa đơn. Không gửi mật khẩu hoặc OTP cho nhân viên.",
+        "context": "An tự mở ứng dụng bảo hiểm đã dùng từ trước rồi vào mục hỗ trợ.",
+        "answer": "continue",
+        "explanation": "An đã tự mở ứng dụng bảo hiểm và được hướng dẫn gửi giấy tờ liên quan, nên có thể tiếp tục. Chỉ gửi những gì hồ sơ yêu cầu và chờ phản hồi; nộp hồ sơ chưa có nghĩa chắc chắn được trả tiền.",
+        "grade": {
+         "part": 1,
+         "rule": {
+          "eq": "continue"
+         }
+        }
+       }
+      ]
+     },
+     "response": {
+      "note": [
+       {
+        "b": "Tình huống:"
+       },
+       " vừa thấy giao dịch không do bạn thực hiện sau khi gửi mã cho người lạ. Bạn có ứng dụng ngân hàng đang dùng và số hỗ trợ ghi trên thẻ. Đây là bài giả lập, không nhập dữ liệu thật."
+      ],
+      "title": "Bốn bước bạn sẽ làm",
+      "slots": 4,
+      "remove": "Lấy ra",
+      "removeLabel": "Lấy bước {n} ra",
+      "emptySlot": "Chọn một thẻ bên dưới để đặt bước {n}",
+      "placed": "Đã xếp bước {n}",
+      "add": "Thêm vào kế hoạch",
+      "submit": "Nộp kế hoạch ứng phó",
+      "submitted": "Đã nhận kế hoạch",
+      "feedback": "Đã nhận kế hoạch. Báo ngân hàng và khóa thẻ hoặc tài khoản đều cần làm ngay. Việc nào làm được trước thì làm, đừng đợi gom đủ giấy tờ.",
+      "actions": [
+       {
+        "id": "save",
+        "label": "Lưu chứng từ, thời điểm và gửi báo cáo",
+        "image": "/images/finteen-v2/chapter-07/asset-mini-game/scam-or-safe/save-evidence.png"
+       },
+       {
+        "id": "payFee",
+        "label": "Chuyển phí cho người hứa lấy lại tiền",
+        "image": "/images/finteen-v2/chapter-07/asset-mini-game/scam-or-safe/message-phone.png"
+       },
+       {
+        "id": "protect",
+        "label": "Khóa thẻ hoặc tài khoản trong ứng dụng ngân hàng",
+        "image": "/images/finteen-v2/chapter-07/asset-mini-game/scam-or-safe/protect-account.png"
+       },
+       {
+        "id": "stop",
+        "label": "Dừng lại, không gửi thêm mã hay thông tin",
+        "image": "/images/finteen-v2/chapter-07/asset-mini-game/scam-or-safe/stop-transaction.png"
+       },
+       {
+        "id": "reply",
+        "label": "Trả lời số lạ để nhờ họ xử lý tiếp",
+        "image": "/images/finteen-v2/chapter-07/asset-mini-game/scam-or-safe/message-phone.png"
+       },
+       {
+        "id": "contact",
+        "label": "Báo ngân hàng qua số trên thẻ hoặc ứng dụng",
+        "image": "/images/finteen-v2/chapter-07/asset-mini-game/scam-or-safe/official-contact.png"
+       }
+      ],
+      "grading": [
+       {
+        "id": "stop",
+        "positions": [
+         0
+        ],
+        "review": "Dừng ngay thao tác và không gửi thêm thông tin.",
+        "grade": {
+         "id": "response_stop",
+         "part": 2,
+         "input": "slots",
+         "rule": {
+          "at": {
+           "item": "stop",
+           "in": [
+            0
+           ]
+          }
+         }
+        }
+       },
+       {
+        "id": "contact",
+        "positions": [
+         1,
+         2
+        ],
+        "review": "Báo ngân hàng qua số trên thẻ hoặc mục hỗ trợ trong ứng dụng.",
+        "grade": {
+         "id": "response_contact",
+         "part": 2,
+         "input": "slots",
+         "rule": {
+          "at": {
+           "item": "contact",
+           "in": [
+            1,
+            2
+           ]
+          }
+         }
+        }
+       },
+       {
+        "id": "protect",
+        "positions": [
+         1,
+         2
+        ],
+        "review": "Dùng chức năng khóa thẻ hoặc tài khoản trong ứng dụng ngân hàng.",
+        "grade": {
+         "id": "response_protect",
+         "part": 2,
+         "input": "slots",
+         "rule": {
+          "at": {
+           "item": "protect",
+           "in": [
+            1,
+            2
+           ]
+          }
+         }
+        }
+       },
+       {
+        "id": "save",
+        "positions": [
+         3
+        ],
+        "review": "Lưu tin nhắn và thông tin giao dịch để gửi ngân hàng; đừng đợi gom đủ mới báo và khóa.",
+        "grade": {
+         "id": "response_save",
+         "part": 2,
+         "input": "slots",
+         "rule": {
+          "at": {
+           "item": "save",
+           "in": [
+            3
+           ]
+          }
+         }
+        }
+       }
+      ],
+      "reviewTitle": "Xem lại các bước đã chọn",
+      "reviewSummary": "Báo ngân hàng và khóa thẻ hoặc tài khoản đều cần làm sớm. Việc nào làm được trước thì làm trước. Đừng chuyển thêm phí hay nhờ lại người lạ. Dù đã báo ngân hàng, bạn vẫn chưa chắc lấy lại được tiền."
+     },
+     "texts": {
+      "stepsLabel": "Các phần chơi",
+      "roundTitle": "Màn {n} · {title}",
+      "submittedBadge": "Đã nộp đáp án",
+      "openBadge": "Chưa nộp đáp án",
+      "howto": "Cách chơi",
+      "correct": "✓ Đúng",
+      "incorrect": "× Chưa đúng",
+      "verdictLine": " · {label}",
+      "defaultFeedback": "Nộp một lần; sau đó đọc lời giải và tiếp tục, kể cả khi có câu chưa đúng.",
+      "footerDone": "Đã xem kết quả · có thể tiếp tục",
+      "footerOpen": "Không đếm giờ · chưa nộp đáp án",
+      "next": "Sang màn tiếp theo →",
+      "finish": "Trở lại câu chuyện",
+      "note": "Các thao tác trong bài thử không mở liên kết, gửi tin, tạo khoản vay hay thay đổi ví của An. Không nhập OTP, mật khẩu hoặc thông tin cá nhân thật."
+     }
+    },
+    "reference": {
+     "buttonText": "Khoản chi và điều kiện bảo hiểm",
+     "cards": [
+      {
+       "id": "bill",
+       "label": "Khoản cần trả hôm nay",
+       "image": "/images/finteen-v2/chapter-07/props/medical-receipt.png",
+       "facts": [
+        [
+         "Hóa đơn y tế",
+         "300.000đ, An cần trả đủ trong ngày"
+        ],
+        [
+         "Tiền An hiện có",
+         "1.500.000đ"
+        ],
+        [
+         "Tiền dành cho việc bất ngờ",
+         "300.000đ đã nằm trong 1.500.000đ trên, không phải tiền có thêm"
+        ]
+       ]
+      },
+      {
+       "id": "cover",
+       "label": "Thẻ bảo hiểm giả định",
+       "image": "/images/finteen-v2/chapter-07/props/insurance-terms-folder.png",
+       "facts": [
+        [
+         "Phí bảo hiểm",
+         "An đã đóng từ trước, hôm nay không đóng thêm"
+        ],
+        [
+         "Phạm vi",
+         "Chỉ chi trả chi phí xử lý chấn thương được bảo hiểm theo thẻ này"
+        ],
+        [
+         "Phần An tự trả",
+         "100.000đ trong hóa đơn 300.000đ, bảo hiểm không hoàn phần này"
+        ],
+        [
+         "Bảo hiểm có thể hoàn",
+         "Tối đa 200.000đ sau khi hồ sơ được duyệt; chưa nhận ngay hôm nay"
+        ],
+        [
+         "Không được bảo hiểm trả",
+         "Đồ dùng cá nhân bị hỏng và chi phí không thuộc điều kiện của thẻ"
+        ]
+       ]
+      },
+      {
+       "id": "claim",
+       "label": "Giấy tờ và trạng thái",
+       "image": "/images/finteen-v2/chapter-07/props/medical-receipt.png",
+       "facts": [
+        [
+         "Giấy tờ cần nộp",
+         "Hóa đơn đã thanh toán, giấy ghi nhận xử lý y tế và mẫu yêu cầu chi trả"
+        ],
+        [
+         "Cách nộp",
+         "Nộp theo hướng dẫn trong tài liệu bảo hiểm"
+        ],
+        [
+         "Tình trạng hồ sơ",
+         "Chưa được duyệt nên An chưa nhận được tiền bảo hiểm"
+        ],
+        [
+         "Nếu thiếu hoặc bị từ chối",
+         "Hỏi bộ phận hỗ trợ bảo hiểm về lý do và giấy tờ cần bổ sung"
+        ]
+       ]
+      }
+     ],
+     "shared": {
+      "label": "Lưu ý cho tình huống này",
+      "items": [
+       "Các điều kiện bảo hiểm dưới đây được đặt ra cho bài học; hợp đồng thực tế có thể khác.",
+       "An đã được chăm sóc y tế. Bạn sẽ giúp An tính tiền cần trả và chuẩn bị giấy tờ bảo hiểm."
+      ]
+     }
+    }
+   },
+   "nextSceneId": "CH07_AFTER_INSURANCE_1"
+  },
+  {
+   "id": "CH07_AFTER_INSURANCE_1",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11-school-infirmary.png",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "thinking",
+     "src": "/images/finteen-v2/chapter-07/char/an/an-thinking.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Hôm nay cần thanh toán đủ ba trăm nghìn. Còn quyền lợi tối đa hai trăm nghìn đang là khả năng được xét, chưa phải tiền đã nhận.",
+   "text": "Hôm nay cần thanh toán đủ ba trăm nghìn. Còn quyền lợi tối đa hai trăm nghìn đang là khả năng được xét, chưa phải tiền đã nhận.",
+   "speaker": "An",
+   "speakerId": "AN",
+   "nextSceneId": "CH07_AFTER_INSURANCE_2"
+  },
+  {
+   "id": "CH07_AFTER_INSURANCE_2",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11-school-infirmary.png",
+   "characters": [
+    {
+     "id": "MINH",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/minh/minh-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Tớ đã ghi chỗ cất hồ sơ. Mình không cần gửi hết mọi thứ cho bất cứ ai nhận làm giúp.",
+   "text": "Tớ đã ghi chỗ cất hồ sơ. Mình không cần gửi hết mọi thứ cho bất cứ ai nhận làm giúp.",
+   "speaker": "Minh",
+   "speakerId": "MINH",
+   "nextSceneId": "CH07_AFTER_INSURANCE_3"
+  },
+  {
+   "id": "CH07_AFTER_INSURANCE_3",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11-school-infirmary.png",
+   "characters": [
+    {
+     "id": "CO_LINH",
+     "expression": "encouraging",
+     "src": "/images/finteen-v2/chapter-07/char/co-linh/co-linh-encouraging.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Và mỗi hợp đồng thật có thể khác thẻ giả định này. Khi dùng, em cần xem đúng phạm vi, phần tự trả và thủ tục của sản phẩm đó.",
+   "text": "Và mỗi hợp đồng thật có thể khác thẻ giả định này. Khi dùng, em cần xem đúng phạm vi, phần tự trả và thủ tục của sản phẩm đó.",
+   "speaker": "Cô Linh",
+   "speakerId": "CO_LINH",
+   "nextSceneId": "CH07_AFTER_INSURANCE_4"
+  },
+  {
+   "id": "CH07_AFTER_INSURANCE_4",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11-school-infirmary.png",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/an/an-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Giờ em phải tính xem lấy tiền đâu để trả hôm nay. Mỗi cách sẽ ảnh hưởng thế nào đến tháng sau nhỉ?",
+   "text": "Giờ em phải tính xem lấy tiền đâu để trả hôm nay. Mỗi cách sẽ ảnh hưởng thế nào đến tháng sau nhỉ?",
+   "speaker": "An",
+   "speakerId": "AN",
+   "nextSceneId": "CH07_SC02_ART"
+  },
+  {
+   "id": "CH07_SC02_ART",
+   "type": "inspect",
+   "background": "/images/finteen-v2/chapter-07/scene/sc02-paying-and-keeping-records.png",
+   "characters": [],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Tiền hôm nay, hồ sơ ngày mai",
+   "sceneArt": "/images/finteen-v2/chapter-07/scene/sc02-paying-and-keeping-records.png",
+   "nextSceneId": "CH07_PAYMENT_INTRO_1"
+  },
+  {
+   "id": "CH07_PAYMENT_INTRO_1",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11b-medical-paperwork-desk.png",
+   "characters": [
+    {
+     "id": "MINH",
+     "expression": "inviting",
+     "src": "/images/finteen-v2/chapter-07/char/minh/minh-inviting.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Tớ thấy quảng cáo ứng trước ba trăm nghìn rất nhanh. Họ nói có tiền ngay để trả hóa đơn.",
+   "text": "Tớ thấy quảng cáo ứng trước ba trăm nghìn rất nhanh. Họ nói có tiền ngay để trả hóa đơn.",
+   "speaker": "Minh",
+   "speakerId": "MINH",
+   "nextSceneId": "CH07_PAYMENT_INTRO_2"
+  },
+  {
+   "id": "CH07_PAYMENT_INTRO_2",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11b-medical-paperwork-desk.png",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "thinking",
+     "src": "/images/finteen-v2/chapter-07/char/an/an-thinking.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Nhưng tớ đang có một triệu rưỡi. Nếu vay thêm chỉ để ví vẫn hiện số đó thì sau này sao?",
+   "text": "Nhưng tớ đang có một triệu rưỡi. Nếu vay thêm chỉ để ví vẫn hiện số đó thì sau này sao?",
+   "speaker": "An",
+   "speakerId": "AN",
+   "nextSceneId": "CH07_PAYMENT_INTRO_3"
+  },
+  {
+   "id": "CH07_PAYMENT_INTRO_3",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11b-medical-paperwork-desk.png",
+   "characters": [
+    {
+     "id": "MINH",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/minh/minh-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Dòng điều kiện ghi một tháng nữa trả ba trăm sáu mươi nghìn. Tớ suýt bỏ qua vì chỉ nhìn tiền nhận hôm nay.",
+   "text": "Dòng điều kiện ghi một tháng nữa trả ba trăm sáu mươi nghìn. Tớ suýt bỏ qua vì chỉ nhìn tiền nhận hôm nay.",
+   "speaker": "Minh",
+   "speakerId": "MINH",
+   "nextSceneId": "CH07_PAYMENT_INTRO_4"
+  },
+  {
+   "id": "CH07_PAYMENT_INTRO_4",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11b-medical-paperwork-desk.png",
+   "characters": [
+    {
+     "id": "CO_LINH",
+     "expression": "explaining",
+     "src": "/images/finteen-v2/chapter-07/char/co-linh/co-linh-explaining.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Đây là đề nghị vay giả lập, không mở khoản vay thật cho em. Mình vẫn tính đủ: nhận bao nhiêu, dùng vào đâu và phải trả lại bao nhiêu.",
+   "text": "Đây là đề nghị vay giả lập, không mở khoản vay thật cho em. Mình vẫn tính đủ: nhận bao nhiêu, dùng vào đâu và phải trả lại bao nhiêu.",
+   "speaker": "Cô Linh",
+   "speakerId": "CO_LINH",
+   "nextSceneId": "CH07_PAYMENT_INTRO_5"
+  },
+  {
+   "id": "CH07_PAYMENT_INTRO_5",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11b-medical-paperwork-desk.png",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/an/an-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Nhận ba trăm rồi trả chi phí ba trăm thì ví quay về số cũ. Nhưng có thêm khoản phải trả ba trăm sáu mươi vào tháng sau.",
+   "text": "Nhận ba trăm rồi trả chi phí ba trăm thì ví quay về số cũ. Nhưng có thêm khoản phải trả ba trăm sáu mươi vào tháng sau.",
+   "speaker": "An",
+   "speakerId": "AN",
+   "nextSceneId": "CH07_PAYMENT_INTRO_6"
+  },
+  {
+   "id": "CH07_PAYMENT_INTRO_6",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11b-medical-paperwork-desk.png",
+   "characters": [
+    {
+     "id": "MINH",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/minh/minh-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Vậy số dư không giảm chưa chắc nghĩa là tình hình đỡ hơn.",
+   "text": "Vậy số dư không giảm chưa chắc nghĩa là tình hình đỡ hơn.",
+   "speaker": "Minh",
+   "speakerId": "MINH",
+   "nextSceneId": "CH07_PAYMENT_INTRO_7"
+  },
+  {
+   "id": "CH07_PAYMENT_INTRO_7",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11b-medical-paperwork-desk.png",
+   "characters": [
+    {
+     "id": "CO_LINH",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/co-linh/co-linh-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Đúng. Khoản đi vay cũng không phải thu nhập mình kiếm được. Nó có nghĩa vụ trả đi kèm.",
+   "text": "Đúng. Khoản đi vay cũng không phải thu nhập mình kiếm được. Nó có nghĩa vụ trả đi kèm.",
+   "speaker": "Cô Linh",
+   "speakerId": "CO_LINH",
+   "nextSceneId": "CH07_PAYMENT_INTRO_8"
+  },
+  {
+   "id": "CH07_PAYMENT_INTRO_8",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11b-medical-paperwork-desk.png",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "thinking",
+     "src": "/images/finteen-v2/chapter-07/char/an/an-thinking.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Em còn một cách nữa là cầm giấy tờ về rồi để sau tính. Nhưng khoản chi hôm nay vẫn chưa có cách xử lý.",
+   "text": "Em còn một cách nữa là cầm giấy tờ về rồi để sau tính. Nhưng khoản chi hôm nay vẫn chưa có cách xử lý.",
+   "speaker": "An",
+   "speakerId": "AN",
+   "nextSceneId": "CH07_PAYMENT_INTRO_9"
+  },
+  {
+   "id": "CH07_PAYMENT_INTRO_9",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11b-medical-paperwork-desk.png",
+   "characters": [
+    {
+     "id": "CO_LINH",
+     "expression": "encouraging",
+     "src": "/images/finteen-v2/chapter-07/char/co-linh/co-linh-encouraging.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Phần chăm sóc không bị bỏ mặc. Việc mình quyết định ở đây là phương án thanh toán và trách nhiệm giữ hồ sơ, không phải có xứng đáng được giúp hay không.",
+   "text": "Phần chăm sóc không bị bỏ mặc. Việc mình quyết định ở đây là phương án thanh toán và trách nhiệm giữ hồ sơ, không phải có xứng đáng được giúp hay không.",
+   "speaker": "Cô Linh",
+   "speakerId": "CO_LINH",
+   "nextSceneId": "CH07_PAYMENT_INTRO_10"
+  },
+  {
+   "id": "CH07_PAYMENT_INTRO_10",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11b-medical-paperwork-desk.png",
+   "characters": [
+    {
+     "id": "MINH",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/minh/minh-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Tớ để các con số ngay đây. Cậu xem muốn dùng tiền đang có hay tính cách khác nhé.",
+   "text": "Tớ để các con số ngay đây. Cậu xem muốn dùng tiền đang có hay tính cách khác nhé.",
+   "speaker": "Minh",
+   "speakerId": "MINH",
+   "nextSceneId": "CH07_SC02"
+  },
+  {
+   "id": "CH07_SC02",
+   "type": "choice",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11b-medical-paperwork-desk.png",
+   "characters": [],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "An sẽ lấy tiền đâu để trả chi phí hôm nay?",
+   "text": "An sẽ lấy tiền đâu để trả chi phí hôm nay?",
+   "prompt": "An sẽ lấy tiền đâu để trả chi phí hôm nay?",
+   "options": [
+    {
+     "id": "CH07_SC02_A",
+     "label": "Dùng 300.000đ đang có, giữ giấy tờ để nộp hồ sơ bảo hiểm.",
+     "deltaStats": {
+      "RISK": -7
+     },
+     "evidenceScores": {
+      "I": 2,
+      "C": 2,
+      "P": 2
+     },
+     "moneyEvents": [
+      {
+       "eventId": "CH07_MEDICAL_PAYMENT",
+       "amount": -300000,
+       "reason": "Thanh toán chi phí y tế"
+      }
+     ],
+     "setFlags": {
+      "incident_resolved": true,
+      "incident_unresolved": false,
+      "hot_loan": false
+     },
+     "nextSceneId": "CH07_PAY_1",
+     "condition": {
+      "var": "money",
+      "op": ">=",
+      "value": 300000
+     },
+     "lockedReason": "Chưa đủ điều kiện để chọn."
+    },
+    {
+     "id": "CH07_SC02_B",
+     "label": "Giữ tiền đang có, dùng khoản vay 300.000đ để trả chi phí hôm nay.",
+     "deltaStats": {
+      "RISK": 15,
+      "GOAL": -5
+     },
+     "evidenceScores": {
+      "I": 0,
+      "C": 0,
+      "P": 0
+     },
+     "moneyEvents": [
+      {
+       "eventId": "CH07_HOT_LOAN_RECEIVED",
+       "amount": 300000,
+       "reason": "Nhận tiền vay giả lập"
+      },
+      {
+       "eventId": "CH07_HOT_LOAN_SPENT",
+       "amount": -300000,
+       "reason": "Dùng tiền vay trả chi phí y tế"
+      }
+     ],
+     "setFlags": {
+      "incident_resolved": true,
+      "incident_unresolved": false,
+      "hot_loan": true
+     },
+     "nextSceneId": "CH07_LOAN_1"
+    },
+    {
+     "id": "CH07_SC02_C",
+     "label": "Mang giấy tờ về trước, để chuyện trả tiền tính sau.",
+     "deltaStats": {
+      "RISK": 5,
+      "GOAL": -5
+     },
+     "evidenceScores": {
+      "I": 0,
+      "C": 0,
+      "P": 0
+     },
+     "setFlags": {
+      "incident_resolved": false,
+      "incident_unresolved": true,
+      "hot_loan": false
+     },
+     "nextSceneId": "CH07_PENDING_1"
+    }
+   ],
+   "choiceGroup": "CH07_PAYMENT"
+  },
+  {
+   "id": "CH07_PAY_1",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11b-medical-paperwork-desk.png",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/an/an-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Em dùng ba trăm nghìn trong khoản đã dự trù. Ví còn một triệu hai trăm nghìn.",
+   "text": "Em dùng ba trăm nghìn trong khoản đã dự trù. Ví còn một triệu hai trăm nghìn.",
+   "speaker": "An",
+   "speakerId": "AN",
+   "nextSceneId": "CH07_PAY_2"
+  },
+  {
+   "id": "CH07_PAY_2",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11b-medical-paperwork-desk.png",
+   "characters": [
+    {
+     "id": "MINH",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/minh/minh-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Tớ cất hóa đơn cùng giấy xử lý y tế vào bìa này nhé.",
+   "text": "Tớ cất hóa đơn cùng giấy xử lý y tế vào bìa này nhé.",
+   "speaker": "Minh",
+   "speakerId": "MINH",
+   "nextSceneId": "CH07_PAY_3"
+  },
+  {
+   "id": "CH07_PAY_3",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11b-medical-paperwork-desk.png",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "thinking",
+     "src": "/images/finteen-v2/chapter-07/char/an/an-thinking.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Ừ. Trả tiền xong chưa có nghĩa hồ sơ bảo hiểm xong. Mình vẫn cần mẫu yêu cầu và theo dõi phản hồi.",
+   "text": "Ừ. Trả tiền xong chưa có nghĩa hồ sơ bảo hiểm xong. Mình vẫn cần mẫu yêu cầu và theo dõi phản hồi.",
+   "speaker": "An",
+   "speakerId": "AN",
+   "nextSceneId": "CH07_PAY_4"
+  },
+  {
+   "id": "CH07_PAY_4",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11b-medical-paperwork-desk.png",
+   "characters": [
+    {
+     "id": "CO_LINH",
+     "expression": "encouraging",
+     "src": "/images/finteen-v2/chapter-07/char/co-linh/co-linh-encouraging.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Khoản chi đã được xử lý bằng tiền hiện có. Phần xét chi trả bảo hiểm vẫn tách riêng, chưa cộng gì vào ví.",
+   "text": "Khoản chi đã được xử lý bằng tiền hiện có. Phần xét chi trả bảo hiểm vẫn tách riêng, chưa cộng gì vào ví.",
+   "speaker": "Cô Linh",
+   "speakerId": "CO_LINH",
+   "nextSceneId": "CH07_RISK_1"
+  },
+  {
+   "id": "CH07_LOAN_1",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11b-medical-paperwork-desk.png",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "thinking",
+     "src": "/images/finteen-v2/chapter-07/char/an/an-thinking.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Bài mô phỏng ghi nhận thêm ba trăm nghìn tiền vay, rồi trừ đúng ba trăm nghìn trả chi phí. Ví vẫn một triệu rưỡi.",
+   "text": "Bài mô phỏng ghi nhận thêm ba trăm nghìn tiền vay, rồi trừ đúng ba trăm nghìn trả chi phí. Ví vẫn một triệu rưỡi.",
+   "speaker": "An",
+   "speakerId": "AN",
+   "nextSceneId": "CH07_LOAN_2"
+  },
+  {
+   "id": "CH07_LOAN_2",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11b-medical-paperwork-desk.png",
+   "characters": [
+    {
+     "id": "MINH",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/minh/minh-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Nhưng một tháng nữa phải trả ba trăm sáu mươi nghìn. Tớ sẽ không xóa dòng đó chỉ vì ví trông chưa giảm.",
+   "text": "Nhưng một tháng nữa phải trả ba trăm sáu mươi nghìn. Tớ sẽ không xóa dòng đó chỉ vì ví trông chưa giảm.",
+   "speaker": "Minh",
+   "speakerId": "MINH",
+   "nextSceneId": "CH07_LOAN_3"
+  },
+  {
+   "id": "CH07_LOAN_3",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11b-medical-paperwork-desk.png",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "worried-money",
+     "src": "/images/finteen-v2/chapter-07/char/an/an-worried-money.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Để giữ số dư hôm nay mà tạo thêm sáu mươi nghìn chi phí… Tớ cần ghi nghĩa vụ đó cùng kế hoạch tháng tới.",
+   "text": "Để giữ số dư hôm nay mà tạo thêm sáu mươi nghìn chi phí… Tớ cần ghi nghĩa vụ đó cùng kế hoạch tháng tới.",
+   "speaker": "An",
+   "speakerId": "AN",
+   "nextSceneId": "CH07_LOAN_4"
+  },
+  {
+   "id": "CH07_LOAN_4",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11b-medical-paperwork-desk.png",
+   "characters": [
+    {
+     "id": "CO_LINH",
+     "expression": "explaining",
+     "src": "/images/finteen-v2/chapter-07/char/co-linh/co-linh-explaining.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Em ghi rõ ngày phải trả 360.000đ và nguồn tiền dự tính nhé. Dù ví hôm nay vẫn đủ tiền, tháng sau em còn phải trả thêm khoản vay này.",
+   "text": "Em ghi rõ ngày phải trả 360.000đ và nguồn tiền dự tính nhé. Dù ví hôm nay vẫn đủ tiền, tháng sau em còn phải trả thêm khoản vay này.",
+   "speaker": "Cô Linh",
+   "speakerId": "CO_LINH",
+   "nextSceneId": "CH07_RISK_1"
+  },
+  {
+   "id": "CH07_PENDING_1",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11b-medical-paperwork-desk.png",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "thinking",
+     "src": "/images/finteen-v2/chapter-07/char/an/an-thinking.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Em mang tờ giấy về trước. Nhưng em chưa chọn nguồn trả ba trăm nghìn hôm nay.",
+   "text": "Em mang tờ giấy về trước. Nhưng em chưa chọn nguồn trả ba trăm nghìn hôm nay.",
+   "speaker": "An",
+   "speakerId": "AN",
+   "nextSceneId": "CH07_PENDING_2"
+  },
+  {
+   "id": "CH07_PENDING_2",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11b-medical-paperwork-desk.png",
+   "characters": [
+    {
+     "id": "MINH",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/minh/minh-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Tớ sẽ ghi là khoản chưa xử lý, chứ không coi cất tờ giấy là chi phí tự hết.",
+   "text": "Tớ sẽ ghi là khoản chưa xử lý, chứ không coi cất tờ giấy là chi phí tự hết.",
+   "speaker": "Minh",
+   "speakerId": "MINH",
+   "nextSceneId": "CH07_PENDING_3"
+  },
+  {
+   "id": "CH07_PENDING_3",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11b-medical-paperwork-desk.png",
+   "characters": [
+    {
+     "id": "CO_LINH",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/co-linh/co-linh-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Phần chăm sóc vẫn được hỗ trợ và có người lớn đồng hành. Về tài chính, khoản thanh toán và hồ sơ đang còn việc phải làm.",
+   "text": "Phần chăm sóc vẫn được hỗ trợ và có người lớn đồng hành. Về tài chính, khoản thanh toán và hồ sơ đang còn việc phải làm.",
+   "speaker": "Cô Linh",
+   "speakerId": "CO_LINH",
+   "nextSceneId": "CH07_PENDING_4"
+  },
+  {
+   "id": "CH07_PENDING_4",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11b-medical-paperwork-desk.png",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "worried-money",
+     "src": "/images/finteen-v2/chapter-07/char/an/an-worried-money.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Dạ. Số tiền hiện có vẫn một triệu rưỡi, nhưng mình không thể coi mọi việc đã xong chỉ vì chưa trừ tiền.",
+   "text": "Dạ. Số tiền hiện có vẫn một triệu rưỡi, nhưng mình không thể coi mọi việc đã xong chỉ vì chưa trừ tiền.",
+   "speaker": "An",
+   "speakerId": "AN",
+   "nextSceneId": "CH07_RISK_1"
+  },
+  {
+   "id": "CH07_RISK_1",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11b-medical-paperwork-desk.png",
+   "characters": [
+    {
+     "id": "MINH",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/minh/minh-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Trước đây tớ nghe rủi ro thì chỉ nghĩ đến mất tiền. Hôm nay còn có sức khỏe và cả thời gian phải giải quyết nữa.",
+   "text": "Trước đây tớ nghe rủi ro thì chỉ nghĩ đến mất tiền. Hôm nay còn có sức khỏe và cả thời gian phải giải quyết nữa.",
+   "speaker": "Minh",
+   "speakerId": "MINH",
+   "nextSceneId": "CH07_RISK_2"
+  },
+  {
+   "id": "CH07_RISK_2",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11b-medical-paperwork-desk.png",
+   "characters": [
+    {
+     "id": "CO_LINH",
+     "expression": "explaining",
+     "src": "/images/finteen-v2/chapter-07/char/co-linh/co-linh-explaining.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Rủi ro tài chính là sự việc có thể khiến mình mất tiền, thu nhập, tài sản hoặc thông tin. Không phải lúc nào cũng tránh được hết.",
+   "text": "Rủi ro tài chính là sự việc có thể khiến mình mất tiền, thu nhập, tài sản hoặc thông tin. Không phải lúc nào cũng tránh được hết.",
+   "speaker": "Cô Linh",
+   "speakerId": "CO_LINH",
+   "nextSceneId": "CH07_RISK_3"
+  },
+  {
+   "id": "CH07_RISK_3",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11b-medical-paperwork-desk.png",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "thinking",
+     "src": "/images/finteen-v2/chapter-07/char/an/an-thinking.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Thế mua bảo hiểm là làm rủi ro biến mất à cô?",
+   "text": "Thế mua bảo hiểm là làm rủi ro biến mất à cô?",
+   "speaker": "An",
+   "speakerId": "AN",
+   "nextSceneId": "CH07_RISK_4"
+  },
+  {
+   "id": "CH07_RISK_4",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11b-medical-paperwork-desk.png",
+   "characters": [
+    {
+     "id": "CO_LINH",
+     "expression": "explaining",
+     "src": "/images/finteen-v2/chapter-07/char/co-linh/co-linh-explaining.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Không. Bảo hiểm chuyển một phần hậu quả tài chính theo hợp đồng sang đơn vị bảo hiểm, đổi lại mình đóng phí. Sự cố vẫn có thể xảy ra.",
+   "text": "Không. Bảo hiểm chuyển một phần hậu quả tài chính theo hợp đồng sang đơn vị bảo hiểm, đổi lại mình đóng phí. Sự cố vẫn có thể xảy ra.",
+   "speaker": "Cô Linh",
+   "speakerId": "CO_LINH",
+   "nextSceneId": "CH07_RISK_5"
+  },
+  {
+   "id": "CH07_RISK_5",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11b-medical-paperwork-desk.png",
+   "characters": [
+    {
+     "id": "MINH",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/minh/minh-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Còn chuẩn bị khoản dự trù là mình tự chịu một phần chi phí?",
+   "text": "Còn chuẩn bị khoản dự trù là mình tự chịu một phần chi phí?",
+   "speaker": "Minh",
+   "speakerId": "MINH",
+   "nextSceneId": "CH07_RISK_6"
+  },
+  {
+   "id": "CH07_RISK_6",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11b-medical-paperwork-desk.png",
+   "characters": [
+    {
+     "id": "CO_LINH",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/co-linh/co-linh-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Đúng. Mình có bốn hướng thường gặp: tránh, giảm, tự gánh và chuyển giao. Có thể kết hợp, chứ không chỉ chọn một cho mọi chuyện.",
+   "text": "Đúng. Mình có bốn hướng thường gặp: tránh, giảm, tự gánh và chuyển giao. Có thể kết hợp, chứ không chỉ chọn một cho mọi chuyện.",
+   "speaker": "Cô Linh",
+   "speakerId": "CO_LINH",
+   "nextSceneId": "CH07_RISK_7"
+  },
+  {
+   "id": "CH07_RISK_7",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11b-medical-paperwork-desk.png",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/an/an-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Ví dụ đường đang ngập thì chọn đường khác là tránh đi qua chỗ rủi ro đó.",
+   "text": "Ví dụ đường đang ngập thì chọn đường khác là tránh đi qua chỗ rủi ro đó.",
+   "speaker": "An",
+   "speakerId": "AN",
+   "nextSceneId": "CH07_RISK_8"
+  },
+  {
+   "id": "CH07_RISK_8",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11b-medical-paperwork-desk.png",
+   "characters": [
+    {
+     "id": "MINH",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/minh/minh-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Lưu bản sao bài vẽ là giảm nguy cơ mất hết dữ liệu, chứ không hứa máy không bao giờ hỏng.",
+   "text": "Lưu bản sao bài vẽ là giảm nguy cơ mất hết dữ liệu, chứ không hứa máy không bao giờ hỏng.",
+   "speaker": "Minh",
+   "speakerId": "MINH",
+   "nextSceneId": "CH07_RISK_9"
+  },
+  {
+   "id": "CH07_RISK_9",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11b-medical-paperwork-desk.png",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "thinking",
+     "src": "/images/finteen-v2/chapter-07/char/an/an-thinking.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Dành tiền cho khoản sửa nhỏ là tự gánh trong khả năng. Bảo hiểm thì chỉ chuyển phần nào hợp đồng cho phép.",
+   "text": "Dành tiền cho khoản sửa nhỏ là tự gánh trong khả năng. Bảo hiểm thì chỉ chuyển phần nào hợp đồng cho phép.",
+   "speaker": "An",
+   "speakerId": "AN",
+   "nextSceneId": "CH07_RISK_10"
+  },
+  {
+   "id": "CH07_RISK_10",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11b-medical-paperwork-desk.png",
+   "characters": [
+    {
+     "id": "CO_LINH",
+     "expression": "encouraging",
+     "src": "/images/finteen-v2/chapter-07/char/co-linh/co-linh-encouraging.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Các em đang nhìn vào hành động cụ thể rồi. Đọc điều kiện giúp mình biết phần nào vẫn cần tự chuẩn bị.",
+   "text": "Các em đang nhìn vào hành động cụ thể rồi. Đọc điều kiện giúp mình biết phần nào vẫn cần tự chuẩn bị.",
+   "speaker": "Cô Linh",
+   "speakerId": "CO_LINH",
+   "nextSceneId": "CH07_RISK_11"
+  },
+  {
+   "id": "CH07_RISK_11",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11b-medical-paperwork-desk.png",
+   "characters": [
+    {
+     "id": "MINH",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/minh/minh-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Mình còn phải kiểm tra người nhận hồ sơ là ai nữa. Chỉ có cái tên giống công ty chắc chưa đủ.",
+   "text": "Mình còn phải kiểm tra người nhận hồ sơ là ai nữa. Chỉ có cái tên giống công ty chắc chưa đủ.",
+   "speaker": "Minh",
+   "speakerId": "MINH",
+   "nextSceneId": "CH07_RISK_12"
+  },
+  {
+   "id": "CH07_RISK_12",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11b-medical-paperwork-desk.png",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/an/an-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Tớ sẽ tìm chỗ nộp hồ sơ trong tài liệu bảo hiểm. Có tin nhắn mới thì cứ đọc kỹ đã.",
+   "text": "Tớ sẽ tìm chỗ nộp hồ sơ trong tài liệu bảo hiểm. Có tin nhắn mới thì cứ đọc kỹ đã.",
+   "speaker": "An",
+   "speakerId": "AN",
+   "nextSceneId": "CH07_SC03_ART"
+  },
+  {
+   "id": "CH07_SC03_ART",
+   "type": "inspect",
+   "background": "/images/finteen-v2/chapter-07/scene/sc03-checking-refund-message.png",
+   "characters": [],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Tin nhắn đến đúng lúc",
+   "sceneArt": "/images/finteen-v2/chapter-07/scene/sc03-checking-refund-message.png",
+   "nextSceneId": "CH07_MESSAGE_1"
+  },
+  {
+   "id": "CH07_MESSAGE_1",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg12-refund-message-phone.png",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "thinking",
+     "src": "/images/finteen-v2/chapter-07/char/an/an-thinking.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Điện thoại rung đúng lúc mình đang nghĩ đến tiền bảo hiểm. Có tin ghi “nhận ngay hai trăm nghìn”.",
+   "text": "Điện thoại rung đúng lúc mình đang nghĩ đến tiền bảo hiểm. Có tin ghi “nhận ngay hai trăm nghìn”.",
+   "speaker": "An",
+   "speakerId": "AN",
+   "nextSceneId": "CH07_MESSAGE_2"
+  },
+  {
+   "id": "CH07_MESSAGE_2",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg12-refund-message-phone.png",
+   "characters": [
+    {
+     "id": "MINH",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/minh/minh-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Nhanh thế à? Mình còn chưa biết hồ sơ đã đủ hay chưa.",
+   "text": "Nhanh thế à? Mình còn chưa biết hồ sơ đã đủ hay chưa.",
+   "speaker": "Minh",
+   "speakerId": "MINH",
+   "nextSceneId": "CH07_MESSAGE_3"
+  },
+  {
+   "id": "CH07_MESSAGE_3",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg12-refund-message-phone.png",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/an/an-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Họ bảo gửi mã OTP và làm trong năm phút, không thì mất quyền nhận.",
+   "text": "Họ bảo gửi mã OTP và làm trong năm phút, không thì mất quyền nhận.",
+   "speaker": "An",
+   "speakerId": "AN",
+   "nextSceneId": "CH07_MESSAGE_4"
+  },
+  {
+   "id": "CH07_MESSAGE_4",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg12-refund-message-phone.png",
+   "characters": [
+    {
+     "id": "MINH",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/minh/minh-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Lại đúng số tiền hai trăm nghìn trong thẻ. Tớ hiểu sao đọc vội dễ tưởng là chuyện của mình.",
+   "text": "Lại đúng số tiền hai trăm nghìn trong thẻ. Tớ hiểu sao đọc vội dễ tưởng là chuyện của mình.",
+   "speaker": "Minh",
+   "speakerId": "MINH",
+   "nextSceneId": "CH07_MESSAGE_5"
+  },
+  {
+   "id": "CH07_MESSAGE_5",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg12-refund-message-phone.png",
+   "characters": [
+    {
+     "id": "CO_LINH",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/co-linh/co-linh-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Hai em cứ đọc kỹ tin nhắn đã nhé. Chưa cần bấm vào đường dẫn hay trả lời người gửi đâu.",
+   "text": "Hai em cứ đọc kỹ tin nhắn đã nhé. Chưa cần bấm vào đường dẫn hay trả lời người gửi đâu.",
+   "speaker": "Cô Linh",
+   "speakerId": "CO_LINH",
+   "nextSceneId": "CH07_MESSAGE_6"
+  },
+  {
+   "id": "CH07_MESSAGE_6",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg12-refund-message-phone.png",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "thinking",
+     "src": "/images/finteen-v2/chapter-07/char/an/an-thinking.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "OTP là mã xác thực một lần, không phải hóa đơn hay mã hồ sơ. Tớ chưa yêu cầu giao dịch nào cần xác nhận cả.",
+   "text": "OTP là mã xác thực một lần, không phải hóa đơn hay mã hồ sơ. Tớ chưa yêu cầu giao dịch nào cần xác nhận cả.",
+   "speaker": "An",
+   "speakerId": "AN",
+   "nextSceneId": "CH07_MESSAGE_7"
+  },
+  {
+   "id": "CH07_MESSAGE_7",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg12-refund-message-phone.png",
+   "characters": [
+    {
+     "id": "MINH",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/minh/minh-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Tên người gửi trông như bộ phận hỗ trợ. Nhưng tên đó tự ghi được phải không cô?",
+   "text": "Tên người gửi trông như bộ phận hỗ trợ. Nhưng tên đó tự ghi được phải không cô?",
+   "speaker": "Minh",
+   "speakerId": "MINH",
+   "nextSceneId": "CH07_MESSAGE_8"
+  },
+  {
+   "id": "CH07_MESSAGE_8",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg12-refund-message-phone.png",
+   "characters": [
+    {
+     "id": "CO_LINH",
+     "expression": "explaining",
+     "src": "/images/finteen-v2/chapter-07/char/co-linh/co-linh-explaining.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Tên và ảnh đại diện ai cũng có thể tự đặt. Muốn biết có đúng bên bảo hiểm không, mình cần hỏi lại qua ứng dụng đã dùng hoặc số điện thoại trong hợp đồng.",
+   "text": "Tên và ảnh đại diện ai cũng có thể tự đặt. Muốn biết có đúng bên bảo hiểm không, mình cần hỏi lại qua ứng dụng đã dùng hoặc số điện thoại trong hợp đồng.",
+   "speaker": "Cô Linh",
+   "speakerId": "CO_LINH",
+   "nextSceneId": "CH07_MESSAGE_9"
+  },
+  {
+   "id": "CH07_MESSAGE_9",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg12-refund-message-phone.png",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "thinking",
+     "src": "/images/finteen-v2/chapter-07/char/an/an-thinking.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Nếu gọi lại số họ vừa gửi thì vẫn là hỏi chính người đang tự nhận là hỗ trợ.",
+   "text": "Nếu gọi lại số họ vừa gửi thì vẫn là hỏi chính người đang tự nhận là hỗ trợ.",
+   "speaker": "An",
+   "speakerId": "AN",
+   "nextSceneId": "CH07_MESSAGE_10"
+  },
+  {
+   "id": "CH07_MESSAGE_10",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg12-refund-message-phone.png",
+   "characters": [
+    {
+     "id": "CO_LINH",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/co-linh/co-linh-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Đúng rồi. Em tự mở ứng dụng bảo hiểm đã dùng, hoặc gọi số hỗ trợ ghi trong hợp đồng. Đừng lấy số do người vừa nhắn gửi cho mình.",
+   "text": "Đúng rồi. Em tự mở ứng dụng bảo hiểm đã dùng, hoặc gọi số hỗ trợ ghi trong hợp đồng. Đừng lấy số do người vừa nhắn gửi cho mình.",
+   "speaker": "Cô Linh",
+   "speakerId": "CO_LINH",
+   "nextSceneId": "CH07_MESSAGE_11"
+  },
+  {
+   "id": "CH07_MESSAGE_11",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg12-refund-message-phone.png",
+   "characters": [
+    {
+     "id": "MINH",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/minh/minh-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Còn cái mốc năm phút làm tớ chỉ muốn xử lý ngay cho khỏi mất tiền.",
+   "text": "Còn cái mốc năm phút làm tớ chỉ muốn xử lý ngay cho khỏi mất tiền.",
+   "speaker": "Minh",
+   "speakerId": "MINH",
+   "nextSceneId": "CH07_MESSAGE_12"
+  },
+  {
+   "id": "CH07_MESSAGE_12",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg12-refund-message-phone.png",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/an/an-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Nhưng tiền chưa được duyệt thì lời hứa “nhận ngay” cần được kiểm tra, không phải vì thấy gấp là làm theo.",
+   "text": "Nhưng tiền chưa được duyệt thì lời hứa “nhận ngay” cần được kiểm tra, không phải vì thấy gấp là làm theo.",
+   "speaker": "An",
+   "speakerId": "AN",
+   "nextSceneId": "CH07_MESSAGE_INSPECT"
+  },
+  {
+   "id": "CH07_MESSAGE_INSPECT",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg12-refund-message-phone.png",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "thinking",
+     "src": "/images/finteen-v2/chapter-07/char/an/an-thinking.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Đọc tin nhắn và xem danh bạ",
+   "text": "Đọc tin nhắn và xem danh bạ",
+   "speaker": "An",
+   "requiredInspections": [
+    "ch07_message_inspect"
+   ],
+   "nextSceneId": "CH07_SC03",
+   "inspect": {
+    "id": "ch07_message_inspect",
+    "buttonText": "Đọc tin nhắn và xem danh bạ",
+    "cards": [
+     {
+      "id": "sms",
+      "label": "Tin nhắn",
+      "sender": "Hỗ trợ hoàn phí",
+      "senderNote": "Số lạ · Tự giới thiệu là nhân viên hỗ trợ",
+      "message": "Hồ sơ của bạn được hoàn 200.000đ. Gửi mã OTP trong 5 phút để nhận tiền ngay. Quá thời gian sẽ mất quyền nhận.",
+      "context": "An không thực hiện giao dịch nào cần nhập OTP."
+     },
+     {
+      "id": "contact",
+      "label": "Thông tin liên lạc",
+      "contacts": [
+       {
+        "id": "insurance-app",
+        "name": "Ứng dụng bảo hiểm",
+        "detail": "An tự mở ứng dụng đã dùng từ trước."
+       },
+       {
+        "id": "insurance-support",
+        "name": "Hỗ trợ bảo hiểm",
+        "detail": "Thông tin liên hệ được ghi trong tài liệu bảo hiểm."
+       },
+       {
+        "id": "school-support",
+        "name": "Bàn hỗ trợ của trường",
+        "detail": "Điểm hỗ trợ đã được nhà trường giới thiệu."
+       }
+      ],
+      "note": "Nếu muốn hỏi lại, hãy dùng thông tin liên hệ đã có từ trước, thay vì số điện thoại hay đường dẫn trong tin nhắn lạ."
+     }
+    ],
+    "shared": {
+     "label": "Đang chờ xét hồ sơ",
+     "items": [
+      "Bên bảo hiểm chưa thông báo duyệt hồ sơ và chưa chuyển tiền cho An."
+     ]
+    },
+    "autoNextSceneOnClose": true,
+    "layout": "phone"
+   }
+  },
+  {
+   "id": "CH07_SC03",
+   "type": "choice",
+   "background": "/images/finteen-v2/chapter-07/bg/bg12-refund-message-phone.png",
+   "characters": [],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "An sẽ làm gì với tin nhắn vừa đến?",
+   "text": "An sẽ làm gì với tin nhắn vừa đến?",
+   "prompt": "An sẽ làm gì với tin nhắn vừa đến?",
+   "options": [
+    {
+     "id": "CH07_SC03_A",
+     "label": "Mở ứng dụng bảo hiểm để hỏi về tin vừa nhận, rồi lưu lại tin nhắn.",
+     "deltaStats": {
+      "SAVING": 1,
+      "HAPPINESS": 1,
+      "RISK": -8,
+      "GOAL": 2
+     },
+     "evidenceScores": {
+      "I": 2,
+      "C": 1,
+      "P": 2
+     },
+     "setFlags": {
+      "fraud_contained": true,
+      "fraud_exposed": false
+     },
+     "nextSceneId": "CH07_VERIFY_1"
+    },
+    {
+     "id": "CH07_SC03_B",
+     "label": "Gửi mã OTP theo yêu cầu trong bài thử để nhận 200.000đ ngay.",
+     "deltaStats": {
+      "RISK": 20
+     },
+     "evidenceScores": {
+      "I": 0,
+      "C": 0,
+      "P": 0
+     },
+     "moneyEvents": [
+      {
+       "eventId": "CH07_FRAUD_LOSS",
+       "amount": -150000,
+       "reason": "Tổn thất giả lập sau khi lộ OTP"
+      }
+     ],
+     "setFlags": {
+      "fraud_contained": false,
+      "fraud_exposed": true
+     },
+     "nextSceneId": "CH07_EXPOSED_1",
+     "condition": {
+      "var": "money",
+      "op": ">=",
+      "value": 150000
+     },
+     "lockedReason": "Chưa đủ điều kiện để chọn."
+    }
+   ],
+   "choiceGroup": "CH07_FRAUD"
+  },
+  {
+   "id": "CH07_VERIFY_1",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg12-refund-message-phone.png",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/an/an-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Em tự mở mục hỗ trợ trong ứng dụng đã dùng, không mở từ tin nhắn. Đây là ảnh tin vừa đến.",
+   "text": "Em tự mở mục hỗ trợ trong ứng dụng đã dùng, không mở từ tin nhắn. Đây là ảnh tin vừa đến.",
+   "speaker": "An",
+   "speakerId": "AN",
+   "nextSceneId": "CH07_VERIFY_2"
+  },
+  {
+   "id": "CH07_VERIFY_2",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg12-refund-message-phone.png",
+   "characters": [
+    {
+     "id": "CO_LINH",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/co-linh/co-linh-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Bộ phận hỗ trợ trả lời rồi: họ không yêu cầu gửi OTP cho nhân viên để nhận tiền bảo hiểm. Tin nhắn vừa rồi là giả mạo.",
+   "text": "Bộ phận hỗ trợ trả lời rồi: họ không yêu cầu gửi OTP cho nhân viên để nhận tiền bảo hiểm. Tin nhắn vừa rồi là giả mạo.",
+   "speaker": "Cô Linh",
+   "speakerId": "CO_LINH",
+   "nextSceneId": "CH07_VERIFY_3"
+  },
+  {
+   "id": "CH07_VERIFY_3",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg12-refund-message-phone.png",
+   "characters": [
+    {
+     "id": "MINH",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/minh/minh-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Vậy không có khoản hoàn tiền nào vừa vào ví. Chỉ là họ nhắc đúng con số mình đang chờ.",
+   "text": "Vậy không có khoản hoàn tiền nào vừa vào ví. Chỉ là họ nhắc đúng con số mình đang chờ.",
+   "speaker": "Minh",
+   "speakerId": "MINH",
+   "nextSceneId": "CH07_VERIFY_4"
+  },
+  {
+   "id": "CH07_VERIFY_4",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg12-refund-message-phone.png",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "relieved",
+     "src": "/images/finteen-v2/chapter-07/char/an/an-relieved.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Tớ chụp lại tin nhắn rồi. May là chưa gửi mã cho họ.",
+   "text": "Tớ chụp lại tin nhắn rồi. May là chưa gửi mã cho họ.",
+   "speaker": "An",
+   "speakerId": "AN",
+   "nextSceneId": "CH07_VERIFY_5"
+  },
+  {
+   "id": "CH07_VERIFY_5",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg12-refund-message-phone.png",
+   "characters": [
+    {
+     "id": "CO_LINH",
+     "expression": "encouraging",
+     "src": "/images/finteen-v2/chapter-07/char/co-linh/co-linh-encouraging.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Lần sau gặp tin nhắn tương tự, em cứ tự mở ứng dụng hoặc tìm lại số hỗ trợ đã biết để hỏi nhé.",
+   "text": "Lần sau gặp tin nhắn tương tự, em cứ tự mở ứng dụng hoặc tìm lại số hỗ trợ đã biết để hỏi nhé.",
+   "speaker": "Cô Linh",
+   "speakerId": "CO_LINH",
+   "nextSceneId": "CH07_INBOX_INTRO_1"
+  },
+  {
+   "id": "CH07_EXPOSED_1",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg12-refund-message-phone.png",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "worried-money",
+     "src": "/images/finteen-v2/chapter-07/char/an/an-worried-money.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Trong mô phỏng, em đã làm theo yêu cầu gửi OTP. Sao lại có giao dịch trừ một trăm năm mươi nghìn?",
+   "text": "Trong mô phỏng, em đã làm theo yêu cầu gửi OTP. Sao lại có giao dịch trừ một trăm năm mươi nghìn?",
+   "speaker": "An",
+   "speakerId": "AN",
+   "nextSceneId": "CH07_EXPOSED_2"
+  },
+  {
+   "id": "CH07_EXPOSED_2",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg12-refund-message-phone.png",
+   "characters": [
+    {
+     "id": "MINH",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/minh/minh-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Mình dừng ở đây, đừng gửi thêm mã hay chuyển thêm tiền cho người đó. Tớ gọi cô ngồi cùng nhé.",
+   "text": "Mình dừng ở đây, đừng gửi thêm mã hay chuyển thêm tiền cho người đó. Tớ gọi cô ngồi cùng nhé.",
+   "speaker": "Minh",
+   "speakerId": "MINH",
+   "nextSceneId": "CH07_EXPOSED_3"
+  },
+  {
+   "id": "CH07_EXPOSED_3",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg12-refund-message-phone.png",
+   "characters": [
+    {
+     "id": "CO_LINH",
+     "expression": "explaining",
+     "src": "/images/finteen-v2/chapter-07/char/co-linh/co-linh-explaining.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Có cô ở đây rồi. Em mở ứng dụng ngân hàng để khóa thẻ hoặc tài khoản nếu có chức năng đó, rồi báo ngay cho ngân hàng về giao dịch lạ nhé.",
+   "text": "Có cô ở đây rồi. Em mở ứng dụng ngân hàng để khóa thẻ hoặc tài khoản nếu có chức năng đó, rồi báo ngay cho ngân hàng về giao dịch lạ nhé.",
+   "speaker": "Cô Linh",
+   "speakerId": "CO_LINH",
+   "nextSceneId": "CH07_EXPOSED_4"
+  },
+  {
+   "id": "CH07_EXPOSED_4",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg12-refund-message-phone.png",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "thinking",
+     "src": "/images/finteen-v2/chapter-07/char/an/an-thinking.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Em mở ứng dụng ngân hàng để tìm mục khóa thẻ, khóa tài khoản và ghi lại giao dịch lạ. Em sẽ không gọi lại số trong tin nhắn.",
+   "text": "Em mở ứng dụng ngân hàng để tìm mục khóa thẻ, khóa tài khoản và ghi lại giao dịch lạ. Em sẽ không gọi lại số trong tin nhắn.",
+   "speaker": "An",
+   "speakerId": "AN",
+   "nextSceneId": "CH07_EXPOSED_5"
+  },
+  {
+   "id": "CH07_EXPOSED_5",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg12-refund-message-phone.png",
+   "characters": [
+    {
+     "id": "CO_LINH",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/co-linh/co-linh-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Nếu không mở được ứng dụng, cô sẽ cùng em tìm số hỗ trợ trên thẻ hoặc trang web của ngân hàng. Mình báo ngay, đừng đợi gom đủ giấy tờ.",
+   "text": "Nếu không mở được ứng dụng, cô sẽ cùng em tìm số hỗ trợ trên thẻ hoặc trang web của ngân hàng. Mình báo ngay, đừng đợi gom đủ giấy tờ.",
+   "speaker": "Cô Linh",
+   "speakerId": "CO_LINH",
+   "nextSceneId": "CH07_EXPOSED_6"
+  },
+  {
+   "id": "CH07_EXPOSED_6",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg12-refund-message-phone.png",
+   "characters": [
+    {
+     "id": "MINH",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/minh/minh-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Tớ giữ thời điểm tin nhắn và mã giao dịch giả lập trên giấy cho cậu. Không đăng ảnh thông tin tài khoản lên nhóm.",
+   "text": "Tớ giữ thời điểm tin nhắn và mã giao dịch giả lập trên giấy cho cậu. Không đăng ảnh thông tin tài khoản lên nhóm.",
+   "speaker": "Minh",
+   "speakerId": "MINH",
+   "nextSceneId": "CH07_EXPOSED_7"
+  },
+  {
+   "id": "CH07_EXPOSED_7",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg12-refund-message-phone.png",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "worried-money",
+     "src": "/images/finteen-v2/chapter-07/char/an/an-worried-money.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Ví đã giảm một trăm năm mươi nghìn trong bài. Làm bước bảo vệ không làm số tiền đó tự quay lại.",
+   "text": "Ví đã giảm một trăm năm mươi nghìn trong bài. Làm bước bảo vệ không làm số tiền đó tự quay lại.",
+   "speaker": "An",
+   "speakerId": "AN",
+   "nextSceneId": "CH07_EXPOSED_8"
+  },
+  {
+   "id": "CH07_EXPOSED_8",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg12-refund-message-phone.png",
+   "characters": [
+    {
+     "id": "CO_LINH",
+     "expression": "encouraging",
+     "src": "/images/finteen-v2/chapter-07/char/co-linh/co-linh-encouraging.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Đúng. Mục tiêu trước mắt là ngăn thiệt hại tiếp diễn, rồi theo dõi hỗ trợ. Có thể báo cáo và yêu cầu tra soát, nhưng không hứa chắc lấy lại được tiền.",
+   "text": "Đúng. Mục tiêu trước mắt là ngăn thiệt hại tiếp diễn, rồi theo dõi hỗ trợ. Có thể báo cáo và yêu cầu tra soát, nhưng không hứa chắc lấy lại được tiền.",
+   "speaker": "Cô Linh",
+   "speakerId": "CO_LINH",
+   "nextSceneId": "CH07_INBOX_INTRO_1"
+  },
+  {
+   "id": "CH07_INBOX_INTRO_1",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg12-refund-message-phone.png",
+   "characters": [
+    {
+     "id": "MINH",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/minh/minh-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Không phải tin nào nói đến tiền cũng là lừa đảo. Tớ muốn biết cách phân biệt mà không đoán theo ảnh đại diện.",
+   "text": "Không phải tin nào nói đến tiền cũng là lừa đảo. Tớ muốn biết cách phân biệt mà không đoán theo ảnh đại diện.",
+   "speaker": "Minh",
+   "speakerId": "MINH",
+   "nextSceneId": "CH07_INBOX_INTRO_2"
+  },
+  {
+   "id": "CH07_INBOX_INTRO_2",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg12-refund-message-phone.png",
+   "characters": [
+    {
+     "id": "CO_LINH",
+     "expression": "explaining",
+     "src": "/images/finteen-v2/chapter-07/char/co-linh/co-linh-explaining.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Giờ thử đọc vài tin trong hộp thư nhé. Ngoài nội dung, hãy xem tin đến từ đâu và An có biết người gửi từ trước không.",
+   "text": "Giờ thử đọc vài tin trong hộp thư nhé. Ngoài nội dung, hãy xem tin đến từ đâu và An có biết người gửi từ trước không.",
+   "speaker": "Cô Linh",
+   "speakerId": "CO_LINH",
+   "nextSceneId": "CH07_INBOX_INTRO_3"
+  },
+  {
+   "id": "CH07_INBOX_INTRO_3",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg12-refund-message-phone.png",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/an/an-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Em sẽ chọn tin nào cần hỏi lại trước, tin nào có thể làm tiếp theo hướng dẫn.",
+   "text": "Em sẽ chọn tin nào cần hỏi lại trước, tin nào có thể làm tiếp theo hướng dẫn.",
+   "speaker": "An",
+   "speakerId": "AN",
+   "nextSceneId": "CH07_INBOX_INTRO_4"
+  },
+  {
+   "id": "CH07_INBOX_INTRO_4",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg12-refund-message-phone.png",
+   "characters": [
+    {
+     "id": "MINH",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/minh/minh-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Rồi mình xếp kế hoạch nếu thấy giao dịch lạ. Cần làm việc nào trước để rủi ro không tiếp tục?",
+   "text": "Rồi mình xếp kế hoạch nếu thấy giao dịch lạ. Cần làm việc nào trước để rủi ro không tiếp tục?",
+   "speaker": "Minh",
+   "speakerId": "MINH",
+   "nextSceneId": "CH07_INBOX_INTRO_5"
+  },
+  {
+   "id": "CH07_INBOX_INTRO_5",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg12-refund-message-phone.png",
+   "characters": [
+    {
+     "id": "CO_LINH",
+     "expression": "encouraging",
+     "src": "/images/finteen-v2/chapter-07/char/co-linh/co-linh-encouraging.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Bài thử không đếm ngược và không cần thông tin thật. Các em sắp xếp trước, nộp một lần rồi đọc lý do.",
+   "text": "Bài thử không đếm ngược và không cần thông tin thật. Các em sắp xếp trước, nộp một lần rồi đọc lý do.",
+   "speaker": "Cô Linh",
+   "speakerId": "CO_LINH",
+   "nextSceneId": "CH07_GAME_SAFETY"
+  },
+  {
+   "id": "CH07_GAME_SAFETY",
+   "type": "minigame",
+   "background": "/images/finteen-v2/chapter-07/bg/bg12-refund-message-phone.png",
+   "characters": [],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Bình tĩnh trước rủi ro",
+   "game": {
+    "id": "SCAM_OR_SAFE_CH07",
+    "kind": "SCAM_OR_SAFE",
+    "title": "Bình tĩnh trước rủi ro",
+    "rounds": [
+     1,
+     2
+    ],
+    "config": {
+     "eyebrow": "CÙNG AN XỬ LÝ TỪNG VIỆC",
+     "heading": "Bình tĩnh trước rủi ro",
+     "subheading": "Đọc kỹ điều kiện · xem ai đang liên hệ · giữ kín thông tin",
+     "rounds": [
+      {
+       "title": "Quầy hồ sơ",
+       "image": "/images/finteen-v2/chapter-07/props/insurance-terms-folder.png",
+       "instruction": "Chọn số tiền cần thanh toán hôm nay và những giấy tờ gửi theo thẻ bảo hiểm. Có thể thay đổi trước khi nộp. Bài thử chưa trừ tiền của An."
+      },
+      {
+       "title": "Hộp thư cần kiểm tra",
+       "image": "/images/finteen-v2/chapter-07/asset-mini-game/scam-or-safe/message-phone.png",
+       "instruction": "Đọc cả nội dung lẫn bối cảnh của từng tin. Chọn cách xử lý cho cả sáu tin rồi nộp một lần; trước khi nộp, chạm số để xem hoặc đổi câu trả lời."
+      },
+      {
+       "title": "Ưu tiên xử lý",
+       "image": "/images/finteen-v2/chapter-07/asset-mini-game/scam-or-safe/message-phone.png",
+       "instruction": "Có giao dịch lạ sau khi lộ mã xác thực. Chọn bốn hành động và xếp theo thứ tự sẽ làm. Có thể lấy thẻ ra để đổi trước khi nộp."
+      }
+     ],
+     "insurance": {
+      "note": [
+       {
+        "b": "Hóa đơn y tế: 300.000đ, cần thanh toán trong ngày."
+       },
+       {
+        "br": true
+       },
+       "Ví bài thử có 1.500.000đ. Khoản xét chi trả tối đa 200.000đ từ bảo hiểm chưa được duyệt; phí bảo hiểm đã đóng từ trước."
+      ],
+      "referenceButton": "Xem lại điều kiện bảo hiểm và hồ sơ",
+      "paymentQuestion": "Bạn đưa bao nhiêu tiền để thanh toán hôm nay?",
+      "payments": [
+       100000,
+       200000,
+       300000,
+       500000
+      ],
+      "correctPayment": 300000,
+      "documentQuestion": "Bạn giữ những giấy tờ nào để gửi yêu cầu chi trả?",
+      "documents": [
+       {
+        "id": "receipt",
+        "label": "Hóa đơn đã thanh toán",
+        "image": "/images/finteen-v2/chapter-07/props/medical-receipt.png"
+       },
+       {
+        "id": "appointment",
+        "label": "Lịch hẹn buổi sau",
+        "image": "/images/finteen-v2/chapter-07/asset-mini-game/scam-or-safe/time-pressure.png"
+       },
+       {
+        "id": "medicalRecord",
+        "label": "Giấy ghi nhận xử lý y tế",
+        "image": "/images/finteen-v2/chapter-07/props/medical-receipt.png"
+       },
+       {
+        "id": "otp",
+        "label": "Mã OTP người nhắn tin hỏi",
+        "image": "/images/finteen-v2/chapter-07/asset-mini-game/scam-or-safe/message-phone.png"
+       },
+       {
+        "id": "claim",
+        "label": "Mẫu yêu cầu chi trả",
+        "image": "/images/finteen-v2/chapter-07/props/insurance-terms-folder.png"
+       }
+      ],
+      "requiredDocuments": [
+       "receipt",
+       "medicalRecord",
+       "claim"
+      ],
+      "documentSelected": "Đã chọn",
+      "documentPick": "Chọn giấy tờ",
+      "submit": "Nộp cách thanh toán và hồ sơ",
+      "submitted": "Đã nhận bài nộp",
+      "feedback": "Đã nhận bài nộp. Xem phần tiền cần trả hôm nay và hồ sơ cần giữ bên dưới.",
+      "paymentLabel": "Tiền thanh toán hôm nay",
+      "paymentExplanation": [
+       "Cần trả đủ 300.000đ. Ví bài thử còn 1.500.000đ − 300.000đ =",
+       " ",
+       {
+        "strong": "1.200.000đ"
+       },
+       ". Phần tự trả 100.000đ không có nghĩa hôm nay chỉ thanh toán 100.000đ; khoản bảo hiểm 200.000đ chưa được nhận."
+      ],
+      "packetLabel": "Hồ sơ theo thẻ này",
+      "packetExplanation": "Cần hóa đơn đã thanh toán, giấy ghi nhận xử lý y tế và mẫu yêu cầu chi trả. Lịch hẹn không thay chứng từ trong thẻ này; không gửi OTP cho người hỏi. Nộp đủ hồ sơ vẫn cần chờ bên bảo hiểm xem xét theo điều kiện đã ghi; lúc này An chưa nhận được tiền.",
+      "questions": [
+       {
+        "id": "insurancePayment",
+        "grade": {
+         "part": 0,
+         "input": "payment",
+         "rule": {
+          "eq": 300000
+         }
+        }
+       },
+       {
+        "id": "insurancePacket",
+        "grade": {
+         "part": 0,
+         "input": "documents",
+         "rule": {
+          "sets": [
+           [
+            "receipt",
+            "medicalRecord",
+            "claim"
+           ]
+          ]
+         }
+        }
+       }
+      ]
+     },
+     "inbox": {
+      "navLabel": "Sáu tin nhắn",
+      "navItem": "Tin {n}, {status}",
+      "statusCorrect": "Đúng",
+      "statusIncorrect": "Chưa đúng",
+      "statusPicked": "Đã chọn",
+      "statusOpen": "Chưa chọn",
+      "image": "/images/finteen-v2/chapter-07/asset-mini-game/scam-or-safe/message-phone.png",
+      "counter": "Tin {n}/{total}",
+      "contextLabel": "Bối cảnh:",
+      "answerOrder": [
+       "continue",
+       "check"
+      ],
+      "answerLabels": {
+       "check": "Chưa làm theo, tìm nơi khác để hỏi lại",
+       "continue": "Tiếp tục làm theo hướng dẫn"
+      },
+      "youChose": "Bạn chọn: {answer}.",
+      "progress": "Đã chọn cách xử lý {count}/{total} tin.",
+      "progressDone": "Có thể mở từng tin để đọc lời giải.",
+      "progressOpen": "Chưa kiểm tra đúng sai; bạn có thể đổi trước khi nộp.",
+      "submit": "Nộp cách xử lý sáu tin",
+      "submitted": "Đã kiểm tra hộp thư",
+      "feedback": "Đã kiểm tra hộp thư. Chọn từng tin để xem dấu hiệu và lý do.",
+      "messages": [
+       {
+        "id": "instantRefund",
+        "channel": "SMS từ số chưa lưu",
+        "text": "Hồ sơ được hoàn 200.000đ. Gửi mã OTP để nhận ngay; sau 5 phút quyền nhận tiền sẽ hết.",
+        "context": "An không yêu cầu giao dịch nào. Người gửi muốn nhận mã xác thực.",
+        "answer": "check",
+        "explanation": "Yêu cầu OTP và thúc ép thời gian là dấu hiệu cần dừng. Tự mở ứng dụng hoặc dùng thông tin liên hệ đã có trong hợp đồng, không gọi theo tin nhắn.",
+        "grade": {
+         "part": 1,
+         "rule": {
+          "eq": "check"
+         }
+        }
+       },
+       {
+        "id": "claimStatus",
+        "channel": "Ứng dụng bảo hiểm An đang dùng",
+        "text": "Hồ sơ đã tiếp nhận, đang chờ xét. Bạn có thể xem danh sách chứng từ tại mục Hồ sơ của tôi.",
+        "context": "Ứng dụng đã cài từ trước; An mở trực tiếp, không qua đường dẫn trong tin lạ.",
+        "answer": "continue",
+        "explanation": "Có thể tiếp tục xem trạng thái trong ứng dụng bảo hiểm An tự mở. Đã tiếp nhận vẫn chưa đồng nghĩa được duyệt hay đã nhận tiền.",
+        "grade": {
+         "part": 1,
+         "rule": {
+          "eq": "continue"
+         }
+        }
+       },
+       {
+        "id": "fakeLink",
+        "channel": "Tin nhắn tự xưng hỗ trợ bảo hiểm",
+        "text": "Bổ sung hồ sơ tại bao-hiem-hoan-tien.example/xac-minh, nhập mật khẩu ngân hàng để đối chiếu.",
+        "context": "Địa chỉ không trùng trang web ghi trong hợp đồng. Đây chỉ là tên miền giả lập, không phải liên kết để mở.",
+        "answer": "check",
+        "explanation": "Tên người gửi và chữ “bảo hiểm” trong địa chỉ chưa đủ để biết ai đứng sau tin nhắn. Hồ sơ y tế không cần gửi mật khẩu ngân hàng cho người nhắn tin.",
+        "grade": {
+         "part": 1,
+         "rule": {
+          "eq": "check"
+         }
+        }
+       },
+       {
+        "id": "officialDesk",
+        "channel": "Bàn hỗ trợ của trường",
+        "text": "Mang hóa đơn và giấy xử lý y tế đến bàn hướng dẫn. Không gửi ảnh giấy tờ vào nhóm chat công khai.",
+        "context": "An và Cô Linh đang đứng tại bàn đã được nhà trường giới thiệu.",
+        "answer": "continue",
+        "explanation": "An đang hỏi trực tiếp tại bàn do nhà trường giới thiệu nên có thể tiếp tục và đưa giấy tờ cần thiết. Người hướng dẫn giúp chuẩn bị hồ sơ, nhưng không quyết định bên bảo hiểm có trả tiền hay không.",
+        "grade": {
+         "part": 1,
+         "rule": {
+          "eq": "continue"
+         }
+        }
+       },
+       {
+        "id": "remoteApp",
+        "channel": "Cuộc gọi từ người lạ",
+        "text": "Cài ứng dụng hỗ trợ từ tệp tôi gửi và bật quyền điều khiển màn hình, tôi sẽ làm hồ sơ thay.",
+        "context": "An chưa từng liên hệ người này; An không tìm thấy ứng dụng này trên kho ứng dụng hay trang web của bên bảo hiểm.",
+        "answer": "check",
+        "explanation": "Không cài tệp lạ hay cấp quyền điều khiển thiết bị. Dừng cuộc gọi, rồi tự tìm số hỗ trợ trong hợp đồng để hỏi lại bên bảo hiểm.",
+        "grade": {
+         "part": 1,
+         "rule": {
+          "eq": "check"
+         }
+        }
+       },
+       {
+        "id": "verifiedSupport",
+        "channel": "Mục hỗ trợ của ứng dụng bảo hiểm",
+        "text": "Bạn có thể gửi yêu cầu giải thích hồ sơ, kèm mã hồ sơ và hóa đơn. Không gửi mật khẩu hoặc OTP cho nhân viên.",
+        "context": "An tự mở ứng dụng bảo hiểm đã dùng từ trước rồi vào mục hỗ trợ.",
+        "answer": "continue",
+        "explanation": "An đã tự mở ứng dụng bảo hiểm và được hướng dẫn gửi giấy tờ liên quan, nên có thể tiếp tục. Chỉ gửi những gì hồ sơ yêu cầu và chờ phản hồi; nộp hồ sơ chưa có nghĩa chắc chắn được trả tiền.",
+        "grade": {
+         "part": 1,
+         "rule": {
+          "eq": "continue"
+         }
+        }
+       }
+      ]
+     },
+     "response": {
+      "note": [
+       {
+        "b": "Tình huống:"
+       },
+       " vừa thấy giao dịch không do bạn thực hiện sau khi gửi mã cho người lạ. Bạn có ứng dụng ngân hàng đang dùng và số hỗ trợ ghi trên thẻ. Đây là bài giả lập, không nhập dữ liệu thật."
+      ],
+      "title": "Bốn bước bạn sẽ làm",
+      "slots": 4,
+      "remove": "Lấy ra",
+      "removeLabel": "Lấy bước {n} ra",
+      "emptySlot": "Chọn một thẻ bên dưới để đặt bước {n}",
+      "placed": "Đã xếp bước {n}",
+      "add": "Thêm vào kế hoạch",
+      "submit": "Nộp kế hoạch ứng phó",
+      "submitted": "Đã nhận kế hoạch",
+      "feedback": "Đã nhận kế hoạch. Báo ngân hàng và khóa thẻ hoặc tài khoản đều cần làm ngay. Việc nào làm được trước thì làm, đừng đợi gom đủ giấy tờ.",
+      "actions": [
+       {
+        "id": "save",
+        "label": "Lưu chứng từ, thời điểm và gửi báo cáo",
+        "image": "/images/finteen-v2/chapter-07/asset-mini-game/scam-or-safe/save-evidence.png"
+       },
+       {
+        "id": "payFee",
+        "label": "Chuyển phí cho người hứa lấy lại tiền",
+        "image": "/images/finteen-v2/chapter-07/asset-mini-game/scam-or-safe/message-phone.png"
+       },
+       {
+        "id": "protect",
+        "label": "Khóa thẻ hoặc tài khoản trong ứng dụng ngân hàng",
+        "image": "/images/finteen-v2/chapter-07/asset-mini-game/scam-or-safe/protect-account.png"
+       },
+       {
+        "id": "stop",
+        "label": "Dừng lại, không gửi thêm mã hay thông tin",
+        "image": "/images/finteen-v2/chapter-07/asset-mini-game/scam-or-safe/stop-transaction.png"
+       },
+       {
+        "id": "reply",
+        "label": "Trả lời số lạ để nhờ họ xử lý tiếp",
+        "image": "/images/finteen-v2/chapter-07/asset-mini-game/scam-or-safe/message-phone.png"
+       },
+       {
+        "id": "contact",
+        "label": "Báo ngân hàng qua số trên thẻ hoặc ứng dụng",
+        "image": "/images/finteen-v2/chapter-07/asset-mini-game/scam-or-safe/official-contact.png"
+       }
+      ],
+      "grading": [
+       {
+        "id": "stop",
+        "positions": [
+         0
+        ],
+        "review": "Dừng ngay thao tác và không gửi thêm thông tin.",
+        "grade": {
+         "id": "response_stop",
+         "part": 2,
+         "input": "slots",
+         "rule": {
+          "at": {
+           "item": "stop",
+           "in": [
+            0
+           ]
+          }
+         }
+        }
+       },
+       {
+        "id": "contact",
+        "positions": [
+         1,
+         2
+        ],
+        "review": "Báo ngân hàng qua số trên thẻ hoặc mục hỗ trợ trong ứng dụng.",
+        "grade": {
+         "id": "response_contact",
+         "part": 2,
+         "input": "slots",
+         "rule": {
+          "at": {
+           "item": "contact",
+           "in": [
+            1,
+            2
+           ]
+          }
+         }
+        }
+       },
+       {
+        "id": "protect",
+        "positions": [
+         1,
+         2
+        ],
+        "review": "Dùng chức năng khóa thẻ hoặc tài khoản trong ứng dụng ngân hàng.",
+        "grade": {
+         "id": "response_protect",
+         "part": 2,
+         "input": "slots",
+         "rule": {
+          "at": {
+           "item": "protect",
+           "in": [
+            1,
+            2
+           ]
+          }
+         }
+        }
+       },
+       {
+        "id": "save",
+        "positions": [
+         3
+        ],
+        "review": "Lưu tin nhắn và thông tin giao dịch để gửi ngân hàng; đừng đợi gom đủ mới báo và khóa.",
+        "grade": {
+         "id": "response_save",
+         "part": 2,
+         "input": "slots",
+         "rule": {
+          "at": {
+           "item": "save",
+           "in": [
+            3
+           ]
+          }
+         }
+        }
+       }
+      ],
+      "reviewTitle": "Xem lại các bước đã chọn",
+      "reviewSummary": "Báo ngân hàng và khóa thẻ hoặc tài khoản đều cần làm sớm. Việc nào làm được trước thì làm trước. Đừng chuyển thêm phí hay nhờ lại người lạ. Dù đã báo ngân hàng, bạn vẫn chưa chắc lấy lại được tiền."
+     },
+     "texts": {
+      "stepsLabel": "Các phần chơi",
+      "roundTitle": "Màn {n} · {title}",
+      "submittedBadge": "Đã nộp đáp án",
+      "openBadge": "Chưa nộp đáp án",
+      "howto": "Cách chơi",
+      "correct": "✓ Đúng",
+      "incorrect": "× Chưa đúng",
+      "verdictLine": " · {label}",
+      "defaultFeedback": "Nộp một lần; sau đó đọc lời giải và tiếp tục, kể cả khi có câu chưa đúng.",
+      "footerDone": "Đã xem kết quả · có thể tiếp tục",
+      "footerOpen": "Không đếm giờ · chưa nộp đáp án",
+      "next": "Sang màn tiếp theo →",
+      "finish": "Trở lại câu chuyện",
+      "note": "Các thao tác trong bài thử không mở liên kết, gửi tin, tạo khoản vay hay thay đổi ví của An. Không nhập OTP, mật khẩu hoặc thông tin cá nhân thật."
+     }
+    },
+    "reference": null
+   },
+   "nextSceneId": "CH07_AFTER_SAFETY_1"
+  },
+  {
+   "id": "CH07_AFTER_SAFETY_1",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg12-refund-message-phone.png",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "thinking",
+     "src": "/images/finteen-v2/chapter-07/char/an/an-thinking.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Mình cần nhìn yêu cầu thực sự: lấy mã, lấy mật khẩu, cài tệp lạ hay chỉ hướng dẫn xem hồ sơ trong ứng dụng đã mở.",
+   "text": "Mình cần nhìn yêu cầu thực sự: lấy mã, lấy mật khẩu, cài tệp lạ hay chỉ hướng dẫn xem hồ sơ trong ứng dụng đã mở.",
+   "speaker": "An",
+   "speakerId": "AN",
+   "nextSceneId": "CH07_AFTER_SAFETY_2"
+  },
+  {
+   "id": "CH07_AFTER_SAFETY_2",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg12-refund-message-phone.png",
+   "characters": [
+    {
+     "id": "MINH",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/minh/minh-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Nếu thấy giao dịch lạ thì dừng lại ngay. Báo ngân hàng và khóa thẻ hoặc tài khoản càng sớm càng tốt, đừng chờ người kia nhắn tiếp.",
+   "text": "Nếu thấy giao dịch lạ thì dừng lại ngay. Báo ngân hàng và khóa thẻ hoặc tài khoản càng sớm càng tốt, đừng chờ người kia nhắn tiếp.",
+   "speaker": "Minh",
+   "speakerId": "MINH",
+   "nextSceneId": "CH07_AFTER_SAFETY_3"
+  },
+  {
+   "id": "CH07_AFTER_SAFETY_3",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg12-refund-message-phone.png",
+   "characters": [
+    {
+     "id": "CO_LINH",
+     "expression": "explaining",
+     "src": "/images/finteen-v2/chapter-07/char/co-linh/co-linh-explaining.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Nếu ứng dụng có nút khóa thẻ hoặc tài khoản thì dùng ngay, đồng thời nhờ ngân hàng hỗ trợ. Việc nào làm được trước thì làm, đừng mải gom bằng chứng mà chậm khóa.",
+   "text": "Nếu ứng dụng có nút khóa thẻ hoặc tài khoản thì dùng ngay, đồng thời nhờ ngân hàng hỗ trợ. Việc nào làm được trước thì làm, đừng mải gom bằng chứng mà chậm khóa.",
+   "speaker": "Cô Linh",
+   "speakerId": "CO_LINH",
+   "nextSceneId": "CH07_AFTER_SAFETY_4"
+  },
+  {
+   "id": "CH07_AFTER_SAFETY_4",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg12-refund-message-phone.png",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/an/an-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Lưu chứng từ là để có căn cứ theo dõi. Không phải đăng hết dữ liệu cá nhân để nhờ người lạ xét giúp.",
+   "text": "Lưu chứng từ là để có căn cứ theo dõi. Không phải đăng hết dữ liệu cá nhân để nhờ người lạ xét giúp.",
+   "speaker": "An",
+   "speakerId": "AN",
+   "nextSceneId": "CH07_SC04_ART"
+  },
+  {
+   "id": "CH07_SC04_ART",
+   "type": "inspect",
+   "background": "/images/finteen-v2/chapter-07/scene/sc04-organizing-evidence-and-support.png",
+   "characters": [],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Giữ lại điều cần thiết",
+   "sceneArt": "/images/finteen-v2/chapter-07/scene/sc04-organizing-evidence-and-support.png",
+   "nextSceneId": "CH07_SUPPORT_1"
+  },
+  {
+   "id": "CH07_SUPPORT_1",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11c-recovery-evidence-desk.png",
+   "characters": [
+    {
+     "id": "MINH",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/minh/minh-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Mình còn hồ sơ bảo hiểm. Cần hỏi họ đã nhận đủ giấy tờ hay thiếu mục nào, đúng không?",
+   "text": "Mình còn hồ sơ bảo hiểm. Cần hỏi họ đã nhận đủ giấy tờ hay thiếu mục nào, đúng không?",
+   "speaker": "Minh",
+   "speakerId": "MINH",
+   "nextSceneId": "CH07_SUPPORT_2"
+  },
+  {
+   "id": "CH07_SUPPORT_2",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11c-recovery-evidence-desk.png",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/an/an-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Ừ. Tớ muốn giữ bản chụp hóa đơn, điều kiện bảo hiểm và ghi lại lần liên hệ, thay vì gửi đi rồi không biết hỏi ai.",
+   "text": "Ừ. Tớ muốn giữ bản chụp hóa đơn, điều kiện bảo hiểm và ghi lại lần liên hệ, thay vì gửi đi rồi không biết hỏi ai.",
+   "speaker": "An",
+   "speakerId": "AN",
+   "nextSceneId": "CH07_SUPPORT_3"
+  },
+  {
+   "id": "CH07_SUPPORT_3",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11c-recovery-evidence-desk.png",
+   "characters": [
+    {
+     "id": "CO_LINH",
+     "expression": "explaining",
+     "src": "/images/finteen-v2/chapter-07/char/co-linh/co-linh-explaining.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Nếu hồ sơ chưa được duyệt hoặc bị từ chối, em hỏi bộ phận hỗ trợ bảo hiểm xem vì sao và cần bổ sung gì. Mình nghe họ giải thích rồi xem lại điều khoản nhé.",
+   "text": "Nếu hồ sơ chưa được duyệt hoặc bị từ chối, em hỏi bộ phận hỗ trợ bảo hiểm xem vì sao và cần bổ sung gì. Mình nghe họ giải thích rồi xem lại điều khoản nhé.",
+   "speaker": "Cô Linh",
+   "speakerId": "CO_LINH",
+   "nextSceneId": "CH07_SUPPORT_4"
+  },
+  {
+   "id": "CH07_SUPPORT_4",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11c-recovery-evidence-desk.png",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "thinking",
+     "src": "/images/finteen-v2/chapter-07/char/an/an-thinking.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Mình cũng cần làm theo hướng dẫn của hợp đồng, chứ không nghĩ cứ gửi càng nhiều dữ liệu càng tốt.",
+   "text": "Mình cũng cần làm theo hướng dẫn của hợp đồng, chứ không nghĩ cứ gửi càng nhiều dữ liệu càng tốt.",
+   "speaker": "An",
+   "speakerId": "AN",
+   "nextSceneId": "CH07_SUPPORT_5"
+  },
+  {
+   "id": "CH07_SUPPORT_5",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11c-recovery-evidence-desk.png",
+   "characters": [
+    {
+     "id": "MINH",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/minh/minh-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Có người nhắn riêng bảo nhận lấy lại tiền và làm bảo hiểm nhanh. Họ muốn một trăm nghìn phí trước.",
+   "text": "Có người nhắn riêng bảo nhận lấy lại tiền và làm bảo hiểm nhanh. Họ muốn một trăm nghìn phí trước.",
+   "speaker": "Minh",
+   "speakerId": "MINH",
+   "nextSceneId": "CH07_SUPPORT_6"
+  },
+  {
+   "id": "CH07_SUPPORT_6",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11c-recovery-evidence-desk.png",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "worried-money",
+     "src": "/images/finteen-v2/chapter-07/char/an/an-worried-money.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Em đang muốn giải quyết cho xong nên nghe cũng thấy muốn thử. Họ bảo chỉ mất phí này một lần.",
+   "text": "Em đang muốn giải quyết cho xong nên nghe cũng thấy muốn thử. Họ bảo chỉ mất phí này một lần.",
+   "speaker": "An",
+   "speakerId": "AN",
+   "nextSceneId": "CH07_SUPPORT_7"
+  },
+  {
+   "id": "CH07_SUPPORT_7",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11c-recovery-evidence-desk.png",
+   "characters": [
+    {
+     "id": "CO_LINH",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/co-linh/co-linh-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Mình có biết người đó làm ở đâu không? Chỉ gửi tên hay ảnh giao dịch qua chat thì chưa biết họ có thật sự giúp được mình hay không.",
+   "text": "Mình có biết người đó làm ở đâu không? Chỉ gửi tên hay ảnh giao dịch qua chat thì chưa biết họ có thật sự giúp được mình hay không.",
+   "speaker": "Cô Linh",
+   "speakerId": "CO_LINH",
+   "nextSceneId": "CH07_SUPPORT_8"
+  },
+  {
+   "id": "CH07_SUPPORT_8",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11c-recovery-evidence-desk.png",
+   "characters": [
+    {
+     "id": "MINH",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/minh/minh-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Người này tự tìm tới, không phải địa chỉ trong hợp đồng hay nơi mình chủ động hỏi.",
+   "text": "Người này tự tìm tới, không phải địa chỉ trong hợp đồng hay nơi mình chủ động hỏi.",
+   "speaker": "Minh",
+   "speakerId": "MINH",
+   "nextSceneId": "CH07_SUPPORT_9"
+  },
+  {
+   "id": "CH07_SUPPORT_9",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11c-recovery-evidence-desk.png",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "thinking",
+     "src": "/images/finteen-v2/chapter-07/char/an/an-thinking.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Nếu chuyển thêm một trăm nghìn mà không có căn cứ thì mình tạo một khoản chi mới, chưa giải quyết được khoản cũ.",
+   "text": "Nếu chuyển thêm một trăm nghìn mà không có căn cứ thì mình tạo một khoản chi mới, chưa giải quyết được khoản cũ.",
+   "speaker": "An",
+   "speakerId": "AN",
+   "nextSceneId": "CH07_SUPPORT_10"
+  },
+  {
+   "id": "CH07_SUPPORT_10",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11c-recovery-evidence-desk.png",
+   "characters": [
+    {
+     "id": "CO_LINH",
+     "expression": "encouraging",
+     "src": "/images/finteen-v2/chapter-07/char/co-linh/co-linh-encouraging.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Mình xem lại giấy tờ đang có và thông tin liên hệ trong hợp đồng nhé. Sau đó quyết định sẽ nhờ ai hỗ trợ tiếp.",
+   "text": "Mình xem lại giấy tờ đang có và thông tin liên hệ trong hợp đồng nhé. Sau đó quyết định sẽ nhờ ai hỗ trợ tiếp.",
+   "speaker": "Cô Linh",
+   "speakerId": "CO_LINH",
+   "nextSceneId": "CH07_SUPPORT_INSPECT"
+  },
+  {
+   "id": "CH07_SUPPORT_INSPECT",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11c-recovery-evidence-desk.png",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "thinking",
+     "src": "/images/finteen-v2/chapter-07/char/an/an-thinking.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Hồ sơ và nơi tìm hỗ trợ",
+   "text": "Hồ sơ và nơi tìm hỗ trợ",
+   "speaker": "An",
+   "requiredInspections": [
+    "ch07_support_inspect"
+   ],
+   "nextSceneId": "CH07_SC04",
+   "inspect": {
+    "id": "ch07_support_inspect",
+    "buttonText": "Hồ sơ và nơi tìm hỗ trợ",
+    "cards": [
+     {
+      "id": "records",
+      "label": "Giữ lại để theo dõi",
+      "image": "/images/finteen-v2/chapter-07/asset-mini-game/scam-or-safe/save-evidence.png",
+      "facts": [
+       [
+        "Hồ sơ chi phí",
+        "Điều kiện bảo hiểm, hóa đơn, giấy xử lý y tế và mẫu yêu cầu"
+       ],
+       [
+        "Nếu có giao dịch lạ",
+        "Thời điểm, mã giao dịch, ảnh tin nhắn; cất riêng, không đăng công khai"
+       ],
+       [
+        "Nhật ký hỗ trợ",
+        "Ngày liên hệ, nơi đã hỏi, mã hồ sơ và giấy tờ cần bổ sung"
+       ]
+      ]
+     },
+     {
+      "id": "official",
+      "label": "Tự tìm đúng nơi",
+      "image": "/images/finteen-v2/chapter-07/asset-mini-game/scam-or-safe/official-contact.png",
+      "facts": [
+       [
+        "Về hồ sơ bảo hiểm",
+        "Bộ phận hỗ trợ ghi trong hợp đồng hoặc ứng dụng bảo hiểm"
+       ],
+       [
+        "Về giao dịch tài khoản",
+        "Gọi số trên thẻ hoặc mở mục hỗ trợ trong ứng dụng ngân hàng"
+       ],
+       [
+        "Người đồng hành",
+        "Gia đình, người lớn tin cậy và bàn hỗ trợ của trường"
+       ],
+       [
+        "Nếu người lạ đòi phí trước",
+        "Không chuyển tiền để mở khóa, lấy lại tiền hoặc làm hồ sơ theo lời hứa trong tin nhắn"
+       ]
+      ]
+     }
+    ],
+    "shared": {
+     "label": "Chưa có khoản hoàn tiền",
+     "items": [
+      "Khoản bảo hiểm tối đa 200.000đ vẫn chờ xét; báo cáo lừa đảo cũng không tự hoàn lại tổn thất."
+     ]
+    },
+    "autoNextSceneOnClose": true
+   }
+  },
+  {
+   "id": "CH07_SC04",
+   "type": "choice",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11c-recovery-evidence-desk.png",
+   "characters": [],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "An muốn tiếp tục xử lý hồ sơ và tìm hỗ trợ thế nào?",
+   "text": "An muốn tiếp tục xử lý hồ sơ và tìm hỗ trợ thế nào?",
+   "prompt": "An muốn tiếp tục xử lý hồ sơ và tìm hỗ trợ thế nào?",
+   "options": [
+    {
+     "id": "CH07_SC04_A",
+     "label": "Nhờ cô cùng hỏi bên bảo hiểm xem hồ sơ còn thiếu gì, rồi ghi lại mã hồ sơ.",
+     "deltaStats": {
+      "RISK": -8,
+      "GOAL": 2
+     },
+     "evidenceScores": {
+      "I": 2,
+      "C": 1,
+      "P": 2
+     },
+     "setFlags": {
+      "recovery_done": true,
+      "recovery_unverified": false
+     },
+     "nextSceneId": "CH07_OFFICIAL_1"
+    },
+    {
+     "id": "CH07_SC04_B",
+     "label": "Gửi 100.000đ phí trước cho người vừa nhắn để họ làm giúp.",
+     "deltaStats": {
+      "RISK": 5,
+      "GOAL": -2
+     },
+     "evidenceScores": {
+      "I": 0,
+      "C": 0,
+      "P": 0
+     },
+     "moneyEvents": [
+      {
+       "eventId": "CH07_RECOVERY_FEE_LOSS",
+       "amount": -100000,
+       "reason": "Phí chuyển cho người lạ nhận làm hồ sơ"
+      }
+     ],
+     "setFlags": {
+      "recovery_done": false,
+      "recovery_unverified": true
+     },
+     "nextSceneId": "CH07_FEE_1",
+     "condition": {
+      "var": "money",
+      "op": ">=",
+      "value": 100000
+     },
+     "lockedReason": "Chưa đủ điều kiện để chọn."
+    }
+   ],
+   "choiceGroup": "CH07_SUPPORT"
+  },
+  {
+   "id": "CH07_OFFICIAL_1",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11c-recovery-evidence-desk.png",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/an/an-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Em giữ giấy tờ và mã hồ sơ rồi. Nếu cần bổ sung, em hỏi lại bên bảo hiểm, chứ không chuyển phí cho người vừa nhắn.",
+   "text": "Em giữ giấy tờ và mã hồ sơ rồi. Nếu cần bổ sung, em hỏi lại bên bảo hiểm, chứ không chuyển phí cho người vừa nhắn.",
+   "speaker": "An",
+   "speakerId": "AN",
+   "nextSceneId": "CH07_OFFICIAL_2"
+  },
+  {
+   "id": "CH07_OFFICIAL_2",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11c-recovery-evidence-desk.png",
+   "characters": [
+    {
+     "id": "MINH",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/minh/minh-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Lần hỏi sau cậu có thể chỉ rõ đang chờ giấy gì và từ hôm nào. Đỡ phải kể lại từ đầu cho từng người.",
+   "text": "Lần hỏi sau cậu có thể chỉ rõ đang chờ giấy gì và từ hôm nào. Đỡ phải kể lại từ đầu cho từng người.",
+   "speaker": "Minh",
+   "speakerId": "MINH",
+   "nextSceneId": "CH07_OFFICIAL_3"
+  },
+  {
+   "id": "CH07_OFFICIAL_3",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11c-recovery-evidence-desk.png",
+   "characters": [
+    {
+     "id": "CO_LINH",
+     "expression": "encouraging",
+     "src": "/images/finteen-v2/chapter-07/char/co-linh/co-linh-encouraging.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Mình đã có cách theo dõi. Nếu có giao dịch bất thường, tiếp tục phối hợp bảo vệ và báo cáo; không vì đã báo một lần mà bỏ kiểm tra thông báo mới.",
+   "text": "Mình đã có cách theo dõi. Nếu có giao dịch bất thường, tiếp tục phối hợp bảo vệ và báo cáo; không vì đã báo một lần mà bỏ kiểm tra thông báo mới.",
+   "speaker": "Cô Linh",
+   "speakerId": "CO_LINH",
+   "nextSceneId": "CH07_OFFICIAL_4"
+  },
+  {
+   "id": "CH07_OFFICIAL_4",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11c-recovery-evidence-desk.png",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "thinking",
+     "src": "/images/finteen-v2/chapter-07/char/an/an-thinking.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Còn tiền bảo hiểm thì đợi họ trả lời đã. Em chưa tính hai trăm nghìn đó vào tiền có thể tiêu.",
+   "text": "Còn tiền bảo hiểm thì đợi họ trả lời đã. Em chưa tính hai trăm nghìn đó vào tiền có thể tiêu.",
+   "speaker": "An",
+   "speakerId": "AN",
+   "nextSceneId": "CH07_CHECK_EXPOSED"
+  },
+  {
+   "id": "CH07_FEE_1",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11c-recovery-evidence-desk.png",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "worried-money",
+     "src": "/images/finteen-v2/chapter-07/char/an/an-worried-money.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Em đã chuyển một trăm nghìn trong bài cho người nhắn. Họ lại yêu cầu thêm phí để mở hồ sơ.",
+   "text": "Em đã chuyển một trăm nghìn trong bài cho người nhắn. Họ lại yêu cầu thêm phí để mở hồ sơ.",
+   "speaker": "An",
+   "speakerId": "AN",
+   "nextSceneId": "CH07_FEE_2"
+  },
+  {
+   "id": "CH07_FEE_2",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11c-recovery-evidence-desk.png",
+   "characters": [
+    {
+     "id": "MINH",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/minh/minh-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Lời hứa ban đầu chưa thành khoản tiền về. Mình dừng gửi thêm và giữ lại tin yêu cầu phí mới.",
+   "text": "Lời hứa ban đầu chưa thành khoản tiền về. Mình dừng gửi thêm và giữ lại tin yêu cầu phí mới.",
+   "speaker": "Minh",
+   "speakerId": "MINH",
+   "nextSceneId": "CH07_FEE_3"
+  },
+  {
+   "id": "CH07_FEE_3",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11c-recovery-evidence-desk.png",
+   "characters": [
+    {
+     "id": "CO_LINH",
+     "expression": "explaining",
+     "src": "/images/finteen-v2/chapter-07/char/co-linh/co-linh-explaining.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Một trăm nghìn đã chuyển vẫn chưa lấy lại được. Em đừng gửi thêm nhé. Cô sẽ cùng em báo ngân hàng và hỏi bên bảo hiểm về hồ sơ.",
+   "text": "Một trăm nghìn đã chuyển vẫn chưa lấy lại được. Em đừng gửi thêm nhé. Cô sẽ cùng em báo ngân hàng và hỏi bên bảo hiểm về hồ sơ.",
+   "speaker": "Cô Linh",
+   "speakerId": "CO_LINH",
+   "nextSceneId": "CH07_FEE_4"
+  },
+  {
+   "id": "CH07_FEE_4",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11c-recovery-evidence-desk.png",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "thinking",
+     "src": "/images/finteen-v2/chapter-07/char/an/an-thinking.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Em cần có người lớn tin cậy cùng theo dõi và báo việc vừa xảy ra. Em không muốn tự giấu rồi làm tiếp theo họ.",
+   "text": "Em cần có người lớn tin cậy cùng theo dõi và báo việc vừa xảy ra. Em không muốn tự giấu rồi làm tiếp theo họ.",
+   "speaker": "An",
+   "speakerId": "AN",
+   "nextSceneId": "CH07_CHECK_EXPOSED"
+  },
+  {
+   "id": "CH07_CHECK_EXPOSED",
+   "type": "conditional",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11c-recovery-evidence-desk.png",
+   "characters": [],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "condition": {
+    "var": "choice:CH07_FRAUD",
+    "op": "==",
+    "value": "CH07_SC03_B"
+   },
+   "ifTrueSceneId": "CH07_CLOSE_EXPOSED_1",
+   "ifFalseSceneId": "CH07_CLOSE_CONTAINED_1"
+  },
+  {
+   "id": "CH07_CLOSE_EXPOSED_1",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11c-recovery-evidence-desk.png",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "thinking",
+     "src": "/images/finteen-v2/chapter-07/char/an/an-thinking.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Bài mô phỏng vẫn ghi nhận em đã lộ OTP và mất một trăm năm mươi nghìn. Bước bảo vệ giúp ngăn rủi ro tiếp diễn, không xóa việc đã xảy ra.",
+   "text": "Bài mô phỏng vẫn ghi nhận em đã lộ OTP và mất một trăm năm mươi nghìn. Bước bảo vệ giúp ngăn rủi ro tiếp diễn, không xóa việc đã xảy ra.",
+   "speaker": "An",
+   "speakerId": "AN",
+   "nextSceneId": "CH07_CLOSE_EXPOSED_2"
+  },
+  {
+   "id": "CH07_CLOSE_EXPOSED_2",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11c-recovery-evidence-desk.png",
+   "characters": [
+    {
+     "id": "CO_LINH",
+     "expression": "encouraging",
+     "src": "/images/finteen-v2/chapter-07/char/co-linh/co-linh-encouraging.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Em đã biết dừng lại và nhờ giúp đỡ rồi. Giờ mình tiếp tục kiểm tra tài khoản và làm theo hướng dẫn của ngân hàng nhé.",
+   "text": "Em đã biết dừng lại và nhờ giúp đỡ rồi. Giờ mình tiếp tục kiểm tra tài khoản và làm theo hướng dẫn của ngân hàng nhé.",
+   "speaker": "Cô Linh",
+   "speakerId": "CO_LINH",
+   "nextSceneId": "CH07_CLOSE_EXPOSED_3"
+  },
+  {
+   "id": "CH07_CLOSE_EXPOSED_3",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11c-recovery-evidence-desk.png",
+   "characters": [
+    {
+     "id": "MINH",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/minh/minh-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Tớ có thể ngồi cùng khi cậu rà lại thời điểm và chứng từ. Cậu không cần tự xử lý hết mọi thứ.",
+   "text": "Tớ có thể ngồi cùng khi cậu rà lại thời điểm và chứng từ. Cậu không cần tự xử lý hết mọi thứ.",
+   "speaker": "Minh",
+   "speakerId": "MINH",
+   "nextSceneId": "CH07_CLOSE_1"
+  },
+  {
+   "id": "CH07_CLOSE_CONTAINED_1",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11c-recovery-evidence-desk.png",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/an/an-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Em chưa gửi OTP cho họ. Giờ em cần xem lại khoản chi y tế và theo dõi hồ sơ bảo hiểm nữa.",
+   "text": "Em chưa gửi OTP cho họ. Giờ em cần xem lại khoản chi y tế và theo dõi hồ sơ bảo hiểm nữa.",
+   "speaker": "An",
+   "speakerId": "AN",
+   "nextSceneId": "CH07_CLOSE_CONTAINED_2"
+  },
+  {
+   "id": "CH07_CLOSE_CONTAINED_2",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11c-recovery-evidence-desk.png",
+   "characters": [
+    {
+     "id": "MINH",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/minh/minh-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "May là chưa mất tiền vì tin đó. Nhưng những tin đến sau mình vẫn phải đọc kỹ và xem ai gửi.",
+   "text": "May là chưa mất tiền vì tin đó. Nhưng những tin đến sau mình vẫn phải đọc kỹ và xem ai gửi.",
+   "speaker": "Minh",
+   "speakerId": "MINH",
+   "nextSceneId": "CH07_CLOSE_CONTAINED_3"
+  },
+  {
+   "id": "CH07_CLOSE_CONTAINED_3",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11c-recovery-evidence-desk.png",
+   "characters": [
+    {
+     "id": "CO_LINH",
+     "expression": "encouraging",
+     "src": "/images/finteen-v2/chapter-07/char/co-linh/co-linh-encouraging.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Đúng. Không cần lúc nào cũng hoảng, cũng không cần tin ngay chỉ vì thông tin trông quen.",
+   "text": "Đúng. Không cần lúc nào cũng hoảng, cũng không cần tin ngay chỉ vì thông tin trông quen.",
+   "speaker": "Cô Linh",
+   "speakerId": "CO_LINH",
+   "nextSceneId": "CH07_CLOSE_1"
+  },
+  {
+   "id": "CH07_CLOSE_1",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11c-recovery-evidence-desk.png",
+   "characters": [
+    {
+     "id": "MINH",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/minh/minh-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Tớ giữ cặp giúp cậu nhé. Lịch làm bài nhóm để mình sắp theo hướng dẫn của cô y tế và gia đình.",
+   "text": "Tớ giữ cặp giúp cậu nhé. Lịch làm bài nhóm để mình sắp theo hướng dẫn của cô y tế và gia đình.",
+   "speaker": "Minh",
+   "speakerId": "MINH",
+   "nextSceneId": "CH07_CLOSE_2"
+  },
+  {
+   "id": "CH07_CLOSE_2",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11c-recovery-evidence-desk.png",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "neutral",
+     "src": "/images/finteen-v2/chapter-07/char/an/an-neutral.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Cảm ơn cậu. Tớ sẽ cất hồ sơ riêng, ghi lại việc còn chờ và nhờ gia đình xem cùng.",
+   "text": "Cảm ơn cậu. Tớ sẽ cất hồ sơ riêng, ghi lại việc còn chờ và nhờ gia đình xem cùng.",
+   "speaker": "An",
+   "speakerId": "AN",
+   "nextSceneId": "CH07_CLOSE_3"
+  },
+  {
+   "id": "CH07_CLOSE_3",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11c-recovery-evidence-desk.png",
+   "characters": [
+    {
+     "id": "CO_LINH",
+     "expression": "encouraging",
+     "src": "/images/finteen-v2/chapter-07/char/co-linh/co-linh-encouraging.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Biến cố có thể làm kế hoạch thay đổi. Điều mình làm tiếp là nhìn đúng số tiền đang có, giữ thông tin cần thiết và tìm đúng nơi hỗ trợ.",
+   "text": "Biến cố có thể làm kế hoạch thay đổi. Điều mình làm tiếp là nhìn đúng số tiền đang có, giữ thông tin cần thiết và tìm đúng nơi hỗ trợ.",
+   "speaker": "Cô Linh",
+   "speakerId": "CO_LINH",
+   "nextSceneId": "CH07_CLOSE_4"
+  },
+  {
+   "id": "CH07_CLOSE_4",
+   "type": "dialogue",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11c-recovery-evidence-desk.png",
+   "characters": [
+    {
+     "id": "AN",
+     "expression": "thinking",
+     "src": "/images/finteen-v2/chapter-07/char/an/an-thinking.png",
+     "position": "center"
+    }
+   ],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Hôm nay em chưa thể nói mọi khoản đều được hoàn. Nhưng em đã biết cần theo dõi điều gì, và không phải làm theo lời hứa gấp trong tin nhắn.",
+   "text": "Hôm nay em chưa thể nói mọi khoản đều được hoàn. Nhưng em đã biết cần theo dõi điều gì, và không phải làm theo lời hứa gấp trong tin nhắn.",
+   "speaker": "An",
+   "speakerId": "AN",
+   "nextSceneId": "CH07_ENDING"
+  },
+  {
+   "id": "CH07_ENDING",
+   "type": "ending",
+   "background": "/images/finteen-v2/chapter-07/bg/bg11c-recovery-evidence-desk.png",
+   "characters": [],
+   "knowledgeUnits": [
+    "D07.01",
+    "D07.02",
+    "D07.03",
+    "D07.04",
+    "D07.05",
+    "D07.06",
+    "D07.08",
+    "D07.09",
+    "D07.10",
+    "D08.01",
+    "D08.06"
+   ],
+   "title": "Kết thúc Chương 7 · Biến cố bất ngờ",
+   "nextSceneId": null
+  }
+ ],
+ "endingRules": {
+  "priorityOrder": [
+   "C_RECOVERY",
+   "A_GOAL_ACHIEVED",
+   "B_BALANCED"
+  ],
+  "endings": [
+   {
+    "id": "C_RECOVERY",
+    "title": "Ending C: Recovery",
+    "condition": {
+     "any": [
+      {
+       "var": "miniGameNeedsPractice",
+       "op": "==",
+       "value": true
+      },
+      {
+       "var": "flag:incident_unresolved",
+       "op": "==",
+       "value": true
+      },
+      {
+       "var": "flag:recovery_unverified",
+       "op": "==",
+       "value": true
+      },
+      {
+       "var": "flag:fraud_exposed",
+       "op": "==",
+       "value": true
+      },
+      {
+       "var": "RISK",
+       "op": ">",
+       "value": 55
+      },
+      {
+       "var": "SAVING",
+       "op": "<",
+       "value": 40
+      }
+     ]
+    },
+    "storyText": "An cần luyện thêm cách xử lý khoản chi, kiểm tra tin nhắn hoặc tìm người hỗ trợ. Nếu đã có giao dịch đáng ngờ, cần tiếp tục theo dõi với ngân hàng. Khoản bảo hiểm vẫn chờ xét và chưa được cộng vào ví.",
+    "characterSprite": "/images/finteen-v2/chapter-07/char/an/an-worried-money.png"
+   },
+   {
+    "id": "A_GOAL_ACHIEVED",
+    "title": "Ending A: Goal Achieved",
+    "condition": {
+     "all": [
+      {
+       "var": "flag:incident_resolved",
+       "op": "==",
+       "value": true
+      },
+      {
+       "var": "flag:hot_loan",
+       "op": "!=",
+       "value": true
+      },
+      {
+       "var": "flag:fraud_contained",
+       "op": "==",
+       "value": true
+      },
+      {
+       "var": "flag:recovery_done",
+       "op": "==",
+       "value": true
+      },
+      {
+       "var": "choicePercent",
+       "op": ">=",
+       "value": 75
+      },
+      {
+       "var": "learningScore",
+       "op": ">=",
+       "value": 75
+      },
+      {
+       "var": "miniGameCompleted",
+       "op": "==",
+       "value": true
+      },
+      {
+       "var": "miniGameGoalEligible",
+       "op": "==",
+       "value": true
+      }
+     ]
+    },
+    "storyText": "An xử lý khoản chi bằng tiền đã chuẩn bị, dừng tin giả và giữ đủ giấy tờ và biết liên hệ ai để hỏi tiếp. Tiền bảo hiểm vẫn chờ xét; biết cách xử lý không có nghĩa mọi rủi ro biến mất.",
+    "characterSprite": "/images/finteen-v2/chapter-07/char/an/an-relieved.png"
+   },
+   {
+    "id": "B_BALANCED",
+    "title": "Ending B: Balanced",
+    "storyText": "An đã có cách tiếp tục xử lý sự việc và giữ thông tin an toàn. Một số điều kiện, nghĩa vụ hoặc kỹ năng vẫn cần theo dõi; chưa có khoản hoàn tiền tự động nào.",
+    "characterSprite": "/images/finteen-v2/chapter-07/char/an/an-thinking.png",
+    "fallback": true
+   }
+  ]
+ },
+ "endingReport": {
+  "choiceGroupMaxima": {
+   "CH07_PAYMENT": 6,
+   "CH07_FRAUD": 5,
+   "CH07_SUPPORT": 5
+  },
+  "maxChoiceScore": 6,
+  "requiredGameIds": [
+   "INSURANCE_DESK_CH07",
+   "SCAM_OR_SAFE_CH07"
+  ],
+  "miniGameLabel": "Bình tĩnh trước rủi ro",
+  "miniGameMax": 12,
+  "weights": {
+   "choices": 0.65,
+   "miniGame": 0.35,
+   "reflection": 0
+  },
+  "bands": [
+   {
+    "min": 85,
+    "label": "Đã thể hiện vững"
+   },
+   {
+    "min": 60,
+    "label": "Đang hình thành"
+   },
+   {
+    "min": 0,
+    "label": "Cần luyện thêm"
+   }
+  ],
+  "achieved": [
+   {
+    "when": "flags.incident_resolved && !flags.hot_loan",
+    "text": "Đã dùng 300.000đ hiện có để xử lý khoản y tế, giữ hồ sơ."
+   },
+   {
+    "when": "flags.hot_loan",
+    "text": "Đã trả khoản y tế trong mô phỏng; còn nghĩa vụ trả 360.000đ sau một tháng."
+   },
+   {
+    "when": "flags.fraud_contained",
+    "text": "Đã dừng tin giả trước khi gửi OTP."
+   },
+   {
+    "when": "flags.recovery_done",
+    "text": "Đã hỏi bộ phận hỗ trợ bảo hiểm và ghi lại thông tin hồ sơ."
+   }
+  ],
+  "practice": [
+   {
+    "when": "miniGameNeedsPractice",
+    "text": "Bài thực hành còn nhiều câu chưa đúng. Xem lại giấy tờ bảo hiểm, bối cảnh tin nhắn và thứ tự xử lý giao dịch đáng ngờ."
+   },
+   {
+    "when": "flags.incident_unresolved",
+    "text": "Khoản chi y tế và cách hoàn thiện hồ sơ vẫn chưa được xử lý."
+   },
+   {
+    "when": "flags.fraud_exposed",
+    "text": "Tiếp tục bảo vệ tài khoản và phối hợp theo dõi tổn thất 150.000đ; không có bảo đảm thu hồi."
+   },
+   {
+    "when": "flags.recovery_unverified",
+    "text": "Không gửi thêm phí cho người tự hứa thu hồi tiền; giữ bằng chứng và liên hệ ngân hàng, bên bảo hiểm bằng thông tin đã có từ trước."
+   },
+   {
+    "text": "Kiểm tra phạm vi bảo hiểm và hồ sơ, không ghi khoản chờ xét thành tiền đã nhận."
+   }
+  ],
+  "nextStep": "Xem phản hồi trong ứng dụng bảo hiểm, kiểm tra giao dịch ngân hàng và nhờ gia đình cùng theo dõi."
+ },
+ "releaseVersion": "2.0.0"
+}

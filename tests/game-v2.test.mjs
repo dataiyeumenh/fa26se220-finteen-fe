@@ -1,10 +1,10 @@
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import test from "node:test";
-import { chapter1V2GameData } from "../src/pages/Kid/Dashboard/data/chapter1V2VisualNovel.js";
-import { chapter2V2GameData } from "../src/pages/Kid/Dashboard/data/chapter2V2VisualNovel.js";
-import { chapter3V2GameData } from "../src/pages/Kid/Dashboard/data/chapter3V2VisualNovel.js";
-import { chapter4V2GameData } from "../src/pages/Kid/Dashboard/data/chapter4V2VisualNovel.js";
+import { chapter1V2GameData } from "./fixtures/content/index.mjs";
+import { chapter2V2GameData } from "./fixtures/content/index.mjs";
+import { chapter3V2GameData } from "./fixtures/content/index.mjs";
+import { chapter4V2GameData } from "./fixtures/content/index.mjs";
 
 function validateChapter(data) {
   const ids = new Set(data.scenes.map((scene) => scene.id));
