@@ -57,9 +57,9 @@ function evaluateStructured(c, ctx) {
   if (Array.isArray(c.all)) return c.all.every((x) => evaluateStructured(x, ctx));
   if (Array.isArray(c.any)) return c.any.some((x) => evaluateStructured(x, ctx));
   if (typeof c.var === "string") {
-    const left = resolve(c.var, ctx);
-    if (left === undefined) return false; // biến lạ: không đoán
-    return compare(left, c.op, c.value);
+    // Biến chưa có giá trị (vd chương không tính choicePercent) so như dạng cũ: undefined == true → sai, != true → đúng,
+    // so số → sai. BE đã kiểm tên biến khi lưu nên ở đây không chặn thêm.
+    return compare(resolve(c.var, ctx), c.op, c.value);
   }
   return false;
 }

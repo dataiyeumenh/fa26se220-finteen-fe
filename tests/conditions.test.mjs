@@ -34,7 +34,10 @@ test("khuôn v2: all / any lồng nhau với tiền, chỉ số, flag:, inspecte
   assert.equal(evaluateCondition({ var: "choice:CH04_SC02", op: "!=", value: "CH04_SC02_A" }, ctx), false);
   assert.equal(evaluateCondition({ var: "choice:CH09_X", op: "==", value: "A" }, ctx), false); // chưa chọn
   assert.equal(evaluateCondition({ var: "flag:chua_bat", op: "==", value: false }, ctx), true);
-  assert.equal(evaluateCondition({ var: "bien_la", op: "==", value: 1 }, ctx), false); // biến lạ: không đoán
+  assert.equal(evaluateCondition({ var: "bien_la", op: "==", value: 1 }, ctx), false); // chưa có giá trị
+  // biến chưa có giá trị so như dạng cũ: !x (x undefined) là đúng
+  assert.equal(evaluateCondition({ var: "coreCalculationsCorrect", op: "!=", value: true }, { ...ctx, derived: {} }, "ending"), true);
+  assert.equal(evaluateCondition({ var: "choicePercent", op: ">=", value: 1 }, { ...ctx, derived: {} }, "ending"), false);
 });
 
 test("biến kết chương đọc từ ctx.derived", () => {
