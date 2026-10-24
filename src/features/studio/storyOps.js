@@ -195,3 +195,88 @@ export function evalCondition(condition, state) {
   const target = condition.value
   return { '==': value == target, '!=': value != target, '>': value > target, '>=': value >= target, '<': value < target, '<=': value <= target }[condition.op]
 }
+
+/**
+ * Bản đồ truyện "rẽ rồi nhập": câu hỏi / rẽ nhánh tách thành làn, các làn gặp lại ở điểm nhập (post-dominator).
+ * Trả cây khối để vẽ: node (một cảnh), run (đoạn thẳng dài, thu gọn được), branch (các làn + điểm nhập), jump (↩ quay lại / ↪ nhập vào cảnh đã vẽ).
+ */
+export function buildStoryMap(scenes) {
+  if (!scenes.length) return []
+  const index = new Map(scenes.map((scene, i) => [scene.id, i]))
+  const exits = id => [...new Set(exitsOf(scenes[index.get(id)]).filter(target => index.has(target)))]
+  // đường quay lại (DFS từ cảnh đầu) bị bỏ khi tính điểm nhập
+  const back = new Set(), color = {}, stack = [[scenes[0].id, 0]]
+  color[scenes[0].id] = 1
+  while (stack.length) {
+    const top = stack[stack.length - 1], outs = exits(top[0])
+    if (top[1] >= outs.length) { color[top[0]] = 2; stack.pop(); continue }
+    const next = outs[top[1]++]
+    if (color[next] === 1) back.add(`${top[0]}>${next}`)
+    else if (!color[next]) { color[next] = 1; stack.push([next, 0]) }
+  }
+  const dag = id => exits(id).filter(target => !back.has(`${id}>${target}`))
+  const order = [], seen = new Set()
+  for (const scene of scenes) {
+    if (seen.has(scene.id)) continue
+    const walk = [[scene.id, 0]]; seen.add(scene.id)
+    while (walk.length) {
+      const top = walk[walk.length - 1], outs = dag(top[0])
+      if (top[1] >= outs.length) { order.push(top[0]); walk.pop(); continue }
+      const next = outs[top[1]++]
+      if (!seen.has(next)) { seen.add(next); walk.push([next, 0]) }
+    }
+  }
+  const pdom = {}
+  for (const id of order) {
+    const sets = dag(id).map(target => pdom[target])
+    let inter = sets.length ? new Set(sets[0]) : new Set()
+    for (const set of sets.slice(1)) inter = new Set([...inter].filter(x => set.has(x)))
+    inter.add(id); pdom[id] = inter
+  }
+  const joinOf = id => { const rest = [...pdom[id]].filter(x => x !== id); return rest.find(d => pdom[d].size === rest.length && rest.every(x => pdom[d].has(x))) || null }
+  const drawn = new Set()
+  function sequence(start, stop) {
+    const blocks = []
+    let id = start, run = [], guard = 0
+    const flush = () => { if (run.length) blocks.push(run.length <= 3 ? { kind: 'nodes', indexes: run } : { kind: 'run', indexes: run }); run = [] }
+    while (id && id !== stop && guard++ < 600) {
+      if (!index.has(id)) break
+      if (drawn.has(id)) { flush(); blocks.push({ kind: 'jump', to: index.get(id), back: false }); return blocks }
+      drawn.add(id)
+      const scene = scenes[index.get(id)], type = typeOf(scene)
+      const backs = exits(id).filter(target => back.has(`${id}>${target}`))
+      if (type !== 'choice' && type !== 'conditional') {
+        run.push(index.get(id))
+        if (backs.length) { flush(); backs.forEach(target => blocks.push({ kind: 'jump', to: index.get(target), back: true })) }
+        id = dag(id)[0]
+        continue
+      }
+      flush()
+      const join = joinOf(id)
+      const arms = type === 'choice'
+        ? (scene.options || []).map((option, k) => ({ label: option.text || option.label || `Lựa chọn ${k + 1}`, to: option.nextSceneId, option: k, locked: !!option.condition }))
+        : [{ label: 'Nếu đúng', to: scene.ifTrueSceneId }, { label: 'Nếu không', to: scene.ifFalseSceneId }]
+      const used = new Set()
+      const lanes = arms.map(arm => {
+        const lane = { label: arm.label, option: arm.option, locked: arm.locked }
+        if (arm.to && back.has(`${id}>${arm.to}`)) lane.jump = { to: index.get(arm.to), back: true }
+        else if (!arm.to || !index.has(arm.to)) lane.empty = 'unset'
+        else if (arm.to === join) lane.empty = 'join'
+        else if (used.has(arm.to)) lane.jump = { to: index.get(arm.to), back: false, same: true }
+        else {
+          used.add(arm.to)
+          lane.body = sequence(arm.to, join)
+          const flat = lane.body.flatMap(block => block.indexes || [])
+          const last = flat.at(-1)
+          if (last != null && isLinear(scenes[last]) && scenes[last][nextKeyOf(scenes[last])] === join) lane.last = last
+        }
+        return lane
+      })
+      blocks.push({ kind: 'branch', index: index.get(id), choice: type === 'choice', join: join ? index.get(join) : null, sameJoinAsParent: !!join && join === stop, lanes })
+      id = join
+    }
+    flush()
+    return blocks
+  }
+  return sequence(scenes[0].id, null)
+}

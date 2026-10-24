@@ -112,6 +112,8 @@ try {
   await editor.page.getByRole('link', { name: 'Mở trình soạn' }).click()
   await editor.page.getByRole('button', { name: 'Cảnh 1: SC01', exact: true }).waitFor()
   await editor.page.getByRole('button', { name: 'Thêm cảnh', exact: true }).first().click()
+  // "Thêm cảnh" mở hộp chọn loại cảnh theo khuôn; chọn Lời thoại
+  await editor.page.getByRole('dialog').getByRole('button', { name: /^Lời thoại/ }).click()
   await editor.page.getByLabel('Tiêu đề cảnh', { exact: true }).fill('Cảnh vừa thêm')
   await editor.page.getByRole('button', { name: 'Nhân đôi cảnh', exact: true }).click()
   await editor.page.getByRole('button', { name: 'Cảnh 3: Cảnh vừa thêm (bản sao)', exact: true }).waitFor()
