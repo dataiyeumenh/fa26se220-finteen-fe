@@ -243,6 +243,21 @@ export default function EditorPage({ notify, code }) {
     commit({ ...content, scenes: result.scenes }, result.index)
     announce(`Đã xoá cảnh ${idx + 1}${result.to ? '. Cảnh trước nối thẳng sang cảnh sau' : ''}.`)
   }
+  /* bản đồ: tạo nhánh riêng cho một lựa chọn đang đi thẳng về điểm nhập; thêm cảnh ở cuối một làn */
+  const createBranch = (questionIndex, optionIndex, joinIndex) => {
+    const question = scenes[questionIndex], id = nextSceneId(code, scenes)
+    const fresh = { id, type: 'dialogue', title: '', text: '', background: question.background || '', characters: structuredClone(question.characters || []), nextSceneId: joinIndex != null ? scenes[joinIndex].id : null }
+    const next = scenes.map((item, i) => (i === questionIndex ? { ...item, options: item.options.map((option, k) => (k === optionIndex ? { ...option, nextSceneId: id } : option)) } : item))
+    next.splice(questionIndex + 1, 0, fresh)
+    commit({ ...content, scenes: next }, questionIndex + 1)
+    announce(`Đã tạo nhánh riêng cho lựa chọn ${optionIndex + 1} ở cảnh ${questionIndex + 2}; xong cảnh đó thì về chỗ các làn nhập lại.`)
+  }
+  const addLaneEnd = lastIndex => {
+    const id = nextSceneId(code, scenes), last = scenes[lastIndex]
+    const result = insertLinked(scenes, lastIndex, { id, type: 'dialogue', title: '', text: '', background: last.background || '', characters: structuredClone(last.characters || []) })
+    commit({ ...content, scenes: result.scenes }, result.index)
+    announce(`Đã thêm cảnh ${result.index + 1} ở cuối làn.`)
+  }
   const setOption = (index, patch) => update({ options: scene.options.map((option, k) => {
     if (k !== index) return option
     const next = { ...option, ...patch }
@@ -272,7 +287,7 @@ export default function EditorPage({ notify, code }) {
       warnings={warnings} refreshError={refreshError} conditionDrafts={conditionDrafts} editCondition={editCondition} onSuggestVoice={suggestVoice}
       history={{ undo, redo, canUndo: history.past.length > 0, canRedo: history.future.length > 0 }} notice={notice} issues={storyIssues(scenes)}
       onAdd={() => setDialog({ kind: 'add' })} onDuplicate={duplicateScene} onDelete={deleteScene} onPickBackground={() => setPicking('background')}
-      onAddCharacter={() => setDialog({ kind: 'character' })} onPlay={() => setDialog({ kind: 'play' })} openDialog={setDialog} />
+      onAddCharacter={() => setDialog({ kind: 'character' })} onPlay={() => setDialog({ kind: 'play' })} openDialog={setDialog} onBranch={createBranch} onLaneEnd={addLaneEnd} />
     {voiceHints && <VoiceHints hints={voiceHints} scenes={scenes} write={write} onAccept={acceptHint} onDrop={dropHint} onOpen={id => go(id)} onClose={() => setVoiceHints(null)} />}
     {picking && <AssetPicker chapter={code} notify={notify} onClose={() => setPicking(false)} onPick={asset => {
       if (picking === 'character') update({ characters: [...(scene.characters || []), { id: asset.label || 'NHAN_VAT', src: asset.url, position: 'center' }] })

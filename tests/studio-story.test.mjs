@@ -65,3 +65,18 @@ test('conditions read as sentences and evaluate three-valued in play mode', () =
   assert.equal(conditionSentence({ var: 'money', op: '>=', value: 500000 }, line()), 'Tiền của An ít nhất 500.000đ')
   assert.match(conditionSentence({ var: 'choice:q', op: '==', value: 'q2' }, line()), /đã chọn “2”/)
 })
+
+test('story map splits a question into lanes that rejoin, and marks empty lanes and loops', async () => {
+  const { buildStoryMap } = await import('../src/features/studio/storyOps.js')
+  const blocks = buildStoryMap(line())
+  const branch = blocks.find(block => block.kind === 'branch')
+  assert.equal(branch.index, 1)
+  assert.equal(branch.join, 4)
+  assert.deepEqual(branch.lanes.map(lane => lane.body?.flatMap(b => b.indexes)), [[2], [3]])
+  assert.equal(branch.lanes[0].last, 2)
+  const same = line(); same[1].options = same[1].options.map(option => ({ ...option, nextSceneId: 'd' }))
+  const sameBranch = buildStoryMap(same).find(block => block.kind === 'branch')
+  assert.deepEqual(sameBranch.lanes.map(lane => lane.empty), ['join', 'join'])
+  const loop = line(); loop[4].nextSceneId = 'a'
+  assert.ok(JSON.stringify(buildStoryMap(loop)).includes('"back":true'))
+})

@@ -4,6 +4,7 @@ import { STATUS_LABEL } from './studioClient'
 import { Tag } from './ui'
 import SchemaFields from './SchemaFields'
 import ChoiceConditions from './ChoiceConditions'
+import StoryMap from './StoryMap'
 import { SceneThumb } from './SceneDialogs'
 import { TYPE_LABEL, conditionSentence, isLinear, nextKeyOf, sceneLabel, typeOf, vnd } from './storyOps'
 import './editor-canvas.css'
@@ -85,9 +86,10 @@ const effectText = (option, labels) => [...Object.entries(option.deltaStats || {
 
 export default function EditorCanvas(props) {
   const { code, content, meta, scenes, scene, idx, setIdx, write, busy, dirty, json, setJson, toggleJson, save, update, schemaQuery, warnings = [], refreshError = '', conditionDrafts = {}, editCondition, onSuggestVoice,
-    history, notice, issues, onAdd, onDuplicate, onDelete, onPickBackground, onAddCharacter, onPlay, openDialog } = props
+    history, notice, issues, onAdd, onDuplicate, onDelete, onPickBackground, onAddCharacter, onPlay, openDialog, onBranch, onLaneEnd } = props
   const trackRef = useRef(null)
   const [panel, setPanel] = useState(true)
+  const [view, setView] = useState('frame') // khung hình | bản đồ truyện
   const visualMode = json === null
   const schema = schemaQuery.data
   const stats = schema?.stats || []
@@ -139,17 +141,19 @@ export default function EditorCanvas(props) {
     {refreshError && <p role="alert" className="scene-editor-notice">Đã lưu nhưng chưa tải lại được thông tin nháp: {refreshError}</p>}
     {visualMode && !!issues.length && <details className="scene-issues"><summary><AlertTriangle size={16} aria-hidden="true" />Cần sửa trước khi gửi duyệt ({issues.length}) <small>Lưu nháp vẫn được.</small></summary>
       <ul>{issues.slice(0, 40).map((issue, index) => <li key={index}><span>{issue.text}</span><button type="button" onClick={() => setIdx(issue.index)}>Tới chỗ sửa</button></li>)}</ul></details>}
-    {json !== null ? <div className="scene-json-editor"><div><Code2 size={16} /> Nội dung JSON <small>Toàn bộ cấu trúc chương</small></div><textarea aria-label="JSON nội dung chương" readOnly={!write || busy} value={json} onChange={event => setJson(event.target.value)} spellCheck={false} /></div> : <div className={`scene-editor-body${panel ? '' : ' is-wide'}`}>
-      <div className="scene-editor-workbench">
+    {json !== null ? <div className="scene-json-editor"><div><Code2 size={16} /> Nội dung JSON <small>Toàn bộ cấu trúc chương</small></div><textarea aria-label="JSON nội dung chương" readOnly={!write || busy} value={json} onChange={event => setJson(event.target.value)} spellCheck={false} /></div> : <div className={`scene-editor-body${panel && view === 'frame' ? '' : ' is-wide'}`}>
+      <div className={`scene-editor-workbench${view === 'map' ? ' is-map' : ''}`}>
         <div className="scene-editor-canvas-heading">
-          <div className="scene-nav"><button type="button" aria-label="Cảnh trước" disabled={idx === 0 || !scenes.length} onClick={() => setIdx(idx - 1)}><ChevronLeft size={18} /></button>
+          <div className="scene-view-switch" role="group" aria-label="Cách xem"><button type="button" aria-pressed={view === 'frame'} onClick={() => setView('frame')}>Khung hình</button><button type="button" aria-pressed={view === 'map'} onClick={() => setView('map')}>Bản đồ truyện</button></div>
+          {view === 'frame' && <div className="scene-nav"><button type="button" aria-label="Cảnh trước" disabled={idx === 0 || !scenes.length} onClick={() => setIdx(idx - 1)}><ChevronLeft size={18} /></button>
             <span>Cảnh {scenes.length ? idx + 1 : 0} / {scenes.length}</span>
-            <button type="button" aria-label="Cảnh sau" disabled={idx >= scenes.length - 1} onClick={() => setIdx(idx + 1)}><ChevronRight size={18} /></button></div>
-          <button type="button" className="scene-panel-toggle" onClick={() => setPanel(!panel)} aria-expanded={panel}>{panel ? <PanelRightClose size={17} /> : <PanelRightOpen size={17} />}{panel ? 'Thu gọn bảng bên' : 'Mở bảng bên'}</button>
+            <button type="button" aria-label="Cảnh sau" disabled={idx >= scenes.length - 1} onClick={() => setIdx(idx + 1)}><ChevronRight size={18} /></button></div>}
+          {view === 'frame' && <button type="button" className="scene-panel-toggle" onClick={() => setPanel(!panel)} aria-expanded={panel}>{panel ? <PanelRightClose size={17} /> : <PanelRightOpen size={17} />}{panel ? 'Thu gọn bảng bên' : 'Mở bảng bên'}</button>}
         </div>
-        <div className="scene-editor-canvas">{scene ? <SceneStage key={scene.id} scene={scene} scenes={scenes} sprites={content.sprites} write={write && !busy} update={update} onBackground={onPickBackground} onAddCharacter={onAddCharacter} onOpenLock={index => openDialog({ kind: 'lock', index })} /> : <p className="scene-schema-status">Chương chưa có cảnh nào. Bấm “Thêm cảnh” để bắt đầu.</p>}</div>
+        {view === 'map' ? <StoryMap scenes={scenes} write={write && !busy} onOpen={index => { setIdx(index); setView('frame') }} onBranch={(...args) => { onBranch(...args); setView('frame') }} onLaneEnd={index => { onLaneEnd(index); setView('frame') }} />
+          : <div className="scene-editor-canvas">{scene ? <SceneStage key={scene.id} scene={scene} scenes={scenes} sprites={content.sprites} write={write && !busy} update={update} onBackground={onPickBackground} onAddCharacter={onAddCharacter} onOpenLock={index => openDialog({ kind: 'lock', index })} /> : <p className="scene-schema-status">Chương chưa có cảnh nào. Bấm “Thêm cảnh” để bắt đầu.</p>}</div>}
       </div>
-      {panel && <aside className="scene-inspector" aria-label="Thuộc tính cảnh">{scene ? <>
+      {panel && view === 'frame' && <aside className="scene-inspector" aria-label="Thuộc tính cảnh">{scene ? <>
         <div className="scene-inspector-heading"><h2>Cảnh {idx + 1}</h2><span>{TYPE_LABEL[type] || type}</span><code title="Mã cảnh, không đổi khi chèn hoặc xoá cảnh khác">{scene.id}</code></div>
         <fieldset disabled={!write || busy}>
           <label>Tiêu đề cảnh<input value={scene.title || ''} onChange={event => update({ title: event.target.value })} placeholder="Tên ngắn để bạn dễ tìm" /></label>
