@@ -9,7 +9,8 @@ import {
 import { cn } from "@/lib/utils";
 import "./need-want.css";
 
-const zones = [
+// Quầy + các giỏ: game.zones trong JSON chương; thiếu → bộ bản 1.1.0 (giỏ Cần / Muốn).
+const DEFAULT_ZONES = [
   {
     id: "inventory",
     title: "Quầy hàng",
@@ -72,6 +73,7 @@ export function NeedWantMiniGame({
   className,
   immersive = false,
 }) {
+  const zones = game.zones ?? DEFAULT_ZONES;
   const [placements, setPlacements] = useState({});
   const [selected, setSelected] = useState(null);
   const [dragZone, setDragZone] = useState(null);

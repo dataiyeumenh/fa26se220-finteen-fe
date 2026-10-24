@@ -54,7 +54,7 @@ export function CareerMatchMiniGame({ game, onComplete, className }) {
       setFitSolved(true);
       setFeedback({
         tone: "good",
-        text: "Chính xác. Việc 16 giờ vượt quỹ thời gian, hai việc còn lại vừa lịch học.",
+        text: game.texts?.fitAllCorrect ?? "Chính xác. Việc 16 giờ vượt quỹ thời gian, hai việc còn lại vừa lịch học.",
       });
     } else {
       setFeedback({

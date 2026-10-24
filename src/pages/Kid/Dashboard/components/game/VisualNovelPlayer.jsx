@@ -56,6 +56,37 @@ import {
   summarizeMiniGames,
 } from "./miniGameRules";
 
+// Khung mini-game theo `game.kind` (bộ khuôn BE: scene-schema.json → minigameKinds). Dữ liệu cũ chưa có kind (bản 1.1.0)
+// tra theo id cũ (legacyIds của khuôn). Kind lạ → báo chưa có khung, không rơi im lặng vào Cần / Muốn.
+const MINI_GAME_FRAMES = {
+  NEED_WANT: NeedWantMiniGame,
+  BUDGET_BUILDER: BudgetBuilderMiniGame,
+  SAVINGS_RACE: SavingsRaceMiniGame,
+  CAREER_MATCH: CareerMatchMiniGame,
+  SMART_SHOPPING: SmartShoppingMiniGame,
+  COMPOUND_TIMELINE: CompoundTimelineMiniGame,
+  LOAN_DETECTIVE: LoanDetectiveMiniGame,
+  SCAM_OR_SAFE: ScamOrSafeMiniGame,
+  FUTURE_PLAN: FuturePlanMiniGame,
+};
+const LEGACY_KIND = {
+  NEEDS_OR_WANTS_CH01: "NEED_WANT",
+  BUDGET_BUILDER_CH02: "BUDGET_BUILDER",
+  SAVINGS_RACE_CH02: "SAVINGS_RACE",
+  CAREER_MATCH_CH03: "CAREER_MATCH",
+};
+// Khung lưu tiến độ giữa chừng (onProgress / initialResult) và props riêng — giữ đúng như khi còn chọn theo id.
+const PROGRESS_KINDS = new Set(["SMART_SHOPPING", "COMPOUND_TIMELINE", "LOAN_DETECTIVE", "SCAM_OR_SAFE", "FUTURE_PLAN"]);
+const MINI_GAME_PROPS = {
+  NEED_WANT: { className: "h-full", immersive: true },
+  BUDGET_BUILDER: { className: "h-full" },
+  SAVINGS_RACE: { className: "h-full" },
+  CAREER_MATCH: { className: "h-full" },
+  SMART_SHOPPING: { className: "h-full" },
+  COMPOUND_TIMELINE: { className: "h-full" },
+};
+const miniGameKindOf = (game) => game?.kind || LEGACY_KIND[game?.id];
+
 function applyStatEffects(current, effects = {}) {
   const next = { ...current };
   Object.entries(effects).forEach(([key, delta]) => {
@@ -481,6 +512,8 @@ export function VisualNovelPlayer({ data }) {
     });
   }, [data.sprites, scene.characters]);
 
+  const miniGameKind = scene?.type === "minigame" ? miniGameKindOf(scene.game) : undefined;
+  const MiniGameFrame = MINI_GAME_FRAMES[miniGameKind];
   const hasChoiceOptions =
     Array.isArray(scene.options) && scene.options.length > 0;
   const isSceneOnlyScreen = scene.type === "cutscene" || scene.type === "scene";
@@ -1434,123 +1467,32 @@ export function VisualNovelPlayer({ data }) {
           </div>
         ) : scene.type === "minigame" ? (
           <div className="vn-minigame-host">
-            {scene.game?.id === "BUDGET_BUILDER_CH02" ? (
-              <BudgetBuilderMiniGame
+            {MiniGameFrame ? (
+              <MiniGameFrame
                 key={`${scene.id}-${scenePath.length}`}
                 game={scene.game}
                 onComplete={handleMiniGameComplete}
-                className="h-full"
-              />
-            ) : scene.game?.id === "SAVINGS_RACE_CH02" ? (
-              <SavingsRaceMiniGame
-                key={`${scene.id}-${scenePath.length}`}
-                game={scene.game}
-                planFlag={gameFlag}
-                onComplete={handleMiniGameComplete}
-                className="h-full"
-              />
-            ) : scene.game?.kind === "FUTURE_PLAN" ? (
-              <FuturePlanMiniGame
-                key={`${scene.id}-${scenePath.length}`}
-                game={scene.game}
-                initialResult={miniGameResults[scene.id]}
-                onProgress={(result) =>
-                  setMiniGameResults((prev) => ({
-                    ...prev,
-                    [scene.id]: {
-                      ...result,
-                      gameId: scene.game.id,
-                      completed: false,
-                    },
-                  }))
-                }
-                onComplete={handleMiniGameComplete}
-              />
-            ) : scene.game?.kind === "SCAM_OR_SAFE" ? (
-              <ScamOrSafeMiniGame
-                key={`${scene.id}-${scenePath.length}`}
-                game={scene.game}
-                initialResult={miniGameResults[scene.id]}
-                onProgress={(result) =>
-                  setMiniGameResults((prev) => ({
-                    ...prev,
-                    [scene.id]: {
-                      ...result,
-                      gameId: scene.game.id,
-                      completed: false,
-                    },
-                  }))
-                }
-                onComplete={handleMiniGameComplete}
-              />
-            ) : scene.game?.kind === "LOAN_DETECTIVE" ? (
-              <LoanDetectiveMiniGame
-                key={`${scene.id}-${scenePath.length}`}
-                game={scene.game}
-                initialResult={miniGameResults[scene.id]}
-                onProgress={(result) =>
-                  setMiniGameResults((prev) => ({
-                    ...prev,
-                    [scene.id]: {
-                      ...result,
-                      gameId: scene.game.id,
-                      completed: false,
-                    },
-                  }))
-                }
-                onComplete={handleMiniGameComplete}
-              />
-            ) : scene.game?.kind === "COMPOUND_TIMELINE" ? (
-              <CompoundTimelineMiniGame
-                key={`${scene.id}-${scenePath.length}`}
-                game={scene.game}
-                initialResult={miniGameResults[scene.id]}
-                onProgress={(result) =>
-                  setMiniGameResults((prev) => ({
-                    ...prev,
-                    [scene.id]: {
-                      ...result,
-                      gameId: scene.game.id,
-                      completed: false,
-                    },
-                  }))
-                }
-                onComplete={handleMiniGameComplete}
-                className="h-full"
-              />
-            ) : scene.game?.kind === "SMART_SHOPPING" ? (
-              <SmartShoppingMiniGame
-                key={`${scene.id}-${scenePath.length}`}
-                game={scene.game}
-                initialResult={miniGameResults[scene.id]}
-                onProgress={(result) =>
-                  setMiniGameResults((prev) => ({
-                    ...prev,
-                    [scene.id]: {
-                      ...result,
-                      gameId: scene.game.id,
-                      completed: false,
-                    },
-                  }))
-                }
-                onComplete={handleMiniGameComplete}
-                className="h-full"
-              />
-            ) : scene.game?.id === "CAREER_MATCH_CH03" ? (
-              <CareerMatchMiniGame
-                key={`${scene.id}-${scenePath.length}`}
-                game={scene.game}
-                onComplete={handleMiniGameComplete}
-                className="h-full"
+                {...(MINI_GAME_PROPS[miniGameKind] || {})}
+                {...(miniGameKind === "SAVINGS_RACE" ? { planFlag: gameFlag } : {})}
+                {...(PROGRESS_KINDS.has(miniGameKind)
+                  ? {
+                      initialResult: miniGameResults[scene.id],
+                      onProgress: (result) =>
+                        setMiniGameResults((prev) => ({
+                          ...prev,
+                          [scene.id]: {
+                            ...result,
+                            gameId: scene.game.id,
+                            completed: false,
+                          },
+                        })),
+                    }
+                  : {})}
               />
             ) : (
-              <NeedWantMiniGame
-                key={`${scene.id}-${scenePath.length}`}
-                game={scene.game}
-                onComplete={handleMiniGameComplete}
-                className="h-full"
-                immersive
-              />
+              <p className="vn-minigame-unknown" role="alert">
+                Mini-game loại "{miniGameKind || "chưa khai"}" chưa có khung hiển thị.
+              </p>
             )}
           </div>
         ) : hasChoiceOptions ? (
