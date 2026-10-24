@@ -29,6 +29,7 @@ import {
   applyFutureAction,
   budgetFeedback,
 } from "../src/pages/Kid/Dashboard/components/game/futurePlanRules.js";
+import { endingId } from "./helpers/story.mjs";
 
 const safeFlags = {
   purchase_fit: true,
@@ -142,14 +143,7 @@ function resolve(data, results, learning, flags = safeFlags) {
     ...chapterMiniGameSummary(results, data.endingReport),
     ...(learning ? learning(ledger, results, data.endingReport) : {}),
   };
-  return data.endingRules.endings.find(
-    (ending) =>
-      ending.condition === "DEFAULT_FALLBACK" ||
-      new Function(
-        ...Object.keys(context),
-        `return Boolean(${ending.condition})`,
-      )(...Object.values(context)),
-  ).id;
+  return endingId(data, context);
 }
 
 for (const [data, learning, tasks, resultFor, groups] of cases) {

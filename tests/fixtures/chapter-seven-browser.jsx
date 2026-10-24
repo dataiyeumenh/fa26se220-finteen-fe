@@ -1,9 +1,12 @@
 import { createRoot } from "react-dom/client";
 import { MemoryRouter } from "react-router-dom";
 import { VisualNovelPlayer } from "../../src/pages/Kid/Dashboard/components/game/VisualNovelPlayer";
-import { chapter7V2GameData as data } from "./content/index.mjs";
+import { chapter7V2GameData as content } from "./content/index.mjs";
+import { normalizeChapter } from "../../src/pages/Kid/Dashboard/components/game/chapterShape.js";
 import { progressKey } from "../../src/pages/Kid/Dashboard/components/game/visualNovelProgress.js";
 import "../../src/index.css";
+// Dữ liệu như game thấy (VisualNovelPlayer chuẩn hoá: inspect → scene, reflection → activity).
+const data = normalizeChapter(content);
 
 const safetyConfig = data.scenes.find(
   (scene) => scene.game?.kind === "SCAM_OR_SAFE",

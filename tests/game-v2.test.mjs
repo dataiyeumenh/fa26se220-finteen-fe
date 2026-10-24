@@ -5,6 +5,7 @@ import { chapter1V2GameData } from "./fixtures/content/index.mjs";
 import { chapter2V2GameData } from "./fixtures/content/index.mjs";
 import { chapter3V2GameData } from "./fixtures/content/index.mjs";
 import { chapter4V2GameData } from "./fixtures/content/index.mjs";
+import { endingId, lockReason } from "./helpers/story.mjs";
 
 function validateChapter(data) {
   const ids = new Set(data.scenes.map((scene) => scene.id));
@@ -82,9 +83,17 @@ test("Chapter 4 compares for free, charges once at purchase and keeps fees separ
   assert.equal(chapter4V2GameData.initialMoney, 2500000);
   for (const option of scenes.CH04_SC02.options) {
     assert.deepEqual(option.moneyEvents, []);
-    assert.equal(option.requires.minMoney, undefined);
-    assert.equal(option.requires.flags, undefined);
-    assert.deepEqual(option.requires.inspected, ["ch04_comparison"]);
+    // Khoá duy nhất: đã mở bảng so sánh (không đòi tiền, không đòi cờ).
+    assert.deepEqual(option.condition, {
+      var: "inspected:ch04_comparison",
+      op: "==",
+      value: true,
+    });
+    assert.ok(lockReason(option, { money: 0 }));
+    assert.equal(
+      lockReason(option, { money: 0, inspectedIds: { ch04_comparison: true } }),
+      null,
+    );
   }
   for (const [phone, price] of [
     ["A", 1600000],
@@ -101,9 +110,14 @@ test("Chapter 4 compares for free, charges once at purchase and keeps fees separ
       "EV_CH04_PHONE_PURCHASE",
     );
     assert.equal(receipt.options[1].moneyEvents[1].amount, -100000);
-    assert.equal(purchase.requires.minMoney, price);
+    assert.deepEqual(purchase.condition, { var: "money", op: ">=", value: price });
+    assert.ok(lockReason(purchase, { money: price - 1 }));
+    assert.equal(lockReason(purchase, { money: price }), null);
   }
-  assert.equal(scenes.CH04_SC03.options[1].requires.minMoney, 1700000);
+  const withFee = scenes.CH04_SC03.options[1];
+  assert.deepEqual(withFee.condition, { var: "money", op: ">=", value: 1700000 });
+  assert.ok(lockReason(withFee, { money: 1699999 }));
+  assert.equal(lockReason(withFee, { money: 1700000 }), null);
   const fees = chapter4V2GameData.scenes
     .filter((scene) => /^CH04_SC04_MONTH_/.test(scene.id))
     .map((scene) => scene.options[0].moneyEvents[0]);
@@ -135,34 +149,26 @@ test("Chapter 4 mini-game has scored answers and both results continue the chapt
   assert.deepEqual(chapter4V2GameData.endingReport.requiredGameIds, [
     scene.game.id,
   ]);
+  // Khuôn bỏ onFailSceneId: đạt hay chưa đạt game đều đi tiếp nextSceneId (VisualNovelPlayer: nextSceneId || onPassSceneId).
   assert.equal(scene.onPassSceneId, scene.nextSceneId);
-  assert.equal(scene.onFailSceneId, scene.nextSceneId);
+  assert.equal(scene.onFailSceneId, undefined);
 });
 
 test("Chapter 4 endings check recovery first, then fit, evidence, completion and reflection", () => {
-  const rules = chapter4V2GameData.endingRules;
   const resolve = (
     flags,
     { risk = 30, saving = 50, evidence = 12, mini = true, reflection = 4 } = {},
-  ) => {
-    for (const id of rules.priorityOrder) {
-      const ending = rules.endings.find((ending) => ending.id === id);
-      if (ending.condition === "DEFAULT_FALLBACK") return id;
-      const check = new Function(
-        "flags",
-        "RISK",
-        "SAVING",
-        "evidenceScore",
-        "miniGameCompleted",
-        "reflectionScore",
-        "miniGameGoalEligible",
-        "miniGameNeedsPractice",
-        `return ${ending.condition}`,
-      );
-      if (check(flags, risk, saving, evidence, mini, reflection, mini, false))
-        return id;
-    }
-  };
+  ) =>
+    endingId(chapter4V2GameData, {
+      flags,
+      RISK: risk,
+      SAVING: saving,
+      evidenceScore: evidence,
+      miniGameCompleted: mini,
+      reflectionScore: reflection,
+      miniGameGoalEligible: mini,
+      miniGameNeedsPractice: false,
+    });
   const fit = {
     purchase_fit: true,
     phone_b: true,
@@ -210,8 +216,26 @@ test("Chapter 3 gates the paid design course and never charges for commission", 
     design.moneyEvents.reduce((sum, event) => sum + event.amount, 0),
     -200000,
   );
-  assert.equal(design.requires.minMoney, 200000);
-  assert.ok(design.requires.flags.includes("source_checked"));
+  // Khoá: đã xem bảng so sánh + đã kiểm tra nguồn (chọn CH03_SC02_CHOICE_A, lựa chọn duy nhất bật source_checked) + đủ 200.000đ.
+  const checkSource = scenes.CH03_SC02_CHOICE.options.find(
+    (option) => option.id === "CH03_SC02_CHOICE_A",
+  );
+  assert.equal(checkSource.flag, "source_checked");
+  const ready = {
+    money: 200000,
+    inspectedIds: { ch03_job_compare: true },
+    choiceLedger: { CH03_SC02_CHOICE: { optionId: checkSource.id } },
+  };
+  assert.equal(lockReason(design, ready), null);
+  assert.ok(lockReason(design, { ...ready, money: 199999 }));
+  assert.ok(lockReason(design, { ...ready, choiceLedger: {} }));
+  assert.ok(
+    lockReason(design, {
+      ...ready,
+      choiceLedger: { CH03_SC02_CHOICE: { optionId: "CH03_SC02_CHOICE_B" } },
+    }),
+  );
+  assert.ok(lockReason(design, { ...ready, inspectedIds: {} }));
   const commission = scenes.CH03_SC03_CHOICE.options.find(
     (option) => option.id === "CH03_SC03_CHOICE_B",
   );
@@ -255,9 +279,19 @@ test("Chapter 1 postpone choice does not spend money and best ending is reachabl
     (option) => option.id === "CH01_SC02_CHOICE_C",
   );
   assert.deepEqual(postpone.moneyEvents, []);
-  assert.match(
-    chapter1V2GameData.endingRules.endings[0].condition,
-    /money >= 500000/,
+  const best = chapter1V2GameData.endingRules.endings[0];
+  assert.ok(
+    best.condition.all.some(
+      (leaf) => leaf.var === "money" && leaf.op === ">=" && leaf.value === 500000,
+    ),
+  );
+  // Giữ trọn tiền ban đầu (hoãn mua) + đủ điểm mini-game là tới được kết tốt nhất.
+  assert.equal(
+    endingId(chapter1V2GameData, {
+      money: chapter1V2GameData.initialMoney,
+      miniGameScore: 5,
+    }),
+    best.id,
   );
 });
 

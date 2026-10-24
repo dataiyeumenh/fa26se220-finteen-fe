@@ -161,3 +161,16 @@ export function optionLockReason(option, ctx) {
     (requires.inspected || []).some((key) => !ctx.inspectedIds?.[key]);
   return unmet ? requires.lockedReason || "Chưa đủ điều kiện để chọn." : null;
 }
+
+/**
+ * Kết chương: đi theo endingRules.priorityOrder, kết "fallback": true luôn đúng, không kết nào khớp → kết cuối mảng.
+ * ctx như evaluateCondition, thêm ctx.derived (biến kết chương). VisualNovelPlayer và test dùng chung hàm này.
+ */
+export function resolveEnding(endingRules, ctx) {
+  if (!endingRules?.endings) return null;
+  for (const id of endingRules.priorityOrder || []) {
+    const ending = endingRules.endings.find((e) => e.id === id);
+    if (ending && (ending.fallback === true || evaluateCondition(ending.condition, ctx, "ending"))) return ending;
+  }
+  return endingRules.endings[endingRules.endings.length - 1] || null;
+}

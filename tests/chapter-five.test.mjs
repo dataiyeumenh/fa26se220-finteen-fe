@@ -9,6 +9,7 @@ import {
   chapterFiveLearning,
   gradeReflection,
 } from "../src/pages/Kid/Dashboard/components/game/compoundTimelineRules.js";
+import { endingId, lockReason } from "./helpers/story.mjs";
 const scenes = new Map(data.scenes.map((scene) => [scene.id, scene]));
 const timelineConfig = data.scenes.find(
   (scene) => scene.game?.kind === "COMPOUND_TIMELINE",
@@ -58,13 +59,7 @@ function ending(flags, extra = {}) {
     ...chapterFiveLearning(ledger, { game }, data.endingReport),
     ...extra,
   };
-  return data.endingRules.endings.find(
-    (item) =>
-      item.condition === "DEFAULT_FALLBACK" ||
-      new Function(...Object.keys(values), `return ${item.condition}`)(
-        ...Object.values(values),
-      ),
-  ).id;
+  return endingId(data, values);
 }
 test("all scenes are reachable, links and nested assets exist; no projected money becomes a transaction", () => {
   assert.equal(scenes.size, data.scenes.length);
@@ -127,9 +122,18 @@ test("primary branches preserve the specified stats, pending state and mutually 
   assert.equal(option("CH05_B_MATURITY").setFlags.term_maturity, true);
   assert.deepEqual(option("CH05_B_MATURITY").deltaStats, { GOAL: -3 });
   assert.equal(option("CH05_TOPUP_PROMISE").setFlags.account_pending, true);
-  assert.deepEqual(option("CH05_TOPUP_VERIFIED").requires.inspected, [
-    "ch05_topup_budget",
-  ]);
+  assert.deepEqual(option("CH05_TOPUP_VERIFIED").condition, {
+    var: "inspected:ch05_topup_budget",
+    op: "==",
+    value: true,
+  });
+  assert.ok(lockReason(option("CH05_TOPUP_VERIFIED"), {}));
+  assert.equal(
+    lockReason(option("CH05_TOPUP_VERIFIED"), {
+      inspectedIds: { ch05_topup_budget: true },
+    }),
+    null,
+  );
   assert.equal(
     option("CH05_TOPUP_VERIFIED").setFlags.topup_source_verified,
     true,

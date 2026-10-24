@@ -1,5 +1,9 @@
 import { FuturePlanMiniGame } from "./FuturePlanMiniGame.jsx";
-import { evaluateCondition, optionLockReason } from "./conditions.js";
+import {
+  evaluateCondition,
+  optionLockReason,
+  resolveEnding as resolveChapterEnding,
+} from "./conditions.js";
 import {
   buildPlanReview,
   chapterEightLearning,
@@ -938,22 +942,11 @@ export function VisualNovelPlayer({ data: rawData }) {
       "ending",
     );
 
-  const resolveEnding = () => {
-    if (!data.endingRules?.endings) return null;
-
-    const endingRules = data.endingRules;
-    const priorityOrder = endingRules.priorityOrder || [];
-
-    for (const endingId of priorityOrder) {
-      const ending = endingRules.endings.find((e) => e.id === endingId);
-      // Kết dự phòng (khuôn: "fallback": true) luôn đúng — thay chuỗi DEFAULT_FALLBACK cũ.
-      if (ending && (ending.fallback === true || evaluateEndingCondition(ending.condition))) {
-        return ending;
-      }
-    }
-
-    return endingRules.endings[endingRules.endings.length - 1] || null;
-  };
+  const resolveEnding = () =>
+    resolveChapterEnding(data.endingRules, {
+      ...conditionContext(),
+      derived: endingDerived(),
+    });
 
   const buildEndingReport = () => {
     const config = data.endingReport;

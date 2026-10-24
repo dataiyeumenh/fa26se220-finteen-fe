@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { normalizeHotspot } from "../src/pages/Kid/Dashboard/components/game/inspectHotspot.js";
 import { chapter4V2GameData } from "./fixtures/content/index.mjs";
+import { lockReason } from "./helpers/story.mjs";
 
 test("hotspot stays within image bounds after moving and resizing", () => {
   assert.deepEqual(normalizeHotspot({ x: 95, y: -20, width: 30, height: 20 }), {
@@ -38,6 +39,14 @@ test("comparison opens from chapter 4 art; purchase options retain inspected req
   const purchase = scenes.find((scene) => scene.id === "CH04_SC02");
   assert.equal(purchase.inspect, undefined);
   assert.equal(purchase.reviewAction.targetSceneId, art.id);
-  for (const option of purchase.options)
-    assert.ok(option.requires.inspected.includes(art.inspect.id));
+  for (const option of purchase.options) {
+    assert.ok(lockReason(option, { money: chapter4V2GameData.initialMoney }));
+    assert.equal(
+      lockReason(option, {
+        money: chapter4V2GameData.initialMoney,
+        inspectedIds: { [art.inspect.id]: true },
+      }),
+      null,
+    );
+  }
 });

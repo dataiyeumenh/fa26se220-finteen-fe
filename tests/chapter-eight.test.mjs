@@ -1,7 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
-import { chapter8V2GameData as data } from "./fixtures/content/index.mjs";
+import { chapter8V2GameData as content } from "./fixtures/content/index.mjs";
+import { branchTarget, choiceGroupOf, endingId, ledgerEntry, normalizeChapter } from "./helpers/story.mjs";
 import {
   availableBudget,
   budgetFeedback,
@@ -25,6 +26,8 @@ import {
   saveNovelProgress,
 } from "../src/pages/Kid/Dashboard/components/game/visualNovelProgress.js";
 import { canAccessChapter, CHAPTERS } from "../src/features/workspace/model.js";
+// Dữ liệu như game thấy (VisualNovelPlayer chuẩn hoá: inspect → scene, reflection → activity).
+const data = normalizeChapter(content);
 const futurePlanConfig = data.scenes.find(
   (scene) => scene.game?.kind === "FUTURE_PLAN",
 ).game.config;
@@ -72,14 +75,7 @@ const ending = (flags, stats, ledger, results = games()) => {
     ...chapterEightLearning(ledger, results, data.endingReport),
     miniGameCompleted: true,
   };
-  return data.endingRules.endings.find(
-    (rule) =>
-      rule.condition === "DEFAULT_FALLBACK" ||
-      new Function(
-        ...Object.keys(context),
-        `return Boolean(${rule.condition})`,
-      )(...Object.values(context)),
-  ).id;
+  return endingId(data, context);
 };
 function assets(value) {
   if (typeof value === "string" && value.startsWith("/images/"))
@@ -299,9 +295,10 @@ test("an adopted budget with a deficit remains unresolved instead of earning a f
   assert.equal(planProjection(planner, state.budgets).feasible, false);
   const branch = scenes.get("CH08_PLAN_ROUTE");
   const flags = { plan_draft_feasible: false };
+  assert.equal(branchTarget(branch, { flags }), branch.ifFalseSceneId);
   assert.equal(
-    new Function("flags", `return ${branch.condition.expression}`)(flags),
-    false,
+    branchTarget(branch, { flags: { plan_draft_feasible: true } }),
+    branch.ifTrueSceneId,
   );
   assert.equal(branch.ifFalseSceneId, "CH08_DRAFT_GAP_1");
   assert.deepEqual(scenes.get(branch.ifFalseSceneId).setFlags, {
@@ -355,16 +352,10 @@ test("all eight story paths have exactly one settlement, unchanged forecast inco
             for (const [key, value] of Object.entries(option.deltaStats))
               stats[key] += value;
             assert.equal(option.moneyEvents, undefined);
-            ledger[scene.choiceGroup] = {
-              evidenceScores: option.evidenceScores,
-            };
+            ledger[choiceGroupOf(scene)] = ledgerEntry(option);
             id = option.nextSceneId;
           } else if (scene.type === "conditional")
-            id = new Function("flags", `return ${scene.condition.expression}`)(
-              flags,
-            )
-              ? scene.ifTrueSceneId
-              : scene.ifFalseSceneId;
+            id = branchTarget(scene, { flags, stats, money, choiceLedger: ledger });
           else {
             flags = { ...flags, ...scene.setFlags };
             if (scene.marketSettlement) {
@@ -631,9 +622,10 @@ test("chapter eight is loadable and playable by an existing guest without a subs
   assert.equal(canAccessChapter(null, 8), false);
   const read = (path) => readFileSync(path, "utf8");
   assert.ok(
+    // Một nguồn: mọi chương (kể cả 8 → CH08) tải từ bản phát hành BE, không còn file chương tĩnh.
     read("src/pages/Kid/Dashboard/KidGames.jsx").includes(
-      "chapter8V2VisualNovel",
-    ),
+      "getChapterContent(chapterCode(chapterNumber))",
+    ) && !existsSync("src/pages/Kid/Dashboard/data/chapter8V2VisualNovel.js"),
   );
   assert.ok(
     read("src/features/workspace/KidPages.jsx").includes(
