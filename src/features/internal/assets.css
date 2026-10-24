@@ -1,0 +1,15 @@
+.studio-assets { max-width: 1120px; margin: auto; padding: 32px 20px; color: #18352e; }
+.studio-assets nav { display: flex; justify-content: space-between; gap: 16px; }
+.studio-assets h1, .studio-assets h2 { margin: 24px 0 12px; }
+.studio-assets form, .studio-assets section { margin: 20px 0; padding: 20px; border: 1px solid #ccdcd4; border-radius: 16px; background: #fff; }
+.studio-assets fieldset { border: 0; display: grid; gap: 12px; }
+.studio-assets label { display: grid; gap: 6px; margin: 12px 0; }
+.studio-assets input { padding: 10px; border: 1px solid #a9bfb2; border-radius: 8px; width: 100%; min-width: 0; }
+.studio-assets button { cursor: pointer; padding: 10px 16px; border: 1px solid #a9bfb2; border-radius: 8px; background: #e8f2ec; }
+.studio-assets button:disabled { cursor: wait; opacity: .6; }
+.studio-assets [role=alert] { color: #a62424; }
+.studio-asset-preview { max-height: 320px; max-width: 100%; object-fit: contain; }
+.studio-asset-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
+.studio-asset-grid button { display: grid; gap: 8px; text-align: left; overflow-wrap: anywhere; }
+.studio-asset-grid button[aria-pressed=true] { outline: 3px solid #237455; }
+.studio-asset-grid img { width: 100%; height: 150px; object-fit: contain; }

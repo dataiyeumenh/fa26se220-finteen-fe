@@ -7,7 +7,9 @@ const InternalApp = lazy(() => import("@/features/internal/InternalApp"));
 import Homepage from "@/pages/Homepage";
 import Login from "@/pages/auth/Login";
 import Register from "@/pages/auth/Register";
+import AuthForm from "@/features/workspace/AuthForm";
 import { AuthLayout } from "@/pages/auth/AuthLayout";
+import InternalAuthLayout from "@/pages/auth/InternalAuthLayout";
 
 // Dashboard CHUNG cho người lớn: Guest / Parent / Teacher
 import {
@@ -99,6 +101,9 @@ function App() {
         />
         {/* 1. CÔNG KHAI */}
         <Route path="/" element={<Homepage />} />
+        <Route element={<InternalAuthLayout />}>
+          <Route path="/internal/login" element={<AuthForm internal />} />
+        </Route>
         <Route element={<AuthLayout />}>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />

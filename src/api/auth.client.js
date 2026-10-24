@@ -32,6 +32,7 @@ export function createAuthClient({ baseUrl, storage, contextStorage = storage, f
   const logoutSlot = message => { revision++; slotSession = null; learnerDashboardRequest = null; persistSlot(); publish({ actor: null, learnerDashboard: null, learnerDashboardLoading: false, learnerDashboardError: '', loading: false, error: message || '' }) }
   const expired = () => { logout(); publish({ error: 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.' }) }
   async function request(path, { body, method = body === undefined ? 'GET' : 'POST', authenticated = false, slotAuthenticated = false } = {}) {
+    const multipart = typeof FormData !== 'undefined' && body instanceof FormData
     const activeSession = slotAuthenticated ? slotSession : session
     const token = activeSession?.accessToken
     if ((authenticated || slotAuthenticated) && (!token || activeSession.expiresAt <= now())) {
@@ -43,8 +44,8 @@ export function createAuthClient({ baseUrl, storage, contextStorage = storage, f
     try {
       response = await fetcher(`${baseUrl.replace(/\/$/, '')}${path}`, {
         method, credentials: 'omit', signal: AbortSignal.timeout(20000),
-        headers: { Accept: 'application/json', ...(body !== undefined ? { 'Content-Type': 'application/json' } : {}), ...(authenticated || slotAuthenticated ? { Authorization: `Bearer ${token}` } : {}) },
-        ...(body !== undefined ? { body: JSON.stringify(body) } : {}),
+        headers: { Accept: 'application/json', ...(body !== undefined && !multipart ? { 'Content-Type': 'application/json' } : {}), ...(authenticated || slotAuthenticated ? { Authorization: `Bearer ${token}` } : {}) },
+        ...(body !== undefined ? { body: multipart ? body : JSON.stringify(body) } : {}),
       })
     } catch { throw new ApiError('Không kết nối được máy chủ. Kiểm tra mạng rồi thử lại.', null, 0) }
     let data
@@ -140,6 +141,23 @@ export function createAuthClient({ baseUrl, storage, contextStorage = storage, f
     checkExpiry: () => { if (slotSession && slotSession.expiresAt <= now()) logoutSlot('Phiên học tập đã hết hạn. Vui lòng đăng nhập lại.'); else if (session && session.expiresAt <= now()) expired() },
     register: ({ email, password, displayName, phone }) => request('/api/auth/register', { body: { email: email.trim(), password, displayName: displayName.trim(), ...(phone?.trim() ? { phone: phone.trim() } : {}) } }),
     login: (email, password) => signIn('/api/auth/login', { email: email.trim(), password }),
+    internalLogin: (email, password) => signIn('/api/auth/internal/login', { email: email.trim(), password }),
+    listStudioAssets: ({ chapter = '', q = '' } = {}) => {
+      const query = new URLSearchParams({ kind: 'IMAGE' })
+      if (chapter.trim()) query.set('chapter', chapter.trim())
+      if (q.trim()) query.set('q', q.trim())
+      return request(`/api/studio/assets?${query}`, { authenticated: true })
+    },
+    uploadStudioAsset: (file, { label = '', chapterCode = '' } = {}) => {
+      if (!file || !['image/png', 'image/jpeg', 'image/webp'].includes(file.type) || !file.size || file.size > 5 * 1024 * 1024) {
+        throw new ApiError('Chọn ảnh PNG, JPEG hoặc WebP, tối đa 5 MB.', 6008, 400)
+      }
+      const body = new FormData()
+      body.append('file', file)
+      if (label.trim()) body.append('label', label.trim())
+      if (chapterCode.trim()) body.append('chapterCode', chapterCode.trim())
+      return request('/api/studio/assets', { authenticated: true, body })
+    },
     verify: (email, otp) => signIn('/api/auth/verify', { email: email.trim(), otp: otp.trim() }),
     async resetPassword(email, otp, newPassword) {
       await request('/api/auth/password/reset', { body: { email: email.trim(), otp: otp.trim(), newPassword } })

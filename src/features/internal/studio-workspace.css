@@ -1,0 +1,50 @@
+.studio-workspace { min-height: 100dvh; display: grid; grid-template-columns: 254px minmax(0, 1fr); background: #f5f9f7; color: #213e36; font-family: 'Be Vietnam Pro', sans-serif; }
+.studio-sidebar { background: white; border-right: 1px solid #e1ebe5; padding: 30px 20px; display: flex; flex-direction: column; min-height: 100dvh; }
+.studio-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: #163d30; font-size: 25px; font-weight: 800; }
+.studio-brand > span, .studio-profile > span { display: grid; place-items: center; background: #e2f4e9; color: #17856b; width: 44px; height: 44px; border-radius: 13px; flex-shrink: 0; }
+.studio-brand small { display: block; font-size: 8px; letter-spacing: 1.8px; font-weight: 600; margin-top: 3px; color: #7a948a; }
+.studio-profile { display: flex; align-items: center; gap: 10px; padding: 18px 10px; background: #f6faf7; border-radius: 12px; margin: 34px 0 28px; }
+.studio-profile > div { min-width: 0; }
+.studio-profile strong { display: block; font-size: 12px; overflow-wrap: anywhere; }
+.studio-profile small { display: block; font-size: 10px; color: #7a9187; line-height: 1.7; margin-top: 5px; }
+.studio-nav-label { color: #8b9f96; font-size: 9px; letter-spacing: 1.3px; margin: 0 12px 14px; }
+.studio-sidebar nav { display: grid; gap: 7px; }
+.studio-sidebar nav a { display: flex; align-items: center; gap: 12px; padding: 13px 12px; text-decoration: none; border-radius: 10px; color: #6b8177; font-size: 12px; font-weight: 500; }
+.studio-sidebar nav a:hover { background: #f1f8f3; }
+.studio-sidebar nav a.active { background: #e3f4e9; color: #13775d; font-weight: 600; }
+.studio-sidebar-bottom { margin-top: auto; padding-top: 40px; display: grid; gap: 18px; }
+.studio-sidebar-bottom > span { display: flex; align-items: center; gap: 8px; color: #8aa095; font-size: 10px; padding: 0 12px; }
+.studio-sidebar-bottom button { display: flex; align-items: center; gap: 12px; padding: 13px 12px; border: 0; background: transparent; color: #657d71; cursor: pointer; font-size: 12px; }
+.studio-main { min-width: 0; }
+.studio-topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 24px 40px; background: #ffffffbd; border-bottom: 1px solid #e2ece6; font-size: 11px; }
+.studio-topbar > span:first-child { display: flex; align-items: center; gap: 12px; color: #81978c; }
+.studio-topbar strong { color: #3d5d4c; font-weight: 500; }
+.studio-member-tag { background: #edf6f0; color: #54816a; padding: 7px 12px; border-radius: 20px; font-size: 10px; }
+.studio-content { max-width: 1150px; padding: 40px; margin: auto; }
+.studio-eyebrow { font-size: 9px; letter-spacing: 1.8px; color: #2c9475; font-weight: 600; }
+.studio-content h1 { font-size: clamp(23px, 3vw, 31px); font-weight: 650; letter-spacing: -.8px; margin: 12px 0; }
+.studio-intro { font-size: 12px; color: #7a9185; line-height: 1.9; }
+.studio-welcome { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 30px 36px; background: linear-gradient(115deg, #dff4e7, #eef9e2); border: 1px solid #d8ead9; border-radius: 18px; margin: 30px 0; color: #6aa184; }
+.studio-welcome span { font-size: 8px; letter-spacing: 1.5px; }
+.studio-welcome h2 { font-size: 25px; font-weight: 600; line-height: 1.5; color: #285c42; margin: 14px 0; }
+.studio-welcome p { font-size: 11px; margin: 0; }
+.studio-section-heading { display: flex; justify-content: space-between; align-items: center; margin: 30px 0 18px; }
+.studio-section-heading h2 { font-size: 16px; font-weight: 600; }
+.studio-section-heading > span { font-size: 10px; color: #8ba093; }
+.studio-menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+.studio-menu-card { position: relative; display: block; padding: 25px; border-radius: 15px; border: 1px solid #e0eae3; background: #fff; text-decoration: none; color: inherit; transition: border-color .15s; }
+.studio-menu-card:hover { border-color: #79b99a; }
+.studio-menu-icon { display: grid; place-items: center; width: 48px; height: 48px; color: #359b78; background: #eaf6ef; border-radius: 12px; }
+.studio-status { position: absolute; top: 27px; right: 20px; font-size: 9px; color: #8d9488; background: #f5f4ee; border-radius: 12px; padding: 5px 8px; }
+.studio-status.ready { background: #edf8ee; color: #39865b; }
+.studio-menu-card h3 { font-size: 15px; font-weight: 600; margin: 20px 0 10px; }
+.studio-menu-card p { color: #7b9285; font-size: 11px; line-height: 1.9; min-height: 42px; }
+.studio-open { display: flex; align-items: center; justify-content: space-between; border-top: 1px solid #edf2ee; padding-top: 16px; margin-top: 20px; font-size: 10px; color: #2b8c67; }
+.studio-footnote { display: flex; gap: 8px; align-items: center; font-size: 10px; color: #92a497; margin-top: 28px; }
+.studio-coming-soon { background: white; border: 1px solid #e0eae3; border-radius: 18px; padding: 48px 28px; text-align: center; margin: 30px 0; color: #398e6d; }
+.studio-coming-soon h2 { color: #365b48; font-size: 20px; margin: 20px 0; }
+.studio-coming-soon p { color: #7a9185; font-size: 12px; line-height: 1.9; }
+.studio-coming-soon a { display: inline-flex; gap: 8px; align-items: center; color: #16845f; font-size: 12px; margin-top: 20px; }
+.studio-workspace a:focus-visible, .studio-workspace button:focus-visible { outline: 3px solid #69bd96; outline-offset: 3px; }
+@media(max-width: 800px) { .studio-workspace { grid-template-columns: 210px minmax(0, 1fr); } .studio-sidebar { padding: 22px 12px; } .studio-content { padding: 28px 20px; } .studio-topbar { padding: 22px 20px; } .studio-welcome { padding: 24px; } .studio-welcome > svg { width: 65px; } }
+@media(max-width: 580px) { .studio-workspace { grid-template-columns: minmax(0, 1fr); } .studio-sidebar { min-height: auto; border-right: 0; border-bottom: 1px solid #e1ebe5; padding: 18px; } .studio-profile, .studio-nav-label, .studio-sidebar-bottom > span { display: none; } .studio-sidebar nav { display: flex; flex-wrap: wrap; margin-top: 18px; gap: 6px; } .studio-sidebar nav a { padding: 10px; font-size: 10px; gap: 6px; } .studio-sidebar-bottom { padding-top: 10px; } .studio-sidebar-bottom button { padding: 8px 10px; } .studio-topbar { padding: 16px 20px; } .studio-content { padding: 25px 18px; } .studio-welcome h2 { font-size: 21px; } .studio-welcome > svg { display: none; } .studio-menu-grid { grid-template-columns: minmax(0, 1fr); } }
