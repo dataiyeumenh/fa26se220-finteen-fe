@@ -288,7 +288,7 @@ export default function EditorPage({ notify, code }) {
       warnings={warnings} refreshError={refreshError} conditionDrafts={conditionDrafts} editCondition={editCondition} onSuggestVoice={suggestVoice}
       history={{ undo, redo, canUndo: history.past.length > 0, canRedo: history.future.length > 0 }} notice={notice} issues={storyIssues(scenes)}
       onAdd={() => setDialog({ kind: 'add' })} onDuplicate={duplicateScene} onDelete={deleteScene} onPickBackground={() => setPicking('background')}
-      onAddCharacter={() => setDialog({ kind: 'character' })} onPlay={() => setDialog({ kind: 'play' })} openDialog={setDialog} onBranch={createBranch} onLaneEnd={addLaneEnd} />
+      onAddCharacter={() => setDialog({ kind: 'character' })} onPlay={() => setDialog({ kind: 'play' })} openDialog={setDialog} onBranch={createBranch} onLaneEnd={addLaneEnd} onPickImage={apply => setPicking(() => apply)} />
     {voiceHints && <VoiceHints hints={voiceHints} scenes={scenes} write={write} onAccept={acceptHint} onDrop={dropHint} onOpen={id => go(id)} onClose={() => setVoiceHints(null)} />}
     {picking && <AssetPicker chapter={code} notify={notify} onClose={() => setPicking(false)} onPick={asset => {
       if (typeof picking === 'function') picking(asset.url)

@@ -280,3 +280,10 @@ export function buildStoryMap(scenes) {
   }
   return sequence(scenes[0].id, null)
 }
+
+/** tóm tắt nhánh của một câu hỏi: số lựa chọn, số đích khác nhau, lựa chọn đi thẳng về điểm nhập, điểm nhập */
+export function branchSummary(scenes, scene) {
+  const options = scene.options || [], targets = new Set(options.map(option => option.nextSceneId).filter(Boolean))
+  const join = continuation(scenes, scene)
+  return { options: options.length, targets: targets.size, straight: join ? options.filter(option => option.nextSceneId === join).length : 0, join: join ? scenes.findIndex(item => item.id === join) : null }
+}
