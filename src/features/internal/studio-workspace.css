@@ -1,5 +1,5 @@
 .studio-workspace { min-height: 100dvh; display: grid; grid-template-columns: 254px minmax(0, 1fr); background: #f5f9f7; color: #213e36; font-family: 'Be Vietnam Pro', sans-serif; }
-.studio-sidebar { background: white; border-right: 1px solid #e1ebe5; padding: 30px 20px; display: flex; flex-direction: column; min-height: 100dvh; }
+.studio-sidebar { position: sticky; top: 0; align-self: start; height: 100dvh; overflow-y: auto; background: white; border-right: 1px solid #e1ebe5; padding: 30px 20px; display: flex; flex-direction: column; min-height: 0; scrollbar-width: thin; }
 .studio-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: #163d30; font-size: 25px; font-weight: 800; }
 .studio-brand > span, .studio-profile > span { display: grid; place-items: center; background: #e2f4e9; color: #17856b; width: 44px; height: 44px; border-radius: 13px; flex-shrink: 0; }
 .studio-brand small { display: block; font-size: 8px; letter-spacing: 1.8px; font-weight: 600; margin-top: 3px; color: #7a948a; }
@@ -16,6 +16,54 @@
 .studio-sidebar-bottom > span { display: flex; align-items: center; gap: 8px; color: #8aa095; font-size: 10px; padding: 0 12px; }
 .studio-sidebar-bottom button { display: flex; align-items: center; gap: 12px; padding: 13px 12px; border: 0; background: transparent; color: #657d71; cursor: pointer; font-size: 12px; }
 .studio-main { min-width: 0; }
+.studio-role-switch { display: grid; gap: 7px; font-size: 10px; color: #7a9187; margin: -10px 8px 20px; }
+.studio-role-switch select { width: 100%; padding: 9px; border: 1px solid #dce7e0; border-radius: 8px; background: #fff; color: #3d6452; }
+.studio-sidebar nav .studio-nav-group-label { margin: 22px 12px 7px; font-size: 8px; letter-spacing: 1.2px; color: #8b9f96; }
+.studio-reference-nav { margin-top: 16px; border-top: 1px solid #edf2ee; padding-top: 14px; }
+.studio-reference-nav summary { cursor: pointer; padding: 7px 12px; font-size: 10px; color: #8a9e92; }
+.studio-role-overview { --role-accent: #16815f; --role-tint: #e3f3e9; --role-border: #cee6d7; }
+.studio-role-overview.role-game_reviewer { --role-accent: #386db1; --role-tint: #e8f0fb; --role-border: #d4e2f4; }
+.studio-role-overview.role-game_manager { --role-accent: #99712e; --role-tint: #fbf2df; --role-border: #eee0bc; }
+.studio-role-hero { display: flex; align-items: center; justify-content: space-between; gap: 30px; padding: 32px; margin: 28px 0 20px; border: 1px solid var(--role-border); border-radius: 18px; background: linear-gradient(120deg, var(--role-tint), #fff); color: var(--role-accent); }
+.studio-role-hero > div { max-width: 560px; }
+.studio-role-hero > div > span { font-size: 9px; letter-spacing: 1.8px; font-weight: 600; }
+.studio-role-hero h2 { white-space: pre-line; font-size: 27px; line-height: 1.5; font-weight: 600; margin: 16px 0; letter-spacing: -.7px; }
+.studio-role-hero p { font-size: 12px; line-height: 1.9; color: #718478; }
+.studio-role-hero a { display: inline-flex; align-items: center; gap: 16px; margin-top: 20px; padding: 12px 16px; background: var(--role-accent); color: white; border-radius: 9px; font-size: 11px; text-decoration: none; }
+.studio-role-hero > svg { flex-shrink: 0; opacity: .45; margin-right: 20px; }
+.studio-role-metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.studio-role-metrics > div { border: 1px solid #e0e9e3; border-radius: 12px; background: #fff; padding: 20px; }
+.studio-role-metrics span { display: block; font-size: 11px; color: #7e9286; }
+.studio-role-metrics strong { display: block; font-size: 28px; color: var(--role-accent); font-weight: 600; margin-top: 15px; }
+.studio-role-process { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 25px 0; }
+.studio-role-process > div { display: flex; align-items: center; gap: 10px; }
+.studio-role-process b { display: grid; place-items: center; width: 27px; height: 27px; border-radius: 50%; flex-shrink: 0; background: var(--role-tint); color: var(--role-accent); font-size: 9px; }
+.studio-role-process span { font-size: 10px; color: #6f8577; }
+.studio-role-queue { border: 1px solid #e0e9e3; border-radius: 14px; background: #fff; padding: 22px; }
+.studio-role-queue header { display: flex; justify-content: space-between; gap: 16px; align-items: center; margin-bottom: 20px; }
+.studio-role-queue h2 { font-size: 14px; font-weight: 600; margin: 0; }
+.studio-role-queue header a { display: flex; gap: 6px; align-items: center; color: var(--role-accent); font-size: 10px; text-decoration: none; }
+.studio-role-queue > p { font-size: 12px; line-height: 1.8; color: #85978b; padding: 12px 0; }
+.studio-role-queue-item { display: flex; align-items: center; gap: 16px; text-decoration: none; color: #3f5b49; padding: 14px 0; border-top: 1px solid #edf2ee; }
+.studio-role-queue-item > span:first-child { flex: 1; min-width: 0; }.studio-role-queue-item strong { display: block; font-size: 12px; font-weight: 500; }.studio-role-queue-item small { display: block; font-size: 10px; margin-top: 7px; color: #8b9d90; }
+.studio-role-help { font-size: 10px; line-height: 1.9; color: #8b9d90; margin-top: 20px; }
+@media(max-width: 800px) { .studio-role-hero { padding: 24px; }.studio-role-hero h2 { font-size: 23px; }.studio-role-hero > svg { display: none; }.studio-role-process { grid-template-columns: 1fr; gap: 12px; }.studio-role-metrics { gap: 8px; }.studio-role-metrics > div { padding: 14px; }.studio-role-metrics span { font-size: 10px; } }
+@media(max-width: 580px) { .studio-sidebar nav .studio-nav-group-label { flex-basis: 100%; margin-top: 12px; }.studio-reference-nav { width: 100%; }.studio-role-switch { margin: 16px 0 0; }.studio-role-queue header { align-items: flex-start; flex-direction: column; }.studio-role-queue-item { gap: 8px; } }
+.studio-api-content { font-size: 13px; }
+.studio-library-scroll { max-height: max(260px, calc(100dvh - 460px)); overflow: auto; padding: 2px; scrollbar-width: thin; scrollbar-color: #c3d6ca transparent; border: 1px solid #edf2ee; border-radius: 10px; }
+.studio-question-scroll thead { position: sticky; top: 0; z-index: 1; background: #f5faf6; }
+.studio-question-scroll th { padding: 12px; font-size: 11px; }.studio-question-scroll td { padding: 13px 12px; }.studio-question-scroll tbody tr:hover { background: #f9fcfa; }
+.studio-pagination { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px; border-top: 1px solid #edf2ee; padding: 16px 0 0; margin-top: 16px; font-size: 11px; }
+.studio-pagination-info, .studio-pagination-pages { display: flex; align-items: center; gap: 8px; }.studio-pagination-info { color: #8a9d90; }.studio-pagination-info strong { color: #426951; font-weight: 600; }
+.studio-pagination .studio-pagination-info label { display: flex; align-items: center; gap: 7px; margin-left: 10px; font-size: 10px; }.studio-pagination select { border: 1px solid #dce6df; border-radius: 7px; background: #fff; padding: 5px 7px; color: #52735f; }
+.studio-pagination-pages button { display: grid; place-items: center; min-width: 30px; height: 30px; padding: 4px; border-radius: 7px; border: 1px solid #e1e9e3; background: #fff; color: #718c7c; font-size: 11px; }.studio-pagination-pages button[aria-current=page] { background: #17845f; border-color: #17845f; color: #fff; }.studio-pagination-pages button:disabled { opacity: .35; cursor: not-allowed; }.studio-pagination-total { font-size: 10px; color: #99aa9e; }
+@media(max-width: 580px) { .studio-workspace .studio-sidebar { position: static; height: auto; overflow: visible; }.studio-pagination-info { flex-wrap: wrap; }.studio-library-scroll { max-height: 55dvh; }.studio-pagination { justify-content: center; } }
+.studio-submit-error { padding: 16px; margin-bottom: 16px; border: 1px solid #eccdc7; border-radius: 10px; background: #fff5f2; color: #9f4c3e; line-height: 1.8; }
+.studio-api-content label { display: grid; gap: 6px; font-size: 12px; }
+.studio-api-content input, .studio-api-content textarea, .studio-api-content select { min-width: 0; }
+.studio-api-content button:not(:disabled), .studio-api-content summary { cursor: pointer; }
+.studio-api-content th { white-space: nowrap; }
+.studio-api-content td { min-width: 100px; }
 .studio-topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 24px 40px; background: #ffffffbd; border-bottom: 1px solid #e2ece6; font-size: 11px; }
 .studio-topbar > span:first-child { display: flex; align-items: center; gap: 12px; color: #81978c; }
 .studio-topbar strong { color: #3d5d4c; font-weight: 500; }
