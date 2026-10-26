@@ -82,6 +82,30 @@ Khi tải lại checkpoint, không được áp dụng lại tiền/điểm/effe
 
 ## Chạy dự án
 
+### Ảnh trong bản deploy
+
+`npm run build` chỉ chép ảnh được tham chiếu trong `src/`, `index.html` hoặc
+`scripts/production-content-assets.json` vào `dist`. Ảnh ghép đường dẫn động
+(bản đồ, thư mục sprite Savings Race) cũng được giữ. Các tài nguyên ngoài
+`public/images/` vẫn được chép đầy đủ. `npm run dev` tiếp tục phục vụ toàn bộ
+`public`; không xóa ảnh gốc hoặc thay đổi dữ liệu trên backend.
+
+Danh sách ảnh từ backend đã đối chiếu với cả 8 chương của release `2.0.0`.
+Khi backend phát hành nội dung mới có thay đổi ảnh local, cần cập nhật danh sách
+và deploy frontend cùng đợt, trước khi người chơi chuyển sang nội dung đó:
+
+```bash
+npm run audit:assets -- --refresh-content --api-base=https://kidzeconomy.com.vn/finteen
+node --test tests/production-assets.test.mjs
+npm run build
+```
+
+Commit file `scripts/production-content-assets.json` sau khi cập nhật. Build dùng
+danh sách đã commit nên không phụ thuộc kết nối backend. Nếu release mới tham
+chiếu ảnh chưa có trong `public`, audit/build báo lỗi thay vì âm thầm bỏ ảnh.
+`npm run audit:assets` kiểm tra offline và ghi danh sách file giữ/loại cùng lý do
+tham chiếu vào `output/deployment-assets-audit.json`.
+
 ```bash
 npm install
 npm run dev
