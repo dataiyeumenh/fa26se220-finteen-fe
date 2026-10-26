@@ -1,47 +1,43 @@
 // Danh sách chương + gửi duyệt / chấm Đạt / Trả về. Cũng là màn "Chờ duyệt" khi reviewOnly.
 import { useCallback, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Plus } from 'lucide-react'
+import { CheckCircle2, Clock3, FilePenLine, Layers3, Plus, Rocket, Search } from 'lucide-react'
 import { auth } from '../../api/auth.api'
 import { canEdit, canWithdraw } from './permissions'
 import { CHANGE_CLASS, STATUS_LABEL, studioApi } from './studioClient'
 import { useStudioAction, useStudioResource } from './useStudioResource'
-import { TURN_LABEL, reviewedNote, statusLine, stepOf, turnOf } from './chapterWork'
-import { Btn, PageHeader, StateBox, StudioDialog } from './ui'
+import { turnOf } from './chapterWork'
+import { Btn, PageHeader, StateBox, StudioDialog, Tag } from './ui'
 
-const STEPS = ['Đang soạn', 'Chờ duyệt', 'Đã duyệt', 'Đã phát hành']
 const numberOf = draft => draft.chapterNumber ?? Number(draft.code.slice(2))
 const editorPath = code => `/internal/editor/${encodeURIComponent(code)}`
+const FILTERS = [
+  { id: 'ALL', label: 'Tất cả', icon: Layers3 },
+  { id: 'DRAFT', label: 'Đang soạn', icon: FilePenLine },
+  { id: 'SUBMITTED', label: 'Chờ duyệt', icon: Clock3 },
+  { id: 'APPROVED', label: 'Đã duyệt', icon: CheckCircle2 },
+  { id: 'RELEASED', label: 'Đã phát hành', icon: Rocket },
+]
 
-function Track({ status }) {
-  const now = stepOf(status)
-  const tone = status === 'REJECTED' ? ' is-bad' : status === 'SUBMITTED' ? ' is-wait' : status === 'RELEASED' ? ' is-ship' : ''
-  return <ol className="sp-track" aria-label={`Bước ${now + 1} trên 4: ${STATUS_LABEL[status] || status}`}>
-    {STEPS.map((step, index) => <li key={step} className={index < now ? 'done' : index === now ? `now${tone}` : undefined} aria-current={index === now ? 'step' : undefined}>
-      <i aria-hidden="true" />{index === now && status === 'REJECTED' ? 'Bị trả về' : step}
-    </li>)}
-  </ol>
-}
+const matchesFilter = (draft, filter) => filter === 'ALL'
+  || (filter === 'DRAFT' ? ['DRAFT', 'REJECTED'].includes(draft.status) : draft.status === filter)
+
+const shortTime = value => value ? new Date(value).toLocaleString('vi-VN', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit' }) : ''
 
 function ChapterRow({ draft, actor, busy, onAction, onWithdraw }) {
   const turn = turnOf(actor, draft)
   const readOnly = !canEdit(actor) || draft.status === 'SUBMITTED'
   const ownWaiting = draft.status === 'SUBMITTED' && draft.editorId === actor?.id
-  const quote = draft.status === 'REJECTED' ? draft.reviewNote : draft.status === 'SUBMITTED' ? draft.changeNote : ['APPROVED', 'RELEASED'].includes(draft.status) ? draft.reviewNote : ''
-  const quoteLabel = draft.status === 'SUBMITTED' ? 'Người soạn ghi' : draft.status === 'REJECTED' ? 'Góp ý' : 'Nhận xét'
-  const reviewed = reviewedNote(draft)
+  const activityAt = draft.updatedAt || draft.submittedAt || draft.reviewedAt || draft.releasedAt
   return <li className={`sp-chapter${turn ? ' is-mine' : ''}`}>
-    <div className="sp-chapter-no"><small>Chương</small>{String(numberOf(draft)).padStart(2, '0')}</div>
+    <div className="sp-chapter-no"><small>CH</small>{String(numberOf(draft)).padStart(2, '0')}</div>
     <div className="sp-chapter-main">
-      <div className="sp-chapter-title"><h3>{draft.title || draft.code}</h3>{turn && <span className="sp-turn">{TURN_LABEL[turn]}</span>}</div>
-      <Track status={draft.status} />
-      <p className="sp-chapter-line">{statusLine(draft)}</p>
-      {quote && <p className="sp-chapter-line">{quoteLabel}: <q>{quote}</q></p>}
-      <p className="sp-chapter-line">Bản nháp số {draft.revision}{draft.changeClass && CHANGE_CLASS[draft.changeClass] ? `, loại thay đổi: ${CHANGE_CLASS[draft.changeClass].label.toLowerCase()}` : ''}{reviewed ? `. ${reviewed}.` : '.'}</p>
+      <div className="sp-chapter-title"><h3>{draft.title || draft.code}</h3><Tag tone={draft.status}>{STATUS_LABEL[draft.status] || draft.status}</Tag></div>
+      <p className="sp-chapter-line">Bản nháp #{draft.revision}{activityAt ? ` · Cập nhật ${shortTime(activityAt)}` : ''}</p>
     </div>
     <div className="sp-chapter-actions">
-      {turn === 'fix' ? <Link className="sp-btn is-primary" to={editorPath(draft.code)}>Sửa theo góp ý</Link>
-        : <Link className="sp-btn" to={editorPath(draft.code)}>{readOnly ? 'Xem và chơi thử' : 'Mở trình soạn'}</Link>}
+      {turn === 'fix' ? <Link className="sp-btn is-primary" to={editorPath(draft.code)}>Sửa chương</Link>
+        : <Link className="sp-btn" to={editorPath(draft.code)}>{readOnly ? 'Xem chương' : 'Tiếp tục soạn'}</Link>}
       {turn === 'publish' && <Link className="sp-btn is-primary" to="/internal/releases">Đến màn phát hành</Link>}
       {turn === 'submit' && <Btn tone="primary" disabled={busy} onClick={() => onAction(draft, 'submit')}>Gửi duyệt</Btn>}
       {turn === 'review' && <><Btn disabled={busy} onClick={() => onAction(draft, 'reject')}>Trả về</Btn><Btn tone="primary" disabled={busy} onClick={() => onAction(draft, 'approve')}>Đạt</Btn></>}
@@ -107,9 +103,14 @@ export default function ChaptersPage({ notify, reviewOnly = false, title = 'Chư
   const { busy, run, error: actionError, clearError } = useStudioAction(notify)
   const [pending, setPending] = useState(null)
   const [creating, setCreating] = useState(false)
+  const [filter, setFilter] = useState('ALL')
+  const [query, setQuery] = useState('')
   const all = data || []
   // Chương đến lượt mình lên đầu, còn lại theo số chương.
   const sorted = [...all].sort((a, b) => (turnOf(actor, b) ? 1 : 0) - (turnOf(actor, a) ? 1 : 0) || numberOf(a) - numberOf(b))
+  const keyword = query.trim().toLowerCase()
+  const visible = sorted.filter(draft => matchesFilter(draft, filter) && (!keyword || `${draft.code} ${draft.title || ''}`.toLowerCase().includes(keyword)))
+  const countFor = id => all.filter(draft => matchesFilter(draft, id)).length
   const send = ({ changeClass, note }) => {
     const { draft, action } = pending
     const path = `/api/studio/chapters/${encodeURIComponent(draft.code)}/${action === 'submit' ? 'submit' : 'review'}`
@@ -122,7 +123,7 @@ export default function ChaptersPage({ notify, reviewOnly = false, title = 'Chư
   const forMe = waiting.filter(draft => turnOf(actor, draft) === 'review')
   const notMine = waiting.filter(draft => turnOf(actor, draft) !== 'review')
   return <>
-    <PageHeader title={title} intro={intro} actions={!reviewOnly && canEdit(actor) && <Btn tone="primary" disabled={loading || !!error} onClick={() => setCreating(true)}><Plus size={17} aria-hidden="true" />Thêm chương mới</Btn>} />
+    <PageHeader className="sp-chapter-page-head" title={title} intro={intro} actions={!reviewOnly && canEdit(actor) && <Btn tone="primary" disabled={loading || !!error} onClick={() => setCreating(true)}><Plus size={17} aria-hidden="true" />Thêm chương mới</Btn>} />
     {loading && !data ? <StateBox kind="loading">Đang tải danh sách chương…</StateBox>
       : error ? <StateBox kind="error" title="Chưa tải được danh sách chương" actions={<Btn onClick={reload}>Thử lại</Btn>}>{error}</StateBox>
       : reviewOnly ? <>
@@ -132,7 +133,24 @@ export default function ChaptersPage({ notify, reviewOnly = false, title = 'Chư
         {notMine.length > 0 && <><h2 className="sp-group-title">Đang chờ người khác duyệt</h2>
           <ul className="sp-chapters">{notMine.map(draft => <ChapterRow key={draft.code} draft={draft} {...rowProps} />)}</ul></>}
       </>
-      : sorted.length ? <ul className="sp-chapters" aria-label="Danh sách chương">{sorted.map(draft => <ChapterRow key={draft.code} draft={draft} {...rowProps} />)}</ul>
+      : sorted.length ? <>
+        <section className="sp-chapter-dashboard" aria-label="Tổng quan chương">
+          {FILTERS.map(({ id, label, icon: Icon }) => <button type="button" key={id} className={filter === id ? 'active' : ''} aria-pressed={filter === id} onClick={() => setFilter(id)}>
+            <span><Icon size={18} aria-hidden="true" />{label}</span>
+            <strong>{countFor(id)}</strong>
+          </button>)}
+        </section>
+        <div className="sp-chapter-toolbar">
+          <label className="sp-chapter-search">
+            <Search size={18} aria-hidden="true" />
+            <input value={query} onChange={event => setQuery(event.target.value)} placeholder="Tìm theo số hoặc tên chương…" aria-label="Tìm chương" />
+          </label>
+          <span>Hiển thị <strong>{visible.length}</strong>/{all.length} chương</span>
+        </div>
+        {visible.length
+          ? <ul className="sp-chapters" aria-label="Danh sách chương">{visible.map(draft => <ChapterRow key={draft.code} draft={draft} {...rowProps} />)}</ul>
+          : <StateBox title="Không tìm thấy chương phù hợp">Thử đổi từ khóa hoặc chọn một trạng thái khác.</StateBox>}
+      </>
       : <StateBox title="Chưa có chương nào" actions={canEdit(actor) && <Btn tone="primary" onClick={() => setCreating(true)}>Thêm chương đầu tiên</Btn>}>Chương đầu tiên bạn tạo sẽ hiện ở đây.</StateBox>}
     {pending && <ActionDialog key={`${pending.draft.code}-${pending.action}`} pending={pending} busy={busy} error={actionError} onClose={() => setPending(null)} onSend={send} />}
     {creating && <NewChapterDialog rows={all} onClose={() => setCreating(false)} />}

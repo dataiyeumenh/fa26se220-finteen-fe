@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react'
-import { Copy, ImageOff, Music, Upload } from 'lucide-react'
+import { CheckCircle2, Copy, FolderOpen, ImageOff, Images, Music, Search, Upload } from 'lucide-react'
 import { auth } from '../../api/auth.api'
 import { canWriteLibrary } from './permissions'
 import { fetchAssets, uploadFiles } from './assetsApi'
@@ -23,7 +23,7 @@ function AssetCard({ asset, onPick }) {
   const [broken, setBroken] = useState(false)
   const name = nameOf(asset)
   return <button type="button" className="sp-asset" onClick={() => onPick(asset)} aria-label={`${name || 'Ảnh chưa đặt tên'}${chapterOf(asset) ? `, ${chapterOf(asset)}` : ''}, ${STATUS[asset.status]?.[0] || ''}`}>
-    <span className="sp-asset-img">{asset.kind === 'AUDIO' ? <Music size={36} aria-hidden="true" /> : broken ? <ImageOff size={32} aria-hidden="true" /> : <img src={asset.url} alt="" loading="lazy" onError={() => setBroken(true)} />}</span>
+    <span className="sp-asset-img">{asset.kind === 'AUDIO' ? <Music size={36} aria-hidden="true" /> : broken ? <ImageOff size={32} aria-hidden="true" /> : <img src={asset.url} alt="" loading="lazy" onError={() => setBroken(true)} />}<span className="sp-asset-open">Xem chi tiết</span></span>
     <span className="sp-asset-info"><strong className={name ? undefined : 'is-unnamed'}>{name || 'Chưa đặt tên'}</strong>
       <span>{chapterOf(asset)}{asset.status && <Tag tone={asset.status}>{STATUS[asset.status]?.[0] || asset.status}</Tag>}</span></span>
   </button>
@@ -136,21 +136,27 @@ export default function AssetsPage({ notify, title = 'Kho ảnh', intro }) {
   const chaptersLoader = useCallback(() => studioApi.get('/api/studio/chapters'), [])
   const chapters = useStudioResource(chaptersLoader).data || []
   const rows = query.data || []
+  const inUseCount = rows.filter(asset => asset.status === 'IN_USE').length
+  const chapterCount = new Set(rows.flatMap(asset => chapterOf(asset).split(',').map(value => value.trim()).filter(Boolean))).size
   const activePage = Math.min(page, Math.max(0, Math.ceil(rows.length / size) - 1))
   const filter = patch => { setFilters(value => ({ ...value, ...patch })); setPage(0) }
   const filtered = filters.chapter || filters.status || filters.q
   return <>
     <PageHeader title={title} intro={intro} actions={write && <Btn tone="primary" onClick={() => setUploading(true)}><Upload size={17} aria-hidden="true" />Tải ảnh lên</Btn>} />
-    <div className="sp-filters">
-      <div className="sp-chips" role="group" aria-label="Loại tệp">{KINDS.map(([value, label]) => <button type="button" key={value} className="sp-chip" aria-pressed={filters.kind === value} onClick={() => filter({ kind: value })}>{label}</button>)}</div>
-      <label className="sp-field">Chương<select className="sp-input" value={filters.chapter} onChange={event => filter({ chapter: event.target.value })}>
-        <option value="">Mọi chương</option>{chapters.map(draft => <option key={draft.code} value={draft.code}>{draft.code}: {draft.title}</option>)}</select></label>
-      <label className="sp-field">Trạng thái<select className="sp-input" value={filters.status} onChange={event => filter({ status: event.target.value })}>
-        <option value="">Mọi trạng thái</option>{Object.entries(STATUS).map(([key, [label]]) => <option value={key} key={key}>{label}</option>)}</select></label>
-      <form role="search" className="sp-field" onSubmit={event => { event.preventDefault(); filter({ q: search.trim() }) }}>
-        <label htmlFor="sp-asset-search">Tìm theo tên</label>
-        <div className="sp-head-actions"><input id="sp-asset-search" className="sp-input" type="search" value={search} onChange={event => setSearch(event.target.value)} placeholder="Ví dụ: phong bì" style={{ width: 220 }} /><Btn type="submit">Tìm</Btn></div>
+    {!query.loading && !query.error && <section className="sp-asset-overview" aria-label="Tổng quan kho tài nguyên">
+      <div><Images size={19} aria-hidden="true" /><span><strong>{rows.length}</strong>Tài nguyên</span></div>
+      <div><CheckCircle2 size={19} aria-hidden="true" /><span><strong>{inUseCount}</strong>Đang sử dụng</span></div>
+      <div><FolderOpen size={19} aria-hidden="true" /><span><strong>{chapterCount}</strong>Chương liên kết</span></div>
+    </section>}
+    <div className="sp-asset-toolbar">
+      <div className="sp-chips sp-asset-kinds" role="group" aria-label="Loại tệp">{KINDS.map(([value, label]) => <button type="button" key={value} className="sp-chip" aria-pressed={filters.kind === value} onClick={() => filter({ kind: value })}>{label}</button>)}</div>
+      <form role="search" className="sp-asset-search" onSubmit={event => { event.preventDefault(); filter({ q: search.trim() }) }}>
+        <Search size={18} aria-hidden="true" /><input id="sp-asset-search" type="search" value={search} onChange={event => setSearch(event.target.value)} placeholder="Tìm theo tên tài nguyên…" /><button type="submit">Tìm</button>
       </form>
+      <label className="sp-field sp-asset-filter">Chương<select className="sp-input" value={filters.chapter} onChange={event => filter({ chapter: event.target.value })}>
+        <option value="">Mọi chương</option>{chapters.map(draft => <option key={draft.code} value={draft.code}>{draft.code}: {draft.title}</option>)}</select></label>
+      <label className="sp-field sp-asset-filter">Trạng thái<select className="sp-input" value={filters.status} onChange={event => filter({ status: event.target.value })}>
+        <option value="">Mọi trạng thái</option>{Object.entries(STATUS).map(([key, [label]]) => <option value={key} key={key}>{label}</option>)}</select></label>
     </div>
     {filters.status && <p className="sp-hint" style={{ margin: '-6px 0 14px' }}>{STATUS[filters.status][0]}: {STATUS[filters.status][1]}</p>}
     {query.loading && !query.data ? <StateBox kind="loading">Đang tải ảnh…</StateBox>

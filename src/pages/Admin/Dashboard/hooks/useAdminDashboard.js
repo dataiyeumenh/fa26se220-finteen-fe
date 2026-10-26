@@ -137,25 +137,37 @@ export function useAdminAccountSearch(onFound) {
   return { loading, error, search };
 }
 
-export function useAdminRoleAccounts(reloadKey) {
+export function useAdminRoleAccounts(reloadKey, q = "", page = 0, size = 20) {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [refreshVersion, setRefreshVersion] = useState(0);
   useEffect(() => {
-    auth
-      .listAdminRoles()
+    let active = true;
+    const timer = window.setTimeout(() => {
+      setLoading(true);
+      auth
+      .listAdminAccounts({ q, page, size })
       .then((list) => {
+        if (!active) return;
         setRows(Array.isArray(list) ? list : []);
         setError("");
       })
-      .catch((loadError) =>
+      .catch((loadError) => {
+        if (!active) return;
         setError(
-          errorMessage(loadError, "Không tải được danh sách tài khoản nội bộ."),
-        ),
-      )
-      .finally(() => setLoading(false));
-  }, [reloadKey, refreshVersion]);
+          errorMessage(loadError, "Không tải được danh sách tài khoản."),
+        );
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+    }, 300);
+    return () => {
+      active = false;
+      window.clearTimeout(timer);
+    };
+  }, [page, q, reloadKey, refreshVersion, size]);
   return {
     rows,
     loading,

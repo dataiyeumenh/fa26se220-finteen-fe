@@ -301,7 +301,7 @@ test("admin API methods use the account token and documented payloads", async ()
   await auth.listAdminTransactions({ status: "PENDING", page: 1, size: 20 });
   await auth.reconcileTransaction(123);
   await auth.findAdminAccount(" Member@Example.com ");
-  await auth.listAdminRoles();
+  await auth.listAdminAccounts({ q: " member ", page: 2, size: 200 });
   await auth.listAdminRoleLogs({ subjectId: " account-1 ", page: 2, size: 50 });
   await auth.grantAdminRole({
     subjectId: " account-1 ",
@@ -328,7 +328,10 @@ test("admin API methods use the account token and documented payloads", async ()
     calls[6].url,
     /\/api\/admin\/accounts\?email=Member%40Example\.com$/,
   );
-  assert.match(calls[7].url, /\/api\/admin\/roles$/);
+  assert.match(
+    calls[7].url,
+    /\/api\/admin\/accounts\/list\?page=2&size=100&q=member$/,
+  );
   assert.match(
     calls[8].url,
     /\/api\/admin\/roles\/log\?page=2&size=50&subjectId=account-1$/,

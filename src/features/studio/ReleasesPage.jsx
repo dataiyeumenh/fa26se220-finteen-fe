@@ -1,7 +1,7 @@
 // Phát hành (kế hoạch bản sắp ra) và Lịch sử bản (chọn bản đang chạy, thu hồi).
 import { useCallback, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, History, PackageCheck, Radio } from 'lucide-react'
 import { auth } from '../../api/auth.api'
 import { canManage, canPublish } from './permissions'
 import { CHANGE_CLASS, fmtTime, studioApi } from './studioClient'
@@ -93,11 +93,17 @@ function HistoryView({ actor, notify, title, intro }) {
       : query.error ? <StateBox kind="error" title="Chưa tải được lịch sử bản" actions={<Btn onClick={query.reload}>Thử lại</Btn>}>{query.error}</StateBox>
       : !rows.length ? <StateBox title="Chưa phát hành bản nào" actions={manage && <Link className="sp-btn" to="/internal/releases">Mở màn phát hành</Link>}>Bản đầu tiên sẽ là 1.0.0, khi có chương được duyệt và phát hành.</StateBox>
       : <>
+        <section className="sp-history-overview" aria-label="Tổng quan phiên bản">
+          <div className="is-current"><Radio size={19} aria-hidden="true" /><span><small>Đang chạy</small><strong>{current?.version || '—'}</strong></span></div>
+          <div><PackageCheck size={19} aria-hidden="true" /><span><small>Mới nhất</small><strong>{newest?.version || '—'}</strong></span></div>
+          <div><History size={19} aria-hidden="true" /><span><small>Tổng phiên bản</small><strong>{rows.length}</strong></span></div>
+        </section>
         {current && newest && current.version !== newest.version && <div className="sp-consequence" style={{ marginBottom: 16 }}>
           Game đang dùng bản {current.version}, cũ hơn bản mới nhất {newest.version}. Trong lúc này chưa phát hành bản mới được. {manage && `Dùng lại ${newest.version}, hoặc thu hồi ${newest.version} nếu bản đó có lỗi.`}
         </div>}
-        <ul className="sp-releases" aria-label="Các bản đã phát hành">{rows.map(release => <li key={release.version} className={`sp-release${release.current ? ' is-current' : ''}${release.recalledAt ? ' is-recalled' : ''}`}>
-          <div className="sp-release-version">{release.version}</div>
+        <ul className="sp-releases sp-release-timeline" aria-label="Các bản đã phát hành">{rows.map(release => <li key={release.version} className={`sp-release${release.current ? ' is-current' : ''}${release.recalledAt ? ' is-recalled' : ''}`}>
+          <span className="sp-release-dot" aria-hidden="true" />
+          <div className="sp-release-version"><small>Phiên bản</small>{release.version}</div>
           <div className="sp-release-main">
             <div className="sp-release-meta">
               {release.current && <Tag tone="APPROVED">Đang chạy</Tag>}
@@ -105,8 +111,8 @@ function HistoryView({ actor, notify, title, intro }) {
               {!release.current && !release.recalledAt && release === newest && <Tag tone="info">Mới nhất</Tag>}
               <span>Phát hành {fmtTime(release.releasedAt)}</span>
               {changeLabel(release.changeClass) && <span>{changeLabel(release.changeClass)}</span>}
-              {release.chapters?.length > 0 && <span>{release.chapters.map(chapterName).join(', ')}</span>}
             </div>
+            {release.chapters?.length > 0 && <div className="sp-release-chapters">{release.chapters.map(draft => <span key={draft.code}>{chapterName(draft)}</span>)}</div>}
             {release.note && <p>{release.note}</p>}
             {release.recallReason && <p>Lý do thu hồi: {release.recallReason}</p>}
           </div>

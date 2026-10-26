@@ -25,6 +25,7 @@ export default function LearnerReportContent({ reportState }) {
   if (!report) return <Empty>Chưa có dữ liệu báo cáo.</Empty>;
   const { learner, progress, indicators } = report;
   const done = new Set(progress.chaptersDone || []);
+  const continueChapter = Number(progress.continueChapter) || null;
   const chapters = Array.from(
     { length: progress.totalChapters || 0 },
     (_, index) => ({
@@ -100,19 +101,41 @@ export default function LearnerReportContent({ reportState }) {
           </div>
         </div>
         <ol className="ws-chapter-timeline">
-          {chapters.map((chapter) => (
-            <li
-              key={chapter.number}
-              className={chapter.completed ? "is-done" : ""}
-            >
-              <strong>
-                Chương {chapter.number} · {chapter.title}
-              </strong>
-              <span>
-                {chapter.completed ? "Đã hoàn thành" : "Chưa hoàn thành"}
-              </span>
-            </li>
-          ))}
+          {chapters.map((chapter) => {
+            const isPlaying =
+              !chapter.completed && chapter.number === continueChapter;
+            const stateClass = chapter.completed
+              ? "is-done"
+              : isPlaying
+                ? "is-playing"
+                : "is-not_started";
+            const status = chapter.completed
+              ? "Đã hoàn thành"
+              : isPlaying
+                ? "Đang học"
+                : "Chưa hoàn thành";
+
+            return (
+              <li key={chapter.number} className={stateClass}>
+                <span className="ws-chapter-marker" aria-hidden="true">
+                  {chapter.completed ? (
+                    <CheckCircle2 />
+                  ) : isPlaying ? (
+                    <PlayCircle />
+                  ) : (
+                    chapter.number
+                  )}
+                </span>
+                <div className="ws-chapter-card">
+                  <div>
+                    <span>Chương {chapter.number}</span>
+                    <strong>{chapter.title}</strong>
+                  </div>
+                  <span className="ws-chapter-status">{status}</span>
+                </div>
+              </li>
+            );
+          })}
         </ol>
         <footer className="ws-progress-meta">
           {progress.lastPlayedAt
