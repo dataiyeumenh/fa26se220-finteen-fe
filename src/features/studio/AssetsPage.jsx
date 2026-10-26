@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react'
-import { CheckCircle2, Copy, FolderOpen, ImageOff, Images, Music, Search, Upload } from 'lucide-react'
+import { ArrowDownWideNarrow, CheckCircle2, Copy, FolderOpen, ImageOff, Images, ListFilter, Music, Search, Upload, X } from 'lucide-react'
 import { auth } from '../../api/auth.api'
 import { canWriteLibrary } from './permissions'
 import { fetchAssets, uploadFiles } from './assetsApi'
@@ -16,16 +16,18 @@ const STATUS = {
 }
 const WHERE = { CURRENT: 'bản đang chạy', DRAFT: 'bản nháp', OLD: 'bản cũ' }
 const nameOf = asset => asset.label || ''
+const fileNameOf = asset => (asset.ref || asset.url || '').split('?')[0].split('/').pop() || 'Chưa đặt tên'
 // Chương gắn tay, nếu không có thì lấy từ nơi đang dùng.
 const chapterOf = asset => asset.chapterCode || [...new Set((asset.usage || []).map(usage => usage.chapterCode).filter(Boolean))].join(', ')
 
 function AssetCard({ asset, onPick }) {
   const [broken, setBroken] = useState(false)
   const name = nameOf(asset)
-  return <button type="button" className="sp-asset" onClick={() => onPick(asset)} aria-label={`${name || 'Ảnh chưa đặt tên'}${chapterOf(asset) ? `, ${chapterOf(asset)}` : ''}, ${STATUS[asset.status]?.[0] || ''}`}>
-    <span className="sp-asset-img">{asset.kind === 'AUDIO' ? <Music size={36} aria-hidden="true" /> : broken ? <ImageOff size={32} aria-hidden="true" /> : <img src={asset.url} alt="" loading="lazy" onError={() => setBroken(true)} />}<span className="sp-asset-open">Xem chi tiết</span></span>
-    <span className="sp-asset-info"><strong className={name ? undefined : 'is-unnamed'}>{name || 'Chưa đặt tên'}</strong>
-      <span>{chapterOf(asset)}{asset.status && <Tag tone={asset.status}>{STATUS[asset.status]?.[0] || asset.status}</Tag>}</span></span>
+  return <button type="button" className={`sp-asset${asset.kind === 'AUDIO' ? ' is-audio' : ''}`} onClick={() => onPick(asset)} aria-label={`${name || fileNameOf(asset)}${chapterOf(asset) ? `, ${chapterOf(asset)}` : ''}, ${STATUS[asset.status]?.[0] || ''}`}>
+    <span className="sp-asset-img">{asset.kind === 'AUDIO' ? <span className="sp-asset-audio-art"><Music size={34} aria-hidden="true" /><span aria-hidden="true">▂ ▅ ▃ ▇ ▄ ▆ ▂ ▅ ▃</span></span> : broken ? <ImageOff size={32} aria-hidden="true" /> : <img src={asset.url} alt="" loading="lazy" onError={() => setBroken(true)} />}<span className="sp-asset-kind">{asset.kind === 'AUDIO' ? 'Âm thanh' : 'Ảnh'}</span><span className="sp-asset-open">{asset.kind === 'AUDIO' ? 'Nghe và xem chi tiết' : 'Xem chi tiết'}</span></span>
+    <span className="sp-asset-info"><strong title={name || fileNameOf(asset)}>{name || fileNameOf(asset)}</strong>
+      <span className="sp-asset-file-meta">{asset.kind === 'AUDIO' ? 'Bản ghi âm thanh' : asset.width && asset.height ? `${asset.width} × ${asset.height}` : 'Hình ảnh'}{asset.sizeBytes ? ` · ${Math.max(1, Math.round(asset.sizeBytes / 1024))} KB` : ''}</span>
+      <span><span className="sp-asset-chapter">{chapterOf(asset) || 'Chưa gắn chương'}</span>{asset.status && <Tag tone={asset.status}>{STATUS[asset.status]?.[0] || asset.status}</Tag>}</span></span>
   </button>
 }
 
@@ -130,44 +132,54 @@ export default function AssetsPage({ notify, title = 'Kho ảnh', intro }) {
   const [size, setSize] = useState(24)
   const [selected, setSelected] = useState(null)
   const [uploading, setUploading] = useState(false)
+  const [sort, setSort] = useState('newest')
   const write = canWriteLibrary(auth.getSnapshot().actor)
   const loader = useCallback(() => fetchAssets(filters), [filters])
   const query = useStudioResource(loader)
   const chaptersLoader = useCallback(() => studioApi.get('/api/studio/chapters'), [])
   const chapters = useStudioResource(chaptersLoader).data || []
   const rows = query.data || []
+  const sorted = [...rows].sort((a, b) => sort === 'name'
+    ? (nameOf(a) || fileNameOf(a)).localeCompare(nameOf(b) || fileNameOf(b), 'vi', { numeric: true })
+    : sort === 'size' ? (b.sizeBytes || 0) - (a.sizeBytes || 0)
+      : (Date.parse(b.createdAt) || 0) - (Date.parse(a.createdAt) || 0))
   const inUseCount = rows.filter(asset => asset.status === 'IN_USE').length
   const chapterCount = new Set(rows.flatMap(asset => chapterOf(asset).split(',').map(value => value.trim()).filter(Boolean))).size
   const activePage = Math.min(page, Math.max(0, Math.ceil(rows.length / size) - 1))
   const filter = patch => { setFilters(value => ({ ...value, ...patch })); setPage(0) }
   const filtered = filters.chapter || filters.status || filters.q
-  return <>
-    <PageHeader title={title} intro={intro} actions={write && <Btn tone="primary" onClick={() => setUploading(true)}><Upload size={17} aria-hidden="true" />Tải ảnh lên</Btn>} />
+  const resetFilters = () => { setSearch(''); filter({ chapter: '', status: '', q: '' }) }
+  return <div className="sp-library-page">
+    <PageHeader className="sp-chapter-page-head" title={title} intro={intro || 'Quản lý hình ảnh và âm thanh dùng trong các chương. Chọn tài nguyên để xem trước và kiểm tra nơi sử dụng.'} actions={write && <Btn tone="primary" onClick={() => setUploading(true)}><Upload size={17} aria-hidden="true" />Tải ảnh lên</Btn>} />
     {!query.loading && !query.error && <section className="sp-asset-overview" aria-label="Tổng quan kho tài nguyên">
-      <div><Images size={19} aria-hidden="true" /><span><strong>{rows.length}</strong>Tài nguyên</span></div>
-      <div><CheckCircle2 size={19} aria-hidden="true" /><span><strong>{inUseCount}</strong>Đang sử dụng</span></div>
-      <div><FolderOpen size={19} aria-hidden="true" /><span><strong>{chapterCount}</strong>Chương liên kết</span></div>
+      <div><Images size={21} aria-hidden="true" /><span><small>{filtered ? 'Khớp bộ lọc' : filters.kind === 'AUDIO' ? 'Tệp âm thanh' : 'Tệp hình ảnh'}</small><strong>{rows.length}</strong></span></div>
+      <div><CheckCircle2 size={21} aria-hidden="true" /><span><small>Đang dùng trong game</small><strong>{inUseCount}</strong></span></div>
+      <div><FolderOpen size={21} aria-hidden="true" /><span><small>Chương trong kết quả</small><strong>{chapterCount}</strong></span></div>
     </section>}
+    <section className="sp-library-filters" aria-label="Bộ lọc tài nguyên">
+      <div className="sp-library-filter-head"><div className="sp-chips sp-asset-kinds" role="group" aria-label="Loại tệp">{KINDS.map(([value, label]) => <button type="button" key={value} className="sp-chip" aria-pressed={filters.kind === value} onClick={() => filter({ kind: value })}>{value === 'AUDIO' ? <Music size={17} aria-hidden="true" /> : <Images size={17} aria-hidden="true" />}{label}</button>)}</div><span><ListFilter size={15} aria-hidden="true" />Lọc tài nguyên</span></div>
     <div className="sp-asset-toolbar">
-      <div className="sp-chips sp-asset-kinds" role="group" aria-label="Loại tệp">{KINDS.map(([value, label]) => <button type="button" key={value} className="sp-chip" aria-pressed={filters.kind === value} onClick={() => filter({ kind: value })}>{label}</button>)}</div>
       <form role="search" className="sp-asset-search" onSubmit={event => { event.preventDefault(); filter({ q: search.trim() }) }}>
-        <Search size={18} aria-hidden="true" /><input id="sp-asset-search" type="search" value={search} onChange={event => setSearch(event.target.value)} placeholder="Tìm theo tên tài nguyên…" /><button type="submit">Tìm</button>
+        <Search size={18} aria-hidden="true" /><input id="sp-asset-search" aria-label="Tìm tài nguyên theo tên" type="search" value={search} onChange={event => setSearch(event.target.value)} placeholder="Nhập tên tài nguyên…" /><button type="submit">Tìm kiếm</button>
       </form>
       <label className="sp-field sp-asset-filter">Chương<select className="sp-input" value={filters.chapter} onChange={event => filter({ chapter: event.target.value })}>
         <option value="">Mọi chương</option>{chapters.map(draft => <option key={draft.code} value={draft.code}>{draft.code}: {draft.title}</option>)}</select></label>
       <label className="sp-field sp-asset-filter">Trạng thái<select className="sp-input" value={filters.status} onChange={event => filter({ status: event.target.value })}>
         <option value="">Mọi trạng thái</option>{Object.entries(STATUS).map(([key, [label]]) => <option value={key} key={key}>{label}</option>)}</select></label>
     </div>
-    {filters.status && <p className="sp-hint" style={{ margin: '-6px 0 14px' }}>{STATUS[filters.status][0]}: {STATUS[filters.status][1]}</p>}
-    {query.loading && !query.data ? <StateBox kind="loading">Đang tải ảnh…</StateBox>
-      : query.error ? <StateBox kind="error" title="Chưa tải được kho ảnh" actions={<Btn onClick={query.reload}>Thử lại</Btn>}>{query.error}</StateBox>
+    {filtered && <div className="sp-library-active-filters"><span>Đang lọc:</span>{filters.chapter && <button type="button" onClick={() => filter({ chapter: '' })}>Chương {filters.chapter}<X size={13} aria-hidden="true" /><span className="sr-only">Bỏ lọc chương</span></button>}{filters.status && <button type="button" onClick={() => filter({ status: '' })}>{STATUS[filters.status][0]}<X size={13} aria-hidden="true" /><span className="sr-only">Bỏ lọc trạng thái</span></button>}{filters.q && <button type="button" onClick={() => { setSearch(''); filter({ q: '' }) }}>“{filters.q}”<X size={13} aria-hidden="true" /><span className="sr-only">Bỏ từ khóa</span></button>}<button type="button" className="sp-library-reset" onClick={resetFilters}>Xóa bộ lọc</button></div>}
+    {filters.status && <p className="sp-hint">{STATUS[filters.status][0]}: {STATUS[filters.status][1]}</p>}
+    </section>
+    <div className="sp-library-results"><h2>{filters.kind === 'AUDIO' ? 'Thư viện âm thanh' : 'Thư viện hình ảnh'} <span aria-live="polite">{query.loading ? 'Đang tải…' : `${rows.length} tài nguyên`}</span></h2><label><ArrowDownWideNarrow size={16} aria-hidden="true" /><select aria-label="Sắp xếp tài nguyên" value={sort} onChange={event => { setSort(event.target.value); setPage(0) }}><option value="newest">Mới nhất trước</option><option value="name">Tên A → Z</option><option value="size">Dung lượng lớn nhất</option></select></label></div>
+    {query.loading ? <StateBox kind="loading">Đang tải tài nguyên…</StateBox>
+      : query.error ? <StateBox kind="error" title="Chưa tải được kho tài nguyên" actions={<Btn onClick={query.reload}>Thử lại</Btn>}>{query.error}</StateBox>
       : <>
-        <div role="region" aria-label="Danh sách ảnh"><AssetGrid rows={rows.slice(activePage * size, (activePage + 1) * size)} onPick={setSelected}
-          empty={<StateBox title={filtered ? 'Không có ảnh khớp bộ lọc' : 'Kho chưa có ảnh nào'} actions={filtered ? <Btn onClick={() => { setSearch(''); filter({ chapter: '', status: '', q: '' }) }}>Bỏ lọc</Btn> : write && <Btn tone="primary" onClick={() => setUploading(true)}>Tải ảnh lên</Btn>}>
-            {filtered ? 'Thử chọn chương khác hoặc bỏ bớt điều kiện lọc.' : 'Ảnh tải lên sẽ hiện ở đây để dùng trong các chương.'}</StateBox>} /></div>
-        {rows.length > 0 && <Pagination total={rows.length} page={activePage} size={size} sizes={[24, 48, 96]} onPage={setPage} onSize={value => { setSize(value); setPage(0) }} noun="ảnh" />}
+        <div role="region" aria-label="Danh sách tài nguyên"><AssetGrid rows={sorted.slice(activePage * size, (activePage + 1) * size)} onPick={setSelected}
+          empty={<StateBox title={filtered ? 'Không có tài nguyên khớp bộ lọc' : 'Chưa có tài nguyên loại này'} actions={filtered ? <Btn onClick={resetFilters}>Xóa bộ lọc</Btn> : filters.kind === 'IMAGE' && write && <Btn tone="primary" onClick={() => setUploading(true)}>Tải ảnh lên</Btn>}>
+            {filtered ? 'Thử từ khóa khác hoặc bỏ bớt điều kiện lọc.' : filters.kind === 'AUDIO' ? 'Các bản ghi âm thanh sẽ xuất hiện tại đây khi được thêm vào kho.' : 'Tải hình ảnh lên để bắt đầu xây dựng nội dung cho các chương.'}</StateBox>} /></div>
+        {rows.length > 0 && <Pagination total={rows.length} page={activePage} size={size} sizes={[24, 48, 96]} onPage={setPage} onSize={value => { setSize(value); setPage(0) }} noun="tài nguyên" />}
       </>}
     {uploading && <StudioDialog title="Tải ảnh lên kho" onClose={() => setUploading(false)}><UploadForm notify={notify} chapter={filters.chapter} onCancel={() => setUploading(false)} onDone={() => { setUploading(false); query.reload() }} /></StudioDialog>}
     {selected && <AssetDetail asset={selected} notify={notify} onClose={() => setSelected(null)} onChanged={() => { setSelected(null); query.reload() }} />}
-  </>
+  </div>
 }
