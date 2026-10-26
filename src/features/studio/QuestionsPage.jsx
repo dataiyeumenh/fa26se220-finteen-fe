@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react'
-import { Check, Plus, X } from 'lucide-react'
+import { Archive, Check, CircleHelp, LibraryBig, Plus, Search, X } from 'lucide-react'
 import { auth } from '../../api/auth.api'
 import { canWriteLibrary } from './permissions'
 import { studioApi } from './studioClient'
@@ -65,37 +65,47 @@ export default function QuestionsPage({ notify, title = 'Kho câu hỏi', intro 
   const query = useStudioResource(loader)
   const { busy, run, error, clearError } = useStudioAction(notify)
   const rows = query.data || []
+  const activeCount = rows.filter(question => !question.retiredAt).length
+  const poolCount = new Set(rows.map(question => question.pool).filter(Boolean)).size
   const activePage = Math.min(page, Math.max(0, Math.ceil(rows.length / size) - 1))
   const filtered = Object.entries(filters).some(([key, value]) => value && key !== 'includeRetired')
   const toggle = question => void run(() => studioApi.post(`/api/studio/questions/${encodeURIComponent(question.id)}/${question.retiredAt ? 'restore' : 'retire'}`),
     question.retiredAt ? 'Đã khôi phục câu hỏi.' : 'Đã ngừng dùng câu hỏi.', () => { setRetiring(null); query.reload() })
   return <>
     <PageHeader title={title} intro={intro} actions={write && <Btn tone="primary" disabled={busy} onClick={() => setEditing(null)}><Plus size={17} aria-hidden="true" />Thêm câu hỏi</Btn>} />
-    <form className="sp-filters" role="search" onSubmit={event => { event.preventDefault(); setFilters(Object.fromEntries(new FormData(event.currentTarget))); setPage(0) }}>
-      <label className="sp-field">Tìm trong câu hỏi<input className="sp-input" name="q" type="search" placeholder="Ví dụ: tiết kiệm" style={{ width: 240 }} /></label>
-      <label className="sp-field">Chương<input className="sp-input" name="chapter" type="number" min={1} style={{ width: 96 }} /></label>
-      <details className="sp-more"><summary>Lọc thêm</summary><div className="sp-head-actions">
-        {[['pool', 'Kho'], ['standard', 'Chuẩn'], ['concept', 'Khái niệm']].map(([key, label]) => <label className="sp-field" key={key}>{label}<input className="sp-input" name={key} style={{ width: 140 }} /></label>)}
+    {!query.loading && !query.error && <section className="sp-question-overview" aria-label="Tổng quan kho câu hỏi">
+      <div><CircleHelp size={19} aria-hidden="true" /><span><strong>{rows.length}</strong>Kết quả</span></div>
+      <div><Check size={19} aria-hidden="true" /><span><strong>{activeCount}</strong>Đang sử dụng</span></div>
+      <div><LibraryBig size={19} aria-hidden="true" /><span><strong>{poolCount}</strong>Nhóm câu hỏi</span></div>
+    </section>}
+    <form className="sp-question-filters" role="search" onSubmit={event => { event.preventDefault(); setFilters(Object.fromEntries(new FormData(event.currentTarget))); setPage(0) }}>
+      <label className="sp-question-search"><Search size={18} aria-hidden="true" /><input name="q" type="search" placeholder="Tìm nội dung câu hỏi…" /></label>
+      <label className="sp-field sp-question-chapter"><span>Chương</span><input className="sp-input" name="chapter" type="number" min={1} placeholder="Tất cả" /></label>
+      <details className="sp-more sp-question-more"><summary>Lọc nâng cao</summary><div className="sp-question-more-grid">
+        {[['pool', 'Kho'], ['standard', 'Chuẩn'], ['concept', 'Khái niệm']].map(([key, label]) => <label className="sp-field" key={key}>{label}<input className="sp-input" name={key} /></label>)}
+        <label className="sp-check"><input name="includeRetired" type="checkbox" value="true" />Hiện câu đã ngừng dùng</label>
       </div></details>
-      <label className="sp-check"><input name="includeRetired" type="checkbox" value="true" />Hiện cả câu đã ngừng dùng</label>
-      <Btn type="submit">Lọc</Btn>
+      <Btn type="submit" tone="primary">Áp dụng</Btn>
     </form>
     {query.loading && !query.data ? <StateBox kind="loading">Đang tải câu hỏi…</StateBox>
       : query.error ? <StateBox kind="error" title="Chưa tải được kho câu hỏi" actions={<Btn onClick={query.reload}>Thử lại</Btn>}>{query.error}</StateBox>
       : !rows.length ? <StateBox title={filtered ? 'Không có câu hỏi khớp bộ lọc' : 'Kho chưa có câu hỏi nào'} actions={write && !filtered && <Btn tone="primary" onClick={() => setEditing(null)}>Thêm câu hỏi</Btn>}>
           {filtered ? 'Thử từ khoá khác, hoặc xoá bớt điều kiện lọc rồi bấm Lọc.' : 'Câu hỏi thêm vào sẽ dùng được cho bài kiểm tra của giáo viên.'}</StateBox>
       : <>
-        <div className="sp-scroll" tabIndex={0} role="region" aria-label="Danh sách câu hỏi"><table className="sp-table"><thead><tr><th>Câu hỏi và đáp án</th>{write && <th><span className="sr-only">Thao tác</span></th>}</tr></thead><tbody>
-          {rows.slice(activePage * size, (activePage + 1) * size).map(question => <tr key={question.id} className={question.retiredAt ? 'is-retired' : undefined}>
-            <td><p className="sp-q-stem">{question.stem}</p>
+        <div className="sp-question-list" role="region" aria-label="Danh sách câu hỏi">
+          {rows.slice(activePage * size, (activePage + 1) * size).map((question, index) => <article key={question.id} className={`sp-question-card${question.retiredAt ? ' is-retired' : ''}`}>
+            <header className="sp-question-card-head"><span className="sp-question-index">{String(activePage * size + index + 1).padStart(2, '0')}</span><p className="sp-q-stem">{question.stem}</p>
+              {question.retiredAt ? <Tag tone="REJECTED">Đã ngừng dùng</Tag> : <Tag tone="APPROVED">Đang dùng</Tag>}
+            </header>
               <ol className="sp-q-options">{question.options?.map((option, index) => <li key={index} className={index === question.correctIndex ? 'is-correct' : undefined}>
                 <b>{LETTERS[index]}.</b>{option}{index === question.correctIndex && <><Check size={16} aria-hidden="true" /><span className="sr-only">(đáp án đúng)</span></>}</li>)}</ol>
-              <div className="sp-q-meta">{question.retiredAt && <Tag tone="REJECTED">Đã ngừng dùng</Tag>}<span>Mã {question.externalId || question.id}</span><span>Kho {question.pool}</span><span>{question.chapter ? `Chương ${question.chapter}` : 'Dùng chung'}</span>
-                {question.standard && <span>Chuẩn {question.standard}</span>}{question.concept && <span>Khái niệm {question.concept}</span>}</div></td>
-            {write && <td style={{ width: 150 }}><div className="sp-q-actions"><Btn disabled={busy} onClick={() => setEditing(question)}>Sửa</Btn>
-              {question.retiredAt ? <Btn disabled={busy} onClick={() => toggle(question)}>Khôi phục</Btn> : <Btn tone="danger" disabled={busy} onClick={() => { clearError(); setRetiring(question) }}>Ngừng dùng</Btn>}</div></td>}
-          </tr>)}
-        </tbody></table></div>
+            <footer className="sp-question-card-foot"><div className="sp-q-meta"><span>#{question.externalId || question.id}</span><span>{question.pool}</span><span>{question.chapter ? `Chương ${question.chapter}` : 'Dùng chung'}</span>
+              {question.standard && <span>{question.standard}</span>}{question.concept && <span>{question.concept}</span>}</div>
+              {write && <div className="sp-q-actions"><Btn disabled={busy} onClick={() => setEditing(question)}>Chỉnh sửa</Btn>
+                {question.retiredAt ? <Btn disabled={busy} onClick={() => toggle(question)}>Khôi phục</Btn> : <Btn tone="quiet" disabled={busy} onClick={() => { clearError(); setRetiring(question) }}><Archive size={15} aria-hidden="true" />Ngừng dùng</Btn>}</div>}
+            </footer>
+          </article>)}
+        </div>
         <Pagination total={rows.length} page={activePage} size={size} sizes={[10, 20, 50]} onPage={setPage} onSize={value => { setSize(value); setPage(0) }} noun="câu hỏi" />
       </>}
     {editing !== undefined && write && <QuestionForm key={editing?.id || 'new'} question={editing} notify={notify} onClose={() => setEditing(undefined)} onSaved={() => { setEditing(undefined); query.reload() }} />}

@@ -28,8 +28,8 @@ export function Panel({ title, actions, className, children }) {
 }
 
 /** Đầu màn: tên màn, một câu nói màn để làm gì, nút chính bên phải. */
-export function PageHeader({ title, intro, actions }) {
-  return <header className="sp-head">
+export function PageHeader({ title, intro, actions, className }) {
+  return <header className={cn('sp-head', className)}>
     <div><h1>{title}</h1>{intro && <p>{intro}</p>}</div>
     {actions && <div className="sp-head-actions">{actions}</div>}
   </header>

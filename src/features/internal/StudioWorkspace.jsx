@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { Link, NavLink, Navigate, useLocation } from 'react-router-dom'
-import { BookOpen, CheckCheck, ChevronRight, Image, History, LayoutDashboard, Layers3, LogOut, PenLine, Rocket, ShieldCheck } from 'lucide-react'
+import { ArrowLeft, BookOpen, CheckCheck, ChevronRight, Image, History, LayoutDashboard, Layers3, LogOut, PenLine, Rocket, Sparkles } from 'lucide-react'
 import { auth } from '../../api/auth.api'
 import ChaptersPage from '../studio/ChaptersPage'
 import EditorPage from '../studio/EditorPage'
@@ -33,6 +33,8 @@ export default function StudioWorkspace({ actor }) {
   const chapters = useStudioResource(loader).data
   const count = turn => (Array.isArray(chapters) ? chapters : []).filter(draft => turnOf(actor, draft) === turn).length
   const counts = { review: count('review'), release: count('publish') }
+  const isAdmin = actor.roles.includes('ADMIN')
+  const pageTitle = editorCode ? `Trình soạn ${editorCode}` : current?.title || 'Tổng quan'
   if (pathname !== '/internal' && pathname !== '/internal/' && !current) return <Navigate to="/internal" replace />
   const name = actor.displayName || actor.name || actor.email
   const pageProps = { notify, title: current?.title, intro: current?.description }
@@ -41,17 +43,29 @@ export default function StudioWorkspace({ actor }) {
       <Link className="studio-brand" to="/internal" aria-label="FinTeen Studio, về Tổng quan"><span><Layers3 size={22} aria-hidden="true" /></span><div>FinTeen<small>Studio nội dung</small></div></Link>
       <div className="studio-profile"><span aria-hidden="true">{name.slice(0, 1).toUpperCase()}</span><div><strong title={name}>{name}</strong><small>{actor.roles.map(role => ROLE_LABELS[role]).filter(Boolean).join(', ')}</small></div></div>
       <nav aria-label="Điều hướng Studio">
-        <NavLink end to="/internal" title="Tổng quan"><LayoutDashboard size={19} aria-hidden="true" />Tổng quan</NavLink>
+        <p className="studio-nav-group-label studio-nav-group-first">Không gian làm việc</p>
+        <NavLink end to={isAdmin ? '/internal/admin' : '/internal'} title={isAdmin ? 'Quay lại Admin' : 'Tổng quan'}>
+          {isAdmin ? <ArrowLeft size={19} aria-hidden="true" /> : <LayoutDashboard size={19} aria-hidden="true" />}
+          {isAdmin ? 'Quay lại Admin' : 'Tổng quan'}
+        </NavLink>
         {primary.map(({ path, title, icon }) => <NavLink key={path} to={path} title={title} className={editorCode && path === '/internal/chapters' ? 'active' : undefined}>
           <MenuIcon name={icon} />{title}{counts[icon] > 0 && <span className="sp-nav-count" aria-label={`${counts[icon]} chương chờ bạn`}>{counts[icon]}</span>}
         </NavLink>)}
         <p className="studio-nav-group-label">Thư viện dùng chung</p>
         {shared.map(({ path, title, icon }) => <NavLink key={path} to={path} title={title}><MenuIcon name={icon} />{title}</NavLink>)}
-        {actor.roles.includes('ADMIN') && <Link to="/internal/admin" title="Quản trị hệ thống"><ShieldCheck size={19} aria-hidden="true" />Quản trị hệ thống</Link>}
       </nav>
       <div className="studio-sidebar-bottom"><button type="button" title="Đăng xuất" onClick={() => auth.logout()}><LogOut size={18} aria-hidden="true" />Đăng xuất</button></div>
     </aside>
     <div className="studio-main">
+      <header className="studio-global-header">
+        <div className="studio-header-title">
+          <strong>Content Studio</strong>
+          <span>/ {pageTitle}</span>
+        </div>
+        <div className="studio-header-meta">
+          <span className="studio-role-pill"><Sparkles size={15} aria-hidden="true" />{isAdmin ? 'Quản trị viên' : 'Thành viên Studio'}</span>
+        </div>
+      </header>
       {editorCode && <nav className="studio-topbar" aria-label="Vị trí"><Link to="/internal/chapters">{current?.title || 'Chương'}</Link><ChevronRight size={14} aria-hidden="true" /><strong>{editorCode}</strong></nav>}
       <main className={`studio-content${editorCode ? ' studio-content-editor' : ''}`}>
         {editorCode ? <div className="studio-api-content"><EditorPage key={editorCode} code={editorCode} notify={notify} /></div>

@@ -225,7 +225,7 @@
 .ws .ws-progress-score span { margin-top:5px;color:var(--ds-muted);font-size:10px;font-weight:700;text-transform:uppercase; }
 .ws .ws-progress-track { height:12px;margin:22px 0 14px;overflow:hidden;border-radius:999px;background:#e8edf3; }
 .ws .ws-progress-track>span { display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--page-primary),var(--page-accent-text));transition:width .35s ease; }
-.ws .ws-progress-summary { display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:28px; }
+.ws .ws-progress-summary { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:28px; }
 .ws .ws-progress-summary>div { display:flex;align-items:center;gap:9px;padding:11px 13px;border:1px solid var(--ds-border);border-radius:12px;background:#fff;color:#64748b;font-size:12px; }
 .ws .ws-progress-summary svg { width:18px;color:var(--page-accent-text); }
 .ws .ws-progress-summary strong { color:var(--ds-text);font-size:15px; }

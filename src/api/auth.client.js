@@ -234,6 +234,14 @@ export function createAuthClient({ baseUrl, storage, contextStorage = storage, f
     findAdminAccount: email => request(`/api/admin/accounts?email=${encodeURIComponent(email.trim())}`, {
       authenticated: true,
     }),
+    listAdminAccounts: ({ q = '', page = 0, size = 20 } = {}) => {
+      const query = new URLSearchParams({
+        page: String(Math.max(0, Number(page) || 0)),
+        size: String(Math.min(100, Math.max(1, Number(size) || 20))),
+      })
+      if (q.trim()) query.set('q', q.trim())
+      return request(`/api/admin/accounts/list?${query}`, { authenticated: true })
+    },
     listAdminRoles: () => request('/api/admin/roles', { authenticated: true }),
     listAdminRoleLogs: ({ subjectId = '', page = 0, size = 50 } = {}) => {
       const query = new URLSearchParams({ page: String(page), size: String(size) })

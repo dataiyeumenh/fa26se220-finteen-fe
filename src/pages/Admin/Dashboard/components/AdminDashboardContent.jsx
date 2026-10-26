@@ -484,23 +484,24 @@ function InternalAccounts({
 }) {
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState("");
-  const { rows, loading, error, reload } = useAdminRoleAccounts(reloadKey);
-  const keyword = search.trim().toLowerCase();
+  const [page, setPage] = useState(0);
+  const size = 20;
+  const { rows, loading, error, reload } = useAdminRoleAccounts(
+    reloadKey,
+    search.trim(),
+    page,
+    size,
+  );
   const visibleRows = rows.filter((row) => {
-    const matchesSearch =
-      !keyword ||
-      `${row.displayName || ""} ${row.email || ""}`
-        .toLowerCase()
-        .includes(keyword);
     const matchesRole = !roleFilter || row.roles?.includes(roleFilter);
-    return matchesSearch && matchesRole;
+    return matchesRole;
   });
   return (
     <section className="admin-card admin-table-card admin-section">
       <div className="admin-section-heading">
         <div>
           <div className="admin-section-title">
-            <h2>Tài khoản có vai trò nội bộ</h2>
+            <h2>Tất cả tài khoản</h2>
             <span>{rows.length}</span>
           </div>
           <p>Chọn một tài khoản để xem, cấp hoặc thu hồi vai trò.</p>
@@ -522,7 +523,10 @@ function InternalAccounts({
             Tìm trong danh sách
             <input
               value={search}
-              onChange={(event) => setSearch(event.target.value)}
+              onChange={(event) => {
+                setSearch(event.target.value);
+                setPage(0);
+              }}
               placeholder="Tên hoặc email"
             />
           </label>
@@ -547,6 +551,7 @@ function InternalAccounts({
               onClick={() => {
                 setSearch("");
                 setRoleFilter("");
+                setPage(0);
               }}
             >
               Xóa bộ lọc
@@ -626,9 +631,26 @@ function InternalAccounts({
         <div className="admin-empty">
           {rows.length
             ? "Không có tài khoản phù hợp bộ lọc."
-            : "Chưa có tài khoản nào giữ vai trò nội bộ."}
+            : "Không có tài khoản nào trong trang này."}
         </div>
       )}
+      <div className="admin-pagination">
+        <button
+          className="admin-secondary"
+          disabled={loading || page === 0}
+          onClick={() => setPage((value) => Math.max(0, value - 1))}
+        >
+          ← Trang trước
+        </button>
+        <span>Trang {page + 1}</span>
+        <button
+          className="admin-secondary"
+          disabled={loading || rows.length < size}
+          onClick={() => setPage((value) => value + 1)}
+        >
+          Trang sau →
+        </button>
+      </div>
     </section>
   );
 }
@@ -670,8 +692,7 @@ function RolesTab({ actor }) {
           <span>QUẢN LÝ TRUY CẬP</span>
           <h1>Phân quyền tài khoản</h1>
           <p>
-            Danh sách người đang giữ vai trò nội bộ ở ngay dưới; muốn cấp cho
-            người mới thì tìm chính xác bằng email.
+            Tìm và chọn bất kỳ tài khoản nào để cấp hoặc thu hồi vai trò.
           </p>
         </div>
       </header>
@@ -681,16 +702,6 @@ function RolesTab({ actor }) {
         reloadKey={listVersion}
         disabled={busy}
       />
-      <section className="admin-account-lookup">
-        <div>
-          <h2>Cấp quyền cho tài khoản khác</h2>
-          <p>
-            Tài khoản chưa có vai trò nội bộ sẽ không xuất hiện trong danh sách
-            bên trên. Hãy tìm bằng email chính xác.
-          </p>
-        </div>
-        <AccountSearch onFound={chooseAccount} disabled={busy} />
-      </section>
       {!account && <Notice type={notice?.type}>{notice?.text}</Notice>}
       {account && (
         <div
