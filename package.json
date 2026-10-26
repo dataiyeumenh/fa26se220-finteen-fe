@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "audit:assets": "node scripts/audit-production-assets.mjs",
     "lint": "eslint .",
     "test:workspace": "node --test tests/workspace-*.test.mjs",
     "test:internal": "node --test tests/internal-*.test.mjs",
