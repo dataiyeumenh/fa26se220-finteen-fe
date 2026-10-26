@@ -67,7 +67,7 @@ function VoiceHints({ hints, scenes, write, onAccept, onDrop, onOpen, onClose })
   </Panel>
 }
 
-export default function EditorPage({ notify, code }) {
+export default function EditorPage({ notify, code, onNavigationStateChange }) {
   const [search, setSearch] = useSearchParams()
   const [meta, setMeta] = useState(null)
   const [content, setContent] = useState(null)
@@ -86,6 +86,10 @@ export default function EditorPage({ notify, code }) {
   const [dialog, setDialog] = useState(null)
   const lastEdit = useRef({ key: null, at: 0 })
   const { busy, run } = useStudioAction(notify)
+  useEffect(() => {
+    onNavigationStateChange?.({ dirty, busy })
+    return () => onNavigationStateChange?.({ dirty: false, busy: false })
+  }, [dirty, busy, onNavigationStateChange])
   const write = canEdit(auth.getSnapshot().actor) && meta?.status !== 'SUBMITTED'
   const schemaLoader = useCallback(() => studioApi.get('/api/studio/scene-schema'), [])
   const schemaQuery = useStudioResource(schemaLoader)

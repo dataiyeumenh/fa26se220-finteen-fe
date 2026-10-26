@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import { Link, NavLink, Navigate, useLocation } from 'react-router-dom'
 import { ArrowLeft, BookOpen, CheckCheck, ChevronRight, Image, History, LayoutDashboard, Layers3, LogOut, PenLine, Rocket, Sparkles } from 'lucide-react'
 import { auth } from '../../api/auth.api'
@@ -19,8 +19,11 @@ const menuIcons = { chapter: PenLine, review: CheckCheck, release: Rocket, histo
 
 function MenuIcon({ name }) { const Icon = menuIcons[name]; return <Icon size={19} aria-hidden="true" /> }
 
+function ViewBadge() { return <span className="studio-view-badge">Chỉ xem</span> }
+
 export default function StudioWorkspace({ actor }) {
   const { pathname } = useLocation()
+  const [editorNavigation, setEditorNavigation] = useState({ dirty: false, busy: false })
   const { notify, view } = useToast()
   const roleChoices = ['GAME_EDITOR', 'GAME_REVIEWER', 'GAME_MANAGER'].filter(role => actor.roles.includes('ADMIN') || actor.roles.includes(role))
   const available = getStudioMenu(actor)
@@ -48,11 +51,11 @@ export default function StudioWorkspace({ actor }) {
           {isAdmin ? <ArrowLeft size={19} aria-hidden="true" /> : <LayoutDashboard size={19} aria-hidden="true" />}
           {isAdmin ? 'Quay lại Admin' : 'Tổng quan'}
         </NavLink>
-        {primary.map(({ path, title, icon }) => <NavLink key={path} to={path} title={title} className={editorCode && path === '/internal/chapters' ? 'active' : undefined}>
-          <MenuIcon name={icon} />{title}{counts[icon] > 0 && <span className="sp-nav-count" aria-label={`${counts[icon]} chương chờ bạn`}>{counts[icon]}</span>}
+        {primary.map(({ path, title, icon, readOnly }) => <NavLink key={path} to={path} title={`${title}${readOnly ? ' · Chỉ xem' : ''}`} className={editorCode && path === '/internal/chapters' ? 'active' : undefined}>
+          <MenuIcon name={icon} /><span className="studio-menu-label">{title}</span>{readOnly && <ViewBadge />}{counts[icon] > 0 && <span className="sp-nav-count" aria-label={`${counts[icon]} chương chờ bạn`}>{counts[icon]}</span>}
         </NavLink>)}
         <p className="studio-nav-group-label">Thư viện dùng chung</p>
-        {shared.map(({ path, title, icon }) => <NavLink key={path} to={path} title={title}><MenuIcon name={icon} />{title}</NavLink>)}
+        {shared.map(({ path, title, icon, readOnly }) => <NavLink key={path} to={path} title={`${title}${readOnly ? ' · Chỉ xem' : ''}`}><MenuIcon name={icon} /><span className="studio-menu-label">{title}</span>{readOnly && <ViewBadge />}</NavLink>)}
       </nav>
       <div className="studio-sidebar-bottom"><button type="button" title="Đăng xuất" onClick={() => auth.logout()}><LogOut size={18} aria-hidden="true" />Đăng xuất</button></div>
     </aside>
@@ -63,12 +66,13 @@ export default function StudioWorkspace({ actor }) {
           <span>/ {pageTitle}</span>
         </div>
         <div className="studio-header-meta">
+          {current?.readOnly && <span className="studio-view-mode">Chỉ xem</span>}
           <span className="studio-role-pill"><Sparkles size={15} aria-hidden="true" />{isAdmin ? 'Quản trị viên' : 'Thành viên Studio'}</span>
         </div>
       </header>
-      {editorCode && <nav className="studio-topbar" aria-label="Vị trí"><Link to="/internal/chapters">{current?.title || 'Chương'}</Link><ChevronRight size={14} aria-hidden="true" /><strong>{editorCode}</strong></nav>}
+      {editorCode && <nav className="studio-topbar" aria-label="Vị trí"><Link className="scene-editor-back" to="/internal/chapters" onClick={event => { if (editorNavigation.busy || (editorNavigation.dirty && !window.confirm('Bạn có thay đổi chưa lưu. Quay về danh sách chương và bỏ các thay đổi này?'))) event.preventDefault() }}><ArrowLeft size={16} aria-hidden="true" />Danh sách chương</Link><ChevronRight size={14} aria-hidden="true" /><strong>{editorCode}</strong></nav>}
       <main className={`studio-content${editorCode ? ' studio-content-editor' : ''}`}>
-        {editorCode ? <div className="studio-api-content"><EditorPage key={editorCode} code={editorCode} notify={notify} /></div>
+        {editorCode ? <div className="studio-api-content"><EditorPage key={editorCode} code={editorCode} notify={notify} onNavigationStateChange={setEditorNavigation} /></div>
           : !current ? <RoleOverview actor={actor} name={name} roles={roleChoices} />
           : pathname === '/internal/assets' ? <AssetsPage {...pageProps} />
           : pathname === '/internal/releases' ? <ReleasesPage key={pathname} {...pageProps} mode="plan" />

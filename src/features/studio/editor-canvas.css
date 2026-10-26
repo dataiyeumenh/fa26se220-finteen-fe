@@ -35,6 +35,10 @@
 .scene-editor .scene-icon-button { width: 36px; padding: 0; }
 
 .scene-editor-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding: 12px 20px; border-bottom: 1px solid var(--line); }
+.scene-editor-back { display: inline-flex; align-items: center; gap: 5px; padding: 8px 10px; border: 1px solid #d8e3df; border-radius: 8px; color: #315b4e; font-size: 13px; text-decoration: none; }
+.scene-editor-back:hover { background: #eef6f2; }
+.scene-editor-back:focus-visible { outline: 2px solid #168361; outline-offset: 3px; }
+.scene-editor-document { flex: 1; min-width: 180px; }
 .scene-editor .scene-editor-document h1 { font-size: 18px; font-weight: 650; margin: 0; letter-spacing: 0; }
 .scene-editor-document p { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 4px 0 0; font-size: 13px; color: var(--muted); }
 .scene-editor-document-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
