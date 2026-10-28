@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 import {
   BadgeDollarSign,
   BookOpen,
@@ -29,7 +29,7 @@ import useAdminDashboard, {
 } from "../hooks/useAdminDashboard";
 import "../styles/admin.css";
 import "../styles/admin-modern.css";
-import AiKeysPage from '../../../../features/studio/AiKeysPage';
+import AiKeysPage from "../../../../features/studio/AiKeysPage";
 
 const PLAN_KINDS = ["PARENT", "TEACHER"];
 const STATUS_LABELS = {
@@ -691,9 +691,7 @@ function RolesTab({ actor }) {
         <div>
           <span>QUẢN LÝ TRUY CẬP</span>
           <h1>Phân quyền tài khoản</h1>
-          <p>
-            Tìm và chọn bất kỳ tài khoản nào để cấp hoặc thu hồi vai trò.
-          </p>
+          <p>Tìm và chọn bất kỳ tài khoản nào để cấp hoặc thu hồi vai trò.</p>
         </div>
       </header>
       <InternalAccounts
@@ -740,15 +738,25 @@ function RolesTab({ actor }) {
                     ref={reasonRef}
                     value={reason}
                     onChange={(event) => setReason(event.target.value)}
-                    aria-invalid={notice?.type === "error" && !reason.trim() ? true : undefined}
-                    aria-describedby={notice && !pending ? "role-change-notice" : undefined}
+                    aria-invalid={
+                      notice?.type === "error" && !reason.trim()
+                        ? true
+                        : undefined
+                    }
+                    aria-describedby={
+                      notice && !pending ? "role-change-notice" : undefined
+                    }
                     maxLength="255"
                     required
                     placeholder="Ghi rõ lý do cấp hoặc thu hồi vai trò…"
                   />
                   <small>{reason.length}/255 ký tự</small>
                 </label>
-                {!pending && notice && <div id="role-change-notice"><Notice type={notice.type}>{notice.text}</Notice></div>}
+                {!pending && notice && (
+                  <div id="role-change-notice">
+                    <Notice type={notice.type}>{notice.text}</Notice>
+                  </div>
+                )}
                 <div className="admin-role-grid">
                   {ROLE_OPTIONS.map((role) => {
                     const active = account.roles?.includes(role.id);
@@ -1136,7 +1144,9 @@ export default function AdminDashboardContent({ actor }) {
   const [tab, setTab] = useState("plans");
   const { logout } = useAdminDashboard();
   const content =
-    tab === "ai-keys" ? <AiKeysPage /> : tab === "transactions" ? (
+    tab === "ai-keys" ? (
+      <AiKeysPage />
+    ) : tab === "transactions" ? (
       <TransactionsTab />
     ) : tab === "roles" ? (
       <RolesTab actor={actor} />
@@ -1166,7 +1176,9 @@ export default function AdminDashboardContent({ actor }) {
           </div>
         </div>
         <nav aria-label="Điều hướng quản trị">
-          <Link className="admin-studio-link" to="/internal/chapters"><BookOpen size={19} /> Content Studio</Link>
+          <Link className="admin-studio-link" to="/internal/chapters">
+            <BookOpen size={19} /> Content Studio
+          </Link>
           {TABS.map(([id, label, Icon]) => (
             <button
               key={id}

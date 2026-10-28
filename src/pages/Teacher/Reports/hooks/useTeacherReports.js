@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { auth } from "../../../../api/auth.api";
+import { teacherReportsApi as auth } from "../api/teacherReportsApi";
 
 export default function useTeacherReports(options = {}) {
   const { requestedGroupId = "" } = options;

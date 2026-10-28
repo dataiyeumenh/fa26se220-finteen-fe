@@ -58,7 +58,9 @@ export function CareerMatchMiniGame({ game, onComplete, className }) {
       setFitSolved(true);
       setFeedback({
         tone: "good",
-        text: game.texts?.fitAllCorrect ?? "Chính xác. Việc 16 giờ vượt quỹ thời gian, hai việc còn lại vừa lịch học.",
+        text:
+          game.texts?.fitAllCorrect ??
+          "Chính xác. Việc 16 giờ vượt quỹ thời gian, hai việc còn lại vừa lịch học.",
       });
     } else {
       setFeedback({
@@ -71,7 +73,11 @@ export function CareerMatchMiniGame({ game, onComplete, className }) {
   const answer = (question, option) => {
     if (picked[question.id] === question.correctId) return;
     setPicked((current) => ({ ...current, [question.id]: option.id }));
-    setFirstPicks((current) => (question.id in current ? current : { ...current, [question.id]: option.id }));
+    setFirstPicks((current) =>
+      question.id in current
+        ? current
+        : { ...current, [question.id]: option.id },
+    );
     if (option.id === question.correctId) {
       setFeedback({ tone: "good", text: question.explain });
     } else {

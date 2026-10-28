@@ -1,51 +1,66 @@
-import { useState } from 'react'
+import { useState } from "react";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { formatVND, cn } from '@/lib/utils'
-import { Sparkles, Lightbulb, Target } from 'lucide-react'
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { formatVND, cn } from "@/lib/utils";
+import { Sparkles, Lightbulb, Target } from "lucide-react";
 
-const PRINCIPAL = 10_000_000
-const RATE = 0.08
-const YEARS = 40
-const ACTUAL = PRINCIPAL * Math.pow(1 + RATE, YEARS)
+const PRINCIPAL = 10_000_000;
+const RATE = 0.08;
+const YEARS = 40;
+const ACTUAL = PRINCIPAL * Math.pow(1 + RATE, YEARS);
 
 function getErrorTone(error) {
-  const abs = Math.abs(error)
-  if (abs < 20) return 'success'
-  if (abs < 50) return 'warn'
-  return 'error'
+  const abs = Math.abs(error);
+  if (abs < 20) return "success";
+  if (abs < 50) return "warn";
+  return "error";
 }
 
 export function DemoModal({ open, onOpenChange }) {
-  const [guess, setGuess] = useState('')
-  const [result, setResult] = useState(null)
+  const [guess, setGuess] = useState("");
+  const [result, setResult] = useState(null);
 
   const handleCalculate = () => {
-    const parsed = parseInt(guess.replace(/[^\d]/g, ''), 10) || 0
-    const error = ((parsed - ACTUAL) / ACTUAL) * 100
-    setResult({ guess: parsed, error, tone: getErrorTone(error) })
-  }
+    const parsed = parseInt(guess.replace(/[^\d]/g, ""), 10) || 0;
+    const error = ((parsed - ACTUAL) / ACTUAL) * 100;
+    setResult({ guess: parsed, error, tone: getErrorTone(error) });
+  };
 
   const handleClose = (next) => {
     if (!next) {
-      setGuess('')
-      setResult(null)
+      setGuess("");
+      setResult(null);
     }
-    onOpenChange(next)
-  }
+    onOpenChange(next);
+  };
 
   const toneColors = {
-    success: { bg: 'bg-[#ffe43b]/15', text: 'text-[#51428b]', label: 'Xuất sắc!', accent: '#f5d51f' },
-    warn: { bg: 'bg-[#ffe43b]/15', text: 'text-[#b45309]', label: 'Khá gần!', accent: '#b45309' },
-    error: { bg: 'bg-[#e57787]/15', text: 'text-[#dc2626]', label: 'Còn lệch nhiều', accent: '#dc2626' },
-  }
+    success: {
+      bg: "bg-[#ffe43b]/15",
+      text: "text-[#51428b]",
+      label: "Xuất sắc!",
+      accent: "#f5d51f",
+    },
+    warn: {
+      bg: "bg-[#ffe43b]/15",
+      text: "text-[#b45309]",
+      label: "Khá gần!",
+      accent: "#b45309",
+    },
+    error: {
+      bg: "bg-[#e57787]/15",
+      text: "text-[#dc2626]",
+      label: "Còn lệch nhiều",
+      accent: "#dc2626",
+    },
+  };
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
@@ -53,15 +68,18 @@ export function DemoModal({ open, onOpenChange }) {
         <DialogHeader>
           <div className="flex items-center justify-center gap-2 text-[#ffe43b] mb-1">
             <Target className="w-5 h-5" />
-            <span className="text-sm font-semibold text-[#51428b]">Cơ chế đoán-trước</span>
+            <span className="text-sm font-semibold text-[#51428b]">
+              Cơ chế đoán-trước
+            </span>
           </div>
           <DialogTitle className="text-center flex items-center justify-center gap-2">
             <Sparkles className="w-6 h-6 text-[#ffe43b]" aria-hidden="true" />
             Bài học: Lãi kép
           </DialogTitle>
           <DialogDescription className="text-center text-balance">
-            Nếu bạn gửi <strong>10 triệu VNĐ</strong> với lãi suất <strong>8%/năm</strong>,
-            sau <strong>40 năm</strong> bạn sẽ có bao nhiêu?
+            Nếu bạn gửi <strong>10 triệu VNĐ</strong> với lãi suất{" "}
+            <strong>8%/năm</strong>, sau <strong>40 năm</strong> bạn sẽ có bao
+            nhiêu?
           </DialogDescription>
         </DialogHeader>
 
@@ -71,12 +89,16 @@ export function DemoModal({ open, onOpenChange }) {
             inputMode="numeric"
             placeholder="Nhập số của bạn (VNĐ)..."
             value={guess}
-            onChange={e => setGuess(e.target.value)}
-            onKeyDown={e => {
-              if (e.key === 'Enter') handleCalculate()
+            onChange={(e) => setGuess(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") handleCalculate();
             }}
           />
-          <Button onClick={handleCalculate} className="w-full bg-[#ffe43b] text-[#25263d] hover:bg-[#f5d51f]" size="lg">
+          <Button
+            onClick={handleCalculate}
+            className="w-full bg-[#ffe43b] text-[#25263d] hover:bg-[#f5d51f]"
+            size="lg"
+          >
             Xem kết quả của bạn
           </Button>
         </div>
@@ -84,9 +106,9 @@ export function DemoModal({ open, onOpenChange }) {
         {result && (
           <div
             className={cn(
-              'mt-4 p-5 rounded-2xl space-y-3',
+              "mt-4 p-5 rounded-2xl space-y-3",
               toneColors[result.tone].bg,
-              'animate-fade-up relative overflow-hidden'
+              "animate-fade-up relative overflow-hidden",
             )}
           >
             {/* Top color stripe */}
@@ -97,8 +119,12 @@ export function DemoModal({ open, onOpenChange }) {
             />
 
             <div className="flex items-center gap-2 text-sm font-bold">
-              <Lightbulb className={cn('w-4 h-4', toneColors[result.tone].text)} />
-              <span className={toneColors[result.tone].text}>{toneColors[result.tone].label}</span>
+              <Lightbulb
+                className={cn("w-4 h-4", toneColors[result.tone].text)}
+              />
+              <span className={toneColors[result.tone].text}>
+                {toneColors[result.tone].label}
+              </span>
             </div>
 
             <div className="space-y-2 text-sm">
@@ -118,11 +144,11 @@ export function DemoModal({ open, onOpenChange }) {
                 <span className="text-slate-500">Sai số của bạn:</span>
                 <span
                   className={cn(
-                    'font-mono font-bold text-base',
-                    toneColors[result.tone].text
+                    "font-mono font-bold text-base",
+                    toneColors[result.tone].text,
                   )}
                 >
-                  {result.error > 0 ? '+' : ''}
+                  {result.error > 0 ? "+" : ""}
                   {result.error.toFixed(1)}%
                 </span>
               </div>
@@ -131,5 +157,5 @@ export function DemoModal({ open, onOpenChange }) {
         )}
       </DialogContent>
     </Dialog>
-  )
+  );
 }

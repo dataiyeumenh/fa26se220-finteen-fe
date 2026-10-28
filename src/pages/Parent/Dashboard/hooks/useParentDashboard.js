@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { auth } from "../../../../api/auth.api";
+import { parentDashboardApi as auth } from "../api/parentDashboardApi";
 
 export default function useParentDashboard() {
   const [dashboard, setDashboard] = useState(null);

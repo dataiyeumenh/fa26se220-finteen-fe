@@ -11,6 +11,7 @@ import {
 import {
   reportRows,
   reportCsv,
+  groupReportCsv,
   csvCell,
 } from "../src/features/workspace/reporting.js";
 
@@ -353,7 +354,10 @@ test("quiz assignments snapshot questions and learners; submissions and archive 
     0,
   );
   assert.equal(JSON.stringify(rows).includes("credential"), false);
-  assert.equal(reportCsv(rows).includes("Quiz 1"), true);
+  assert.equal(
+    new TextDecoder("utf-16le").decode(reportCsv(rows)).includes("Quiz 1"),
+    true,
+  );
   db = activate(db, session, a.slotId);
   assert.equal(
     reportRows(db, session.id, { learnerId: db.learners[2].id })[0]
@@ -387,5 +391,30 @@ test("CSV handles quotes, line breaks, unicode, and formula injection", () => {
   assert.equal(csvCell('a,"b"\nc'), '"a,""b""\nc"');
   assert.equal(csvCell(" =1+1"), '"\' =1+1"');
   assert.equal(csvCell("@SUM(A1)"), '"\'@SUM(A1)"');
-  assert.ok(reportCsv([]).startsWith("\uFEFF"));
+  const emptyCsv = reportCsv([]);
+  assert.equal(emptyCsv[0], 0xff);
+  assert.equal(emptyCsv[1], 0xfe);
+});
+
+test("report CSV opens in Vietnamese Excel with separate columns and readable values", () => {
+  const bytes = groupReportCsv([
+    {
+      displayName: "Bé An",
+      code: "ABC123",
+      status: "ACTIVE",
+      completedChapters: 2,
+      attemptIndex: 1,
+      lastActiveAt: "2026-10-28T03:30:00Z",
+      indicators: { wealth: 10, saving: 20, happiness: 30, risk: 40, goal: 50 },
+      quizAssigned: 3,
+      quizSubmitted: 2,
+      averageScore: 8.5,
+    },
+  ]);
+  assert.equal(bytes[0], 0xff);
+  assert.equal(bytes[1], 0xfe);
+  const csv = new TextDecoder("utf-16le").decode(bytes);
+  assert.ok(csv.startsWith('"Học sinh"\t"Mã đăng nhập"\t"Trạng thái"'));
+  assert.match(csv, /"Bé An"\t"ABC123"\t"Hoạt động"/);
+  assert.match(csv, /28\/10\/26/);
 });

@@ -25,20 +25,37 @@ export function conditionContext({
   choiceLedger = {},
   ...rest
 } = {}) {
-  const ctx = { flags, stats: { ...stats }, money, miniGameScore, inspectedIds, choiceLedger, derived: {} };
-  for (const [key, value] of Object.entries(rest)) (STATS.has(key) ? ctx.stats : ctx.derived)[key] = value;
+  const ctx = {
+    flags,
+    stats: { ...stats },
+    money,
+    miniGameScore,
+    inspectedIds,
+    choiceLedger,
+    derived: {},
+  };
+  for (const [key, value] of Object.entries(rest))
+    (STATS.has(key) ? ctx.stats : ctx.derived)[key] = value;
   return ctx;
 }
 
 /** Mã kết chương game chọn (priorityOrder + "fallback": true). */
-export const endingId = (data, context) => resolveEnding(data.endingRules, conditionContext(context))?.id;
+export const endingId = (data, context) =>
+  resolveEnding(data.endingRules, conditionContext(context))?.id;
 
 /** Cảnh đích của một cảnh rẽ tự động. */
 export const branchTarget = (scene, context) =>
-  evaluateCondition(scene.condition, conditionContext(context), "scene") ? scene.ifTrueSceneId : scene.ifFalseSceneId;
+  evaluateCondition(scene.condition, conditionContext(context), "scene")
+    ? scene.ifTrueSceneId
+    : scene.ifFalseSceneId;
 
 /** Lý do khoá lựa chọn, null = mở. */
-export const lockReason = (option, context) => optionLockReason(option, conditionContext(context));
+export const lockReason = (option, context) =>
+  optionLockReason(option, conditionContext(context));
 
 /** Mục sổ quyết định như game ghi (choice:<nhóm> đọc optionId). */
-export const ledgerEntry = (option, extra = {}) => ({ optionId: option.id, evidenceScores: option.evidenceScores, ...extra });
+export const ledgerEntry = (option, extra = {}) => ({
+  optionId: option.id,
+  evidenceScores: option.evidenceScores,
+  ...extra,
+});

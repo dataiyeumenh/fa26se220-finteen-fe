@@ -4,7 +4,7 @@
 // Nạp client API khi cần gửi (không nạp lúc tải game): thiếu cấu hình API thì bỏ qua gửi, game vẫn chơi được.
 async function authClient() {
   try {
-    return (await import("@/api/auth.api")).auth;
+    return (await import("../../api/kidDashboardApi")).kidDashboardApi;
   } catch {
     return null;
   }
@@ -14,8 +14,11 @@ const PENDING_PREFIX = "finteen:play:pending:";
 
 /** Số chương: metadata.chapterNumber, không có thì lấy số trong metadata.chapterId / id ("chapter-4", "CH04"). */
 export function chapterNumberOf(data) {
-  if (Number.isInteger(data?.metadata?.chapterNumber)) return data.metadata.chapterNumber;
-  const match = String(data?.metadata?.chapterId || data?.id || "").match(/(\d+)/);
+  if (Number.isInteger(data?.metadata?.chapterNumber))
+    return data.metadata.chapterNumber;
+  const match = String(data?.metadata?.chapterId || data?.id || "").match(
+    /(\d+)/,
+  );
   return match ? Number(match[1]) : null;
 }
 
@@ -25,16 +28,29 @@ export function buildChapterBatch(data, choiceLedger, miniGameResults) {
   const choices = Object.entries(choiceLedger || {})
     .map(([group, entry]) => {
       const scene = scenes.find(
-        (s) => s.type === "choice" && (s.choiceGroup || s.id) === group &&
+        (s) =>
+          s.type === "choice" &&
+          (s.choiceGroup || s.id) === group &&
           (s.options || []).some((o) => o.id === entry.optionId),
       );
-      return scene ? { sceneId: scene.id, optionId: entry.optionId, chosenAt: entry.chosenAt } : null;
+      return scene
+        ? {
+            sceneId: scene.id,
+            optionId: entry.optionId,
+            chosenAt: entry.chosenAt,
+          }
+        : null;
     })
     .filter(Boolean);
   const miniGames = Object.values(miniGameResults || {})
     .filter((r) => r?.completed && r.gameId && r.inputs)
     .flatMap((r) =>
-      Object.entries(r.inputs).map(([itemId, chosen]) => ({ gameId: r.gameId, itemId, chosen, playedAt: r.playedAt })),
+      Object.entries(r.inputs).map(([itemId, chosen]) => ({
+        gameId: r.gameId,
+        itemId,
+        chosen,
+        playedAt: r.playedAt,
+      })),
     );
   return {
     chapter: chapterNumberOf(data),
@@ -46,7 +62,8 @@ export function buildChapterBatch(data, choiceLedger, miniGameResults) {
 }
 
 const slotCodeOf = (auth) => auth?.getSnapshot?.().actor?.code;
-const pendingKey = (code, batch) => `${PENDING_PREFIX}${code}:${batch.chapter}:${batch.releaseVersion}`;
+const pendingKey = (code, batch) =>
+  `${PENDING_PREFIX}${code}:${batch.chapter}:${batch.releaseVersion}`;
 
 /**
  * Gửi lô. Bỏ qua (trả lý do) khi không phải trẻ đăng nhập bằng slot hoặc chương không đến từ API (không có releaseVersion —
@@ -56,23 +73,38 @@ export async function submitChapterBatch(batch) {
   const auth = await authClient();
   const code = slotCodeOf(auth);
   if (!code) return { skipped: "chưa đăng nhập bằng mã của trẻ" };
-  if (!batch.releaseVersion || !batch.chapter) return { skipped: "chương không đến từ API (không có releaseVersion)" };
+  if (!batch.releaseVersion || !batch.chapter)
+    return { skipped: "chương không đến từ API (không có releaseVersion)" };
   try {
     const state = await auth.getPlayState();
-    const allDone = state.totalChapters && (state.chaptersDone || []).length >= state.totalChapters;
-    const attemptIndex = (state.attemptIndex || 1) + (allDone && batch.chapter === 1 ? 1 : 0);
+    const allDone =
+      state.totalChapters &&
+      (state.chaptersDone || []).length >= state.totalChapters;
+    const attemptIndex =
+      (state.attemptIndex || 1) + (allDone && batch.chapter === 1 ? 1 : 0);
     const result = await auth.submitChapterBatch({ ...batch, attemptIndex });
-    try { localStorage.removeItem(pendingKey(code, batch)); } catch { /* bộ nhớ trình duyệt bị chặn */ }
+    try {
+      localStorage.removeItem(pendingKey(code, batch));
+    } catch {
+      /* bộ nhớ trình duyệt bị chặn */
+    }
     return { sent: true, result };
   } catch (error) {
     // Chỉ giữ để gửi lại khi mất mạng / máy chủ lỗi; BE từ chối hẳn (4xx — vd 7003 sai thứ tự chương với trẻ đã chơi trước khi
     // FE biết gửi) thì bỏ lô, không gửi lại mãi.
     const retry = !error?.status || error.status >= 500;
     try {
-      if (retry) localStorage.setItem(pendingKey(code, batch), JSON.stringify(batch));
+      if (retry)
+        localStorage.setItem(pendingKey(code, batch), JSON.stringify(batch));
       else localStorage.removeItem(pendingKey(code, batch));
-    } catch { /* bộ nhớ trình duyệt bị chặn */ }
-    return { failed: error?.message || String(error), code: error?.code, retry };
+    } catch {
+      /* bộ nhớ trình duyệt bị chặn */
+    }
+    return {
+      failed: error?.message || String(error),
+      code: error?.code,
+      retry,
+    };
   }
 }
 
@@ -82,12 +114,18 @@ export async function flushPendingBatches() {
   if (!code) return;
   let keys;
   try {
-    keys = Object.keys(localStorage).filter((k) => k.startsWith(`${PENDING_PREFIX}${code}:`));
-  } catch { return; }
+    keys = Object.keys(localStorage).filter((k) =>
+      k.startsWith(`${PENDING_PREFIX}${code}:`),
+    );
+  } catch {
+    return;
+  }
   for (const key of keys) {
     try {
       const batch = JSON.parse(localStorage.getItem(key));
       if (batch) await submitChapterBatch(batch);
-    } catch { /* để lần sau */ }
+    } catch {
+      /* để lần sau */
+    }
   }
 }

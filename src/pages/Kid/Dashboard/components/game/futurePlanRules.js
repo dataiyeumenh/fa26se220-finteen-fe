@@ -19,7 +19,8 @@ export function validMarket(market, value) {
     value &&
     Object.entries(market.fixed).every(([id, move]) => value[id] === move) &&
     market.drawn.every(
-      (id) => Number.isInteger(value[id]) && Math.abs(value[id]) <= market.maxMove,
+      (id) =>
+        Number.isInteger(value[id]) && Math.abs(value[id]) <= market.maxMove,
     ),
   );
 }
@@ -34,7 +35,8 @@ export function allocationValue(
   );
   const delta = portfolio.assets.reduce(
     (sum, asset) =>
-      sum + (allocation[asset.id] * portfolio.pointValue * market[asset.id]) / 100,
+      sum +
+      (allocation[asset.id] * portfolio.pointValue * market[asset.id]) / 100,
     0,
   );
   return {
@@ -115,10 +117,7 @@ export function buildPlanReview(planner, state) {
         label: month.label,
         image: month.reviewImage,
         facts: [
-          [
-            t.incomeLabel,
-            `${cash(month.income)} / ${cash(month.essential)}`,
-          ],
+          [t.incomeLabel, `${cash(month.income)} / ${cash(month.essential)}`],
           [t.goalLabel, cash(budget.goal)],
           [t.flexibleLabel, cash(budget.flexible)],
           [
@@ -294,7 +293,8 @@ export function applyFutureAction(config, state, action) {
     }
     if (
       action.type === "SUBMIT_ALLOCATION" &&
-      allocationValue(portfolio, state.allocation).total === portfolio.totalPoints
+      allocationValue(portfolio, state.allocation).total ===
+        portfolio.totalPoints
     )
       return {
         ...state,

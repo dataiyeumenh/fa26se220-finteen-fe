@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { auth } from "../../../../api/auth.api";
+import { parentLearnersApi as auth } from "../api/parentLearnersApi";
 
 const errorMessage = (error) =>
   ({

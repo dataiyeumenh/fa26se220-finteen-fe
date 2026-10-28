@@ -111,7 +111,7 @@ export default function TeacherReportsContent({ reportState }) {
             download(
               groupReportCsv(rows),
               `finteen-class-${new Date().toISOString().slice(0, 10)}.csv`,
-              "text/csv;charset=utf-8",
+              "text/csv;charset=utf-16le",
             )
           }
         >

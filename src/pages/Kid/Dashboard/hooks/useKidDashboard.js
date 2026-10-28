@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { auth } from "@/api/auth.api";
+import { auth as authSession } from "@/api/auth.api";
 import { useWorkspace } from "@/features/workspace/useWorkspace";
 
 export default function useKidDashboard() {
@@ -14,7 +14,7 @@ export default function useKidDashboard() {
   const refresh = useCallback(
     async (force = false) => {
       try {
-        await auth.ensureLearnerDashboard({ force });
+        await authSession.ensureLearnerDashboard({ force });
       } catch (error) {
         if ([3007, 3009].includes(error.code))
           navigate("/login?as=kid&reason=slot-ended", { replace: true });

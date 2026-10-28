@@ -92,8 +92,12 @@ async function run() {
       !document
         .querySelector(".vn-dialogue")
         .textContent.includes(
-          resolveFutureScene(portfolio, scene, saved().miniGameResults, saved().flags)
-            .text,
+          resolveFutureScene(
+            portfolio,
+            scene,
+            saved().miniGameResults,
+            saved().flags,
+          ).text,
         )
     )
       throw Error("Dialogue does not match market outcome");
@@ -108,7 +112,11 @@ async function run() {
     if (route === "resume" && reloads === 1 && scene.id === "CH08_PROMISE_1") {
       if (
         saved().money !==
-        chapterEightSettlement(portfolio, saved().miniGameResults, saved().flags).final
+        chapterEightSettlement(
+          portfolio,
+          saved().miniGameResults,
+          saved().flags,
+        ).final
       )
         throw Error("Settlement before reload incorrect");
       reload(2);
@@ -388,8 +396,11 @@ async function run() {
   if (ending !== expected) throw Error(`Expected ${expected}; got ${ending}`);
   if (
     checkpoint.money !==
-      chapterEightSettlement(portfolio, checkpoint.miniGameResults, checkpoint.flags)
-        .final ||
+      chapterEightSettlement(
+        portfolio,
+        checkpoint.miniGameResults,
+        checkpoint.flags,
+      ).final ||
     Object.keys(checkpoint.moneyEventsApplied).length !== 1
   )
     throw Error("Settlement duplicated or forecast transacted");

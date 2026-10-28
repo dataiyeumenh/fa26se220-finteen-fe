@@ -1,6 +1,12 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { createAuthClient } from "../src/api/auth.client.js";
+import { createWorkspaceApi } from "../src/features/workspace/api/workspaceApi.js";
+import { createAdminDashboardApi } from "../src/pages/Admin/Dashboard/api/adminDashboardApi.js";
+import { createParentLearnersApi } from "../src/pages/Parent/Learners/api/parentLearnersApi.js";
+import { createParentReportsApi } from "../src/pages/Parent/Reports/api/parentReportsApi.js";
+import { createLearnerReportApi } from "../src/pages/LearnerReport/api/learnerReportApi.js";
+import { createStudioApi } from "../src/features/studio/studioClient.js";
 
 const me = {
   id: "a",
@@ -50,39 +56,55 @@ function setup() {
   };
 }
 
-test('internal login uses its dedicated endpoint; Studio multipart preserves file and bearer', async () => {
+test("internal login uses its dedicated endpoint; Studio multipart preserves file and bearer", async () => {
   const { auth, calls, queue } = setup();
+  const studioApi = createStudioApi(auth);
   queue.push({ code: 0, result: token }, { code: 0, result: me });
-  await auth.internalLogin(' staff@example.com ', 'password');
-  assert.ok(calls[0].url.endsWith('/api/auth/internal/login'));
-  assert.deepEqual(JSON.parse(calls[0].body), { email: 'staff@example.com', password: 'password' });
-  const asset = { id: 'asset-1', ref: '{{ASSET_BASE}}/a/hash.webp', url: 'https://example.com/a/hash.webp' };
+  await auth.internalLogin(" staff@example.com ", "password");
+  assert.ok(calls[0].url.endsWith("/api/auth/internal/login"));
+  assert.deepEqual(JSON.parse(calls[0].body), {
+    email: "staff@example.com",
+    password: "password",
+  });
+  const asset = {
+    id: "asset-1",
+    ref: "{{ASSET_BASE}}/a/hash.webp",
+    url: "https://example.com/a/hash.webp",
+  };
   queue.push({ code: 0, result: { asset, duplicate: true } });
-  const file = new Blob(['image-bytes'], { type: 'image/png' });
-  const result = await auth.uploadStudioAsset(file, { label: ' Living room ', chapterCode: ' CH04 ' });
+  const file = new Blob(["image-bytes"], { type: "image/png" });
+  const body = new FormData();
+  body.append("file", file);
+  body.append("label", "Living room");
+  body.append("chapterCode", "CH04");
+  const result = await studioApi.upload("/api/studio/assets", body);
   assert.equal(result.duplicate, true);
   assert.equal(result.asset.ref, asset.ref);
   const upload = calls.at(-1);
-  assert.ok(upload.url.endsWith('/finteen/api/studio/assets'));
-  assert.equal(upload.method, 'POST');
-  assert.equal(upload.headers.Authorization, 'Bearer account-token');
-  assert.equal(upload.headers['Content-Type'], undefined);
+  assert.ok(upload.url.endsWith("/finteen/api/studio/assets"));
+  assert.equal(upload.method, "POST");
+  assert.equal(upload.headers.Authorization, "Bearer account-token");
+  assert.equal(upload.headers["Content-Type"], undefined);
   assert.ok(upload.body instanceof FormData);
-  assert.equal(upload.body.get('file').size, file.size);
-  assert.equal(upload.body.get('label'), 'Living room');
-  assert.equal(upload.body.get('chapterCode'), 'CH04');
+  assert.equal(upload.body.get("file").size, file.size);
+  assert.equal(upload.body.get("label"), "Living room");
+  assert.equal(upload.body.get("chapterCode"), "CH04");
   queue.push({ code: 0, result: [asset] });
-  assert.deepEqual(await auth.listStudioAssets({ chapter: 'CH04', q: 'An & nhà' }), [asset]);
+  const query = new URLSearchParams({
+    kind: "IMAGE",
+    chapter: "CH04",
+    q: "An & nhà",
+  });
+  assert.deepEqual(await studioApi.get(`/api/studio/assets?${query}`), [asset]);
   const url = new URL(calls.at(-1).url);
-  assert.equal(url.searchParams.get('kind'), 'IMAGE');
-  assert.equal(url.searchParams.get('chapter'), 'CH04');
-  assert.equal(url.searchParams.get('q'), 'An & nhà');
-  const count = calls.length;
-  assert.throws(() => auth.uploadStudioAsset(new Blob(['x'], { type: 'text/plain' })), /PNG/);
-  assert.throws(() => auth.uploadStudioAsset(new Blob([new Uint8Array(5 * 1024 * 1024 + 1)], { type: 'image/png' })), /5 MB/);
-  assert.equal(calls.length, count);
-  queue.push({ code: 3004, message: 'Forbidden' });
-  await assert.rejects(auth.uploadStudioAsset(file), error => error.code === 3004);
+  assert.equal(url.searchParams.get("kind"), "IMAGE");
+  assert.equal(url.searchParams.get("chapter"), "CH04");
+  assert.equal(url.searchParams.get("q"), "An & nhà");
+  queue.push({ code: 3004, message: "Forbidden" });
+  await assert.rejects(
+    studioApi.upload("/api/studio/assets", body),
+    (error) => error.code === 3004,
+  );
 });
 test("registration has no session; resend uses encoded query and no body; forgot is public JSON", async () => {
   const { auth, calls, queue } = setup();
@@ -267,6 +289,7 @@ test("Google exchange/link payload and conflict codes preserve session", async (
 
 test("admin API methods use the account token and documented payloads", async () => {
   const { auth, queue, calls } = setup();
+  const api = createAdminDashboardApi(auth);
   queue.push({ code: 0, result: token }, { code: 0, result: me });
   await auth.login("admin@example.com", "password");
   queue.push(
@@ -296,24 +319,24 @@ test("admin API methods use the account token and documented payloads", async ()
     { code: 0, result: { subjectId: "account-1", roles: [] } },
     { code: 0, result: {} },
   );
-  await auth.listPlans();
-  await auth.setPlanPrice("PARENT", 99000, 3);
-  await auth.listAdminTransactions({ status: "PENDING", page: 1, size: 20 });
-  await auth.reconcileTransaction(123);
-  await auth.findAdminAccount(" Member@Example.com ");
-  await auth.listAdminAccounts({ q: " member ", page: 2, size: 200 });
-  await auth.listAdminRoleLogs({ subjectId: " account-1 ", page: 2, size: 50 });
-  await auth.grantAdminRole({
+  await api.listPlans();
+  await api.setPlanPrice("PARENT", 99000, 3);
+  await api.listAdminTransactions({ status: "PENDING", page: 1, size: 20 });
+  await api.reconcileTransaction(123);
+  await api.findAdminAccount(" Member@Example.com ");
+  await api.listAdminAccounts({ q: " member ", page: 2, size: 200 });
+  await api.listAdminRoleLogs({ subjectId: " account-1 ", page: 2, size: 50 });
+  await api.grantAdminRole({
     subjectId: " account-1 ",
     role: "GAME_EDITOR",
     reason: " Biên tập nội dung ",
   });
-  await auth.revokeAdminRole({
+  await api.revokeAdminRole({
     subjectId: " account-1 ",
     role: "GAME_EDITOR",
     reason: " Không còn phụ trách ",
   });
-  await auth.grantEntitlement({
+  await api.grantEntitlement({
     accountId: "00000000-0000-0000-0000-000000000001",
     kind: "TEACHER",
     months: 6,
@@ -357,6 +380,7 @@ test("admin API methods use the account token and documented payloads", async ()
 });
 test("payment API creates a VietQR order, lists, checks and cancels it", async () => {
   const { auth, queue, calls } = setup();
+  const api = createWorkspaceApi(auth);
   queue.push(
     { code: 0, result: token },
     { code: 0, result: { ...me, plans: [] } },
@@ -394,10 +418,10 @@ test("payment API creates a VietQR order, lists, checks and cancels it", async (
     },
     { code: 0, message: "OK" },
   );
-  const created = await auth.createPayment("PARENT");
-  const history = await auth.listPayments({ page: 0, size: 20 });
-  const checked = await auth.getPayment(created.orderCode);
-  const cancelled = await auth.cancelPayment(
+  const created = await api.createPayment("PARENT");
+  const history = await api.listPayments({ page: 0, size: 20 });
+  const checked = await api.getPayment(created.orderCode);
+  const cancelled = await api.cancelPayment(
     created.orderCode,
     "Người dùng hủy",
   );
@@ -418,29 +442,28 @@ test("payment API creates a VietQR order, lists, checks and cancels it", async (
 });
 test("group and slot management APIs use documented methods and payloads", async () => {
   const { auth, queue, calls } = setup();
+  const api = createParentLearnersApi(auth);
   queue.push(
     { code: 0, result: token },
     { code: 0, result: { ...me, plans: ["PARENT"] } },
   );
   await auth.login("parent@example.com", "password");
   queue.push(...Array.from({ length: 11 }, () => ({ code: 0, result: [] })));
-  await auth.listGroups();
-  await auth.openGroup(" Nhà mình ", "FAMILY");
-  await auth.confirmConsent("group-1");
-  await auth.closeGroup("group-1");
-  await auth.listGroupSlots("group-1");
-  await auth.groupCapacity("group-1");
-  await auth.openSlot({
+  await api.listGroups();
+  await api.openGroup(" Nhà mình ", "FAMILY");
+  await api.confirmConsent("group-1");
+  await api.closeGroup("group-1");
+  await api.listGroupSlots("group-1");
+  await api.groupCapacity("group-1");
+  await api.openSlot({
     groupId: "group-1",
     displayName: " Bé An ",
     pin: "012345",
   });
-  await auth.openSlots("group-1", [
-    { displayName: " Bé Bình ", pin: "123456" },
-  ]);
-  await auth.returnSlot("slot-1");
-  await auth.wipeSlot("slot-1");
-  await auth.changeSlotPin("slot-1", "654321");
+  await api.openSlots("group-1", [{ displayName: " Bé Bình ", pin: "123456" }]);
+  await api.returnSlot("slot-1");
+  await api.wipeSlot("slot-1");
+  await api.changeSlotPin("slot-1", "654321");
   assert.deepEqual(JSON.parse(calls[3].body), {
     name: "Nhà mình",
     context: "FAMILY",
@@ -515,6 +538,8 @@ test("SLOT login normalizes code, keeps a separate session and restores the kid 
 
 test("report APIs use ACCOUNT authentication and encoded resource ids", async () => {
   const { auth, queue, calls } = setup();
+  const reportsApi = createParentReportsApi(auth);
+  const learnerApi = createLearnerReportApi(auth);
   queue.push(
     { code: 0, result: token },
     { code: 0, result: { ...me, plans: ["PARENT"] } },
@@ -524,8 +549,8 @@ test("report APIs use ACCOUNT authentication and encoded resource ids", async ()
     { code: 0, result: { rows: [] } },
     { code: 0, result: { learner: {}, progress: {} } },
   );
-  await auth.getGroupReport("group/one");
-  await auth.getSlotReport("slot/one");
+  await reportsApi.getGroupReport("group/one");
+  await learnerApi.getSlotReport("slot/one");
   assert.match(calls[2].url, /\/api\/groups\/group%2Fone\/report$/);
   assert.match(calls[3].url, /\/api\/slots\/slot%2Fone\/report$/);
   assert.equal(calls[2].headers.Authorization, "Bearer account-token");

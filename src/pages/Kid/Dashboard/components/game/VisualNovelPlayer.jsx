@@ -59,7 +59,11 @@ import {
   recordMiniGameResult,
   summarizeMiniGames,
 } from "./miniGameRules";
-import { buildChapterBatch, flushPendingBatches, submitChapterBatch } from "./playBatch.js";
+import {
+  buildChapterBatch,
+  flushPendingBatches,
+  submitChapterBatch,
+} from "./playBatch.js";
 import { normalizeChapter } from "./chapterShape.js";
 
 // Khung mini-game theo `game.kind` (bộ khuôn BE: scene-schema.json → minigameKinds). Dữ liệu cũ chưa có kind (bản 1.1.0)
@@ -82,7 +86,13 @@ const LEGACY_KIND = {
   CAREER_MATCH_CH03: "CAREER_MATCH",
 };
 // Khung lưu tiến độ giữa chừng (onProgress / initialResult) và props riêng — giữ đúng như khi còn chọn theo id.
-const PROGRESS_KINDS = new Set(["SMART_SHOPPING", "COMPOUND_TIMELINE", "LOAN_DETECTIVE", "SCAM_OR_SAFE", "FUTURE_PLAN"]);
+const PROGRESS_KINDS = new Set([
+  "SMART_SHOPPING",
+  "COMPOUND_TIMELINE",
+  "LOAN_DETECTIVE",
+  "SCAM_OR_SAFE",
+  "FUTURE_PLAN",
+]);
 const MINI_GAME_PROPS = {
   NEED_WANT: { className: "h-full", immersive: true },
   BUDGET_BUILDER: { className: "h-full" },
@@ -101,7 +111,6 @@ function applyStatEffects(current, effects = {}) {
   });
   return next;
 }
-
 
 function CharacterSprite({ src, alt, position, dimmed = false }) {
   const [broken, setBroken] = useState(false);
@@ -404,7 +413,11 @@ export function VisualNovelPlayer({ data: rawData }) {
 
       if (candidate.type !== "conditional") return index;
 
-      const branchResult = evaluateCondition(candidate.condition, conditionContext(), "scene");
+      const branchResult = evaluateCondition(
+        candidate.condition,
+        conditionContext(),
+        "scene",
+      );
       const targetId = branchResult
         ? candidate.ifTrueSceneId
         : candidate.ifFalseSceneId;
@@ -531,11 +544,16 @@ export function VisualNovelPlayer({ data: rawData }) {
     if (import.meta.env.DEV) window.__finteenLastBatch = batch;
     void submitChapterBatch(batch).then((outcome) => {
       if (import.meta.env.DEV) window.__finteenLastSubmit = outcome;
-      if (outcome.failed) console.warn("Chưa gửi được kết quả chương, sẽ gửi lại sau:", outcome.failed);
+      if (outcome.failed)
+        console.warn(
+          "Chưa gửi được kết quả chương, sẽ gửi lại sau:",
+          outcome.failed,
+        );
     });
   }, [scene?.type, isReviewing, data, choiceLedger, miniGameResults]);
 
-  const miniGameKind = scene?.type === "minigame" ? miniGameKindOf(scene.game) : undefined;
+  const miniGameKind =
+    scene?.type === "minigame" ? miniGameKindOf(scene.game) : undefined;
   const MiniGameFrame = MINI_GAME_FRAMES[miniGameKind];
   const hasChoiceOptions =
     Array.isArray(scene.options) && scene.options.length > 0;
@@ -923,7 +941,9 @@ export function VisualNovelPlayer({ data: rawData }) {
     return {
       gameFlag,
       evidenceScore:
-        (evidenceScores.I || 0) + (evidenceScores.C || 0) + (evidenceScores.P || 0),
+        (evidenceScores.I || 0) +
+        (evidenceScores.C || 0) +
+        (evidenceScores.P || 0),
       miniGameCompleted,
       reflectionScore,
       choicePercent: learning.choicePercent,
@@ -1488,7 +1508,9 @@ export function VisualNovelPlayer({ data: rawData }) {
                 game={scene.game}
                 onComplete={handleMiniGameComplete}
                 {...(MINI_GAME_PROPS[miniGameKind] || {})}
-                {...(miniGameKind === "SAVINGS_RACE" ? { planFlag: gameFlag } : {})}
+                {...(miniGameKind === "SAVINGS_RACE"
+                  ? { planFlag: gameFlag }
+                  : {})}
                 {...(PROGRESS_KINDS.has(miniGameKind)
                   ? {
                       initialResult: miniGameResults[scene.id],
@@ -1506,7 +1528,8 @@ export function VisualNovelPlayer({ data: rawData }) {
               />
             ) : (
               <p className="vn-minigame-unknown" role="alert">
-                Mini-game loại "{miniGameKind || "chưa khai"}" chưa có khung hiển thị.
+                Mini-game loại "{miniGameKind || "chưa khai"}" chưa có khung
+                hiển thị.
               </p>
             )}
           </div>

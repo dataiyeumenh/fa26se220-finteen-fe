@@ -2,7 +2,12 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import { chapter7V2GameData as content } from "./fixtures/content/index.mjs";
-import { endingId, isStructured, lockReason, normalizeChapter } from "./helpers/story.mjs";
+import {
+  endingId,
+  isStructured,
+  lockReason,
+  normalizeChapter,
+} from "./helpers/story.mjs";
 import {
   applySafetyAction,
   createSafetyState,
@@ -43,7 +48,11 @@ const games = () =>
       ["SCAM_OR_SAFE_CH07", [1, 2]],
     ].map(([gameId, rounds]) => [
       gameId,
-      { ...safetyResult(safetyConfig, fullHistory, rounds), gameId, completed: true },
+      {
+        ...safetyResult(safetyConfig, fullHistory, rounds),
+        gameId,
+        completed: true,
+      },
     ]),
   );
 const goodLedger = {
@@ -251,9 +260,18 @@ test("correct financial choice preserves savings stat; losses do not become scor
 });
 test("insurance checkout records both criteria once and allows wrong submission to finish", () => {
   let state = createSafetyState([0]);
-  assert.equal(applySafetyAction(safetyConfig, state, { type: "SUBMIT_INSURANCE" }), state);
-  state = applySafetyAction(safetyConfig, state, { type: "PAYMENT", amount: 100000 });
-  state = applySafetyAction(safetyConfig, state, { type: "DOCUMENT", id: "otp" });
+  assert.equal(
+    applySafetyAction(safetyConfig, state, { type: "SUBMIT_INSURANCE" }),
+    state,
+  );
+  state = applySafetyAction(safetyConfig, state, {
+    type: "PAYMENT",
+    amount: 100000,
+  });
+  state = applySafetyAction(safetyConfig, state, {
+    type: "DOCUMENT",
+    id: "otp",
+  });
   assert.deepEqual(state.history, {});
   state = applySafetyAction(safetyConfig, state, { type: "SUBMIT_INSURANCE" });
   assert.equal(state.submittedRounds[0], true);
@@ -266,15 +284,26 @@ test("insurance checkout records both criteria once and allows wrong submission 
   ])
     assert.equal(applySafetyAction(safetyConfig, state, action), state);
   let correct = createSafetyState([0]);
-  correct = applySafetyAction(safetyConfig, correct, { type: "PAYMENT", amount: 300000 });
+  correct = applySafetyAction(safetyConfig, correct, {
+    type: "PAYMENT",
+    amount: 300000,
+  });
   for (const id of ["receipt", "medicalRecord", "claim"])
-    correct = applySafetyAction(safetyConfig, correct, { type: "DOCUMENT", id });
-  correct = applySafetyAction(safetyConfig, correct, { type: "SUBMIT_INSURANCE" });
+    correct = applySafetyAction(safetyConfig, correct, {
+      type: "DOCUMENT",
+      id,
+    });
+  correct = applySafetyAction(safetyConfig, correct, {
+    type: "SUBMIT_INSURANCE",
+  });
   assert.equal(safetyResult(safetyConfig, correct.history, [0]).score, 2);
 });
 test("insurance packet must match the actual stated terms and rejects extra data", () => {
   let state = createSafetyState([0]);
-  state = applySafetyAction(safetyConfig, state, { type: "PAYMENT", amount: 300000 });
+  state = applySafetyAction(safetyConfig, state, {
+    type: "PAYMENT",
+    amount: 300000,
+  });
   for (const id of ["receipt", "medicalRecord", "claim", "otp"])
     state = applySafetyAction(safetyConfig, state, { type: "DOCUMENT", id });
   state = applySafetyAction(safetyConfig, state, { type: "SUBMIT_INSURANCE" });
@@ -283,14 +312,20 @@ test("insurance packet must match the actual stated terms and rejects extra data
 });
 test("inbox drafts do not score, can be changed and are graded only after all six", () => {
   let state = createSafetyState([1, 2]);
-  assert.equal(applySafetyAction(safetyConfig, state, { type: "ROUND", round: 2 }), state);
+  assert.equal(
+    applySafetyAction(safetyConfig, state, { type: "ROUND", round: 2 }),
+    state,
+  );
   state = applySafetyAction(safetyConfig, state, {
     type: "ANSWER_MESSAGE",
     id: safetyMessages[0].id,
     answer: "continue",
   });
   assert.deepEqual(state.history, {});
-  assert.equal(applySafetyAction(safetyConfig, state, { type: "SUBMIT_MESSAGES" }), state);
+  assert.equal(
+    applySafetyAction(safetyConfig, state, { type: "SUBMIT_MESSAGES" }),
+    state,
+  );
   for (const message of safetyMessages)
     state = applySafetyAction(safetyConfig, state, {
       type: "ANSWER_MESSAGE",
@@ -299,7 +334,10 @@ test("inbox drafts do not score, can be changed and are graded only after all si
     });
   state = applySafetyAction(safetyConfig, state, { type: "SUBMIT_MESSAGES" });
   assert.equal(safetyResult(safetyConfig, state.history, [1]).score, 6);
-  assert.equal(safetyResult(safetyConfig, state.history, [1]).firstPercent, 100);
+  assert.equal(
+    safetyResult(safetyConfig, state.history, [1]).firstPercent,
+    100,
+  );
   assert.equal(
     applySafetyAction(safetyConfig, state, {
       type: "ANSWER_MESSAGE",
@@ -308,7 +346,10 @@ test("inbox drafts do not score, can be changed and are graded only after all si
     }),
     state,
   );
-  const review = applySafetyAction(safetyConfig, state, { type: "MESSAGE", index: 0 });
+  const review = applySafetyAction(safetyConfig, state, {
+    type: "MESSAGE",
+    index: 0,
+  });
   assert.deepEqual(review.history, state.history);
   assert.equal(review.activeMessage, 0);
 });
@@ -324,7 +365,10 @@ test("wrong inbox is completed without rewriting answers or granting correct evi
   assert.equal(safetyResult(safetyConfig, state.history, [1]).score, 0);
   assert.equal(safetyResult(safetyConfig, state.history, [1]).completed, true);
   assert.equal(safetyResult(safetyConfig, state.history, [1]).passed, false);
-  assert.equal(applySafetyAction(safetyConfig, state, { type: "ROUND", round: 2 }).round, 2);
+  assert.equal(
+    applySafetyAction(safetyConfig, state, { type: "ROUND", round: 2 }).round,
+    2,
+  );
 });
 test("response accepts immediate protection or official contact in either middle order", () => {
   for (const ids of [
@@ -333,25 +377,46 @@ test("response accepts immediate protection or official contact in either middle
   ]) {
     let state = createSafetyState([2]);
     for (const id of ids)
-      state = applySafetyAction(safetyConfig, state, { type: "ADD_RESPONSE", id });
+      state = applySafetyAction(safetyConfig, state, {
+        type: "ADD_RESPONSE",
+        id,
+      });
     assert.deepEqual(state.history, {});
     state = applySafetyAction(safetyConfig, state, { type: "SUBMIT_RESPONSE" });
     assert.equal(safetyResult(safetyConfig, state.history, [2]).score, 4);
     assert.equal(
-      applySafetyAction(safetyConfig, state, { type: "REMOVE_RESPONSE", id: "stop" }),
+      applySafetyAction(safetyConfig, state, {
+        type: "REMOVE_RESPONSE",
+        id: "stop",
+      }),
       state,
     );
-    assert.equal(applySafetyAction(safetyConfig, state, { type: "SUBMIT_RESPONSE" }), state);
+    assert.equal(
+      applySafetyAction(safetyConfig, state, { type: "SUBMIT_RESPONSE" }),
+      state,
+    );
   }
 });
 test("response permits unsafe drafts but freezes their partial credit and consequences on submission", () => {
   let state = createSafetyState([2]);
-  state = applySafetyAction(safetyConfig, state, { type: "ADD_RESPONSE", id: "reply" });
-  state = applySafetyAction(safetyConfig, state, { type: "REMOVE_RESPONSE", id: "reply" });
+  state = applySafetyAction(safetyConfig, state, {
+    type: "ADD_RESPONSE",
+    id: "reply",
+  });
+  state = applySafetyAction(safetyConfig, state, {
+    type: "REMOVE_RESPONSE",
+    id: "reply",
+  });
   for (const id of ["stop", "payFee", "reply", "save"])
-    state = applySafetyAction(safetyConfig, state, { type: "ADD_RESPONSE", id });
+    state = applySafetyAction(safetyConfig, state, {
+      type: "ADD_RESPONSE",
+      id,
+    });
   assert.equal(
-    applySafetyAction(safetyConfig, state, { type: "ADD_RESPONSE", id: "protect" }),
+    applySafetyAction(safetyConfig, state, {
+      type: "ADD_RESPONSE",
+      id: "protect",
+    }),
     state,
   );
   state = applySafetyAction(safetyConfig, state, { type: "SUBMIT_RESPONSE" });

@@ -121,16 +121,68 @@
         "target_customers": 4,
         "time_limit": 60,
         "items": [
-          { "id": "banh_trang_tron", "name": "Bánh Tráng Trộn", "price": 15000, "sprite": "c2_mg_item_banh_trang_tron.png" },
-          { "id": "ca_vien", "name": "Cá Viên Chiên", "price": 20000, "sprite": "c2_mg_item_ca_vien.png" },
-          { "id": "sam_lanh", "name": "Sâm Lạnh", "price": 10000, "sprite": "c2_mg_item_sam_lanh.png" },
-          { "id": "tra_sua", "name": "Trà Sữa", "price": 25000, "sprite": "c2_mg_item_tra_sua.png" }
+          {
+            "id": "banh_trang_tron",
+            "name": "Bánh Tráng Trộn",
+            "price": 15000,
+            "sprite": "c2_mg_item_banh_trang_tron.png"
+          },
+          {
+            "id": "ca_vien",
+            "name": "Cá Viên Chiên",
+            "price": 20000,
+            "sprite": "c2_mg_item_ca_vien.png"
+          },
+          {
+            "id": "sam_lanh",
+            "name": "Sâm Lạnh",
+            "price": 10000,
+            "sprite": "c2_mg_item_sam_lanh.png"
+          },
+          {
+            "id": "tra_sua",
+            "name": "Trà Sữa",
+            "price": 25000,
+            "sprite": "c2_mg_item_tra_sua.png"
+          }
         ],
         "customers": [
-          { "id": "c1", "order": "banh_trang_tron", "sprites": { "ordering": "c2_mg_customer1_ordering.png", "correct": "c2_mg_customer1_correct.png", "wrong": "c2_mg_customer1_wrong.png" } },
-          { "id": "c2", "order": "tra_sua", "sprites": { "ordering": "c2_mg_customer2_ordering.png", "correct": "c2_mg_customer2_correct.png", "wrong": "c2_mg_customer2_wrong.png" } },
-          { "id": "c3", "order": "ca_vien", "sprites": { "ordering": "c2_mg_customer3_ordering.png", "correct": "c2_mg_customer3_correct.png", "wrong": "c2_mg_customer3_wrong.png" } },
-          { "id": "c4", "order": "sam_lanh", "sprites": { "ordering": "c2_mg_customer4_ordering.png", "correct": "c2_mg_customer4_correct.png", "wrong": "c2_mg_customer4_wrong.png" } }
+          {
+            "id": "c1",
+            "order": "banh_trang_tron",
+            "sprites": {
+              "ordering": "c2_mg_customer1_ordering.png",
+              "correct": "c2_mg_customer1_correct.png",
+              "wrong": "c2_mg_customer1_wrong.png"
+            }
+          },
+          {
+            "id": "c2",
+            "order": "tra_sua",
+            "sprites": {
+              "ordering": "c2_mg_customer2_ordering.png",
+              "correct": "c2_mg_customer2_correct.png",
+              "wrong": "c2_mg_customer2_wrong.png"
+            }
+          },
+          {
+            "id": "c3",
+            "order": "ca_vien",
+            "sprites": {
+              "ordering": "c2_mg_customer3_ordering.png",
+              "correct": "c2_mg_customer3_correct.png",
+              "wrong": "c2_mg_customer3_wrong.png"
+            }
+          },
+          {
+            "id": "c4",
+            "order": "sam_lanh",
+            "sprites": {
+              "ordering": "c2_mg_customer4_ordering.png",
+              "correct": "c2_mg_customer4_correct.png",
+              "wrong": "c2_mg_customer4_wrong.png"
+            }
+          }
         ]
       },
       "on_success": {

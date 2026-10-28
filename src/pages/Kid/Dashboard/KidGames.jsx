@@ -13,7 +13,10 @@ export default function KidGames() {
   const [searchParams] = useSearchParams();
   const chapterParam = searchParams.get("chapter") || "1";
   const chapterNumber = Number(chapterParam);
-  const validChapter = Number.isInteger(chapterNumber) && chapterNumber >= 1 && chapterNumber <= 99;
+  const validChapter =
+    Number.isInteger(chapterNumber) &&
+    chapterNumber >= 1 &&
+    chapterNumber <= 99;
   const { loading, error } = useKidDashboard();
   const [gameData, setGameData] = useState(null);
   const [runtimeError, setRuntimeError] = useState("");
@@ -37,7 +40,10 @@ export default function KidGames() {
         setLoadedChapter(chapterNumber);
         setRuntimeError("");
       })
-      .catch((e) => mounted && setRuntimeError(e.message || "Không tải được chương."));
+      .catch(
+        (e) =>
+          mounted && setRuntimeError(e.message || "Không tải được chương."),
+      );
     return () => {
       mounted = false;
     };
@@ -77,16 +83,24 @@ export default function KidGames() {
         </div>
       )}
 
-      {!loading && !error && validChapter && gameData && loadedChapter === chapterNumber && (
-        <VisualNovelPlayer key={gameData.id} data={gameData} />
-      )}
+      {!loading &&
+        !error &&
+        validChapter &&
+        gameData &&
+        loadedChapter === chapterNumber && (
+          <VisualNovelPlayer key={gameData.id} data={gameData} />
+        )}
 
       {!loading && !error && !validChapter && (
         <div className="mx-auto max-w-5xl space-y-4">
           <div className="rounded-3xl border border-amber-200 bg-white p-8 text-center">
             <Gamepad2 className="mx-auto mb-4 h-12 w-12 text-amber-500" />
-            <h1 className="text-2xl font-bold text-gray-800">Chọn chương để bắt đầu</h1>
-            <p className="mt-3 text-gray-600">Chọn một chương để vào visual novel tương ứng.</p>
+            <h1 className="text-2xl font-bold text-gray-800">
+              Chọn chương để bắt đầu
+            </h1>
+            <p className="mt-3 text-gray-600">
+              Chọn một chương để vào visual novel tương ứng.
+            </p>
           </div>
           <div className="grid gap-4 md:grid-cols-2">
             {chapters.map((chapter) => (
@@ -98,7 +112,9 @@ export default function KidGames() {
                 <div className="text-xs font-bold uppercase tracking-widest text-amber-600">
                   Chương {chapter.chapterNumber}
                 </div>
-                <h2 className="mt-2 text-2xl font-black text-gray-900">{chapter.title}</h2>
+                <h2 className="mt-2 text-2xl font-black text-gray-900">
+                  {chapter.title}
+                </h2>
               </Link>
             ))}
           </div>

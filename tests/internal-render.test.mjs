@@ -21,43 +21,80 @@ test("internal routes require the shared ACCOUNT login instead of seeded credent
     );
     assert.equal(html, "");
     assert.doesNotMatch(html, /FinTeenDemo!|@finteen.demo|<form/);
-    const { default: AuthForm } = await server.ssrLoadModule('/src/features/workspace/AuthForm.jsx');
-    const login = renderToString(React.createElement(MemoryRouter, { initialEntries: ['/internal/login?as=kid'] }, React.createElement(AuthForm, { internal: true })));
+    const { default: AuthForm } = await server.ssrLoadModule(
+      "/src/features/workspace/AuthForm.jsx",
+    );
+    const login = renderToString(
+      React.createElement(
+        MemoryRouter,
+        { initialEntries: ["/internal/login?as=kid"] },
+        React.createElement(AuthForm, { internal: true }),
+      ),
+    );
     assert.match(login, /Đăng nhập nội bộ/);
     assert.match(login, /type="email"/);
     assert.match(login, /Game Editor, Game Reviewer/);
     assert.doesNotMatch(login, /Loại tài khoản|href="\/register"|Mã PIN/);
-    const { accountDestination, hasInternalAccess } = await server.ssrLoadModule('/src/features/internal/access.js');
-    for (const role of ['ADMIN', 'GAME_EDITOR', 'GAME_REVIEWER', 'GAME_MANAGER']) {
+    const { accountDestination, hasInternalAccess } =
+      await server.ssrLoadModule("/src/features/internal/access.js");
+    for (const role of [
+      "ADMIN",
+      "GAME_EDITOR",
+      "GAME_REVIEWER",
+      "GAME_MANAGER",
+    ]) {
       assert.equal(hasInternalAccess({ roles: [role] }), true);
-      assert.equal(accountDestination({ roles: [role] }), '/internal');
+      assert.equal(accountDestination({ roles: [role] }), "/internal");
     }
-    assert.equal(hasInternalAccess({ roles: ['PARENT'] }), false);
-    assert.equal(accountDestination({ role: 'kid' }), '/dashboard/kid');
-    const { default: StudioWorkspace } = await server.ssrLoadModule('/src/features/internal/StudioWorkspace.jsx');
-    const menuFor = roles => renderToString(React.createElement(MemoryRouter, { initialEntries: ['/internal'] }, React.createElement(StudioWorkspace, { actor: { roles, displayName: 'Studio User' } })));
-    for (const [role, path] of [['GAME_EDITOR', 'chapters'], ['GAME_REVIEWER', 'reviews'], ['GAME_MANAGER', 'releases']]) {
+    assert.equal(hasInternalAccess({ roles: ["PARENT"] }), false);
+    assert.equal(accountDestination({ role: "kid" }), "/dashboard/kid");
+    const { default: StudioWorkspace } = await server.ssrLoadModule(
+      "/src/features/internal/StudioWorkspace.jsx",
+    );
+    const menuFor = (roles) =>
+      renderToString(
+        React.createElement(
+          MemoryRouter,
+          { initialEntries: ["/internal"] },
+          React.createElement(StudioWorkspace, {
+            actor: { roles, displayName: "Studio User" },
+          }),
+        ),
+      );
+    for (const [role, path] of [
+      ["GAME_EDITOR", "chapters"],
+      ["GAME_REVIEWER", "reviews"],
+      ["GAME_MANAGER", "releases"],
+    ]) {
       const menu = menuFor([role]);
       assert.match(menu, new RegExp(`href="/internal/${path}"`));
       assert.match(menu, /href="\/internal\/assets"/);
       assert.match(menu, /href="\/internal\/chapters"/);
-      if (role === 'GAME_MANAGER') assert.match(menu, /href="\/internal\/releases"/);
+      if (role === "GAME_MANAGER")
+        assert.match(menu, /href="\/internal\/releases"/);
       else assert.doesNotMatch(menu, /href="\/internal\/releases"/);
       assert.match(menu, /href="\/internal\/questions"/);
-      if (role !== 'GAME_REVIEWER') assert.doesNotMatch(menu, /href="\/internal\/reviews"/);
+      if (role !== "GAME_REVIEWER")
+        assert.doesNotMatch(menu, /href="\/internal\/reviews"/);
     }
-    const combined = menuFor(['GAME_EDITOR', 'GAME_REVIEWER']);
+    const combined = menuFor(["GAME_EDITOR", "GAME_REVIEWER"]);
     assert.match(combined, /href="\/internal\/chapters"/);
     assert.match(combined, /href="\/internal\/reviews"/);
     assert.match(combined, /value="GAME_REVIEWER"/);
     assert.match(combined, /Bạn soạn chương/);
-    const admin = menuFor(['ADMIN']);
+    const admin = menuFor(["ADMIN"]);
     assert.match(admin, /href="\/internal\/admin"/);
     assert.match(admin, /Quay lại Admin/);
     assert.match(admin, /href="\/internal\/history"/);
     assert.match(admin, /value="GAME_REVIEWER"/);
-    assert.match(menuFor(['GAME_REVIEWER']), /Bạn chơi thử chương người khác gửi lên/);
-    assert.match(menuFor(['GAME_MANAGER']), /Bạn đưa các chương đã duyệt vào game/);
+    assert.match(
+      menuFor(["GAME_REVIEWER"]),
+      /Bạn chơi thử chương người khác gửi lên/,
+    );
+    assert.match(
+      menuFor(["GAME_MANAGER"]),
+      /Bạn đưa các chương đã duyệt vào game/,
+    );
   } finally {
     await server.close();
   }

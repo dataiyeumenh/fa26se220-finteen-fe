@@ -1,1 +1,36 @@
-<!doctype html><html lang="vi"><head><meta charset="UTF-8"><title>Chương 8 · 360px</title><style>body{margin:0;background:#554c40}iframe{display:block;width:360px;height:900px;border:0}</style></head><body><iframe title="Chương 8 ở 360px" src="about:blank"></iframe><pre id="ch8-browser-result">RUNNING</pre><script>document.querySelector('iframe').src='/tests/fixtures/chapter-eight-browser.html'+(location.search||'?route=goal');window.addEventListener('message',event=>{if(event.origin===location.origin&&event.data.type==='ch8-review')document.getElementById('ch8-browser-result').textContent=event.data.result;});</script></body></html>
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Chương 8 · 360px</title>
+    <style>
+      body {
+        margin: 0;
+        background: #554c40;
+      }
+      iframe {
+        display: block;
+        width: 360px;
+        height: 900px;
+        border: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <iframe title="Chương 8 ở 360px" src="about:blank"></iframe>
+    <pre id="ch8-browser-result">RUNNING</pre>
+    <script>
+      document.querySelector("iframe").src =
+        "/tests/fixtures/chapter-eight-browser.html" +
+        (location.search || "?route=goal");
+      window.addEventListener("message", (event) => {
+        if (
+          event.origin === location.origin &&
+          event.data.type === "ch8-review"
+        )
+          document.getElementById("ch8-browser-result").textContent =
+            event.data.result;
+      });
+    </script>
+  </body>
+</html>

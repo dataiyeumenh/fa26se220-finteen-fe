@@ -1,12 +1,19 @@
-const env = import.meta.env
+const env = import.meta.env || globalThis.process?.env || {};
+const nodeFallbackBaseUrl =
+  typeof window === "undefined" ? "http://localhost" : "";
 
 export const apiConfig = {
-  baseUrl: (env.VITE_API_BASE_URL || '').trim().replace(/\/+$/, ''),
+  baseUrl: (env.VITE_API_BASE_URL || nodeFallbackBaseUrl)
+    .trim()
+    .replace(/\/+$/, ""),
   // Documentation URL only; requests use baseUrl, never the Swagger UI URL.
-  swaggerUrl: (env.VITE_SWAGGER_URL || '').trim(),
-}
+  swaggerUrl: (env.VITE_SWAGGER_URL || "").trim(),
+};
 
-if (!apiConfig.baseUrl) throw new Error('Thiếu VITE_API_BASE_URL. Hãy cấu hình .env rồi khởi động lại Vite.')
+if (!apiConfig.baseUrl)
+  throw new Error(
+    "Thiếu VITE_API_BASE_URL. Hãy cấu hình .env rồi khởi động lại Vite.",
+  );
 
 export const firebaseConfig = {
   apiKey: env.VITE_FIREBASE_API_KEY,
@@ -15,4 +22,4 @@ export const firebaseConfig = {
   storageBucket: env.VITE_FIREBASE_STORAGE_BUCKET,
   messagingSenderId: env.VITE_FIREBASE_MESSAGING_SENDER_ID,
   appId: env.VITE_FIREBASE_APP_ID,
-}
+};

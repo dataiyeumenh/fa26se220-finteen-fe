@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { auth } from "../../../../api/auth.api";
+import { teacherDashboardApi as auth } from "../api/teacherDashboardApi";
 
 export default function useTeacherDashboard() {
   const [dashboard, setDashboard] = useState(null);

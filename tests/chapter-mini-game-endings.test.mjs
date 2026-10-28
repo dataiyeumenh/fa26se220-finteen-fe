@@ -92,7 +92,11 @@ const cases = [
     ch8,
     chapterEightLearning,
     futurePlanConfig.tasks.map((id) => ({ id })),
-    (history, kind) => futureResult(futurePlanConfig, { ...createFutureState(cfg(kind)), history }),
+    (history, kind) =>
+      futureResult(futurePlanConfig, {
+        ...createFutureState(cfg(kind)),
+        history,
+      }),
     ["portfolio", "claims", "planner"],
   ],
 ];
@@ -231,15 +235,25 @@ test("chapter 8 budget submissions require money for the goal as well as staying
       .includes("chưa dành tiền"),
   );
   assert.equal(
-    applyFutureAction(futurePlanConfig, state, { type: "BUDGET", id: "goal", delta: 100000 }),
+    applyFutureAction(futurePlanConfig, state, {
+      type: "BUDGET",
+      id: "goal",
+      delta: 100000,
+    }),
     state,
   );
-  const draft = applyFutureAction(futurePlanConfig, createFutureState(cfg("planner")), {
-    type: "BUDGET",
-    id: "goal",
-    delta: 100000,
+  const draft = applyFutureAction(
+    futurePlanConfig,
+    createFutureState(cfg("planner")),
+    {
+      type: "BUDGET",
+      id: "goal",
+      delta: 100000,
+    },
+  );
+  const submitted = applyFutureAction(futurePlanConfig, draft, {
+    type: "SUBMIT_MONTH",
   });
-  const submitted = applyFutureAction(futurePlanConfig, draft, { type: "SUBMIT_MONTH" });
   assert.equal(futureResult(futurePlanConfig, submitted).score, 1);
   assert.equal(
     recordMiniGameResult(
