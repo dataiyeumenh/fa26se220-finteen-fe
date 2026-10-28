@@ -122,8 +122,8 @@ export function Plans() {
     }
   };
   // Public plan prices are loaded independently from the account's owned entitlements.
-  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     void load();
     void loadPayments();
     void auth.ensureEntitlements().catch(() => {});
