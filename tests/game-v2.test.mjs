@@ -110,12 +110,20 @@ test("Chapter 4 compares for free, charges once at purchase and keeps fees separ
       "EV_CH04_PHONE_PURCHASE",
     );
     assert.equal(receipt.options[1].moneyEvents[1].amount, -100000);
-    assert.deepEqual(purchase.condition, { var: "money", op: ">=", value: price });
+    assert.deepEqual(purchase.condition, {
+      var: "money",
+      op: ">=",
+      value: price,
+    });
     assert.ok(lockReason(purchase, { money: price - 1 }));
     assert.equal(lockReason(purchase, { money: price }), null);
   }
   const withFee = scenes.CH04_SC03.options[1];
-  assert.deepEqual(withFee.condition, { var: "money", op: ">=", value: 1700000 });
+  assert.deepEqual(withFee.condition, {
+    var: "money",
+    op: ">=",
+    value: 1700000,
+  });
   assert.ok(lockReason(withFee, { money: 1699999 }));
   assert.equal(lockReason(withFee, { money: 1700000 }), null);
   const fees = chapter4V2GameData.scenes
@@ -282,7 +290,8 @@ test("Chapter 1 postpone choice does not spend money and best ending is reachabl
   const best = chapter1V2GameData.endingRules.endings[0];
   assert.ok(
     best.condition.all.some(
-      (leaf) => leaf.var === "money" && leaf.op === ">=" && leaf.value === 500000,
+      (leaf) =>
+        leaf.var === "money" && leaf.op === ">=" && leaf.value === 500000,
     ),
   );
   // Giữ trọn tiền ban đầu (hoãn mua) + đủ điểm mini-game là tới được kết tốt nhất.

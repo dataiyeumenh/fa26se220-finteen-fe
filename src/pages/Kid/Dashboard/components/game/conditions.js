@@ -54,8 +54,10 @@ function compare(left, op, right) {
 }
 
 function evaluateStructured(c, ctx) {
-  if (Array.isArray(c.all)) return c.all.every((x) => evaluateStructured(x, ctx));
-  if (Array.isArray(c.any)) return c.any.some((x) => evaluateStructured(x, ctx));
+  if (Array.isArray(c.all))
+    return c.all.every((x) => evaluateStructured(x, ctx));
+  if (Array.isArray(c.any))
+    return c.any.some((x) => evaluateStructured(x, ctx));
   if (typeof c.var === "string") {
     // Biến chưa có giá trị (vd chương không tính choicePercent) so như dạng cũ: undefined == true → sai, != true → đúng,
     // so số → sai. BE đã kiểm tên biến khi lưu nên ở đây không chặn thêm.
@@ -134,12 +136,18 @@ export function evaluateCondition(condition, ctx, mode = "scene") {
   if (condition == null) return false;
   if (isStructured(condition)) return evaluateStructured(condition, ctx);
   if (typeof condition === "string") {
-    if (mode === "ending") return condition === "DEFAULT_FALLBACK" || legacyEndingExpression(condition, ctx);
+    if (mode === "ending")
+      return (
+        condition === "DEFAULT_FALLBACK" ||
+        legacyEndingExpression(condition, ctx)
+      );
     return false; // bộ đọc cũ của rẽ tự động không hiểu chuỗi trần (chỉ {check|expression|formula}) — giữ y hành vi
   }
   if (mode === "scene" && typeof condition === "object") {
-    const expression = condition.check || condition.expression || condition.formula;
-    if (expression) return legacySceneExpression(String(expression).trim(), ctx);
+    const expression =
+      condition.check || condition.expression || condition.formula;
+    if (expression)
+      return legacySceneExpression(String(expression).trim(), ctx);
     if (condition.field) return legacyField(condition, ctx);
   }
   return false;
@@ -151,7 +159,9 @@ export function evaluateCondition(condition, ctx, mode = "scene") {
  */
 export function optionLockReason(option, ctx) {
   if (isStructured(option.condition)) {
-    return evaluateStructured(option.condition, ctx) ? null : option.lockedReason || "Chưa đủ điều kiện để chọn.";
+    return evaluateStructured(option.condition, ctx)
+      ? null
+      : option.lockedReason || "Chưa đủ điều kiện để chọn.";
   }
   const requires = option.requires;
   if (!requires) return null;
@@ -170,7 +180,12 @@ export function resolveEnding(endingRules, ctx) {
   if (!endingRules?.endings) return null;
   for (const id of endingRules.priorityOrder || []) {
     const ending = endingRules.endings.find((e) => e.id === id);
-    if (ending && (ending.fallback === true || evaluateCondition(ending.condition, ctx, "ending"))) return ending;
+    if (
+      ending &&
+      (ending.fallback === true ||
+        evaluateCondition(ending.condition, ctx, "ending"))
+    )
+      return ending;
   }
   return endingRules.endings[endingRules.endings.length - 1] || null;
 }

@@ -18,9 +18,7 @@ const fillParts = (template, values) =>
   template
     .split(/(\{\w+\})/)
     .filter(Boolean)
-    .map((part) =>
-      /^\{\w+\}$/.test(part) ? values[part.slice(1, -1)] : part,
-    );
+    .map((part) => (/^\{\w+\}$/.test(part) ? values[part.slice(1, -1)] : part));
 // Đoạn có định dạng: chuỗi = chữ, {b} / {strong} = chữ đậm, {br} = xuống dòng.
 const rich = (parts) =>
   parts.map((part, i) =>
@@ -52,7 +50,8 @@ export function ScamOrSafeMiniGame({
   const { round, history } = state;
   const finished = Boolean(state.submittedRounds[round]);
   const active = inbox.messages[state.activeMessage];
-  const actionInfo = (id) => response.actions.find((action) => action.id === id);
+  const actionInfo = (id) =>
+    response.actions.find((action) => action.id === id);
   const dispatch = (action) => {
     const next = applySafetyAction(config, current.current, action);
     if (next === current.current) return;

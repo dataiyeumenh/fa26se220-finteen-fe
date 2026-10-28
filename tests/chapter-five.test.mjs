@@ -144,10 +144,23 @@ test("primary branches preserve the specified stats, pending state and mutually 
   assert.equal(scenes.has("CH05_PROVIDER_REVIEW"), false);
 });
 test("timeline, inflation and early withdrawal arithmetic match the spec", () => {
-  assert.deepEqual(timelineAt(1, timelineConfig.timeline), { compound: 1050000, simple: 1050000 });
-  assert.deepEqual(timelineAt(2, timelineConfig.timeline), { compound: 1102500, simple: 1100000 });
-  assert.equal(timelineAt(2, timelineConfig.timeline).compound - timelineAt(2, timelineConfig.timeline).simple, 2500);
-  assert.equal(1080000 - timelineAt(1, timelineConfig.timeline).compound, 30000);
+  assert.deepEqual(timelineAt(1, timelineConfig.timeline), {
+    compound: 1050000,
+    simple: 1050000,
+  });
+  assert.deepEqual(timelineAt(2, timelineConfig.timeline), {
+    compound: 1102500,
+    simple: 1100000,
+  });
+  assert.equal(
+    timelineAt(2, timelineConfig.timeline).compound -
+      timelineAt(2, timelineConfig.timeline).simple,
+    2500,
+  );
+  assert.equal(
+    1080000 - timelineAt(1, timelineConfig.timeline).compound,
+    30000,
+  );
   assert.equal(
     answerOf("aBalance"),
     1000000 + (1000000 * 0.03 * 3) / 12 - 5000 * 3,

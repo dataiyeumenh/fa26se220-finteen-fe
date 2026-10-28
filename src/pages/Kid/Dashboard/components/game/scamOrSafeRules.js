@@ -89,10 +89,7 @@ export function applySafetyAction(config, state, action) {
     inbox.answerOrder.includes(action.answer)
   ) {
     next.messages = { ...state.messages, [action.id]: action.answer };
-    next.activeMessage = Math.min(
-      messages.length - 1,
-      state.activeMessage + 1,
-    );
+    next.activeMessage = Math.min(messages.length - 1, state.activeMessage + 1);
   } else if (
     action.type === "SUBMIT_MESSAGES" &&
     state.round === 1 &&

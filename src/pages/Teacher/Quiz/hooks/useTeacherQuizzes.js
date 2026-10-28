@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { auth } from "../../../../api/auth.api";
+import { teacherQuizApi as auth } from "../api/teacherQuizApi";
 
 const quizError = (error) =>
   ({

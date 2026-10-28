@@ -1,5 +1,7 @@
 import {
+  CheckCircle2,
   ClipboardList,
+  Clock3,
   Eye,
   Pencil,
   Plus,
@@ -64,7 +66,7 @@ export default function TeacherQuizContent({ quizState }) {
         </div>
       )}
       {modal?.type === "edit" ? (
-        <QuizEditor
+        <QuizEditLoader
           groups={groups}
           quiz={modal.quiz}
           onClose={() => setModal(null)}
@@ -189,6 +191,28 @@ export default function TeacherQuizContent({ quizState }) {
   );
 }
 
+function QuizEditLoader(props) {
+  const { quiz } = props;
+  const { detail, error } = useTeacherQuizDetail(quiz?.id);
+  if (!quiz) return <QuizEditor {...props} />;
+  if (error)
+    return (
+      <section className="ws-card">
+        <Notice text={error} />
+        <button className="ws-btn" onClick={props.onClose}>
+          Quay lại
+        </button>
+      </section>
+    );
+  if (!detail) return <Empty>Đang tải chi tiết đề…</Empty>;
+  return (
+    <QuizEditor
+      {...props}
+      quiz={{ ...quiz, ...detail.quiz, questions: detail.questions || [] }}
+    />
+  );
+}
+
 function QuizEditor({ groups, quiz, onClose, onSaved }) {
   const [filters, setFilters] = useState({
     q: "",
@@ -262,7 +286,12 @@ function QuizEditor({ groups, quiz, onClose, onSaved }) {
         </label>
         <label>
           Hạn nộp
-          <input name="dueAt" type="datetime-local" required />
+          <input
+            name="dueAt"
+            type="datetime-local"
+            defaultValue={quiz?.dueAt ? quiz.dueAt.slice(0, 16) : ""}
+            required
+          />
         </label>
         <fieldset>
           <legend>Kho câu hỏi · đã chọn {selected.size}/100</legend>
@@ -312,22 +341,76 @@ function QuizEditor({ groups, quiz, onClose, onSaved }) {
 
 function QuizDetail({ quiz, onClose }) {
   const { detail, error } = useTeacherQuizDetail(quiz.id);
+  const questions = detail?.questions || [];
+  const title = detail?.quiz?.title || quiz.title;
   return (
-    <Modal title={detail?.quiz?.title || "Chi tiết đề"} onClose={onClose}>
-      <Notice text={error} />
-      {detail?.questions?.map((question, index) => (
-        <section className="ws-question" key={question.id}>
-          <h3>
-            {index + 1}. {question.stem}
-          </h3>
-          {question.options?.map((option, optionIndex) => (
-            <p key={option}>
-              {String.fromCharCode(65 + optionIndex)}. {option}
-              {question.correctIndex === optionIndex ? " ✓" : ""}
-            </p>
-          ))}
-        </section>
-      ))}
+    <Modal
+      title="Xem đề Quiz"
+      className="ws-quiz-preview-modal"
+      onClose={onClose}
+    >
+      <div className="ws-quiz-preview">
+        <header className="ws-quiz-preview-head">
+          <div>
+            <span className="ws-pill">{kindLabel(detail?.quiz || quiz)}</span>
+            <h2>{title}</h2>
+            <p>Xem toàn bộ nội dung và đáp án đúng trước khi sử dụng đề.</p>
+          </div>
+          <div className="ws-quiz-preview-stats">
+            <span>
+              <ClipboardList size={18} />
+              <strong>{questions.length || quiz.questionCount || 0}</strong>
+              câu hỏi
+            </span>
+            <span>
+              <Clock3 size={18} />
+              <strong>{dateTime(detail?.quiz?.dueAt || quiz.dueAt)}</strong>
+              hạn nộp
+            </span>
+          </div>
+        </header>
+        <Notice text={error} />
+        {!detail && !error ? (
+          <Empty>Đang tải nội dung đề…</Empty>
+        ) : questions.length ? (
+          <div className="ws-quiz-preview-list">
+            {questions.map((question, index) => (
+              <article className="ws-quiz-preview-question" key={question.id}>
+                <div className="ws-quiz-preview-number">{index + 1}</div>
+                <div className="ws-quiz-preview-body">
+                  <div className="ws-quiz-preview-question-head">
+                    <h3>{question.stem}</h3>
+                    {question.externalId && (
+                      <small>{question.externalId}</small>
+                    )}
+                  </div>
+                  <div className="ws-quiz-preview-options">
+                    {question.options?.map((option, optionIndex) => {
+                      const correct = question.correctIndex === optionIndex;
+                      return (
+                        <div
+                          className={correct ? "is-correct" : ""}
+                          key={`${question.id}-${optionIndex}`}
+                        >
+                          <span>{String.fromCharCode(65 + optionIndex)}</span>
+                          <p>{option}</p>
+                          {correct && (
+                            <strong>
+                              <CheckCircle2 size={17} /> Đáp án đúng
+                            </strong>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        ) : (
+          !error && <Empty>Đề chưa có câu hỏi.</Empty>
+        )}
+      </div>
     </Modal>
   );
 }

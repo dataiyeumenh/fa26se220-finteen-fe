@@ -1,1 +1,36 @@
-<!doctype html><html lang="vi"><head><meta charset="UTF-8"><title>360px Chapter 5 acceptance</title><style>body{margin:0;background:#203d34}iframe{display:block;width:360px;height:900px;border:0}</style></head><body><iframe title="Chapter 5 ở 360px" src="about:blank"></iframe><pre id="ch5-browser-result">RUNNING</pre><script>document.querySelector('iframe').src='/tests/fixtures/chapter-five-browser.html'+(location.search||'?route=revise');window.addEventListener('message',event=>{if(event.origin===location.origin&&event.data.type==='ch5-review')document.getElementById('ch5-browser-result').textContent=event.data.result;});</script></body></html>
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <title>360px Chapter 5 acceptance</title>
+    <style>
+      body {
+        margin: 0;
+        background: #203d34;
+      }
+      iframe {
+        display: block;
+        width: 360px;
+        height: 900px;
+        border: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <iframe title="Chapter 5 ở 360px" src="about:blank"></iframe>
+    <pre id="ch5-browser-result">RUNNING</pre>
+    <script>
+      document.querySelector("iframe").src =
+        "/tests/fixtures/chapter-five-browser.html" +
+        (location.search || "?route=revise");
+      window.addEventListener("message", (event) => {
+        if (
+          event.origin === location.origin &&
+          event.data.type === "ch5-review"
+        )
+          document.getElementById("ch5-browser-result").textContent =
+            event.data.result;
+      });
+    </script>
+  </body>
+</html>

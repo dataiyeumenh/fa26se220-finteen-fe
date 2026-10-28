@@ -1,1 +1,36 @@
-<!doctype html><html lang="vi"><head><meta charset="UTF-8"><title>Chapter 6 · 360px</title><style>body{margin:0;background:#233e35}iframe{display:block;width:360px;height:900px;border:0}</style></head><body><iframe title="Chương 6 ở 360px" src="about:blank"></iframe><pre id="ch6-browser-result">RUNNING</pre><script>document.querySelector('iframe').src='/tests/fixtures/chapter-six-browser.html'+(location.search||'?route=retry');window.addEventListener('message',event=>{if(event.origin===location.origin&&event.data.type==='ch6-review')document.getElementById('ch6-browser-result').textContent=event.data.result;});</script></body></html>
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Chapter 6 · 360px</title>
+    <style>
+      body {
+        margin: 0;
+        background: #233e35;
+      }
+      iframe {
+        display: block;
+        width: 360px;
+        height: 900px;
+        border: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <iframe title="Chương 6 ở 360px" src="about:blank"></iframe>
+    <pre id="ch6-browser-result">RUNNING</pre>
+    <script>
+      document.querySelector("iframe").src =
+        "/tests/fixtures/chapter-six-browser.html" +
+        (location.search || "?route=retry");
+      window.addEventListener("message", (event) => {
+        if (
+          event.origin === location.origin &&
+          event.data.type === "ch6-review"
+        )
+          document.getElementById("ch6-browser-result").textContent =
+            event.data.result;
+      });
+    </script>
+  </body>
+</html>

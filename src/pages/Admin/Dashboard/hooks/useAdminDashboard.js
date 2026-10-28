@@ -1,12 +1,18 @@
 import { useEffect, useState } from "react";
-import { auth } from "../../../../api/auth.api";
+import { adminDashboardApi as auth } from "../api/adminDashboardApi";
+import { auth as authSession } from "@/api/auth.api";
 import { useWorkspace } from "../../../../features/workspace/useWorkspace";
 
 const errorMessage = (error, fallback) => error?.message || fallback;
 
 export default function useAdminDashboard() {
   const { actor, loading, authError } = useWorkspace();
-  return { actor, loading, error: authError, logout: () => auth.logout() };
+  return {
+    actor,
+    loading,
+    error: authError,
+    logout: () => authSession.logout(),
+  };
 }
 
 export function useAdminPlans() {
@@ -147,21 +153,21 @@ export function useAdminRoleAccounts(reloadKey, q = "", page = 0, size = 20) {
     const timer = window.setTimeout(() => {
       setLoading(true);
       auth
-      .listAdminAccounts({ q, page, size })
-      .then((list) => {
-        if (!active) return;
-        setRows(Array.isArray(list) ? list : []);
-        setError("");
-      })
-      .catch((loadError) => {
-        if (!active) return;
-        setError(
-          errorMessage(loadError, "Không tải được danh sách tài khoản."),
-        );
-      })
-      .finally(() => {
-        if (active) setLoading(false);
-      });
+        .listAdminAccounts({ q, page, size })
+        .then((list) => {
+          if (!active) return;
+          setRows(Array.isArray(list) ? list : []);
+          setError("");
+        })
+        .catch((loadError) => {
+          if (!active) return;
+          setError(
+            errorMessage(loadError, "Không tải được danh sách tài khoản."),
+          );
+        })
+        .finally(() => {
+          if (active) setLoading(false);
+        });
     }, 300);
     return () => {
       active = false;

@@ -205,7 +205,9 @@ export function FuturePlanMiniGame({
                     </span>
                     <small>
                       {fill(pf.before, {
-                        amount: cash(state.allocation[asset.id] * pf.pointValue),
+                        amount: cash(
+                          state.allocation[asset.id] * pf.pointValue,
+                        ),
                       })}
                     </small>
                     <b>
@@ -491,7 +493,9 @@ export function FuturePlanMiniGame({
                     )
                     .map((type, index) => (
                       <div key={index}>
-                        <small>{fill(pl.year.monthLabel, { n: index + 1 })}</small>
+                        <small>
+                          {fill(pl.year.monthLabel, { n: index + 1 })}
+                        </small>
                         <b>{cash(state.budgets[type].goal)}</b>
                         <span>{pl.months[type].yearLabel}</span>
                       </div>

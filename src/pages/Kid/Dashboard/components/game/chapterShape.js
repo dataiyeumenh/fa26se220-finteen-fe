@@ -5,7 +5,9 @@
 const TYPE_ALIAS = { inspect: "scene", reflection: "activity" };
 
 const lowerPosition = (item) =>
-  typeof item?.position === "string" ? { ...item, position: item.position.toLowerCase() } : item;
+  typeof item?.position === "string"
+    ? { ...item, position: item.position.toLowerCase() }
+    : item;
 
 export function normalizeChapter(data) {
   if (!data || !Array.isArray(data.scenes)) return data;
@@ -14,10 +16,17 @@ export function normalizeChapter(data) {
     scenes: data.scenes.map((scene) => ({
       ...scene,
       type: TYPE_ALIAS[scene.type] ?? scene.type,
-      ...(Array.isArray(scene.characters) ? { characters: scene.characters.map(lowerPosition) } : {}),
+      ...(Array.isArray(scene.characters)
+        ? { characters: scene.characters.map(lowerPosition) }
+        : {}),
     })),
     ...(data.endingRules?.endings
-      ? { endingRules: { ...data.endingRules, endings: data.endingRules.endings.map(lowerPosition) } }
+      ? {
+          endingRules: {
+            ...data.endingRules,
+            endings: data.endingRules.endings.map(lowerPosition),
+          },
+        }
       : {}),
   };
 }

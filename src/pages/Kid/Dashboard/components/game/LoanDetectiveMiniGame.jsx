@@ -57,7 +57,10 @@ export function LoanDetectiveMiniGame({
     if (next === stateRef.current) return;
     stateRef.current = next;
     setState(next);
-    onProgress?.({ ...loanResult(config, next.history, game.rounds), ui: next });
+    onProgress?.({
+      ...loanResult(config, next.history, game.rounds),
+      ui: next,
+    });
   };
   const beginDrag = (event, id) => {
     dragRef.current = id;
@@ -349,7 +352,9 @@ export function LoanDetectiveMiniGame({
                       : texts.incorrect}{" "}
                     · {fill(texts.offerName, { id: offer.id })}
                   </b>
-                  <p>{fill(sort.yourTray, { tray: trayName(sorted[offer.id]) })}</p>
+                  <p>
+                    {fill(sort.yourTray, { tray: trayName(sorted[offer.id]) })}
+                  </p>
                   <p>
                     <strong>
                       {fill(sort.correctTray, {
@@ -503,7 +508,9 @@ export function LoanDetectiveMiniGame({
                     </div>
                     <div>
                       <dt>{st.pay}</dt>
-                      <dd>{fill(st.payValue, { amount: cash(statement.amount) })}</dd>
+                      <dd>
+                        {fill(st.payValue, { amount: cash(statement.amount) })}
+                      </dd>
                     </div>
                     <div>
                       <dt>{st.walletLeft}</dt>

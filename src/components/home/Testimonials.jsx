@@ -1,56 +1,72 @@
-import { Star, MessageCircle, Quote, ThumbsUp } from 'lucide-react'
+import { Star, MessageCircle, Quote, ThumbsUp } from "lucide-react";
 
 const testimonials = [
   {
-    name: 'Trần Minh Tuấn',
-    role: 'Lớp 11 · THPT Nguyễn Du',
-    avatar: 'T',
+    name: "Trần Minh Tuấn",
+    role: "Lớp 11 · THPT Nguyễn Du",
+    avatar: "T",
     quote:
-      'Em tưởng tiết kiệm 1tr/tháng × 20 năm ≈ 200tr. Sau khi học FinTeen, em biết con số thật là hơn 500tr. Sốc luôn!',
-    accent: '#ffe43b',
-    bgAccent: 'bg-[#ffe43b]',
-    bgSoft: 'bg-[#ffe43b]/10',
+      "Em tưởng tiết kiệm 1tr/tháng × 20 năm ≈ 200tr. Sau khi học FinTeen, em biết con số thật là hơn 500tr. Sốc luôn!",
+    accent: "#ffe43b",
+    bgAccent: "bg-[#ffe43b]",
+    bgSoft: "bg-[#ffe43b]/10",
   },
   {
-    name: 'Lê Hoàng Yến',
-    role: 'Lớp 10 · THPT Lê Quý Đôn',
-    avatar: 'L',
+    name: "Lê Hoàng Yến",
+    role: "Lớp 10 · THPT Lê Quý Đôn",
+    avatar: "L",
     quote:
       'Em mê nhất phần "đoán trước". Nhìn kết quả em sai be bét nhưng hiểu NGAY tại sao. Không có cách nào quên được!',
-    accent: '#ac92ec',
-    bgAccent: 'bg-[#d7c8ff]',
-    bgSoft: 'bg-[#eee7ff]',
+    accent: "#ac92ec",
+    bgAccent: "bg-[#d7c8ff]",
+    bgSoft: "bg-[#eee7ff]",
   },
   {
-    name: 'Nguyễn Phương Linh',
-    role: 'Lớp 12 · THPT Chuyên Lê Hồng Phong',
-    avatar: 'N',
+    name: "Nguyễn Phương Linh",
+    role: "Lớp 12 · THPT Chuyên Lê Hồng Phong",
+    avatar: "N",
     quote:
       'Game "Mua điện thoại trả góp" khiến em sợ luôn. Giờ em biết "0% lãi" thường là cú lừa. Cảm ơn FinTeen nhiều lắm!',
-    accent: '#4f9be8',
-    bgAccent: 'bg-[#4f9be8]',
-    bgSoft: 'bg-[#4f9be8]/10',
+    accent: "#4f9be8",
+    bgAccent: "bg-[#4f9be8]",
+    bgSoft: "bg-[#4f9be8]/10",
   },
-]
+];
 
 export function Testimonials() {
   return (
-    <section id="testimonials" className="relative py-24 md:py-28 bg-[#fff0e7] overflow-hidden">
-      <div className="absolute top-0 left-1/3 w-72 h-72 rounded-full bg-[#ffe43b]/10 blur-3xl pointer-events-none" aria-hidden="true" />
-      <div className="absolute bottom-10 right-1/4 w-64 h-64 rounded-full bg-[#ffe43b]/10 blur-3xl pointer-events-none" aria-hidden="true" />
-      <div className="absolute top-1/2 left-10 w-56 h-56 rounded-full bg-[#4f9be8]/8 blur-3xl pointer-events-none" aria-hidden="true" />
+    <section
+      id="testimonials"
+      className="relative py-24 md:py-28 bg-[#fff0e7] overflow-hidden"
+    >
+      <div
+        className="absolute top-0 left-1/3 w-72 h-72 rounded-full bg-[#ffe43b]/10 blur-3xl pointer-events-none"
+        aria-hidden="true"
+      />
+      <div
+        className="absolute bottom-10 right-1/4 w-64 h-64 rounded-full bg-[#ffe43b]/10 blur-3xl pointer-events-none"
+        aria-hidden="true"
+      />
+      <div
+        className="absolute top-1/2 left-10 w-56 h-56 rounded-full bg-[#4f9be8]/8 blur-3xl pointer-events-none"
+        aria-hidden="true"
+      />
 
       <div className="container mx-auto max-w-[1200px] px-6 relative">
         <div className="text-center mb-16">
           <div className="inline-flex items-center gap-2 bg-white border-2 border-[#ffe43b]/20 rounded-full px-5 py-2 text-sm font-bold text-[#51428b] mb-4 shadow-sm">
-            <MessageCircle className="w-4 h-4 text-[#ffe43b]" aria-hidden="true" />
+            <MessageCircle
+              className="w-4 h-4 text-[#ffe43b]"
+              aria-hidden="true"
+            />
             Góc nhìn học tập · Nội dung minh họa
           </div>
           <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-4 text-balance text-[#25263d]">
             Những khoảnh khắc <span className="text-[#3568bd]">"à ha!"</span>
           </h2>
           <p className="text-lg text-[#25263d]/65 max-w-[600px] mx-auto text-balance">
-            Các câu chuyện giả định minh họa trải nghiệm học, không phải đánh giá thực tế.
+            Các câu chuyện giả định minh họa trải nghiệm học, không phải đánh
+            giá thực tế.
           </p>
         </div>
 
@@ -62,15 +78,28 @@ export function Testimonials() {
               style={{ animationDelay: `${i * 100}ms` }}
             >
               {/* Top color bar */}
-              <div className={`absolute top-0 left-0 right-0 h-1 ${t.bgAccent}`} aria-hidden="true" />
+              <div
+                className={`absolute top-0 left-0 right-0 h-1 ${t.bgAccent}`}
+                aria-hidden="true"
+              />
 
-              <Quote className="w-8 h-8 mb-4" style={{ color: `${t.accent}50` }} aria-hidden="true" />
+              <Quote
+                className="w-8 h-8 mb-4"
+                style={{ color: `${t.accent}50` }}
+                aria-hidden="true"
+              />
               <div className="text-[#ffe43b] text-lg mb-4 flex gap-0.5">
                 {[...Array(5)].map((_, idx) => (
-                  <Star key={idx} className="w-5 h-5 fill-current" aria-hidden="true" />
+                  <Star
+                    key={idx}
+                    className="w-5 h-5 fill-current"
+                    aria-hidden="true"
+                  />
                 ))}
               </div>
-              <p className="text-base text-[#25263d] leading-relaxed mb-6 italic">"{t.quote}"</p>
+              <p className="text-base text-[#25263d] leading-relaxed mb-6 italic">
+                "{t.quote}"
+              </p>
               <div className="flex items-center gap-3.5">
                 <div
                   className={`w-12 h-12 rounded-full ${t.bgAccent} flex items-center justify-center text-[#25263d] font-extrabold text-lg shadow-sm`}
@@ -78,7 +107,9 @@ export function Testimonials() {
                   {t.avatar}
                 </div>
                 <div className="flex-1">
-                  <h4 className="text-base font-extrabold text-[#25263d]">{t.name}</h4>
+                  <h4 className="text-base font-extrabold text-[#25263d]">
+                    {t.name}
+                  </h4>
                   <p className="text-sm text-[#25263d]/60">{t.role}</p>
                 </div>
                 <ThumbsUp
@@ -92,5 +123,5 @@ export function Testimonials() {
         </div>
       </div>
     </section>
-  )
+  );
 }

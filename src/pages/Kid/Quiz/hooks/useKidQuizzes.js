@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import { auth } from "@/api/auth.api";
+import { kidQuizApi as auth } from "../api/kidQuizApi";
+import { auth as authSession } from "@/api/auth.api";
 
 const message = (error) => error?.message || "Không thể hoàn thành yêu cầu.";
 
@@ -61,7 +62,7 @@ export function useKidQuiz(quizId) {
         ([questionId, chosenIndex]) => ({ questionId, chosenIndex }),
       );
       setResult(await auth.submitLearnerQuiz(quiz.id, payload));
-      await auth.ensureLearnerDashboard({ force: true }).catch(() => {});
+      await authSession.ensureLearnerDashboard({ force: true }).catch(() => {});
     } catch (value) {
       setError(message(value));
     } finally {

@@ -2,7 +2,13 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import { chapter8V2GameData as content } from "./fixtures/content/index.mjs";
-import { branchTarget, choiceGroupOf, endingId, ledgerEntry, normalizeChapter } from "./helpers/story.mjs";
+import {
+  branchTarget,
+  choiceGroupOf,
+  endingId,
+  ledgerEntry,
+  normalizeChapter,
+} from "./helpers/story.mjs";
 import {
   availableBudget,
   budgetFeedback,
@@ -161,9 +167,18 @@ test("independent market draws include both endpoints and zero without leaving t
     drawMarketScenario(portfolio.market, () => 0.5),
     { period: "sau ba tháng", cash: 0, bonds: 0, equity: 0 },
   );
-  assert.equal(validMarket(portfolio.market, { cash: 0, bonds: 11, equity: 0 }), false);
-  assert.equal(validMarket(portfolio.market, { cash: 0, bonds: 1.5, equity: 0 }), false);
-  assert.equal(validMarket(portfolio.market, { cash: 1, bonds: 0, equity: 0 }), false);
+  assert.equal(
+    validMarket(portfolio.market, { cash: 0, bonds: 11, equity: 0 }),
+    false,
+  );
+  assert.equal(
+    validMarket(portfolio.market, { cash: 0, bonds: 1.5, equity: 0 }),
+    false,
+  );
+  assert.equal(
+    validMarket(portfolio.market, { cash: 1, bonds: 0, equity: 0 }),
+    false,
+  );
 });
 test("every market combination has consistent arithmetic, dialogue and identical learning credit", () => {
   for (let bonds = -10; bonds <= 10; bonds++)
@@ -172,7 +187,8 @@ test("every market combination has consistent arithmetic, dialogue and identical
       const market = drawMarketScenario(portfolio.market, () => draws.shift());
       assert.equal(market.bonds, bonds);
       assert.equal(market.equity, equity);
-      const state = applyFutureAction(futurePlanConfig, 
+      const state = applyFutureAction(
+        futurePlanConfig,
         {
           ...createFutureState(cfg("portfolio")),
           allocation: sampleAllocations.balanced,
@@ -181,7 +197,9 @@ test("every market combination has consistent arithmetic, dialogue and identical
         { type: "SUBMIT_ALLOCATION" },
       );
       assert.equal(futureResult(futurePlanConfig, state).score, 2);
-      const results = { CH08_GAME_PORTFOLIO: futureResult(futurePlanConfig, state) };
+      const results = {
+        CH08_GAME_PORTFOLIO: futureResult(futurePlanConfig, state),
+      };
       for (const fit of [true, false]) {
         const flags = { portfolio_fit: fit },
           settlement = chapterEightSettlement(portfolio, results, flags);
@@ -197,7 +215,8 @@ test("every market combination has consistent arithmetic, dialogue and identical
             `${settlement.final.toLocaleString("vi-VN")}đ`,
           ),
         );
-        const reaction = resolveFutureScene(portfolio, 
+        const reaction = resolveFutureScene(
+          portfolio,
           scenes.get("CH08_PROMISE_1"),
           results,
           flags,
@@ -218,7 +237,8 @@ test("checkpoint restoration preserves random results and keeps legacy submitted
     JSON.parse(JSON.stringify(draft)),
   );
   assert.deepEqual(restored.market, draft.market);
-  const submitted = applyFutureAction(futurePlanConfig, 
+  const submitted = applyFutureAction(
+    futurePlanConfig,
     { ...draft, allocation: sampleAllocations.balanced },
     { type: "SUBMIT_ALLOCATION" },
   );
@@ -228,7 +248,9 @@ test("checkpoint restoration preserves random results and keeps legacy submitted
     draft.market,
   );
   assert.equal(
-    applyFutureAction(futurePlanConfig, submitted, { type: "SUBMIT_ALLOCATION" }),
+    applyFutureAction(futurePlanConfig, submitted, {
+      type: "SUBMIT_ALLOCATION",
+    }),
     submitted,
   );
   const legacy = { ...submitted };
@@ -238,7 +260,8 @@ test("checkpoint restoration preserves random results and keeps legacy submitted
     legacyMarketScenario,
   );
   assert.equal(
-    chapterEightSettlement(portfolio, 
+    chapterEightSettlement(
+      portfolio,
       { CH08_GAME_PORTFOLIO: { ui: legacy } },
       { portfolio_fit: true },
     ).final,
@@ -262,14 +285,24 @@ test("each budget situation starts at zero and the chosen amounts determine the 
       assert.deepEqual(state.budgets[month - 1], targets[month - 1]);
     for (const [id, value] of Object.entries(targets[month]))
       for (let amount = 0; amount < value; amount += 100000) {
-        state = applyFutureAction(futurePlanConfig, state, { type: "BUDGET", id, delta: 100000 });
+        state = applyFutureAction(futurePlanConfig, state, {
+          type: "BUDGET",
+          id,
+          delta: 100000,
+        });
       }
     assert.deepEqual(
-      restoreFutureState(cfg("planner"), JSON.parse(JSON.stringify(state))).budgets,
+      restoreFutureState(cfg("planner"), JSON.parse(JSON.stringify(state)))
+        .budgets,
       state.budgets,
     );
-    state = applyFutureAction(futurePlanConfig, state, { type: "SUBMIT_MONTH" });
-    if (month < 2) state = applyFutureAction(futurePlanConfig, state, { type: "NEXT_MONTH" });
+    state = applyFutureAction(futurePlanConfig, state, {
+      type: "SUBMIT_MONTH",
+    });
+    if (month < 2)
+      state = applyFutureAction(futurePlanConfig, state, {
+        type: "NEXT_MONTH",
+      });
   }
   assert.deepEqual(state.budgets, targets);
   assert.equal(planBalance(planMonths[2], state.budgets[2]), 0);
@@ -285,7 +318,10 @@ test("each budget situation starts at zero and the chosen amounts determine the 
     scenes.get("CH08_PLAN_CARDS").inspect.planResultFrom,
     "CH08_GAME_PLANNER",
   );
-  assert.equal(buildPlanReview(planner, state).cards[2].facts[1][1], "400.000đ");
+  assert.equal(
+    buildPlanReview(planner, state).cards[2].facts[1][1],
+    "400.000đ",
+  );
 });
 test("an adopted budget with a deficit remains unresolved instead of earning a feasible-plan ending", () => {
   const state = {
@@ -318,7 +354,10 @@ test("claims and planning are separate activities and every one is required for 
     applyFutureAction(futurePlanConfig, planner, { type: "CHECK", id: "risk" }),
     planner,
   );
-  assert.equal(applyFutureAction(futurePlanConfig, claims, { type: "SUBMIT_MONTH" }), claims);
+  assert.equal(
+    applyFutureAction(futurePlanConfig, claims, { type: "SUBMIT_MONTH" }),
+    claims,
+  );
   assert.equal(futureResult(futurePlanConfig, planner).total, 3);
   assert.equal(futureResult(futurePlanConfig, claims).total, 3);
   const results = games();
@@ -355,7 +394,12 @@ test("all eight story paths have exactly one settlement, unchanged forecast inco
             ledger[choiceGroupOf(scene)] = ledgerEntry(option);
             id = option.nextSceneId;
           } else if (scene.type === "conditional")
-            id = branchTarget(scene, { flags, stats, money, choiceLedger: ledger });
+            id = branchTarget(scene, {
+              flags,
+              stats,
+              money,
+              choiceLedger: ledger,
+            });
           else {
             flags = { ...flags, ...scene.setFlags };
             if (scene.marketSettlement) {
@@ -388,9 +432,16 @@ test("all eight story paths have exactly one settlement, unchanged forecast inco
 });
 test("allocation drafts are bounded, cannot overallocate, and submit wrong answers without retries", () => {
   let state = createFutureState(cfg("portfolio"));
-  assert.equal(applyFutureAction(futurePlanConfig, state, { type: "SUBMIT_ALLOCATION" }), state);
   assert.equal(
-    applyFutureAction(futurePlanConfig, state, { type: "ALLOCATE", id: "cash", delta: -10 }),
+    applyFutureAction(futurePlanConfig, state, { type: "SUBMIT_ALLOCATION" }),
+    state,
+  );
+  assert.equal(
+    applyFutureAction(futurePlanConfig, state, {
+      type: "ALLOCATE",
+      id: "cash",
+      delta: -10,
+    }),
     state,
   );
   for (let i = 0; i < 10; i++)
@@ -400,21 +451,35 @@ test("allocation drafts are bounded, cannot overallocate, and submit wrong answe
       delta: 10,
     });
   assert.equal(
-    applyFutureAction(futurePlanConfig, state, { type: "ALLOCATE", id: "bonds", delta: 10 }),
+    applyFutureAction(futurePlanConfig, state, {
+      type: "ALLOCATE",
+      id: "bonds",
+      delta: 10,
+    }),
     state,
   );
   assert.deepEqual(state.history, {});
-  state = applyFutureAction(futurePlanConfig, state, { type: "SUBMIT_ALLOCATION" });
+  state = applyFutureAction(futurePlanConfig, state, {
+    type: "SUBMIT_ALLOCATION",
+  });
   assert.equal(futureResult(futurePlanConfig, state).completed, true);
   assert.equal(futureResult(futurePlanConfig, state).score, 0);
   assert.equal(
-    applyFutureAction(futurePlanConfig, state, { type: "ALLOCATE", id: "equity", delta: -10 }),
+    applyFutureAction(futurePlanConfig, state, {
+      type: "ALLOCATE",
+      id: "equity",
+      delta: -10,
+    }),
     state,
   );
-  assert.equal(applyFutureAction(futurePlanConfig, state, { type: "SUBMIT_ALLOCATION" }), state);
+  assert.equal(
+    applyFutureAction(futurePlanConfig, state, { type: "SUBMIT_ALLOCATION" }),
+    state,
+  );
 });
 test("the portfolio exercise rewards goal protection and diversification, not the largest market return", () => {
-  const balanced = applyFutureAction(futurePlanConfig, 
+  const balanced = applyFutureAction(
+    futurePlanConfig,
     {
       ...createFutureState(cfg("portfolio")),
       allocation: sampleAllocations.balanced,
@@ -422,7 +487,8 @@ test("the portfolio exercise rewards goal protection and diversification, not th
     { type: "SUBMIT_ALLOCATION" },
   );
   assert.equal(futureResult(futurePlanConfig, balanced).passed, true);
-  const allCash = applyFutureAction(futurePlanConfig, 
+  const allCash = applyFutureAction(
+    futurePlanConfig,
     {
       ...createFutureState(cfg("portfolio")),
       allocation: { cash: 100, bonds: 0, equity: 0 },
@@ -438,20 +504,33 @@ test("the portfolio exercise rewards goal protection and diversification, not th
 test("claim checks permit unsafe selections, retain first answers, and freeze only after submission", () => {
   let state = createFutureState(cfg("claims"));
   assert.equal(
-    applyFutureAction(futurePlanConfig, state, { type: "BUDGET", id: "goal", delta: -100000 }),
+    applyFutureAction(futurePlanConfig, state, {
+      type: "BUDGET",
+      id: "goal",
+      delta: -100000,
+    }),
     state,
   );
   for (const check of claimChecks.filter((check) => !check.correct))
-    state = applyFutureAction(futurePlanConfig, state, { type: "CHECK", id: check.id });
+    state = applyFutureAction(futurePlanConfig, state, {
+      type: "CHECK",
+      id: check.id,
+    });
   assert.deepEqual(state.history, {});
-  assert.equal(applyFutureAction(futurePlanConfig, state, { type: "CHECK", id: "risk" }), state);
+  assert.equal(
+    applyFutureAction(futurePlanConfig, state, { type: "CHECK", id: "risk" }),
+    state,
+  );
   state = applyFutureAction(futurePlanConfig, state, { type: "SUBMIT_CHECKS" });
   assert.equal(state.checksSubmitted, true);
   assert.equal(
     Object.values(state.history).filter((record) => record.finalCorrect).length,
     0,
   );
-  assert.equal(applyFutureAction(futurePlanConfig, state, { type: "CHECK", id: "risk" }), state);
+  assert.equal(
+    applyFutureAction(futurePlanConfig, state, { type: "CHECK", id: "risk" }),
+    state,
+  );
 });
 test("budget maths count the existing obligation once and allow different feasible tradeoffs", () => {
   assert.equal(
@@ -474,7 +553,10 @@ test("budget maths count the existing obligation once and allow different feasib
   );
   assert.ok(feasibleBudget(planMonths[2], { goal: 0, flexible: 0 }));
   assert.equal(
-    planProjection(planner, planMonths.map(() => ({ goal: 0, flexible: 0 }))).feasible,
+    planProjection(
+      planner,
+      planMonths.map(() => ({ goal: 0, flexible: 0 })),
+    ).feasible,
     false,
   );
 });
@@ -485,7 +567,11 @@ test("the two budget controls share one limit and increasing either transfers fr
     ["flexible", 4],
   ])
     for (let i = 0; i < steps; i++)
-      state = applyFutureAction(futurePlanConfig, state, { type: "BUDGET", id, delta: 100000 });
+      state = applyFutureAction(futurePlanConfig, state, {
+        type: "BUDGET",
+        id,
+        delta: 100000,
+      });
   state = applyFutureAction(futurePlanConfig, state, {
     type: "BUDGET",
     id: "flexible",
@@ -506,7 +592,11 @@ test("the two budget controls share one limit and increasing either transfers fr
     });
   assert.deepEqual(state.budgets[0], { goal: 1000000, flexible: 0 });
   assert.equal(
-    applyFutureAction(futurePlanConfig, state, { type: "BUDGET", id: "goal", delta: 100000 }),
+    applyFutureAction(futurePlanConfig, state, {
+      type: "BUDGET",
+      id: "goal",
+      delta: 100000,
+    }),
     state,
   );
   for (let i = 0; i < 10; i++)
@@ -528,14 +618,23 @@ test("no month can allocate more than its available income, including on load an
   for (let month = 0; month < 3; month++) {
     for (const id of ["goal", "flexible", "goal"])
       for (let i = 0; i < 12; i++) {
-        state = applyFutureAction(futurePlanConfig, state, { type: "BUDGET", id, delta: 100000 });
+        state = applyFutureAction(futurePlanConfig, state, {
+          type: "BUDGET",
+          id,
+          delta: 100000,
+        });
         assert.ok(planBalance(planMonths[month], state.budgets[month]) >= 0);
         assert.ok(
           state.budgets[month][id] <= availableBudget(planMonths[month]),
         );
       }
-    state = applyFutureAction(futurePlanConfig, state, { type: "SUBMIT_MONTH" });
-    if (month < 2) state = applyFutureAction(futurePlanConfig, state, { type: "NEXT_MONTH" });
+    state = applyFutureAction(futurePlanConfig, state, {
+      type: "SUBMIT_MONTH",
+    });
+    if (month < 2)
+      state = applyFutureAction(futurePlanConfig, state, {
+        type: "NEXT_MONTH",
+      });
   }
   const draft = createFutureState(cfg("planner"));
   draft.budgets[0] = { goal: 600000, flexible: 700000 };
@@ -560,20 +659,38 @@ test("feedback describes the actual 400k and 200k allocation instead of a fixed 
 });
 test("all three budget months must be submitted once; mistakes still permit completion", () => {
   let state = createFutureState(cfg("planner"));
-  assert.equal(applyFutureAction(futurePlanConfig, state, { type: "NEXT_MONTH" }), state);
+  assert.equal(
+    applyFutureAction(futurePlanConfig, state, { type: "NEXT_MONTH" }),
+    state,
+  );
   for (let month = 0; month < 3; month++) {
-    state = applyFutureAction(futurePlanConfig, state, { type: "SUBMIT_MONTH" });
+    state = applyFutureAction(futurePlanConfig, state, {
+      type: "SUBMIT_MONTH",
+    });
     assert.equal(
-      applyFutureAction(futurePlanConfig, state, { type: "BUDGET", id: "goal", delta: -100000 }),
+      applyFutureAction(futurePlanConfig, state, {
+        type: "BUDGET",
+        id: "goal",
+        delta: -100000,
+      }),
       state,
     );
-    assert.equal(applyFutureAction(futurePlanConfig, state, { type: "SUBMIT_MONTH" }), state);
-    if (month < 2) state = applyFutureAction(futurePlanConfig, state, { type: "NEXT_MONTH" });
+    assert.equal(
+      applyFutureAction(futurePlanConfig, state, { type: "SUBMIT_MONTH" }),
+      state,
+    );
+    if (month < 2)
+      state = applyFutureAction(futurePlanConfig, state, {
+        type: "NEXT_MONTH",
+      });
   }
   assert.equal(futureResult(futurePlanConfig, state).completed, true);
   assert.equal(futureResult(futurePlanConfig, state).score, 0);
   assert.equal(futureResult(futurePlanConfig, state).passed, false);
-  assert.equal(applyFutureAction(futurePlanConfig, state, { type: "NEXT_MONTH" }), state);
+  assert.equal(
+    applyFutureAction(futurePlanConfig, state, { type: "NEXT_MONTH" }),
+    state,
+  );
 });
 test("checkpoint saves allocation drafts and one-time settlement without changing decisions", () => {
   const values = new Map(),
@@ -581,11 +698,15 @@ test("checkpoint saves allocation drafts and one-time settlement without changin
       getItem: (key) => values.get(key) || null,
       setItem: (key, value) => values.set(key, value),
     };
-  const draft = applyFutureAction(futurePlanConfig, createFutureState(cfg("portfolio")), {
-    type: "ALLOCATE",
-    id: "cash",
-    delta: 10,
-  });
+  const draft = applyFutureAction(
+    futurePlanConfig,
+    createFutureState(cfg("portfolio")),
+    {
+      type: "ALLOCATE",
+      id: "cash",
+      delta: 10,
+    },
+  );
   const snapshot = {
     scenePath: [0],
     money: 9780000,

@@ -196,14 +196,16 @@ export function SmartShoppingMiniGame({
     });
     setReport(result);
     if (!firstReport) setFirstReport(result);
-    const inputs = firstInputs ?? compactInputs({
-      phone: selectedId,
-      inspected,
-      cancelDay: cancellationDay === "" ? undefined : Number(cancellationDay),
-      disputed: disputedLine,
-      batteryChecked,
-      batteryPlan,
-    });
+    const inputs =
+      firstInputs ??
+      compactInputs({
+        phone: selectedId,
+        inspected,
+        cancelDay: cancellationDay === "" ? undefined : Number(cancellationDay),
+        disputed: disputedLine,
+        batteryChecked,
+        batteryPlan,
+      });
     if (!firstInputs) setFirstInputs(inputs);
     setStep(2);
     const first = firstReport || result;
@@ -532,14 +534,16 @@ export function SmartShoppingMiniGame({
                 setBatteryPlan={setBatteryPlan}
               />
               <h4>{texts.savedFiles}</h4>
-              {inspections.filter((check) =>
-                inspected.includes(`${offer.id}:${check.id}`),
-              ).map((check) => (
-                <div className="mission-saved-file" key={check.id}>
-                  <strong>{check.label}</strong>
-                  <p>{inspectOffer(offer, check.id)}</p>
-                </div>
-              ))}
+              {inspections
+                .filter((check) =>
+                  inspected.includes(`${offer.id}:${check.id}`),
+                )
+                .map((check) => (
+                  <div className="mission-saved-file" key={check.id}>
+                    <strong>{check.label}</strong>
+                    <p>{inspectOffer(offer, check.id)}</p>
+                  </div>
+                ))}
             </div>
           </div>
           <footer className="mission-footer">

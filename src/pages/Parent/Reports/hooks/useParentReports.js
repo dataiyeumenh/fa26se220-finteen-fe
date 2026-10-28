@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { auth } from "../../../../api/auth.api";
+import { parentReportsApi as auth } from "../api/parentReportsApi";
 
 export default function useParentReports(options = {}) {
   const { requestedGroupId = "" } = options;
