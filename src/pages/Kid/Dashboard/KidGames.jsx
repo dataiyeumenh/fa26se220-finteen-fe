@@ -1,6 +1,6 @@
 import { Gamepad2 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useLocation, useSearchParams } from "react-router-dom";
 import useKidDashboard from "./hooks/useKidDashboard";
 import { VisualNovelPlayer } from "./components/game/VisualNovelPlayer";
 import { getChapterContent, getCurrentRelease } from "@/api/content.api";
@@ -10,6 +10,10 @@ import { getChapterContent, getCurrentRelease } from "@/api/content.api";
 const chapterCode = (number) => `CH${String(number).padStart(2, "0")}`;
 
 export default function KidGames() {
+  const { pathname } = useLocation();
+  const playPath = pathname.startsWith("/dashboard/demo")
+    ? "/dashboard/demo/play"
+    : "/dashboard/kid/play";
   const [searchParams] = useSearchParams();
   const chapterParam = searchParams.get("chapter") || "1";
   const chapterNumber = Number(chapterParam);
@@ -106,7 +110,7 @@ export default function KidGames() {
             {chapters.map((chapter) => (
               <Link
                 key={chapter.code}
-                to={`/dashboard/demo/play?chapter=${chapter.chapterNumber}`}
+                to={`${playPath}?chapter=${chapter.chapterNumber}`}
                 className="rounded-3xl border border-amber-200 bg-white p-6 text-left transition hover:-translate-y-0.5 hover:shadow-lg"
               >
                 <div className="text-xs font-bold uppercase tracking-widest text-amber-600">
