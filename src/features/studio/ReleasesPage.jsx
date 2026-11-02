@@ -1,4 +1,4 @@
-// Phát hành (kế hoạch bản sắp ra) và Lịch sử bản (chọn bản đang chạy, thu hồi).
+// Phát hành (kế hoạch bản sắp ra) và Lịch sử phiên bản (chọn bản đang chạy, thu hồi).
 import { useCallback, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, History, PackageCheck, Radio } from "lucide-react";
@@ -51,15 +51,16 @@ function PlanView({ actor, notify, title, intro }) {
           </StateBox>
         ) : query.errorCode === 6006 ? (
           <StateBox
+            kind="warning"
             title="Chưa phát hành được: game đang dùng một bản cũ"
             actions={
               <Link className="sp-btn is-primary" to="/internal/history">
-                Mở Lịch sử bản
+                Mở Lịch sử phiên bản
               </Link>
             }
           >
             Game đang chạy bản {running || "cũ"}, không phải bản mới nhất (có
-            người đã chuyển về bản cũ). Muốn phát hành tiếp, vào Lịch sử bản:
+            người đã chuyển về bản cũ). Muốn phát hành tiếp, vào Lịch sử phiên bản:
             dùng lại bản mới nhất, hoặc thu hồi bản đó nếu nó có lỗi.
           </StateBox>
         ) : (
@@ -189,7 +190,7 @@ function PlanView({ actor, notify, title, intro }) {
             {plan.currentVersion && (
               <li>
                 Bản {plan.currentVersion} vẫn được giữ; có thể quay lại trong
-                Lịch sử bản.
+                Lịch sử phiên bản.
               </li>
             )}
           </ul>
@@ -247,7 +248,7 @@ function HistoryView({ actor, notify, title, intro }) {
       ) : query.error ? (
         <StateBox
           kind="error"
-          title="Chưa tải được lịch sử bản"
+          title="Chưa tải được lịch sử phiên bản"
           actions={<Btn onClick={query.reload}>Thử lại</Btn>}
         >
           {query.error}
@@ -442,7 +443,7 @@ export default function ReleasesPage({ notify, mode = "plan", title, intro }) {
   const props = {
     actor,
     notify,
-    title: title || (mode === "plan" ? "Phát hành" : "Lịch sử bản"),
+    title: title || (mode === "plan" ? "Phát hành" : "Lịch sử phiên bản"),
     intro,
   };
   return mode === "plan" ? <PlanView {...props} /> : <HistoryView {...props} />;

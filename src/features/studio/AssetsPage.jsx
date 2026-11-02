@@ -7,6 +7,7 @@ import { fmtTime, studioApi } from './studioClient'
 import { useStudioAction, useStudioResource } from './useStudioResource'
 import { Btn, ConfirmDialog, PageHeader, StateBox, StudioDialog, Tag } from './ui'
 import Pagination from './Pagination'
+import { assetDisplayName } from './assetNames.js'
 
 const STATUS = {
   IN_USE: ['Đang dùng', 'Có trong bản game đang chạy.'],
@@ -15,7 +16,7 @@ const STATUS = {
   ORPHAN: ['Chưa dùng', 'Chưa nội dung nào dùng ảnh này. Có thể xoá.'],
 }
 const WHERE = { CURRENT: 'bản đang chạy', DRAFT: 'bản nháp', OLD: 'bản cũ' }
-const nameOf = asset => asset.label || ''
+const nameOf = assetDisplayName
 const fileNameOf = asset => (asset.ref || asset.url || '').split('?')[0].split('/').pop() || 'Chưa đặt tên'
 // Chương gắn tay, nếu không có thì lấy từ nơi đang dùng.
 const chapterOf = asset => asset.chapterCode || [...new Set((asset.usage || []).map(usage => usage.chapterCode).filter(Boolean))].join(', ')
@@ -86,46 +87,46 @@ function AssetDetail({ asset, notify, onClose, onChanged }) {
   const [deleting, setDeleting] = useState(false)
   const value = query.data
   const write = canWriteLibrary(auth.getSnapshot().actor)
-  const copy = async () => { try { await navigator.clipboard.writeText(value.ref); notify('Đã sao chép mã ảnh.', true) } catch { notify('Chưa sao chép được. Mở "Thông tin kỹ thuật" và chép tay.') } }
-  return <StudioDialog title={value ? nameOf(value) || 'Ảnh chưa đặt tên' : 'Chi tiết ảnh'} onClose={onClose} busy={busy} wide>
+  const copy = async () => { try { await navigator.clipboard.writeText(value.ref); notify('Đã sao chép mã tài nguyên.', true) } catch { notify('Chưa sao chép được. Mở "Thông tin kỹ thuật" và chép tay.') } }
+  return <StudioDialog title={value ? nameOf(value) || 'Tài nguyên chưa đặt tên' : 'Chi tiết tài nguyên'} onClose={onClose} busy={busy} wide>
     {query.loading ? <StateBox kind="loading">Đang tải chi tiết…</StateBox>
-      : query.error ? <StateBox kind="error" title="Chưa tải được chi tiết ảnh" actions={<Btn onClick={query.reload}>Thử lại</Btn>}>{query.error}</StateBox>
+      : query.error ? <StateBox kind="error" title="Chưa tải được chi tiết tài nguyên" actions={<Btn onClick={query.reload}>Thử lại</Btn>}>{query.error}</StateBox>
       : value && <div className="sp-asset-detail">
-        <div className="sp-asset-img">{value.kind === 'AUDIO' ? <audio controls src={value.url} /> : <img src={value.url} alt={nameOf(value) || 'Ảnh chưa đặt tên'} />}</div>
+        <div className="sp-asset-img">{value.kind === 'AUDIO' ? <audio controls src={value.url} /> : <img src={value.url} alt={nameOf(value) || 'Tài nguyên chưa đặt tên'} />}</div>
         <div className="sp-dialog-body">
           <div><Tag tone={value.status}>{STATUS[value.status]?.[0] || value.status}</Tag><p className="sp-hint" style={{ marginTop: 6 }}>{STATUS[value.status]?.[1]}</p></div>
           <p className="sp-hint">{[value.width && `${value.width} × ${value.height} px`, value.sizeBytes && `${Math.round(value.sizeBytes / 1024)} KB`, value.uploadedByName && `tải lên bởi ${value.uploadedByName}`, value.createdAt && fmtTime(value.createdAt)].filter(Boolean).join(', ')}</p>
           <div><h3 className="sp-field" style={{ marginBottom: 6 }}>Đang được dùng ở</h3>
             {value.usage?.length ? <ul className="sp-usage">{value.usage.map((usage, index) => <li key={index}>{usage.chapterCode}, {WHERE[usage.where] || usage.where}
               {usage.versions?.length > 0 && <small>Bản {usage.versions.join(', ')}</small>}{usage.sceneIds?.length > 0 && <small>Cảnh {usage.sceneIds.join(', ')}</small>}</li>)}</ul>
-              : <p className="sp-hint">Chưa chương nào dùng ảnh này.</p>}</div>
-          <div className="sp-head-actions"><Btn onClick={copy}><Copy size={16} aria-hidden="true" />Sao chép mã ảnh</Btn></div>
+              : <p className="sp-hint">Chưa chương nào dùng tài nguyên này.</p>}</div>
+          <div className="sp-head-actions"><Btn onClick={copy}><Copy size={16} aria-hidden="true" />Sao chép mã tài nguyên</Btn></div>
           {write && (value.registered ? <form className="sp-dialog-body" onSubmit={event => {
             event.preventDefault()
             const form = new FormData(event.currentTarget)
-            void run(() => studioApi.put(`/api/studio/assets/${encodeURIComponent(value.id)}`, { label: form.get('label').trim(), chapterCode: form.get('chapterCode').trim() || null }), 'Đã lưu thông tin ảnh.', onChanged)
+            void run(() => studioApi.put(`/api/studio/assets/${encodeURIComponent(value.id)}`, { label: form.get('label').trim(), chapterCode: form.get('chapterCode').trim() || null }), 'Đã lưu thông tin tài nguyên.', onChanged)
           }}><fieldset disabled={busy} className="sp-dialog-body">
-            <div className="sp-grid-2"><label className="sp-field">Tên ảnh<input className="sp-input" name="label" defaultValue={value.label || ''} /></label>
+            <div className="sp-grid-2"><label className="sp-field">Tên tài nguyên<small>Đặt tên theo nội dung để dễ tìm. Tên này không đổi đường dẫn đang dùng trong game.</small><input className="sp-input" name="label" defaultValue={value.label || ''} placeholder={value.kind === 'AUDIO' ? 'Ví dụ: Mẹ giải thích cách tiết kiệm – CH01' : 'Ví dụ: An nhận tiền từ mẹ – CH01'} /></label>
               <label className="sp-field">Thuộc chương<input className="sp-input" name="chapterCode" defaultValue={value.chapterCode || ''} placeholder="CH04" /></label></div>
             <div className="sp-dialog-actions">
-              {value.status === 'ORPHAN' ? <Btn tone="danger" onClick={() => { clearError(); setDeleting(true) }}>Xoá ảnh</Btn> : <span className="sp-hint" style={{ marginRight: 'auto' }}>Ảnh đang được dùng nên không xoá được.</span>}
-              <Btn type="submit" tone="primary">Lưu nhãn</Btn></div>
-          </fieldset></form> : <p className="sp-hint">Ảnh này chuyển từ kho cũ, chưa có phiếu trong kho mới nên chưa sửa tên hay xoá được.</p>)}
+              {value.status === 'ORPHAN' ? <Btn tone="danger" onClick={() => { clearError(); setDeleting(true) }}>Xoá tài nguyên</Btn> : <span className="sp-hint" style={{ marginRight: 'auto' }}>Tài nguyên đang được dùng nên không xoá được.</span>}
+              <Btn type="submit" tone="primary">Lưu tên</Btn></div>
+          </fieldset></form> : <p className="sp-hint">Tài nguyên này chuyển từ kho cũ, chưa có phiếu trong kho mới nên chưa sửa tên hay xoá được.</p>)}
           <details className="sp-tech"><summary>Thông tin kỹ thuật</summary>
-            <label className="sp-field">Mã ảnh dùng trong nội dung<input className="sp-input" readOnly value={value.ref || ''} onFocus={event => event.target.select()} /></label>
+            <label className="sp-field">Mã tài nguyên dùng trong nội dung<input className="sp-input" readOnly value={value.ref || ''} onFocus={event => event.target.select()} /></label>
             <label className="sp-field">Đường dẫn<input className="sp-input" readOnly value={value.url || ''} onFocus={event => event.target.select()} /></label></details>
         </div>
       </div>}
-    {deleting && <ConfirmDialog tone="danger" title="Xoá vĩnh viễn ảnh này?" confirmLabel="Xoá vĩnh viễn" busy={busy} error={error} onClose={() => setDeleting(false)}
-      onConfirm={() => void run(() => studioApi.del(`/api/studio/assets/${encodeURIComponent(value.id)}`), 'Đã xoá ảnh.', () => { setDeleting(false); onChanged() })}>
-      Ảnh bị xoá khỏi kho và không khôi phục được. Hiện chưa nội dung nào dùng ảnh này.
+    {deleting && <ConfirmDialog tone="danger" title="Xoá vĩnh viễn tài nguyên này?" confirmLabel="Xoá vĩnh viễn" busy={busy} error={error} onClose={() => setDeleting(false)}
+      onConfirm={() => void run(() => studioApi.del(`/api/studio/assets/${encodeURIComponent(value.id)}`), 'Đã xoá tài nguyên.', () => { setDeleting(false); onChanged() })}>
+      Tài nguyên bị xoá khỏi kho và không khôi phục được. Hiện chưa nội dung nào dùng tài nguyên này.
     </ConfirmDialog>}
   </StudioDialog>
 }
 
 const KINDS = [['IMAGE', 'Ảnh'], ['AUDIO', 'Âm thanh']]
 
-export default function AssetsPage({ notify, title = 'Kho ảnh', intro }) {
+export default function AssetsPage({ notify, title = 'Kho tài nguyên', intro }) {
   const [filters, setFilters] = useState({ kind: 'IMAGE', chapter: '', status: '', q: '' })
   const [search, setSearch] = useState('')
   const [page, setPage] = useState(0)
@@ -134,11 +135,12 @@ export default function AssetsPage({ notify, title = 'Kho ảnh', intro }) {
   const [uploading, setUploading] = useState(false)
   const [sort, setSort] = useState('newest')
   const write = canWriteLibrary(auth.getSnapshot().actor)
-  const loader = useCallback(() => fetchAssets(filters), [filters])
+  const loader = useCallback(() => fetchAssets({ kind: filters.kind, chapter: filters.chapter, status: filters.status }), [filters.kind, filters.chapter, filters.status])
   const query = useStudioResource(loader)
   const chaptersLoader = useCallback(() => studioApi.get('/api/studio/chapters'), [])
   const chapters = useStudioResource(chaptersLoader).data || []
-  const rows = query.data || []
+  const rows = (query.data || []).filter(asset => !filters.q ||
+    `${nameOf(asset)} ${asset.ref || ''}`.toLocaleLowerCase('vi').includes(filters.q.toLocaleLowerCase('vi')))
   const sorted = [...rows].sort((a, b) => sort === 'name'
     ? (nameOf(a) || fileNameOf(a)).localeCompare(nameOf(b) || fileNameOf(b), 'vi', { numeric: true })
     : sort === 'size' ? (b.sizeBytes || 0) - (a.sizeBytes || 0)

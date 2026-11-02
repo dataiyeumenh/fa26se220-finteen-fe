@@ -44,6 +44,7 @@ export default function PaymentResult({ payment: initialPayment, onClose }) {
       : `${String(Math.floor(secondsLeft / 3600)).padStart(2, "0")}:${String(Math.floor((secondsLeft % 3600) / 60)).padStart(2, "0")}:${String(secondsLeft % 60).padStart(2, "0")}`;
 
   useEffect(() => {
+    if (!initialPayment.qrCode) return undefined;
     let active = true;
     QRCode.toDataURL(initialPayment.qrCode, {
       width: 320,

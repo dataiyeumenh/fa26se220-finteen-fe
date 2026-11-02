@@ -9,7 +9,7 @@ const request = (client, path, options) => {
     !path.startsWith("/api/studio/") &&
     !path.startsWith("/api/admin/ai-keys")
   ) {
-    throw new Error("ÄÆ°á»ng dáº«n Studio khĂ´ng há»£p lá»‡.");
+    throw new Error("Đường dẫn Studio không hợp lệ.");
   }
   return client.accountRequest(path, options);
 };

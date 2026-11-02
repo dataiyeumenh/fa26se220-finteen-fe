@@ -37,7 +37,7 @@ export function Notice({ text }) {
 export function DataSourceNote({ api = false, children }) {
   return (
     <div className={`ws-source-note ${api ? "api" : "mock"}`} role="note">
-      <strong>{api ? "ĐÃ KẾT NỐI API" : "DỮ LIỆU MOCK · CHƯA CÓ API"}</strong>
+      <strong>{api ? "ĐÃ KẾT NỐI API" : "ĐANG PHÁT TRIỂN · DỮ LIỆU MOCK"}</strong>
       <span>{children}</span>
     </div>
   );

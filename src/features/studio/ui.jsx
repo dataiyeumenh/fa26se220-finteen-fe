@@ -1,6 +1,7 @@
 // Mảnh UI dùng chung của Studio. Btn / Panel / Tag giữ nguyên API vì trình soạn cũng dùng.
 import { Dialog, DialogContent, DialogTitle } from "../../components/ui/dialog";
 import { cn } from "@/lib/utils";
+import { AlertTriangle } from "lucide-react";
 import "./studio-pages.css";
 
 export function Tag({ tone = "DRAFT", className, children }) {
@@ -64,10 +65,10 @@ export function StateBox({ kind, title, actions, children }) {
     );
   return (
     <div
-      className={cn("sp-state", kind === "error" && "is-error")}
-      role={kind === "error" ? "alert" : undefined}
+      className={cn("sp-state", kind === "error" && "is-error", kind === "warning" && "is-warning")}
+      role={kind === "error" || kind === "warning" ? "alert" : undefined}
     >
-      {title && <h2>{title}</h2>}
+      {title && <h2>{kind === "warning" && <AlertTriangle size={22} aria-hidden="true" />}{title}</h2>}
       {children && <p>{children}</p>}
       {actions && <div className="sp-head-actions">{actions}</div>}
     </div>

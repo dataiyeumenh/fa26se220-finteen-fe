@@ -2,9 +2,13 @@ import { useNavigate } from "react-router-dom";
 import { MapPinned } from "lucide-react";
 import { useKidLessons } from "./hooks/useKidLessons";
 import GameMap from "./components/GameMapReal";
+import { Modal } from "@/features/workspace/ui";
+import { useState } from "react";
+import MockChapterReport from "./components/game/MockChapterReport.jsx";
 
 export default function KidLessons() {
   const navigate = useNavigate();
+  const [reportOpen, setReportOpen] = useState(false);
   const { chapters, loading, error } = useKidLessons();
 
   const handleChapterClick = (chapter) => {
@@ -49,12 +53,14 @@ export default function KidLessons() {
   );
   const totalLessons = chapters.reduce((sum, c) => sum + c.totalLessons, 0);
   const overallProgress = Math.round(
-    (totalLessonsCompleted / totalLessons) * 100,
+    totalLessons ? (totalLessonsCompleted / totalLessons) * 100 : 0,
   );
 
   return (
     <>
       <div className="space-y-4">
+        <button className="ws-btn" onClick={() => setReportOpen(true)}>Xem báo cáo cuối chương mẫu · Đang phát triển</button>
+        {reportOpen && <Modal title="Báo cáo cuối chương mẫu" onClose={() => setReportOpen(false)}><MockChapterReport /></Modal>}
         {/* Compact Header */}
         <div className="flex items-center justify-between gap-3 flex-wrap">
           <div className="flex items-center gap-3">

@@ -350,7 +350,7 @@ export default function AuthForm({ registration = false, internal = false }) {
             name="secret"
             placeholder={kid ? "Nhập PIN 6 chữ số" : "Nhập mật khẩu của bạn"}
             autoComplete={registration ? "new-password" : "current-password"}
-            minLength={kid ? 6 : 8}
+            minLength={kid ? 6 : registration ? 8 : undefined}
             maxLength={kid ? 6 : undefined}
             pattern={kid ? "[0-9]{6}" : undefined}
             inputMode={kid ? "numeric" : undefined}

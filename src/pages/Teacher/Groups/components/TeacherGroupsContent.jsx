@@ -1,4 +1,4 @@
-import { Plus, RefreshCw, ShieldCheck, Users, XCircle } from "lucide-react";
+import { Copy, KeyRound, Plus, RefreshCw, ShieldCheck, Trash2, Users, XCircle } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -184,6 +184,7 @@ function TeacherLearnerList({ learnerState }) {
     message,
     refresh,
     actions,
+    setMessage,
   } = learnerState;
   const [modal, setModal] = useState(null);
   const [tab, setTab] = useState("ACTIVE");
@@ -208,8 +209,8 @@ function TeacherLearnerList({ learnerState }) {
           {error || message}
         </div>
       )}
-      <div className="ws-toolbar">
-        <div className="ws-tabs">
+      <div className="ws-toolbar ws-teacher-learners-toolbar">
+        <div className="ws-tabs ws-teacher-learners-tabs">
           <button
             className={tab === "ACTIVE" ? "active" : ""}
             onClick={() => setTab("ACTIVE")}
@@ -226,7 +227,6 @@ function TeacherLearnerList({ learnerState }) {
         {available > 0 && (
           <button
             className="ws-btn primary"
-            disabled={!group.consentConfirmed}
             onClick={() => setModal({ type: "create" })}
           >
             <Plus size={16} /> Tạo học sinh
@@ -236,20 +236,56 @@ function TeacherLearnerList({ learnerState }) {
       {rows.length ? (
         <div className="ws-grid three">
           {rows.map((slot) => (
-            <article className="ws-card ws-slot" key={slot.id}>
-              <Users />
+            <article
+              className={`ws-card ws-slot ${slot.status === "ACTIVE" ? "" : "inactive"}`}
+              key={slot.id}
+            >
+              <Users className="ws-slot-icon" />
               <h2>{slot.displayName || "Đã xóa dữ liệu"}</h2>
-              <code>{slot.code || "—"}</code>
+              {slot.code && (
+                <div className="ws-code">
+                  <code>{slot.code}</code>
+                  <button
+                    aria-label="Sao chép mã"
+                    onClick={async () => {
+                      try {
+                        await navigator.clipboard.writeText(slot.code);
+                        setMessage("Đã sao chép mã đăng nhập.");
+                      } catch {
+                        setMessage(`Mã đăng nhập: ${slot.code}`);
+                      }
+                    }}
+                  >
+                    <Copy size={17} />
+                  </button>
+                </div>
+              )}
               <div className="ws-actions">
                 <Link className="ws-btn" to={`/dashboard/learners/${slot.id}`}>
                   Xem tiến độ
                 </Link>
                 {slot.status === "ACTIVE" && (
+                  <>
+                    <button
+                      className="ws-btn"
+                      onClick={() => setModal({ type: "pin", slot })}
+                    >
+                      <KeyRound size={15} /> Đổi PIN
+                    </button>
+                    <button
+                      className="ws-btn warning"
+                      onClick={() => setModal({ type: "return", slot })}
+                    >
+                      Thu hồi
+                    </button>
+                  </>
+                )}{" "}
+                {slot.status !== "WIPED" && (
                   <button
-                    className="ws-btn warning"
-                    onClick={() => setModal({ type: "return", slot })}
+                    className="ws-btn danger"
+                    onClick={() => setModal({ type: "wipe", slot })}
                   >
-                    Thu hồi
+                    <Trash2 size={15} /> Xóa dữ liệu
                   </button>
                 )}
               </div>
@@ -262,7 +298,12 @@ function TeacherLearnerList({ learnerState }) {
       {modal && (
         <Modal
           title={
-            modal.type === "create" ? "Tạo hồ sơ học sinh" : "Thu hồi học sinh"
+            {
+              create: "Tạo hồ sơ học sinh",
+              pin: "Đổi mã PIN",
+              return: "Thu hồi học sinh",
+              wipe: "Xóa dữ liệu học sinh",
+            }[modal.type]
           }
           onClose={() => setModal(null)}
         >
@@ -275,26 +316,39 @@ function TeacherLearnerList({ learnerState }) {
                       displayName: form.get("name"),
                       pin: form.get("pin"),
                     })
-                  : actions.returnSlot(modal.slot.id),
+                  : modal.type === "pin"
+                    ? actions.changeSlotPin(modal.slot.id, form.get("pin"))
+                    : modal.type === "wipe"
+                      ? actions.wipeSlot(modal.slot.id)
+                      : actions.returnSlot(modal.slot.id),
               )
             }
           >
             {modal.type === "create" && (
-              <>
                 <label>
                   Tên học sinh
-                  <input name="name" required />
+                  <input name="name" required maxLength={40} />
                 </label>
+            )}
+            {["create", "pin"].includes(modal.type) && (
                 <label>
                   PIN 6 chữ số
                   <input
                     name="pin"
                     type="password"
+                    inputMode="numeric"
                     pattern="[0-9]{6}"
+                    minLength={6}
+                    maxLength={6}
                     required
                   />
                 </label>
-              </>
+            )}
+            {modal.type === "wipe" && (
+              <label>
+                Nhập XOA để xác nhận xóa vĩnh viễn dữ liệu học sinh
+                <input name="confirm" pattern="XOA" required />
+              </label>
             )}
           </ActionForm>
         </Modal>

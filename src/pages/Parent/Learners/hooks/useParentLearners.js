@@ -43,7 +43,7 @@ export default function useParentLearners() {
       ]);
       setSlots(slotRows || []);
       setCapacity(
-        Number.isFinite(Number(availableCapacity))
+        availableCapacity != null && availableCapacity !== "" && Number.isFinite(Number(availableCapacity))
           ? Number(availableCapacity)
           : null,
       );
@@ -127,7 +127,9 @@ export default function useParentLearners() {
   const inactive = slots.filter((slot) => slot.status !== "ACTIVE");
   const available = group
     ? (capacity ??
-      Math.max(0, Number(group.slotLimit) - Number(group.slotUsed)))
+      (Number.isFinite(Number(group.slotLimit))
+        ? Math.max(0, Number(group.slotLimit) - active.length)
+        : null))
     : 0;
   return {
     context: "FAMILY",

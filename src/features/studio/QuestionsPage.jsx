@@ -21,6 +21,7 @@ import {
   Tag,
 } from "./ui";
 import Pagination from "./Pagination";
+import QuestionImportDialog from "./QuestionImportDialog.jsx";
 
 const LETTERS = "ABCDEFGH";
 const MORE_FIELDS = {
@@ -215,6 +216,7 @@ export default function QuestionsPage({
 }) {
   const [filters, setFilters] = useState({});
   const [editing, setEditing] = useState(undefined);
+  const [importing, setImporting] = useState(false);
   const [retiring, setRetiring] = useState(null);
   const [page, setPage] = useState(0);
   const [size, setSize] = useState(20);
@@ -258,6 +260,8 @@ export default function QuestionsPage({
         intro={intro}
         actions={
           write && (
+            <>
+            <Btn disabled={busy} onClick={() => setImporting(true)}>Import từ file</Btn>
             <Btn
               tone="primary"
               disabled={busy}
@@ -266,6 +270,7 @@ export default function QuestionsPage({
               <Plus size={17} aria-hidden="true" />
               Thêm câu hỏi
             </Btn>
+            </>
           )
         }
       />
@@ -473,6 +478,10 @@ export default function QuestionsPage({
           />
         </>
       )}
+      {importing && write && <QuestionImportDialog onClose={() => {
+        setImporting(false);
+        query.reload();
+      }} />}
       {editing !== undefined && write && (
         <QuestionForm
           key={editing?.id || "new"}

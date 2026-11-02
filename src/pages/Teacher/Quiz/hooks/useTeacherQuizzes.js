@@ -157,6 +157,7 @@ export function useTeacherQuizDetail(quizId) {
   const [detail, setDetail] = useState(null);
   const [error, setError] = useState("");
   useEffect(() => {
+    if (!quizId) return undefined;
     let active = true;
     auth
       .getQuiz(quizId)

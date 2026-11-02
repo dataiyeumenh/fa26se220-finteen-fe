@@ -44,11 +44,13 @@ const REGIONS = [
 function ChapterPoint({ chapter, point, onSelect }) {
   const current = chapter.status === "current";
   const completed = chapter.status === "completed";
+  const locked = chapter.status === "locked";
   const status = current ? "current" : completed ? "complete" : "available";
   return (
     <>
       <button
         type="button"
+        disabled={locked}
         className={`atlas-stop ${status}`}
         style={{ left: `${point.x}%`, top: `${point.y}%` }}
         onClick={() => onSelect?.(chapter)}
@@ -69,13 +71,14 @@ function ChapterPoint({ chapter, point, onSelect }) {
           )}
         </span>
         <span className="atlas-stop-action">
-          {current ? "Tiếp tục" : completed ? "Chơi lại" : "Khám phá"}{" "}
+          {locked ? "Chưa mở" : current ? "Tiếp tục" : completed ? "Chơi lại" : "Khám phá"}{" "}
           <ArrowRight size={14} />
         </span>
       </button>
       <button
         type="button"
         className={`atlas-label ${status}`}
+        disabled={locked}
         style={{ left: `${point.x}%`, top: `${point.labelY}%` }}
         onClick={() => onSelect?.(chapter)}
       >
