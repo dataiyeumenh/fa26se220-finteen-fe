@@ -14,6 +14,7 @@ import { AddSceneDialog, CharacterDialog, ConditionDialog, EffectDialog, PlayDia
 import { prepareDraftV2, parseCondition } from './draftV2'
 import { AssetPicker } from './AssetsPage'
 import { Btn, Panel } from './ui'
+import { patchSceneVoice } from './sceneVoice.js'
 
 function template(code) {
   const n = Number(code.slice(2))
@@ -123,7 +124,7 @@ export default function EditorPage({ notify, code, onNavigationStateChange }) {
     setHistory(h => ({ past: [...h.past.slice(-79), { content, idx }], future: [] }))
   }
   const commit = (next, nextIdx = idx, mergeKey) => { if (!canChange) return; remember(mergeKey); setContent(next); setIdx(nextIdx); setDirty(true) }
-  const update = (patch) => commit({ ...content, scenes: scenes.map((s, i) => (i === idx ? { ...s, ...patch } : s)) }, idx, `${scene?.id}:${Object.keys(patch).join(',')}`)
+  const update = (patch) => commit({ ...content, scenes: scenes.map((s, i) => (i === idx ? patchSceneVoice(s, patch) : s)) }, idx, `${scene?.id}:${Object.keys(patch).join(',')}`)
   const step = (from, to) => {
     if (!history[from].length || !canChange) return
     const target = history[from].at(-1)
@@ -174,7 +175,7 @@ export default function EditorPage({ notify, code, onNavigationStateChange }) {
     if (!write) return
     const picked = all ? voiceHints.suggestions : [hint]
     const byId = Object.fromEntries(picked.map(item => [item.sceneId, item.suggestion]))
-    setContent({ ...content, scenes: scenes.map(s => (s.id in byId ? { ...s, spokenText: byId[s.id] } : s)) })
+    setContent({ ...content, scenes: scenes.map(s => (s.id in byId ? patchSceneVoice(s, { spokenText: byId[s.id] }) : s)) })
     setDirty(true)
     setVoiceHints(all ? null : { ...voiceHints, suggestions: voiceHints.suggestions.filter(item => item !== hint) })
   }

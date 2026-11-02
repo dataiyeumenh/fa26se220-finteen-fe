@@ -2,7 +2,6 @@ import useKidDashboard from "./hooks/useKidDashboard.js";
 import WelcomeBanner from "./components/WelcomeBanner.jsx";
 import ContinueLearning from "./components/ContinueLearning.jsx";
 import Achievements from "./components/Achievements.jsx";
-import AiSuggestionCard from "./components/AiSuggestionCard.jsx";
 
 export default function KidDashboard() {
   const dashboard = useKidDashboard();
@@ -37,8 +36,7 @@ export default function KidDashboard() {
             lessonsTarget={dashboard.lessonsTarget}
           />
           <ContinueLearning lessons={dashboard.continueLessons} />
-          <Achievements items={dashboard.achievements} />
-          <AiSuggestionCard />
+          <Achievements items={dashboard.achievements} source={dashboard.achievementSource} />
         </>
       )}
     </>

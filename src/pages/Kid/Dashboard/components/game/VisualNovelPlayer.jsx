@@ -65,6 +65,9 @@ import {
   submitChapterBatch,
 } from "./playBatch.js";
 import { normalizeChapter } from "./chapterShape.js";
+import { endingReportMock } from "./endingReportMock.js";
+import MockChapterReport from "./MockChapterReport.jsx";
+import SceneVoice from "./SceneVoice.jsx";
 
 // Khung mini-game theo `game.kind` (bộ khuôn BE: scene-schema.json → minigameKinds). Dữ liệu cũ chưa có kind (bản 1.1.0)
 // tra theo id cũ (legacyIds của khuôn). Kind lạ → báo chưa có khung, không rơi im lặng vào Cần / Muốn.
@@ -192,10 +195,12 @@ function SpeakerTag({ scene }) {
 
 function EndingReport({ report }) {
   if (!report) return null;
+  if (report.source === "mock") return <MockChapterReport />;
   const format = (value) => Number(value || 0).toLocaleString("vi-VN");
 
   return (
     <div className="vn-report">
+      <p role="note">Đang phát triển · Báo cáo tính từ lượt chơi trên trình duyệt; kết quả máy chủ có thể khác.</p>
       <div className="vn-report-grid">
         <div className="vn-report-card">
           <small>Số dư cuối chương</small>
@@ -312,6 +317,10 @@ export function VisualNovelPlayer({ data: rawData }) {
   const preloadedImageStateRef = useRef(new Map());
   const preloadingImageRef = useRef(new Map());
 
+  const [voiceEnabled, setVoiceEnabled] = useState(() => {
+    try { return localStorage.getItem("finteen:voice-enabled") !== "false"; }
+    catch { return true; }
+  });
   const [scenePath, setScenePath] = useState(savedProgress?.scenePath || [0]);
   const [miniGameDoneByScene, setMiniGameDoneByScene] = useState(
     savedProgress?.miniGameDoneByScene || {},
@@ -970,7 +979,7 @@ export function VisualNovelPlayer({ data: rawData }) {
 
   const buildEndingReport = () => {
     const config = data.endingReport;
-    if (!config) return null;
+    if (!config) return endingReportMock;
     const normalizedLearning = config.choiceGroupMaxima
       ? learningSummary(choiceLedger, miniGameResults, config)
       : null;
@@ -1259,6 +1268,9 @@ export function VisualNovelPlayer({ data: rawData }) {
       onPointerDownCapture={collapseMenuOnGameClick}
     >
       <header className="vn-toolbar">
+        {voiceEnabled && scene.voiceUrl && scene.voice !== "off" && (
+          <SceneVoice key={`${scene.id}:${scene.voiceUrl}`} src={scene.voiceUrl} />
+        )}
         <div className="vn-toolbar-left">
           <details ref={menuDetailsRef} className="vn-details vn-menu">
             <summary
@@ -1288,6 +1300,19 @@ export function VisualNovelPlayer({ data: rawData }) {
                 <div style={{ width: progress + "%" }} />
               </div>
               <div className="vn-menu-actions">
+                <button
+                  type="button"
+                  className="vn-icon-button"
+                  aria-pressed={voiceEnabled}
+                  onClick={() => {
+                    const enabled = !voiceEnabled;
+                    setVoiceEnabled(enabled);
+                    try { localStorage.setItem("finteen:voice-enabled", String(enabled)); }
+                    catch { /* Keep preference for this game session. */ }
+                  }}
+                >
+                  Giọng đọc: {voiceEnabled ? "Bật" : "Tắt"}
+                </button>
                 <Link
                   to="/dashboard/kid/lessons"
                   className="vn-icon-button"
@@ -1688,6 +1713,7 @@ export function VisualNovelPlayer({ data: rawData }) {
                 <p className="text-center mb-4">
                   {resolveEnding()?.storyText || scene.text}
                 </p>
+                <EndingReport report={buildEndingReport()} />
                 <Link
                   to="/dashboard/kid/lessons"
                   className="w-full inline-block bg-green-600 text-white p-3 rounded-lg text-center hover:bg-green-700"

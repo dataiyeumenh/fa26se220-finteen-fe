@@ -18,7 +18,7 @@ export async function uploadFiles(files, { label, chapterCode }, notify) {
         f.size > 5 * 1024 * 1024
       ) {
         throw new ApiError(
-          "Chá»n áº£nh PNG, JPEG hoáº·c WebP, tá»‘i Ä‘a 5 MB.",
+          "Chọn ảnh PNG, JPEG hoặc WebP, tối đa 5 MB.",
           6008,
           400,
         );

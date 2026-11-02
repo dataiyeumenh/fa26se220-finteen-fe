@@ -23,7 +23,7 @@ const work = {
     open: "Mở danh sách chờ duyệt",
     path: "/internal/reviews",
     empty: "Không có chương nào đang chờ bạn duyệt",
-    note: "Bạn không duyệt được chương do chính mình sửa. Kho ảnh và kho câu hỏi chỉ để tra cứu.",
+    note: "Bạn không duyệt được chương do chính mình sửa. Kho tài nguyên và kho câu hỏi chỉ để tra cứu.",
   },
   GAME_MANAGER: {
     about:

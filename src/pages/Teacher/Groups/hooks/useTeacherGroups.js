@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { teacherGroupsApi as auth } from "../api/teacherGroupsApi";
+import { withGroupConsent } from "../api/withGroupConsent.js";
 
 const errorMessage = (error) =>
   ({
@@ -100,12 +101,13 @@ export default function useTeacherGroups() {
         ),
       openSlot: ({ displayName, pin }) =>
         run(
-          () => auth.openSlot({ groupId: group.id, displayName, pin }),
+          () => withGroupConsent(auth, group, () =>
+            auth.openSlot({ groupId: group.id, displayName, pin })),
           "Đã tạo hồ sơ trẻ. Hãy sao chép mã đăng nhập trên thẻ và đưa mã PIN vừa đặt cho trẻ.",
         ),
       openSlots: (items) =>
         run(
-          () => auth.openSlots(group.id, items),
+          () => withGroupConsent(auth, group, () => auth.openSlots(group.id, items)),
           `Đã tạo ${items.length} hồ sơ trẻ.`,
         ),
       changeSlotPin: (slotId, pin) =>

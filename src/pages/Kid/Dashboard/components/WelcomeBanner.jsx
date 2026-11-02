@@ -1,5 +1,6 @@
 import { Flame, PlayCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 export default function WelcomeBanner({
   user,
@@ -8,6 +9,7 @@ export default function WelcomeBanner({
   lessonsTarget,
   accent = "#fbbf24",
 }) {
+  const navigate = useNavigate();
   return (
     <div
       className="rounded-3xl p-6 md:p-8 mb-6 relative overflow-hidden text-white"
@@ -44,7 +46,7 @@ export default function WelcomeBanner({
           </span>{" "}
           nữa là hoàn thành mục tiêu
         </p>
-        <Button className="bg-white text-[#92400e] hover:bg-white/90 border-0 font-extrabold shadow-[0_4px_14px_rgba(0,0,0,0.2)]">
+        <Button onClick={() => navigate("/dashboard/kid/lessons")} className="bg-white text-[#92400e] hover:bg-white/90 border-0 font-extrabold shadow-[0_4px_14px_rgba(0,0,0,0.2)]">
           <PlayCircle className="w-4 h-4" aria-hidden="true" /> Tiếp tục học
         </Button>
       </div>

@@ -10,12 +10,15 @@ import {
   Trash2,
 } from "lucide-react";
 import { useState } from "react";
+import { teacherQuizApi } from "../api/teacherQuizApi";
+import QuestionFileImport from "../../../../components/public/QuestionFileImport.jsx";
 import {
   ActionForm,
   Empty,
   Heading,
   Modal,
   Notice,
+  DataSourceNote,
 } from "../../../../features/workspace/ui";
 import {
   useTeacherQuestionBank,
@@ -65,6 +68,9 @@ export default function TeacherQuizContent({ quizState }) {
           {error || message}
         </div>
       )}
+      {modal?.type === "import" && (
+        <QuizImport groupId={groupId} onClose={() => setModal(null)} onSaved={done} />
+      )}
       {modal?.type === "edit" ? (
         <QuizEditLoader
           groups={groups}
@@ -75,6 +81,11 @@ export default function TeacherQuizContent({ quizState }) {
       ) : (
         <>
           <div className="ws-toolbar">
+            {currentGroup && !currentGroup.closedAt && (
+              <button className="ws-btn" onClick={() => setModal({ type: "import" })}>
+                Import từ file
+              </button>
+            )}
             <label>
               Lớp học
               <select
@@ -110,6 +121,7 @@ export default function TeacherQuizContent({ quizState }) {
                     </span>
                   </div>
                   <h2>{quiz.title}</h2>
+                  {quiz.source === "mock" && <DataSourceNote>Đề import chỉ lưu trên trình duyệt này. Chưa thể giao cho học sinh hoặc đồng bộ máy chủ.</DataSourceNote>}
                   <p>
                     {quiz.questionCount} câu · Hạn {dateTime(quiz.dueAt)}
                   </p>
@@ -121,7 +133,7 @@ export default function TeacherQuizContent({ quizState }) {
                     >
                       <Eye size={16} /> Xem đề
                     </button>
-                    {!quiz.publishedAt && quiz.kind !== "POST_TEST" && (
+                    {!quiz.publishedAt && quiz.kind !== "POST_TEST" && quiz.source !== "mock" && (
                       <>
                         <button
                           className="ws-btn"
@@ -142,6 +154,11 @@ export default function TeacherQuizContent({ quizState }) {
                           <Trash2 size={16} /> Xóa
                         </button>
                       </>
+                    )}
+                    {quiz.source === "mock" && (
+                      <button className="ws-btn danger" onClick={() => setModal({ type: "delete", quiz })}>
+                        <Trash2 size={16} /> Xóa mock
+                      </button>
                     )}
                     {quiz.publishedAt && (
                       <button
@@ -473,6 +490,22 @@ function QuizResults({ quiz, onClose }) {
           ))}
         </section>
       )}
+    </Modal>
+  );
+}
+
+function QuizImport({ groupId, onClose, onSaved }) {
+  const [questions, setQuestions] = useState([]);
+  return (
+    <Modal title="Import Quiz t? file" onClose={onClose}>
+      <DataSourceNote>Import đang sử dụng mock API. Đề chỉ lưu trên trình duyệt theo tài khoản hiện tại; chưa thể phát hành cho học sinh.</DataSourceNote>
+      <QuestionFileImport questions={questions} onChange={setQuestions} />
+      {questions.length > 0 && <ActionForm submit="Lưu đề mock" onSubmit={async (form) => {
+        await teacherQuizApi.importQuiz({ groupId, title: form.get("title"), dueAt: null, questions });
+        await onSaved("Đã import đề bằng mock API; chỉ lưu trên trình duyệt này.");
+      }}>
+        <label>Tên đề<input name="title" required maxLength={200} /></label>
+      </ActionForm>}
     </Modal>
   );
 }

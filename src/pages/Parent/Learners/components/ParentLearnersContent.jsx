@@ -78,7 +78,7 @@ export default function ParentLearnersContent({ learnerState }) {
     <>
       <Heading
         title="Không gian của các con"
-        description={`${active.length}/${group.slotLimit} hồ sơ đang hoạt động · ${available} chỗ trống.`}
+        description={`${active.length}/${group.slotLimit} hồ sơ đang hoạt động · ${available == null ? "Chưa xác định số" : available} chỗ trống.`}
       >
         <button className="ws-btn" onClick={() => void refresh()}>
           <RefreshCw size={16} /> Làm mới
@@ -92,7 +92,7 @@ export default function ParentLearnersContent({ learnerState }) {
           {error || message}
         </div>
       )}
-      <div className="ws-toolbar">
+      <div className="ws-toolbar ws-parent-learners-toolbar">
         <label>
           Tìm hồ sơ
           <input
@@ -115,15 +115,20 @@ export default function ParentLearnersContent({ learnerState }) {
             Đã thu hồi ({inactive.length})
           </button>
         </div>
-        {available > 0 && (
           <button
             className="ws-btn primary"
+            disabled={available === 0}
+            aria-describedby={available === 0 ? "learner-capacity-notice" : undefined}
             onClick={() => setModal({ type: "create" })}
           >
             <Plus size={17} /> Tạo hồ sơ trẻ
           </button>
-        )}
       </div>
+      {available === 0 && (
+        <p className="ws-notice" id="learner-capacity-notice" role="status">
+          Nhóm đã hết chỗ tạo hồ sơ trẻ. Thu hồi hồ sơ không còn sử dụng rồi bấm Làm mới để kiểm tra lại.
+        </p>
+      )}
       {rows.length ? (
         <div className="ws-grid three">
           {rows.map((slot) => (

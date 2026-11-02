@@ -85,7 +85,7 @@ function VoiceFields({ scene, update }) {
             aria-label="Nghe giọng đọc"
           />
         ) : (
-          <small>Chưa có giọng đọc</small>
+          <small>Chưa có giọng đọc cho nội dung này. Lưu nháp để backend cập nhật MP3.</small>
         )}
         <label className="scene-voice-off">
           <input

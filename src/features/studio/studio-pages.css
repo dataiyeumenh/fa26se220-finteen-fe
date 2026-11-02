@@ -1,4 +1,4 @@
-/* Các màn Studio ngoài trình soạn (Chương, Chờ duyệt, Phát hành, Lịch sử bản, Kho ảnh, Kho câu hỏi, Khoá AI).
+/* Các màn Studio ngoài trình soạn (Chương, Chờ duyệt, Phát hành, Lịch sử phiên bản, Kho tài nguyên, Kho câu hỏi, Khoá AI).
    Người dùng là người soạn nội dung, không phải lập trình viên: mỗi màn một việc chính, một nút chính, trạng thái nói bằng lời.
    Điểm nhấn duy nhất: dải tiến trình của chương (Đang soạn → Chờ duyệt → Đã duyệt → Đã phát hành). Mọi thứ khác yên. */
 .studio-workspace, .sp-scope, .sp-dialog {
@@ -235,7 +235,7 @@ textarea.sp-input { min-height: 88px; resize: vertical; line-height: 1.5; }
 .sp-release-main p { margin: 0; line-height: 1.55; }
 .sp-release-meta { display: flex; gap: 8px 14px; flex-wrap: wrap; align-items: center; color: var(--sp-muted); font-size: 13px; }
 
-/* ---------- Kho ảnh ---------- */
+/* ---------- Kho tài nguyên ---------- */
 .sp-asset-overview { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-bottom: 14px; }
 .sp-asset-overview > div { display: flex; align-items: center; gap: 11px; min-height: 64px; padding: 11px 14px; border: 1px solid #e1e7ed; border-radius: 12px; background: #fff; color: #718096; }
 .sp-asset-overview > div > svg { color: #4d7c6f; }
@@ -468,6 +468,20 @@ textarea.sp-input { min-height: 88px; resize: vertical; line-height: 1.5; }
 .sp-tag.t-REJECTED, .sp-tag.t-bad { border-color: #ead7d5; background: #fbf5f4; color: #8b5a55; }
 .sp-tag.t-RELEASED, .sp-tag.t-info { border-color: #d8e0ea; background: #f3f6fa; color: #50647e; }
 .sp-state { border-color: #dfe5eb; background: #fff; }
+.sp-state.is-warning {
+  border: 1px solid #f2bd4b;
+  border-left: 5px solid #d97706;
+  background: #fffbeb;
+}
+.sp-state.is-warning h2 {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  color: #92400e;
+  font-weight: 700;
+}
+.sp-state.is-warning h2 svg { flex-shrink: 0; color: #b45309; }
+.sp-state.is-warning p { color: #78350f; }
 .sp-dialog .sp-dialog-title { font-weight: 600; }
 .sp-release-plan { gap: 12px; }
 .sp-version strong, .sp-release-version { font-weight: 600; }
