@@ -8,6 +8,7 @@ import {
   Layers3,
   Lock,
   Mic,
+  AudioLines,
   PanelRightClose,
   PanelRightOpen,
   Play,
@@ -61,7 +62,13 @@ function Thumbnail({ scene }) {
 }
 
 /** Giọng đọc của một câu thoại: cách đọc (spokenText), nghe giọng đã có, tắt giọng. BE tự gắn / gỡ giọng khi lưu nháp. */
-function VoiceFields({ scene, update }) {
+const VOICE_STATE = {
+  MISSING: "Lời thoại mới — cần bấm Sinh giọng",
+  PENDING: "Đang sinh giọng…",
+  FAILED: "Sinh giọng lỗi",
+};
+
+function VoiceFields({ scene, update, status }) {
   return (
     <div className="scene-voice-fields">
       <label>
@@ -85,7 +92,11 @@ function VoiceFields({ scene, update }) {
             aria-label="Nghe giọng đọc"
           />
         ) : (
-          <small>Chưa có giọng đọc cho nội dung này. Lưu nháp để backend cập nhật MP3.</small>
+          <small className={`scene-voice-state scene-voice-${(status?.status || "none").toLowerCase()}`}>
+            {status?.status && VOICE_STATE[status.status]
+              ? VOICE_STATE[status.status] + (status.error ? `: ${status.error}` : "")
+              : "Lời thoại đã sửa — lưu nháp rồi bấm Sinh giọng"}
+          </small>
         )}
         <label className="scene-voice-off">
           <input
@@ -421,6 +432,8 @@ export default function EditorCanvas(props) {
     conditionDrafts = {},
     editCondition,
     onSuggestVoice,
+    onRenderVoice,
+    voice,
     history,
     notice,
     issues,
@@ -552,6 +565,26 @@ export default function EditorCanvas(props) {
             >
               <Mic size={16} />
               Gợi ý cách đọc (AI)
+            </button>
+          )}
+          {write && onRenderVoice && (
+            <button
+              type="button"
+              className="scene-quiet"
+              disabled={busy || dirty || !voice}
+              title={
+                dirty
+                  ? "Lưu nháp trước"
+                  : voice?.pending
+                    ? `Đang sinh ${voice.pending} câu trên máy sinh`
+                    : "Chỉ câu mới / đã sửa được sinh; câu trùng dùng lại giọng cũ"
+              }
+              onClick={onRenderVoice}
+            >
+              <AudioLines size={16} />
+              {voice?.pending
+                ? `Đang sinh ${voice.pending} câu…`
+                : `Sinh giọng${voice ? ` (${voice.missing + voice.failed} câu)` : ""}`}
             </button>
           )}
           <button
@@ -963,7 +996,7 @@ export default function EditorCanvas(props) {
                     >
                       <h3 id="group-voice">Giọng đọc</h3>
                       <fieldset disabled={!write || busy}>
-                        <VoiceFields scene={scene} update={update} />
+                        <VoiceFields scene={scene} update={update} status={voice?.items?.find((item) => item.sceneId === scene.id)} />
                       </fieldset>
                     </section>
                   )}

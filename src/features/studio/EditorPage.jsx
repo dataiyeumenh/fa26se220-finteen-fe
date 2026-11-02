@@ -68,6 +68,37 @@ function VoiceHints({ hints, scenes, write, onAccept, onDrop, onOpen, onClose })
   </Panel>
 }
 
+const VOICE_LABEL = { MISSING: 'Cần sinh', FAILED: 'Lỗi — sinh lại', PENDING: 'Đang sinh…', READY: 'Đã có giọng' }
+const VOICE_TONE = { MISSING: 'text-amber-700', FAILED: 'text-red-700', PENDING: 'text-blue-700', READY: 'text-emerald-700' }
+
+/** Danh sách câu sẽ sinh giọng (câu mới / đã sửa / lỗi) — xem trước rồi mới bấm; câu trùng khoá dùng lại giọng cũ nên không có ở đây. */
+function VoiceRenderList({ voice, scenes, busy, onRender, onOpen, onClose }) {
+  const number = id => scenes.findIndex(s => s.id === id) + 1
+  const speaker = id => scenes.find(s => s.id === id)?.speaker
+  const todo = voice.items.filter(i => i.status !== 'READY')
+  const count = voice.missing + voice.failed
+  return <Panel title="Sinh giọng đọc" actions={<>
+    {count > 0 && <Btn tone="primary" disabled={busy || voice.pending > 0} onClick={onRender}>Sinh {count} câu này</Btn>}
+    <Btn onClick={onClose}>Đóng</Btn>
+  </>}>
+    <p className="mb-3 text-xs text-slate-500">
+      {voice.lines} câu có giọng đọc · {voice.ready} câu giữ giọng cũ (lời không đổi) · {count} câu cần sinh
+      {voice.pending ? ` · đang sinh ${voice.pending} câu trên máy sinh (GitHub Actions), danh sách tự cập nhật` : ''}.
+    </p>
+    {!todo.length && <p>Mọi câu đã có giọng — không cần sinh.</p>}
+    <ul className="grid gap-2">{todo.map(item => <li key={item.sceneId} className="rounded-lg border border-slate-200 p-3">
+      <div className="flex items-center justify-between gap-2 text-xs">
+        <button type="button" className="text-blue-700 underline" onClick={() => onOpen(item.sceneId)}>
+          Cảnh {number(item.sceneId)} · {speaker(item.sceneId) || item.speakerId}
+        </button>
+        <span className={`font-semibold ${VOICE_TONE[item.status] || ''}`}>{VOICE_LABEL[item.status] || item.status}</span>
+      </div>
+      <p className="mt-1 text-sm">{item.readText}</p>
+      <p className="text-xs text-slate-500">Giọng: {item.profile}{item.error ? ` · ${item.error}` : ''}</p>
+    </li>)}</ul>
+  </Panel>
+}
+
 export default function EditorPage({ notify, code, onNavigationStateChange }) {
   const [search, setSearch] = useSearchParams()
   const [meta, setMeta] = useState(null)
@@ -81,6 +112,8 @@ export default function EditorPage({ notify, code, onNavigationStateChange }) {
   const [warnings, setWarnings] = useState([])
   const [refreshError, setRefreshError] = useState('')
   const [conditionDrafts, setConditionDrafts] = useState({})
+  const [voice, setVoice] = useState(null) // trạng thái giọng từng câu (GET …/voice): READY / MISSING / PENDING / FAILED
+  const [voiceList, setVoiceList] = useState(false)
   const [voiceHints, setVoiceHints] = useState(null) // gợi ý cách đọc của AI — chưa ghi vào nháp tới khi người soạn bấm Nhận
   const [history, setHistory] = useState({ past: [], future: [] })
   const [notice, setNotice] = useState(null) // ví dụ "Đã xoá cảnh 3" kèm nút Hoàn tác
@@ -105,6 +138,26 @@ export default function EditorPage({ notify, code, onNavigationStateChange }) {
     }).catch(error => { if (active) setLoadError(formatError(error)) })
     return () => { active = false }
   }, [code, search, attempt])
+  const loadVoice = useCallback(() => studioApi.get(`/api/studio/chapters/${encodeURIComponent(code)}/voice`).then(setVoice).catch(() => setVoice(null)), [code])
+  useEffect(() => { if (meta?.revision) loadVoice() }, [meta?.revision, loadVoice])
+  useEffect(() => {
+    if (!voice?.pending) return
+    // Máy sinh (GitHub Actions) đang chạy: hỏi lại mỗi 4 giây; xong thì tải lại nháp để có voiceUrl mới.
+    const timer = setTimeout(async () => {
+      const next = await studioApi.get(`/api/studio/chapters/${encodeURIComponent(code)}/voice`).catch(() => null)
+      if (!next) return
+      setVoice(next)
+      if (!next.pending) {
+        if (next.failed) notify(`Xong giọng — ${next.failed} câu lỗi, bấm Sinh giọng để thử lại`)
+        else notify('Đã sinh xong giọng đọc', true)
+        if (!dirty) {
+          const fresh = await studioApi.get(`/api/studio/chapters/${encodeURIComponent(code)}/draft`).catch(() => null)
+          if (fresh) setContent(prepareDraftV2(fresh.content))
+        }
+      }
+    }, 4000)
+    return () => clearTimeout(timer)
+  }, [voice, code, dirty, notify])
   useEffect(() => {
     if (!dirty) return
     const warn = event => { event.preventDefault(); event.returnValue = '' }
@@ -170,6 +223,12 @@ export default function EditorPage({ notify, code, onNavigationStateChange }) {
     () => studioApi.post(`/api/studio/chapters/${encodeURIComponent(code)}/voice/suggest`),
     result => result.aiCalls ? `AI gợi ý ${result.suggestions.length} câu (${result.aiCalls} lần gọi)` : 'Không có câu nào cần đổi cách đọc.',
     result => setVoiceHints(result),
+  )
+  const renderVoice = () => void run(
+    () => studioApi.post(`/api/studio/chapters/${encodeURIComponent(code)}/voice`),
+    r => r.queued + r.alreadyPending === 0 ? 'Mọi câu đã có giọng — không cần sinh.'
+      : `Đang sinh ${r.queued + r.alreadyPending} câu (${r.ready} câu giữ giọng cũ)` + (r.dispatched ? '' : ` — chưa gọi được máy sinh: ${r.dispatchNote}`),
+    () => loadVoice(),
   )
   const acceptHint = (hint, all = false) => {
     if (!write) return
@@ -290,10 +349,11 @@ export default function EditorPage({ notify, code, onNavigationStateChange }) {
     <EditorCanvas code={code} content={content} meta={meta} scenes={scenes} scene={scene} idx={idx} setIdx={setIdx}
       write={write} busy={busy} dirty={dirty} json={json}
       setJson={value => { setJson(value); setDirty(true) }} toggleJson={toggleJson} save={save} update={update} schemaQuery={schemaQuery}
-      warnings={warnings} refreshError={refreshError} conditionDrafts={conditionDrafts} editCondition={editCondition} onSuggestVoice={suggestVoice}
+      warnings={warnings} refreshError={refreshError} conditionDrafts={conditionDrafts} editCondition={editCondition} onSuggestVoice={suggestVoice} onRenderVoice={() => { setVoiceList(true); loadVoice() }} voice={voice}
       history={{ undo, redo, canUndo: history.past.length > 0, canRedo: history.future.length > 0 }} notice={notice} issues={storyIssues(scenes)}
       onAdd={() => setDialog({ kind: 'add' })} onDuplicate={duplicateScene} onDelete={deleteScene} onPickBackground={() => setPicking('background')}
       onAddCharacter={() => setDialog({ kind: 'character' })} onPlay={() => setDialog({ kind: 'play' })} openDialog={setDialog} onBranch={createBranch} onLaneEnd={addLaneEnd} onPickImage={apply => setPicking(() => apply)} />
+    {voiceList && voice && <VoiceRenderList voice={voice} scenes={scenes} busy={busy} onRender={renderVoice} onOpen={id => go(id)} onClose={() => setVoiceList(false)} />}
     {voiceHints && <VoiceHints hints={voiceHints} scenes={scenes} write={write} onAccept={acceptHint} onDrop={dropHint} onOpen={id => go(id)} onClose={() => setVoiceHints(null)} />}
     {picking && <AssetPicker chapter={code} notify={notify} onClose={() => setPicking(false)} onPick={asset => {
       if (typeof picking === 'function') picking(asset.url)
