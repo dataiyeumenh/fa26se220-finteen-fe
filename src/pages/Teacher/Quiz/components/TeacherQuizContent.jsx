@@ -12,6 +12,7 @@ import {
 import { useState } from "react";
 import { teacherQuizApi } from "../api/teacherQuizApi";
 import QuestionFileImport from "../../../../components/public/QuestionFileImport.jsx";
+import QuestionSetPicker from "./QuestionSetPicker.jsx";
 import {
   ActionForm,
   Empty,
@@ -32,6 +33,7 @@ const kindLabel = (quiz) =>
     : "Đề giáo viên";
 const dateTime = (value) =>
   value ? new Date(value).toLocaleString("vi-VN") : "Không có hạn";
+const QUESTION_BANK_FILTERS = {};
 
 export default function TeacherQuizContent({ quizState }) {
   const {
@@ -231,13 +233,6 @@ function QuizEditLoader(props) {
 }
 
 function QuizEditor({ groups, quiz, onClose, onSaved }) {
-  const [filters, setFilters] = useState({
-    q: "",
-    standard: "",
-    concept: "",
-    pool: "",
-  });
-  const [applied, setApplied] = useState(filters);
   const [selected, setSelected] = useState(
     () =>
       new Set(
@@ -245,13 +240,7 @@ function QuizEditor({ groups, quiz, onClose, onSaved }) {
       ),
   );
   const { questions, loading, error, saveQuiz } =
-    useTeacherQuestionBank(applied);
-  const toggle = (id) =>
-    setSelected((old) => {
-      const next = new Set(old);
-      next.has(id) ? next.delete(id) : next.size < 100 && next.add(id);
-      return next;
-    });
+    useTeacherQuestionBank(QUESTION_BANK_FILTERS);
   return (
     <section className="ws-card ws-quiz-editor-page">
       <header>
@@ -268,7 +257,8 @@ function QuizEditor({ groups, quiz, onClose, onSaved }) {
       <ActionForm
         submit={quiz ? "Lưu thay đổi" : "Tạo đề nháp"}
         onSubmit={async (form) => {
-          if (!selected.size) throw new Error("Hãy chọn ít nhất một câu hỏi.");
+          if (loading || error) throw new Error("Kho câu hỏi chưa tải xong. Hãy thử lại sau.");
+          if (!selected.size) throw new Error("Hãy chọn ít nhất một bộ câu hỏi.");
           const dueAt = new Date(form.get("dueAt")).toISOString();
           await saveQuiz(quiz?.id, {
             groupId: form.get("groupId"),
@@ -310,47 +300,7 @@ function QuizEditor({ groups, quiz, onClose, onSaved }) {
             required
           />
         </label>
-        <fieldset>
-          <legend>Kho câu hỏi · đã chọn {selected.size}/100</legend>
-          <div className="ws-toolbar">
-            <label>
-              Tìm
-              <input
-                value={filters.q}
-                onChange={(event) =>
-                  setFilters((old) => ({ ...old, q: event.target.value }))
-                }
-              />
-            </label>
-            <button
-              type="button"
-              className="ws-btn"
-              onClick={() => setApplied({ ...filters })}
-            >
-              Lọc
-            </button>
-          </div>
-          <Notice text={error} />
-          {loading ? (
-            <Empty>Đang tải kho câu hỏi…</Empty>
-          ) : (
-            <div className="ws-checks">
-              {questions.map((question) => (
-                <label key={question.id}>
-                  <input
-                    type="checkbox"
-                    checked={selected.has(question.id)}
-                    onChange={() => toggle(question.id)}
-                  />
-                  <span>
-                    <strong>{question.externalId || "Câu hỏi"}</strong> ·{" "}
-                    {question.stem}
-                  </span>
-                </label>
-              ))}
-            </div>
-          )}
-        </fieldset>
+        <QuestionSetPicker questions={questions} selected={selected} onChange={setSelected} loading={loading} error={error} />
       </ActionForm>
     </section>
   );
