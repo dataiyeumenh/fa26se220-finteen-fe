@@ -57,7 +57,7 @@ export function ChapterFourMiniGame({ onComplete }) {
         {phase === "intro" && (
           <section className="c4s-scene c4s-intro">
             <img
-              src="/images/career-match/career-fair-kawaii-v2.png"
+              src="/images/career-match/career-fair-kawaii-v2.webp"
               alt="Minh cùng Linh và Mai sau ngày hội nghề nghiệp"
             />
             <div className="c4s-shade" />
@@ -186,7 +186,7 @@ export function ChapterFourMiniGame({ onComplete }) {
             key={frame}
           >
             <img
-              src="/images/career-match/minh-mom-ending-v1.png"
+              src="/images/career-match/minh-mom-ending-v1.webp"
               alt="Minh cùng mẹ xem bài kiểm tra ở phòng khách"
             />
             <div className="c4s-shade" />
@@ -248,7 +248,7 @@ export function ChapterFourMiniGame({ onComplete }) {
           <section className="c4s-return">
             <div className="c4s-return-art">
               <img
-                src="/images/career-match/career-fair-kawaii-v2.png"
+                src="/images/career-match/career-fair-kawaii-v2.webp"
                 alt="Minh trở lại trò chuyện cùng Mai và Linh"
               />
             </div>

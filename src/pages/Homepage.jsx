@@ -15,33 +15,33 @@ const audiences = [
     title: "Đồng hành mà không gây áp lực",
     description: "Tạo hồ sơ cho con, mở quyền truy cập và xem báo cáo sau từng chặng học.",
     detail: "Biết con đang hiểu gì và cần hỗ trợ ở đâu.",
-    image: "/images/finteen-v2/chapter-01/scene/sc01-receiving-allowance.png",
+    image: "/images/finteen-v2/chapter-01/scene/sc01-receiving-allowance.webp",
   },
   {
     id: "teacher", icon: School, label: "Giáo viên",
     title: "Dễ triển khai cho cả lớp",
     description: "Tạo lớp, giao quiz trước và sau khi học, rồi theo dõi báo cáo theo nhóm.",
     detail: "Quan sát tiến bộ mà không cần tổng hợp thủ công.",
-    image: "/images/finteen-v2/chapter-08/scene/sc05-explaining-personal-plan.png",
+    image: "/images/finteen-v2/chapter-08/scene/sc05-explaining-personal-plan.webp",
   },
   {
     id: "learner", icon: Gamepad2, label: "Học sinh",
     title: "Vào chơi nhanh, không cần email",
     description: "Đăng nhập bằng mã truy cập và PIN để bắt đầu câu chuyện, mini-game và quiz.",
     detail: "Tự do thử, sai và nhìn thấy hệ quả của mỗi lựa chọn.",
-    image: "/images/finteen-v2/chapter-04/scene/sc02-comparing-three-phones.png",
+    image: "/images/finteen-v2/chapter-04/scene/sc02-comparing-three-phones.webp",
   },
 ];
 
 const chapters = [
-  ["01", "Tiền đầu tiên", "Nhu cầu và mong muốn", "chapter-01/scene/sc01-receiving-allowance.png", "lime"],
-  ["02", "Mục tiêu lớn", "Ngân sách và tiết kiệm", "chapter-02/scene/sc02-dividing-envelopes.png", "coral"],
-  ["03", "Công việc đầu tiên", "Thu nhập thực nhận", "chapter-03/scene/sc01-three-career-offers.png", "amber"],
-  ["04", "Mua thông minh", "So sánh tổng chi phí", "chapter-04/scene/sc02-comparing-three-phones.png", "coral"],
-  ["05", "Ngân hàng và lãi", "Phí, lãi và sức mua", "chapter-05/scene/sc03-money-and-purchasing-power.png", "sky"],
-  ["06", "Mượn tiền", "Vay và tổng chi phí", "chapter-06/scene/sc02-comparing-loan-offers.png", "amber"],
-  ["07", "Biến cố bất ngờ", "Bảo hiểm và lừa đảo", "chapter-07/scene/sc03-checking-refund-message.png", "coral"],
-  ["08", "Kế hoạch 18 tuổi", "Đầu tư và dài hạn", "chapter-08/scene/sc05-explaining-personal-plan.png", "lime"],
+  ["01", "Tiền đầu tiên", "Nhu cầu và mong muốn", "chapter-01/scene/sc01-receiving-allowance.webp", "lime"],
+  ["02", "Mục tiêu lớn", "Ngân sách và tiết kiệm", "chapter-02/scene/sc02-dividing-envelopes.webp", "coral"],
+  ["03", "Công việc đầu tiên", "Thu nhập thực nhận", "chapter-03/scene/sc01-three-career-offers.webp", "amber"],
+  ["04", "Mua thông minh", "So sánh tổng chi phí", "chapter-04/scene/sc02-comparing-three-phones.webp", "coral"],
+  ["05", "Ngân hàng và lãi", "Phí, lãi và sức mua", "chapter-05/scene/sc03-money-and-purchasing-power.webp", "sky"],
+  ["06", "Mượn tiền", "Vay và tổng chi phí", "chapter-06/scene/sc02-comparing-loan-offers.webp", "amber"],
+  ["07", "Biến cố bất ngờ", "Bảo hiểm và lừa đảo", "chapter-07/scene/sc03-checking-refund-message.webp", "coral"],
+  ["08", "Kế hoạch 18 tuổi", "Đầu tư và dài hạn", "chapter-08/scene/sc05-explaining-personal-plan.webp", "lime"],
 ].map(([number, title, topic, path, tone]) => ({
   number, title, topic, tone, image: `/images/finteen-v2/${path}`,
 }));
@@ -59,7 +59,7 @@ const reportMetrics = [
 ];
 
 function Brand() {
-  return <a href="#top" className="home-brand" aria-label="FinTeen - Trang chủ"><img src="/brand/finteen-logo-v2.png" alt="FinTeen" /></a>;
+  return <a href="#top" className="home-brand" aria-label="FinTeen - Trang chủ"><img src="/brand/finteen-logo-v2.webp" alt="FinTeen" /></a>;
 }
 
 export default function Homepage() {
@@ -116,10 +116,10 @@ export default function Homepage() {
             </div>
             <div className="home-hero__visual" aria-label="Minh họa hành trình học FinTeen">
               <div className="home-hero__map-frame">
-                <img src="/images/map/journey-v2/finteen-map-01-home.png" alt="Bản đồ hành trình FinTeen" />
+                <img src="/images/map/journey-v2/finteen-map-01-home.webp" alt="Bản đồ hành trình FinTeen" fetchPriority="high" decoding="async" width="2752" height="1536" />
                 <div className="home-map-route" aria-hidden="true"><span /><span /><span /></div>
               </div>
-              <div className="home-hero__scene-frame"><img src="/images/finteen-v2/chapter-08/scene/sc05-explaining-personal-plan.png" alt="Học sinh trao đổi kế hoạch tài chính với giáo viên" /></div>
+              <div className="home-hero__scene-frame"><img src="/images/finteen-v2/chapter-08/scene/sc05-explaining-personal-plan.webp" alt="Học sinh trao đổi kế hoạch tài chính với giáo viên" /></div>
             </div>
           </div>
           <div className="home-landscape" aria-hidden="true" />
@@ -136,7 +136,7 @@ export default function Homepage() {
                   </button>
                 ))}
               </div>
-              <div className="home-audience__media" role="tabpanel" key={selectedAudience.id}><img src={selectedAudience.image} alt="" /></div>
+              <div className="home-audience__media" role="tabpanel" key={selectedAudience.id}><img src={selectedAudience.image} alt="" loading="lazy" decoding="async" /></div>
               <div className="home-audience__content">
                 <p className="home-audience__label">{selectedAudience.label}</p><h3>{selectedAudience.title}</h3><p>{selectedAudience.description}</p>
                 <div className="home-audience__detail"><ShieldCheck /><span>{selectedAudience.detail}</span></div>
@@ -152,7 +152,7 @@ export default function Homepage() {
               {chapters.map((chapter) => (
                 <article key={chapter.number} className={`home-chapter home-chapter--${chapter.tone}`}>
                   <div className="home-chapter__pin">{chapter.number}</div>
-                  <div className="home-chapter__image"><img src={chapter.image} alt="" /></div>
+                  <div className="home-chapter__image"><img src={chapter.image} alt="" loading="lazy" decoding="async" /></div>
                   <div className="home-chapter__copy"><h3>{chapter.title}</h3><p>{chapter.topic}</p></div>
                 </article>
               ))}
@@ -174,7 +174,7 @@ export default function Homepage() {
             <div className="home-section-heading home-section-heading--report"><h2>Biết trẻ đang hiểu gì — và cần hỗ trợ ở đâu.</h2><p>Báo cáo minh họa từ dữ liệu học tập trong FinTeen.</p></div>
             <div className="home-report__layout">
               <div className="home-report-ui" aria-label="Minh họa báo cáo học tập">
-                <div className="home-report-ui__sidebar"><img src="/brand/finteen-logo-v2.png" alt="" /><span>Trang chủ</span><strong><BarChart3 /> Báo cáo</strong><span>Học sinh</span></div>
+                <div className="home-report-ui__sidebar"><img src="/brand/finteen-logo-v2.webp" alt="" /><span>Trang chủ</span><strong><BarChart3 /> Báo cáo</strong><span>Học sinh</span></div>
                 <div className="home-report-ui__main">
                   <div className="home-report-ui__topline"><div><small>Báo cáo</small><strong>Tổng quan tiến độ</strong></div><span>Minh họa</span></div>
                   <div className="home-report-ui__grid">

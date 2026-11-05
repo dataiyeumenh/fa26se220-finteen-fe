@@ -3,6 +3,7 @@
 // (ảnh đã là URL CDN). Có version trên URL nên trình duyệt cache chương vĩnh viễn; bản mới = URL mới.
 // Giữ releaseVersion của lúc bắt đầu chơi cho hết chương (xem build/api-docs/content.md của BE).
 import { apiConfig } from "./config.js";
+import { resolveContentImages } from "../lib/imageAssets.js";
 
 let currentRelease = null;
 
@@ -36,5 +37,5 @@ export function getCurrentRelease() {
 
 export async function getChapterContent(code) {
   const { version } = await getCurrentRelease();
-  return getJson(`/api/content/releases/${version}/chapters/${code}`);
+  return resolveContentImages(await getJson(`/api/content/releases/${version}/chapters/${code}`));
 }

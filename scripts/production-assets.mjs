@@ -1,5 +1,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
+import { webpImageUrl } from '../src/lib/imageAssets.js'
+import { webpAssets } from '../src/lib/webpAssets.js'
 
 const sourceExtensions = new Set(['.js', '.jsx', '.ts', '.tsx', '.css', '.html', '.json', '.svg'])
 
@@ -28,11 +30,11 @@ export function collectProductionAssets(root) {
     reasons.set(reference, list)
   }
   for (const filename of [...walkFiles(path.join(root, 'src')), path.join(root, 'index.html')]) {
-    if (!sourceExtensions.has(path.extname(filename))) continue
+    if (!sourceExtensions.has(path.extname(filename)) || filename.endsWith('webpAssets.js')) continue
     for (const ref of imageReferences(fs.readFileSync(filename, 'utf8'))) add(ref, path.relative(root, filename).replaceAll('\\', '/'))
   }
   for (const chapter of snapshot.chapters) {
-    for (const ref of chapter.localImages) add(ref, `content ${snapshot.version}/${chapter.code}`)
+    for (const ref of chapter.localImages) add(webpImageUrl(ref), `content ${snapshot.version}/${chapter.code}`)
   }
   const publicDir = path.join(root, 'public')
   const files = walkFiles(publicDir).map(filename => ({
@@ -50,7 +52,8 @@ export function collectProductionAssets(root) {
     }
   }
   const matches = file => references.some(ref => matchesReference(file.url, ref))
-  const kept = files.filter(file => !file.url.startsWith('/images/') || matches(file))
+  // Originals remain in the checkout for source material, never in the deployment.
+  const kept = files.filter(file => !webpAssets[file.url] && (!file.url.startsWith('/images/') || matches(file)))
   const included = new Set(kept.map(file => file.url))
   const excluded = files.filter(file => !included.has(file.url))
   return { snapshot, kept, excluded, references: Object.fromEntries([...reasons].map(([ref, values]) => [ref, [...values]])) }

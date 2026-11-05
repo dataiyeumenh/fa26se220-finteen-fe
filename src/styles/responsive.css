@@ -1,0 +1,166 @@
+/* Shared viewport safeguards. Component styles still own desktop layouts. */
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-padding-top: 88px;
+}
+body {
+  margin: 0;
+  min-width: 320px;
+}
+#root { min-height: 100dvh; }
+img, video, canvas { max-width: 100%; }
+button, input, select, textarea { font: inherit; }
+:where(.ws-main, .studio-main, .admin-main, .ws-content, .studio-content, .admin-content,
+  .ws-card, .sp-panel, .admin-card, .ws-form, .sp-field) { min-width: 0; }
+:where(.ws-heading, .admin-heading, .sp-head, .ws-row, .ws-actions, .admin-actions) {
+  overflow-wrap: anywhere;
+}
+:where(.ws-table-wrap, .admin-table-wrap, .sp-scroll) {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+}
+:where(.ws-modal, .sp-dialog, .studio-dialog) {
+  max-width: calc(100vw - 24px);
+  max-height: calc(100dvh - 24px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+@media (max-width: 1100px) {
+  .ws .ws-overview-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ws .ws-toolbar { flex-wrap: wrap; }
+  .ws .ws-quiz-editor-page fieldset .ws-toolbar { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .studio-global-header { flex-wrap: wrap; gap: 10px; }
+  .studio-header-title, .studio-header-meta { min-width: 0; flex-wrap: wrap; }
+  .scene-editor-document-actions, .scene-undo-bar { flex-wrap: wrap; }
+}
+
+@media (max-width: 900px) {
+  /* A sidebar and a full form do not fit side by side on portrait tablets. */
+  .ws.ws-adult { display: block; }
+  .ws.ws-adult .ws-sidebar {
+    position: static;
+    width: 100%;
+    height: auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 12px;
+    padding: 16px;
+    border-right: 0;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  .ws.ws-adult .ws-brand { min-width: 0; padding: 0; border: 0; }
+  .ws.ws-adult .ws-identity { display: none; }
+  .ws.ws-adult .ws-context-switch { grid-column: 1 / -1; grid-row: 2; max-width: 360px; }
+  .ws.ws-adult .ws-sidebar nav {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    display: flex;
+    flex-direction: row;
+    gap: 6px;
+    overflow-x: auto;
+    min-width: 0;
+    padding-bottom: 4px;
+  }
+  .ws.ws-adult .ws-sidebar nav a { flex-shrink: 0; white-space: nowrap; min-height: 44px; }
+  .ws.ws-adult .ws-logout { grid-column: 2; grid-row: 1; align-self: center; }
+  .admin-shell.admin-shell { display: block; }
+  .admin-shell .admin-sidebar {
+    position: relative;
+    width: 100%;
+    height: auto;
+    padding: 16px;
+  }
+  .admin-shell .admin-user { display: none; }
+  .admin-shell .admin-brand { max-width: calc(100% - 110px); }
+  .admin-shell .admin-sidebar nav {
+    display: flex;
+    flex-direction: row;
+    gap: 6px;
+    overflow-x: auto;
+    margin: 16px 0 0;
+    padding-bottom: 4px;
+  }
+  .admin-shell .admin-sidebar nav > * { flex: 0 0 auto; width: auto; white-space: nowrap; min-height: 44px; }
+  .admin-shell .admin-sidebar nav::before { display: none; }
+  .admin-shell .admin-logout { position: absolute; top: 20px; right: 16px; width: auto; }
+  .admin-shell .admin-summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .admin-shell .admin-grant-layout, .admin-shell .admin-plan-grid { grid-template-columns: minmax(0, 1fr); }
+  .studio-workspace.studio-workspace { grid-template-columns: minmax(0, 1fr); }
+  .studio-workspace .studio-sidebar {
+    position: static;
+    height: auto;
+    padding: 16px;
+    overflow: visible;
+  }
+  .studio-workspace .studio-profile { display: none; }
+  .studio-workspace .studio-sidebar nav { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+  .studio-workspace .studio-sidebar nav .studio-nav-group-label { flex-basis: 100%; }
+  .studio-workspace .studio-sidebar nav a { min-height: 44px; }
+  .studio-workspace .studio-sidebar-bottom { padding-top: 8px; }
+  .studio-workspace.studio-workspace-editing { grid-template-columns: minmax(0, 1fr); }
+  .studio-workspace-editing .studio-sidebar { align-items: stretch; }
+  .studio-workspace-editing .studio-brand > div { display: block; }
+  .studio-workspace-editing .studio-sidebar nav { margin-top: 12px; }
+  .studio-workspace-editing .studio-sidebar nav a,
+  .studio-workspace-editing .studio-sidebar-bottom button { font-size: 12px; gap: 8px; }
+  .studio-workspace-editing .studio-menu-label { display: inline; }
+  .studio-workspace .scene-editor-body, .studio-workspace .scene-editor-body.is-wide {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: 'canvas' 'timeline' 'inspector';
+  }
+  .scene-inspector { border-left: 0; border-top: 1px solid #d9e3dd; }
+  .vn-player .vn-toolbar { grid-template-columns: minmax(0, 1fr) auto; }
+  .vn-player .vn-progress-pill { display: none; }
+}
+
+@media (max-width: 600px) {
+  /* Prevent iOS input focus from zooming the entire page. */
+  html body :is(.ft-public, .ws, .ws-modal, .studio-workspace, .studio-dialog, .sp-dialog, .admin-shell)
+    :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea) { font-size: 16px; }
+  .ws .ws-content, .studio-workspace .studio-content, .admin-shell .admin-content { padding: 20px 12px 32px; }
+  .ws .ws-card, .ws .ws-quiz-editor-page { padding: 16px; }
+  .ws .ws-quiz-editor-page fieldset { padding: 14px; }
+  .ws .ws-quiz-editor-page > header, .ws .ws-heading, .admin-heading, .sp-head {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  .ws .ws-toolbar > label, .ws .ws-toolbar > input, .ws .ws-toolbar > select { min-width: 0; flex: 1 1 100%; }
+  .ws .ws-grid.two, .ws .ws-grid.three, .ws .ws-overview-metrics,
+  .ws .ws-quiz-editor-page fieldset .ws-toolbar, .ws-quiz-results-summary,
+  .admin-shell .admin-form-row, .sp-grid-2 { grid-template-columns: minmax(0, 1fr); }
+  .ws .ws-row, .ws .ws-actions, .admin-actions { flex-wrap: wrap; }
+  .ws .ws-overview-live, .ws .ws-overview-hero { flex-direction: column; gap: 18px; padding: 20px; }
+  .ws .ws-top { padding-inline: 12px; gap: 10px; }
+  .ws-top-title { min-width: 0; }
+  .ws-top-title strong { font-size: 13px; }
+  .ws-question-sets__toolbar > button { width: 100%; }
+  .ws .ws-kid-bottom-nav { bottom: max(10px, env(safe-area-inset-bottom)); }
+  .ws.ws-kid .ws-content { padding-bottom: calc(90px + env(safe-area-inset-bottom)); }
+  .studio-header-title > span { overflow-wrap: anywhere; }
+  .studio-global-header { padding: 12px; }
+  .sp-asset-grid { grid-template-columns: repeat(auto-fill, minmax(min(100%, 140px), 1fr)); }
+  .sp-head-actions, .sp-panel-head, .sp-toolbar, .scene-undo-bar, .scene-issues li { flex-wrap: wrap; }
+  .scene-editor-document { min-width: 0; flex-basis: 100%; }
+  .scene-editor-toolbar, .studio-topbar { padding-inline: 12px; }
+  .studio-topbar { flex-wrap: wrap; }
+  .studio-pick-grid, .studio-kind-grid, .studio-cast-grid { grid-template-columns: repeat(auto-fill, minmax(min(100%, 140px), 1fr)); }
+  .internal-auth-header { gap: 10px; }
+  .internal-auth-back { font-size: 11px; white-space: nowrap; }
+  .ft-auth-page .ft-auth-form-side { padding: 24px 18px; }
+  .payment-checkout { width: 100%; min-width: 0; }
+}
+
+@media (hover: none) and (pointer: coarse) {
+  :where(.ws, .ws-modal, .ft-public, .admin-shell, .studio-workspace, .studio-dialog, .sp-dialog)
+    :is(button, .ws-btn, .sp-btn):not([role="switch"]) { min-height: 44px; }
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+  .vn-dialogue-dock { max-height: 55dvh; overflow-y: auto; }
+  .vn-toolbar { grid-template-columns: minmax(0, 1fr) auto; }
+  .vn-hud-right { flex-wrap: wrap; }
+}

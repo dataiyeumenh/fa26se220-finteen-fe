@@ -35,7 +35,7 @@ export function AuthLayout() {
           </p>
           <div className="ft-story-preview">
             <img
-              src="/images/map/journey-v2/finteen-map-01-home.png"
+              src="/images/map/journey-v2/finteen-map-01-home.webp"
               alt="Con đường khám phá FinTeen bắt đầu từ một ngôi làng nhỏ"
               width="2752"
               height="1536"

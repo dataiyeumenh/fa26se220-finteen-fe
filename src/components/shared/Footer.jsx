@@ -28,7 +28,7 @@ export function Footer() {
         <div className="ft-site-footer__grid">
           <div className="ft-site-footer__brand">
             <Link to="/" aria-label="FinTeen — Trang chủ">
-              <img src="/brand/finteen-logo-v2.png" alt="FinTeen" width="136" height="48" />
+              <img src="/brand/finteen-logo-v2.webp" alt="FinTeen" width="136" height="48" />
             </Link>
             <p className="ft-site-footer__tagline">Hiểu tiền hôm nay. Tự tin ngày mai.</p>
             <p>Đồng hành cùng học sinh Việt Nam xây dựng thói quen tài chính qua bài học, trò chơi và những lựa chọn thực tế.</p>

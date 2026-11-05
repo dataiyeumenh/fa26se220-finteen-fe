@@ -1,0 +1,239 @@
+.ft-mobile-navigation { display: none; }
+
+.ws .ws-sidebar.ft-sidebar,
+.admin-shell .admin-sidebar.ft-sidebar,
+.studio-workspace .studio-sidebar.ft-sidebar {
+  width: 248px;
+  padding: 24px 16px 18px;
+  background: #fff;
+  border-right: 1px solid #e8ecf1;
+  box-shadow: none;
+  color: #253349;
+  font-family: "Be Vietnam Pro", system-ui, sans-serif;
+}
+.ft-sidebar :is(.ws-brand, .admin-brand, .studio-brand) {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 58px;
+  margin: 0 4px 12px;
+  padding: 0 8px 18px;
+  border-bottom: 1px solid #edf0f4;
+  text-decoration: none;
+  color: #53637a;
+  flex-shrink: 0;
+}
+.ft-sidebar :is(.ws-brand, .admin-brand, .studio-brand) img {
+  display: block;
+  width: 144px;
+  height: 42px;
+  min-height: 42px;
+  flex-shrink: 0;
+  object-fit: contain;
+}
+.ft-sidebar :is(.admin-brand, .studio-brand) { flex-direction: column; align-items: flex-start; gap: 3px; }
+.ft-sidebar :is(.admin-brand, .studio-brand) small { font-size: 10px; font-weight: 600; color: #7c899b; letter-spacing: .08em; }
+.ft-sidebar .studio-profile { margin: 4px 0 16px; border-color: #edf0f4; background: #f8fafc; }
+.ft-sidebar .studio-profile strong { color: #253349; }
+.ft-sidebar .studio-profile small { color: #748297; }
+.ft-sidebar .studio-profile > span { background: #e8f5ee; color: #237555; }
+.ft-sidebar .admin-user { background: #f8fafc; border-color: #edf0f4; }
+.ft-sidebar .admin-user strong { color: #253349; }
+.ft-sidebar .ws-context-switch > div { background: #f3f6f8; border-color: #e7ecf0; }
+.ws.ws-adult .ft-sidebar .ws-context-switch .ws-role-button.active {
+  background: #fff;
+  border-color: #dfe9e3;
+  color: #176447;
+  box-shadow: 0 2px 5px #213b2c0a;
+}
+.ft-sidebar .studio-nav-group-label { color: #7b899b; font-size: 10px; font-weight: 600; }
+.ft-sidebar nav::before { display: none; }
+.ft-sidebar nav { gap: 5px; }
+.ws .ft-sidebar nav a,
+.admin-shell .ft-sidebar nav :is(a, button),
+.studio-workspace .ft-sidebar nav a {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 46px;
+  padding: 11px 13px;
+  border: 1px solid transparent;
+  border-radius: 11px;
+  background: transparent;
+  color: #617087;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.5;
+  text-decoration: none;
+  box-shadow: none;
+}
+.ft-sidebar nav :is(a, button) svg { width: 19px; height: 19px; flex-shrink: 0; color: inherit; }
+.ws .ft-sidebar nav a:hover,
+.admin-shell .ft-sidebar nav :is(a, button):hover,
+.studio-workspace .ft-sidebar nav a:hover { background: #f6f8fb; color: #27384f; }
+.ws.ws-adult .ft-sidebar nav a.active,
+.admin-shell .ft-sidebar nav button.active,
+.studio-workspace .ft-sidebar nav a.active {
+  background: #eff6f2;
+  border-color: #deece3;
+  color: #176447;
+  font-weight: 600;
+  box-shadow: none;
+}
+.ft-sidebar nav :is(a, button)::before,
+.ft-sidebar nav :is(a, button)::after { display: none; }
+.ws.ws-adult .ft-sidebar nav a.active svg,
+.admin-shell .ft-sidebar nav button.active svg,
+.studio-workspace .ft-sidebar nav a.active svg { color: inherit; }
+.ft-sidebar .studio-sidebar-bottom { margin-top: auto; border-color: #edf0f4; }
+.ft-sidebar :is(.ws-logout, .admin-logout, .studio-sidebar-bottom button) {
+  color: #7e5c62;
+  border-color: #edf0f4;
+  border-radius: 10px;
+  font-size: 12px;
+}
+.ft-sidebar :is(.ws-logout, .admin-logout, .studio-sidebar-bottom button):hover { background: #fff4f3; color: #a44747; }
+.ft-sidebar :is(a, button):focus-visible { outline: 2px solid #19815a; outline-offset: 3px; }
+
+/* The learner bar flows with its logo and account controls; labels never wrap. */
+.ws.ws-kid .ws-top { gap: 24px; padding: 12px 28px; box-shadow: 0 2px 12px #23342805; }
+.ws.ws-kid .ws-kid-header-main { gap: clamp(20px, 4vw, 64px); }
+.ws.ws-kid .ws-kid-nav { position: static; transform: none; gap: 4px; min-width: 0; }
+.ws.ws-kid .ws-kid-nav a {
+  flex: 0 0 auto;
+  gap: 8px;
+  min-height: 44px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-size: 13px;
+  white-space: nowrap;
+}
+.ws.ws-kid .ws-kid-nav a svg { flex-shrink: 0; }
+.ws.ws-kid .ws-kid-nav a.active {
+  background: #edf6ef;
+  color: #1b704b;
+  box-shadow: none;
+}
+.ws.ws-kid .ws-top-actions { flex-shrink: 0; gap: 10px; margin-left: auto; }
+.ws.ws-kid .ws-profile-trigger { min-width: 0; border-radius: 12px; }
+
+@media (min-width: 901px) {
+  .studio-workspace:has(> .ft-sidebar) { grid-template-columns: 248px minmax(0, 1fr); }
+  .studio-workspace-editing .ft-sidebar .studio-brand > div { display: block; }
+  .studio-workspace-editing .ft-sidebar .studio-menu-label { display: inline; }
+  .studio-workspace-editing .ft-sidebar nav { margin-top: 0; }
+  .studio-workspace-editing .ft-sidebar nav a { justify-content: flex-start; }
+  .studio-workspace-editing .ft-sidebar .studio-sidebar-bottom button { font-size: 12px; gap: 8px; }
+}
+@media (max-width: 1200px) {
+  .ws.ws-kid .ws-profile-copy { display: none; }
+  .ws.ws-kid .ws-kid-header-main { gap: 24px; }
+  .ws.ws-kid .ws-kid-nav a { padding-inline: 12px; }
+}
+@media (max-width: 900px) {
+  .ws .ws-sidebar.ft-sidebar,
+  .admin-shell .admin-sidebar.ft-sidebar,
+  .studio-workspace .studio-sidebar.ft-sidebar { display: none; }
+  .ft-mobile-navigation {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px 20px;
+    border-bottom: 1px solid #e8ecf1;
+    background: #fff;
+  }
+  .ft-mobile-navigation__brand { display: grid; gap: 3px; text-decoration: none; }
+  .ft-mobile-navigation__brand img { width: 128px; height: 36px; object-fit: contain; }
+  .ft-mobile-navigation__brand span { font-size: 10px; font-weight: 500; color: #7a8799; }
+  .ft-navigation-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 10px 14px;
+    border: 1px solid #e3e9ef;
+    border-radius: 12px;
+    background: #f8fafb;
+    color: #31445d;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .ws.ws-kid .ws-top { flex-wrap: wrap; gap: 12px; padding: 12px 20px; }
+  .ws.ws-kid .ws-kid-header-main { display: contents; }
+  .ws.ws-kid .ws-kid-brand { order: 0; }
+  .ws.ws-kid .ws-top-actions { order: 1; }
+  .ws.ws-kid .ws-kid-nav {
+    position: static;
+    display: flex;
+    order: 2;
+    flex: 1 1 100%;
+    gap: 6px;
+    padding: 4px;
+    background: #f6f8fa;
+    border-radius: 14px;
+  }
+  .ws.ws-kid .ws-kid-nav a { flex: 1 1 0; justify-content: center; padding-inline: 8px; font-size: 12px; }
+}
+@media (max-width: 760px) {
+  .ws.ws-kid .ws-kid-nav { display: none; }
+  .ws.ws-kid .ws-top { flex-wrap: nowrap; padding: 10px 16px; }
+  .ws.ws-kid .ws-kid-bottom-nav { padding-bottom: max(6px, env(safe-area-inset-bottom)); }
+}
+
+/* Portalled navigation reuses the same sidebar contents, with focus trapping and Escape. */
+.ft-sidebar-drawer.ft-sidebar-drawer {
+  position: fixed;
+  inset: 0 auto 0 0;
+  display: flex;
+  flex-direction: column;
+  width: min(320px, calc(100vw - 36px));
+  max-width: 320px;
+  min-height: 0;
+  height: 100dvh;
+  max-height: 100dvh;
+  padding: 0;
+  gap: 0;
+  transform: none;
+  translate: none;
+  border: 0;
+  border-radius: 0 20px 20px 0;
+  background: #fff;
+  overflow: hidden;
+  animation: none;
+}
+.ft-sidebar-drawer .ft-sidebar.ft-sidebar--drawer {
+  position: static;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  padding: 24px 16px;
+  gap: 16px;
+  overflow-y: auto;
+  border: 0;
+}
+.ft-sidebar-drawer .ft-sidebar.ft-sidebar--drawer nav {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+  gap: 5px;
+  margin: 0;
+  overflow: visible;
+}
+.ft-sidebar-drawer .ft-sidebar.ft-sidebar--drawer nav > * { flex: 0 0 auto; width: 100%; white-space: normal; }
+.ft-sidebar-drawer .ft-sidebar--drawer .ws-context-switch { display: grid; max-width: none; }
+.ft-sidebar-drawer .ft-sidebar--drawer :is(.ws-logout, .admin-logout) { position: static; width: 100%; margin-top: auto; }
+.ft-sidebar-drawer .ft-sidebar--drawer .studio-profile { display: flex; }
+.ft-sidebar-drawer .ft-sidebar--drawer .studio-nav-group-label { flex-basis: auto; }
+.ft-sidebar-drawer[data-state="open"] { animation: ft-drawer-enter 180ms ease-out; }
+@keyframes ft-drawer-enter {
+  from { opacity: 0; transform: translateX(-24px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ft-sidebar-drawer[data-state="open"] { animation: none; }
+}

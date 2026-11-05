@@ -1,4 +1,5 @@
 import { auth } from "../../api/auth.api.js";
+import { resolveContentImages } from "../../lib/imageAssets.js";
 
 export const hasRole = (...roles) =>
   roles.some((role) => auth.getSnapshot().actor?.roles?.includes(role));
@@ -11,7 +12,7 @@ const request = (client, path, options) => {
   ) {
     throw new Error("Đường dẫn Studio không hợp lệ.");
   }
-  return client.accountRequest(path, options);
+  return client.accountRequest(path, options).then(resolveContentImages);
 };
 
 export const createStudioApi = (client) => ({
