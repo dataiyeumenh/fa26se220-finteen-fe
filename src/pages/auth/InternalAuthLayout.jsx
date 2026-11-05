@@ -1,5 +1,6 @@
 import { Link, Outlet } from "react-router-dom";
 import { Footer } from "@/components/shared/Footer";
+import { PublicBrand } from "@/components/public/PublicBrand";
 import {
   ArrowLeft,
   ArrowUpRight,
@@ -9,6 +10,7 @@ import {
   PenLine,
   ShieldCheck,
 } from "lucide-react";
+import "@/components/public/public.css";
 import "./internal-auth.css";
 
 const roles = [
@@ -22,14 +24,10 @@ export default function InternalAuthLayout() {
   return (
     <div className="ft-public internal-auth">
       <header className="internal-auth-header">
-        <Link className="internal-auth-brand" to="/">
-          <span>
-            <Layers3 size={23} aria-hidden="true" />
-          </span>
-          finteen
-          <span className="internal-auth-brand-divider" />{" "}
-          <small>WORKSPACE</small>
-        </Link>
+        <div className="internal-auth-brand">
+          <PublicBrand />
+          <span className="internal-auth-workspace">Workspace</span>
+        </div>
         <Link className="internal-auth-back" to="/">
           <ArrowLeft size={15} aria-hidden="true" /> Về trang chủ
         </Link>

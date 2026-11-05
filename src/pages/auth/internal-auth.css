@@ -5,7 +5,11 @@
   background:
     radial-gradient(ellipse at 12% 35%, #dff5e9 0, transparent 55%), #f3faf7;
   color: #193c35;
-  font-family: "Be Vietnam Pro", sans-serif;
+  font-family: var(--font-sans);
+}
+.internal-auth.ft-public h1,
+.internal-auth.ft-public h2 {
+  font-family: var(--font-sans);
 }
 .internal-auth-header {
   max-width: 1320px;
@@ -20,31 +24,12 @@
 .internal-auth-brand {
   display: flex;
   align-items: center;
-  gap: 10px;
-  color: #193c35;
-  text-decoration: none;
-  font-size: 26px;
-  font-weight: 800;
-  letter-spacing: -1px;
+  gap: 16px;
 }
-.internal-auth-brand > span:first-child {
-  display: grid;
-  place-items: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
-  color: #0d8778;
-  background: #d9f3e8;
-}
-.internal-auth-brand .internal-auth-brand-divider {
-  width: 1px;
-  height: 22px;
-  margin: 0 4px;
-  background: #cee4da;
-}
-.internal-auth-brand small {
-  font-size: 10px;
-  letter-spacing: 2px;
+.internal-auth-workspace {
+  border-left: 1px solid #cee4da;
+  padding-left: 16px;
+  font-size: 12px;
   color: #688279;
   font-weight: 600;
 }
@@ -251,12 +236,8 @@
     min-height: 80px;
     padding: 18px 20px;
   }
-  .internal-auth-brand {
-    font-size: 22px;
-  }
-  .internal-auth-brand small {
-    font-size: 8px;
-    letter-spacing: 1px;
+  .internal-auth-brand .ft-brand img {
+    height: 36px;
   }
   .internal-auth-main {
     grid-template-columns: minmax(0, 460px);
@@ -284,5 +265,10 @@
   .internal-auth-card {
     padding: 26px 22px;
     border-radius: 18px;
+  }
+}
+@media (max-width: 420px) {
+  .internal-auth-workspace {
+    display: none;
   }
 }
