@@ -7,6 +7,7 @@ import {
   ArrowUpRight,
 } from "lucide-react";
 import { PublicBrand } from "@/components/public/PublicBrand";
+import { Footer } from "@/components/shared/Footer";
 import "@/components/public/public.css";
 
 export function AuthLayout() {
@@ -70,9 +71,7 @@ export function AuthLayout() {
           <Outlet />
         </div>
       </main>
-      <footer className="ft-auth-footer">
-        FinTeen · Hiểu tiền hôm nay. Tự tin ngày mai.
-      </footer>
+      <Footer />
     </div>
   );
 }

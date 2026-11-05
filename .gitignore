@@ -10,11 +10,9 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+/public/
+/docs/
 /output/
-/docs/*
-!/docs/STUDIO.md
-!/docs/parent-teacher/
-!/docs/parent-teacher/*.md
 *.local
 .env
 .env.*

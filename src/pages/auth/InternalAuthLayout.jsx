@@ -1,4 +1,5 @@
 import { Link, Outlet } from "react-router-dom";
+import { Footer } from "@/components/shared/Footer";
 import {
   ArrowLeft,
   ArrowUpRight,
@@ -83,10 +84,7 @@ export default function InternalAuthLayout() {
           </p>
         </div>
       </main>
-      <footer className="internal-auth-footer">
-        <span>FinTeen · Internal Workspace</span>
-        <span>Nội dung tốt bắt đầu từ đội ngũ tận tâm.</span>
-      </footer>
+      <Footer />
     </div>
   );
 }

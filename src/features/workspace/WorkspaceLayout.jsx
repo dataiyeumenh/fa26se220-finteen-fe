@@ -24,6 +24,7 @@ import {
 import { useWorkspace } from "./useWorkspace";
 import { auth } from "../../api/auth.api";
 import { Button } from "@/components/ui/button";
+import { Footer } from "@/components/shared/Footer";
 import "./workspace.css";
 import "./workspace-header.css";
 import "./workspace-visuals.css";
@@ -397,6 +398,7 @@ export default function WorkspaceLayout({ children }) {
           )}
           {children}
         </main>
+        {learner && <Footer />}
       </div>
       {learner && (
         <nav

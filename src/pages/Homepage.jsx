@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import "@/components/home/home-colors.css";
 import { DemoModal } from "@/components/home/DemoModal";
+import { Footer } from "@/components/shared/Footer";
 
 const audiences = [
   {
@@ -202,7 +203,7 @@ export default function Homepage() {
         </section>
       </main>
 
-      <footer className="home-footer"><div className="home-shell home-footer__inner"><div><Brand /><p>Nền tảng học tài chính dành cho tuổi teen Việt Nam.</p></div><div className="home-footer__links"><a href="#danh-cho-ai">Dành cho ai</a><a href="#hanh-trinh">Hành trình</a><a href="#bao-cao">Báo cáo</a><span>© 2026 FinTeen</span></div></div></footer>
+      <Footer />
       <DemoModal open={demoOpen} onOpenChange={setDemoOpen} />
     </div>
   );

@@ -622,12 +622,6 @@
   font-size: 11px;
   margin: 8px 0 0;
 }
-.ft-auth-footer {
-  text-align: center;
-  font-size: 11px;
-  color: var(--ft-muted);
-  padding: 24px 12px;
-}
 @media (max-width: 860px) {
   .ft-auth-center {
     grid-template-columns: minmax(0, 480px);
