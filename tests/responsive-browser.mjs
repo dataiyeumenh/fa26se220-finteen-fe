@@ -5,10 +5,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
 
-const allCases = ['home', 'login', 'register', 'internal-login', 'parent', 'teacher', 'kid', 'quiz', 'quiz-preview', 'admin', 'editor', 'reviewer', 'manager', 'game', 'teacher-menu', 'admin-menu', 'editor-menu', ...Array.from({ length: 8 }, (_, i) => `minigame-${i + 1}`)];
+const allCases = ['home', 'login', 'register', 'internal-login', 'parent', 'teacher', 'kid', 'kid-child', 'quiz', 'quiz-preview', 'admin', 'editor', 'reviewer', 'manager', 'game', 'teacher-menu', 'admin-menu', 'editor-menu', ...Array.from({ length: 8 }, (_, i) => `minigame-${i + 1}`)];
 const cases = process.env.RESPONSIVE_CASES ? process.env.RESPONSIVE_CASES.split(',') : allCases;
 assert.ok(cases.every(name => allCases.includes(name)), 'Unknown responsive case');
-const widths = [320, 390, 768, 1024, 1440];
+const widths = [320, 390, 768, 1024, 1440, 1920];
 const server = await createServer({ appType: 'custom', server: { host: '127.0.0.1', port: 5194, strictPort: true, hmr: false } });
 server.middlewares.use('/__responsive-case', async (_req, res) => {
   res.setHeader('Content-Type', 'text/html');
@@ -27,7 +27,7 @@ server.middlewares.use('/__responsive-capture', (req, res) => {
   const params = new URL(req.url, 'http://localhost').searchParams;
   const name = params.get('case');
   const width = Number(params.get('width'));
-  if (!cases.includes(name) || !widths.includes(width)) { res.statusCode = 400; res.end(); return; }
+  if (!allCases.includes(name) || !widths.includes(width)) { res.statusCode = 400; res.end(); return; }
   res.setHeader('Content-Type', 'text/html');
   res.end(`<!doctype html><html><body style="margin:0;background:#e2e8f0"><iframe style="border:0;display:block;width:${width}px;height:900px" src="/__responsive-case?case=${name}"></iframe></body></html>`);
 });
@@ -47,10 +47,10 @@ try {
   assert.ok(encoded?.startsWith('['), `Browser audit did not complete: ${encoded || error.slice(-500)}`);
   const results = JSON.parse(encoded.replaceAll('&quot;', '"').replaceAll('&amp;', '&').replaceAll('&lt;', '<').replaceAll('&gt;', '>'));
   fs.writeFileSync('output/responsive-browser-audit.json', JSON.stringify(results, null, 2));
-  const failures = results.filter(result => result.scrollWidth > result.width + 1 || result.overflowing.length || result.imagesFailed.length || !result.rendered || !result.preview || !result.navigation);
+  const failures = results.filter(result => result.scrollWidth > result.width + 1 || result.overflowing.length || result.imagesFailed.length || !result.rendered || !result.preview || !result.navigation || (result.activeNavigationContrast !== null && result.activeNavigationContrast < 4.5) || (result.navigationCenterOffset !== null && result.navigationCenterOffset > 1) || !result.overlayScrollbars || !result.previewScrollWorks);
   console.log(JSON.stringify({ checked: results.length, failures }, null, 2));
   if (process.env.RESPONSIVE_SCREENSHOTS) {
-    for (const [name, width] of [['teacher-menu', 390], ['admin-menu', 768], ['editor-menu', 768], ['kid', 768], ['kid', 1024], ['parent', 1440]]) {
+    for (const [name, width] of [['kid', 1920], ['kid', 1024], ['kid', 768], ['kid-child', 1920], ['quiz-preview', 390], ['teacher-menu', 390]]) {
       const capture = spawn(executable, ['--headless=new', '--disable-gpu', '--disable-software-rasterizer', '--no-sandbox', '--no-first-run', `--user-data-dir=${profile}`, `--window-size=${Math.max(500, width)},900`, '--virtual-time-budget=12000', `--screenshot=${path.resolve(`output/responsive-${name}-${width}.png`)}`, `http://127.0.0.1:5194/__responsive-capture?case=${name}&width=${width}`], { windowsHide: true, stdio: 'ignore' });
       await new Promise((resolve, reject) => { capture.on('error', reject); capture.on('exit', code => code === 0 ? resolve() : reject(new Error(`Screenshot failed: ${name}`))); });
     }

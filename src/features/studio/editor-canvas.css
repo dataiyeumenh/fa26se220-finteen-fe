@@ -128,7 +128,7 @@ textarea.stage-text:focus { background: #fff; }
 .scene-timeline-heading { display: flex; align-items: center; justify-content: space-between; padding: 8px 20px 0; font-size: 13px; color: var(--muted); }
 .scene-timeline-heading b { font-weight: 600; color: var(--ink); margin-left: 4px; }
 .scene-editor .scene-timeline-heading button { border: 0; color: var(--accent-strong); font-weight: 600; }
-.scene-timeline-track { display: flex; align-items: flex-start; gap: 12px; overflow-x: auto; padding: 8px 20px 14px; scrollbar-width: thin; }
+.scene-timeline-track { display: flex; align-items: flex-start; gap: 12px; overflow-x: auto; padding: 8px 20px 14px;  }
 .scene-editor button.scene-thumbnail { position: relative; display: flex; flex-direction: column; align-items: stretch; gap: 4px; width: 136px; padding: 0; flex-shrink: 0; border: 0; border-radius: 0; background: transparent; text-align: left; min-height: 0; }
 .scene-thumbnail-art { display: flex; position: relative; width: 100%; aspect-ratio: 16 / 9; align-items: center; justify-content: center; color: #9db5a8; background: var(--wash) center / cover; border: 2px solid transparent; border-radius: 6px; overflow: hidden; }
 .scene-thumbnail.selected .scene-thumbnail-art { border-color: var(--accent); }

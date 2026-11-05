@@ -352,7 +352,7 @@ textarea.sp-input { min-height: 88px; resize: vertical; line-height: 1.5; }
 .sp-q-options li svg { align-self: center; flex-shrink: 0; }
 .sp-q-meta { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 13px; color: var(--sp-muted); }
 .sp-q-actions { display: flex; flex-direction: column; gap: 8px; align-items: stretch; }
-.sp-scroll { position: relative; max-height: max(320px, calc(100dvh - 330px)); overflow: auto; border: 1px solid var(--sp-line); border-radius: 12px; background: #fff; scrollbar-width: thin; }
+.sp-scroll { position: relative; max-height: max(320px, calc(100dvh - 330px)); overflow: auto; border: 1px solid var(--sp-line); border-radius: 12px; background: #fff;  }
 .sp-question-overview { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-bottom: 14px; }
 .sp-question-overview > div { display: flex; align-items: center; gap: 11px; min-height: 64px; padding: 11px 14px; border: 1px solid #e1e7ed; border-radius: 12px; background: #fff; color: #718096; }
 .sp-question-overview > div > svg { color: #4d7c6f; }

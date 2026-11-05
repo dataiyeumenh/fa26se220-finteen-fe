@@ -789,7 +789,6 @@
 .ws[data-ws-role="kid"] .ws-btn.primary {
   color: #fff !important;
 }
-.ws[data-ws-role="kid"] .ws-kid-nav a.active,
 .ws[data-ws-role="kid"] .ws-kid-bottom-nav a.active {
   color: #fff;
 }

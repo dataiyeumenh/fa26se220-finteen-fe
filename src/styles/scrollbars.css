@@ -1,0 +1,30 @@
+:root { color-scheme: light; }
+
+/* OverlayScrollbars theme: document, dialogs, tables and navigation panels. */
+.os-scrollbar.os-theme-finteen {
+  --os-size: 10px;
+  --os-padding-perpendicular: 3px;
+  --os-padding-axis: 5px;
+  --os-track-border-radius: 999px;
+  --os-track-bg: transparent;
+  --os-track-bg-hover: #e9eef380;
+  --os-track-bg-active: #e9eef3;
+  --os-handle-border-radius: 999px;
+  --os-handle-bg: #aab8c7b3;
+  --os-handle-bg-hover: #8194a8;
+  --os-handle-bg-active: #647c91;
+  --os-handle-min-size: 40px;
+  --os-handle-interactive-area-offset: 4px;
+  z-index: 85;
+}
+
+/* Preserve the DOM of native text editing controls. */
+textarea { scrollbar-width: thin; scrollbar-color: #aab8c7 transparent; }
+@media (forced-colors: active) {
+  .os-scrollbar.os-theme-finteen {
+    --os-handle-bg: ButtonText;
+    --os-handle-bg-hover: Highlight;
+    --os-handle-bg-active: Highlight;
+    --os-track-bg: Canvas;
+  }
+}
