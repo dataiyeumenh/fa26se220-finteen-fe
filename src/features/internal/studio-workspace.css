@@ -2,7 +2,7 @@
 .studio-workspace { min-height: 100dvh; display: grid; grid-template-columns: 264px minmax(0, 1fr); background: #f5f7fb; color: #17243c; font-family: 'Be Vietnam Pro', system-ui, sans-serif; font-size: 14px; }
 
 /* Thanh bên */
-.studio-sidebar { position: sticky; top: 0; align-self: start; height: 100dvh; overflow-y: auto; background: linear-gradient(180deg, #102448 0%, #0a1934 100%); border-right: 0; padding: 24px 16px 18px; display: flex; flex-direction: column; min-height: 0; scrollbar-width: thin; box-shadow: 10px 0 32px rgba(14, 35, 70, .08); }
+.studio-sidebar { position: sticky; top: 0; align-self: start; height: 100dvh; overflow-y: auto; background: linear-gradient(180deg, #102448 0%, #0a1934 100%); border-right: 0; padding: 24px 16px 18px; display: flex; flex-direction: column; min-height: 0;  box-shadow: 10px 0 32px rgba(14, 35, 70, .08); }
 .studio-brand { display: flex; align-items: center; gap: 11px; padding: 0 6px; text-decoration: none; color: #fff; font-size: 19px; font-weight: 750; line-height: 1.15; letter-spacing: -.02em; }
 .studio-brand > span { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 12px; background: linear-gradient(135deg, #35c49a, #1a9b78); color: #fff; flex-shrink: 0; box-shadow: 0 8px 18px rgba(30, 186, 140, .24); }
 .studio-brand small { display: block; font-size: 11px; font-weight: 600; color: #9fb0cb; margin-top: 3px; letter-spacing: .08em; text-transform: uppercase; }

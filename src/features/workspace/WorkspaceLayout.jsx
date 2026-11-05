@@ -206,13 +206,13 @@ export default function WorkspaceLayout({ children }) {
         </ResponsiveSidebar>
       )}
       <div className="ws-main">
-        <header className="ws-top">
+        <header className={learner ? "ws-top ft-learner-header" : "ws-top"}>
           {learner ? (
-            <div className="ws-kid-header-main">
+            <>
               <Link to="/dashboard/kid" className="ws-kid-brand">
                 <img src="/brand/finteen-logo-v2.webp" alt="FinTeen" />
               </Link>
-              <nav className="ws-kid-nav" aria-label="Điều hướng học tập">
+              <nav className="ft-learner-nav" aria-label="Điều hướng học tập">
                 {links.map(([to, text, Icon]) => (
                   <NavLink end key={to} to={to}>
                     <Icon size={18} />
@@ -220,7 +220,7 @@ export default function WorkspaceLayout({ children }) {
                   </NavLink>
                 ))}
               </nav>
-            </div>
+            </>
           ) : (
             <div className="ws-top-title">
               <strong>Không gian đồng hành</strong>

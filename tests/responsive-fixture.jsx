@@ -27,16 +27,17 @@ import ch8 from './fixtures/content/CH08.json';
 import { initialNovelProgress, saveNovelProgress } from '../src/pages/Kid/Dashboard/components/game/visualNovelProgress.js';
 import { resolveContentImages } from '../src/lib/imageAssets.js';
 import { auth } from '../src/api/auth.api.js';
+import { startScrollbars } from '../src/lib/scrollbars.js';
 
 const name = new URLSearchParams(location.search).get('case') || 'home';
 // Measure settled layouts; animation frames are covered by visual review separately.
 const stableLayout = document.createElement('style');
 stableLayout.textContent = '*, *::before, *::after { animation: none !important; transition: none !important; }';
 document.head.append(stableLayout);
-const role = name === 'kid' || name === 'game' || name.startsWith('minigame-') ? 'kid' : name === 'parent' ? 'parent' : 'teacher';
+const role = name.startsWith('kid') || name === 'game' || name.startsWith('minigame-') ? 'kid' : name === 'parent' ? 'parent' : 'teacher';
 const internalRole = ({ editor: 'GAME_EDITOR', 'editor-menu': 'GAME_EDITOR', reviewer: 'GAME_REVIEWER', manager: 'GAME_MANAGER', admin: 'ADMIN', 'admin-menu': 'ADMIN' })[name];
 const actor = { id: 'layout-fixture', name: 'Nguyễn Minh Anh', displayName: 'Nguyễn Minh Anh', email: 'layout@example.test', role, kind: role === 'kid' ? 'kid' : 'adult', plans: ['parent', 'teacher'], roles: internalRole ? [internalRole] : [], source: 'api' };
-if (role === 'kid') actor.learnerRole = 'student';
+if (role === 'kid') actor.learnerRole = name === 'kid-child' ? 'child' : 'student';
 const snapshot = { actor: ['home', 'login', 'register', 'internal-login'].includes(name) ? null : actor, loading: false, entitlements: [], learnerDashboard: null };
 auth.getSnapshot = () => snapshot;
 auth.ensureEntitlements = async () => [];
@@ -51,7 +52,7 @@ const quizState = { groups: [{ id: 'g1', name: 'Lớp học tài chính cùng Fi
 const chapters = Array.from({ length: 8 }, (_, i) => ({ id: i + 1, title: `Chương ${i + 1}`, subtitle: 'Hành trình học tài chính', status: i ? 'locked' : 'current', progress: 25, lessonsCompleted: 1, totalLessons: 4 }));
 let view;
 let route = '/';
-if (name === 'kid') route = '/dashboard/kid/lessons';
+if (name.startsWith('kid')) route = '/dashboard/kid/lessons';
 else if (name === 'parent' || name === 'teacher-menu') route = '/dashboard';
 if (name === 'home') view = <Homepage />;
 else if (['login', 'register', 'internal-login'].includes(name)) {
@@ -64,10 +65,27 @@ else if (name === 'game' || name.startsWith('minigame-')) {
   saveNovelProgress(localStorage, data, initialNovelProgress(data, index));
   view = <VisualNovelPlayer data={data} />;
 }
-else view = <WorkspaceLayout>{name === 'kid' ? <GameMap chapters={chapters} /> : name === 'quiz' || name === 'quiz-preview' ? <TeacherQuizContent quizState={quizState} /> : name === 'parent' ? <ParentDashboardContent actor={actor} dashboardState={dashboardState} /> : <TeacherDashboardContent actor={actor} dashboardState={dashboardState} />}</WorkspaceLayout>;
+else view = <WorkspaceLayout>{name.startsWith('kid') ? <GameMap chapters={chapters} /> : name === 'quiz' || name === 'quiz-preview' ? <TeacherQuizContent quizState={quizState} /> : name === 'parent' ? <ParentDashboardContent actor={actor} dashboardState={dashboardState} /> : <TeacherDashboardContent actor={actor} dashboardState={dashboardState} />}</WorkspaceLayout>;
+const stopScrollbars = startScrollbars();
+if (import.meta.hot) import.meta.hot.dispose(stopScrollbars);
 createRoot(document.getElementById('root')).render(<MemoryRouter initialEntries={[route]}>{view}</MemoryRouter>);
 
 function clickText(text) { [...document.querySelectorAll('button')].find(button => button.textContent.trim() === text)?.click(); }
+function activeNavigationContrast() {
+  const link = document.querySelector('.ft-learner-nav a[aria-current="page"]');
+  if (!link?.getBoundingClientRect().width) return null;
+  const style = getComputedStyle(link);
+  const luminance = color => {
+    const values = color.match(/[\d.]+/g).slice(0, 3).map(Number).map(value => {
+      const channel = value / 255;
+      return channel <= .04045 ? channel / 12.92 : ((channel + .055) / 1.055) ** 2.4;
+    });
+    return values[0] * .2126 + values[1] * .7152 + values[2] * .0722;
+  };
+  const text = luminance(style.color);
+  const background = luminance(style.backgroundColor);
+  return (Math.max(text, background) + .05) / (Math.min(text, background) + .05);
+}
 setTimeout(() => {
   if (name.startsWith('quiz')) clickText('Tạo đề');
   if (name.endsWith('-menu') && innerWidth <= 900) document.querySelector('.ft-navigation-toggle')?.click();
@@ -85,7 +103,24 @@ setTimeout(() => {
         return rect.right > width + 1 || rect.left < -1;
       }).slice(0, 8).map(el => ({ tag: el.tagName, class: el.getAttribute('class') || '', width: Math.round(el.getBoundingClientRect().width) }));
       const failedImages = [...document.images].filter(img => img.complete && !img.naturalWidth).map(img => img.getAttribute('src'));
+      const activeContrast = activeNavigationContrast();
+      const nav = document.querySelector('.ft-learner-nav');
+      const header = document.querySelector('.ft-learner-header');
+      const navRect = nav?.getBoundingClientRect();
+      const headerRect = header?.getBoundingClientRect();
+      const centerOffset = width > 900 && navRect?.width ? Math.abs(navRect.left + navRect.width / 2 - headerRect.left - headerRect.width / 2) : null;
+      const previewScroll = document.querySelector('.ws-set-preview__body');
+      let previewScrollWorks = true;
+      if (previewScroll && previewScroll.scrollHeight > previewScroll.clientHeight) {
+        previewScroll.scrollTop = 50;
+        previewScrollWorks = previewScroll.scrollTop > 0;
+        previewScroll.scrollTop = 0;
+      }
       const result = { name, width, scrollWidth: document.documentElement.scrollWidth, overflowing, imagesFailed: failedImages.filter(url => url?.startsWith('/')), externalImagesUnavailable: failedImages.filter(url => !url?.startsWith('/')), rendered: Boolean(document.querySelector('#root')?.textContent?.trim() || document.querySelector('.vn-player')), preview: name !== 'quiz-preview' || Boolean(document.querySelector('[role="dialog"]')), navigation: !name.endsWith('-menu') || width > 900 || Boolean(document.querySelector('[role="dialog"] .ft-sidebar--drawer')) };
+      result.activeNavigationContrast = activeContrast;
+      result.navigationCenterOffset = centerOffset;
+      result.overlayScrollbars = Boolean(document.querySelector('.os-scrollbar.os-theme-finteen'));
+      result.previewScrollWorks = previewScrollWorks;
       parent.postMessage({ responsiveResult: result }, location.origin);
       document.body.dataset.audit = JSON.stringify(result);
     }, 700);

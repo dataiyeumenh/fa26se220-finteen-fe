@@ -100,8 +100,8 @@
   overflow-wrap: anywhere;
   border-top: 1px solid #e4eadd;
   border-bottom: 1px solid #e4eadd;
-  scrollbar-width: thin;
-  scrollbar-color: #c1cfbd transparent;
+  
+  
 }
 .phone-sender {
   display: grid;
