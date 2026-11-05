@@ -1,6 +1,7 @@
 ﻿import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import { lazy, Suspense } from "react";
+import "./styles/responsive.css";
 const InternalApp = lazy(() => import("@/features/internal/InternalApp"));
 
 // Trang công khai và xác thực

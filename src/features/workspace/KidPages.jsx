@@ -26,7 +26,7 @@ export function GuestDemo() {
           </div>
           <img
             className="ws-hero-art object-contain"
-            src="/images/finteen-v2/chapter-01/props/allowance-envelope.png"
+            src="/images/finteen-v2/chapter-01/props/allowance-envelope.webp"
             alt=""
           />
         </section>
@@ -47,7 +47,7 @@ export function GuestDemo() {
           </div>
           <img
             className="ws-hero-art object-contain"
-            src="/images/finteen-v2/chapter-02/asset-mini-game/savings-race/piggy-bank.png"
+            src="/images/finteen-v2/chapter-02/asset-mini-game/savings-race/piggy-bank.webp"
             alt=""
           />
         </section>
@@ -68,7 +68,7 @@ export function GuestDemo() {
           </div>
           <img
             className="ws-hero-art object-contain"
-            src="/images/finteen-v2/chapter-03/asset-mini-game/career-match/design-assistant.png"
+            src="/images/finteen-v2/chapter-03/asset-mini-game/career-match/design-assistant.webp"
             alt=""
           />
         </section>
@@ -89,7 +89,7 @@ export function GuestDemo() {
           </div>
           <img
             className="ws-hero-art object-contain"
-            src="/images/finteen-v2/chapter-04/asset-mini-game/smart-shopping/phone-a-new.png"
+            src="/images/finteen-v2/chapter-04/asset-mini-game/smart-shopping/phone-a-new.webp"
             alt=""
           />
         </section>
@@ -110,7 +110,7 @@ export function GuestDemo() {
           </div>
           <img
             className="ws-hero-art object-contain"
-            src="/images/finteen-v2/chapter-05/asset-mini-game/compound-timeline/term-account.png"
+            src="/images/finteen-v2/chapter-05/asset-mini-game/compound-timeline/term-account.webp"
             alt=""
           />
         </section>
@@ -131,7 +131,7 @@ export function GuestDemo() {
           </div>
           <img
             className="ws-hero-art object-contain"
-            src="/images/finteen-v2/chapter-06/asset-mini-game/loan-detective/laptop-goal.png"
+            src="/images/finteen-v2/chapter-06/asset-mini-game/loan-detective/laptop-goal.webp"
             alt=""
           />
         </section>
@@ -152,7 +152,7 @@ export function GuestDemo() {
           </div>
           <img
             className="ws-hero-art object-contain"
-            src="/images/finteen-v2/chapter-07/props/insurance-terms-folder.png"
+            src="/images/finteen-v2/chapter-07/props/insurance-terms-folder.webp"
             alt=""
           />
         </section>
@@ -173,7 +173,7 @@ export function GuestDemo() {
           </div>
           <img
             className="ws-hero-art object-contain"
-            src="/images/finteen-v2/chapter-08/asset-mini-game/portfolio-builder/diversified-fund.png"
+            src="/images/finteen-v2/chapter-08/asset-mini-game/portfolio-builder/diversified-fund.webp"
             alt=""
           />
         </section>

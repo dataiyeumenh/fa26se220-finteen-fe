@@ -172,7 +172,7 @@ export default function GameMap({ chapters = [], onChapterClick }) {
           <img
             key={region.file}
             className="atlas-background"
-            src={`/images/map/journey-v2/finteen-map-${region.file}.png`}
+            src={`/images/map/journey-v2/finteen-map-${region.file}.webp`}
             alt={`Bản đồ ${region.title}`}
           />
           <div className="atlas-world-title">

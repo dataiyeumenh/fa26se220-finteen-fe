@@ -19,8 +19,8 @@
 .home-brand { display: inline-flex; flex: none; align-items: center; }
 .home-brand img { width: 168px; height: auto; object-fit: contain; }
 .home-nav { display: flex; align-items: center; gap: 36px; }
-.home-nav a, .home-footer a { color: var(--ink); font-size: 15px; font-weight: 750; text-decoration: none; }
-.home-nav a:hover, .home-footer a:hover { color: var(--green-700); }
+.home-nav a { color: var(--ink); font-size: 15px; font-weight: 750; text-decoration: none; }
+.home-nav a:hover { color: var(--green-700); }
 .home-header__actions { display: flex; align-items: center; gap: 20px; }
 .home-link-button { border: 0; background: transparent; color: var(--ink); font-weight: 750; cursor: pointer; }
 .home-menu-button { display: none; width: 44px; height: 44px; place-items: center; border: 0; border-radius: 12px; background: var(--mint); color: var(--green-900); }
@@ -145,11 +145,6 @@
 .home-final-cta__inner > div:first-child svg { width: 48px; height: 48px; flex: none; color: var(--lime); }
 .home-final-cta h2 { font-size: clamp(2.4rem, 4vw, 4rem); font-weight: 900; line-height: 1.02; letter-spacing: -.05em; }
 .home-final-cta .home-action-row { flex: none; margin-top: 0; }
-.home-footer { border-top: 1px solid #e4ebe6; background: #fff; padding: 42px 0; }
-.home-footer__inner { display: flex; align-items: center; justify-content: space-between; gap: 36px; }
-.home-footer p { margin-top: 12px; color: var(--muted); font-size: 13px; }
-.home-footer__links { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 24px; }
-.home-footer__links span { color: #708078; font-size: 13px; }
 .public-home-demo { border: 1px solid #cddfd3; color: var(--ink); box-shadow: 0 22px 60px rgb(7 62 43 / 22%); }
 @keyframes home-fade-up { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -202,7 +197,6 @@
   .home-report__benefits article { display: flex; border-right: 0; border-bottom: 1px solid #cee0d3; padding: 22px 0; } .home-report__benefits article > svg { margin-bottom: 0; }
   .home-final-cta__inner { min-height: 0; padding: 70px 0; } .home-final-cta__inner > div:first-child { display: block; } .home-final-cta__inner > div:first-child svg { margin-bottom: 18px; }
   .home-final-cta .home-action-row { width: 100%; flex-direction: column; } .home-final-cta button { width: 100%; }
-  .home-footer__inner { align-items: flex-start; flex-direction: column; } .home-footer__links { justify-content: flex-start; }
 }
 @media (max-width: 420px) { .home-brand img { width: 132px; } .home-process__steps { grid-template-columns: 1fr; } .home-chapter { grid-template-columns: 112px 1fr; } .home-metric { grid-template-columns: 1fr 62px 31px; } }
 @media (prefers-reduced-motion: reduce) { .home-v2 *, .home-v2 *::before, .home-v2 *::after { scroll-behavior: auto !important; animation: none !important; transition: none !important; } }

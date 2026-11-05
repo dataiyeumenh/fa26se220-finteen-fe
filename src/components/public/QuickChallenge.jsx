@@ -29,7 +29,7 @@ export function QuickChallenge() {
           <div className="ft-item-stage">
             <span className="ft-orbit" aria-hidden="true" />
             <img
-              src="/images/c1/mini-game/c1_item_game_gift_card.png"
+              src="/images/c1/mini-game/c1_item_game_gift_card.webp"
               alt="Thẻ nạp game"
               width="180"
               height="180"

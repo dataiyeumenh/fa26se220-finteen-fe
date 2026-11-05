@@ -19,19 +19,19 @@ const DEFAULT_EXPENSES = [
   {
     label: "Trò chơi",
     image:
-      "/images/finteen-v2/chapter-02/asset-mini-game/budget-builder/entertainment.png",
+      "/images/finteen-v2/chapter-02/asset-mini-game/budget-builder/entertainment.webp",
     value: -200000,
   },
   {
     label: "Tai nghe xịn",
     image:
-      "/images/finteen-v2/chapter-01/asset-mini-game/needs-or-wants/05-upgrade-headphones.png",
+      "/images/finteen-v2/chapter-01/asset-mini-game/needs-or-wants/05-upgrade-headphones.webp",
     value: -150000,
   },
   {
     label: "Tượng mèo trang trí",
     image:
-      "/images/finteen-v2/chapter-01/asset-mini-game/needs-or-wants/06-desk-decoration.png",
+      "/images/finteen-v2/chapter-01/asset-mini-game/needs-or-wants/06-desk-decoration.webp",
     value: -100000,
   },
 ];
@@ -56,7 +56,7 @@ const freshItem = (cfg) =>
     : {
         ...freshCoin(cfg),
         label: "Tiền tiết kiệm",
-        image: `${spriteBase}/gold-coin.png`,
+        image: `${spriteBase}/gold-coin.webp`,
       };
 const freshWave = (cfg, wave) =>
   Array.from({ length: 2 + Math.floor(Math.random() * 2) }, (_, index) => ({
@@ -291,7 +291,7 @@ export function SavingsRaceMiniGame({ game, onComplete, className }) {
         >
           <div className={cn("catch-pig-art", catchFx && "is-catching")}>
             <img
-              src={`${spriteBase}/piggy-bank.png`}
+              src={`${spriteBase}/piggy-bank.webp`}
               alt=""
               draggable={false}
             />

@@ -24,6 +24,8 @@ import {
 import { useWorkspace } from "./useWorkspace";
 import { auth } from "../../api/auth.api";
 import { Button } from "@/components/ui/button";
+import { Footer } from "@/components/shared/Footer";
+import ResponsiveSidebar from "@/components/shared/ResponsiveSidebar";
 import "./workspace.css";
 import "./workspace-header.css";
 import "./workspace-visuals.css";
@@ -136,9 +138,9 @@ export default function WorkspaceLayout({ children }) {
       data-ws-page={pageTheme}
     >
       {!learner && (
-        <aside className="ws-sidebar">
+        <ResponsiveSidebar className="ws-sidebar" scopeClass="ws ws-adult" title={teacher ? "Không gian giáo viên" : paid ? "Không gian phụ huynh" : "Không gian dùng thử"} role={actor?.role || "guest"}>
           <Link to="/" className="ws-brand">
-            <img src="/brand/finteen-logo-v2.png" alt="FinTeen" />
+            <img src="/brand/finteen-logo-v2.webp" alt="FinTeen" />
           </Link>
           {dualContext && (
             <div
@@ -201,14 +203,14 @@ export default function WorkspaceLayout({ children }) {
           >
             <LogOut size={18} /> Đăng xuất
           </button>
-        </aside>
+        </ResponsiveSidebar>
       )}
       <div className="ws-main">
         <header className="ws-top">
           {learner ? (
             <div className="ws-kid-header-main">
               <Link to="/dashboard/kid" className="ws-kid-brand">
-                <img src="/brand/finteen-logo-v2.png" alt="FinTeen" />
+                <img src="/brand/finteen-logo-v2.webp" alt="FinTeen" />
               </Link>
               <nav className="ws-kid-nav" aria-label="Điều hướng học tập">
                 {links.map(([to, text, Icon]) => (
@@ -397,6 +399,7 @@ export default function WorkspaceLayout({ children }) {
           )}
           {children}
         </main>
+        {learner && <Footer />}
       </div>
       {learner && (
         <nav

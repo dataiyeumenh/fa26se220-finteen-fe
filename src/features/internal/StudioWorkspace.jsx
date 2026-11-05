@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 import { Link, NavLink, Navigate, useLocation } from 'react-router-dom'
-import { ArrowLeft, BookOpen, CheckCheck, ChevronRight, Image, History, LayoutDashboard, Layers3, LogOut, PenLine, Rocket, Sparkles } from 'lucide-react'
+import { ArrowLeft, BookOpen, CheckCheck, ChevronRight, Image, History, LayoutDashboard, LogOut, PenLine, Rocket, Sparkles } from 'lucide-react'
 import { auth } from '../../api/auth.api'
 import ChaptersPage from '../studio/ChaptersPage'
 import EditorPage from '../studio/EditorPage'
@@ -14,6 +14,7 @@ import { studioApi } from '../studio/studioClient'
 import { useStudioResource } from '../studio/useStudioResource'
 import { useToast } from '../studio/useToast'
 import './studio-workspace.css'
+import ResponsiveSidebar from '@/components/shared/ResponsiveSidebar'
 
 const menuIcons = { chapter: PenLine, review: CheckCheck, release: Rocket, history: History, asset: Image, question: BookOpen }
 
@@ -42,8 +43,8 @@ export default function StudioWorkspace({ actor }) {
   const name = actor.displayName || actor.name || actor.email
   const pageProps = { notify, title: current?.title, intro: current?.description }
   return <div className={`studio-workspace${editorCode ? ' studio-workspace-editing' : ''}`}>
-    <aside className="studio-sidebar">
-      <Link className="studio-brand" to="/internal" aria-label="FinTeen Studio, về Tổng quan"><span><Layers3 size={22} aria-hidden="true" /></span><div>FinTeen<small>Studio nội dung</small></div></Link>
+    <ResponsiveSidebar className="studio-sidebar" scopeClass="studio-workspace" title="Studio nội dung" role="internal">
+      <Link className="studio-brand" to="/internal" aria-label="FinTeen Studio, về Tổng quan"><img src="/brand/finteen-logo-v2.webp" alt="FinTeen" /><small>Studio nội dung</small></Link>
       <div className="studio-profile"><span aria-hidden="true">{name.slice(0, 1).toUpperCase()}</span><div><strong title={name}>{name}</strong><small>{actor.roles.map(role => ROLE_LABELS[role]).filter(Boolean).join(', ')}</small></div></div>
       <nav aria-label="Điều hướng Studio">
         <p className="studio-nav-group-label studio-nav-group-first">Không gian làm việc</p>
@@ -58,7 +59,7 @@ export default function StudioWorkspace({ actor }) {
         {shared.map(({ path, title, icon, readOnly }) => <NavLink key={path} to={path} title={`${title}${readOnly ? ' · Chỉ xem' : ''}`}><MenuIcon name={icon} /><span className="studio-menu-label">{title}</span>{readOnly && <ViewBadge />}</NavLink>)}
       </nav>
       <div className="studio-sidebar-bottom"><button type="button" title="Đăng xuất" onClick={() => auth.logout()}><LogOut size={18} aria-hidden="true" />Đăng xuất</button></div>
-    </aside>
+    </ResponsiveSidebar>
     <div className="studio-main">
       <header className="studio-global-header">
         <div className="studio-header-title">

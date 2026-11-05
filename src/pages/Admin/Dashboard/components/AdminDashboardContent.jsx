@@ -30,6 +30,7 @@ import useAdminDashboard, {
 import "../styles/admin.css";
 import "../styles/admin-modern.css";
 import AiKeysPage from "../../../../features/studio/AiKeysPage";
+import ResponsiveSidebar from "@/components/shared/ResponsiveSidebar";
 
 const PLAN_KINDS = ["PARENT", "TEACHER"];
 const STATUS_LABELS = {
@@ -1159,12 +1160,10 @@ export default function AdminDashboardContent({ actor }) {
     );
   return (
     <div className="admin-shell">
-      <aside className="admin-sidebar">
+      <ResponsiveSidebar className="admin-sidebar" scopeClass="admin-shell" title="Quản trị hệ thống" role="admin">
         <a className="admin-brand" href="/">
-          <b>f.</b>
-          <span>
-            finteen<small>ADMIN CONSOLE</small>
-          </span>
+          <img src="/brand/finteen-logo-v2.webp" alt="FinTeen" />
+          <small>Quản trị hệ thống</small>
         </a>
         <div className="admin-user">
           <ShieldCheck />
@@ -1183,6 +1182,8 @@ export default function AdminDashboardContent({ actor }) {
             <button
               key={id}
               className={tab === id ? "active" : ""}
+              data-navigation-item
+              aria-current={tab === id ? "page" : undefined}
               onClick={() => setTab(id)}
             >
               <Icon size={19} />
@@ -1193,7 +1194,7 @@ export default function AdminDashboardContent({ actor }) {
         <button className="admin-logout" onClick={logout}>
           <LogOut size={18} /> Đăng xuất
         </button>
-      </aside>
+      </ResponsiveSidebar>
       <main className="admin-main">
         <div className="admin-topbar">
           <span>Hệ thống quản trị FinTeen</span>
