@@ -10,7 +10,11 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
-/public/
+# Track optimized website assets; keep original images and working files local.
+/public/**
+!/public/**/
+!/public/**/*.webp
+!/public/**/*.svg
 /docs/
 /output/
 *.local
