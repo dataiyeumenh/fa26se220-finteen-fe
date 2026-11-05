@@ -1,550 +1,208 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  ArrowRight,
-  BarChart3,
-  BookOpen,
-  Check,
-  ChevronRight,
-  Gamepad2,
-  Landmark,
-  Menu,
-  PiggyBank,
-  Play,
-  School,
-  ShieldCheck,
-  Sparkles,
-  Target,
-  TrendingUp,
-  Users,
-  WalletCards,
-  X,
+  ArrowRight, BarChart3, BookOpenCheck, Check, ChevronRight,
+  CircleDollarSign, ClipboardCheck, Gamepad2, GraduationCap,
+  KeyRound, Menu, Play, School, ShieldCheck, UserRoundPlus, Users, X,
 } from "lucide-react";
 import "@/components/home/home-colors.css";
 import { DemoModal } from "@/components/home/DemoModal";
 
 const audiences = [
   {
-    icon: Gamepad2,
-    title: "Học sinh chủ động",
-    description:
-      "Ra quyết định trong các tình huống gần gũi, nhận phản hồi và hình thành tư duy tài chính.",
-    color: "bg-white",
+    id: "parent", icon: Users, label: "Phụ huynh",
+    title: "Đồng hành mà không gây áp lực",
+    description: "Tạo hồ sơ cho con, mở quyền truy cập và xem báo cáo sau từng chặng học.",
+    detail: "Biết con đang hiểu gì và cần hỗ trợ ở đâu.",
+    image: "/images/finteen-v2/chapter-01/scene/sc01-receiving-allowance.png",
   },
   {
-    icon: Users,
-    title: "Phụ huynh đồng hành",
-    description:
-      "Quản lý hồ sơ của các con, gói học và theo dõi tiến độ trong cùng một nơi.",
-    color: "bg-white",
+    id: "teacher", icon: School, label: "Giáo viên",
+    title: "Dễ triển khai cho cả lớp",
+    description: "Tạo lớp, giao quiz trước và sau khi học, rồi theo dõi báo cáo theo nhóm.",
+    detail: "Quan sát tiến bộ mà không cần tổng hợp thủ công.",
+    image: "/images/finteen-v2/chapter-08/scene/sc05-explaining-personal-plan.png",
   },
   {
-    icon: School,
-    title: "Giáo viên dễ triển khai",
-    description:
-      "Tạo nhóm, giao hoạt động và quan sát hành trình học tài chính của học sinh.",
-    color: "bg-white",
+    id: "learner", icon: Gamepad2, label: "Học sinh",
+    title: "Vào chơi nhanh, không cần email",
+    description: "Đăng nhập bằng mã truy cập và PIN để bắt đầu câu chuyện, mini-game và quiz.",
+    detail: "Tự do thử, sai và nhìn thấy hệ quả của mỗi lựa chọn.",
+    image: "/images/finteen-v2/chapter-04/scene/sc02-comparing-three-phones.png",
   },
 ];
 
 const chapters = [
-  {
-    number: "01",
-    title: "Từ mái nhà nhỏ",
-    topic: "Tiền tiêu vặt & nhu cầu",
-    image: "/images/finteen-v2/chapter-01/scene/sc01-receiving-allowance.png",
-    color: "bg-[#fff2b8]",
-  },
-  {
-    number: "02",
-    title: "Những bước đi mới",
-    topic: "Lập ngân sách & tiết kiệm",
-    image: "/images/finteen-v2/chapter-02/scene/sc02-dividing-envelopes.png",
-    color: "bg-[#c8f4df]",
-  },
-  {
-    number: "03",
-    title: "Vun đắp tương lai",
-    topic: "Nghề nghiệp & thu nhập",
-    image: "/images/finteen-v2/chapter-03/scene/sc01-three-career-offers.png",
-    color: "bg-[#dcd3ff]",
-  },
-  {
-    number: "04",
-    title: "Chân trời rộng mở",
-    topic: "So sánh & quyết định",
-    image:
-      "/images/finteen-v2/chapter-04/scene/sc02-comparing-three-phones.png",
-    color: "bg-[#ffd5c2]",
-  },
-];
+  ["01", "Tiền đầu tiên", "Nhu cầu và mong muốn", "chapter-01/scene/sc01-receiving-allowance.png", "lime"],
+  ["02", "Mục tiêu lớn", "Ngân sách và tiết kiệm", "chapter-02/scene/sc02-dividing-envelopes.png", "coral"],
+  ["03", "Công việc đầu tiên", "Thu nhập thực nhận", "chapter-03/scene/sc01-three-career-offers.png", "amber"],
+  ["04", "Mua thông minh", "So sánh tổng chi phí", "chapter-04/scene/sc02-comparing-three-phones.png", "coral"],
+  ["05", "Ngân hàng và lãi", "Phí, lãi và sức mua", "chapter-05/scene/sc03-money-and-purchasing-power.png", "sky"],
+  ["06", "Mượn tiền", "Vay và tổng chi phí", "chapter-06/scene/sc02-comparing-loan-offers.png", "amber"],
+  ["07", "Biến cố bất ngờ", "Bảo hiểm và lừa đảo", "chapter-07/scene/sc03-checking-refund-message.png", "coral"],
+  ["08", "Kế hoạch 18 tuổi", "Đầu tư và dài hạn", "chapter-08/scene/sc05-explaining-personal-plan.png", "lime"],
+].map(([number, title, topic, path, tone]) => ({
+  number, title, topic, tone, image: `/images/finteen-v2/${path}`,
+}));
 
 const steps = [
-  [
-    "01",
-    "Tạo tài khoản",
-    "Chọn vai trò phụ huynh hoặc giáo viên và bắt đầu chỉ trong vài phút.",
-  ],
-  [
-    "02",
-    "Kết nối người học",
-    "Tạo hồ sơ cho trẻ hoặc nhóm học bằng mã truy cập riêng.",
-  ],
-  [
-    "03",
-    "Bắt đầu hành trình",
-    "Học qua tình huống, thử thách và xem tiến độ sau mỗi chương.",
-  ],
+  { icon: UserRoundPlus, title: "Tạo tài khoản", text: "Phụ huynh hoặc giáo viên đăng ký." },
+  { icon: Users, title: "Mở slot cho trẻ", text: "Tạo hồ sơ hoặc nhóm học phù hợp." },
+  { icon: KeyRound, title: "Vào bằng mã + PIN", text: "Trẻ không cần email hay mật khẩu." },
+  { icon: BarChart3, title: "Xem báo cáo", text: "Theo dõi tiến độ sau mỗi chặng." },
 ];
 
-const financeTopics = [
-  {
-    icon: WalletCards,
-    title: "Thu nhập & chi tiêu",
-    description:
-      "Hiểu tiền đến từ đâu, phân biệt nhu cầu với mong muốn và kiểm soát những khoản chi hằng ngày.",
-    label: "Nền tảng",
-    tone: "green",
-  },
-  {
-    icon: PiggyBank,
-    title: "Tiết kiệm & mục tiêu",
-    description:
-      "Lập mục tiêu vừa sức, chia nhỏ kế hoạch và duy trì thói quen tiết kiệm đều đặn.",
-    label: "Thói quen",
-    tone: "yellow",
-  },
-  {
-    icon: BarChart3,
-    title: "Ngân sách cá nhân",
-    description:
-      "Biết phân bổ một khoản tiền có hạn, theo dõi dòng tiền và điều chỉnh khi kế hoạch thay đổi.",
-    label: "Thực hành",
-    tone: "blue",
-  },
-  {
-    icon: TrendingUp,
-    title: "Lãi suất & đầu tư",
-    description:
-      "Làm quen với lãi đơn, lãi kép, lợi nhuận, rủi ro và sức mạnh của thời gian.",
-    label: "Phát triển",
-    tone: "purple",
-  },
-  {
-    icon: ShieldCheck,
-    title: "Rủi ro & bảo vệ",
-    description:
-      "Nhận diện lừa đảo tài chính, hiểu quỹ dự phòng và cách bảo vệ thông tin cá nhân.",
-    label: "An toàn",
-    tone: "orange",
-  },
-  {
-    icon: Landmark,
-    title: "Kinh tế quanh ta",
-    description:
-      "Khám phá giá cả, cung cầu, lạm phát và cách các thay đổi kinh tế ảnh hưởng đến gia đình.",
-    label: "Mở rộng",
-    tone: "cyan",
-  },
-];
-
-const learningOutcomes = [
-  "Biết cân nhắc trước khi mua sắm",
-  "Tự lập một ngân sách đơn giản",
-  "Hiểu giá trị của tiết kiệm dài hạn",
-  "Nhận biết rủi ro và chi phí ẩn",
+const reportMetrics = [
+  ["Hoàn thành nội dung", "80%"], ["Độ chính xác bài tập", "76%"],
+  ["Thời gian học", "65%"], ["Duy trì học tập", "71%"], ["Tiến độ chương", "75%"],
 ];
 
 function Brand() {
-  return (
-    <a href="#top" className="home-brand" aria-label="FinTeen - Trang chủ">
-      <img src="/brand/finteen-logo-v2.png" alt="FinTeen" />
-    </a>
-  );
+  return <a href="#top" className="home-brand" aria-label="FinTeen - Trang chủ"><img src="/brand/finteen-logo-v2.png" alt="FinTeen" /></a>;
 }
 
 export default function Homepage() {
   const navigate = useNavigate();
   const [demoOpen, setDemoOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [activeAudience, setActiveAudience] = useState("parent");
+  const selectedAudience = audiences.find((item) => item.id === activeAudience);
+
+  useEffect(() => {
+    if (!window.location.hash) return;
+    const target = document.querySelector(window.location.hash);
+    if (target) requestAnimationFrame(() => target.scrollIntoView());
+  }, []);
 
   return (
-    <div
-      id="top"
-      className="public-home home-v2 min-h-screen overflow-x-hidden bg-[#fffaf0] text-[#17212b]"
-    >
-      <header className="sticky top-0 z-50 border-b-2 border-[#17212b] bg-[#fffaf0]/95 backdrop-blur">
-        <div className="mx-auto flex h-[72px] max-w-7xl items-center justify-between px-5 lg:px-8">
+    <div id="top" className="public-home home-v2">
+      <header className="home-header">
+        <div className="home-shell home-header__inner">
           <Brand />
-          <nav
-            className="hidden items-center gap-7 md:flex"
-            aria-label="Điều hướng chính"
-          >
-            <a href="#loi-ich">Lợi ích</a>
-            <a href="#hanh-trinh">Hành trình học</a>
-            <a href="#cach-hoat-dong">Cách hoạt động</a>
+          <nav className="home-nav" aria-label="Điều hướng chính">
+            <a href="#danh-cho-ai">Dành cho ai</a><a href="#hanh-trinh">Hành trình</a><a href="#bao-cao">Báo cáo</a>
           </nav>
-          <div className="hidden items-center gap-3 sm:flex">
-            <button
-              className="home-link-button"
-              onClick={() => navigate("/login")}
-            >
-              Đăng nhập
-            </button>
-            <button
-              className="home-solid-button px-5 py-2.5"
-              onClick={() => navigate("/register")}
-            >
-              Bắt đầu ngay
-            </button>
+          <div className="home-header__actions">
+            <button className="home-link-button" onClick={() => navigate("/login")}>Đăng nhập</button>
+            <button className="home-solid-button home-solid-button--compact" onClick={() => navigate("/register")}>Bắt đầu</button>
           </div>
-          <button
-            className="grid size-11 place-items-center md:hidden"
-            onClick={() => setMenuOpen((value) => !value)}
-            aria-label={menuOpen ? "Đóng menu" : "Mở menu"}
-          >
+          <button className="home-menu-button" onClick={() => setMenuOpen((value) => !value)} aria-label={menuOpen ? "Đóng menu" : "Mở menu"} aria-expanded={menuOpen}>
             {menuOpen ? <X /> : <Menu />}
           </button>
         </div>
         {menuOpen && (
-          <nav className="grid gap-3 border-t-2 border-[#17212b] bg-[#fffaf0] p-5 md:hidden">
-            <a href="#loi-ich" onClick={() => setMenuOpen(false)}>
-              Lợi ích
-            </a>
-            <a href="#hanh-trinh" onClick={() => setMenuOpen(false)}>
-              Hành trình học
-            </a>
-            <a href="#cach-hoat-dong" onClick={() => setMenuOpen(false)}>
-              Cách hoạt động
-            </a>
-            <button
-              className="text-left font-bold"
-              onClick={() => navigate("/login")}
-            >
-              Đăng nhập
-            </button>
-            <button
-              className="home-solid-button"
-              onClick={() => navigate("/register")}
-            >
-              Tạo tài khoản
-            </button>
+          <nav className="home-mobile-nav" aria-label="Điều hướng trên điện thoại">
+            <a href="#danh-cho-ai" onClick={() => setMenuOpen(false)}>Dành cho ai</a>
+            <a href="#hanh-trinh" onClick={() => setMenuOpen(false)}>Hành trình</a>
+            <a href="#bao-cao" onClick={() => setMenuOpen(false)}>Báo cáo</a>
+            <button onClick={() => navigate("/login")}>Đăng nhập</button>
+            <button className="home-solid-button" onClick={() => navigate("/register")}>Bắt đầu</button>
           </nav>
         )}
       </header>
 
       <main>
-        <section className="border-b-2 border-[#17212b] px-5 py-14 lg:px-8 lg:py-20">
-          <div className="mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-[0.9fr_1.1fr]">
-            <div>
-              <div className="home-kicker">
-                <Sparkles className="size-4" /> Kỹ năng tài chính cho thế hệ mới
+        <section className="home-hero">
+          <div className="home-shell home-hero__grid">
+            <div className="home-hero__copy">
+              <h1>Học cách quản lý tiền qua những lựa chọn thật.</h1>
+              <p>FinTeen là game tài chính dành cho tuổi teen. Trẻ trải nghiệm 8 chương tương tác; phụ huynh và giáo viên theo dõi tiến bộ trong cùng một hệ thống.</p>
+              <div className="home-action-row">
+                <button className="home-solid-button" onClick={() => navigate("/register")}>Bắt đầu <ArrowRight /></button>
+                <button className="home-outline-button" onClick={() => setDemoOpen(true)}><Play /> Thử một bài học</button>
               </div>
-              <h1 className="mt-6 max-w-2xl text-5xl font-black leading-[1.02] tracking-[-0.045em] sm:text-6xl lg:text-7xl">
-                Hiểu tiền sớm.
-                <br />
-                <span className="home-marker">Tự tin chọn tương lai.</span>
-              </h1>
-              <p className="mt-6 max-w-xl text-lg font-medium leading-8 text-[#46505b]">
-                FinTeen giúp học sinh cấp 2–3 rèn kỹ năng quản lý tiền qua tình
-                huống thực tế, thử thách tương tác và lộ trình học rõ ràng.
-              </p>
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <button
-                  className="home-solid-button group"
-                  onClick={() => navigate("/register")}
-                >
-                  Bắt đầu miễn phí{" "}
-                  <ArrowRight className="size-5 transition-transform group-hover:translate-x-1" />
-                </button>
-                <button
-                  className="home-outline-button"
-                  onClick={() => setDemoOpen(true)}
-                >
-                  <Play className="size-5 fill-current" /> Thử một bài học
-                </button>
-              </div>
-              <div className="mt-7 flex flex-wrap gap-x-6 gap-y-2 text-sm font-bold text-[#46505b]">
-                <span className="flex items-center gap-2">
-                  <Check className="size-4" /> Nội dung tiếng Việt
-                </span>
-                <span className="flex items-center gap-2">
-                  <Check className="size-4" /> Học theo tốc độ riêng
-                </span>
-              </div>
+              <div className="home-hero__trust"><span><Check /> Nội dung tiếng Việt</span><span><Check /> Trẻ không cần email</span></div>
             </div>
-            <div className="relative pb-5 pr-1">
-              <div className="home-art-card overflow-hidden bg-[#dff4c7]">
-                <img
-                  src="/images/map/journey-v2/finteen-map-01-home.png"
-                  alt="Bản đồ hành trình học tài chính của FinTeen"
-                  className="aspect-[4/3] h-full w-full object-cover"
-                />
-                <div className="absolute inset-x-4 bottom-4 flex items-center justify-between rounded-2xl border-2 border-[#17212b] bg-white p-3.5 shadow-[4px_4px_0_#17212b] sm:inset-x-6 sm:bottom-6">
-                  <div className="flex items-center gap-3">
-                    <span className="grid size-11 place-items-center rounded-xl bg-[#ffe34f] font-black">
-                      01
-                    </span>
-                    <div>
-                      <p className="text-xs font-bold uppercase tracking-wider text-[#66717c]">
-                        Đang học
-                      </p>
-                      <p className="font-black">Tiền đến từ đâu?</p>
-                    </div>
-                  </div>
-                  <ChevronRight className="size-6" />
-                </div>
+            <div className="home-hero__visual" aria-label="Minh họa hành trình học FinTeen">
+              <div className="home-hero__map-frame">
+                <img src="/images/map/journey-v2/finteen-map-01-home.png" alt="Bản đồ hành trình FinTeen" />
+                <div className="home-map-route" aria-hidden="true"><span /><span /><span /></div>
               </div>
-              <div className="absolute -left-4 top-8 hidden rounded-xl border-2 border-[#17212b] bg-white px-4 py-3 font-black shadow-[4px_4px_0_#17212b] sm:block">
-                8 chủ đề thiết thực
-              </div>
-              <div className="absolute -right-3 top-20 hidden rounded-xl border-2 border-[#17212b] bg-[#dceaa7] px-4 py-3 font-black shadow-[4px_4px_0_#17212b] sm:block">
-                Học qua quyết định
-              </div>
+              <div className="home-hero__scene-frame"><img src="/images/finteen-v2/chapter-08/scene/sc05-explaining-personal-plan.png" alt="Học sinh trao đổi kế hoạch tài chính với giáo viên" /></div>
             </div>
           </div>
+          <div className="home-landscape" aria-hidden="true" />
         </section>
 
-        <section id="loi-ich" className="px-5 py-16 lg:px-8 lg:py-24">
-          <div className="mx-auto max-w-7xl">
-            <div className="max-w-2xl">
-              <p className="home-eyebrow">Một nền tảng, cả nhà cùng học</p>
-              <h2 className="home-section-title">
-                Được thiết kế cho từng người trong hành trình.
-              </h2>
-            </div>
-            <div className="mt-10 grid gap-5 md:grid-cols-3">
-              {audiences.map(({ icon: Icon, title, description, color }) => (
-                <article key={title} className={`home-feature-card ${color}`}>
-                  <span className="grid size-14 place-items-center rounded-2xl border-2 border-[#17212b] bg-white shadow-[3px_3px_0_#17212b]">
-                    <Icon className="size-7" />
-                  </span>
-                  <h3 className="mt-7 text-2xl font-black">{title}</h3>
-                  <p className="mt-3 leading-7 text-[#3f4a54]">{description}</p>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="home-topics-section px-5 py-16 lg:px-8 lg:py-24">
-          <div className="mx-auto max-w-7xl">
-            <div className="flex flex-col justify-between gap-5 md:flex-row md:items-end">
-              <div className="max-w-2xl">
-                <p className="home-eyebrow">Kiến thức dùng được ngoài đời</p>
-                <h2 className="home-section-title">
-                  Tài chính không chỉ là những con số.
-                </h2>
-              </div>
-              <p className="max-w-md leading-7 text-[#64748b]">
-                Mỗi chủ đề bắt đầu từ một vấn đề quen thuộc của học sinh, sau đó
-                mở rộng thành kiến thức kinh tế và kỹ năng ra quyết định.
-              </p>
-            </div>
-            <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-              {financeTopics.map(
-                ({ icon: Icon, title, description, label, tone }) => (
-                  <article key={title} className="home-topic-card">
-                    <div className="flex items-start justify-between gap-4">
-                      <span
-                        className={`home-topic-icon home-topic-icon--${tone}`}
-                      >
-                        <Icon className="size-6" />
-                      </span>
-                      <span className="home-topic-label">{label}</span>
-                    </div>
-                    <h3 className="mt-6 text-xl font-extrabold">{title}</h3>
-                    <p className="mt-2 leading-7 text-[#64748b]">
-                      {description}
-                    </p>
-                  </article>
-                ),
-              )}
-            </div>
-          </div>
-        </section>
-
-        <section className="home-outcomes-section px-5 py-16 lg:px-8 lg:py-20">
-          <div className="mx-auto grid max-w-7xl items-center gap-10 lg:grid-cols-[1fr_0.9fr]">
-            <div>
-              <p className="home-eyebrow">Học để tự lập</p>
-              <h2 className="home-section-title">
-                Từ kiến thức đến quyết định tốt hơn mỗi ngày.
-              </h2>
-              <p className="mt-5 max-w-2xl leading-7 text-[#64748b]">
-                FinTeen không chấm điểm khả năng ghi nhớ. Học sinh được thử, sai
-                và nhìn thấy hệ quả trong môi trường an toàn trước khi gặp những
-                lựa chọn tương tự ngoài đời.
-              </p>
-              <div className="mt-7 grid gap-3 sm:grid-cols-2">
-                {learningOutcomes.map((item) => (
-                  <div key={item} className="home-outcome-item">
-                    <Check className="size-5" />
-                    <span>{item}</span>
-                  </div>
+        <section id="danh-cho-ai" className="home-audience home-section">
+          <div className="home-shell">
+            <div className="home-section-heading home-section-heading--center"><h2>Mỗi người một trải nghiệm rõ ràng</h2><p>Người lớn quản lý và đồng hành. Teen tập trung vào hành trình của mình.</p></div>
+            <div className="home-audience__layout">
+              <div className="home-audience__tabs" role="tablist" aria-label="Chọn người dùng">
+                {audiences.map(({ id, icon: Icon, label }) => (
+                  <button key={id} role="tab" aria-selected={activeAudience === id} className={activeAudience === id ? "is-active" : ""} onClick={() => setActiveAudience(id)}>
+                    <Icon /><span>{label}</span><ChevronRight />
+                  </button>
                 ))}
               </div>
-            </div>
-            <div className="home-insight-panel">
-              <div className="flex items-center gap-3">
-                <span className="home-insight-icon">
-                  <BookOpen className="size-6" />
-                </span>
-                <div>
-                  <p className="text-sm font-bold text-[#16a34a]">
-                    Phương pháp học
-                  </p>
-                  <h3 className="text-xl font-extrabold">
-                    Tình huống → Quyết định → Phản hồi
-                  </h3>
-                </div>
-              </div>
-              <div className="mt-6 space-y-5">
-                <div>
-                  <div className="mb-2 flex justify-between text-sm font-bold">
-                    <span>Hiểu khái niệm</span>
-                    <span>01</span>
-                  </div>
-                  <div className="home-learning-line">
-                    <span className="w-[72%]" />
-                  </div>
-                </div>
-                <div>
-                  <div className="mb-2 flex justify-between text-sm font-bold">
-                    <span>Thực hành lựa chọn</span>
-                    <span>02</span>
-                  </div>
-                  <div className="home-learning-line">
-                    <span className="w-[86%]" />
-                  </div>
-                </div>
-                <div>
-                  <div className="mb-2 flex justify-between text-sm font-bold">
-                    <span>Rút kinh nghiệm</span>
-                    <span>03</span>
-                  </div>
-                  <div className="home-learning-line">
-                    <span className="w-full" />
-                  </div>
-                </div>
+              <div className="home-audience__media" role="tabpanel" key={selectedAudience.id}><img src={selectedAudience.image} alt="" /></div>
+              <div className="home-audience__content">
+                <p className="home-audience__label">{selectedAudience.label}</p><h3>{selectedAudience.title}</h3><p>{selectedAudience.description}</p>
+                <div className="home-audience__detail"><ShieldCheck /><span>{selectedAudience.detail}</span></div>
               </div>
             </div>
           </div>
         </section>
 
-        <section
-          id="hanh-trinh"
-          className="border-y-2 border-[#17212b] bg-[#17212b] px-5 py-16 text-white lg:px-8 lg:py-24"
-        >
-          <div className="mx-auto max-w-7xl">
-            <div className="flex flex-col justify-between gap-5 md:flex-row md:items-end">
-              <div className="max-w-2xl">
-                <p className="font-black uppercase tracking-[0.16em] text-[#ffe34f]">
-                  Nội dung trong sản phẩm
-                </p>
-                <h2 className="mt-3 text-4xl font-black tracking-[-0.035em] sm:text-5xl">
-                  Mỗi chương là một câu chuyện thật.
-                </h2>
-              </div>
-              <p className="max-w-md text-[#cbd1d6]">
-                Không học thuộc lòng. Trẻ quan sát tình huống, chọn cách xử lý
-                và thấy hệ quả của quyết định.
-              </p>
-            </div>
-            <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <section id="hanh-trinh" className="home-journey home-section">
+          <div className="home-shell">
+            <div className="home-section-heading home-section-heading--journey"><h2>8 chương. Một hành trình trưởng thành cùng tiền.</h2><p>Từ khoản tiền đầu tiên đến kế hoạch tuổi 18.</p></div>
+            <div className="home-journey__path" aria-label="Hành trình tám chương FinTeen">
               {chapters.map((chapter) => (
-                <article
-                  key={chapter.number}
-                  className="group overflow-hidden rounded-3xl border-2 border-white bg-white text-[#17212b] transition-transform hover:-translate-y-1"
-                >
-                  <div
-                    className={`relative aspect-[4/3] overflow-hidden ${chapter.color}`}
-                  >
-                    <img
-                      src={chapter.image}
-                      alt=""
-                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                    <span className="absolute left-4 top-4 grid size-11 place-items-center rounded-xl border-2 border-[#17212b] bg-[#ffe34f] font-black shadow-[3px_3px_0_#17212b]">
-                      {chapter.number}
-                    </span>
-                  </div>
-                  <div className="p-5">
-                    <p className="text-sm font-bold text-[#68737d]">
-                      {chapter.topic}
-                    </p>
-                    <h3 className="mt-1 text-xl font-black">{chapter.title}</h3>
-                  </div>
+                <article key={chapter.number} className={`home-chapter home-chapter--${chapter.tone}`}>
+                  <div className="home-chapter__pin">{chapter.number}</div>
+                  <div className="home-chapter__image"><img src={chapter.image} alt="" /></div>
+                  <div className="home-chapter__copy"><h3>{chapter.title}</h3><p>{chapter.topic}</p></div>
                 </article>
               ))}
             </div>
           </div>
         </section>
 
-        <section id="cach-hoat-dong" className="px-5 py-16 lg:px-8 lg:py-24">
-          <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.8fr_1.2fr]">
-            <div>
-              <p className="home-eyebrow">Bắt đầu thật đơn giản</p>
-              <h2 className="home-section-title">
-                Ba bước để vào lớp học tài chính.
-              </h2>
-              <p className="mt-5 max-w-md leading-7 text-[#52606b]">
-                Không cần cài đặt phức tạp. FinTeen hoạt động trực tiếp trên
-                trình duyệt và phù hợp cho cả học tại nhà lẫn trên lớp.
-              </p>
-            </div>
-            <div className="grid gap-4">
-              {steps.map(([number, title, description]) => (
-                <article key={number} className="home-step-card">
-                  <span className="home-step-number">{number}</span>
-                  <div>
-                    <h3 className="text-xl font-black">{title}</h3>
-                    <p className="mt-1 leading-7 text-[#52606b]">
-                      {description}
-                    </p>
+        <section id="cach-hoat-dong" className="home-process home-section">
+          <div className="home-shell">
+            <div className="home-section-heading"><h2>Bắt đầu chỉ trong vài bước</h2><p>Người lớn thiết lập một lần. Trẻ có thể bắt đầu hành trình ngay trên trình duyệt.</p></div>
+            <ol className="home-process__steps">
+              {steps.map(({ icon: Icon, title, text }, index) => <li key={title}><span className="home-process__number">{index + 1}</span><span className="home-process__icon"><Icon /></span><h3>{title}</h3><p>{text}</p></li>)}
+            </ol>
+          </div>
+        </section>
+
+        <section id="bao-cao" className="home-report home-section">
+          <div className="home-shell">
+            <div className="home-section-heading home-section-heading--report"><h2>Biết trẻ đang hiểu gì — và cần hỗ trợ ở đâu.</h2><p>Báo cáo minh họa từ dữ liệu học tập trong FinTeen.</p></div>
+            <div className="home-report__layout">
+              <div className="home-report-ui" aria-label="Minh họa báo cáo học tập">
+                <div className="home-report-ui__sidebar"><img src="/brand/finteen-logo-v2.png" alt="" /><span>Trang chủ</span><strong><BarChart3 /> Báo cáo</strong><span>Học sinh</span></div>
+                <div className="home-report-ui__main">
+                  <div className="home-report-ui__topline"><div><small>Báo cáo</small><strong>Tổng quan tiến độ</strong></div><span>Minh họa</span></div>
+                  <div className="home-report-ui__grid">
+                    <div className="home-report-ui__metrics"><h3>5 chỉ số theo dõi</h3>{reportMetrics.map(([label, value]) => <div className="home-metric" key={label}><span>{label}</span><div><i style={{ width: value }} /></div><strong>{value}</strong></div>)}</div>
+                    <div className="home-report-ui__knowledge">
+                      <h3>Mức độ nắm khái niệm</h3><div className="home-knowledge-row"><span>Lập ngân sách</span><strong>Vững</strong></div><div className="home-knowledge-row"><span>Tiết kiệm</span><strong>Khá</strong></div><div className="home-knowledge-row"><span>Chi tiêu hợp lý</span><em>Đang học</em></div>
+                      <div className="home-report-ui__review"><ClipboardCheck /><div><strong>Xem lại câu trả lời sai</strong><span>Biết điểm nào cần giải thích thêm</span></div></div>
+                    </div>
                   </div>
-                </article>
-              ))}
+                </div>
+              </div>
+              <div className="home-report__benefits">
+                <article><BarChart3 /><div><h3>Theo dõi 5 chỉ số</h3><p>Nắm nhanh tiến độ và thói quen học tập.</p></div></article>
+                <article><BookOpenCheck /><div><h3>Xem mức độ nắm khái niệm</h3><p>Biết nội dung nào đã vững hoặc đang học.</p></div></article>
+                <article><ClipboardCheck /><div><h3>Nhận biết câu trả lời sai</h3><p>Hỗ trợ đúng chỗ thay vì đoán điều trẻ chưa hiểu.</p></div></article>
+              </div>
             </div>
           </div>
         </section>
 
-        <section className="px-5 pb-16 lg:px-8 lg:pb-24">
-          <div className="mx-auto grid max-w-7xl gap-8 overflow-hidden rounded-[32px] border-2 border-[#17212b] bg-[#ffe34f] p-7 shadow-[8px_8px_0_#17212b] md:p-12 lg:grid-cols-[1fr_auto] lg:items-center">
-            <div>
-              <p className="flex items-center gap-2 font-black uppercase tracking-wider">
-                <Target className="size-5" /> Sẵn sàng bắt đầu?
-              </p>
-              <h2 className="mt-3 max-w-3xl text-4xl font-black tracking-[-0.04em] sm:text-5xl">
-                Biến những bài học về tiền thành kỹ năng dùng được cả đời.
-              </h2>
-            </div>
-            <button
-              className="home-dark-button whitespace-nowrap"
-              onClick={() => navigate("/register")}
-            >
-              Tạo tài khoản <ArrowRight className="size-5" />
-            </button>
+        <section className="home-final-cta">
+          <div className="home-shell home-final-cta__inner">
+            <div><CircleDollarSign /><h2>Cùng teen bắt đầu hành trình tài chính đầu tiên.</h2></div>
+            <div className="home-action-row"><button className="home-lime-button" onClick={() => navigate("/register")}>Bắt đầu cho gia đình <ArrowRight /></button><button className="home-white-button" onClick={() => navigate("/register")}><GraduationCap /> Dành cho giáo viên</button></div>
           </div>
         </section>
       </main>
 
-      <footer className="border-t-2 border-[#17212b] bg-white px-5 py-10 lg:px-8">
-        <div className="mx-auto flex max-w-7xl flex-col justify-between gap-6 sm:flex-row sm:items-center">
-          <div>
-            <Brand />
-            <p className="mt-3 text-sm text-[#66717c]">
-              Nền tảng học tài chính dành cho trẻ em Việt Nam.
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-x-6 gap-y-3 text-sm font-bold">
-            <a href="#loi-ich">Lợi ích</a>
-            <a href="#hanh-trinh">Hành trình học</a>
-            <a href="#cach-hoat-dong">Cách hoạt động</a>
-            <span className="text-[#66717c]">© 2026 FinTeen</span>
-          </div>
-        </div>
-      </footer>
+      <footer className="home-footer"><div className="home-shell home-footer__inner"><div><Brand /><p>Nền tảng học tài chính dành cho tuổi teen Việt Nam.</p></div><div className="home-footer__links"><a href="#danh-cho-ai">Dành cho ai</a><a href="#hanh-trinh">Hành trình</a><a href="#bao-cao">Báo cáo</a><span>© 2026 FinTeen</span></div></div></footer>
       <DemoModal open={demoOpen} onOpenChange={setDemoOpen} />
     </div>
   );

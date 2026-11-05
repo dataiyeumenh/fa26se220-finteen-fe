@@ -13,6 +13,8 @@ dist-ssr
 /output/
 /docs/*
 !/docs/STUDIO.md
+!/docs/parent-teacher/
+!/docs/parent-teacher/*.md
 *.local
 .env
 .env.*
