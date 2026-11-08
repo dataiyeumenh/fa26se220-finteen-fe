@@ -1,5 +1,4 @@
 import { OverlayScrollbars } from "overlayscrollbars";
-import "overlayscrollbars/overlayscrollbars.css";
 
 /** Enhance existing viewports without wrapping or moving React-owned children. */
 export function startScrollbars() {

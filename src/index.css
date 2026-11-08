@@ -1,5 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+/* Library defaults must not override positioned application overlays. */
+@import "overlayscrollbars/overlayscrollbars.css" layer(components);
 @import "./styles/scrollbars.css";
 
 @theme {
