@@ -59,9 +59,10 @@ else if (['login', 'register', 'internal-login'].includes(name)) {
   view = <Routes><Route element={name === 'internal-login' ? <InternalAuthLayout /> : <AuthLayout />}><Route path="*" element={<AuthForm registration={name === 'register'} internal={name === 'internal-login'} />} /></Route></Routes>;
 } else if (name === 'admin' || name === 'admin-menu') view = <AdminDashboardContent actor={actor} />;
 else if (internalRole) { route = '/internal'; view = <StudioWorkspace actor={actor} />; }
-else if (name === 'game' || name.startsWith('minigame-')) {
-  const data = resolveContentImages(name === 'game' ? chapter : [ch1, ch2, ch3, chapter, ch5, ch6, ch7, ch8][Number(name.split('-')[1]) - 1]);
-  const index = name === 'game' ? 0 : data.scenes.findIndex(scene => scene.type === 'minigame');
+else if (name === 'game' || name.startsWith('game-') || name.startsWith('minigame-')) {
+  const isGame = name === 'game' || name.startsWith('game-');
+  const data = resolveContentImages(isGame ? chapter : [ch1, ch2, ch3, chapter, ch5, ch6, ch7, ch8][Number(name.split('-')[1]) - 1]);
+  const index = name === 'game' ? 0 : data.scenes.findIndex(scene => scene.type === (isGame ? name.slice(5) : 'minigame'));
   saveNovelProgress(localStorage, data, initialNovelProgress(data, index));
   view = <VisualNovelPlayer data={data} />;
 }
@@ -121,6 +122,16 @@ setTimeout(() => {
       result.navigationCenterOffset = centerOffset;
       result.overlayScrollbars = Boolean(document.querySelector('.os-scrollbar.os-theme-finteen'));
       result.previewScrollWorks = previewScrollWorks;
+      if (name === 'game' || name.startsWith('game-')) {
+        const player = document.querySelector('.vn-player')?.getBoundingClientRect();
+        const backdrop = document.querySelector('.vn-stage-space')?.getBoundingClientRect();
+        const overlay = document.querySelector('.vn-dialogue-dock, .vn-choice-overlay');
+        result.gameLayout = Boolean(player && backdrop && overlay &&
+          getComputedStyle(overlay).position === 'absolute' &&
+          Math.abs(backdrop.top - player.top) <= 1 &&
+          Math.abs(backdrop.bottom - player.bottom) <= 1 &&
+          Math.abs(backdrop.width - player.width) <= 1);
+      }
       parent.postMessage({ responsiveResult: result }, location.origin);
       document.body.dataset.audit = JSON.stringify(result);
     }, 700);
