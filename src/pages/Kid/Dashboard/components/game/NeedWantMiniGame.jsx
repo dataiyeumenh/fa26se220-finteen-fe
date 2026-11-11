@@ -74,6 +74,7 @@ export function NeedWantMiniGame({
   className,
   immersive = false,
 }) {
+  const t = game.texts ?? {};
   const zones = game.zones ?? DEFAULT_ZONES;
   const [placements, setPlacements] = useState({});
   const [selected, setSelected] = useState(null);
@@ -136,8 +137,8 @@ export function NeedWantMiniGame({
           <span className="nw-eyebrow">
             <Sparkles size={15} /> THỬ THÁCH NHỎ
           </span>
-          <h2>Cần hay Muốn?</h2>
-          <p>Cùng chọn đồ vào đúng giỏ nhé!</p>
+          <h2>{t.heading ?? "Cần hay Muốn?"}</h2>
+          <p>{t.intro ?? "Cùng chọn đồ vào đúng giỏ nhé!"}</p>
         </div>
         <div className="nw-progress">
           <span>
@@ -161,7 +162,7 @@ export function NeedWantMiniGame({
       <div className="nw-tip">
         <Lightbulb size={20} />
         <span>
-          <b>Cần</b> là thiết yếu. <b>Muốn</b> là thứ bạn thích có thêm.
+          {t.tip ?? <><b>Cần</b> là thiết yếu. <b>Muốn</b> là thứ bạn thích có thêm.</>}
         </span>
       </div>
       <div className="nw-board">
