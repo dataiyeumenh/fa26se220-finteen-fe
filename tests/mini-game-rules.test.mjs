@@ -8,7 +8,7 @@ import {
 } from "../src/pages/Kid/Dashboard/components/game/miniGameRules.js";
 
 test("repair reserve choice uses the actual envelope allocation and allows exactly 200,000", () => {
-  const option = { id: "CH02_SC04_CHOICE_A" };
+  const option = { id: "renamed-option", requires: { minFlexibleReserve: 200000 } };
   for (const value of [0, 100000, 199999])
     assert.ok(flexibleReserveLock(option, { emergency_buffer: value }));
   for (const value of [200000, 400000])
@@ -18,12 +18,20 @@ test("repair reserve choice uses the actual envelope allocation and allows exact
     );
   assert.ok(flexibleReserveLock(option, {}));
   assert.equal(flexibleReserveLock({ id: "CH02_SC04_CHOICE_B" }, {}), null);
-  assert.ok(
+  assert.equal(
     flexibleReserveLock(
       { flag: "risk_handled_buffer" },
       { emergency_buffer: 100000 },
     ),
+    null,
   );
+  assert.equal(flexibleReserveLock({ id: "CH02_SC04_CHOICE_A" }, {}), null);
+  const custom = {
+    requires: { minFlexibleReserve: 350000, reserveZoneId: "rainy_day" },
+    lockedReason: "Cần {amount} trong quỹ mới.",
+  };
+  assert.equal(flexibleReserveLock(custom, { emergency_buffer: 999999 }), "Cần 350.000đ trong quỹ mới.");
+  assert.equal(flexibleReserveLock(custom, { rainy_day: 350000 }), null);
 });
 
 const settings = {

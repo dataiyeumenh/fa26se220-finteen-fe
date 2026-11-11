@@ -1,12 +1,12 @@
+import { fill } from "./shoppingMissionRules.js";
+
 export function flexibleReserveLock(option, allocations) {
-  const required =
-    option.requires?.minFlexibleReserve ??
-    (option.id === "CH02_SC04_CHOICE_A" || option.flag === "risk_handled_buffer"
-      ? 200000
-      : null);
-  if (required == null || Number(allocations.emergency_buffer || 0) >= required)
-    return null;
-  return `Quỹ dự trù linh hoạt chưa đủ ${required.toLocaleString("vi-VN")}đ. Hãy chọn cách xử lý khác.`;
+  const req = option.requires;
+  if (!req?.minFlexibleReserve) return null;
+  const zone = req.reserveZoneId ?? "emergency_buffer";
+  if (Number(allocations[zone] || 0) >= req.minFlexibleReserve) return null;
+  const amount = `${req.minFlexibleReserve.toLocaleString("vi-VN")}đ`;
+  return fill(option.lockedReason ?? "Quỹ dự trù linh hoạt chưa đủ {amount}. Hãy chọn cách xử lý khác.", { amount });
 }
 
 export function advanceFallingItems(
