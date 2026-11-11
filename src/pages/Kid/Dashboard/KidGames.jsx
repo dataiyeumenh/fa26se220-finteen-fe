@@ -4,12 +4,16 @@ import { Link, useLocation, useSearchParams } from "react-router-dom";
 import useKidDashboard from "./hooks/useKidDashboard";
 import { VisualNovelPlayer } from "./components/game/VisualNovelPlayer";
 import { getChapterContent, getCurrentRelease } from "@/api/content.api";
+import { useWorkspace } from "@/features/workspace/useWorkspace";
+import { novelProgressOwner } from "./components/game/visualNovelProgress.js";
 
 // MỘT nguồn nội dung (Hưng 24/10: "tất cả phải đồng nhất"): mọi chương tải từ bản phát hành hiện tại của BE
 // (GET /api/content/releases/{version}/chapters/{code}) — không còn file tĩnh trong FE, không còn đường StoryPlayer nội bộ.
 const chapterCode = (number) => `CH${String(number).padStart(2, "0")}`;
 
 export default function KidGames() {
+  const { actor } = useWorkspace();
+  const progressOwner = novelProgressOwner(actor);
   const { pathname } = useLocation();
   const playPath = pathname.startsWith("/dashboard/demo")
     ? "/dashboard/demo/play"
@@ -92,7 +96,12 @@ export default function KidGames() {
         validChapter &&
         gameData &&
         loadedChapter === chapterNumber && (
-          <VisualNovelPlayer key={gameData.id} data={gameData} />
+          <VisualNovelPlayer
+            key={JSON.stringify([progressOwner, gameData.id])}
+            data={gameData}
+            progressOwner={progressOwner}
+            learnerCode={actor?.role === "kid" ? actor.code : null}
+          />
         )}
 
       {!loading && !error && !validChapter && (

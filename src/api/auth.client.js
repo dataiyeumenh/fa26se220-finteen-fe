@@ -305,11 +305,13 @@ export function createAuthClient({
     if (!slotSession) return null;
     if (!force && state.learnerDashboard) return state.learnerDashboard;
     if (learnerDashboardRequest) return learnerDashboardRequest;
+    const token = slotSession.accessToken;
     publish({ learnerDashboardLoading: true, learnerDashboardError: "" });
-    learnerDashboardRequest = request("/api/learner/dashboard", {
+    const pending = request("/api/learner/dashboard", {
       slotAuthenticated: true,
     })
       .then((result) => {
+        if (slotSession?.accessToken !== token) return null;
         if (!result?.learner || !result?.progress)
           throw new ApiError("Máy chủ trả dữ liệu tổng quan chưa đầy đủ.");
         publish({
@@ -320,16 +322,18 @@ export function createAuthClient({
         return result;
       })
       .catch((error) => {
-        publish({
-          learnerDashboardLoading: false,
-          learnerDashboardError: error.message,
-        });
+        if (slotSession?.accessToken === token)
+          publish({
+            learnerDashboardLoading: false,
+            learnerDashboardError: error.message,
+          });
         throw error;
       })
       .finally(() => {
-        learnerDashboardRequest = null;
+        if (learnerDashboardRequest === pending) learnerDashboardRequest = null;
       });
-    return learnerDashboardRequest;
+    learnerDashboardRequest = pending;
+    return pending;
   }
   async function slotLogin(code, pin) {
     const normalizedCode = String(code || "")
@@ -353,10 +357,12 @@ export function createAuthClient({
       accessToken: result.accessToken,
       expiresAt: now() + result.expiresIn * 1000,
     };
+    learnerDashboardRequest = null;
     persistSlot();
     publish({
       actor: slotActor(),
       learnerDashboard: null,
+      learnerDashboardLoading: false,
       learnerDashboardError: "",
       loading: false,
       error: "",

@@ -69,14 +69,17 @@ const pendingKey = (code, batch) =>
  * Gửi lô. Bỏ qua (trả lý do) khi không phải trẻ đăng nhập bằng slot hoặc chương không đến từ API (không có releaseVersion —
  * CH04–08 còn đọc file tĩnh). Lần chơi: theo GET /api/play/state; chơi lại chương 1 sau khi xong hết → lần chơi mới.
  */
-export async function submitChapterBatch(batch) {
+export async function submitChapterBatch(batch, expectedCode) {
   const auth = await authClient();
   const code = slotCodeOf(auth);
   if (!code) return { skipped: "chưa đăng nhập bằng mã của trẻ" };
+  if (expectedCode !== undefined && code !== expectedCode)
+    return { skipped: "phiên học đã thay đổi" };
   if (!batch.releaseVersion || !batch.chapter)
     return { skipped: "chương không đến từ API (không có releaseVersion)" };
   try {
     const state = await auth.getPlayState();
+    if (slotCodeOf(auth) !== code) return { skipped: "phiên học đã thay đổi" };
     const allDone =
       state.totalChapters &&
       (state.chaptersDone || []).length >= state.totalChapters;
@@ -109,9 +112,11 @@ export async function submitChapterBatch(batch) {
 }
 
 /** Gửi lại các lô còn treo của trẻ đang đăng nhập (gọi khi mở game). */
-export async function flushPendingBatches() {
-  const code = slotCodeOf(await authClient());
+export async function flushPendingBatches(expectedCode) {
+  const auth = await authClient();
+  const code = slotCodeOf(auth);
   if (!code) return;
+  if (expectedCode !== undefined && code !== expectedCode) return;
   let keys;
   try {
     keys = Object.keys(localStorage).filter((k) =>
@@ -121,9 +126,10 @@ export async function flushPendingBatches() {
     return;
   }
   for (const key of keys) {
+    if (slotCodeOf(auth) !== code) return;
     try {
       const batch = JSON.parse(localStorage.getItem(key));
-      if (batch) await submitChapterBatch(batch);
+      if (batch) await submitChapterBatch(batch, code);
     } catch {
       /* để lần sau */
     }

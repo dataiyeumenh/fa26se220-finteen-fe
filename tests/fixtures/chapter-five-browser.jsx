@@ -52,10 +52,10 @@ const testData = {
   id: "CH05_BROWSER_TEST",
   metadata: { ...data.metadata, persistProgress: true },
 };
-localStorage.removeItem(progressKey(testData));
+localStorage.removeItem(progressKey(testData, "test-owner"));
 createRoot(document.getElementById("root")).render(
   <MemoryRouter>
-    <VisualNovelPlayer data={testData} />
+    <VisualNovelPlayer progressOwner="test-owner" data={testData} />
   </MemoryRouter>,
 );
 async function run() {
@@ -270,7 +270,7 @@ async function run() {
   const report = document.querySelector(".vn-report")?.textContent || "";
   if (!report.includes("Compound Timeline") || !report.includes("1.000.000"))
     throw new Error("Missing game label or wallet");
-  const stored = JSON.parse(localStorage.getItem(progressKey(testData)));
+  const stored = JSON.parse(localStorage.getItem(progressKey(testData, "test-owner")));
   if (
     document.querySelector(".vn-stats-grid,.vn-stats-details,.vn-stat-card") ||
     /SAVING:|HAPPINESS:|RISK:|GOAL:/.test(report)

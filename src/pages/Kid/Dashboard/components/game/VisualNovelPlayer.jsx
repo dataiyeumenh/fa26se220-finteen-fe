@@ -276,7 +276,7 @@ function EndingReport({ report }) {
   );
 }
 
-export function VisualNovelPlayer({ data: rawData }) {
+export function VisualNovelPlayer({ data: rawData, progressOwner = null, learnerCode = null }) {
   const data = useMemo(() => normalizeChapter(rawData), [rawData]);
   // Cấu hình mini-game FUTURE_PLAN của chương (nếu có): settlement / bảng kế hoạch cấp chương đọc số liệu từ đây.
   const futurePlan = useMemo(
@@ -286,7 +286,7 @@ export function VisualNovelPlayer({ data: rawData }) {
     [data],
   );
   const [savedProgress] = useState(() => {
-    return loadBrowserNovelProgress(data);
+    return loadBrowserNovelProgress(data, progressOwner);
   });
   const checkpointRef = useRef(savedProgress || initialNovelProgress(data));
   const learningSummary =
@@ -544,14 +544,14 @@ export function VisualNovelPlayer({ data: rawData }) {
 
   // Tới cảnh kết → gửi lô lên BE (POST /api/play/chapter); mở game → gửi bù lô còn treo. Không chặn trẻ chơi tiếp.
   useEffect(() => {
-    void flushPendingBatches();
-  }, []);
+    void flushPendingBatches(learnerCode);
+  }, [learnerCode]);
   useEffect(() => {
     if (scene?.type !== "ending" || isReviewing || batchSentRef.current) return;
     batchSentRef.current = true;
     const batch = buildChapterBatch(data, choiceLedger, miniGameResults);
     if (import.meta.env.DEV) window.__finteenLastBatch = batch;
-    void submitChapterBatch(batch).then((outcome) => {
+    void submitChapterBatch(batch, learnerCode).then((outcome) => {
       if (import.meta.env.DEV) window.__finteenLastSubmit = outcome;
       if (outcome.failed)
         console.warn(
@@ -559,7 +559,7 @@ export function VisualNovelPlayer({ data: rawData }) {
           outcome.failed,
         );
     });
-  }, [scene?.type, isReviewing, data, choiceLedger, miniGameResults]);
+  }, [scene?.type, isReviewing, data, choiceLedger, miniGameResults, learnerCode]);
 
   const miniGameKind =
     scene?.type === "minigame" ? miniGameKindOf(scene.game) : undefined;
@@ -911,9 +911,9 @@ export function VisualNovelPlayer({ data: rawData }) {
 
   const restart = () => {
     const initial = initialNovelProgress(data, resolveNavigableSceneIndex(0));
-    clearBrowserNovelProgress(data);
+    clearBrowserNovelProgress(data, progressOwner);
     checkpointRef.current = initial;
-    saveBrowserNovelProgress(data, initial);
+    saveBrowserNovelProgress(data, initial, progressOwner);
     committedDecisionsRef.current.clear();
     marketSettlementAppliedRef.current = false;
     setScenePath([resolveNavigableSceneIndex(0)]);
@@ -1125,9 +1125,10 @@ export function VisualNovelPlayer({ data: rawData }) {
       committedDecisions: [...committedDecisionsRef.current],
     };
     checkpointRef.current = checkpoint;
-    saveBrowserNovelProgress(data, checkpoint);
+    saveBrowserNovelProgress(data, checkpoint, progressOwner);
   }, [
     data,
+    progressOwner,
     pendingEffects,
     scenePath,
     miniGameDoneByScene,
@@ -1146,7 +1147,7 @@ export function VisualNovelPlayer({ data: rawData }) {
   ]);
 
   useEffect(() => {
-    const flush = () => saveBrowserNovelProgress(data, checkpointRef.current);
+    const flush = () => saveBrowserNovelProgress(data, checkpointRef.current, progressOwner);
     const onVisibilityChange = () => {
       if (document.visibilityState === "hidden") flush();
     };
@@ -1157,7 +1158,7 @@ export function VisualNovelPlayer({ data: rawData }) {
       window.removeEventListener("pagehide", flush);
       document.removeEventListener("visibilitychange", onVisibilityChange);
     };
-  }, [data]);
+  }, [data, progressOwner]);
 
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;

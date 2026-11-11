@@ -23,7 +23,7 @@ const params = new URLSearchParams(location.search),
   route = params.get("route") || "goal",
   snapshot = params.get("snapshot");
 const node = document.getElementById("ch8-browser-result"),
-  key = progressKey(data);
+  key = progressKey(data, "test-owner");
 const reloads =
   route === "resume" ? Number(sessionStorage.getItem("ch8:reloads") || 0) : 0;
 if (!reloads) localStorage.removeItem(key);
@@ -59,7 +59,7 @@ const concentrated = ["concentrated", "allbad"].includes(route),
   wrong = route === "wrong";
 createRoot(document.getElementById("root")).render(
   <MemoryRouter>
-    <VisualNovelPlayer data={data} />
+    <VisualNovelPlayer progressOwner="test-owner" data={data} />
   </MemoryRouter>,
 );
 async function run() {

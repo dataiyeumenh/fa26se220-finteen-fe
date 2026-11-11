@@ -28,7 +28,7 @@ const wait = () => new Promise((resolve) => setTimeout(resolve, 50));
 const assert = (condition, message) => {
   if (!condition) throw Error(message);
 };
-const saved = () => JSON.parse(localStorage.getItem(progressKey(data)));
+const saved = () => JSON.parse(localStorage.getItem(progressKey(data, "test-owner")));
 const sceneId = () => document.querySelector(".vn-player")?.dataset.sceneId;
 const find = (text) =>
   [...document.querySelectorAll("button")].find(
@@ -55,7 +55,7 @@ let mountId = 0;
 async function mount() {
   root.render(
     <MemoryRouter key={++mountId}>
-      <VisualNovelPlayer data={data} />
+      <VisualNovelPlayer progressOwner="test-owner" data={data} />
     </MemoryRouter>,
   );
   for (let tick = 0; tick < 60 && !sceneId(); tick++) await wait();
@@ -98,12 +98,12 @@ function checkDraft() {
 async function run() {
   const marker = JSON.parse(localStorage.getItem(markerKey) || "null");
   if (!marker) {
-    clearBrowserNovelProgress(data);
+    clearBrowserNovelProgress(data, "test-owner");
     saveNovelProgress(localStorage, other, {
       ...initialNovelProgress(other),
       scenePath: [0, 1, 2],
       money: 9870000,
-    });
+    }, "test-owner");
     await mount();
     for (let tick = 0; tick < 150 && saved().scenePath.length < 15; tick++) {
       const scene = data.scenes.find((item) => item.id === sceneId());
@@ -175,7 +175,7 @@ async function run() {
           },
         },
       },
-    });
+    }, "test-owner");
     await mount();
     checkDraft();
     reload({ phase: "reload-draft", sceneCheck: marker.sceneId });
@@ -240,7 +240,7 @@ async function run() {
       saved().scenePath.length === 1,
     "Old choices or history restored after restart",
   );
-  const otherProgress = JSON.parse(localStorage.getItem(progressKey(other)));
+  const otherProgress = JSON.parse(localStorage.getItem(progressKey(other, "test-owner")));
   assert(
     otherProgress.money === 9870000 && otherProgress.scenePath.at(-1) === 2,
     "Restart reset another chapter",

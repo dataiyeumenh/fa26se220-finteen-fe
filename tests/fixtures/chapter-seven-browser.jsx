@@ -33,7 +33,7 @@ window.addEventListener("error", (event) => errors.push(event.message));
 window.addEventListener("unhandledrejection", (event) =>
   errors.push(String(event.reason)),
 );
-if (!reloads) localStorage.removeItem(progressKey(data));
+if (!reloads) localStorage.removeItem(progressKey(data, "test-owner"));
 const wait = () => new Promise((resolve) => setTimeout(resolve, 35));
 const find = (text) =>
   [...document.querySelectorAll("button")].find(
@@ -51,7 +51,7 @@ const click = (text) => {
 const root = createRoot(document.getElementById("root"));
 root.render(
   <MemoryRouter>
-    <VisualNovelPlayer data={data} />
+    <VisualNovelPlayer progressOwner="test-owner" data={data} />
   </MemoryRouter>,
 );
 function reload(next) {
@@ -118,7 +118,7 @@ async function run() {
       return;
     }
     if (route === "resume" && reloads === 1 && scene.id === "CH07_PAY_2") {
-      const saved = JSON.parse(localStorage.getItem(progressKey(data)));
+      const saved = JSON.parse(localStorage.getItem(progressKey(data, "test-owner")));
       if (
         saved.money !== 1200000 ||
         !saved.moneyEventsApplied.CH07_MEDICAL_PAYMENT
@@ -283,7 +283,7 @@ async function run() {
               .click();
             await wait();
             if (route === "resume" && reloads === 2 && index === 2) {
-              const saved = JSON.parse(localStorage.getItem(progressKey(data)));
+              const saved = JSON.parse(localStorage.getItem(progressKey(data, "test-owner")));
               if (
                 Object.keys(saved.miniGameResults[scene.id].ui.messages)
                   .length !== 3
@@ -322,7 +322,7 @@ async function run() {
         }
       }
       if (round === 2) {
-        const saved = JSON.parse(localStorage.getItem(progressKey(data)));
+        const saved = JSON.parse(localStorage.getItem(progressKey(data, "test-owner")));
         const ui = saved.miniGameResults[scene.id]?.ui;
         if (!ui.submittedRounds[2]) {
           const sequence = wrong
@@ -336,7 +336,7 @@ async function run() {
               await wait();
             }
             if (route === "resume" && reloads === 3 && id === "contact") {
-              const saved = JSON.parse(localStorage.getItem(progressKey(data)));
+              const saved = JSON.parse(localStorage.getItem(progressKey(data, "test-owner")));
               if (saved.miniGameResults[scene.id].ui.response.length !== 2)
                 throw Error("Response draft not saved");
               reload(4);
@@ -399,7 +399,7 @@ async function run() {
     throw Error(
       `Ending ${ending}; expected ${expected}; last ${[...visited].at(-1)}`,
     );
-  const saved = JSON.parse(localStorage.getItem(progressKey(data)));
+  const saved = JSON.parse(localStorage.getItem(progressKey(data, "test-owner")));
   const expectedMoney =
     1500000 -
     (!loan && !pending ? 300000 : 0) -
