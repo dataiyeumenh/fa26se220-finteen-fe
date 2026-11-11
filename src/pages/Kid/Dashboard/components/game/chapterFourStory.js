@@ -117,7 +117,7 @@ export const chapterFourEndings = {
 
 export function chapterFourOutcome(choiceId) {
   const ending = chapterFourEndings[choiceId];
-  if (!ending) throw new Error("Unknown chapter four choice");
+  if (!ending) throw new Error("Lựa chọn trong chương bốn không hợp lệ.");
   return {
     chapterId: 4,
     sceneId: "4.3",

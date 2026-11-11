@@ -14,10 +14,10 @@ import "@/components/public/public.css";
 import "./internal-auth.css";
 
 const roles = [
-  [ShieldCheck, "Admin", "Quản trị hệ thống"],
-  [Layers3, "Game Manager", "Quản lý phát hành"],
-  [PenLine, "Game Editor", "Biên tập nội dung"],
-  [CheckCheck, "Game Reviewer", "Kiểm duyệt chất lượng"],
+  [ShieldCheck, "Quản trị viên", "Quản trị hệ thống"],
+  [Layers3, "Quản lý trò chơi", "Quản lý phát hành"],
+  [PenLine, "Biên tập viên trò chơi", "Biên tập nội dung"],
+  [CheckCheck, "Người duyệt trò chơi", "Kiểm duyệt chất lượng"],
 ];
 
 export default function InternalAuthLayout() {

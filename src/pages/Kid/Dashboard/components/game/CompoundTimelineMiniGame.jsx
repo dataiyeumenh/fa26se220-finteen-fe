@@ -117,7 +117,7 @@ export function CompoundTimelineMiniGame({
   return (
     <section
       className={`compound-game ${className}`}
-      aria-label={game.title || "Compound Timeline"}
+      aria-label={game.title || "Dòng thời gian lãi kép"}
     >
       <header>
         <span>{config.eyebrow}</span>

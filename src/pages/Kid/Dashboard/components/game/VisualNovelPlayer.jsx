@@ -171,7 +171,7 @@ function SceneBackground({ src, showMissingHint = true }) {
     <>
       <img
         src={src}
-        alt="scene background"
+        alt="Ảnh nền cảnh"
         onError={() => setBroken(true)}
         onLoad={(event) => {
           const img = event.currentTarget;

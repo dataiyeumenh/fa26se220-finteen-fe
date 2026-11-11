@@ -85,7 +85,7 @@ export default function TeacherQuizContent({ quizState }) {
           <div className="ws-toolbar">
             {currentGroup && !currentGroup.closedAt && (
               <button className="ws-btn" onClick={() => setModal({ type: "import" })}>
-                Import từ file
+                Nhập từ tệp
               </button>
             )}
             <label>
@@ -447,12 +447,12 @@ function QuizResults({ quiz, onClose }) {
 function QuizImport({ groupId, onClose, onSaved }) {
   const [questions, setQuestions] = useState([]);
   return (
-    <Modal title="Import Quiz t? file" onClose={onClose}>
-      <DataSourceNote>Import đang sử dụng mock API. Đề chỉ lưu trên trình duyệt theo tài khoản hiện tại; chưa thể phát hành cho học sinh.</DataSourceNote>
+    <Modal title="Nhập bài kiểm tra từ tệp" onClose={onClose}>
+      <DataSourceNote>Đề nhập từ tệp chỉ lưu trên trình duyệt theo tài khoản hiện tại; chưa thể phát hành cho học sinh.</DataSourceNote>
       <QuestionFileImport questions={questions} onChange={setQuestions} />
-      {questions.length > 0 && <ActionForm submit="Lưu đề mock" onSubmit={async (form) => {
+      {questions.length > 0 && <ActionForm submit="Lưu đề mô phỏng" onSubmit={async (form) => {
         await teacherQuizApi.importQuiz({ groupId, title: form.get("title"), dueAt: null, questions });
-        await onSaved("Đã import đề bằng mock API; chỉ lưu trên trình duyệt này.");
+        await onSaved("Đã nhập đề mô phỏng; chỉ lưu trên trình duyệt này.");
       }}>
         <label>Tên đề<input name="title" required maxLength={200} /></label>
       </ActionForm>}

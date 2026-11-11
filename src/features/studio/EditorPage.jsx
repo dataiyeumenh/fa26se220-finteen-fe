@@ -250,7 +250,7 @@ export default function EditorPage({ notify, code, onNavigationStateChange }) {
     if (json === null) {
       for (const [key, raw] of Object.entries(conditionDrafts)) {
         if (!scenes.some(scene => key.startsWith(`${scene.id}/`))) continue
-        try { parseCondition(raw) } catch (error) { return notify(`Điều kiện ${key}: JSON chưa hợp lệ. ${error.message}`) }
+        try { parseCondition(raw) } catch (error) { return notify(`Điều kiện ${key}: ${formatError(error)}`) }
       }
     }
     let body = content
@@ -258,7 +258,7 @@ export default function EditorPage({ notify, code, onNavigationStateChange }) {
       try {
         body = JSON.parse(json)
       } catch (e) {
-        return notify('JSON sai: ' + e.message)
+        return notify(formatError(e))
       }
     }
     if (!body || typeof body !== 'object' || Array.isArray(body) || !Array.isArray(body.scenes) || !body.scenes.length) return notify('Nội dung phải là đối tượng JSON có ít nhất một scene.')
@@ -339,7 +339,7 @@ export default function EditorPage({ notify, code, onNavigationStateChange }) {
       const parsed = JSON.parse(json)
       if (!parsed || !Array.isArray(parsed.scenes)) throw new Error('Cần mảng scenes trong nội dung chương.')
       setContent(prepareDraftV2(parsed)); setIdx(0); setJson(null); setConditionDrafts({}); setHistory({ past: [], future: [] })
-    } catch (error) { notify('JSON: ' + error.message) }
+    } catch (error) { notify(formatError(error)) }
   }
   if (loadError) return <Panel title={code}><p role="alert">{loadError}</p><Btn onClick={() => { setLoadError(''); setAttempt(value => value + 1) }}>Thử lại</Btn></Panel>
   if (!content) return <p role="status">Đang tải {code}…</p>

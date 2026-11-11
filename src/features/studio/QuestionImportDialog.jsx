@@ -13,7 +13,7 @@ export default function QuestionImportDialog({ onClose }) {
   const [error, setError] = useState("");
   const running = useRef(false);
   const done = questions.length > 0 && saved === questions.length;
-  return <StudioDialog title="Import câu hỏi từ file" onClose={onClose} busy={busy} wide>
+  return <StudioDialog title="Nhập câu hỏi từ tệp" onClose={onClose} busy={busy} wide>
     <form className="sp-dialog-body" onSubmit={async (event) => {
       event.preventDefault();
       if (running.current || !questions.length || done || !pool.trim()) return;

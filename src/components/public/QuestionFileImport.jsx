@@ -1,5 +1,6 @@
 ﻿import { useState } from "react";
 import { parseQuizFile, QUIZ_CSV_TEMPLATE } from "../../pages/Teacher/Quiz/quizImport.js";
+import { vietnameseError } from "../../lib/vietnameseMessages.js";
 
 // Shared by teacher Quiz and the internal question library.
 export default function QuestionFileImport({ questions, onChange, disabled = false }) {
@@ -24,7 +25,7 @@ export default function QuestionFileImport({ questions, onChange, disabled = fal
         try {
           if (file.size > 1024 * 1024) throw new Error("File vượt quá 1 MB.");
           onChange(parseQuizFile(await file.text(), file.name));
-        } catch (value) { setError(value.message); }
+        } catch (value) { setError(vietnameseError(value, "Không đọc được tệp câu hỏi. Vui lòng chọn lại tệp.")); }
         finally { setReading(false); }
       }} />
     </label>

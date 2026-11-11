@@ -1,48 +1,26 @@
-# Mục lục nguồn sự thật FinTeen cho AI
+﻿# Tài liệu kỹ thuật FinTeen
 
-File này giúp AI chọn đúng tài liệu trước khi viết code hoặc ghép ảnh. Ngày tài liệu hóa: 04/10/2026.
+Cập nhật ngày **09/11/2026**. Thư mục này giữ tài liệu kỹ thuật phục vụ source hiện tại và sơ đồ kiến trúc.
 
-## Chọn tài liệu theo việc cần làm
+| Nội dung | Tài liệu |
+| --- | --- |
+| Kiến trúc tổng quan, thành phần, xác thực, game và Studio | [diagrams/README.md](diagrams/README.md) |
+| Phạm vi tích hợp API và phần còn dùng mock | [api-coverage-2026-11-02.md](api-coverage-2026-11-02.md) |
+| Cấu hình và cơ chế xác thực ACCOUNT/SLOT | [auth-integration.md](auth-integration.md) |
+| Đăng nhập và phân quyền cổng nội bộ | [internal-login.md](internal-login.md) |
+| Content Studio, quyền và luồng duyệt/phát hành | [STUDIO.md](STUDIO.md) |
+| Cấu trúc page, hook và API Parent/Teacher | [parent-teacher/README.md](parent-teacher/README.md) |
+| Quy tắc tuổi và tạo hình asset đang được README ảnh tham chiếu | [finteen-v2-character-ages.md](finteen-v2-character-ages.md) |
+| Contract sử dụng ảnh và layer của từng chương | [README asset](../public/images/finteen-v2/README.md) |
 
-| Việc | Đọc trước | Vai trò |
-| --- | --- | --- |
-| Ghép bộ ảnh An/Minh thành game | `../public/images/finteen-v2/README.md` rồi README từng chương | Nguồn sự thật về file ảnh, nhân vật, layer và cảnh. |
-| Lấy cốt truyện, con số, lựa chọn, ending v2 | `finteen-game-context-sources/FinTeen_Game_Design_Document_GDD_v3_Expanded.md` và framework tài chính | Nguồn logic/nội dung; đối chiếu README chương trước khi chọn asset. |
-| Xác nhận tuổi/tạo hình | `finteen-v2-character-ages.md` và manifest ảnh | Tuổi là thuộc tính của tình huống độc lập, không phải timeline trưởng thành. |
-| Sửa gameplay Tí đang chạy | `../cot_truyen_text.txt`, runtime trong `public/images/c1`, `c2`, adapter trong `src` | Tuyến cũ, tách biệt với art v2. |
-| Sửa demo chương 4 lịch học/ca làm | `chapter-four-story-mini-game.md` | Đây là đoạn Minh chọn lịch học–làm, không phải chương 4 Mua thông minh của v2. |
-| Sửa tài khoản/Content Studio | `finteen-project-context.md`, `frontend-account-workspace.md`, `internal-workspace.md` | Mô tả frontend workspace và quyền demo. |
-| Sửa bản đồ hành trình | `finteen-journey-map-art-brief.md` | Prompt và ý nghĩa bốn vùng bản đồ. |
+## Nguồn xác nhận hành vi
 
-## Thứ tự ưu tiên khi nguồn mâu thuẫn
+Ưu tiên source đang được import. Route nằm trong `src/App.jsx`; phiên và HTTP client nằm trong `src/api/auth.client.js`; nội dung game được tải qua `src/api/content.api.js`, không lấy từ các bản đặc tả chương cũ. README asset mô tả cách dùng hình, không xác nhận rằng mọi asset đều đã được runtime sử dụng.
 
-1. File/runtime đang được code import là sự thật về **hành vi hiện chạy**.
-2. README trong chính thư mục asset là sự thật về **cách dùng ảnh**.
-3. GDD v2 là sự thật về **logic câu chuyện dự định triển khai**.
-4. Tài liệu lịch sử, prompt và báo cáo audit chỉ giải thích nguồn gốc; không tự động ghi đè ba lớp trên.
+Sơ đồ và tài liệu tích hợp mô tả frontend. Repository không chứa mã backend hoặc schema database; các ghi chú này không thay thế kiểm thử API thực tế.
 
-Nếu cần thay hành vi hiện chạy theo GDD, đó là migration có chủ đích: ghi rõ tuyến bị thay, cập nhật adapter/test và không âm thầm đổi tên Tí thành An.
+## Phạm vi sau khi dọn
 
-## Những nhầm lẫn cần tránh
+Đã bỏ các bộ báo cáo DOCX, screenshot, ZIP xuất, script tạo báo cáo, prompt tạo ảnh, GDD và hướng dẫn demo/triển khai cũ. Không giữ bản sao lịch sử trong `docs`. Danh sách file đã xóa và checksum nằm tại `output/docs-cleanup-2026-11-09/`.
 
-- `cot_truyen_text.txt` là tuyến Tí 8 chương; `public/images/finteen-v2` là tuyến An/Minh theo GDD v2.
-- Chương 4 trong `ChapterFourMiniGame.jsx` nói về ca làm và lịch ôn; `finteen-v2/chapter-04` nói về mua điện thoại thông minh.
-- Tranh `scene/` đã có nhân vật, không phải background để chồng thêm sprite.
-- Ảnh trong `output/` là báo cáo/preview/audit, không phải asset runtime.
-- Các con số trong tranh chỉ minh họa. Dữ liệu tiền, ngày, phần trăm và đáp án phải đến từ state/UI.
-
-## Trạng thái đã xác nhận
-
-- Gameplay main hiện có chương 1–2 tuyến cũ và đoạn demo chương 4.
-- Bộ `finteen-v2` có asset và README chi tiết cho chương 1–8. Ngày 14/10/2026 bổ sung 59 PNG chương 7–8 (32 ảnh mới, 27 ảnh tái sử dụng), đủ nền, scene, sprite, mini-game và props; xem `chapter-07-08-manifest.json`. Đây là trạng thái art, không xác nhận gameplay đã tích hợp.
-- Content Studio, tài khoản và quyền hiện là mô phỏng frontend/local state.
-- Không xem ghi chú “đã tạo ảnh” là bằng chứng ảnh đã được nối vào game.
-
-## Checklist cho AI trước khi commit
-
-- Nêu rõ đang sửa tuyến nào.
-- Không dùng đường dẫn từ `output/` trong runtime.
-- Kiểm tra mọi đường dẫn asset tồn tại và đúng chữ hoa/thường.
-- Đối chiếu beat với bảng Công thức lắp cảnh của README chương.
-- Test nhánh, phép tính, checkpoint và build.
-- Cập nhật README chương nếu thêm/xóa/đổi vai asset.
+`/docs/` hiện nằm trong `.gitignore`; file mới có thể bị bỏ qua, còn file đã được Git theo dõi vẫn xuất hiện trong `git status` khi thay đổi.

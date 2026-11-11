@@ -1176,7 +1176,7 @@ export default function AdminDashboardContent({ actor }) {
         </div>
         <nav aria-label="Điều hướng quản trị">
           <Link className="admin-studio-link" to="/internal/chapters">
-            <BookOpen size={19} /> Content Studio
+            <BookOpen size={19} /> Quản lý nội dung
           </Link>
           {TABS.map(([id, label, Icon]) => (
             <button

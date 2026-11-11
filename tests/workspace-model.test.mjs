@@ -171,18 +171,13 @@ for (const first of ["parent", "teacher"])
     assert.ok(resolveSession(db, childSession));
     assert.equal(resolveSession(db, studentSession), null);
   });
-test("new adults are Guest; current main demo allows chapters 1 to 8 without a plan", () => {
+test("new adults are Guest; only chapter 1 is available without a plan", () => {
   const { db, session } = setup();
   const guest = resolveSession(db, session);
   assert.equal(guest.role, "guest");
   assert.equal(canAccessChapter(guest, 1), true);
-  assert.equal(canAccessChapter(guest, 2), true);
-  assert.equal(canAccessChapter(guest, 3), true);
-  assert.equal(canAccessChapter(guest, 4), true);
-  assert.equal(canAccessChapter(guest, 5), true);
-  assert.equal(canAccessChapter(guest, 6), true);
-  assert.equal(canAccessChapter(guest, 7), true);
-  assert.equal(canAccessChapter(guest, 8), true);
+  for (let chapter = 2; chapter <= 8; chapter++)
+    assert.equal(canAccessChapter(guest, chapter), false);
   for (const chapter of [0, 9, 1.5, NaN])
     assert.equal(canAccessChapter(guest, chapter), false);
   assert.equal(canAccessChapter(null, 1), false);

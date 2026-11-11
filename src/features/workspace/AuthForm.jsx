@@ -245,7 +245,7 @@ export default function AuthForm({ registration = false, internal = false }) {
       </h1>
       <p className="ft-auth-intro">
         {internal
-          ? "Dành cho Admin, Game Editor, Game Reviewer và Game Manager. Sử dụng tài khoản đã được quản trị viên cấp quyền."
+          ? "Dành cho quản trị viên, biên tập viên, người duyệt và quản lý trò chơi. Sử dụng tài khoản đã được quản trị viên cấp quyền."
           : registration
             ? "Dành cho phụ huynh và giáo viên. Tạo tài khoản để cùng các bạn nhỏ khám phá FinTeen."
             : kid

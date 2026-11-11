@@ -1,4 +1,6 @@
 // ACCOUNT endpoints and ApiResponse handling. No SLOT tokens or demo data.
+import { vietnameseApiMessage } from "../lib/vietnameseMessages.js";
+
 export class ApiError extends Error {
   constructor(message, code, status) {
     super(message);
@@ -188,7 +190,7 @@ export function createAuthClient({
         [3003, 3007, 3009].includes(data?.code) &&
         slotSession?.accessToken === token
       )
-        logoutSlot(data?.message);
+        logoutSlot(vietnameseApiMessage(data?.message, data?.code, response.status));
       else if (
         authenticated &&
         data?.code === 3003 &&
@@ -196,7 +198,7 @@ export function createAuthClient({
       )
         expired();
       throw new ApiError(
-        data?.message || "Yêu cầu không thành công.",
+        vietnameseApiMessage(data?.message, data?.code, response.status),
         data?.code,
         response.status,
       );
@@ -309,7 +311,7 @@ export function createAuthClient({
     })
       .then((result) => {
         if (!result?.learner || !result?.progress)
-          throw new ApiError("Máy chủ trả dữ liệu dashboard chưa đầy đủ.");
+          throw new ApiError("Máy chủ trả dữ liệu tổng quan chưa đầy đủ.");
         publish({
           learnerDashboard: result,
           learnerDashboardLoading: false,

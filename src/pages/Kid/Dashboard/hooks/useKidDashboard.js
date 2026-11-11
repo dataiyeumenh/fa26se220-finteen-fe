@@ -40,8 +40,8 @@ export default function useKidDashboard() {
     error: learnerDashboardError,
     refresh: () => refresh(true),
     streak: progress?.streak || 0,
-    lessonsThisWeek: progress?.completedChapters || 0,
-    lessonsTarget: progress?.totalChapters || 0,
+    completedChapters: progress?.completedChapters || 0,
+    totalChapters: progress?.totalChapters || 0,
     continueLessons: progress?.continueChapter
       ? [
           {

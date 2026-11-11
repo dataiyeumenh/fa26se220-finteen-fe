@@ -5,8 +5,8 @@ import { useNavigate } from "react-router-dom";
 export default function WelcomeBanner({
   user,
   streak,
-  lessonsThisWeek,
-  lessonsTarget,
+  completedChapters,
+  totalChapters,
   accent = "#fbbf24",
 }) {
   const navigate = useNavigate();
@@ -36,13 +36,13 @@ export default function WelcomeBanner({
           Chào {user?.name || "bạn"}!
         </h1>
         <p className="text-white/90 text-sm md:text-base mb-5">
-          Bạn đã học{" "}
+          Bạn đã hoàn thành{" "}
           <span className="font-extrabold text-white">
-            {lessonsThisWeek} bài
+            {completedChapters}/{totalChapters} chương
           </span>{" "}
-          tuần này. Còn{" "}
+          trong hành trình. Còn{" "}
           <span className="font-extrabold text-white">
-            {lessonsTarget - lessonsThisWeek} bài
+            {Math.max(0, totalChapters - completedChapters)} chương
           </span>{" "}
           nữa là hoàn thành mục tiêu
         </p>
