@@ -7,6 +7,7 @@ import {
   Heading,
   Modal,
 } from "../../../../features/workspace/ui";
+import { ContentSkeleton } from "@/components/feedback/LoadingState";
 
 export default function TeacherGroupsContent({ learnerState, groupsOnly }) {
   const {
@@ -26,7 +27,7 @@ export default function TeacherGroupsContent({ learnerState, groupsOnly }) {
       setModal(null);
       return result;
     });
-  if (loading) return <Empty>Đang tải lớp học…</Empty>;
+  if (loading) return <ContentSkeleton variant="cards" cards={3} label="Đang tải lớp học…" />;
   if (!group)
     return (
       <>
