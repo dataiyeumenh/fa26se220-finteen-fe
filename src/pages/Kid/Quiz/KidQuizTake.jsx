@@ -1,7 +1,8 @@
 import { CheckCircle2 } from "lucide-react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { Empty, Modal } from "@/features/workspace/ui";
+import { Modal } from "@/features/workspace/ui";
 import { useKidQuiz } from "./hooks/useKidQuizzes";
+import { ContentSkeleton } from "@/components/feedback/LoadingState";
 
 export default function KidQuizTake() {
   const { id } = useParams();
@@ -17,7 +18,7 @@ export default function KidQuizTake() {
         </Link>
       </>
     );
-  if (!quiz) return <Empty>Đang tải đề Quiz…</Empty>;
+  if (!quiz) return <ContentSkeleton variant="cards" cards={2} label="Đang tải đề Quiz…" />;
   return (
     <div className="ws-quiz-page">
       <header className="ws-quiz-page-header">
