@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { auth } from "../../api/auth.api";
+import { authServiceErrorMessage } from "../../lib/authMessages.js";
 
 const errors = {
   3012: "Mã không đúng, đã dùng hoặc đã bị vô hiệu sau 5 lần nhập sai. Kiểm tra mã hoặc xin mã mới.",
   3013: "Mã xác minh đã hết hạn. Hãy gửi lại mã.",
-  3014: "Email đã được xác minh. Bạn có thể quay lại đăng nhập.",
   3017: "Mã đặt lại mật khẩu không đúng, đã dùng hoặc đã bị vô hiệu sau 5 lần nhập sai. Kiểm tra mã hoặc xin mã mới.",
   3018: "Mã đặt lại mật khẩu đã hết hạn. Hãy gửi lại mã.",
 };
@@ -53,7 +53,8 @@ export default function OtpForm({
       else await auth.verify(email, otp);
       onSuccess(reset);
     } catch (err) {
-      setError(errors[err.code] || err.message);
+      setError(authServiceErrorMessage(err) || errors[err.code] ||
+        "Không thể xác minh thông tin. Vui lòng kiểm tra mã và thử lại.");
     } finally {
       lock.current = false;
       setBusy(false);
@@ -68,18 +69,22 @@ export default function OtpForm({
     try {
       if (reset) await auth.forgot(email);
       else await auth.resend(email);
-      onCooldown(60);
-      setOtp("");
-      setMessage(
-        "Nếu tài khoản đủ điều kiện, mã mới sẽ được gửi qua email. Hãy dùng mã mới nhất và kiểm tra cả Spam.",
-      );
-      input.current?.focus();
     } catch (err) {
-      setError(err.message);
+      const serviceError = authServiceErrorMessage(err);
+      if (serviceError) {
+        setError(serviceError);
+        return;
+      }
     } finally {
       lock.current = false;
       setBusy(false);
     }
+    onCooldown(60);
+    setOtp("");
+    setMessage(
+      "Nếu tài khoản đủ điều kiện, mã mới sẽ được gửi qua email. Hãy dùng mã mới nhất và kiểm tra cả Spam.",
+    );
+    input.current?.focus();
   }
   return (
     <section className="ft-auth-form">

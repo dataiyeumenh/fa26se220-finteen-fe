@@ -33,6 +33,16 @@ Token ACCOUNT/SLOT cùng `expiresAt` được lưu trong sessionStorage, theo AP
 
 Google login tải động Firebase SDK, mở popup, lấy ID token rồi gửi đến `/api/auth/login/google` để nhận ACCOUNT. Firebase chỉ giữ phiên trong bộ nhớ và đăng xuất sau khi lấy token; ứng dụng không dùng Firestore để lưu dữ liệu nghiệp vụ.
 
+## Thông báo xác thực không tiết lộ tài khoản
+
+- Đăng nhập sai mật khẩu, tài khoản không tồn tại, bị khóa hoặc dùng sai cổng đều hiển thị: **Không thể đăng nhập. Vui lòng kiểm tra thông tin đăng nhập và thử lại.** Áp dụng cho người dùng, nội bộ, Google và mã/PIN học sinh.
+- FE không hiển thị nguyên văn lỗi máy chủ ở bước đăng nhập và không đưa liên kết sang cổng khác trong thông báo lỗi. Lỗi đăng nhập cũng không tự chuyển sang bước xác minh email dựa trên mã lỗi; xác minh đăng ký vẫn đi qua luồng OTP riêng.
+- Quên mật khẩu và gửi lại mã có cùng thông báo trung lập cho tài khoản đủ hoặc không đủ điều kiện. Lỗi mạng, giới hạn yêu cầu và sự cố dịch vụ dùng thông báo cố định, không kèm dữ liệu tài khoản hay URL.
+- **Yêu cầu BE cần phối hợp:** từ chối sai cổng trước khi cấp token; trả cùng HTTP status, mã lỗi công khai và cấu trúc thông báo cho các lỗi thông tin đăng nhập; xử lý thời gian phản hồi nhất quán để hạn chế dò tài khoản. Chi tiết nguyên nhân chỉ ghi trong log được bảo vệ, không ghi mật khẩu/OTP/token.
+- Bản sửa FE chỉ kiểm soát nội dung ứng dụng hiển thị. FE không thay đổi được response body/status hoặc thời gian xử lý của BE; không được xem việc ẩn URL là thay thế cho kiểm tra quyền tại API.
+
+Tham khảo: [OWASP Authentication Cheat Sheet — Authentication Responses](https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html#authentication-responses).
+
 ## Kiểm tra
 
 ```powershell

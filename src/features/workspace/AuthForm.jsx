@@ -16,6 +16,7 @@ import { useWorkspace } from "./useWorkspace";
 import OtpForm from "../auth/OtpForm";
 import { accountDestination, hasInternalAccess } from "../internal/access";
 import { completeLogin, wrongLoginMessage } from "../auth/loginPolicy";
+import { authServiceErrorMessage, loginErrorMessage } from "../../lib/authMessages.js";
 import "@/components/public/public.css";
 
 function PasswordField({ id, label, hint, ...inputProps }) {
@@ -93,16 +94,11 @@ export default function AuthForm({ registration = false, internal = false }) {
   if (actor && !busy && !otpMode)
     return (
       <section className="ft-auth-form">
-        <h1>Không đúng trang đăng nhập</h1>
-        <p role="alert">{wrongLoginMessage(internal)}</p>
+        <h1>Không thể đăng nhập</h1>
+        <p role="alert">{wrongLoginMessage()}</p>
         <button className="ft-button ft-primary" onClick={() => auth.logout()}>
           Đăng nhập tài khoản khác
         </button>
-        <p>
-          <Link to={internal ? "/login" : "/internal/login"}>
-            Đến trang đăng nhập phù hợp
-          </Link>
-        </p>
       </section>
     );
   if (otpMode)
@@ -129,7 +125,7 @@ export default function AuthForm({ registration = false, internal = false }) {
             try {
               navigate(completeLogin(auth, internal), { replace: true });
             } catch (err) {
-              setError(err.message);
+              setError(loginErrorMessage(err));
             }
           }
         }}
@@ -165,23 +161,7 @@ export default function AuthForm({ registration = false, internal = false }) {
       }
       navigate(completeLogin(auth, internal), { replace: true });
     } catch (err) {
-      const kidErrors = {
-        3002: "Sai PIN, bạn thử lại nhé.",
-        3007: "Không tìm thấy mã này. Hãy kiểm tra lại mã được cấp.",
-        3008: "PIN đã bị khóa do nhập sai nhiều lần. Vui lòng đợi 15 phút rồi thử lại.",
-        3009: "Nhóm hoặc lớp học đã kết thúc. Mã này không còn sử dụng được.",
-      };
-      setError(
-        kid && kidErrors[err.code]
-          ? kidErrors[err.code]
-          : err.code === 3016
-            ? "Tài khoản tạm khóa do nhập sai nhiều lần. Vui lòng thử lại sau 15 phút."
-            : err.message,
-      );
-      if (err.code === 3011) {
-        setEmail(String(form.get("identifier")).trim());
-        setOtpMode("verify");
-      }
+      setError(registration ? err.message : loginErrorMessage(err));
     } finally {
       setBusy(false);
     }
@@ -197,14 +177,19 @@ export default function AuthForm({ registration = false, internal = false }) {
     setMessage("");
     try {
       await auth[action](email);
-      setCooldown(60);
-      setEmail(email.trim());
-      setOtpMode("reset");
     } catch (err) {
-      setError(err.message);
+      const serviceError = authServiceErrorMessage(err);
+      if (serviceError) {
+        setError(serviceError);
+        return;
+      }
     } finally {
       setBusy(false);
     }
+    // The recovery screen is identical whether or not the account is eligible.
+    setCooldown(60);
+    setEmail(email.trim());
+    setOtpMode("reset");
   };
   const googleLogin = async () => {
     setBusy(true);
@@ -215,11 +200,7 @@ export default function AuthForm({ registration = false, internal = false }) {
       await auth.googleLogin(token);
       navigate(completeLogin(auth, internal), { replace: true });
     } catch (err) {
-      setError(
-        err.code === 3020
-          ? "Email này đã đăng ký bằng mật khẩu. Hãy đăng nhập bằng mật khẩu, rồi vào Tài khoản để liên kết Google."
-          : err.message,
-      );
+      setError(loginErrorMessage(err));
     } finally {
       setBusy(false);
     }

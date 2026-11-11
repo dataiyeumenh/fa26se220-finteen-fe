@@ -1,5 +1,13 @@
 // ACCOUNT endpoints and ApiResponse handling. No SLOT tokens or demo data.
 import { vietnameseApiMessage } from "../lib/vietnameseMessages.js";
+import { loginErrorMessage } from "../lib/authMessages.js";
+
+const LOGIN_PATHS = new Set([
+  "/api/auth/login",
+  "/api/auth/internal/login",
+  "/api/auth/login/google",
+  "/api/slots/login",
+]);
 
 export class ApiError extends Error {
   constructor(message, code, status) {
@@ -198,7 +206,9 @@ export function createAuthClient({
       )
         expired();
       throw new ApiError(
-        vietnameseApiMessage(data?.message, data?.code, response.status),
+        LOGIN_PATHS.has(path)
+          ? loginErrorMessage({ status: response.status })
+          : vietnameseApiMessage(data?.message, data?.code, response.status),
         data?.code,
         response.status,
       );

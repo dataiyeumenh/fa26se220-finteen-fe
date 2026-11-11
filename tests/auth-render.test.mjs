@@ -4,6 +4,38 @@ import { createServer } from "vite";
 import React from "react";
 import { renderToString } from "react-dom/server";
 import { MemoryRouter } from "react-router-dom";
+import { LOGIN_FAILURE_MESSAGE } from "../src/lib/authMessages.js";
+
+test("wrong-portal screens never link to or identify the other login portal in either direction", async () => {
+  globalThis.localStorage = { getItem() {}, setItem() {} };
+  globalThis.sessionStorage = { getItem() {}, setItem() {} };
+  const server = await createServer({ server: { middlewareMode: true, hmr: false }, appType: "custom" });
+  const originalFetch = globalThis.fetch;
+  let roles = ["GAME_EDITOR"];
+  try {
+    const { auth } = await server.ssrLoadModule("/src/api/auth.api.js");
+    const { default: AuthForm } = await server.ssrLoadModule("/src/features/workspace/AuthForm.jsx");
+    globalThis.fetch = async (url) => ({
+      ok: true, status: 200,
+      json: async () => ({ code: 0, result: url.endsWith("/me")
+        ? { id: "account", displayName: "Test", plans: [], roles }
+        : { accessToken: "token", expiresIn: 60 } }),
+    });
+    for (const internal of [false, true]) {
+      roles = internal ? [] : ["GAME_EDITOR"];
+      await auth.login("test@example.com", "password");
+      const html = renderToString(React.createElement(MemoryRouter, {
+        initialEntries: [internal ? "/internal/login" : "/login"],
+      }, React.createElement(AuthForm, { internal })));
+      assert.ok(html.includes(LOGIN_FAILURE_MESSAGE));
+      assert.doesNotMatch(html, /\/internal\/login|href="\/login"|tài khoản nội bộ|không tồn tại/i);
+      auth.logout();
+    }
+  } finally {
+    globalThis.fetch = originalFetch;
+    await server.close();
+  }
+});
 
 test("real accounts render settings and server plans without demo activation or local profile writes", async () => {
   const memory = () => {

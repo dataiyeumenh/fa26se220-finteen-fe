@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { vietnameseApiMessage, vietnameseError } from "../src/lib/vietnameseMessages.js";
 import { createAuthClient } from "../src/api/auth.client.js";
 import { parseQuizFile } from "../src/pages/Teacher/Quiz/quizImport.js";
+import { LOGIN_FAILURE_MESSAGE } from "../src/lib/authMessages.js";
 
 test("English API errors use domain codes before HTTP fallbacks; Vietnamese details survive", () => {
   assert.match(vietnameseApiMessage("Wrong password", 3002, 401), /Thông tin đăng nhập không đúng/);
@@ -31,7 +32,7 @@ test("API exceptions and expired learner notifications receive Vietnamese while 
     },
   });
   await assert.rejects(client.login("a@example.com", "bad"), (error) =>
-    error.code === 3002 && error.status === 401 && /Thông tin đăng nhập không đúng/.test(error.message));
+    error.code === 3002 && error.status === 401 && error.message === LOGIN_FAILURE_MESSAGE);
   await client.slotLogin("ABC", "1234");
   await assert.rejects(client.slotRequest("/api/learner/dashboard"), (error) =>
     error.code === 3009 && /Nhóm hoặc lớp học đã kết thúc/.test(error.message));
