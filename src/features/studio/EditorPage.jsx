@@ -15,6 +15,7 @@ import { prepareDraftV2, parseCondition } from './draftV2'
 import { AssetPicker } from './AssetsPage'
 import { Btn, Panel } from './ui'
 import { patchSceneVoice } from './sceneVoice.js'
+import { AudioLines, Sparkles } from 'lucide-react'
 
 function template(code) {
   const n = Number(code.slice(2))
@@ -46,19 +47,15 @@ function template(code) {
   }
 }
 
-/** Gợi ý cách đọc của AI: mỗi câu Nhận (ghi spokenText vào nháp, cần Lưu nháp) hoặc Bỏ; ghi rõ AI nào sinh ra. */
+/** Gợi ý cách đọc của AI: mỗi câu Nhận (ghi spokenText vào nháp, cần Lưu nháp) hoặc Bỏ. */
 function VoiceHints({ hints, scenes, write, onAccept, onDrop, onOpen, onClose }) {
   const number = id => scenes.findIndex(s => s.id === id) + 1
-  return <Panel title="Gợi ý cách đọc cho giọng" actions={<>
+  return <Panel className="studio-voice-panel studio-voice-panel--hints" title={<span className="studio-voice-title"><span className="studio-voice-icon"><Sparkles size={21} aria-hidden="true" /></span>Gợi ý cách đọc cho giọng</span>} actions={<>
     {write && hints.suggestions.length > 1 && <Btn tone="primary" onClick={() => onAccept(null, true)}>Nhận tất cả</Btn>}
     <Btn onClick={onClose}>Đóng</Btn>
   </>}>
-    <p className="mb-3 text-xs text-slate-500">
-      {hints.source ? `Gợi ý từ ${hints.source === 'GEMINI' ? 'Gemini' : 'OpenRouter'} (${hints.model}) · ` : ''}
-      {hints.lines} câu thoại · {hints.sentToAi} câu có số / ký hiệu gửi AI · {hints.aiCalls} lần gọi. AI chỉ gợi ý — bấm Nhận rồi Lưu nháp mới ghi.
-    </p>
     {!hints.suggestions.length && <p>Không còn gợi ý nào.</p>}
-    <ul className="grid gap-2">{hints.suggestions.map(hint => <li key={hint.sceneId} className="rounded-lg border border-slate-200 p-3">
+    <ul className="studio-voice-items">{hints.suggestions.map(hint => <li key={hint.sceneId} className="studio-voice-item">
       <button type="button" className="text-xs text-blue-700 underline" onClick={() => onOpen(hint.sceneId)}>Cảnh {number(hint.sceneId)}</button>
       <p className="mt-1 text-sm text-slate-500">{hint.text}</p>
       <p className="mt-1 text-sm font-semibold">Đọc là: {hint.suggestion}</p>
@@ -77,21 +74,17 @@ function VoiceRenderList({ voice, scenes, busy, onRender, onOpen, onClose }) {
   const speaker = id => scenes.find(s => s.id === id)?.speaker
   const todo = voice.items.filter(i => i.status !== 'READY')
   const count = voice.missing + voice.failed
-  return <Panel title="Sinh giọng đọc" actions={<>
+  return <Panel className="studio-voice-panel studio-voice-panel--render" title={<span className="studio-voice-title"><span className="studio-voice-icon"><AudioLines size={21} aria-hidden="true" /></span>Sinh giọng đọc</span>} actions={<>
     {count > 0 && <Btn tone="primary" disabled={busy || voice.pending > 0} onClick={onRender}>Sinh {count} câu này</Btn>}
     <Btn onClick={onClose}>Đóng</Btn>
   </>}>
-    <p className="mb-3 text-xs text-slate-500">
-      {voice.lines} câu có giọng đọc · {voice.ready} câu giữ giọng cũ (lời không đổi) · {count} câu cần sinh
-      {voice.pending ? ` · đang sinh ${voice.pending} câu trên máy sinh (GitHub Actions), danh sách tự cập nhật` : ''}.
-    </p>
     {!todo.length && <p>Mọi câu đã có giọng — không cần sinh.</p>}
-    <ul className="grid gap-2">{todo.map(item => <li key={item.sceneId} className="rounded-lg border border-slate-200 p-3">
+    <ul className="studio-voice-items">{todo.map(item => <li key={item.sceneId} className="studio-voice-item">
       <div className="flex items-center justify-between gap-2 text-xs">
         <button type="button" className="text-blue-700 underline" onClick={() => onOpen(item.sceneId)}>
           Cảnh {number(item.sceneId)} · {speaker(item.sceneId) || item.speakerId}
         </button>
-        <span className={`font-semibold ${VOICE_TONE[item.status] || ''}`}>{VOICE_LABEL[item.status] || item.status}</span>
+        <span className={`studio-voice-status font-semibold ${VOICE_TONE[item.status] || ''}`}>{VOICE_LABEL[item.status] || item.status}</span>
       </div>
       <p className="mt-1 text-sm">{item.readText}</p>
       <p className="text-xs text-slate-500">Giọng: {item.profile}{item.error ? ` · ${item.error}` : ''}</p>
@@ -353,8 +346,10 @@ export default function EditorPage({ notify, code, onNavigationStateChange }) {
       history={{ undo, redo, canUndo: history.past.length > 0, canRedo: history.future.length > 0 }} notice={notice} issues={storyIssues(scenes)}
       onAdd={() => setDialog({ kind: 'add' })} onDuplicate={duplicateScene} onDelete={deleteScene} onPickBackground={() => setPicking('background')}
       onAddCharacter={() => setDialog({ kind: 'character' })} onPlay={() => setDialog({ kind: 'play' })} openDialog={setDialog} onBranch={createBranch} onLaneEnd={addLaneEnd} onPickImage={apply => setPicking(() => apply)} />
-    {voiceList && voice && <VoiceRenderList voice={voice} scenes={scenes} busy={busy} onRender={renderVoice} onOpen={id => go(id)} onClose={() => setVoiceList(false)} />}
-    {voiceHints && <VoiceHints hints={voiceHints} scenes={scenes} write={write} onAccept={acceptHint} onDrop={dropHint} onOpen={id => go(id)} onClose={() => setVoiceHints(null)} />}
+    {((voiceList && voice) || voiceHints) && <div className="studio-voice-tools">
+      {voiceList && voice && <VoiceRenderList voice={voice} scenes={scenes} busy={busy} onRender={renderVoice} onOpen={id => go(id)} onClose={() => setVoiceList(false)} />}
+      {voiceHints && <VoiceHints hints={voiceHints} scenes={scenes} write={write} onAccept={acceptHint} onDrop={dropHint} onOpen={id => go(id)} onClose={() => setVoiceHints(null)} />}
+    </div>}
     {picking && <AssetPicker chapter={code} notify={notify} onClose={() => setPicking(false)} onPick={asset => {
       if (typeof picking === 'function') picking(asset.url)
       else if (picking === 'character') update({ characters: [...(scene.characters || []), { id: asset.label || 'NHAN_VAT', src: asset.url, position: 'center' }] })

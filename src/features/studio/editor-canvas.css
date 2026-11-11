@@ -15,13 +15,7 @@
   color: var(--ink);
 }
 
-/* Khi soạn: thu thanh bên của Studio thành dải biểu tượng để khung cảnh rộng ra */
-.studio-workspace.studio-workspace-editing { grid-template-columns: 76px minmax(0, 1fr); }
-.studio-workspace-editing .studio-sidebar { position: sticky; top: 0; height: 100dvh; padding: 20px 10px; align-items: center; }
-.studio-workspace-editing .studio-brand > div, .studio-workspace-editing .studio-profile, .studio-workspace-editing .studio-nav-label,
-.studio-workspace-editing .studio-sidebar nav .studio-nav-group-label, .studio-workspace-editing .studio-sidebar-bottom > span { display: none; }
-.studio-workspace-editing .studio-sidebar nav { margin-top: 28px; }
-.studio-workspace-editing .studio-sidebar nav a, .studio-workspace-editing .studio-sidebar-bottom button { font-size: 0; gap: 0; justify-content: center; padding: 12px; }
+/* Sidebar sizing and its mobile drawer belong to shared navigation.css. */
 .studio-workspace-editing .studio-topbar { padding: 12px 24px; }
 .studio-content.studio-content-editor { max-width: none; padding: 12px 16px 20px; }
 
@@ -216,8 +210,6 @@ textarea.stage-text:focus { background: #fff; }
 @media (max-width: 850px) {
   .scene-editor-body, .scene-editor-body.is-wide { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'canvas' 'timeline' 'inspector'; }
   .scene-inspector { border-left: 0; border-top: 1px solid var(--line); }
-  .studio-workspace.studio-workspace-editing { grid-template-columns: minmax(0, 1fr); }
-  .studio-workspace-editing .studio-sidebar { position: static; height: auto; }
 }
 @media (max-width: 580px) {
   .scene-editor-toolbar, .scene-timeline-track { padding-inline: 12px; }
@@ -370,3 +362,41 @@ textarea.choice-text:focus { border-color: var(--accent); background: #fff; outl
 .scene-editor .scene-quiet:hover:not(:disabled) { background: var(--wash); border-color: transparent; color: var(--ink); }
 /* cảnh có khối nội dung bên dưới (lựa chọn, thẻ xem): khung cảnh thấp hơn một chút để khối đó lộ ra ngay màn đầu */
 .has-panel .stage-frame { max-width: min(100%, calc((100dvh - 380px) * 16 / 9)); }
+
+/* Voice tools form a separate workspace below the scene canvas. */
+.studio-voice-tools { display: grid; gap: 20px; margin-top: 24px; padding-top: 24px; border-top: 2px solid #d9e3e8; }
+.studio-voice-panel.sp-panel {
+  --voice-accent: #0f766e;
+  --voice-border: #a6d9d2;
+  --voice-wash: #eefaf7;
+  --voice-icon-wash: #d1efe6;
+  margin: 0;
+  padding: 22px;
+  border: 1px solid var(--voice-border);
+  border-left: 5px solid var(--voice-accent);
+  border-radius: 16px;
+  background: var(--voice-wash);
+  box-shadow: 0 6px 20px #183d3510;
+}
+.studio-voice-panel--hints.sp-panel {
+  --voice-accent: #5145a6;
+  --voice-border: #ccc7ed;
+  --voice-wash: #f4f2fc;
+  --voice-icon-wash: #e5e0f8;
+}
+.studio-voice-title { display: flex; align-items: center; gap: 12px; line-height: 1.4; }
+.studio-voice-panel .sp-panel-head h2 { color: var(--voice-accent); font-size: 18px; font-weight: 700; }
+.studio-voice-icon { display: inline-flex; align-items: center; justify-content: center; width: 42px; height: 42px; flex-shrink: 0; border-radius: 12px; background: var(--voice-icon-wash); }
+.studio-voice-items { display: grid; gap: 12px; list-style: none; margin: 0; padding: 0; }
+.studio-voice-item { min-width: 0; padding: 16px; border: 1px solid var(--voice-border); border-radius: 12px; background: #fff; overflow-wrap: anywhere; }
+.studio-voice-status { flex-shrink: 0; padding: 4px 9px; border-radius: 6px; background: #f4f6f8; }
+.studio-voice-panel .sp-btn.is-primary { background: var(--voice-accent); border-color: var(--voice-accent); }
+.studio-voice-panel .sp-btn.is-primary:hover:not(:disabled) { filter: brightness(.92); }
+@media (max-width: 580px) {
+  .studio-voice-tools { gap: 16px; margin-top: 20px; padding-top: 20px; }
+  .studio-voice-panel.sp-panel { padding: 16px 12px; }
+  .studio-voice-panel .sp-panel-head h2 { font-size: 16px; }
+  .studio-voice-panel .sp-panel-actions { width: 100%; }
+  .studio-voice-panel .sp-panel-actions .sp-btn { flex: 1; }
+  .studio-voice-item { padding: 12px; }
+}

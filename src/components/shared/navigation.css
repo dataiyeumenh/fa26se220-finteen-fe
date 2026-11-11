@@ -138,11 +138,6 @@
 
 @media (min-width: 901px) {
   .studio-workspace:has(> .ft-sidebar) { grid-template-columns: 248px minmax(0, 1fr); }
-  .studio-workspace-editing .ft-sidebar .studio-brand > div { display: block; }
-  .studio-workspace-editing .ft-sidebar .studio-menu-label { display: inline; }
-  .studio-workspace-editing .ft-sidebar nav { margin-top: 0; }
-  .studio-workspace-editing .ft-sidebar nav a { justify-content: flex-start; }
-  .studio-workspace-editing .ft-sidebar .studio-sidebar-bottom button { font-size: 12px; gap: 8px; }
 }
 @media (max-width: 1200px) {
   .ws.ws-kid .ws-profile-copy { display: none; }

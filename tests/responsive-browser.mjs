@@ -7,6 +7,7 @@ import assert from 'node:assert/strict';
 
 const allCases = ['home', 'login', 'register', 'internal-login', 'parent', 'teacher', 'kid', 'kid-child', 'quiz', 'quiz-preview', 'admin', 'editor', 'reviewer', 'manager', 'game', 'teacher-menu', 'admin-menu', 'editor-menu', ...Array.from({ length: 8 }, (_, i) => `minigame-${i + 1}`)];
 allCases.push('game-dialogue', 'game-choice');
+allCases.push('editor-chapter', 'editor-chapter-menu');
 const cases = process.env.RESPONSIVE_CASES ? process.env.RESPONSIVE_CASES.split(',') : allCases;
 assert.ok(cases.every(name => allCases.includes(name)), 'Unknown responsive case');
 const widths = [320, 390, 768, 1024, 1440, 1920];
@@ -49,6 +50,7 @@ try {
   const results = JSON.parse(encoded.replaceAll('&quot;', '"').replaceAll('&amp;', '&').replaceAll('&lt;', '<').replaceAll('&gt;', '>'));
   fs.writeFileSync('output/responsive-browser-audit.json', JSON.stringify(results, null, 2));
   assert.ok(results.every(result => result.gameLayout !== false), 'Game backdrop must fill the player and dialogue/choices must remain overlays');
+  assert.ok(results.every(result => !result.editorLayout || (result.editorLayout.rendered && result.editorLayout.overlap <= 1 && result.editorLayout.menuReadable && result.editorLayout.contentVisible)), 'Chapter editor must render beside the sidebar without overlap or hidden menu text; see output/responsive-browser-audit.json');
   const failures = results.filter(result => result.scrollWidth > result.width + 1 || result.overflowing.length || result.imagesFailed.length || !result.rendered || !result.preview || !result.navigation || (result.activeNavigationContrast !== null && result.activeNavigationContrast < 4.5) || (result.navigationCenterOffset !== null && result.navigationCenterOffset > 1) || !result.overlayScrollbars || !result.previewScrollWorks);
   console.log(JSON.stringify({ checked: results.length, failures }, null, 2));
   if (process.env.RESPONSIVE_SCREENSHOTS) {
