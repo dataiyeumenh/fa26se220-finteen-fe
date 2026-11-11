@@ -4,11 +4,12 @@ import { MemoryRouter } from "react-router-dom";
 import { VisualNovelPlayer } from "../../src/pages/Kid/Dashboard/components/game/VisualNovelPlayer";
 import { chapter6V2GameData as content } from "./content/index.mjs";
 import { normalizeChapter } from "../../src/pages/Kid/Dashboard/components/game/chapterShape.js";
+import { resolveContentImages } from "../../src/lib/imageAssets.js";
 import { loanTotal } from "../../src/pages/Kid/Dashboard/components/game/loanDetectiveRules.js";
 import { progressKey } from "../../src/pages/Kid/Dashboard/components/game/visualNovelProgress.js";
 import "../../src/index.css";
 // Dữ liệu như game thấy (VisualNovelPlayer chuẩn hoá: inspect → scene, reflection → activity).
-const data = normalizeChapter(content);
+const data = normalizeChapter(resolveContentImages(content));
 
 const loanConfig = data.scenes.find(
   (scene) => scene.game?.kind === "LOAN_DETECTIVE",
@@ -365,7 +366,7 @@ async function run() {
           products.length !== 4 ||
           products.some(
             (image) =>
-              !image.getAttribute("src").startsWith("/images/") ||
+              !loanConfig.cart.items.some(item => item.image === image.getAttribute("src")) ||
               (image.complete && !image.naturalWidth),
           )
         )

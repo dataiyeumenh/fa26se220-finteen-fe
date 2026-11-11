@@ -3,6 +3,7 @@ import { affordabilityAt } from "./loanDetectiveRules.js";
 import { gradeReflection } from "./compoundTimelineRules";
 import { PhoneInspectDialog } from "./PhoneInspectDialog.jsx";
 import "./compound-timeline.css";
+import { fill } from "./shoppingMissionRules.js";
 
 // Cards are read-only evidence. Reading never grants choice points or stats.
 export function InspectCardsDialog({ inspect, onClose }) {
@@ -55,12 +56,12 @@ function EvidenceCardsDialog({ inspect, onClose }) {
         onKeyDown={keys}
       >
         <header className="ch5-inspect-heading">
-          <span>SỔ TAY KHÁM PHÁ CỦA AN</span>
+          <span>{inspect.eyebrow ?? "SỔ TAY KHÁM PHÁ CỦA AN"}</span>
           <h3 id="ch5-inspect-title">{inspect.buttonText}</h3>
           <p>
-            {inspect.cashflows
+            {inspect.subtitle ?? (inspect.cashflows
               ? "Thu nhập − tiền sinh hoạt − tiền trả gói B = tiền còn lại."
-              : "Chạm vào từng thẻ để đọc. Thẻ đã xem sẽ được đánh dấu ✓."}
+              : "Chạm vào từng thẻ để đọc. Thẻ đã xem sẽ được đánh dấu ✓.")}
           </p>
         </header>
         {inspect.dataText && (
@@ -117,7 +118,7 @@ function EvidenceCardsDialog({ inspect, onClose }) {
           <>
             <div className="loan-affordability-cards">
               {inspect.cashflows.map((flow) => {
-                const budget = affordabilityAt(flow.income);
+                const budget = affordabilityAt(flow);
                 const cash = (n) => `${n.toLocaleString("vi-VN")}đ`;
                 return (
                   <article key={flow.id} className="loan-affordability-card">
@@ -152,9 +153,7 @@ function EvidenceCardsDialog({ inspect, onClose }) {
               })}
             </div>
             <p className="loan-affordability-takeaway">
-              Cả hai tháng đều trả được 550.000đ. Khi thu nhập giảm, chỉ còn
-              150.000đ cho việc khác. Cần theo dõi thu nhập để duy trì lịch 12
-              tháng.
+              {inspect.takeaway ?? "Cả hai tháng đều trả được 550.000đ. Khi thu nhập giảm, chỉ còn 150.000đ cho việc khác. Cần theo dõi thu nhập để duy trì lịch 12 tháng."}
             </p>
           </>
         )}
@@ -262,29 +261,41 @@ const information = [
   ["color", "Màu biểu đồ"],
   ["friend", "Lời bạn giới thiệu"],
 ];
-export function ChapterFivePlanSummary({ flags }) {
+export function ChapterFivePlanSummary({ scene = {}, flags }) {
+  const plan = scene.planSummary ?? {};
+  const cash = (value) => `${value.toLocaleString("vi-VN")}đ`;
+  const cases = plan.cases ?? [
+    { flag: "term_maturity", text: "B: dự tính giữ đến tháng 12 để nhận {amount}, nhưng chưa có nguồn học phí cho tháng 3. Kế hoạch chưa đáp ứng thời hạn.", values: { amount: 1060000 } },
+    { flag: "account_choice_A", text: "B: {amount} theo lãi rút sớm, đủ học phí.", values: { amount: 1005000 } },
+    { flag: "topup_source_verified", text: "A: {amount} sau phí + {gap} dành từ khoản chi đã xác nhận; cần kiểm tra cuối tháng 1.", values: { amount: 992500, gap: 7500 } },
+    { flag: "account_pending", text: "A: {amount} sau phí. Nguồn bù {gap} chưa xác minh; kế hoạch còn chờ.", values: { amount: 992500, gap: 7500 } },
+    { text: "A: {amount} sau phí, còn thiếu {gap}. Kế hoạch lần này chưa đạt mục tiêu.", values: { amount: 992500, gap: 7500 } },
+  ];
+  const selected = cases.find((item) => !item.flag || flags[item.flag]);
+  const provider = plan.provider ?? {
+    flag: "provider_checked",
+    yes: "Đã kiểm tra thông tin nhà cung cấp.",
+    no: "Thông tin nhà cung cấp chưa được kiểm tra đầy đủ.",
+  };
+  const note = plan.note ?? {
+    text: "Đây là kế hoạch. Ví hiện tại vẫn là {wallet}.",
+    values: { wallet: 1000000 },
+  };
+  const formatLine = (line) => fill(line?.text ?? "", Object.fromEntries(
+    Object.entries(line?.values ?? {}).map(([key, value]) => [key, typeof value === "number" ? cash(value) : value]),
+  ));
   return (
     <aside className="ch5-plan-summary" aria-label="Kế hoạch dự kiến">
       <p>
-        <b>Dự kiến cuối tháng 3</b>
+        <b>{plan.title ?? "Dự kiến cuối tháng 3"}</b>
       </p>
       <p>
-        {flags.term_maturity
-          ? "B: dự tính giữ đến tháng 12 để nhận 1.060.000đ, nhưng chưa có nguồn học phí cho tháng 3. Kế hoạch chưa đáp ứng thời hạn."
-          : flags.account_choice_A
-            ? "B: 1.005.000đ theo lãi rút sớm, đủ học phí."
-            : flags.topup_source_verified
-              ? "A: 992.500đ sau phí + 7.500đ dành từ khoản chi đã xác nhận; cần kiểm tra cuối tháng 1."
-              : flags.account_pending
-                ? "A: 992.500đ sau phí. Nguồn bù 7.500đ chưa xác minh; kế hoạch còn chờ."
-                : "A: 992.500đ sau phí, còn thiếu 7.500đ. Kế hoạch lần này chưa đạt mục tiêu."}
+        {formatLine(selected)}
       </p>
       <p>
-        {flags.provider_checked
-          ? "Đã kiểm tra thông tin nhà cung cấp."
-          : "Thông tin nhà cung cấp chưa được kiểm tra đầy đủ."}
+        {flags[provider.flag] ? provider.yes : provider.no}
       </p>
-      <small>Đây là kế hoạch. Ví hiện tại vẫn là 1.000.000đ.</small>
+      <small>{formatLine(note)}</small>
     </aside>
   );
 }

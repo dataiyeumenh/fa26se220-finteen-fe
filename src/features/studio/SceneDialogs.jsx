@@ -1,6 +1,7 @@
 // Hộp thoại của trình soạn: chọn cảnh bằng ảnh, thêm cảnh theo loại, ảnh hưởng, khoá / điều kiện, chơi thử.
 // Ảnh hưởng và khoá làm trên BẢN SAO — chỉ ghi khi bấm Xong; đóng hộp thoại là không đổi gì.
 import { useState } from "react";
+import { MINI_GAME_FRAMES, miniGameKindOf } from "../../pages/Kid/Dashboard/components/game/miniGameFrames.js";
 import {
   Clapperboard,
   Flag,
@@ -719,6 +720,7 @@ const applyFlags = (state, flags) => {
 
 export function PlayDialog({ content, startIndex, stats, onEdit, onClose }) {
   const scenes = content.scenes || [];
+  const [playthrough, setPlaythrough] = useState(0);
   const [run, setRun] = useState(() => ({
     index: startIndex,
     state: freshState(content, stats),
@@ -745,7 +747,8 @@ export function PlayDialog({ content, startIndex, stats, onEdit, onClose }) {
     applyFlags(state, scenes[index].setFlags);
     setRun({ index, state, steps: run.steps + 1, changed, opened: null });
   };
-  const restart = () =>
+  const restart = () => {
+    setPlaythrough((value) => value + 1);
     setRun({
       index: startIndex,
       state: freshState(content, stats),
@@ -753,7 +756,9 @@ export function PlayDialog({ content, startIndex, stats, onEdit, onClose }) {
       changed: "",
       opened: null,
     });
+  };
   const type = typeOf(scene);
+  const PreviewGame = MINI_GAME_FRAMES[miniGameKindOf(scene?.game)];
   let controls = null,
     note = null;
   if (run.dead)
@@ -847,7 +852,20 @@ export function PlayDialog({ content, startIndex, stats, onEdit, onClose }) {
         </button>
       );
   } else if (type === "minigame")
-    controls = (
+    controls = PreviewGame ? (
+      <PreviewGame
+        key={`${playthrough}:${scene.id}:${run.steps}`}
+        game={scene.game}
+        onComplete={(result) => goTo(
+          scene.nextSceneId || scene.onPassSceneId,
+          (state) => {
+            state.score = result.score ?? 0;
+            applyFlags(state, scene.game?.onComplete?.setFlags);
+          },
+          `Điểm mini-game ${result.score ?? 0}`,
+        )}
+      />
+    ) : (
       <form
         onSubmit={(event) => {
           event.preventDefault();
@@ -962,7 +980,7 @@ export function PlayDialog({ content, startIndex, stats, onEdit, onClose }) {
       {run.changed && (
         <p className="studio-play-change">Vừa thay đổi: {run.changed}</p>
       )}
-      <div
+      {type !== "minigame" && <div
         className="studio-play-stage"
         style={{
           backgroundImage: scene?.background
@@ -990,7 +1008,7 @@ export function PlayDialog({ content, startIndex, stats, onEdit, onClose }) {
             )}
           </div>
         )}
-      </div>
+      </div>}
       {note}
       {controls && <div className="studio-play-controls">{controls}</div>}
       <div className="studio-dialog-actions">

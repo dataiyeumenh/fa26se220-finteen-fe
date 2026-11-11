@@ -4,10 +4,11 @@ import { MemoryRouter } from "react-router-dom";
 import { VisualNovelPlayer } from "../../src/pages/Kid/Dashboard/components/game/VisualNovelPlayer";
 import { chapter5V2GameData as content } from "./content/index.mjs";
 import { normalizeChapter } from "../../src/pages/Kid/Dashboard/components/game/chapterShape.js";
+import { resolveContentImages } from "../../src/lib/imageAssets.js";
 import { progressKey } from "../../src/pages/Kid/Dashboard/components/game/visualNovelProgress.js";
 import "../../src/index.css";
 // Dữ liệu như game thấy (VisualNovelPlayer chuẩn hoá: inspect → scene, reflection → activity).
-const data = normalizeChapter(content);
+const data = normalizeChapter(resolveContentImages(content));
 
 const timelineConfig = data.scenes.find(
   (scene) => scene.game?.kind === "COMPOUND_TIMELINE",
@@ -294,12 +295,9 @@ async function run() {
     )
   )
     throw new Error("Ending allows decision revision");
-  const back = buttons().find(
-    (b) =>
-      b.title ===
-      "L\u00f9i l\u1ea1i m\u1ed9t c\u1ea3nh \u0111\u00e3 \u0111i qua; gi\u1eef nguy\u00ean ti\u1ec1n v\u00e0 \u0111i\u1ec3m",
-  );
-  if (!back || back.disabled) throw new Error("Back navigation is disabled");
+  if (!document.querySelector(".vn-menu-trigger") ||
+      !document.querySelector('a[aria-label="Về bản đồ chương"]'))
+    throw new Error("Game menu or chapter map navigation is unavailable");
   if (route === "pending" && (delta("SAVING") !== 0 || delta("GOAL") !== 1))
     throw new Error("Pending plan received feasibility reward");
   if (

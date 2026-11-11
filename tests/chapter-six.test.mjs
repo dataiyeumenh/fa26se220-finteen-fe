@@ -482,14 +482,15 @@ test("statement locks on confirmation, reveals events sequentially, scores once 
   assert.equal(loanTasks.length, data.endingReport.miniGameMax);
 });
 test("affordability view shows complete income-minus-living-minus-installment arithmetic", () => {
-  assert.deepEqual(affordabilityAt(3000000), {
+  assert.deepEqual(affordabilityAt({ income: 3000000 }), {
     income: 3000000,
     essentials: 2000000,
     repayment: 550000,
     remaining: 450000,
   });
-  assert.equal(affordabilityAt(2700000).remaining, 150000);
-  assert.equal(affordabilityAt(2400000).remaining, -150000);
+  assert.equal(affordabilityAt({ income: 2700000 }).remaining, 150000);
+  assert.equal(affordabilityAt({ income: 2400000 }).remaining, -150000);
+  assert.equal(affordabilityAt({ income: 4200000, essentials: 2300000, repayment: 800000 }).remaining, 1100000);
   const inspect = scenes.get("CH06_FINAL_DATA").inspect;
   assert.equal(inspect.cashflows.length, 2);
   assert.deepEqual(inspect.cards, []);

@@ -21,11 +21,11 @@ export function loanApr(offer) {
 }
 export const monthlyCapacity = (income = 3000000, essentials = 2000000) =>
   income - essentials;
-export const affordabilityAt = (
+export const affordabilityAt = ({
   income,
   essentials = 2000000,
   repayment = 550000,
-) => ({
+}) => ({
   income,
   essentials,
   repayment,

@@ -338,6 +338,15 @@ export default function EditorPage({ notify, code, onNavigationStateChange }) {
   if (!content) return <p role="status">Đang tải {code}…</p>
   const option = dialog?.index != null ? scene?.options?.[dialog.index] : null
   const close = () => setDialog(null)
+  const playDraft = () => {
+    try {
+      const preview = json === null ? content : JSON.parse(json)
+      if (!preview || !Array.isArray(preview.scenes) || !preview.scenes.length)
+        throw new Error('Nội dung JSON cần có ít nhất một cảnh để chơi thử.')
+      const currentIndex = preview.scenes.findIndex(item => item.id === scene?.id)
+      setDialog({ kind: 'play', content: prepareDraftV2(preview), startIndex: currentIndex >= 0 ? currentIndex : 0 })
+    } catch (error) { notify(formatError(error)) }
+  }
   return <>
     <EditorCanvas code={code} content={content} meta={meta} scenes={scenes} scene={scene} idx={idx} setIdx={setIdx}
       write={write} busy={busy} dirty={dirty} json={json}
@@ -345,7 +354,7 @@ export default function EditorPage({ notify, code, onNavigationStateChange }) {
       warnings={warnings} refreshError={refreshError} conditionDrafts={conditionDrafts} editCondition={editCondition} onSuggestVoice={suggestVoice} onRenderVoice={() => { setVoiceList(true); loadVoice() }} voice={voice}
       history={{ undo, redo, canUndo: history.past.length > 0, canRedo: history.future.length > 0 }} notice={notice} issues={storyIssues(scenes)}
       onAdd={() => setDialog({ kind: 'add' })} onDuplicate={duplicateScene} onDelete={deleteScene} onPickBackground={() => setPicking('background')}
-      onAddCharacter={() => setDialog({ kind: 'character' })} onPlay={() => setDialog({ kind: 'play' })} openDialog={setDialog} onBranch={createBranch} onLaneEnd={addLaneEnd} onPickImage={apply => setPicking(() => apply)} />
+      onAddCharacter={() => setDialog({ kind: 'character' })} onPlay={playDraft} openDialog={setDialog} onBranch={createBranch} onLaneEnd={addLaneEnd} onPickImage={apply => setPicking(() => apply)} />
     {((voiceList && voice) || voiceHints) && <div className="studio-voice-tools">
       {voiceList && voice && <VoiceRenderList voice={voice} scenes={scenes} busy={busy} onRender={renderVoice} onOpen={id => go(id)} onClose={() => setVoiceList(false)} />}
       {voiceHints && <VoiceHints hints={voiceHints} scenes={scenes} write={write} onAccept={acceptHint} onDrop={dropHint} onOpen={id => go(id)} onClose={() => setVoiceHints(null)} />}
@@ -369,6 +378,6 @@ export default function EditorPage({ notify, code, onNavigationStateChange }) {
       onPick={(id, src, expression) => { const used = new Set((scene.characters || []).map(item => String(item.position).toLowerCase())); update({ characters: [...(scene.characters || []), { id, expression, src, position: ['center', 'right', 'left'].find(p => !used.has(p)) || 'right' }] }); close() }} />}
     {dialog?.kind === 'minigame' && <MinigameDialog game={scene.game} kind={schemaQuery.data?.minigameKinds?.[scene.game?.kind]} onClose={close}
       onPickImage={apply => setPicking(() => apply)} onSave={game => { update({ game }); close(); notify('Đã cập nhật mini-game.', true) }} />}
-    {dialog?.kind === 'play' && <PlayDialog content={content} startIndex={idx} stats={stats} onClose={close} onEdit={index => { setIdx(index); close() }} />}
+    {dialog?.kind === 'play' && <PlayDialog content={dialog.content} startIndex={dialog.startIndex} stats={stats} onClose={close} onEdit={index => { setIdx(index); close() }} />}
   </>
 }
