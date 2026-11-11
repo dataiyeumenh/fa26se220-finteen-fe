@@ -4,6 +4,8 @@
 // Giữ releaseVersion của lúc bắt đầu chơi cho hết chương (xem build/api-docs/content.md của BE).
 import { apiConfig } from "./config.js";
 import { resolveContentImages } from "../lib/imageAssets.js";
+import { auth } from "./auth.api.js";
+import { personalizationApi } from "./personalization.api.js";
 
 let currentRelease = null;
 
@@ -37,5 +39,10 @@ export function getCurrentRelease() {
 
 export async function getChapterContent(code) {
   const { version } = await getCurrentRelease();
+  // Bé đang đăng nhập: lấy chương BE đã ghép theo nhãn cá nhân hoá của bé (PR BE #57). Không có phiên bé
+  // (người lớn xem thử, trang công khai): bản gốc như cũ.
+  if (auth.getSnapshot().actor?.kind === "learner") {
+    return resolveContentImages(await personalizationApi.chapterForChild(version, code));
+  }
   return resolveContentImages(await getJson(`/api/content/releases/${version}/chapters/${code}`));
 }

@@ -1,9 +1,11 @@
 import { Gamepad2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Link, useLocation, useSearchParams } from "react-router-dom";
 import useKidDashboard from "./hooks/useKidDashboard";
 import { VisualNovelPlayer } from "./components/game/VisualNovelPlayer";
 import { getChapterContent, getCurrentRelease } from "@/api/content.api";
+import { auth } from "@/api/auth.api";
+import { PersonalizationGate } from "./components/PersonalizationGate";
 
 // MỘT nguồn nội dung (Hưng 24/10: "tất cả phải đồng nhất"): mọi chương tải từ bản phát hành hiện tại của BE
 // (GET /api/content/releases/{version}/chapters/{code}) — không còn file tĩnh trong FE, không còn đường StoryPlayer nội bộ.
@@ -26,6 +28,10 @@ export default function KidGames() {
   const [runtimeError, setRuntimeError] = useState("");
   const [loadedChapter, setLoadedChapter] = useState(null);
   const [chapters, setChapters] = useState([]);
+  // Cá nhân hoá (BE PR #57): bé đăng nhập thì qua cổng hỏi nhanh / game chọn phụ trước khi tải chương đã ghép.
+  const isLearner = auth.getSnapshot().actor?.kind === "learner";
+  const [gateDone, setGateDone] = useState(!isLearner);
+  const finishGate = useCallback(() => setGateDone(true), []);
 
   useEffect(() => {
     let mounted = true;
@@ -37,6 +43,7 @@ export default function KidGames() {
         mounted = false;
       };
     }
+    if (!gateDone) return undefined;
     getChapterContent(chapterCode(chapterNumber))
       .then((content) => {
         if (!mounted) return;
@@ -51,7 +58,7 @@ export default function KidGames() {
     return () => {
       mounted = false;
     };
-  }, [chapterNumber, validChapter]);
+  }, [chapterNumber, validChapter, gateDone]);
 
   return (
     <>
@@ -85,6 +92,10 @@ export default function KidGames() {
         >
           {runtimeError}
         </div>
+      )}
+
+      {!loading && !error && validChapter && !gateDone && (
+        <PersonalizationGate onDone={finishGate} />
       )}
 
       {!loading &&

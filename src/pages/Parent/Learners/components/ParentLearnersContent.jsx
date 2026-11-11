@@ -1,4 +1,4 @@
-import { Copy, KeyRound, Plus, RefreshCw, Trash2, Users } from "lucide-react";
+import { Copy, KeyRound, Plus, RefreshCw, Sparkles, Trash2, Users } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -7,6 +7,7 @@ import {
   Heading,
   Modal,
 } from "../../../../features/workspace/ui";
+import ParentPersonalization from "./ParentPersonalization";
 
 export default function ParentLearnersContent({ learnerState }) {
   const {
@@ -164,6 +165,12 @@ export default function ParentLearnersContent({ learnerState }) {
                   <>
                     <button
                       className="ws-btn"
+                      onClick={() => setModal({ type: "perso", slot })}
+                    >
+                      <Sparkles size={15} /> Cá nhân hoá
+                    </button>
+                    <button
+                      className="ws-btn"
                       onClick={() => setModal({ type: "pin", slot })}
                     >
                       <KeyRound size={15} /> Đổi PIN
@@ -191,7 +198,19 @@ export default function ParentLearnersContent({ learnerState }) {
       ) : (
         <Empty>Không có hồ sơ phù hợp.</Empty>
       )}
-      {modal && modal.type !== "group" && (
+      {modal?.type === "perso" && (
+        <Modal
+          title={`Cá nhân hoá cho ${modal.slot.displayName}`}
+          onClose={() => setModal(null)}
+        >
+          <ParentPersonalization
+            slot={modal.slot}
+            onSaved={() => setMessage("Đã lưu khảo sát cá nhân hoá.")}
+            onClose={() => setModal(null)}
+          />
+        </Modal>
+      )}
+      {modal && !["group", "perso"].includes(modal.type) && (
         <Modal
           title={
             {
