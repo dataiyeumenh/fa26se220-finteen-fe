@@ -8,7 +8,7 @@ import { useWorkspace } from "@/features/workspace/useWorkspace";
 import { novelProgressOwner } from "./components/game/visualNovelProgress.js";
 
 // MỘT nguồn nội dung (Hưng 24/10: "tất cả phải đồng nhất"): mọi chương tải từ bản phát hành hiện tại của BE
-// (GET /api/content/releases/{version}/chapters/{code}) — không còn file tĩnh trong FE, không còn đường StoryPlayer nội bộ.
+// (GET /api/content/releases/{version}/chapters/{code}) — mọi chương dùng cùng nguồn nội dung từ BE.
 const chapterCode = (number) => `CH${String(number).padStart(2, "0")}`;
 
 export default function KidGames() {
