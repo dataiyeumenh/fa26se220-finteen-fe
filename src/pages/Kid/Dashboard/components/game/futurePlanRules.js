@@ -176,16 +176,15 @@ export function resolveFutureScene(portfolio, scene, results, flags) {
         ? `giảm ${-value}%`
         : "giữ nguyên giá trị";
   const dir = delta > 0 ? "up" : delta < 0 ? "down" : "flat";
-  return {
-    ...scene,
-    text: fill(scene.marketText[dir] ?? scene.text, {
-      bonds: movement(market.bonds),
-      equity: movement(market.equity),
-      final: cash(final),
-      change: cash(Math.abs(delta)),
-      start: cash(portfolio.startingAmount),
-    }),
-  };
+  const text = fill(scene.marketText[dir] ?? scene.text, {
+    bonds: movement(market.bonds),
+    equity: movement(market.equity),
+    final: cash(final),
+    change: cash(Math.abs(delta)),
+    start: cash(portfolio.startingAmount),
+  });
+  // Lịch sử lựa chọn trong VisualNovelPlayer lưu scene.title.
+  return { ...scene, title: text, text };
 }
 export function createFutureState(config) {
   return {
