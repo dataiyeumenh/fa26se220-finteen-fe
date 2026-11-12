@@ -13,6 +13,7 @@ const scenarios = [
   ["chapter-five", "chapter-five", "ch5-browser-result"],
   ["chapter-six", "chapter-six", "ch6-browser-result"],
   ["chapter-eight", "chapter-eight", "ch8-browser-result"],
+  ["chapter-eight-feedback", "chapter-eight-feedback", "ch8-feedback-result"],
 ];
 try {
   for (const [name, fixture, id] of scenarios) {

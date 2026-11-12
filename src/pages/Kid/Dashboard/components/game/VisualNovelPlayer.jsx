@@ -341,6 +341,12 @@ export function VisualNovelPlayer({ data: rawData, progressOwner = null, learner
   );
   const [moneyFx, setMoneyFx] = useState(null);
 
+  useEffect(() => {
+    if (!moneyFx) return;
+    const timer = setTimeout(() => setMoneyFx(null), 1200);
+    return () => clearTimeout(timer);
+  }, [moneyFx]);
+
   const isReviewing = reviewOffset > 0;
   const sceneIndex = scenePath[scenePath.length - 1 - reviewOffset];
 
@@ -795,7 +801,6 @@ export function VisualNovelPlayer({ data: rawData, progressOwner = null, learner
       setMoney((prev) => Math.max(0, prev + totalMoneyDelta));
       if (totalMoneyDelta !== 0) {
         setMoneyFx(totalMoneyDelta);
-        setTimeout(() => setMoneyFx(null), 1200);
       }
     }
 
