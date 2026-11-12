@@ -45,6 +45,8 @@ async function claimsFeedback(overrides) {
     pickedWrong: "Không cần xem · Bạn chọn thừa",
   };
   const covered = new Set();
+  const backgrounds = new Map();
+  const verdicts = { pickedRight: "Chọn đúng", missed: "Bỏ sót", skippedRight: "Bỏ qua đúng", pickedWrong: "Chọn thừa" };
   for (const check of claims.checks) {
     const picked = state.checks.includes(check.id);
     const key = check.correct ? picked ? "pickedRight" : "missed" : picked ? "pickedWrong" : "skippedRight";
@@ -52,11 +54,20 @@ async function claimsFeedback(overrides) {
     const card = document.querySelector(`[data-claim="${check.id}"]`);
     assert(card.querySelector("small").firstChild.textContent === labels[key], `Incorrect ${key} label`);
     assert(card.dataset.result === (picked === check.correct ? "correct" : "incorrect"), "Result colors changed");
+    assert(card.dataset.claimResult === key, "Claim result type missing");
+    const badge = card.querySelector(".future-claim-verdict");
+    assert(badge?.textContent === verdicts[key] && badge.querySelector("svg"), "Visible verdict label or icon missing");
+    assert(parseFloat(getComputedStyle(badge).fontSize) >= 14, "Verdict label is too small");
+    assert(parseFloat(getComputedStyle(card.querySelector("small")).fontSize) >= 13, "Feedback text is too small");
+    assert(getComputedStyle(card).boxShadow === "none", "Selection ring overrides submitted feedback");
+    backgrounds.set(key, getComputedStyle(card).backgroundColor);
     assert(card.disabled && card.getAttribute("aria-pressed") === String(picked), "Submitted selection changed");
   }
   assert(covered.size === 4, "All four feedback cases must be covered");
+  assert(new Set(backgrounds.values()).size === 4, "Submitted result types need four distinct backgrounds");
+  assert(backgrounds.get("pickedWrong") !== backgrounds.get("pickedRight"), "Incorrect selected card still looks correct");
   assert(result.score === 2 && result.total === 3 && result.completed && !result.passed, "Claims scoring changed");
-  return { usefulSelected: result.score, usefulTotal: result.total, classificationsCorrect: document.querySelectorAll('[data-claim][data-result="correct"]').length };
+  return { usefulSelected: result.score, usefulTotal: result.total, classificationsCorrect: document.querySelectorAll('[data-claim][data-result="correct"]').length, backgrounds: Object.fromEntries(backgrounds) };
 }
 
 async function settlementBadge() {
@@ -95,6 +106,10 @@ async function settlementBadge() {
 
 async function run() {
   const claims = await claimsFeedback();
+  if (new URLSearchParams(location.search).get("preview") === "claims") {
+    output.textContent = JSON.stringify({ status: "PASS", claims });
+    return;
+  }
   await claimsFeedback({ pickedRight: "CUSTOM PICKED", missed: "CUSTOM MISSED", skippedRight: "CUSTOM SKIPPED", pickedWrong: "CUSTOM EXTRA" });
   const money = await settlementBadge();
   output.textContent = JSON.stringify({ status: "PASS", claims, money });

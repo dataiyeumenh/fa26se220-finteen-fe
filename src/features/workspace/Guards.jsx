@@ -9,6 +9,8 @@ import { canAccessChapter } from "./model";
 import WorkspaceLayout from "./WorkspaceLayout";
 import { Empty } from "./ui";
 import { auth } from "../../api/auth.api";
+import { useKidPlayState } from "../../pages/Kid/Dashboard/hooks/useKidPlayState.js";
+import { canPlayJourneyChapter, resumeJourneyChapter } from "../../pages/Kid/Dashboard/api/kidJourneyProgress.js";
 
 export function RequireAccount({ kind, roles, plans }) {
   const { actor, loading, authError } = useWorkspace();
@@ -90,8 +92,11 @@ export function LegacyGameEntry() {
 export function ChapterGuard({ children }) {
   const { actor } = useWorkspace();
   const [params] = useSearchParams();
+  const resume = actor?.role === "kid" && !params.get("chapter");
   const chapter = Number(params.get("chapter") || 1);
-  if (!canAccessChapter(actor, chapter)) {
+  const entitled = canAccessChapter(actor, chapter);
+  const progress = useKidPlayState({ enabled: actor?.role === "kid" && entitled, refreshKey: resume ? "resume" : chapter });
+  if (!entitled) {
     return (
       <Navigate
         to={
@@ -100,6 +105,21 @@ export function ChapterGuard({ children }) {
         replace
       />
     );
+  }
+  if (actor.role === "kid") {
+    if (progress.loading) return <Empty><p role="status">Đang kiểm tra tiến trình học…</p></Empty>;
+    if (progress.error) return <Empty>
+      <p role="alert">{progress.error}</p>
+      <button className="ws-btn" onClick={progress.retry}>Thử lại</button>
+    </Empty>;
+    if (resume) {
+      const next = resumeJourneyChapter(progress.state);
+      if (next === null) return <Navigate to="/dashboard/kid/lessons" replace />;
+      const search = new URLSearchParams(params);
+      search.set("chapter", String(next));
+      return <Navigate to={`/dashboard/kid/play?${search}`} replace />;
+    }
+    if (!canPlayJourneyChapter(progress.state, chapter)) return <Navigate to="/dashboard/kid/lessons" replace />;
   }
   return children;
 }

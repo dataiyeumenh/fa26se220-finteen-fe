@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { CircleAlert, CircleCheck, CircleMinus, CircleX } from "lucide-react";
 import { InspectCardsDialog } from "./ChapterFiveActivities.jsx";
 import {
   planProjection,
@@ -22,6 +23,12 @@ const CLAIM_RESULT_LABELS = {
   missed: "Nên xem · Bạn bỏ sót",
   skippedRight: "Không cần xem · Bạn bỏ qua ✓",
   pickedWrong: "Không cần xem · Bạn chọn thừa",
+};
+const CLAIM_RESULT_BADGES = {
+  pickedRight: { title: "Chọn đúng", Icon: CircleCheck },
+  missed: { title: "Bỏ sót", Icon: CircleAlert },
+  skippedRight: { title: "Bỏ qua đúng", Icon: CircleMinus },
+  pickedWrong: { title: "Chọn thừa", Icon: CircleX },
 };
 function Counter({
   label,
@@ -298,10 +305,12 @@ export function FuturePlanMiniGame({
               const key = check.correct
                 ? picked ? "pickedRight" : "missed"
                 : picked ? "pickedWrong" : "skippedRight";
+              const { title, Icon } = CLAIM_RESULT_BADGES[key];
               return (
                 <button
                   key={check.id}
                   data-claim={check.id}
+                  data-claim-result={state.checksSubmitted ? key : undefined}
                   aria-pressed={picked}
                   data-result={
                     state.checksSubmitted
@@ -313,6 +322,12 @@ export function FuturePlanMiniGame({
                   disabled={state.checksSubmitted}
                   onClick={() => dispatch({ type: "CHECK", id: check.id })}
                 >
+                  {state.checksSubmitted && (
+                    <span className="future-claim-verdict">
+                      <Icon size={18} aria-hidden="true" />
+                      <span>{title}</span>
+                    </span>
+                  )}
                   <b>{check.label}</b>
                   <small>
                     {state.checksSubmitted

@@ -1,5 +1,5 @@
 ﻿import { useRef, useState } from "react";
-import { ArrowLeft, ArrowRight, Check, Flag, Play } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, Flag, LockKeyhole, Play } from "lucide-react";
 import "./journey-map.css";
 
 const REGIONS = [
@@ -45,7 +45,7 @@ function ChapterPoint({ chapter, point, onSelect }) {
   const current = chapter.status === "current";
   const completed = chapter.status === "completed";
   const locked = chapter.status === "locked";
-  const status = current ? "current" : completed ? "complete" : "available";
+  const status = locked ? "locked" : current ? "current" : completed ? "complete" : "available";
   return (
     <>
       <button
@@ -54,7 +54,7 @@ function ChapterPoint({ chapter, point, onSelect }) {
         className={`atlas-stop ${status}`}
         style={{ left: `${point.x}%`, top: `${point.y}%` }}
         onClick={() => onSelect?.(chapter)}
-        aria-label={`${chapter.title}: ${chapter.subtitle}${current ? ", đang chơi" : ""}`}
+        aria-label={`${chapter.title}: ${chapter.subtitle}${locked ? ", chưa mở" : current ? ", đang chơi" : ""}`}
       >
         <span className="atlas-ring" aria-hidden="true" />
         {current && (
@@ -64,6 +64,7 @@ function ChapterPoint({ chapter, point, onSelect }) {
         )}
         <span className="atlas-medal">
           {String(chapter.id).padStart(2, "0")}
+          {locked && <span className="atlas-lock" aria-hidden="true"><LockKeyhole size={15} /></span>}
           {completed && (
             <span className="atlas-check">
               <Check size={16} />
@@ -72,7 +73,7 @@ function ChapterPoint({ chapter, point, onSelect }) {
         </span>
         <span className="atlas-stop-action">
           {locked ? "Chưa mở" : current ? "Tiếp tục" : completed ? "Chơi lại" : "Khám phá"}{" "}
-          <ArrowRight size={14} />
+          {locked ? <LockKeyhole size={14} /> : <ArrowRight size={14} />}
         </span>
       </button>
       <button
@@ -85,7 +86,7 @@ function ChapterPoint({ chapter, point, onSelect }) {
         <span>CHƯƠNG {chapter.id}</span>
         <strong>{chapter.subtitle}</strong>
         <small>
-          {completed
+          {locked ? "Hoàn thành chương trước" : completed
             ? "✓ Đã hoàn thành"
             : `${chapter.lessonsCompleted}/${chapter.totalLessons} bài · ${chapter.progress || 0}%`}
         </small>
@@ -235,6 +236,7 @@ export default function GameMap({ chapters = [], onChapterClick }) {
         <span>
           <Flag size={14} /> Đang chơi
         </span>
+        <span><LockKeyhole size={14} /> Chưa mở</span>
         <span>Bấm vào đế tròn để vào chương.</span>
       </p>
     </section>

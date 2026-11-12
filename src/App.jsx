@@ -144,7 +144,7 @@ function App() {
           <Route element={<RequireAccount roles={["kid"]} />}>
             <Route element={<DashboardShell />}>
               <Route path="/dashboard/kid" element={<KidDashboard />} />
-              <Route path="/dashboard/kid/games" element={<KidGamesPage />} />
+              <Route path="/dashboard/kid/games" element={<ChapterGuard><KidGamesPage /></ChapterGuard>} />
               <Route
                 path="/dashboard/kid/achievements"
                 element={<KidAchievements />}
