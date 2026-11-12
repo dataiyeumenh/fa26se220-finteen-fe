@@ -17,6 +17,12 @@ import { futureInputs } from "./miniGameInputs.js";
 const cash = (amount) => `${amount.toLocaleString("vi-VN")}đ`;
 const fill = (template, values) =>
   template.replace(/\{(\w+)\}/g, (_, key) => values[key]);
+const CLAIM_RESULT_LABELS = {
+  pickedRight: "Nên xem · Bạn đã chọn ✓",
+  missed: "Nên xem · Bạn bỏ sót",
+  skippedRight: "Không cần xem · Bạn bỏ qua ✓",
+  pickedWrong: "Không cần xem · Bạn chọn thừa",
+};
 function Counter({
   label,
   value,
@@ -280,14 +286,23 @@ export function FuturePlanMiniGame({
           </aside>
           <h3>{cl.question}</h3>
           <p>{cl.instruction}</p>
+          {state.checksSubmitted && (
+            <p>
+              Bạn chọn đúng {cl.checks.filter((check) => check.correct && state.checks.includes(check.id)).length}/{cl.pickCount} thông tin nên xem.
+            </p>
+          )}
           <div className="future-checks">
             {cl.checks.map((check) => {
-              const matched = state.checks.includes(check.id) === check.correct;
+              const picked = state.checks.includes(check.id);
+              const matched = picked === check.correct;
+              const key = check.correct
+                ? picked ? "pickedRight" : "missed"
+                : picked ? "pickedWrong" : "skippedRight";
               return (
                 <button
                   key={check.id}
                   data-claim={check.id}
-                  aria-pressed={state.checks.includes(check.id)}
+                  aria-pressed={picked}
                   data-result={
                     state.checksSubmitted
                       ? matched
@@ -301,8 +316,8 @@ export function FuturePlanMiniGame({
                   <b>{check.label}</b>
                   <small>
                     {state.checksSubmitted
-                      ? `${status(matched)}${state.checks.includes(check.id) ? cl.chosen : cl.notChosen}`
-                      : state.checks.includes(check.id)
+                      ? (cl.resultLabels?.[key] ?? CLAIM_RESULT_LABELS[key])
+                      : picked
                         ? cl.selected
                         : cl.select}
                     {state.checksSubmitted && <span>{check.detail}</span>}
