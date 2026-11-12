@@ -8,7 +8,7 @@ import React from "react";
 import { renderToString } from "react-dom/server";
 import { MemoryRouter } from "react-router-dom";
 
-test("guest demo offers only chapter 1; direct links to chapters 2–8 never render the player", async () => {
+test("guest demo offers only chapter 1 and learners never render a player before progress is loaded", async () => {
   globalThis.localStorage = { getItem() {}, setItem() {} };
   globalThis.sessionStorage = { getItem() {}, setItem() {} };
   const server = await createServer({ server: { middlewareMode: true }, appType: "custom" });
@@ -40,6 +40,30 @@ test("guest demo offers only chapter 1; direct links to chapters 2–8 never ren
       );
       assert.equal(guarded.includes("chapter-player"), chapter === 1);
     }
+    auth.logout();
+    globalThis.fetch = async () => ({
+      ok: true,
+      status: 200,
+      json: async () => ({ code: 0, result: {
+        accessToken: "learner-token", expiresIn: 60,
+        slot: { id: "learner-id", displayName: "Học sinh test", groupContext: "FAMILY" },
+      } }),
+    });
+    await auth.slotLogin("TEST-SLOT", "000000");
+    for (const chapter of [1, 2, 8]) {
+      const guarded = render(
+        React.createElement(ChapterGuard, null, React.createElement("div", null, "chapter-player")),
+        `/dashboard/kid/play?chapter=${chapter}`,
+      );
+      assert.doesNotMatch(guarded, /chapter-player/);
+      assert.match(guarded, /Đang kiểm tra tiến trình học/);
+    }
+    const { default: GameMap } = await server.ssrLoadModule("/src/pages/Kid/Dashboard/components/GameMapReal.jsx");
+    const lockedMap = render(React.createElement(GameMap, { chapters: [7, 8].map((id) => ({ id, title: `Chương ${id}`, subtitle: "Chương chưa mở", status: "locked", progress: 0, lessonsCompleted: 0, totalLessons: 1 })) }));
+    assert.equal((lockedMap.match(/class="atlas-stop locked"/g) || []).length, 2);
+    assert.equal((lockedMap.match(/class="atlas-label locked"/g) || []).length, 2);
+    assert.equal((lockedMap.match(/disabled="" class="atlas-stop locked"/g) || []).length, 2);
+    assert.match(lockedMap, /Hoàn thành chương trước/);
     auth.logout();
   } finally {
     globalThis.fetch = originalFetch;

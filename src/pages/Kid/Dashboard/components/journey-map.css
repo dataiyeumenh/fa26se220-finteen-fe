@@ -143,7 +143,7 @@
   font-size: clamp(26px, 3cqw, 46px);
   transition: transform 0.18s;
 }
-.atlas-stop:hover .atlas-medal {
+.atlas-stop:hover:not(:disabled) .atlas-medal {
   transform: translateY(-5px);
 }
 .atlas-stop.complete .atlas-medal {
@@ -162,6 +162,31 @@
   color: white;
   border-radius: 50%;
   padding: 4px;
+}
+.atlas-stop.locked,
+.atlas-label.locked {
+  cursor: not-allowed;
+}
+.atlas-stop.locked .atlas-medal {
+  background: #e5e7eb;
+  color: #6b7280;
+  outline-color: #9ca3af;
+  box-shadow: 0 6px 0 #aeb5bf;
+}
+.atlas-lock {
+  position: absolute;
+  right: -8px;
+  bottom: -4px;
+  display: flex;
+  padding: 4px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: #6b7280;
+  color: #fff;
+}
+.atlas-label.locked {
+  background: #f3f4f6;
+  border-color: #cbd0d8;
 }
 .atlas-stop.current .atlas-ring {
   border: 3px solid #ffe43b;
@@ -323,6 +348,10 @@
 .atlas-timeline .completed {
   background: #26795e;
   color: white;
+}
+.atlas-timeline .locked {
+  background: #e5e7eb;
+  color: #6b7280;
 }
 .atlas-caption {
   display: flex;

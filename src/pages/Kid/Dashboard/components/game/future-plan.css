@@ -271,13 +271,72 @@
   margin-top: 10px;
   font-size: 12px;
 }
-.future-checks [aria-pressed="true"] {
+.future-checks [aria-pressed="true"]:not([data-result]) {
   border-color: #567550;
   box-shadow: 0 0 0 2px #b4c6a1;
   background: #ecf2df;
 }
 .future-checks button:disabled {
   opacity: 1;
+}
+.future-checks button[data-claim-result] {
+  background: var(--claim-background);
+  border: 2px solid var(--claim-border);
+  border-left-width: 5px;
+  color: #334035;
+  box-shadow: none;
+}
+.future-checks [data-claim-result="pickedRight"] {
+  --claim-background: #edf8f1;
+  --claim-border: #2f855a;
+  --claim-verdict-background: #d5eddf;
+  --claim-verdict-color: #1a5b3b;
+}
+.future-checks [data-claim-result="skippedRight"] {
+  --claim-background: #f4f6f8;
+  --claim-border: #a6b1bc;
+  --claim-verdict-background: #e5eaf0;
+  --claim-verdict-color: #46566a;
+}
+.future-checks [data-claim-result="missed"] {
+  --claim-background: #fff8e6;
+  --claim-border: #c68a1b;
+  --claim-verdict-background: #ffebbb;
+  --claim-verdict-color: #825112;
+}
+.future-checks [data-claim-result="pickedWrong"] {
+  --claim-background: #fff0ee;
+  --claim-border: #cf5d50;
+  --claim-verdict-background: #ffe0da;
+  --claim-verdict-color: #9d3024;
+}
+.future-claim-verdict {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: 6px;
+  max-width: 100%;
+  padding: 5px 9px;
+  border-radius: 8px;
+  background: var(--claim-verdict-background);
+  color: var(--claim-verdict-color);
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.4;
+}
+.future-claim-verdict svg {
+  flex-shrink: 0;
+}
+.future-checks [data-claim-result] small {
+  color: var(--claim-verdict-color);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.6;
+}
+.future-checks [data-claim-result] small span {
+  color: #465348;
+  font-size: 14px;
+  font-weight: 400;
 }
 .future-planner {
   border-top: 1px solid #d3d8c6;
