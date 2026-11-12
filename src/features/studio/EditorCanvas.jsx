@@ -545,8 +545,8 @@ export default function EditorCanvas(props) {
               </button>
             </>
           )}
-          {visualMode && scene && (
-            <button type="button" onClick={onPlay}>
+          {scene && (
+            <button type="button" disabled={busy} onClick={onPlay}>
               <Play size={16} />
               Chơi thử từ cảnh này
             </button>

@@ -1,5 +1,4 @@
 // Browser-only layout fixture: actual components, deterministic local data, no API writes.
-import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import '../src/index.css';
@@ -35,7 +34,7 @@ const stableLayout = document.createElement('style');
 stableLayout.textContent = '*, *::before, *::after { animation: none !important; transition: none !important; }';
 document.head.append(stableLayout);
 const role = name.startsWith('kid') || name === 'game' || name.startsWith('minigame-') ? 'kid' : name === 'parent' ? 'parent' : 'teacher';
-const internalRole = ({ editor: 'GAME_EDITOR', 'editor-menu': 'GAME_EDITOR', reviewer: 'GAME_REVIEWER', manager: 'GAME_MANAGER', admin: 'ADMIN', 'admin-menu': 'ADMIN' })[name];
+const internalRole = ({ editor: 'GAME_EDITOR', 'editor-menu': 'GAME_EDITOR', 'editor-chapter': 'GAME_EDITOR', 'editor-chapter-menu': 'GAME_EDITOR', reviewer: 'GAME_REVIEWER', manager: 'GAME_MANAGER', admin: 'ADMIN', 'admin-menu': 'ADMIN' })[name];
 const actor = { id: 'layout-fixture', name: 'Nguyễn Minh Anh', displayName: 'Nguyễn Minh Anh', email: 'layout@example.test', role, kind: role === 'kid' ? 'kid' : 'adult', plans: ['parent', 'teacher'], roles: internalRole ? [internalRole] : [], source: 'api' };
 if (role === 'kid') actor.learnerRole = name === 'kid-child' ? 'child' : 'student';
 const snapshot = { actor: ['home', 'login', 'register', 'internal-login'].includes(name) ? null : actor, loading: false, entitlements: [], learnerDashboard: null };
@@ -43,6 +42,9 @@ auth.getSnapshot = () => snapshot;
 auth.ensureEntitlements = async () => [];
 auth.ensureLearnerDashboard = async () => ({});
 auth.accountRequest = async (path) => {
+  if (path === '/api/studio/chapters/CH01/draft') return { draft: { status: 'DRAFT', revision: 34 }, content: resolveContentImages(ch1) };
+  if (path === '/api/studio/scene-schema') return {};
+  if (path.endsWith('/voice')) return { missing: 0, failed: 0, entries: [] };
   if (path.startsWith('/api/questions')) return Array.from({ length: 139 }, (_, i) => ({ id: `f${i}`, externalId: `FDIC_MONEY_SMART-${i}`, stem: 'Đây là câu hỏi thử có nội dung dài để kiểm tra bố cục trên điện thoại và máy tính bảng.', options: ['Lựa chọn một', 'Lựa chọn hai', 'Lựa chọn ba', 'Lựa chọn bốn'], correctIndex: 1 }));
   if (path.includes('/assets')) return { items: [], total: 0, page: 0, size: 24 };
   return [];
@@ -58,13 +60,13 @@ if (name === 'home') view = <Homepage />;
 else if (['login', 'register', 'internal-login'].includes(name)) {
   view = <Routes><Route element={name === 'internal-login' ? <InternalAuthLayout /> : <AuthLayout />}><Route path="*" element={<AuthForm registration={name === 'register'} internal={name === 'internal-login'} />} /></Route></Routes>;
 } else if (name === 'admin' || name === 'admin-menu') view = <AdminDashboardContent actor={actor} />;
-else if (internalRole) { route = '/internal'; view = <StudioWorkspace actor={actor} />; }
+else if (internalRole) { route = name.startsWith('editor-chapter') ? '/internal/editor/CH01' : '/internal'; view = <StudioWorkspace actor={actor} />; }
 else if (name === 'game' || name.startsWith('game-') || name.startsWith('minigame-')) {
   const isGame = name === 'game' || name.startsWith('game-');
   const data = resolveContentImages(isGame ? chapter : [ch1, ch2, ch3, chapter, ch5, ch6, ch7, ch8][Number(name.split('-')[1]) - 1]);
   const index = name === 'game' ? 0 : data.scenes.findIndex(scene => scene.type === (isGame ? name.slice(5) : 'minigame'));
-  saveNovelProgress(localStorage, data, initialNovelProgress(data, index));
-  view = <VisualNovelPlayer data={data} />;
+  saveNovelProgress(localStorage, data, initialNovelProgress(data, index), 'responsive-fixture');
+  view = <VisualNovelPlayer data={data} progressOwner="responsive-fixture" />;
 }
 else view = <WorkspaceLayout>{name.startsWith('kid') ? <GameMap chapters={chapters} /> : name === 'quiz' || name === 'quiz-preview' ? <TeacherQuizContent quizState={quizState} /> : name === 'parent' ? <ParentDashboardContent actor={actor} dashboardState={dashboardState} /> : <TeacherDashboardContent actor={actor} dashboardState={dashboardState} />}</WorkspaceLayout>;
 const stopScrollbars = startScrollbars();
@@ -122,6 +124,20 @@ setTimeout(() => {
       result.navigationCenterOffset = centerOffset;
       result.overlayScrollbars = Boolean(document.querySelector('.os-scrollbar.os-theme-finteen'));
       result.previewScrollWorks = previewScrollWorks;
+      if (name.startsWith('editor-chapter')) {
+        const sidebar = document.querySelector('.studio-workspace > .studio-sidebar')?.getBoundingClientRect();
+        const main = document.querySelector('.studio-main')?.getBoundingClientRect();
+        const editor = document.querySelector('.scene-editor')?.getBoundingClientRect();
+        const menuLink = document.querySelector('.studio-workspace > .studio-sidebar nav a');
+        result.editorLayout = {
+          rendered: Boolean(editor?.width),
+          sidebarWidth: sidebar?.width || 0,
+          mainLeft: main?.left,
+          overlap: sidebar?.width && main ? Math.max(0, sidebar.right - main.left) : 0,
+          menuReadable: width <= 900 || (menuLink && parseFloat(getComputedStyle(menuLink).fontSize) >= 12),
+          contentVisible: Boolean(editor && main && editor.left >= main.left && editor.right <= width + 1),
+        };
+      }
       if (name === 'game' || name.startsWith('game-')) {
         const player = document.querySelector('.vn-player')?.getBoundingClientRect();
         const backdrop = document.querySelector('.vn-stage-space')?.getBoundingClientRect();

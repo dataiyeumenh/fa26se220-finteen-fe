@@ -1,14 +1,14 @@
 export const STAFF_ROLES = {
-  editor: "Game Editor",
-  reviewer: "Game Reviewer",
-  manager: "Manager Operator",
-  admin: "Admin",
+  editor: "Biên tập viên trò chơi",
+  reviewer: "Người duyệt trò chơi",
+  manager: "Quản lý vận hành",
+  admin: "Quản trị viên",
 };
 export const STATUS_LABELS = {
   draft: "Bản nháp",
   pending: "Chờ duyệt",
-  passed: "Pass",
-  failed: "Failed",
+  passed: "Đạt",
+  failed: "Không đạt",
   published: "Đã phát hành",
 };
 export const emptyInternal = () => ({
@@ -329,7 +329,7 @@ export function applyInternal(
       ensure(
         ["passed", "failed"].includes(payload.decision) &&
           text(payload.comment),
-        "Chọn Pass/Failed và nhập nhận xét.",
+        "Chọn Đạt/Không đạt và nhập nhận xét.",
       );
       version.status = payload.decision;
       version.review = {
@@ -350,7 +350,7 @@ export function applyInternal(
         version.status === "passed" &&
           version.review?.decision === "passed" &&
           version.review.version === version.number,
-        "Chỉ phát hành đúng phiên bản đã được Reviewer đánh giá Pass.",
+        "Chỉ phát hành đúng phiên bản đã được người duyệt đánh giá Đạt.",
       );
       version.status = "published";
       version.publishedAt = now;

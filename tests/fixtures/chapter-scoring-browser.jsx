@@ -116,10 +116,10 @@ async function run() {
         ...data,
         metadata: { ...data.metadata, persistProgress: true },
       };
-      saveNovelProgress(localStorage, fixtureData, snapshot);
+      saveNovelProgress(localStorage, fixtureData, snapshot, "test-owner");
       root.render(
         <MemoryRouter key={`${data.id}-${requested}`}>
-          <VisualNovelPlayer data={fixtureData} />
+          <VisualNovelPlayer progressOwner="test-owner" data={fixtureData} />
         </MemoryRouter>,
       );
       await wait();

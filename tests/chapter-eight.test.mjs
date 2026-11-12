@@ -180,7 +180,8 @@ test("independent market draws include both endpoints and zero without leaving t
     false,
   );
 });
-test("every market combination has consistent arithmetic, dialogue and identical learning credit", () => {
+test("every market combination has consistent arithmetic, JSON dialogue and identical learning credit", () => {
+  const templates = new Map(JSON.parse(readFileSync("scripts/content-migrations/minigame-texts-2026-11-12.json", "utf8")).CH08.scenes.map(scene => [scene.id, scene.marketText]));
   for (let bonds = -10; bonds <= 10; bonds++)
     for (let equity = -10; equity <= 10; equity++) {
       const draws = [(bonds + 10 + 0.1) / 21, (equity + 10 + 0.1) / 21];
@@ -211,13 +212,13 @@ test("every market combination has consistent arithmetic, dialogue and identical
         );
         assert.equal(scene.inspect, undefined);
         assert.ok(
-          resolveFutureScene(portfolio, scene, results, flags).text.includes(
+          resolveFutureScene(portfolio, { ...scene, marketText: templates.get(scene.id) }, results, flags).text.includes(
             `${settlement.final.toLocaleString("vi-VN")}đ`,
           ),
         );
         const reaction = resolveFutureScene(
           portfolio,
-          scenes.get("CH08_PROMISE_1"),
+          { ...scenes.get("CH08_PROMISE_1"), marketText: templates.get("CH08_PROMISE_1") },
           results,
           flags,
         ).text;
@@ -727,8 +728,8 @@ test("checkpoint saves allocation drafts and one-time settlement without changin
     snapshot[key] = {};
   snapshot.moneyEventsApplied.CH08_MARKET_SETTLEMENT = true;
   snapshot.miniGameResults.CH08_GAME_PORTFOLIO = { ui: draft };
-  saveNovelProgress(storage, data, snapshot);
-  const saved = readNovelProgress(storage, data);
+  saveNovelProgress(storage, data, snapshot, "test-owner");
+  const saved = readNovelProgress(storage, data, "test-owner");
   assert.deepEqual(saved.miniGameResults.CH08_GAME_PORTFOLIO.ui.allocation, {
     cash: 10,
     bonds: 0,
@@ -737,9 +738,11 @@ test("checkpoint saves allocation drafts and one-time settlement without changin
   assert.equal(saved.money, 9780000);
   assert.equal(saved.moneyEventsApplied.CH08_MARKET_SETTLEMENT, true);
 });
-test("chapter eight is loadable and playable by an existing guest without a subscription", () => {
+test("chapter eight requires a learner profile with a subscription", () => {
   assert.equal(CHAPTERS[7], data.title);
-  assert.equal(canAccessChapter({ role: "guest" }, 8), true);
+  assert.equal(canAccessChapter({ role: "guest" }, 8), false);
+  assert.equal(canAccessChapter({ role: "kid", plan: "parent" }, 8), true);
+  assert.equal(canAccessChapter({ role: "kid", plan: "teacher" }, 8), true);
   assert.equal(canAccessChapter(null, 8), false);
   const read = (path) => readFileSync(path, "utf8");
   assert.ok(
@@ -749,13 +752,13 @@ test("chapter eight is loadable and playable by an existing guest without a subs
     ) && !existsSync("src/pages/Kid/Dashboard/data/chapter8V2VisualNovel.js"),
   );
   assert.ok(
-    read("src/features/workspace/KidPages.jsx").includes(
+    !read("src/features/workspace/KidPages.jsx").includes(
       "/dashboard/demo/play?chapter=8",
     ),
   );
   assert.ok(
     read(
-      "src/pages/Kid/Dashboard/components/game/VisualNovelPlayer.jsx",
+      "src/pages/Kid/Dashboard/components/game/miniGameFrames.js",
     ).includes("FuturePlanMiniGame"),
   );
 });

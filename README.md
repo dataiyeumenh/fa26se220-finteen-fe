@@ -2,16 +2,11 @@
 
 > Đọc file này trước khi sửa game. Đây là điểm vào kỹ thuật; tài liệu ảnh An/Minh nằm tại [`public/images/finteen-v2/README.md`](public/images/finteen-v2/README.md), còn mục lục nguồn nằm tại [`docs/README.md`](docs/README.md).
 
-## Dự án này đang có hai tuyến nội dung
+## Nội dung game hiện tại
 
-Không được tự động trộn hai tuyến chỉ vì số chương giống nhau:
+`KidGames` tải chương từ API theo phiên bản phát hành qua `src/api/content.api.js`. Không coi asset cũ trong `public` là bằng chứng nội dung đó đang chạy. Xem [sơ đồ kiến trúc và luồng game](docs/diagrams/README.md).
 
-| Tuyến | Nhân vật | Nguồn dữ liệu | Trạng thái |
-| --- | --- | --- | --- |
-| Gameplay đang chạy | Tí, Hùng và các nhân vật trong `public/images/c1`, `c2` | `scene_data_runtime.js/json`, adapter trong `src/pages/User/Dashboard/data/` | Chương 1–2 đã có player; chương 4 có đoạn demo riêng. |
-| Bộ art/GDD v2 để tích hợp | An, Minh, mẹ, cô Linh và NPC | `public/images/finteen-v2/`, GDD trong `docs/finteen-game-context-sources/` | Có ảnh chương 1–6 và hướng dẫn ghép; chưa phải runtime hoàn chỉnh. |
-
-`cot_truyen_text.txt` thuộc tuyến Tí cũ. Không lấy lời thoại hoặc số tiền ở đó để gắn vào ảnh An/Minh nếu chưa có quyết định chuyển tuyến. Các chương GDD v2 là **tình huống độc lập**, không phải An lớn dần qua một timeline; mỗi chương phải khởi tạo lại tuổi, tiền, mục tiêu và cờ tình huống.
+Các chương là **tình huống độc lập**; mỗi chương khởi tạo tuổi, tiền, mục tiêu và cờ tình huống của riêng mình. README asset mô tả cách ghép hình; lời thoại, số tiền và điều kiện nhánh phải theo dữ liệu chương đã được duyệt.
 
 ## Thứ tự đọc bắt buộc cho AI triển khai
 
@@ -19,17 +14,16 @@ Không được tự động trộn hai tuyến chỉ vì số chương giống 
 2. Đọc [`docs/README.md`](docs/README.md) để chọn đúng nguồn sự thật.
 3. Đọc [`public/images/finteen-v2/README.md`](public/images/finteen-v2/README.md) để hiểu loại ảnh, thứ tự layer và contract dữ liệu.
 4. Đọc `public/images/finteen-v2/chapter-NN/README.md` của chương cần làm; làm đúng bảng **Công thức lắp cảnh**.
-5. Đọc GDD nguồn để lấy lời thoại/điều kiện nhánh. README ảnh quyết định asset nào xuất hiện; GDD quyết định nội dung và logic. Khi mâu thuẫn, không tự đoán: ghi TODO kèm hai nguồn.
+5. Đối chiếu dữ liệu chương từ API và source đang được import để xác định lời thoại, điều kiện nhánh và asset thực tế. Khi nguồn mâu thuẫn, ghi rõ điểm chưa xác nhận.
 6. Chỉ sau đó mới nối vào player, state, route và persistence hiện có.
 
 ## Kiến trúc code liên quan
 
-- `src/pages/User/Dashboard/components/game/VisualNovelPlayer.jsx`: player visual novel hiện tại.
-- `src/pages/User/Dashboard/data/chapter1V2RuntimeAdapter.js`: dữ liệu runtime Chapter 1.
-- `src/pages/User/Dashboard/data/chapter2V2RuntimeAdapter.js`: dữ liệu runtime Chapter 2.
-- `src/pages/User/Dashboard/components/game/ChapterFourMiniGame.jsx`: demo chương 4 tuyến Minh cũ; không phải chương 4 “Mua thông minh” của bộ art v2.
-- `public/images/c1`, `public/images/c2`: asset gameplay tuyến Tí đang chạy.
-- `public/images/finteen-v2`: asset An/Minh được tài liệu hóa để xây tuyến mới.
+- `src/pages/Kid/Dashboard/components/game/VisualNovelPlayer.jsx`: player visual novel hiện tại.
+- `src/pages/Kid/Dashboard/KidGames.jsx` và `src/api/content.api.js`: tải chương theo phiên bản phát hành.
+- `src/pages/Kid/Dashboard/components/game/visualNovelProgress.js`: checkpoint trong trình duyệt.
+- `src/pages/Kid/Dashboard/components/game/playBatch.js`: gửi kết quả cuối chương qua API khi có phiên SLOT hợp lệ.
+- `public/images/finteen-v2`: asset An/Minh và hướng dẫn ghép hình.
 - `src/features/internal`: layout và phân quyền portal nội bộ. `src/features/studio`: các màn/API chương, duyệt, phát hành, tài nguyên, câu hỏi và khóa AI; dùng phiên ACCOUNT hiện có. Hướng dẫn và ma trận quyền tại [`docs/STUDIO.md`](docs/STUDIO.md).
 
 ## Contract tối thiểu khi biến một chương v2 thành game
@@ -115,4 +109,4 @@ node --test tests/chapter-four-story.test.mjs
 npm run build
 ```
 
-Ứng dụng hiện là frontend demo dùng Vite/React và local browser state; đừng mô tả nó như hệ thống backend hoàn chỉnh.
+Repository này chứa frontend Vite/React gọi API; mã backend và schema database nằm ngoài repository. Một số tính năng còn dữ liệu mock, xem [phạm vi tích hợp API](docs/api-coverage-2026-11-02.md).

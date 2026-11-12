@@ -63,7 +63,7 @@ export default function StudioWorkspace({ actor }) {
     <div className="studio-main">
       <header className="studio-global-header">
         <div className="studio-header-title">
-          <strong>Content Studio</strong>
+          <strong>Quản lý nội dung</strong>
           <span>/ {pageTitle}</span>
         </div>
         <div className="studio-header-meta">

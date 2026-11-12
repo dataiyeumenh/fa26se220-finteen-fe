@@ -482,14 +482,15 @@ test("statement locks on confirmation, reveals events sequentially, scores once 
   assert.equal(loanTasks.length, data.endingReport.miniGameMax);
 });
 test("affordability view shows complete income-minus-living-minus-installment arithmetic", () => {
-  assert.deepEqual(affordabilityAt(3000000), {
+  assert.deepEqual(affordabilityAt({ income: 3000000 }), {
     income: 3000000,
     essentials: 2000000,
     repayment: 550000,
     remaining: 450000,
   });
-  assert.equal(affordabilityAt(2700000).remaining, 150000);
-  assert.equal(affordabilityAt(2400000).remaining, -150000);
+  assert.equal(affordabilityAt({ income: 2700000 }).remaining, 150000);
+  assert.equal(affordabilityAt({ income: 2400000 }).remaining, -150000);
+  assert.equal(affordabilityAt({ income: 4200000, essentials: 2300000, repayment: 800000 }).remaining, 1100000);
   const inspect = scenes.get("CH06_FINAL_DATA").inspect;
   assert.equal(inspect.cashflows.length, 2);
   assert.deepEqual(inspect.cards, []);
@@ -677,23 +678,23 @@ test("checkpoint round trips and rejects invalid/old snapshots; unavailable stor
     ...loanResult(loanConfig, {}, [0, 1]),
     ui: { round: 1 },
   };
-  saveNovelProgress(storage, data, snapshot);
-  assert.deepEqual(readNovelProgress(storage, data), {
+  saveNovelProgress(storage, data, snapshot, "test-owner");
+  assert.deepEqual(readNovelProgress(storage, data, "test-owner"), {
     ...snapshot,
     version: data.version,
     sceneIds: snapshot.scenePath.map((index) => data.scenes[index].id),
   });
   assert.equal(
-    readNovelProgress(storage, { ...data, version: "old" }).version,
+    readNovelProgress(storage, { ...data, version: "old" }, "test-owner").version,
     "old",
   );
   storage.setItem(
-    progressKey(data),
+    progressKey(data, "test-owner"),
     JSON.stringify({ ...snapshot, version: data.version, scenePath: [99999] }),
   );
-  assert.equal(readNovelProgress(storage, data), null);
-  storage.setItem(progressKey(data), "{broken");
-  assert.equal(readNovelProgress(storage, data), null);
+  assert.equal(readNovelProgress(storage, data, "test-owner"), null);
+  storage.setItem(progressKey(data, "test-owner"), "{broken");
+  assert.equal(readNovelProgress(storage, data, "test-owner"), null);
   const denied = {
     getItem() {
       throw Error("denied");
@@ -702,6 +703,6 @@ test("checkpoint round trips and rejects invalid/old snapshots; unavailable stor
       throw Error("full");
     },
   };
-  assert.equal(readNovelProgress(denied, data), null);
-  assert.doesNotThrow(() => saveNovelProgress(denied, data, snapshot));
+  assert.equal(readNovelProgress(denied, data, "test-owner"), null);
+  assert.doesNotThrow(() => saveNovelProgress(denied, data, snapshot, "test-owner"));
 });

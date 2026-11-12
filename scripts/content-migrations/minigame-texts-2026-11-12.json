@@ -1,0 +1,106 @@
+{
+  "CH02": {
+    "options": [
+      {
+        "id": "CH02_SC04_CHOICE_A",
+        "requires": { "minFlexibleReserve": 200000, "reserveZoneId": "emergency_buffer" },
+        "lockedReason": "Quỹ dự trù linh hoạt chưa đủ {amount}. Hãy chọn cách xử lý khác."
+      }
+    ]
+  },
+  "CH05": {
+    "scenes": [
+      {
+        "id": "CH05_SC04_RECAP",
+        "planSummary": {
+          "title": "Dự kiến cuối tháng 3",
+          "cases": [
+            { "flag": "term_maturity", "text": "B: dự tính giữ đến tháng 12 để nhận {amount}, nhưng chưa có nguồn học phí cho tháng 3. Kế hoạch chưa đáp ứng thời hạn.", "values": { "amount": 1060000 } },
+            { "flag": "account_choice_A", "text": "B: {amount} theo lãi rút sớm, đủ học phí.", "values": { "amount": 1005000 } },
+            { "flag": "topup_source_verified", "text": "A: {amount} sau phí + {gap} dành từ khoản chi đã xác nhận; cần kiểm tra cuối tháng 1.", "values": { "amount": 992500, "gap": 7500 } },
+            { "flag": "account_pending", "text": "A: {amount} sau phí. Nguồn bù {gap} chưa xác minh; kế hoạch còn chờ.", "values": { "amount": 992500, "gap": 7500 } },
+            { "text": "A: {amount} sau phí, còn thiếu {gap}. Kế hoạch lần này chưa đạt mục tiêu.", "values": { "amount": 992500, "gap": 7500 } }
+          ],
+          "provider": { "flag": "provider_checked", "yes": "Đã kiểm tra thông tin nhà cung cấp.", "no": "Thông tin nhà cung cấp chưa được kiểm tra đầy đủ." },
+          "note": { "text": "Đây là kế hoạch. Ví hiện tại vẫn là {wallet}.", "values": { "wallet": 1000000 } }
+        }
+      }
+    ]
+  },
+  "CH08": {
+    "scenes": [
+      {
+        "id": "CH08_AFTER_PORTFOLIO_1",
+        "marketText": {
+          "up": "Lượt này, trái phiếu {bonds}, còn cổ phiếu {equity}. Tớ muốn xem mỗi giỏ đã thay đổi bao nhiêu.",
+          "down": "Lượt này, trái phiếu {bonds}, còn cổ phiếu {equity}. Tớ muốn xem mỗi giỏ đã thay đổi bao nhiêu.",
+          "flat": "Lượt này, trái phiếu {bonds}, còn cổ phiếu {equity}. Tớ muốn xem mỗi giỏ đã thay đổi bao nhiêu."
+        }
+      },
+      {
+        "id": "CH08_MARKET_INTRO_1",
+        "marketText": {
+          "up": "Lượt tiếp theo dùng lại đúng tình huống vừa thử: trái phiếu {bonds}, cổ phiếu {equity}. Chỉ cách chia tiền là theo phương án cậu vừa chọn.",
+          "down": "Lượt tiếp theo dùng lại đúng tình huống vừa thử: trái phiếu {bonds}, cổ phiếu {equity}. Chỉ cách chia tiền là theo phương án cậu vừa chọn.",
+          "flat": "Lượt tiếp theo dùng lại đúng tình huống vừa thử: trái phiếu {bonds}, cổ phiếu {equity}. Chỉ cách chia tiền là theo phương án cậu vừa chọn."
+        }
+      },
+      {
+        "id": "CH08_SETTLE_FIT",
+        "marketText": {
+          "up": "Sau khi bán hết theo tình huống vừa thử, em thu về {final}. So với {start} ban đầu, số tiền tăng {change}. Đây là kết quả của cách chia em đã chọn, dùng cùng tỷ lệ với lượt tập.",
+          "down": "Sau khi bán hết theo tình huống vừa thử, em thu về {final}. So với {start} ban đầu, số tiền giảm {change}. Đây là kết quả của cách chia em đã chọn, dùng cùng tỷ lệ với lượt tập.",
+          "flat": "Sau khi bán hết theo tình huống vừa thử, em thu về {final}. So với {start} ban đầu, số tiền không đổi. Đây là kết quả của cách chia em đã chọn, dùng cùng tỷ lệ với lượt tập."
+        }
+      },
+      {
+        "id": "CH08_SETTLE_CONCENTRATED",
+        "marketText": {
+          "up": "Sau khi bán hết theo tình huống vừa thử, em thu về {final}. So với {start} ban đầu, số tiền tăng {change}. Đây là kết quả của cách chia em đã chọn, dùng cùng tỷ lệ với lượt tập.",
+          "down": "Sau khi bán hết theo tình huống vừa thử, em thu về {final}. So với {start} ban đầu, số tiền giảm {change}. Đây là kết quả của cách chia em đã chọn, dùng cùng tỷ lệ với lượt tập.",
+          "flat": "Sau khi bán hết theo tình huống vừa thử, em thu về {final}. So với {start} ban đầu, số tiền không đổi. Đây là kết quả của cách chia em đã chọn, dùng cùng tỷ lệ với lượt tập."
+        }
+      },
+      {
+        "id": "CH08_PROMISE_1",
+        "marketText": {
+          "up": "Thấy tiền tăng lên cũng vui thật. Tớ bắt đầu muốn thử tiếp để kiếm thêm.",
+          "down": "Nhìn ví giảm vẫn thấy khó chịu, dù biết đây là mô phỏng.",
+          "flat": "Tổng tiền cuối cùng không đổi. Nhưng nhìn từng giỏ thì vẫn phải để ý chuyện giá lên xuống."
+        }
+      },
+      {
+        "id": "CH08_PROMISE_2",
+        "marketText": {
+          "up": "Ứng dụng bên cạnh đang có thứ tăng mạnh hơn nữa kìa. Hay mình thử thêm một lượt?",
+          "down": "Ứng dụng bên cạnh đang có thứ tăng mạnh kìa. Hay chuyển sang đó để gỡ lại nhanh?",
+          "flat": "Ứng dụng bên cạnh đang có thứ tăng mạnh hơn nữa kìa. Hay mình thử thêm một lượt?"
+        }
+      },
+      {
+        "id": "CH08_PROMISE_3",
+        "marketText": {
+          "up": "Khoan đã. Hai em đang nghĩ đến mục tiêu, hay đang bị con số tăng trên màn hình cuốn theo?",
+          "down": "Khoan đã. Hai em đang nghĩ đến mục tiêu, hay chỉ muốn lấy lại số tiền vừa giảm?",
+          "flat": "Khoan đã. Hai em đang nghĩ đến mục tiêu, hay đang bị con số tăng trên màn hình cuốn theo?"
+        }
+      },
+      {
+        "id": "CH08_PROMISE_4",
+        "marketText": {
+          "up": "Dạ, em đang nghĩ nếu thử tiếp thì có thể kiếm thêm. Nhưng em chưa tìm hiểu tài sản bên kia là gì.",
+          "down": "Dạ, em chỉ đang muốn lấy lại số tiền vừa giảm. Nhưng em còn chưa biết tài sản bên kia là gì.",
+          "flat": "Dạ, em đang nghĩ nếu thử tiếp thì có thể kiếm thêm. Nhưng em chưa tìm hiểu tài sản bên kia là gì."
+        }
+      },
+      {
+        "id": "CH08_FOMO_1",
+        "marketText": {
+          "up": "Em chọn theo thứ đứng đầu bảng vì nghĩ mình còn có thể kiếm thêm. Lúc bấm thấy hào hứng hơn, nhưng em vẫn chưa đọc đủ thông tin.",
+          "down": "Em chọn theo thứ đứng đầu bảng vì muốn thấy số tiền tăng lại. Lúc bấm thấy nhẹ nhõm hơn một chút.",
+          "flat": "Em chọn theo thứ đứng đầu bảng vì nghĩ mình còn có thể kiếm thêm. Lúc bấm thấy hào hứng hơn, nhưng em vẫn chưa đọc đủ thông tin."
+        }
+      }
+    ]
+  }
+}

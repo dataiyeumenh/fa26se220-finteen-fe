@@ -4,11 +4,12 @@ import { MemoryRouter } from "react-router-dom";
 import { VisualNovelPlayer } from "../../src/pages/Kid/Dashboard/components/game/VisualNovelPlayer";
 import { chapter6V2GameData as content } from "./content/index.mjs";
 import { normalizeChapter } from "../../src/pages/Kid/Dashboard/components/game/chapterShape.js";
+import { resolveContentImages } from "../../src/lib/imageAssets.js";
 import { loanTotal } from "../../src/pages/Kid/Dashboard/components/game/loanDetectiveRules.js";
 import { progressKey } from "../../src/pages/Kid/Dashboard/components/game/visualNovelProgress.js";
 import "../../src/index.css";
 // Dữ liệu như game thấy (VisualNovelPlayer chuẩn hoá: inspect → scene, reflection → activity).
-const data = normalizeChapter(content);
+const data = normalizeChapter(resolveContentImages(content));
 
 const loanConfig = data.scenes.find(
   (scene) => scene.game?.kind === "LOAN_DETECTIVE",
@@ -44,13 +45,13 @@ const click = (text) => {
 const mount = (key) =>
   root.render(
     <MemoryRouter>
-      <VisualNovelPlayer key={key} data={data} />
+      <VisualNovelPlayer progressOwner="test-owner" key={key} data={data} />
     </MemoryRouter>,
   );
 const reloadKey = "finteen:ch6-acceptance:resume";
 const resumeCount =
   route === "resume" ? Number(sessionStorage.getItem(reloadKey) || 0) : 0;
-if (!resumeCount) localStorage.removeItem(progressKey(data));
+if (!resumeCount) localStorage.removeItem(progressKey(data, "test-owner"));
 mount(0);
 
 async function run() {
@@ -84,7 +85,7 @@ async function run() {
       !backChecks.has(scene.id)
     ) {
       await wait();
-      const before = localStorage.getItem(progressKey(data));
+      const before = localStorage.getItem(progressKey(data, "test-owner"));
       const saved = JSON.parse(before);
       const previousId = data.scenes[saved.scenePath.at(-2)].id;
       document.querySelector(".vn-menu>summary").click();
@@ -92,7 +93,7 @@ async function run() {
       await wait();
       if (document.querySelector(".vn-player").dataset.sceneId !== previousId)
         throw Error("Back did not show preceding visited scene");
-      if (localStorage.getItem(progressKey(data)) !== before)
+      if (localStorage.getItem(progressKey(data, "test-owner")) !== before)
         throw Error("Back modified progress or scoring");
       if (
         previousId === "CH06_SC02" &&
@@ -111,7 +112,7 @@ async function run() {
       await wait();
       if (document.querySelector(".vn-player").dataset.sceneId !== scene.id)
         throw Error("Review did not resume current scene");
-      if (localStorage.getItem(progressKey(data)) !== before)
+      if (localStorage.getItem(progressKey(data, "test-owner")) !== before)
         throw Error("Review forward reapplies effects");
       backChecks.add(scene.id);
       continue;
@@ -140,7 +141,7 @@ async function run() {
     }
     if (route === "resume" && reloads === 0 && scene.id === "CH06_COMPARE_1") {
       await wait();
-      const saved = JSON.parse(localStorage.getItem(progressKey(data)));
+      const saved = JSON.parse(localStorage.getItem(progressKey(data, "test-owner")));
       if (data.scenes[saved.scenePath.at(-1)].id !== scene.id)
         throw Error("Story checkpoint missing");
       sessionStorage.setItem(reloadKey, String(reloads + 1));
@@ -290,7 +291,7 @@ async function run() {
               throw Error("Wrong draft placement was rejected or not visible");
             if (document.querySelector(".loan-sort-pool [data-offer=A]"))
               throw Error("Placed card is duplicated in pool");
-            const saved = JSON.parse(localStorage.getItem(progressKey(data)));
+            const saved = JSON.parse(localStorage.getItem(progressKey(data, "test-owner")));
             if (saved.miniGameResults[scene.id].answers.sortA)
               throw Error("Sorting scored before submission");
             const transfer = new DataTransfer();
@@ -337,7 +338,7 @@ async function run() {
             return;
           }
           if (route === "resume" && reloads === 1) {
-            const saved = JSON.parse(localStorage.getItem(progressKey(data)));
+            const saved = JSON.parse(localStorage.getItem(progressKey(data, "test-owner")));
             if (
               !saved.miniGameResults[scene.id]?.ui.sorted.B ||
               saved.miniGameResults[scene.id].ui.submittedRounds[1]
@@ -365,7 +366,7 @@ async function run() {
           products.length !== 4 ||
           products.some(
             (image) =>
-              !image.getAttribute("src").startsWith("/images/") ||
+              !loanConfig.cart.items.some(item => item.image === image.getAttribute("src")) ||
               (image.complete && !image.naturalWidth),
           )
         )
@@ -430,7 +431,7 @@ async function run() {
             );
         }
         if (route === "resume" && reloads === 2) {
-          const saved = JSON.parse(localStorage.getItem(progressKey(data)));
+          const saved = JSON.parse(localStorage.getItem(progressKey(data, "test-owner")));
           if (
             saved.miniGameResults[scene.id]?.ui.statementStep !== 1 ||
             saved.miniGameResults[scene.id]?.ui.statementChoice !== "partial"
@@ -503,7 +504,7 @@ async function run() {
     throw Error("Reflection score remains");
   if (!report?.includes("Thám tử khoản vay"))
     throw Error("Missing learning report");
-  const saved = JSON.parse(localStorage.getItem(progressKey(data)));
+  const saved = JSON.parse(localStorage.getItem(progressKey(data, "test-owner")));
   const expectedPlan = ["repair", "recovery"].includes(route)
     ? "C"
     : route === "conditional"

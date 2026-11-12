@@ -1,8 +1,7 @@
 // Classroom scenarios, not forecasts. One independent draw per asset and per playthrough.
 // Dữ liệu mini-game (tài sản, thị trường, thẻ kiểm tra, tháng, mục tiêu, chữ) nằm trong JSON chương: game.config
 // (khung FUTURE_PLAN, config.mode = portfolio | claims | planner). File này chỉ còn luật.
-const fill = (template, values) =>
-  template.replace(/\{(\w+)\}/g, (_, key) => values[key]);
+import { fill } from "./shoppingMissionRules.js";
 const cash = (value) => `${value.toLocaleString("vi-VN")}đ`;
 export function drawMarketScenario(market, random = Math.random) {
   const max = market.maxMove;
@@ -163,8 +162,8 @@ export function chapterEightSettlement(portfolio, results, flags) {
     eventId: settlement.eventId,
   };
 }
-// ponytail: lời thoại câu chuyện phụ thuộc kết quả thị trường vẫn viết ở đây (thuộc chương, không thuộc khung mini-game).
 export function resolveFutureScene(portfolio, scene, results, flags) {
+  if (!scene?.marketText) return scene;
   const { market, delta, final } = chapterEightSettlement(
     portfolio,
     results,
@@ -176,41 +175,16 @@ export function resolveFutureScene(portfolio, scene, results, flags) {
       : value < 0
         ? `giảm ${-value}%`
         : "giữ nguyên giá trị";
-  const outcome =
-    delta > 0
-      ? `tăng ${cash(delta)}`
-      : delta < 0
-        ? `giảm ${cash(-delta)}`
-        : "không đổi";
-  const text = scene.marketSettlement
-    ? `Sau khi bán hết theo tình huống vừa thử, em thu về ${cash(final)}. So với 10.000.000đ ban đầu, số tiền ${outcome}. Đây là kết quả của cách chia em đã chọn, dùng cùng tỷ lệ với lượt tập.`
-    : {
-        CH08_AFTER_PORTFOLIO_1: `Lượt này, trái phiếu ${movement(market.bonds)}, còn cổ phiếu ${movement(market.equity)}. Tớ muốn xem mỗi giỏ đã thay đổi bao nhiêu.`,
-        CH08_MARKET_INTRO_1: `Lượt tiếp theo dùng lại đúng tình huống vừa thử: trái phiếu ${movement(market.bonds)}, cổ phiếu ${movement(market.equity)}. Chỉ cách chia tiền là theo phương án cậu vừa chọn.`,
-        CH08_PROMISE_1:
-          delta < 0
-            ? "Nhìn ví giảm vẫn thấy khó chịu, dù biết đây là mô phỏng."
-            : delta > 0
-              ? "Thấy tiền tăng lên cũng vui thật. Tớ bắt đầu muốn thử tiếp để kiếm thêm."
-              : "Tổng tiền cuối cùng không đổi. Nhưng nhìn từng giỏ thì vẫn phải để ý chuyện giá lên xuống.",
-        CH08_PROMISE_2:
-          delta < 0
-            ? "Ứng dụng bên cạnh đang có thứ tăng mạnh kìa. Hay chuyển sang đó để gỡ lại nhanh?"
-            : "Ứng dụng bên cạnh đang có thứ tăng mạnh hơn nữa kìa. Hay mình thử thêm một lượt?",
-        CH08_PROMISE_3:
-          delta < 0
-            ? "Khoan đã. Hai em đang nghĩ đến mục tiêu, hay chỉ muốn lấy lại số tiền vừa giảm?"
-            : "Khoan đã. Hai em đang nghĩ đến mục tiêu, hay đang bị con số tăng trên màn hình cuốn theo?",
-        CH08_PROMISE_4:
-          delta < 0
-            ? "Dạ, em chỉ đang muốn lấy lại số tiền vừa giảm. Nhưng em còn chưa biết tài sản bên kia là gì."
-            : "Dạ, em đang nghĩ nếu thử tiếp thì có thể kiếm thêm. Nhưng em chưa tìm hiểu tài sản bên kia là gì.",
-        CH08_FOMO_1:
-          delta < 0
-            ? "Em chọn theo thứ đứng đầu bảng vì muốn thấy số tiền tăng lại. Lúc bấm thấy nhẹ nhõm hơn một chút."
-            : "Em chọn theo thứ đứng đầu bảng vì nghĩ mình còn có thể kiếm thêm. Lúc bấm thấy hào hứng hơn, nhưng em vẫn chưa đọc đủ thông tin.",
-      }[scene.id];
-  return text ? { ...scene, title: text, text } : scene;
+  const dir = delta > 0 ? "up" : delta < 0 ? "down" : "flat";
+  const text = fill(scene.marketText[dir] ?? scene.text, {
+    bonds: movement(market.bonds),
+    equity: movement(market.equity),
+    final: cash(final),
+    change: cash(Math.abs(delta)),
+    start: cash(portfolio.startingAmount),
+  });
+  // Lịch sử lựa chọn trong VisualNovelPlayer lưu scene.title.
+  return { ...scene, title: text, text };
 }
 export function createFutureState(config) {
   return {

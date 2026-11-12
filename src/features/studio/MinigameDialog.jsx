@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { ImagePlus } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle } from "../../components/ui/dialog";
+import { vietnameseError } from "../../lib/vietnameseMessages.js";
 import {
   getAt,
   gradeItems,
@@ -48,7 +49,7 @@ export default function MinigameDialog({
         setJson(null);
         setError("");
       } catch (problem) {
-        return setError(`JSON chưa đúng: ${problem.message}`);
+        return setError(vietnameseError(problem));
       }
     }
     setTab(next);
@@ -58,7 +59,7 @@ export default function MinigameDialog({
       try {
         return onSave(JSON.parse(json));
       } catch (problem) {
-        return setError(`JSON chưa đúng: ${problem.message}`);
+        return setError(vietnameseError(problem));
       }
     }
     onSave(draft);

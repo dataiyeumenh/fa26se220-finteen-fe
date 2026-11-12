@@ -5,8 +5,13 @@ export const QUIZ_CSV_TEMPLATE = '\uFEFFCâu hỏi,Lựa chọn A,Lựa chọn B
 export function parseQuizFile(text, filename) {
   let rows;
   if (/\.json$/i.test(filename)) {
-    const value = JSON.parse(text.replace(/^\uFEFF/, ""));
-    rows = Array.isArray(value) ? value : value.questions;
+    let value;
+    try {
+      value = JSON.parse(text.replace(/^\uFEFF/, ""));
+    } catch {
+      throw new Error("Tệp JSON chưa hợp lệ. Vui lòng kiểm tra dấu ngoặc, dấu nháy và dấu phẩy.");
+    }
+    rows = Array.isArray(value) ? value : value?.questions;
   } else if (/\.csv$/i.test(filename)) {
     const table = [];
     let row = [], cell = "", quoted = false;
@@ -38,7 +43,7 @@ export function parseQuizFile(text, filename) {
     throw new Error("File cần từ 1 đến 100 câu hỏi.");
   return rows.map((q, i) => {
     const stem = String(q?.stem ?? q?.text ?? "").trim();
-    const options = q?.options?.map((v) => typeof v === "string" ? v.trim() : "");
+    const options = Array.isArray(q?.options) ? q.options.map((v) => typeof v === "string" ? v.trim() : "") : [];
     if (!stem || options?.length !== 4 || options.some((v) => !v) || !Number.isInteger(q.correctIndex) || q.correctIndex < 0 || q.correctIndex > 3)
       throw new Error(`Câu ${i + 1}: hãy điền nội dung, đủ 4 lựa chọn và đáp án đúng A, B, C hoặc D (JSON: correctIndex từ 0 đến 3).`);
     return { id: `question-${i + 1}`, stem, options, correctIndex: q.correctIndex };
@@ -51,7 +56,7 @@ export function createMockQuizApi(storage, accountId) {
   const write = (rows) => storage.setItem(key(), JSON.stringify(rows));
   const get = (id) => {
     const quiz = read().find((q) => q.id === id);
-    if (!quiz) throw new Error("Không tìm thấy đề mock trên trình duyệt này.");
+    if (!quiz) throw new Error("Không tìm thấy đề mô phỏng trên trình duyệt này.");
     return quiz;
   };
   return {

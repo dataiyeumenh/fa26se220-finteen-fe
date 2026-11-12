@@ -32,8 +32,8 @@ export default function KidDashboard() {
           <WelcomeBanner
             user={dashboard.user}
             streak={dashboard.streak}
-            lessonsThisWeek={dashboard.lessonsThisWeek}
-            lessonsTarget={dashboard.lessonsTarget}
+            completedChapters={dashboard.completedChapters}
+            totalChapters={dashboard.totalChapters}
           />
           <ContinueLearning lessons={dashboard.continueLessons} />
           <Achievements items={dashboard.achievements} source={dashboard.achievementSource} />

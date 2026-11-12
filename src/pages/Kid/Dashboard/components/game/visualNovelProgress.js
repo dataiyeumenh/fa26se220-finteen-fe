@@ -1,11 +1,18 @@
-// Chapter-local progress on this browser; no account or payment credentials are stored.
-export const progressKey = (data) => `finteen:vn:${data.id}`;
-const legacyProgressKey = (data) => `${progressKey(data)}:${data.version}`;
-export function readNovelProgress(storage, data) {
+// Never adopt old chapter-only checkpoints: their owner cannot be established.
+export const novelProgressOwner = (actor) => {
+  if (!actor?.id) return null;
+  return `${actor.role === "kid" ? "slot" : "account"}:${actor.id}`;
+};
+export const progressKey = (data, owner) => owner
+  ? `finteen:vn:v2:${encodeURIComponent(owner)}:${encodeURIComponent(data.id)}`
+  : null;
+const legacyProgressKey = (data, owner) => `${progressKey(data, owner)}:${data.version}`;
+export function readNovelProgress(storage, data, owner) {
+  if (!owner) return null;
   try {
     const saved = JSON.parse(
-      storage.getItem(progressKey(data)) ||
-        storage.getItem(legacyProgressKey(data)),
+      storage.getItem(progressKey(data, owner)) ||
+        storage.getItem(legacyProgressKey(data, owner)),
     );
     if (!saved || !Array.isArray(saved.scenePath) || !saved.scenePath.length)
       return null;
@@ -59,10 +66,11 @@ export function readNovelProgress(storage, data) {
     return null;
   }
 }
-export function saveNovelProgress(storage, data, snapshot) {
+export function saveNovelProgress(storage, data, snapshot, owner) {
+  if (!owner) return false;
   try {
     storage.setItem(
-      progressKey(data),
+      progressKey(data, owner),
       JSON.stringify({
         ...snapshot,
         version: data.version,
@@ -82,11 +90,11 @@ function browserStorage(name) {
     return null;
   }
 }
-function clearChapterStorage(storage, data) {
-  if (!storage) return;
+function clearChapterStorage(storage, data, owner) {
+  if (!storage || !owner) return;
   try {
-    const prefix = `${progressKey(data)}:`;
-    const keys = [progressKey(data), legacyProgressKey(data)];
+    const prefix = `${progressKey(data, owner)}:`;
+    const keys = [progressKey(data, owner), legacyProgressKey(data, owner)];
     for (let index = 0; index < storage.length; index++) {
       const key = storage.key(index);
       if (key?.startsWith(prefix)) keys.push(key);
@@ -96,24 +104,24 @@ function clearChapterStorage(storage, data) {
     /* Other chapters remain untouched even if storage is unavailable. */
   }
 }
-export function loadBrowserNovelProgress(data) {
+export function loadBrowserNovelProgress(data, owner) {
   const local = browserStorage("localStorage");
-  const current = readNovelProgress(local, data);
+  const current = readNovelProgress(local, data, owner);
   if (current) return current;
   const session = browserStorage("sessionStorage");
-  const previous = readNovelProgress(session, data);
-  if (previous && saveNovelProgress(local, data, previous))
-    clearChapterStorage(session, data);
+  const previous = readNovelProgress(session, data, owner);
+  if (previous && saveNovelProgress(local, data, previous, owner))
+    clearChapterStorage(session, data, owner);
   return previous;
 }
-export function saveBrowserNovelProgress(data, snapshot) {
-  if (!saveNovelProgress(browserStorage("localStorage"), data, snapshot)) {
-    saveNovelProgress(browserStorage("sessionStorage"), data, snapshot);
+export function saveBrowserNovelProgress(data, snapshot, owner) {
+  if (!saveNovelProgress(browserStorage("localStorage"), data, snapshot, owner)) {
+    saveNovelProgress(browserStorage("sessionStorage"), data, snapshot, owner);
   }
 }
-export function clearBrowserNovelProgress(data) {
-  clearChapterStorage(browserStorage("localStorage"), data);
-  clearChapterStorage(browserStorage("sessionStorage"), data);
+export function clearBrowserNovelProgress(data, owner) {
+  clearChapterStorage(browserStorage("localStorage"), data, owner);
+  clearChapterStorage(browserStorage("sessionStorage"), data, owner);
 }
 export function initialNovelProgress(data, sceneIndex = 0) {
   return {

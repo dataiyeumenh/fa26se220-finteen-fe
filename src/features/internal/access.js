@@ -1,5 +1,5 @@
 export const INTERNAL_ROLES = {
-  ADMIN: "Quản trị hệ thống và Content Studio.",
+  ADMIN: "Quản trị hệ thống và quản lý nội dung.",
   GAME_EDITOR: "Soạn nháp chương và gửi duyệt trong Studio.",
   GAME_REVIEWER: "Chơi thử nháp, đánh giá Đạt / Trả về trong Studio.",
   GAME_MANAGER: "Phát hành, thu hồi và đổi bản đang chạy trong Studio.",

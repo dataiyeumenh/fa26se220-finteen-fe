@@ -3,6 +3,7 @@ import { MemoryRouter } from "react-router-dom";
 import { VisualNovelPlayer } from "../../src/pages/Kid/Dashboard/components/game/VisualNovelPlayer";
 import { chapter8V2GameData as content } from "./content/index.mjs";
 import { normalizeChapter } from "../../src/pages/Kid/Dashboard/components/game/chapterShape.js";
+import { resolveContentImages } from "../../src/lib/imageAssets.js";
 import {
   availableBudget,
   createFutureState,
@@ -13,7 +14,7 @@ import {
 import { progressKey } from "../../src/pages/Kid/Dashboard/components/game/visualNovelProgress.js";
 import "../../src/index.css";
 // Dữ liệu như game thấy (VisualNovelPlayer chuẩn hoá: inspect → scene, reflection → activity).
-const data = normalizeChapter(content);
+const data = normalizeChapter(resolveContentImages(content));
 const futurePlanConfig = data.scenes.find(
   (scene) => scene.game?.kind === "FUTURE_PLAN",
 ).game.config;
@@ -23,7 +24,7 @@ const params = new URLSearchParams(location.search),
   route = params.get("route") || "goal",
   snapshot = params.get("snapshot");
 const node = document.getElementById("ch8-browser-result"),
-  key = progressKey(data);
+  key = progressKey(data, "test-owner");
 const reloads =
   route === "resume" ? Number(sessionStorage.getItem("ch8:reloads") || 0) : 0;
 if (!reloads) localStorage.removeItem(key);
@@ -59,7 +60,7 @@ const concentrated = ["concentrated", "allbad"].includes(route),
   wrong = route === "wrong";
 createRoot(document.getElementById("root")).render(
   <MemoryRouter>
-    <VisualNovelPlayer data={data} />
+    <VisualNovelPlayer progressOwner="test-owner" data={data} />
   </MemoryRouter>,
 );
 async function run() {

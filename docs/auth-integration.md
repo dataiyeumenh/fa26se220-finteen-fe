@@ -1,40 +1,52 @@
-# Kết nối auth người lớn
+﻿# Xác thực và cấu hình API
 
-Đã nối theo `auth (1).md` và `README (1).md` cập nhật OTP ngày 06/10/2026.
+Đối chiếu source ngày **09/11/2026**: `src/api/config.js`, `auth.api.js`, `auth.client.js`, `firebase.js` và `src/features/workspace/useWorkspace.js`.
 
-## Chạy
+## Cấu hình
 
-- Chạy `npm install`, sau đó `npm run dev`; mở **http://localhost:5173** (không dùng 127.0.0.1). Port cố định để khớp CORS production.
-- `.env` cấu hình backend production. Đây là **dữ liệu thật**. Không còn URL backend mặc định hardcode trong code.
-- Máy mới: copy `.env.example` thành `.env`. Điền Firebase Web config được gửi riêng vào `.env`, rồi khởi động lại Vite. Không dùng service-account JSON/private key. `.env` được gitignore; chỉ commit `.env.example`. Nếu đã có `.env.local`, Vite ưu tiên các giá trị trong file đó.
-- `VITE_SWAGGER_URL` là link tài liệu, không phải URL gửi request API.
-- Backend local: đặt `VITE_API_BASE_URL=http://localhost:8080` (không `/finteen`).
-- Chưa có config: Google tự khóa; đăng nhập mật khẩu không phụ thuộc Firebase.
+- Tạo `.env` từ `.env.example`, cấu hình `VITE_API_BASE_URL`, rồi chạy `npm install` và `npm run dev`. Vite phục vụ tại `http://localhost:5173`.
+- `VITE_API_BASE_URL` là địa chỉ gửi request; `VITE_SWAGGER_URL` chỉ là địa chỉ tài liệu. Không đặt URL Swagger vào API base.
+- Google login cần đủ cấu hình Firebase Web trong các biến `VITE_FIREBASE_*`. Khi thiếu cấu hình, không thể mở popup Google. Không đưa service-account/private key vào frontend.
+- Xem schema biến môi trường trong `.env.example`; không ghi token hoặc mật khẩu vào tài liệu.
 
-## Đã nối
+## ACCOUNT và SLOT
 
-Tất cả code gọi API nằm trong `src/api`: `auth.client.js` chứa endpoint và xử lý response/token; `auth.api.js` khởi tạo phiên dùng chung; `firebase.js` xử lý Google; `config.js` đọc biến môi trường. Đã xóa `dashboard.api.js` giả lập; các dashboard cũ hiện trạng thái chưa kết nối thay vì số liệu mẫu. `src/features/auth/AccountSettings.jsx` chỉ là giao diện.
+`auth.api.js` tạo một singleton bằng `createAuthClient`. `useWorkspace` đọc trạng thái qua `useSyncExternalStore`; không có React Context provider riêng cho store này.
 
-Đăng ký → màn nhập OTP → POST `/api/auth/verify {email, otp}` → nhận token → `/me` → dashboard (Guest khi chưa có gói). Lỗi đăng nhập 3011 chuyển sang màn OTP. Gửi lại xác minh dùng query email, khóa nút 60 giây. Quên mật khẩu → màn OTP và mật khẩu mới → POST `/api/auth/password/reset {email, otp, newPassword}` → quay lại đăng nhập; không tự đăng nhập sau reset. Không gọi link GET hoặc trang HTML cũ. OTP giữ dạng chuỗi để không mất số 0 đầu, 6 số, BE kiểm hạn 10 phút và vô hiệu sau 5 lần sai. Mã mới thay mã cũ. Không lưu OTP hay mật khẩu vào storage. Đổi mật khẩu vẫn thay token mới; Google login/link qua Firebase `user.getIdToken()`, theo [Firebase Web Auth](https://firebase.google.com/docs/auth/web/google-signin).
+| Phiên | Đăng nhập | Request sau đăng nhập |
+| --- | --- | --- |
+| ACCOUNT | `/api/auth/login`, `/api/auth/internal/login`, xác minh OTP hoặc Google | `auth.accountRequest`, header Bearer ACCOUNT |
+| SLOT | `/api/slots/login` với mã hồ sơ và PIN | `auth.slotRequest`, header Bearer SLOT |
+| Công khai | Không yêu cầu token | `auth.publicRequest`; content client có transport riêng |
 
-Token ACCOUNT giữ trong sessionStorage theo base URL; không lưu mật khẩu, không lưu Firebase token, không dùng cookie, không giả lập refresh token. Reload/focus tải lại `/me`, hết hạn theo `expiresIn` hoặc lỗi 3003 thì xóa phiên. 3002 (sai mật khẩu) không tự đăng xuất. sessionStorage vẫn có rủi ro XSS, nên không chèn HTML không tin cậy. Đăng xuất xóa phiên phía FE; BE chưa cung cấp endpoint logout/revoke.
+ACCOUNT gọi `/api/auth/me` để lấy account, roles và plans. Context parent/teacher được chọn từ gói hợp lệ, lưu trong localStorage; tài khoản không có gói được ánh xạ thành guest. Quyền nội bộ lấy từ `actor.roles`, xem [internal-login.md](internal-login.md).
 
-Quyền/gói lấy từ `/me`, không suy ra từ JWT hay lựa chọn vai trên form. Đã gỡ kho tài khoản/phiên workspace demo, mật khẩu mẫu, seed nhân sự và xác thực nội bộ local. Không đọc localStorage để khôi phục tài khoản. Kid khóa đăng nhập trong lúc chờ `slot.md`; nội bộ hiển thị chưa kết nối API. Các thao tác chưa có backend bị từ chối, không giả lập thành công. Nội dung game/chơi thử vẫn giữ nguyên.
+SLOT nhận thông tin hồ sơ từ API đăng nhập và tạo actor `role=kid`, `kind=learner`. `groupContext=FAMILY` tương ứng child/gói parent; `CLASS` tương ứng student/gói teacher. Dashboard người học lấy từ `/api/learner/dashboard` và được cache trong store.
 
-## Xóa dữ liệu cũ trong trình duyệt
+## Bộ nhớ và hạn dùng
 
-Đóng các tab FinTeen khác. Tại `http://localhost:5173`, mở F12 → Application → Storage, chọn đúng origin localhost:5173 và Clear site data; sau đó tải lại trang. Thao tác này xóa dữ liệu demo cũ và đăng xuất trên origin đó, không xóa tài khoản backend. Nếu từng dùng `127.0.0.1` hoặc port khác, cần làm riêng trên origin đó. Có thể xóa riêng các khóa `finteen.workspace.demo.v1`, `finteen.internal.demo.v1` trong Local Storage; `finteen.workspace.session.v1`, `finteen.internal.session.v1` và khóa bắt đầu bằng `finteen.account.v1:` trong Session Storage. Không cần xóa lịch sử hay dữ liệu tất cả website. Lỗi 3001 do BE trả về không được giải quyết bằng xóa storage.
+Token ACCOUNT/SLOT cùng `expiresAt` được lưu trong sessionStorage, theo API base URL. Context người lớn nằm riêng trong localStorage. Khi đăng nhập ACCOUNT thành công, client xóa phiên SLOT cũ.
 
-## Người dùng kiểm tra email thật
+`startAuth` phục hồi ACCOUNT bằng `/api/auth/me`, refresh khi cửa sổ được focus và kiểm tra hết hạn mỗi giây. Đây không phải cơ chế refresh token. `accountRequest` và `slotRequest` chọn đúng phiên, kiểm tra hạn dùng trước khi gọi API; request dùng `credentials: omit` và timeout 20 giây. Client chỉ nhận thành công khi HTTP thành công và `ApiResponse.code === 0`, trả về `result`.
 
-1. Đăng ký Gmail của bạn → màn nhập OTP, chưa có token; nhập mã đúng → vào Guest ngay, không đăng nhập lại.
-2. Đăng nhập trước xác minh: 3011 chuyển sang OTP. Kiểm tra cooldown 60 giây, Inbox/Spam; thử mã sai 3012, hết hạn 3013, đã xác minh 3014. Gửi lại thì dùng mã mới nhất.
-3. Reload trang, kiểm tra tên/gói đúng; đăng xuất rồi đăng nhập lại.
-4. Quên mật khẩu: thông báo trung tính kể cả email không tồn tại. Nhập OTP + mật khẩu mới ngay trong FE; thử 3017/3018; thành công quay lại đăng nhập bằng mật khẩu mới, phiên cũ bị từ chối.
-5. Trong Tài khoản: thử sai mật khẩu cũ (giữ phiên), xác nhận không khớp (không gửi), đổi đúng (tiếp tục dùng token mới).
-6. Có Firebase config: Google account mới; email đã có mật khẩu → 3020 → đăng nhập mật khẩu rồi liên kết. Thử Google đã gắn tài khoản khác → 3021, hủy/chặn popup và đăng nhập lại sau liên kết.
-7. Kiểm tra mất mạng, khôi phục mạng, hết hạn token và tài khoản có cả hai gói.
+Đăng xuất phía frontend xóa phiên trong store/storage. Lỗi phiên ACCOUNT 3003 và các lỗi phiên SLOT 3003/3007/3009 được xử lý theo từng loại phiên. UI guards kiểm tra role/plan; backend vẫn cần thực thi quyền trên API.
 
-Không tự động chạy test tạo tài khoản hay gửi email production. Test mock: `node --test tests/auth-api.test.mjs`. Build: `npm run build`.
+Google login tải động Firebase SDK, mở popup, lấy ID token rồi gửi đến `/api/auth/login/google` để nhận ACCOUNT. Firebase chỉ giữ phiên trong bộ nhớ và đăng xuất sau khi lấy token; ứng dụng không dùng Firestore để lưu dữ liệu nghiệp vụ.
 
-Kiểm tra toàn bộ auth (client + render): `npm run test:auth`. Firebase SDK tải động khi bấm Google. Override `@grpc/grpc-js` lên bản vá 1.14.5 để tránh dependency có cảnh báo của Firestore đi kèm SDK (app không dùng Firestore). Audit còn cảnh báo `brace-expansion` trong dependency tooling có sẵn, không thuộc phần auth. Build còn cảnh báo chunk chính lớn hơn 500 kB.
+## Thông báo xác thực không tiết lộ tài khoản
+
+- Đăng nhập sai mật khẩu, tài khoản không tồn tại, bị khóa hoặc dùng sai cổng đều hiển thị: **Không thể đăng nhập. Vui lòng kiểm tra thông tin đăng nhập và thử lại.** Áp dụng cho người dùng, nội bộ, Google và mã/PIN học sinh.
+- FE không hiển thị nguyên văn lỗi máy chủ ở bước đăng nhập và không đưa liên kết sang cổng khác trong thông báo lỗi. Lỗi đăng nhập cũng không tự chuyển sang bước xác minh email dựa trên mã lỗi; xác minh đăng ký vẫn đi qua luồng OTP riêng.
+- Quên mật khẩu và gửi lại mã có cùng thông báo trung lập cho tài khoản đủ hoặc không đủ điều kiện. Lỗi mạng, giới hạn yêu cầu và sự cố dịch vụ dùng thông báo cố định, không kèm dữ liệu tài khoản hay URL.
+- **Yêu cầu BE cần phối hợp:** từ chối sai cổng trước khi cấp token; trả cùng HTTP status, mã lỗi công khai và cấu trúc thông báo cho các lỗi thông tin đăng nhập; xử lý thời gian phản hồi nhất quán để hạn chế dò tài khoản. Chi tiết nguyên nhân chỉ ghi trong log được bảo vệ, không ghi mật khẩu/OTP/token.
+- Bản sửa FE chỉ kiểm soát nội dung ứng dụng hiển thị. FE không thay đổi được response body/status hoặc thời gian xử lý của BE; không được xem việc ẩn URL là thay thế cho kiểm tra quyền tại API.
+
+Tham khảo: [OWASP Authentication Cheat Sheet — Authentication Responses](https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html#authentication-responses).
+
+## Kiểm tra
+
+```powershell
+npm run test:auth
+```
+
+Đây là hướng dẫn chạy kiểm tra; không khẳng định đã kiểm thử đăng nhập production trong đợt dọn tài liệu. Luồng xác thực được minh họa trong [sơ đồ ACCOUNT/SLOT](diagrams/03-authentication.svg).

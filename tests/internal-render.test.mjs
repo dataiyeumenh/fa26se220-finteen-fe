@@ -33,7 +33,7 @@ test("internal routes require the shared ACCOUNT login instead of seeded credent
     );
     assert.match(login, /Đăng nhập nội bộ/);
     assert.match(login, /type="email"/);
-    assert.match(login, /Game Editor, Game Reviewer/);
+    assert.match(login, /biên tập viên, người duyệt và quản lý trò chơi/);
     assert.doesNotMatch(login, /Loại tài khoản|href="\/register"|Mã PIN/);
     const { accountDestination, hasInternalAccess } =
       await server.ssrLoadModule("/src/features/internal/access.js");

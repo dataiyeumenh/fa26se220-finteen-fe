@@ -1,5 +1,6 @@
 import { auth } from "../../api/auth.api.js";
 import { resolveContentImages } from "../../lib/imageAssets.js";
+import { vietnameseError } from "../../lib/vietnameseMessages.js";
 
 export const hasRole = (...roles) =>
   roles.some((role) => auth.getSnapshot().actor?.roles?.includes(role));
@@ -73,5 +74,4 @@ const PLAIN_ERRORS = {
 };
 export const formatError = (error) =>
   PLAIN_ERRORS[error?.code] ||
-  error?.message ||
-  "Có lỗi không rõ. Thử lại sau.";
+  vietnameseError(error, "Có lỗi không rõ. Thử lại sau.");

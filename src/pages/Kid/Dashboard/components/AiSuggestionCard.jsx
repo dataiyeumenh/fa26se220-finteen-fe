@@ -37,7 +37,7 @@ export default function AiSuggestionCard() {
       </Button>
     </div>
     {open && <Modal title="Hỏi đáp tài chính mẫu" onClose={() => setOpen(false)}>
-      <DataSourceNote>Đang sử dụng mock API với câu trả lời soạn sẵn; chưa kết nối AI và không sử dụng dữ liệu cá nhân của bạn.</DataSourceNote>
+      <DataSourceNote>Đang sử dụng câu trả lời mô phỏng được soạn sẵn; chưa kết nối AI và không sử dụng dữ liệu cá nhân của bạn.</DataSourceNote>
       <div className="ws-actions">
         {assistantTopics.map((topic) => <button className="ws-btn" key={topic.id} onClick={async () => {
           const result = await kidAssistantMockApi.ask(topic.id);

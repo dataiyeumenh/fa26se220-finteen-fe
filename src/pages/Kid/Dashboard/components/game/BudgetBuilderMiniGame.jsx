@@ -12,6 +12,7 @@ import "./chapter-two-minigames.css";
 import { compactInputs } from "./miniGameInputs.js";
 
 export function BudgetBuilderMiniGame({ game, onComplete, className }) {
+  const t = game.texts ?? {};
   const [assignments, setAssignments] = useState({});
   const [selectedAmountId, setSelectedAmountId] = useState(null);
   const [submitted, setSubmitted] = useState(false);
@@ -89,7 +90,7 @@ export function BudgetBuilderMiniGame({ game, onComplete, className }) {
           <span className="c2-eyebrow">
             <WalletCards size={16} /> THỬ THÁCH NGÂN SÁCH
           </span>
-          <h2>Chia phong bì thật hợp lý</h2>
+          <h2>{t.heading ?? "Chia phong bì thật hợp lý"}</h2>
           <p>{game.instruction}</p>
         </div>
         <div className="c2-counter">
@@ -193,7 +194,7 @@ export function BudgetBuilderMiniGame({ game, onComplete, className }) {
         <aside className="c2-budget-board" aria-label="Tổng kết ngân sách">
           <span className="c2-board-pin" aria-hidden="true" />
           <span className="c2-board-kicker">SỔ TAY THÁNG NÀY</span>
-          <h3>Kế hoạch của An</h3>
+          <h3>{t.boardTitle ?? "Kế hoạch của An"}</h3>
           <div className="c2-ledger-row">
             <span>Thu nhập</span>
             <strong>{budgetTotal.toLocaleString("vi-VN")}đ</strong>
@@ -221,7 +222,7 @@ export function BudgetBuilderMiniGame({ game, onComplete, className }) {
               </strong>
               <small>
                 {passed && submitted
-                  ? "Đủ thiết yếu, mục tiêu và dự phòng"
+                  ? (t.boardSafe ?? "Đủ thiết yếu, mục tiêu và dự phòng")
                   : `${assignedCount}/${game.dropZones.length} phong bì đã hoàn tất`}
               </small>
             </span>
@@ -241,7 +242,7 @@ export function BudgetBuilderMiniGame({ game, onComplete, className }) {
           {submitted && !passed
             ? `Bạn đã đúng ${correctCount}/${game.dropZones.length} phong bì. Bạn có thể điều chỉnh các ô màu cam hoặc tiếp tục.`
             : submitted && passed
-              ? "Ngân sách cân bằng: đủ nhu cầu thiết yếu, mục tiêu và quỹ dự trù."
+              ? (t.passSummary ?? "Ngân sách cân bằng: đủ nhu cầu thiết yếu, mục tiêu và quỹ dự trù.")
               : selectedAmountId
                 ? "Đã chọn thẻ tiền. Bấm vào phong bì để phân bổ."
                 : assignedCount === game.dropZones.length

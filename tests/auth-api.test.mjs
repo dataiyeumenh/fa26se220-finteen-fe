@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { createAuthClient } from "../src/api/auth.client.js";
+import { LOGIN_FAILURE_MESSAGE } from "../src/lib/authMessages.js";
 import { createWorkspaceApi } from "../src/features/workspace/api/workspaceApi.js";
 import { createAdminDashboardApi } from "../src/pages/Admin/Dashboard/api/adminDashboardApi.js";
 import { createParentLearnersApi } from "../src/pages/Parent/Learners/api/parentLearnersApi.js";
@@ -106,6 +107,24 @@ test("internal login uses its dedicated endpoint; Studio multipart preserves fil
     (error) => error.code === 3004,
   );
 });
+test("every login endpoint masks server messages disclosing nonexistent accounts or the other portal", async () => {
+  const attempts = [
+    (client) => client.login("test@example.com", "password"),
+    (client) => client.internalLogin("test@example.com", "password"),
+    (client) => client.googleLogin("google-token"),
+    (client) => client.slotLogin("kidcode1", "012345"),
+  ];
+  for (const attempt of attempts) {
+    for (const message of ["Tài khoản không tồn tại.", "Tài khoản nội bộ phải đăng nhập tại /internal/login."]) {
+      const { auth, queue } = setup();
+      queue.push({ code: 3004, message });
+      await assert.rejects(attempt(auth), (error) =>
+        error.message === LOGIN_FAILURE_MESSAGE && error.code === 3004 && error.status === 401);
+      assert.equal(auth.hasSession(), false);
+    }
+  }
+});
+
 test("registration has no session; resend uses encoded query and no body; forgot is public JSON", async () => {
   const { auth, calls, queue } = setup();
   queue.push({ code: 0, result: me }, { code: 0 }, { code: 0 });
@@ -610,6 +629,42 @@ test("learner dashboard uses the SLOT bearer, caches the result and clears revok
   assert.equal(auth.getSnapshot().actor, null);
   assert.equal(auth.hasSession(), false);
 });
+test("late learner dashboard responses cannot populate another learner's session or clear its pending request", async () => {
+  const { options, queue } = setup();
+  const dashboards = [];
+  const auth = createAuthClient({
+    ...options,
+    fetcher: (url, init) => url.endsWith("/api/learner/dashboard")
+      ? new Promise((resolve) => dashboards.push(resolve))
+      : options.fetcher(url, init),
+  });
+  const login = async (id) => {
+    queue.push({ code: 0, result: {
+      accessToken: `token-${id}`, expiresIn: 60,
+      slot: { id, displayName: id, groupContext: "FAMILY" },
+    } });
+    await auth.slotLogin(id, "012345");
+  };
+  const reply = (id, chaptersDone) => ({
+    ok: true, status: 200,
+    json: async () => ({ code: 0, result: { learner: { id }, progress: { chaptersDone } } }),
+  });
+  await login("a");
+  const oldRequest = auth.ensureLearnerDashboard();
+  await login("b");
+  const newRequest = auth.ensureLearnerDashboard();
+  dashboards[0](reply("a", [1]));
+  await oldRequest;
+  assert.equal(auth.getSnapshot().learnerDashboard, null);
+  assert.equal(auth.getSnapshot().learnerDashboardLoading, true);
+  const duplicate = auth.ensureLearnerDashboard();
+  assert.equal(dashboards.length, 2);
+  dashboards[1](reply("b", []));
+  await Promise.all([newRequest, duplicate]);
+  assert.equal(auth.getSnapshot().learnerDashboard.learner.id, "b");
+  assert.deepEqual(auth.getSnapshot().learnerDashboard.progress.chaptersDone, []);
+});
+
 test("network failures are retryable, not a silent success or fake demo login", async () => {
   const { auth, queue } = setup();
   queue.push({ code: 0, result: token }, new Error("Offline"));

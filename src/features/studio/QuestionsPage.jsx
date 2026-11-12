@@ -261,7 +261,7 @@ export default function QuestionsPage({
         actions={
           write && (
             <>
-            <Btn disabled={busy} onClick={() => setImporting(true)}>Import từ file</Btn>
+            <Btn disabled={busy} onClick={() => setImporting(true)}>Nhập từ tệp</Btn>
             <Btn
               tone="primary"
               disabled={busy}

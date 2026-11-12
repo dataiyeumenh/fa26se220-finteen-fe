@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import "./chapter-two-minigames.css";
 import "./chapter-three.css";
 import { compactInputs } from "./miniGameInputs.js";
+import { fill } from "./shoppingMissionRules.js";
 
 const STEPS = [
   { id: "fit", label: "1. Ghép việc với thời gian" },
@@ -11,6 +12,8 @@ const STEPS = [
 ];
 
 export function CareerMatchMiniGame({ game, onComplete, className }) {
+  const t = game.texts ?? {};
+  const words = { name: t.name ?? "An", hours: game.weeklyLimit };
   const jobs = useMemo(() => game.jobs || [], [game.jobs]);
   const questions = useMemo(() => game.questions || [], [game.questions]);
   const maxHours = Math.max(game.weeklyLimit, ...jobs.map((job) => job.hours));
@@ -26,7 +29,7 @@ export function CareerMatchMiniGame({ game, onComplete, className }) {
 
   const [feedback, setFeedback] = useState({
     tone: "info",
-    text: `Mỗi tuần An chỉ có tối đa ${game.weeklyLimit} giờ ngoài giờ học. Hãy đánh dấu từng việc là vừa lịch hay quá giờ.`,
+    text: fill(t.fitIntro ?? "Mỗi tuần {name} chỉ có tối đa {hours} giờ ngoài giờ học. Hãy đánh dấu từng việc là vừa lịch hay quá giờ.", words),
   });
 
   const isFit = (job) => job.hours <= game.weeklyLimit;
@@ -59,7 +62,7 @@ export function CareerMatchMiniGame({ game, onComplete, className }) {
       setFeedback({
         tone: "good",
         text:
-          game.texts?.fitAllCorrect ??
+          t.fitAllCorrect ??
           "Chính xác. Việc 16 giờ vượt quỹ thời gian, hai việc còn lại vừa lịch học.",
       });
     } else {
@@ -122,7 +125,7 @@ export function CareerMatchMiniGame({ game, onComplete, className }) {
       </header>
 
       <ol className="c3-steps" aria-label="Các bước">
-        {STEPS.map((item) => (
+        {STEPS.map((item, index) => (
           <li
             key={item.id}
             className={cn(
@@ -130,7 +133,7 @@ export function CareerMatchMiniGame({ game, onComplete, className }) {
               item.id === "fit" && step === "calc" && "is-done",
             )}
           >
-            {item.label}
+            {t.steps?.[index] ?? item.label}
           </li>
         ))}
       </ol>
@@ -140,8 +143,9 @@ export function CareerMatchMiniGame({ game, onComplete, className }) {
           <div className="c3-limit">
             {game.timeImage && <img src={game.timeImage} alt="" />}
             <span>
-              Quỹ thời gian của An: tối đa {game.weeklyLimit} giờ/tuần ngoài giờ
-              học
+              {t.timeLabel != null
+                ? fill(t.timeLabel, words)
+                : <>{fill("Quỹ thời gian của {name}: tối đa ", words)}{game.weeklyLimit}{" giờ/tuần ngoài giờ học"}</>}
             </span>
           </div>
           <div className="c3-jobs">
@@ -262,8 +266,7 @@ export function CareerMatchMiniGame({ game, onComplete, className }) {
 
       <footer className="c2-footer">
         <p>
-          Lương, lợi nhuận và chi phí ở đây chỉ là số liệu mô phỏng để thực
-          hành.
+          {t.disclaimer ?? "Lương, lợi nhuận và chi phí ở đây chỉ là số liệu mô phỏng để thực hành."}
         </p>
         <div>
           {step === "fit" && !fitSolved && (
@@ -288,7 +291,7 @@ export function CareerMatchMiniGame({ game, onComplete, className }) {
               disabled={!calcAnswered}
               onClick={finish}
             >
-              Hoàn tất Career Match →
+              {t.finish ?? "Hoàn tất Career Match"} →
             </button>
           )}
         </div>

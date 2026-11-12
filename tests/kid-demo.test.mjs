@@ -3,6 +3,49 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { journeyDemoProgress } from "../src/pages/Kid/Dashboard/api/kidJourneyMock.js";
 import { endingReportMock } from "../src/pages/Kid/Dashboard/components/game/endingReportMock.js";
+import { createServer } from "vite";
+import React from "react";
+import { renderToString } from "react-dom/server";
+import { MemoryRouter } from "react-router-dom";
+
+test("guest demo offers only chapter 1; direct links to chapters 2–8 never render the player", async () => {
+  globalThis.localStorage = { getItem() {}, setItem() {} };
+  globalThis.sessionStorage = { getItem() {}, setItem() {} };
+  const server = await createServer({ server: { middlewareMode: true }, appType: "custom" });
+  const originalFetch = globalThis.fetch;
+  try {
+    const { GuestDemo } = await server.ssrLoadModule("/src/features/workspace/KidPages.jsx");
+    const { ChapterGuard } = await server.ssrLoadModule("/src/features/workspace/Guards.jsx");
+    const { auth } = await server.ssrLoadModule("/src/api/auth.api.js");
+    globalThis.fetch = async (url) => ({
+      ok: true,
+      status: 200,
+      json: async () => ({ code: 0, result: url.endsWith("/me")
+        ? { id: "guest", displayName: "Khách", plans: [], roles: [] }
+        : { accessToken: "guest-token", expiresIn: 60 } }),
+    });
+    await auth.login("guest@example.com", "password");
+    const render = (child, path = "/dashboard/demo") => renderToString(
+      React.createElement(MemoryRouter, { initialEntries: [path] }, child),
+    );
+    const html = render(React.createElement(GuestDemo));
+    assert.match(html, /href="\/dashboard\/demo\/play\?chapter=1"/);
+    assert.doesNotMatch(html, /href="\/dashboard\/demo\/play\?chapter=[2-8]"/);
+    assert.match(html, /href="\/dashboard\/plans"/);
+    assert.match(html, /Mở khóa chương 2–8/);
+    for (let chapter = 1; chapter <= 8; chapter++) {
+      const guarded = render(
+        React.createElement(ChapterGuard, null, React.createElement("div", null, "chapter-player")),
+        `/dashboard/demo/play?chapter=${chapter}`,
+      );
+      assert.equal(guarded.includes("chapter-player"), chapter === 1);
+    }
+    auth.logout();
+  } finally {
+    globalThis.fetch = originalFetch;
+    await server.close();
+  }
+});
 
 test("journey preview has completed, current and upcoming chapters with consistent progress", () => {
   const chapters = Array.from({ length: 8 }, (_, i) => journeyDemoProgress(i + 1));

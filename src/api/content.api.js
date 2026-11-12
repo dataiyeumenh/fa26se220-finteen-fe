@@ -4,6 +4,7 @@
 // Giữ releaseVersion của lúc bắt đầu chơi cho hết chương (xem build/api-docs/content.md của BE).
 import { apiConfig } from "./config.js";
 import { resolveContentImages } from "../lib/imageAssets.js";
+import { vietnameseApiMessage } from "../lib/vietnameseMessages.js";
 
 let currentRelease = null;
 
@@ -22,7 +23,8 @@ async function getJson(path) {
   const data = await response.json().catch(() => null);
   if (!response.ok || data?.code !== 0)
     throw new Error(
-      data?.message || `Máy chủ nội dung trả lỗi ${response.status}.`,
+      vietnameseApiMessage(data?.message, data?.code, response.status,
+        "Không tải được nội dung. Vui lòng thử lại."),
     );
   return data.result;
 }

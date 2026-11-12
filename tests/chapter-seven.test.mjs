@@ -443,7 +443,7 @@ test("normalized report needs both games, has no reflections and keeps all endin
     "C_RECOVERY",
   );
 });
-test("chapter-seven checkpoint preserves drafts and decisions; route and card expose the chapter", () => {
+test("chapter-seven checkpoint preserves drafts and decisions; chapter requires a learning plan", () => {
   const memory = new Map(),
     storage = {
       getItem: (key) => memory.get(key),
@@ -470,19 +470,19 @@ test("chapter-seven checkpoint preserves drafts and decisions; route and card ex
   snapshot.miniGameResults.CH07_GAME_SAFETY = {
     ui: { ...createSafetyState([1, 2]), messages: { instantRefund: "check" } },
   };
-  saveNovelProgress(storage, data, snapshot);
-  assert.deepEqual(readNovelProgress(storage, data), {
+  saveNovelProgress(storage, data, snapshot, "test-owner");
+  assert.deepEqual(readNovelProgress(storage, data, "test-owner"), {
     ...snapshot,
     version: data.version,
     sceneIds: snapshot.scenePath.map((index) => data.scenes[index].id),
   });
   assert.equal(
-    readNovelProgress(storage, { ...data, version: "old" }).version,
+    readNovelProgress(storage, { ...data, version: "old" }, "test-owner").version,
     "old",
   );
   assert.equal(CHAPTERS[6], "Biến cố bất ngờ");
   assert.ok(
-    readFileSync("src/features/workspace/KidPages.jsx", "utf8").includes(
+    !readFileSync("src/features/workspace/KidPages.jsx", "utf8").includes(
       "/dashboard/demo/play?chapter=7",
     ),
   );
@@ -492,5 +492,5 @@ test("chapter-seven checkpoint preserves drafts and decisions; route and card ex
       "getChapterContent(chapterCode(chapterNumber))",
     ) && !existsSync("src/pages/Kid/Dashboard/data/chapter7V2VisualNovel.js"),
   );
-  assert.ok(progressKey(data).includes("CH07_V2"));
+  assert.ok(progressKey(data, "test-owner").includes("CH07_V2"));
 });

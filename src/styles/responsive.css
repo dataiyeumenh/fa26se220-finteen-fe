@@ -100,13 +100,6 @@ button, input, select, textarea { font: inherit; }
   .studio-workspace .studio-sidebar nav .studio-nav-group-label { flex-basis: 100%; }
   .studio-workspace .studio-sidebar nav a { min-height: 44px; }
   .studio-workspace .studio-sidebar-bottom { padding-top: 8px; }
-  .studio-workspace.studio-workspace-editing { grid-template-columns: minmax(0, 1fr); }
-  .studio-workspace-editing .studio-sidebar { align-items: stretch; }
-  .studio-workspace-editing .studio-brand > div { display: block; }
-  .studio-workspace-editing .studio-sidebar nav { margin-top: 12px; }
-  .studio-workspace-editing .studio-sidebar nav a,
-  .studio-workspace-editing .studio-sidebar-bottom button { font-size: 12px; gap: 8px; }
-  .studio-workspace-editing .studio-menu-label { display: inline; }
   .studio-workspace .scene-editor-body, .studio-workspace .scene-editor-body.is-wide {
     grid-template-columns: minmax(0, 1fr);
     grid-template-areas: 'canvas' 'timeline' 'inspector';

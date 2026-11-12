@@ -10,10 +10,10 @@ import {
 import { cn } from "@/lib/utils";
 import "./chapter-two-minigames.css";
 import { advanceFallingItems } from "./miniGameRules";
+import { fill } from "./shoppingMissionRules.js";
 
 const formatMoney = (value) => `${value.toLocaleString("vi-VN")}đ`;
 const clamp = (value) => Math.max(0, Math.min(1, value));
-const spriteBase = "/images/finteen-v2/chapter-02/asset-mini-game/savings-race";
 // Tham số đọc từ JSON chương (game.durationSeconds, expenses, expenseChance, coinStep, coinMaxSteps); thiếu → giá trị bản 1.1.0.
 const DEFAULT_EXPENSES = [
   {
@@ -41,6 +41,8 @@ const raceConfig = (game) => ({
   expenseChance: game.expenseChance ?? 0.25,
   coinStep: game.coinStep ?? 50000,
   coinMaxSteps: game.coinMaxSteps ?? 10,
+  coinLabel: game.texts?.coinLabel ?? "Tiền tiết kiệm",
+  coinImage: game.coinImage ?? "/images/finteen-v2/chapter-02/asset-mini-game/savings-race/gold-coin.webp",
 });
 const freshCoin = (cfg) => ({
   x: 0.1 + Math.random() * 0.8,
@@ -55,8 +57,8 @@ const freshItem = (cfg) =>
       }
     : {
         ...freshCoin(cfg),
-        label: "Tiền tiết kiệm",
-        image: `${spriteBase}/gold-coin.webp`,
+        label: cfg.coinLabel,
+        image: cfg.coinImage,
       };
 const freshWave = (cfg, wave) =>
   Array.from({ length: 2 + Math.floor(Math.random() * 2) }, (_, index) => ({
@@ -74,6 +76,10 @@ const freshEngine = (cfg) => ({
 });
 
 export function SavingsRaceMiniGame({ game, onComplete, className }) {
+  const t = game.texts ?? {};
+  const goal = t.goalLabel ?? "laptop";
+  const avoid = new Intl.ListFormat("vi-VN", { style: "long", type: "conjunction" })
+    .format((game.expenses ?? DEFAULT_EXPENSES).map((expense) => expense.label.toLowerCase()));
   const stageRef = useRef(null);
   const engine = useRef(null);
   const keys = useRef(new Set());
@@ -83,7 +89,7 @@ export function SavingsRaceMiniGame({ game, onComplete, className }) {
   const [catchFx, setCatchFx] = useState(null);
   const [status, setStatus] = useState("ready");
   const [feedback, setFeedback] = useState(
-    "Hứng từng đồng tiền để dành mua laptop nhé!",
+    fill(t.readyFeedback ?? "Hứng từng đồng tiền để dành mua {goal} nhé!", { goal, duration }),
   );
   const finished = status === "won" || status === "timeout";
   const secondsLeft = Math.max(0, Math.ceil(duration - frame.elapsed));
@@ -173,7 +179,7 @@ export function SavingsRaceMiniGame({ game, onComplete, className }) {
     keys.current.clear();
     setFrame({ ...engine.current });
     setCatchFx(null);
-    setFeedback("Hứng từng đồng tiền để dành mua laptop nhé!");
+    setFeedback(fill(t.readyFeedback ?? "Hứng từng đồng tiền để dành mua {goal} nhé!", { goal, duration }));
     setStatus("ready");
   };
   const move = (event) => {
@@ -192,17 +198,18 @@ export function SavingsRaceMiniGame({ game, onComplete, className }) {
   return (
     <section
       className={cn("c2-game catch-game", className)}
-      aria-label="Hứng tiền mua laptop"
+      aria-label={`Hứng tiền mua ${goal}`}
     >
       <header className="c2-header">
         <div>
           <span className="c2-eyebrow">
-            <Coins size={16} /> KHU VƯỜN TIẾT KIỆM
+            <Coins size={16} /> {t.eyebrow ?? "KHU VƯỜN TIẾT KIỆM"}
           </span>
-          <h2>Gom tiền nhỏ, chạm ước mơ</h2>
+          <h2>{t.heading ?? "Gom tiền nhỏ, chạm ước mơ"}</h2>
           <p>
-            Hứng tiền, tránh trò chơi, tai nghe xịn và tượng mèo trang trí. Đủ
-            mục tiêu hoặc hết {duration} giây sẽ kết thúc.
+            {t.intro != null
+              ? fill(t.intro, { avoid, duration, goal })
+              : <>{fill("Hứng tiền, tránh {avoid}. Đủ mục tiêu hoặc hết ", { avoid })}{duration}{" giây sẽ kết thúc."}</>}
           </p>
         </div>
         <span
@@ -215,7 +222,7 @@ export function SavingsRaceMiniGame({ game, onComplete, className }) {
         </span>
       </header>
       <div className="catch-score">
-        <img src={game.goalImage} alt="Laptop mục tiêu" />
+        <img src={game.goalImage} alt={`${goal} mục tiêu`} />
         <div>
           <strong>
             {formatMoney(frame.saved)} / {formatMoney(game.targetAmount)}
@@ -265,7 +272,7 @@ export function SavingsRaceMiniGame({ game, onComplete, className }) {
           <i className="catch-hill hill-two" />
         </div>
         <div className="catch-cloud" aria-hidden="true">
-          ✦ Mỗi đồng nhỏ đều đáng quý ✦
+          {t.tagline ?? "✦ Mỗi đồng nhỏ đều đáng quý ✦"}
         </div>
         {status === "playing" &&
           frame.items.map((item) => (
@@ -291,7 +298,7 @@ export function SavingsRaceMiniGame({ game, onComplete, className }) {
         >
           <div className={cn("catch-pig-art", catchFx && "is-catching")}>
             <img
-              src={`${spriteBase}/piggy-bank.webp`}
+              src={game.basketImage ?? "/images/finteen-v2/chapter-02/asset-mini-game/savings-race/piggy-bank.webp"}
               alt=""
               draggable={false}
             />
@@ -349,7 +356,7 @@ export function SavingsRaceMiniGame({ game, onComplete, className }) {
                   <span aria-hidden="true">✦</span>
                   <img
                     src={game.goalImage}
-                    alt="Chiếc laptop bạn đã tiết kiệm đủ tiền để mua"
+                    alt={`${goal} bạn đã tiết kiệm đủ tiền để mua`}
                   />
                   <span aria-hidden="true">✧</span>
                 </div>
@@ -366,10 +373,10 @@ export function SavingsRaceMiniGame({ game, onComplete, className }) {
             </h3>
             <p>
               {status === "won"
-                ? "Bạn đã tiết kiệm đủ tiền mua laptop!"
+                ? fill(t.winText ?? "Bạn đã tiết kiệm đủ tiền mua {goal}!", { goal, duration })
                 : status === "timeout"
                   ? `Hết ${duration} giây. Bạn tiết kiệm được ${formatMoney(frame.saved)}; vẫn có thể tiếp tục câu chuyện.`
-                  : "Dùng phím ← → hoặc kéo hũ để hứng tiền. Tránh trò chơi, tai nghe xịn và tượng mèo trang trí để giữ tiền tiết kiệm!"}
+                  : fill(t.howto ?? "Dùng phím ← → hoặc kéo hũ để hứng tiền. Tránh {avoid} để giữ tiền tiết kiệm!", { avoid, duration, goal })}
             </p>
             {finished ? (
               <button type="button" onClick={finish}>

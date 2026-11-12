@@ -1,4 +1,14 @@
 // ACCOUNT endpoints and ApiResponse handling. No SLOT tokens or demo data.
+import { vietnameseApiMessage } from "../lib/vietnameseMessages.js";
+import { loginErrorMessage } from "../lib/authMessages.js";
+
+const LOGIN_PATHS = new Set([
+  "/api/auth/login",
+  "/api/auth/internal/login",
+  "/api/auth/login/google",
+  "/api/slots/login",
+]);
+
 export class ApiError extends Error {
   constructor(message, code, status) {
     super(message);
@@ -188,7 +198,7 @@ export function createAuthClient({
         [3003, 3007, 3009].includes(data?.code) &&
         slotSession?.accessToken === token
       )
-        logoutSlot(data?.message);
+        logoutSlot(vietnameseApiMessage(data?.message, data?.code, response.status));
       else if (
         authenticated &&
         data?.code === 3003 &&
@@ -196,7 +206,9 @@ export function createAuthClient({
       )
         expired();
       throw new ApiError(
-        data?.message || "Yêu cầu không thành công.",
+        LOGIN_PATHS.has(path)
+          ? loginErrorMessage({ status: response.status })
+          : vietnameseApiMessage(data?.message, data?.code, response.status),
         data?.code,
         response.status,
       );
@@ -303,13 +315,15 @@ export function createAuthClient({
     if (!slotSession) return null;
     if (!force && state.learnerDashboard) return state.learnerDashboard;
     if (learnerDashboardRequest) return learnerDashboardRequest;
+    const token = slotSession.accessToken;
     publish({ learnerDashboardLoading: true, learnerDashboardError: "" });
-    learnerDashboardRequest = request("/api/learner/dashboard", {
+    const pending = request("/api/learner/dashboard", {
       slotAuthenticated: true,
     })
       .then((result) => {
+        if (slotSession?.accessToken !== token) return null;
         if (!result?.learner || !result?.progress)
-          throw new ApiError("Máy chủ trả dữ liệu dashboard chưa đầy đủ.");
+          throw new ApiError("Máy chủ trả dữ liệu tổng quan chưa đầy đủ.");
         publish({
           learnerDashboard: result,
           learnerDashboardLoading: false,
@@ -318,16 +332,18 @@ export function createAuthClient({
         return result;
       })
       .catch((error) => {
-        publish({
-          learnerDashboardLoading: false,
-          learnerDashboardError: error.message,
-        });
+        if (slotSession?.accessToken === token)
+          publish({
+            learnerDashboardLoading: false,
+            learnerDashboardError: error.message,
+          });
         throw error;
       })
       .finally(() => {
-        learnerDashboardRequest = null;
+        if (learnerDashboardRequest === pending) learnerDashboardRequest = null;
       });
-    return learnerDashboardRequest;
+    learnerDashboardRequest = pending;
+    return pending;
   }
   async function slotLogin(code, pin) {
     const normalizedCode = String(code || "")
@@ -351,10 +367,12 @@ export function createAuthClient({
       accessToken: result.accessToken,
       expiresAt: now() + result.expiresIn * 1000,
     };
+    learnerDashboardRequest = null;
     persistSlot();
     publish({
       actor: slotActor(),
       learnerDashboard: null,
+      learnerDashboardLoading: false,
       learnerDashboardError: "",
       loading: false,
       error: "",
