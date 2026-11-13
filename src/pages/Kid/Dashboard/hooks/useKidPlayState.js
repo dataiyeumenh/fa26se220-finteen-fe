@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useWorkspace } from "@/features/workspace/useWorkspace";
 import { kidDashboardApi } from "../api/kidDashboardApi.js";
 import { isJourneyPlayState } from "../api/kidJourneyProgress.js";
+import { flushPendingBatches } from "../components/game/playBatch.js";
 
 export function useKidPlayState({ enabled = true, refreshKey = null } = {}) {
   const { actor } = useWorkspace();
@@ -13,7 +14,11 @@ export function useKidPlayState({ enabled = true, refreshKey = null } = {}) {
   useEffect(() => {
     let active = true;
     if (!enabled || !code) return;
-    kidDashboardApi.getPlayState().then((state) => {
+    const loadState = async () => {
+      await flushPendingBatches(code);
+      return kidDashboardApi.getPlayState();
+    };
+    loadState().then((state) => {
       if (!isJourneyPlayState(state)) throw new Error("Dữ liệu tiến trình chưa hợp lệ. Vui lòng thử lại.");
       if (active) setResult({ key, state, error: "" });
     }).catch((error) => {

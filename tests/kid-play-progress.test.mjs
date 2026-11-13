@@ -76,6 +76,36 @@ test('ending batch reaches backend with the learner slot and attempt', async () 
   } finally { delete globalThis.__playTestApi; }
 });
 
+test('dashboard waits for pending chapter results before loading progress', async () => {
+  const source = await fs.readFile(new URL('../src/pages/Kid/Dashboard/hooks/useKidPlayState.js', import.meta.url), 'utf8');
+  let effect;
+  let result;
+  let finishFlush;
+  let stateRequests = 0;
+  const pending = new Promise((resolve) => { finishFlush = resolve; });
+  const state = { chaptersDone: [1, 2], totalChapters: 8, attemptIndex: 1 };
+  const createHook = new Function('useEffect', 'useState', 'useWorkspace', 'kidDashboardApi', 'isJourneyPlayState', 'flushPendingBatches',
+    source.replace(/^import .*;\r?\n/gm, '').replace('export function', 'function') + '\nreturn useKidPlayState;');
+  const useKidPlayState = createHook(
+    (callback) => { effect = callback; },
+    (initial) => [initial, (value) => { result = value; }],
+    () => ({ actor: { id: 'kid-1', role: 'kid', code: 'learner-a' } }),
+    { getPlayState: async () => { stateRequests++; return state; } },
+    isJourneyPlayState,
+    async (code) => { assert.equal(code, 'learner-a'); await pending; },
+  );
+  assert.equal(useKidPlayState().loading, true);
+  const cleanup = effect();
+  assert.equal(stateRequests, 0);
+  assert.equal(result, undefined);
+  finishFlush();
+  await new Promise((resolve) => setImmediate(resolve));
+  assert.equal(stateRequests, 1);
+  assert.equal(result.state, state);
+  assert.equal(canPlayJourneyChapter(result.state, 3), true);
+  cleanup();
+});
+
 test('switching learners during a progress request cannot submit the previous learner batch', async () => {
   const source = await fs.readFile(new URL('../src/pages/Kid/Dashboard/components/game/playBatch.js', import.meta.url), 'utf8');
   const instrumented = source.replace('return (await import("../../api/kidDashboardApi")).kidDashboardApi;', 'return globalThis.__playTestApi;');
