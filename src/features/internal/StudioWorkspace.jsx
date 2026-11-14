@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
-import { ArrowLeft, BookOpen, CheckCheck, ChevronRight, Image, History, LayoutDashboard, LogOut, PenLine, Rocket, Sparkles } from 'lucide-react'
+import { ArrowLeft, BookOpen, CheckCheck, ChevronRight, Image, History, LayoutDashboard, LogOut, PenLine, Rocket } from 'lucide-react'
 import { auth } from '../../api/auth.api'
 import ChaptersPage from '../studio/ChaptersPage'
 import EditorPage from '../studio/EditorPage'
