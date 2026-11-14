@@ -34,16 +34,16 @@ const audiences = [
 ];
 
 const chapters = [
-  ["01", "Tiền đầu tiên", "Nhu cầu và mong muốn", "chapter-01/scene/sc01-receiving-allowance.webp", "lime"],
-  ["02", "Mục tiêu lớn", "Ngân sách và tiết kiệm", "chapter-02/scene/sc02-dividing-envelopes.webp", "coral"],
-  ["03", "Công việc đầu tiên", "Thu nhập thực nhận", "chapter-03/scene/sc01-three-career-offers.webp", "amber"],
-  ["04", "Mua thông minh", "So sánh tổng chi phí", "chapter-04/scene/sc02-comparing-three-phones.webp", "coral"],
-  ["05", "Ngân hàng và lãi", "Phí, lãi và sức mua", "chapter-05/scene/sc03-money-and-purchasing-power.webp", "sky"],
-  ["06", "Mượn tiền", "Vay và tổng chi phí", "chapter-06/scene/sc02-comparing-loan-offers.webp", "amber"],
-  ["07", "Biến cố bất ngờ", "Bảo hiểm và lừa đảo", "chapter-07/scene/sc03-checking-refund-message.webp", "coral"],
-  ["08", "Kế hoạch 18 tuổi", "Đầu tư và dài hạn", "chapter-08/scene/sc05-explaining-personal-plan.webp", "lime"],
-].map(([number, title, topic, path, tone]) => ({
-  number, title, topic, tone, image: `/images/finteen-v2/${path}`,
+  ["01", "Tiền đầu tiên", "Nhu cầu và mong muốn", ["Phân biệt nhu cầu với mong muốn", "Biết ưu tiên khi sử dụng tiền"], "Needs or Wants", "chapter-01/scene/sc01-receiving-allowance.webp", "lime"],
+  ["02", "Mục tiêu lớn", "Ngân sách và tiết kiệm", ["Lập ngân sách theo tháng", "Chuẩn bị cho chi phí phát sinh"], "Budget Builder", "chapter-02/scene/sc02-dividing-envelopes.webp", "coral"],
+  ["03", "Công việc đầu tiên", "Thu nhập và nghề nghiệp", ["Hiểu thu nhập thực nhận", "Kiểm chứng thông tin nghề nghiệp"], "Career Match", "chapter-03/scene/sc01-three-career-offers.webp", "amber"],
+  ["04", "Mua thông minh", "So sánh tổng chi phí", ["So sánh giá và giá trị sử dụng", "Lưu bằng chứng mua hàng"], "Smart Shopping", "chapter-04/scene/sc02-comparing-three-phones.webp", "coral"],
+  ["05", "Ngân hàng và lãi", "Phí, lãi và sức mua", ["Hiểu phí và lãi suất", "Quan sát tác động của lạm phát"], "Compound Timeline", "chapter-05/scene/sc03-money-and-purchasing-power.webp", "sky"],
+  ["06", "Mượn tiền có dễ không?", "Vay và tổng chi phí", ["Tính tổng chi phí khi vay", "Nhận diện rủi ro trả góp"], "Loan Detective", "chapter-06/scene/sc02-comparing-loan-offers.webp", "amber"],
+  ["07", "Biến cố bất ngờ", "Rủi ro và an toàn", ["Hiểu vai trò của bảo hiểm", "Phát hiện lừa đảo tài chính"], "Scam or Safe", "chapter-07/scene/sc03-checking-refund-message.webp", "coral"],
+  ["08", "Kế hoạch 18 tuổi", "Đầu tư và dài hạn", ["Hiểu rủi ro và đa dạng hóa", "Lập kế hoạch tài chính 12 tháng"], "Portfolio Builder", "chapter-08/scene/sc05-explaining-personal-plan.webp", "lime"],
+].map(([number, title, topic, goals, game, path, tone]) => ({
+  number, title, topic, goals, game, tone, image: `/images/finteen-v2/${path}`,
 }));
 
 const steps = [
@@ -60,6 +60,33 @@ const reportMetrics = [
 
 function Brand() {
   return <a href="#top" className="home-brand" aria-label="FinTeen - Trang chủ"><img src="/brand/finteen-logo-v2.webp" alt="FinTeen" /></a>;
+}
+
+function KnowledgePreview({ onExplore }) {
+  return (
+    <section id="khung-kien-thuc" className="home-journey home-section">
+      <div className="home-shell">
+        <div className="home-section-heading home-section-heading--journey home-knowledge-heading">
+          <div><h2>Con sẽ học gì trong 8 chương?</h2><p>Phụ huynh và giáo viên có thể xem trước chủ đề, kỹ năng và hoạt động trẻ sẽ trải nghiệm.</p></div>
+          <button className="home-knowledge-more" onClick={onExplore}>Xem khung đầy đủ <ArrowRight /></button>
+        </div>
+        <div className="home-journey__path" aria-label="Khung kiến thức tám chương FinTeen">
+          {chapters.map((chapter) => (
+            <article key={chapter.number} className={`home-chapter home-chapter--${chapter.tone}`}>
+              <div className="home-chapter__pin">{chapter.number}</div>
+              <div className="home-chapter__image"><img src={chapter.image} alt="" decoding="async" /></div>
+              <div className="home-chapter__copy">
+                <p className="home-chapter__topic">{chapter.topic}</p>
+                <h3>{chapter.title}</h3>
+                <ul>{chapter.goals.map((goal) => <li key={goal}><Check /><span>{goal}</span></li>)}</ul>
+                <p className="home-chapter__game"><Gamepad2 /><strong>Mini-game:</strong> {chapter.game}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
 }
 
 export default function Homepage() {
@@ -81,7 +108,7 @@ export default function Homepage() {
         <div className="home-shell home-header__inner">
           <Brand />
           <nav className="home-nav" aria-label="Điều hướng chính">
-            <a href="#danh-cho-ai">Dành cho ai</a><a href="#hanh-trinh">Hành trình</a><a href="#bao-cao">Báo cáo</a>
+            <a href="#danh-cho-ai">Dành cho ai</a><a href="#khung-kien-thuc">Khung kiến thức</a><a href="#bao-cao">Báo cáo</a>
           </nav>
           <div className="home-header__actions">
             <button className="home-link-button" onClick={() => navigate("/login")}>Đăng nhập</button>
@@ -94,7 +121,7 @@ export default function Homepage() {
         {menuOpen && (
           <nav className="home-mobile-nav" aria-label="Điều hướng trên điện thoại">
             <a href="#danh-cho-ai" onClick={() => setMenuOpen(false)}>Dành cho ai</a>
-            <a href="#hanh-trinh" onClick={() => setMenuOpen(false)}>Hành trình</a>
+            <a href="#khung-kien-thuc" onClick={() => setMenuOpen(false)}>Khung kiến thức</a>
             <a href="#bao-cao" onClick={() => setMenuOpen(false)}>Báo cáo</a>
             <button onClick={() => navigate("/login")}>Đăng nhập</button>
             <button className="home-solid-button" onClick={() => navigate("/register")}>Bắt đầu</button>
@@ -125,6 +152,8 @@ export default function Homepage() {
           <div className="home-landscape" aria-hidden="true" />
         </section>
 
+        <KnowledgePreview onExplore={() => navigate("/khung-kien-thuc")} />
+
         <section id="danh-cho-ai" className="home-audience home-section">
           <div className="home-shell">
             <div className="home-section-heading home-section-heading--center"><h2>Mỗi người một trải nghiệm rõ ràng</h2><p>Người lớn quản lý và đồng hành. Teen tập trung vào hành trình của mình.</p></div>
@@ -141,21 +170,6 @@ export default function Homepage() {
                 <p className="home-audience__label">{selectedAudience.label}</p><h3>{selectedAudience.title}</h3><p>{selectedAudience.description}</p>
                 <div className="home-audience__detail"><ShieldCheck /><span>{selectedAudience.detail}</span></div>
               </div>
-            </div>
-          </div>
-        </section>
-
-        <section id="hanh-trinh" className="home-journey home-section">
-          <div className="home-shell">
-            <div className="home-section-heading home-section-heading--journey"><h2>8 chương. Một hành trình trưởng thành cùng tiền.</h2><p>Từ khoản tiền đầu tiên đến kế hoạch tuổi 18.</p></div>
-            <div className="home-journey__path" aria-label="Hành trình tám chương FinTeen">
-              {chapters.map((chapter) => (
-                <article key={chapter.number} className={`home-chapter home-chapter--${chapter.tone}`}>
-                  <div className="home-chapter__pin">{chapter.number}</div>
-                  <div className="home-chapter__image"><img src={chapter.image} alt="" loading="lazy" decoding="async" /></div>
-                  <div className="home-chapter__copy"><h3>{chapter.title}</h3><p>{chapter.topic}</p></div>
-                </article>
-              ))}
             </div>
           </div>
         </section>

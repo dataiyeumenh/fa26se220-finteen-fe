@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { LoaderCircle } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -94,7 +95,8 @@ export function ActionForm({
     >
       {children}
       <Notice text={error} />
-      <button className={`ws-btn ${submitTone}`} disabled={busy}>
+      <button className={`ws-btn ${submitTone}`} disabled={busy} aria-busy={busy}>
+        {busy && <LoaderCircle className="ft-action-spinner" aria-hidden="true" />}
         {busy ? "Đang xử lý…" : submit}
       </button>
     </form>

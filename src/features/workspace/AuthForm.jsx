@@ -17,6 +17,7 @@ import OtpForm from "../auth/OtpForm";
 import { accountDestination, hasInternalAccess } from "../internal/access";
 import { completeLogin, wrongLoginMessage } from "../auth/loginPolicy";
 import { authServiceErrorMessage, loginErrorMessage } from "../../lib/authMessages.js";
+import { PageLoader } from "@/components/feedback/LoadingState";
 import "@/components/public/public.css";
 
 function PasswordField({ id, label, hint, ...inputProps }) {
@@ -87,7 +88,7 @@ export default function AuthForm({ registration = false, internal = false }) {
     setOtpMode(null);
   };
   if (loading && !otpMode && !busy)
-    return <p role="status">Đang kiểm tra phiên đăng nhập…</p>;
+    return <PageLoader compact label="Đang kiểm tra phiên đăng nhập…" />;
   const destination = accountDestination;
   if (actor && !busy && !otpMode && hasInternalAccess(actor) === internal)
     return <Navigate replace to={destination(actor)} />;

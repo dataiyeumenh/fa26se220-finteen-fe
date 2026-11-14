@@ -15,8 +15,23 @@ dist-ssr
 !/public/**/
 !/public/**/*.webp
 !/public/**/*.svg
-/docs/
 /output/
+/outputs/
+/docs/
+/tmp/
+/docx_qa/
+/docx_qa_word/
+/.codex-trash/
+
+# Generated documents and office/report artifacts
+*.doc
+*.docx
+*.pdf
+*.ppt
+*.pptx
+*.xls
+*.xlsx
+~$*
 *.local
 .env
 .env.*

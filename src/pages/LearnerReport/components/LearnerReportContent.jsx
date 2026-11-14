@@ -9,10 +9,11 @@ import { Link } from "react-router-dom";
 import { CHAPTERS } from "../../../features/workspace/model";
 import { dateLabel } from "../../../features/workspace/format";
 import { Empty, Heading } from "../../../features/workspace/ui";
+import { ContentSkeleton } from "@/components/feedback/LoadingState";
 
 export default function LearnerReportContent({ reportState }) {
   const { report, loading, error, refresh } = reportState;
-  if (loading) return <Empty>Đang tải tiến độ học sinh…</Empty>;
+  if (loading) return <ContentSkeleton cards={3} label="Đang tải tiến độ học sinh…" />;
   if (error)
     return (
       <Empty>

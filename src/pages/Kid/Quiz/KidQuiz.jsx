@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Empty, Heading } from "@/features/workspace/ui";
 import { dateLabel } from "@/features/workspace/format";
 import { useKidQuizzes } from "./hooks/useKidQuizzes";
+import { ContentSkeleton } from "@/components/feedback/LoadingState";
 
 const score = (quiz) =>
   quiz.totalQuestions
@@ -26,7 +27,7 @@ export default function KidQuiz() {
         </p>
       )}
       {loading ? (
-        <Empty>Đang tải danh sách Quiz…</Empty>
+        <ContentSkeleton variant="cards" cards={3} label="Đang tải danh sách Quiz…" />
       ) : (
         <>
           <section className="ws-kid-quiz-overview">

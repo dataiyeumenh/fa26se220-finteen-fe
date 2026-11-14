@@ -156,7 +156,7 @@ export function useAdminRoleAccounts(reloadKey, q = "", page = 0, size = 20) {
         .listAdminAccounts({ q, page, size })
         .then((list) => {
           if (!active) return;
-          setRows(Array.isArray(list) ? list : []);
+          setRows(Array.isArray(list) ? list : (list?.items ?? []));
           setError("");
         })
         .catch((loadError) => {
@@ -232,6 +232,7 @@ export function useAdminRoles() {
 
 export function useAdminRoleLogs(appliedSubjectId, page, size = 50) {
   const [rows, setRows] = useState([]);
+  const [pagination, setPagination] = useState({ totalElements: 0, totalPages: 0 });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [refreshVersion, setRefreshVersion] = useState(0);
@@ -239,17 +240,22 @@ export function useAdminRoleLogs(appliedSubjectId, page, size = 50) {
     auth
       .listAdminRoleLogs({ subjectId: appliedSubjectId, page, size })
       .then((list) => {
-        setRows(Array.isArray(list) ? list : []);
+        setRows(Array.isArray(list) ? list : (list?.items ?? []));
+        setPagination(Array.isArray(list)
+          ? { totalElements: list.length, totalPages: list.length ? 1 : 0 }
+          : { totalElements: list?.totalElements ?? 0, totalPages: list?.totalPages ?? 0 });
         setError("");
       })
       .catch((loadError) => {
         setRows([]);
+        setPagination({ totalElements: 0, totalPages: 0 });
         setError(errorMessage(loadError, "Không tải được nhật ký phân quyền."));
       })
       .finally(() => setLoading(false));
   }, [appliedSubjectId, page, refreshVersion, size]);
   return {
     rows,
+    pagination,
     loading,
     error,
     startLoading: () => setLoading(true),

@@ -6,6 +6,7 @@ import {
   groupReportCsv,
 } from "../../../../features/workspace/reporting";
 import { Empty, Heading } from "../../../../features/workspace/ui";
+import { ContentSkeleton } from "@/components/feedback/LoadingState";
 
 const statusLabel = (status) =>
   ({ ACTIVE: "Hoạt động", ARCHIVED: "Đã thu hồi", WIPED: "Đã xoá" })[status] ||
@@ -40,7 +41,7 @@ export default function ParentReportsContent({ reportState }) {
     warning,
     refresh,
   } = reportState;
-  if (loading) return <Empty>Đang tải báo cáo từ máy chủ…</Empty>;
+  if (loading) return <ContentSkeleton variant="table" label="Đang tải báo cáo gia đình…" />;
   if (error)
     return (
       <Empty>

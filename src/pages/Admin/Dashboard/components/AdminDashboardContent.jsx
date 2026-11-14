@@ -8,6 +8,7 @@ import {
   Gift,
   History,
   KeyRound,
+  LayoutDashboard,
   LogOut,
   RefreshCw,
   Save,
@@ -16,6 +17,7 @@ import {
   UserCog,
   UserMinus,
   UserPlus,
+  Users,
   X,
 } from "lucide-react";
 import useAdminDashboard, {
@@ -31,6 +33,11 @@ import "../styles/admin.css";
 import "../styles/admin-modern.css";
 import AiKeysPage from "../../../../features/studio/AiKeysPage";
 import ResponsiveSidebar from "@/components/shared/ResponsiveSidebar";
+import {
+  AdminAccountsTab,
+  AdminOverviewTab,
+  AdminTransactionsTab,
+} from "./AdminInsightsTabs";
 
 const PLAN_KINDS = ["PARENT", "TEACHER"];
 const STATUS_LABELS = {
@@ -39,6 +46,8 @@ const STATUS_LABELS = {
   FAILED: "Thất bại",
 };
 const TABS = [
+  ["overview", "Tổng quan", LayoutDashboard],
+  ["accounts", "Tài khoản", Users],
   ["plans", "Bảng giá", BadgeDollarSign],
   ["transactions", "Giao dịch", CreditCard],
   ["roles", "Phân quyền", UserCog],
@@ -221,6 +230,8 @@ function PlansTab() {
   );
 }
 
+// Kept temporarily for compatibility with older snapshots; the new tab lives in AdminInsightsTabs.
+// eslint-disable-next-line no-unused-vars
 function TransactionsTab() {
   const [status, setStatus] = useState("");
   const [page, setPage] = useState(0);
@@ -875,7 +886,7 @@ function RoleLogsTab() {
   const [search, setSearch] = useState("");
   const [action, setAction] = useState("");
   const size = 50;
-  const { rows, loading, error, startLoading, reload } = useAdminRoleLogs(
+  const { rows, pagination, loading, error, startLoading, reload } = useAdminRoleLogs(
     appliedSubjectId,
     page,
     size,
@@ -965,12 +976,19 @@ function RoleLogsTab() {
         </label>
       </div>
       <Notice type="error">{error}</Notice>
-      <section className="admin-card admin-table-card">
+      <section className="admin-card admin-table-card admin-role-log-table">
         {loading ? (
           <div className="admin-loading">Đang tải nhật ký…</div>
         ) : visibleRows.length ? (
           <div className="admin-table-wrap">
             <table>
+              <colgroup>
+                <col className="admin-log-col-time" />
+                <col className="admin-log-col-actor" />
+                <col className="admin-log-col-action" />
+                <col className="admin-log-col-target" />
+                <col className="admin-log-col-reason" />
+              </colgroup>
               <thead>
                 <tr>
                   <th>Thời gian</th>
@@ -1035,10 +1053,12 @@ function RoleLogsTab() {
         >
           ← Trang trước
         </button>
-        <span>Trang {page + 1}</span>
+        <span>
+          Trang {page + 1}/{Math.max(1, pagination.totalPages)} · {pagination.totalElements} bản ghi
+        </span>
         <button
           className="admin-secondary"
-          disabled={loading || rows.length < size}
+          disabled={loading || page + 1 >= pagination.totalPages}
           onClick={() => changePage(page + 1)}
         >
           Trang sau →
@@ -1142,13 +1162,25 @@ function GrantTab() {
 }
 
 export default function AdminDashboardContent({ actor }) {
-  const [tab, setTab] = useState("plans");
+  const [tab, setTab] = useState("overview");
+  const [transactionQuery, setTransactionQuery] = useState("");
   const { logout } = useAdminDashboard();
   const content =
-    tab === "ai-keys" ? (
+    tab === "overview" ? (
+      <AdminOverviewTab />
+    ) : tab === "accounts" ? (
+      <AdminAccountsTab
+        onShowTransactions={(email) => {
+          setTransactionQuery(email);
+          setTab("transactions");
+        }}
+      />
+    ) : tab === "ai-keys" ? (
       <AiKeysPage />
     ) : tab === "transactions" ? (
-      <TransactionsTab />
+      <AdminTransactionsTab
+        initialQuery={transactionQuery}
+      />
     ) : tab === "roles" ? (
       <RolesTab actor={actor} />
     ) : tab === "role-logs" ? (
@@ -1184,7 +1216,10 @@ export default function AdminDashboardContent({ actor }) {
               className={tab === id ? "active" : ""}
               data-navigation-item
               aria-current={tab === id ? "page" : undefined}
-              onClick={() => setTab(id)}
+              onClick={() => {
+                if (id === "transactions") setTransactionQuery("");
+                setTab(id);
+              }}
             >
               <Icon size={19} />
               {label}
