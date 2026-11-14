@@ -397,6 +397,43 @@ test("admin API methods use the account token and documented payloads", async ()
   for (const call of calls.slice(3))
     assert.equal(call.headers.Authorization, "Bearer account-token");
 });
+test("admin reporting, detail and refund APIs preserve filters and payloads", async () => {
+  const { auth, queue, calls } = setup();
+  const api = createAdminDashboardApi(auth);
+  queue.push({ code: 0, result: token }, { code: 0, result: me });
+  await auth.login("admin@example.com", "password");
+  queue.push(
+    { code: 0, result: {} },
+    { code: 0, result: { items: [], totalElements: 0 } },
+    { code: 0, result: {} },
+    { code: 0, result: { orderCode: 123 } },
+    { code: 0, result: { orderCode: 123, refundedAt: "2026-11-14T00:00:00Z" } },
+    { code: 0, result: { items: [], totalElements: 0 } },
+    { code: 0, result: { account: { id: "account-1" } } },
+  );
+  await api.getAdminDashboard();
+  await api.listAdminTransactions({ status: "PAID", q: "member@example.com", from: "2026-10-16", to: "2026-11-14", refunded: false, page: 1, size: 200 });
+  await api.getAdminTransactionStats({ from: "2026-10-16", to: "2026-11-14" });
+  await api.getAdminTransaction(123);
+  await api.refundAdminTransaction({ orderCode: 123, amount: null, reason: " Khách đổi ý " });
+  await api.listAdminAccounts({ q: "member", role: "GAME_EDITOR", plan: "PARENT", page: 0, size: 20 });
+  await api.getAdminAccount("account-1");
+  assert.match(calls[2].url, /\/api\/admin\/dashboard$/);
+  assert.match(calls[3].url, /status=PAID/);
+  assert.match(calls[3].url, /q=member%40example\.com/);
+  assert.match(calls[3].url, /from=2026-10-16/);
+  assert.match(calls[3].url, /to=2026-11-14/);
+  assert.match(calls[3].url, /refunded=false/);
+  assert.match(calls[3].url, /size=100/);
+  assert.match(calls[4].url, /transactions\/stats\?from=2026-10-16&to=2026-11-14$/);
+  assert.match(calls[5].url, /transactions\/123$/);
+  assert.equal(calls[6].method, "POST");
+  assert.deepEqual(JSON.parse(calls[6].body), { reason: "Khách đổi ý" });
+  assert.match(calls[7].url, /role=GAME_EDITOR/);
+  assert.match(calls[7].url, /plan=PARENT/);
+  assert.match(calls[8].url, /accounts\/account-1$/);
+  for (const call of calls.slice(2)) assert.equal(call.headers.Authorization, "Bearer account-token");
+});
 test("payment API creates a VietQR order, lists, checks and cancels it", async () => {
   const { auth, queue, calls } = setup();
   const api = createWorkspaceApi(auth);
