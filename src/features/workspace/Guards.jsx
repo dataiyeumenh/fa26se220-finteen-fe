@@ -11,10 +11,11 @@ import { Empty } from "./ui";
 import { auth } from "../../api/auth.api";
 import { useKidPlayState } from "../../pages/Kid/Dashboard/hooks/useKidPlayState.js";
 import { canPlayJourneyChapter, resumeJourneyChapter } from "../../pages/Kid/Dashboard/api/kidJourneyProgress.js";
+import { PageLoader } from "@/components/feedback/LoadingState";
 
 export function RequireAccount({ kind, roles, plans }) {
   const { actor, loading, authError } = useWorkspace();
-  if (loading) return <Empty>Đang kiểm tra phiên đăng nhập…</Empty>;
+  if (loading) return <PageLoader label="Đang kiểm tra phiên đăng nhập…" />;
   if (authError && auth.hasSession())
     return (
       <Empty>

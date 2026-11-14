@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react'
-import { Link, NavLink, Navigate, useLocation } from 'react-router-dom'
+import { Link, NavLink, useLocation } from 'react-router-dom'
 import { ArrowLeft, BookOpen, CheckCheck, ChevronRight, Image, History, LayoutDashboard, LogOut, PenLine, Rocket, Sparkles } from 'lucide-react'
 import { auth } from '../../api/auth.api'
 import ChaptersPage from '../studio/ChaptersPage'
@@ -15,6 +15,7 @@ import { useStudioResource } from '../studio/useStudioResource'
 import { useToast } from '../studio/useToast'
 import './studio-workspace.css'
 import ResponsiveSidebar from '@/components/shared/ResponsiveSidebar'
+import NotFoundPage from '@/pages/NotFoundPage'
 
 const menuIcons = { chapter: PenLine, review: CheckCheck, release: Rocket, history: History, asset: Image, question: BookOpen }
 
@@ -39,7 +40,7 @@ export default function StudioWorkspace({ actor }) {
   const counts = { review: count('review'), release: count('publish') }
   const isAdmin = actor.roles.includes('ADMIN')
   const pageTitle = editorCode ? `Trình soạn ${editorCode}` : current?.title || 'Tổng quan'
-  if (pathname !== '/internal' && pathname !== '/internal/' && !current) return <Navigate to="/internal" replace />
+  if (pathname !== '/internal' && pathname !== '/internal/' && !current) return <NotFoundPage internal />
   const name = actor.displayName || actor.name || actor.email
   const pageProps = { notify, title: current?.title, intro: current?.description }
   return <div className={`studio-workspace${editorCode ? ' studio-workspace-editing' : ''}`}>

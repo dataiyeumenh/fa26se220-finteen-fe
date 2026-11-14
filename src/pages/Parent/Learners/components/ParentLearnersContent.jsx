@@ -7,6 +7,7 @@ import {
   Heading,
   Modal,
 } from "../../../../features/workspace/ui";
+import { ContentSkeleton } from "@/components/feedback/LoadingState";
 
 export default function ParentLearnersContent({ learnerState }) {
   const {
@@ -36,7 +37,7 @@ export default function ParentLearnersContent({ learnerState }) {
       setModal(null);
       return result;
     });
-  if (loading) return <Empty>Đang tải không gian gia đình…</Empty>;
+  if (loading) return <ContentSkeleton variant="cards" cards={3} label="Đang tải không gian gia đình…" />;
   if (!group)
     return (
       <>
