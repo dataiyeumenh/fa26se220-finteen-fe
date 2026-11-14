@@ -68,7 +68,7 @@ export default function StudioWorkspace({ actor }) {
         </div>
         <div className="studio-header-meta">
           {current?.readOnly && <span className="studio-view-mode">Chỉ xem</span>}
-          <span className="studio-role-pill"><Sparkles size={15} aria-hidden="true" />{isAdmin ? 'Quản trị viên' : 'Thành viên Studio'}</span>
+          <span className="studio-role-pill">{isAdmin ? 'Quản trị viên' : 'Thành viên Studio'}</span>
         </div>
       </header>
       {editorCode && <nav className="studio-topbar" aria-label="Vị trí"><Link className="scene-editor-back" to="/internal/chapters" onClick={event => { if (editorNavigation.busy || (editorNavigation.dirty && !window.confirm('Bạn có thay đổi chưa lưu. Quay về danh sách chương và bỏ các thay đổi này?'))) event.preventDefault() }}><ArrowLeft size={16} aria-hidden="true" />Danh sách chương</Link><ChevronRight size={14} aria-hidden="true" /><strong>{editorCode}</strong></nav>}

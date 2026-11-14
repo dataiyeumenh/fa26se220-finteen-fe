@@ -385,46 +385,118 @@ function QuizDetail({ quiz, onClose }) {
 function QuizResults({ quiz, onClose }) {
   const { data, slotResult, setSlotResult, error, viewSlot } =
     useTeacherQuizResults(quiz.id);
+  const rows = data?.rows || [];
+  const submitted = rows.filter((row) => row.attempted);
+  const average = submitted.length
+    ? Math.round(
+        submitted.reduce(
+          (sum, row) =>
+            sum +
+            (row.totalQuestions
+              ? (Number(row.score || 0) / Number(row.totalQuestions)) * 100
+              : 0),
+          0,
+        ) / submitted.length,
+      )
+    : 0;
   return (
-    <Modal title={`Kết quả · ${quiz.title}`} onClose={onClose}>
-      <Notice text={error} />
-      {data ? (
-        <div className="ws-table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Học sinh</th>
-                <th>Trạng thái</th>
-                <th>Điểm</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.rows.map((row) => (
-                <tr key={row.slotId}>
-                  <td>{row.displayName || "Đã xóa"}</td>
-                  <td>{row.attempted ? "Đã nộp" : "Chưa nộp"}</td>
-                  <td>
-                    {row.attempted ? `${row.score}/${row.totalQuestions}` : "—"}
-                  </td>
-                  <td>
-                    {row.attempted && (
-                      <button
-                        className="ws-btn compact"
-                        onClick={() => void viewSlot(row.slotId)}
-                      >
-                        Xem bài
-                      </button>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      ) : (
-        <Empty>Đang tải kết quả…</Empty>
-      )}
+    <Modal
+      className="ws-quiz-results-modal"
+      title={`Kết quả · ${quiz.title}`}
+      description="Theo dõi tình trạng nộp bài và kết quả của từng học sinh."
+      onClose={onClose}
+    >
+      <div className="ws-quiz-results">
+        <Notice text={error} />
+        {data ? (
+          <>
+            <div className="ws-quiz-results-summary" aria-label="Tổng quan kết quả">
+              <article>
+                <span>Sĩ số</span>
+                <strong>{rows.length}</strong>
+                <small>học sinh trong lớp</small>
+              </article>
+              <article className="highlight">
+                <span>Đã nộp</span>
+                <strong>{submitted.length}/{rows.length}</strong>
+                <small>{rows.length - submitted.length} học sinh chưa nộp</small>
+              </article>
+              <article>
+                <span>Điểm trung bình</span>
+                <strong>{submitted.length ? `${average}%` : "—"}</strong>
+                <small>tính trên các bài đã nộp</small>
+              </article>
+            </div>
+
+            <div className="ws-quiz-results-toolbar">
+              <div>
+                <h3>Bài làm của học sinh</h3>
+                <p>Chọn “Xem bài” để kiểm tra chi tiết từng câu trả lời.</p>
+              </div>
+              <span className="ws-result-count">{rows.length} học sinh</span>
+            </div>
+
+            {rows.length ? (
+              <div className="ws-quiz-results-table">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Học sinh</th>
+                      <th>Trạng thái</th>
+                      <th>Điểm</th>
+                      <th><span className="sr-only">Thao tác</span></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {rows.map((row) => {
+                      const name = row.displayName || "Hồ sơ đã xóa";
+                      return (
+                        <tr key={row.slotId}>
+                          <td>
+                            <div className="ws-student-cell">
+                              <span aria-hidden="true">{name.slice(0, 1).toUpperCase()}</span>
+                              <div>
+                                <strong>{name}</strong>
+                                <small>{row.code || `ID · ${String(row.slotId).slice(0, 8)}`}</small>
+                              </div>
+                            </div>
+                          </td>
+                          <td>
+                            <span className={`ws-result-status ${row.attempted ? "done" : "pending"}`}>
+                              {row.attempted ? "Đã nộp" : "Chưa nộp"}
+                            </span>
+                          </td>
+                          <td>
+                            {row.attempted ? (
+                              <strong className="ws-grade">{row.score}/{row.totalQuestions}</strong>
+                            ) : (
+                              <span className="ws-table-empty">Chưa có điểm</span>
+                            )}
+                          </td>
+                          <td>
+                            {row.attempted && (
+                              <button
+                                className="ws-btn compact"
+                                onClick={() => void viewSlot(row.slotId)}
+                              >
+                                <Eye size={15} /> Xem bài
+                              </button>
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <Empty>Chưa có học sinh trong danh sách kết quả.</Empty>
+            )}
+          </>
+        ) : (
+          <Empty>Đang tải kết quả…</Empty>
+        )}
+      </div>
       {slotResult && (
         <section className="ws-slot-result-detail">
           <button className="ws-btn" onClick={() => setSlotResult(null)}>

@@ -11,6 +11,7 @@ import Register from "@/pages/auth/Register";
 import AuthForm from "@/features/workspace/AuthForm";
 import { AuthLayout } from "@/pages/auth/AuthLayout";
 import InternalAuthLayout from "@/pages/auth/InternalAuthLayout";
+import KnowledgeFramework from "@/pages/KnowledgeFramework";
 
 // Dashboard CHUNG cho người lớn: Guest / Parent / Teacher
 import {
@@ -102,6 +103,7 @@ function App() {
         />
         {/* 1. CÔNG KHAI */}
         <Route path="/" element={<Homepage />} />
+        <Route path="/khung-kien-thuc" element={<KnowledgeFramework />} />
         <Route element={<InternalAuthLayout />}>
           <Route path="/internal/login" element={<AuthForm internal />} />
         </Route>
