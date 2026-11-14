@@ -1,112 +1,129 @@
-# FinTeen — bản đồ dự án và hướng dẫn bàn giao cho AI
+<div align="center">
 
-> Đọc file này trước khi sửa game. Đây là điểm vào kỹ thuật; tài liệu ảnh An/Minh nằm tại [`public/images/finteen-v2/README.md`](public/images/finteen-v2/README.md), còn mục lục nguồn nằm tại [`docs/README.md`](docs/README.md).
+<img src="public/brand/finteen-logo-v2.webp" alt="FinTeen" width="280" />
 
-## Nội dung game hiện tại
+### Hiểu tiền hôm nay. Tự tin ngày mai.
 
-`KidGames` tải chương từ API theo phiên bản phát hành qua `src/api/content.api.js`. Không coi asset cũ trong `public` là bằng chứng nội dung đó đang chạy. Xem [sơ đồ kiến trúc và luồng game](docs/diagrams/README.md).
+Game học tài chính cá nhân cho trẻ 8–18 tuổi. Mỗi chương là một tình huống đời thường: tiền tiêu vặt, tháng lương đầu tiên, vay mượn, biến cố bất ngờ… Trẻ tự chọn và tự trả giá cho lựa chọn của mình. Phụ huynh và giáo viên theo dõi tiến bộ qua báo cáo.
 
-Các chương là **tình huống độc lập**; mỗi chương khởi tạo tuổi, tiền, mục tiêu và cờ tình huống của riêng mình. README asset mô tả cách ghép hình; lời thoại, số tiền và điều kiện nhánh phải theo dữ liệu chương đã được duyệt.
+[**▶ Chơi thử bản demo**](https://fa26se220-finteen-fe.vercel.app) · [Backend](https://github.com/NamHungBBB1/do-an-BE) · [Tài liệu kỹ thuật](docs/README.md)
 
-## Thứ tự đọc bắt buộc cho AI triển khai
+![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?logo=tailwindcss&logoColor=white)
+![React Router](https://img.shields.io/badge/React_Router-7-CA4245?logo=reactrouter&logoColor=white)
+![Vercel](https://img.shields.io/badge/deploy-Vercel-000000?logo=vercel&logoColor=white)
 
-1. Đọc file này để biết kiến trúc và ranh giới nội dung.
-2. Đọc [`docs/README.md`](docs/README.md) để chọn đúng nguồn sự thật.
-3. Đọc [`public/images/finteen-v2/README.md`](public/images/finteen-v2/README.md) để hiểu loại ảnh, thứ tự layer và contract dữ liệu.
-4. Đọc `public/images/finteen-v2/chapter-NN/README.md` của chương cần làm; làm đúng bảng **Công thức lắp cảnh**.
-5. Đối chiếu dữ liệu chương từ API và source đang được import để xác định lời thoại, điều kiện nhánh và asset thực tế. Khi nguồn mâu thuẫn, ghi rõ điểm chưa xác nhận.
-6. Chỉ sau đó mới nối vào player, state, route và persistence hiện có.
+</div>
 
-## Kiến trúc code liên quan
+---
 
-- `src/pages/Kid/Dashboard/components/game/VisualNovelPlayer.jsx`: player visual novel hiện tại.
-- `src/pages/Kid/Dashboard/KidGames.jsx` và `src/api/content.api.js`: tải chương theo phiên bản phát hành.
-- `src/pages/Kid/Dashboard/components/game/visualNovelProgress.js`: checkpoint trong trình duyệt.
-- `src/pages/Kid/Dashboard/components/game/playBatch.js`: gửi kết quả cuối chương qua API khi có phiên SLOT hợp lệ.
-- `public/images/finteen-v2`: asset An/Minh và hướng dẫn ghép hình.
-- `src/features/internal`: layout và phân quyền portal nội bộ. `src/features/studio`: các màn/API chương, duyệt, phát hành, tài nguyên, câu hỏi và khóa AI; dùng phiên ACCOUNT hiện có. Hướng dẫn và ma trận quyền tại [`docs/STUDIO.md`](docs/STUDIO.md).
+## FinTeen có gì
 
-## Contract tối thiểu khi biến một chương v2 thành game
+| Ai dùng | Làm được gì |
+| --- | --- |
+| 🧒 **Trẻ** | Đăng nhập bằng **mã + PIN** do phụ huynh/giáo viên cấp, không cần email. Đi bản đồ hành trình qua từng chương visual novel, chơi mini-game (tính lương thực nhận, so lãi suất, xử lý tin nhắn lừa đảo…), làm quiz, xem báo cáo cuối chương, chọn sở thích để nội dung gần gũi hơn. |
+| 👨‍👩‍👧 **Phụ huynh** | Mua gói gia đình qua mã QR VietQR, tạo tối đa 4 hồ sơ cho con, trả lời vài câu cá nhân hoá, xem tiến độ và 5 chỉ số tài chính của từng bé. |
+| 👩‍🏫 **Giáo viên** | Mở lớp tối đa 40 học sinh, giao và chấm quiz, xem báo cáo cả lớp lẫn từng em. |
+| 🛠️ **Nội bộ** | **Content Studio** (soạn → duyệt → phát hành chương, kho ảnh, giọng đọc, gợi ý bằng AI) và trang quản trị (tài khoản, giao dịch, phân quyền). |
 
-Mỗi beat nên có dữ liệu thay vì JSX hard-code:
+**Một nguồn nội dung.** Mọi chương đều tải từ bản phát hành hiện hành của API, frontend không gắn cứng chương nào. Studio phát hành bản mới thì bản đồ, game và báo cáo tự cập nhật theo.
 
-```js
-{
-  id: "CH01_SC01_B01",
-  mode: "dialogue", // cutscene | dialogue | inspect | choice | minigame | result | reflection
-  background: "/images/finteen-v2/chapter-01/bg/bg01-living-room-afternoon.png",
-  cutscene: null,
-  actors: [
-    { id: "me", sprite: ".../me-explaining.png", side: "left", active: true },
-    { id: "an", sprite: ".../an-neutral.png", side: "right", active: false }
-  ],
-  props: [{ id: "allowance", image: ".../props/allowance-envelope.png" }],
-  dialogue: { speaker: "Mẹ", text: "..." },
-  uiFacts: [{ label: "Khoản nhận", value: 500000, unit: "VND" }],
-  choices: [], effects: [], next: "CH01_SC01_B02"
-}
-```
+## Bắt đầu nhanh
 
-Các trường tiền phải là số nguyên VND trong state; format dấu chấm chỉ ở UI. Điểm kỹ năng, `Money` của hồ sơ và số tiền giả lập trong bài học là ba loại dữ liệu khác nhau. Một phép tính, thẻ kéo thả hay số dư dự kiến không được tự biến thành giao dịch thật.
-
-## Quy tắc dựng hình không được vi phạm
-
-Thứ tự lớp từ sau ra trước: `background` → lớp tối/ánh sáng → `scene` **hoặc** `sprites + props` → UI mini-game → hộp thoại/HUD → modal kết quả. `scene/*.png` là tranh 16:9 đã chứa nhân vật; khi hiện nó phải ẩn sprite và prop trùng. `bg/*.png` là nền trống dùng cho hội thoại/tương tác. `char` và phần lớn `props`, `asset-mini-game` là PNG alpha, dùng `contain`, không crop và không kéo méo.
-
-- Nền: full viewport, `object-fit: cover`, giữ tâm vùng hành động.
-- Sprite: căn theo chân trên cùng một baseline; giới hạn chiều cao bằng viewport, không dùng scale để biểu thị tuổi.
-- Hộp thoại: nằm dưới nhưng không che mặt/tay/vật đang được giải thích; ảnh đã chủ ý chừa vùng này.
-- Chữ, số tiền, lịch, lãi suất, đáp án đúng và trạng thái chọn phải là HTML/UI, không đọc từ pixel và không ghi đè vĩnh viễn lên PNG.
-- Một thời điểm chỉ có một nguồn kể hành động: tranh scene hoặc sprite ghép trên background, không hiển thị cả hai.
-
-## Vòng đời chuẩn của một cảnh
-
-`enter` khởi tạo background và dữ kiện → `cutscene` hiện tranh scene ngắn → `dialogue` trở về background + sprite → `inspect/choice/minigame` ẩn bớt sprite để đủ chỗ → `result` áp dụng effect đúng một lần → `reflection` giải thích hậu quả → `exit` lưu checkpoint rồi sang cảnh kế.
-
-Khi tải lại checkpoint, không được áp dụng lại tiền/điểm/effect. Mọi lựa chọn phải có ID ổn định, lưu được và khôi phục đúng biểu cảm, nhánh, số dư và bước mini-game.
-
-## Điều kiện hoàn thành một chương
-
-- Tất cả asset trong README chương được dùng đúng vai hoặc được ghi rõ là dự phòng.
-- Mọi scene có đường vào/ra; không có nút cụt, asset 404 hoặc nhánh không hội tụ.
-- Đúng nhân vật, tuổi, trang phục và bối cảnh của chương; không kéo state tình huống khác sang.
-- Phép tính, điều kiện ending và effect được test bằng dữ liệu, không suy từ tên ảnh.
-- Có keyboard focus, alt text theo hành động, nút bỏ qua animation và giao diện dùng được ở màn hình nhỏ.
-- Chạy các test hiện có bên dưới và `npm run build`; chơi tay toàn bộ nhánh, refresh giữa cảnh và kiểm tra không nhân đôi effect.
-
-## Chạy dự án
-
-### Ảnh trong bản deploy
-
-`npm run build` chỉ chép ảnh được tham chiếu trong `src/`, `index.html` hoặc
-`scripts/production-content-assets.json` vào `dist`. Ảnh ghép đường dẫn động
-(bản đồ, thư mục sprite Savings Race) cũng được giữ. Các tài nguyên ngoài
-`public/images/` vẫn được chép đầy đủ. `npm run dev` tiếp tục phục vụ toàn bộ
-`public`; không xóa ảnh gốc hoặc thay đổi dữ liệu trên backend.
-
-Danh sách ảnh từ backend đã đối chiếu với cả 8 chương của release `2.0.0`.
-Khi backend phát hành nội dung mới có thay đổi ảnh local, cần cập nhật danh sách
-và deploy frontend cùng đợt, trước khi người chơi chuyển sang nội dung đó:
+Cần **Node.js 20.19+ hoặc 22.12+** (yêu cầu của Vite 8) và npm.
 
 ```bash
-npm run audit:assets -- --refresh-content --api-base=https://kidzeconomy.com.vn/finteen
-node --test tests/production-assets.test.mjs
-npm run build
-```
-
-Commit file `scripts/production-content-assets.json` sau khi cập nhật. Build dùng
-danh sách đã commit nên không phụ thuộc kết nối backend. Nếu release mới tham
-chiếu ảnh chưa có trong `public`, audit/build báo lỗi thay vì âm thầm bỏ ảnh.
-`npm run audit:assets` kiểm tra offline và ghi danh sách file giữ/loại cùng lý do
-tham chiếu vào `output/deployment-assets-audit.json`.
-
-```bash
+git clone https://github.com/dataiyeumenh/fa26se220-finteen-fe.git
+cd fa26se220-finteen-fe
 npm install
-npm run dev
-npm run test:workspace
-npm run test:internal
-node --test tests/chapter-four-story.test.mjs
-npm run build
+cp .env.example .env      # điền giá trị (xem mục bên dưới)
+npm run dev               # http://localhost:5173
 ```
 
-Repository này chứa frontend Vite/React gọi API; mã backend và schema database nằm ngoài repository. Một số tính năng còn dữ liệu mock, xem [phạm vi tích hợp API](docs/api-coverage-2026-11-02.md).
+### Biến môi trường
+
+| Biến | Ý nghĩa |
+| --- | --- |
+| `VITE_API_BASE_URL` | Địa chỉ backend. Mặc định trỏ server demo, chạy BE tại máy thì dùng `http://localhost:8080`. |
+| `VITE_SWAGGER_URL` | Link Swagger, hiển thị trong trang nội bộ. |
+| `VITE_FIREBASE_*` | Cấu hình Firebase cho nút **Đăng nhập bằng Google**. Hỏi nhóm để lấy giá trị, **không commit** file `.env`. |
+
+Đổi `.env` xong thì khởi động lại Vite.
+
+## Lệnh thường dùng
+
+| Lệnh | Việc |
+| --- | --- |
+| `npm run dev` | Chạy dev server |
+| `npm run build` / `npm run preview` | Build production / xem thử bản build |
+| `npm run lint` | ESLint |
+| `npm test` | Chạy toàn bộ unit test (`tests/*.test.mjs`, tuần tự) |
+| `npm run test:personalization:browser` | Browser test luồng cá nhân hoá + bản đồ chương |
+| `npm run test:production:browser` | Browser test lazy loading, ErrorBoundary, tải lại sau lỗi |
+| `npm run test:ending-report:browser` | Browser test báo cáo cuối chương |
+| `npm run test:payment:browser` | Browser test màn thanh toán (poll, huỷ, hết hạn) |
+| `npm run test:responsive` | Chụp và soát layout ở 320 → 1920px |
+| `npm run audit:assets` | Đối chiếu ảnh trong `public` với nội dung đang phát hành |
+
+Browser test cần Google Chrome ở đường dẫn mặc định của Windows, hoặc đặt `BROWSER_EXECUTABLE`. Test dùng profile riêng và **API giả lập**, không gửi gì lên server thật.
+
+## Kiến trúc trong 30 giây
+
+```
+Trình duyệt ──► React SPA (Vercel) ──► FinTeen API (Spring Boot)
+                   │                       │
+                   │  ACCOUNT token         ├─ /api/auth, /api/slots, /api/payments …  (người lớn)
+                   │  SLOT token            ├─ /api/play/…                              (trẻ)
+                   │                       └─ /api/content/current                      (công khai)
+```
+
+- **Hai loại phiên, không bao giờ trộn.** Người lớn dùng token `ACCOUNT`, trẻ dùng token `SLOT`. Trẻ đăng nhập trên máy của phụ huynh thì phiên phụ huynh bị đóng hẳn.
+- **Server tính điểm.** FE chỉ gửi "chọn gì ở cảnh nào, phiên bản nào". Tiền, chỉ số và báo cáo người lớn do backend tự tính lại từ bản phát hành đã đóng băng.
+- **Không mất tiến độ.** Checkpoint lưu trong trình duyệt. Kết quả chương gửi lỗi do mạng thì giữ lại và tự gửi lại lần sau.
+- **Cá nhân hoá phía server.** Nội dung theo giới tính / độ tuổi / sở thích do backend ghép sẵn, FE chỉ hiển thị.
+
+## Cấu trúc thư mục
+
+```
+src/
+├── api/                  # HTTP client, phiên ACCOUNT/SLOT, content, personalization
+├── features/
+│   ├── auth/             # đăng nhập, đăng ký, Google
+│   ├── workspace/        # khung dashboard, guard, gói & thanh toán
+│   ├── personalization/  # câu hỏi cá nhân hoá
+│   ├── studio/           # Content Studio (editor, reviewer, manager)
+│   └── internal/         # cổng nội bộ + phân quyền
+├── pages/
+│   ├── Kid/              # bản đồ, game visual novel, mini-game, quiz
+│   ├── Parent/  Teacher/ # dashboard, hồ sơ trẻ, lớp, báo cáo
+│   ├── LearnerReport/    # báo cáo từng trẻ
+│   └── Admin/            # quản trị
+├── components/           # UI dùng chung (loading, ErrorBoundary…)
+└── hooks/
+public/images/finteen-v2/ # nhân vật, bối cảnh, mini-game theo chương
+tests/                    # unit test + browser test
+docs/                     # tài liệu kỹ thuật
+```
+
+## Tài liệu
+
+- [Mục lục tài liệu kỹ thuật](docs/README.md)
+- [Bàn giao cho AI: bản đồ game, contract dựng cảnh](docs/AI-HANDOFF.md)
+- [Content Studio và ma trận quyền](docs/STUDIO.md)
+- [Xác thực ACCOUNT / SLOT](docs/auth-integration.md)
+- [Màn Parent / Teacher](docs/parent-teacher/README.md)
+- [Hướng dẫn ảnh nhân vật & bối cảnh](public/images/finteen-v2/README.md)
+
+## Nhóm phát triển
+
+Đồ án tốt nghiệp **SEP490**, Đại học FPT, học kỳ Fall 2026. Mã đề tài FA26SE220, nhóm GFA26SE183.
+
+| Thành viên | Vai trò |
+| --- | --- |
+| Vũ Nam Hưng | Trưởng nhóm |
+| Nguyễn Phương Thanh | Backend |
+| Nguyễn Gia Triệu | Frontend |
+| Lê Hoàng Anh | Frontend |
+
+Giảng viên hướng dẫn: thầy Nguyễn Tấn Phúc.
