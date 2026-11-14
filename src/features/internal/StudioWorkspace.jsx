@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react'
-import { Link, NavLink, Navigate, useLocation } from 'react-router-dom'
+import { Link, NavLink, useLocation } from 'react-router-dom'
 import { ArrowLeft, BookOpen, CheckCheck, ChevronRight, Image, History, LayoutDashboard, LogOut, PenLine, Rocket, Sparkles } from 'lucide-react'
 import { auth } from '../../api/auth.api'
 import ChaptersPage from '../studio/ChaptersPage'
@@ -15,6 +15,7 @@ import { useStudioResource } from '../studio/useStudioResource'
 import { useToast } from '../studio/useToast'
 import './studio-workspace.css'
 import ResponsiveSidebar from '@/components/shared/ResponsiveSidebar'
+import NotFoundPage from '@/pages/NotFoundPage'
 
 const menuIcons = { chapter: PenLine, review: CheckCheck, release: Rocket, history: History, asset: Image, question: BookOpen }
 
@@ -30,7 +31,7 @@ export default function StudioWorkspace({ actor }) {
   const available = getStudioMenu(actor)
   const primary = available.filter(section => section.group !== 'library')
   const shared = available.filter(section => section.group === 'library')
-  const editorCode = /^\/internal\/editor\/(CH\d{2})$/.exec(pathname)?.[1]
+  const editorCode = /^\/internal\/editor\/(CH\d{1,2})$/.exec(pathname)?.[1]
   const current = available.find(section => section.path === pathname || (editorCode && section.path === '/internal/chapters'))
   // Số chương đang chờ chính mình, hiện cạnh mục menu; tải lại mỗi lần đổi màn để số luôn đúng.
   const loader = useCallback(() => pathname && studioApi.get('/api/studio/chapters'), [pathname])
@@ -39,7 +40,7 @@ export default function StudioWorkspace({ actor }) {
   const counts = { review: count('review'), release: count('publish') }
   const isAdmin = actor.roles.includes('ADMIN')
   const pageTitle = editorCode ? `Trình soạn ${editorCode}` : current?.title || 'Tổng quan'
-  if (pathname !== '/internal' && pathname !== '/internal/' && !current) return <Navigate to="/internal" replace />
+  if (pathname !== '/internal' && pathname !== '/internal/' && !current) return <NotFoundPage internal />
   const name = actor.displayName || actor.name || actor.email
   const pageProps = { notify, title: current?.title, intro: current?.description }
   return <div className={`studio-workspace${editorCode ? ' studio-workspace-editing' : ''}`}>
@@ -68,7 +69,7 @@ export default function StudioWorkspace({ actor }) {
         </div>
         <div className="studio-header-meta">
           {current?.readOnly && <span className="studio-view-mode">Chỉ xem</span>}
-          <span className="studio-role-pill"><Sparkles size={15} aria-hidden="true" />{isAdmin ? 'Quản trị viên' : 'Thành viên Studio'}</span>
+          <span className="studio-role-pill">{isAdmin ? 'Quản trị viên' : 'Thành viên Studio'}</span>
         </div>
       </header>
       {editorCode && <nav className="studio-topbar" aria-label="Vị trí"><Link className="scene-editor-back" to="/internal/chapters" onClick={event => { if (editorNavigation.busy || (editorNavigation.dirty && !window.confirm('Bạn có thay đổi chưa lưu. Quay về danh sách chương và bỏ các thay đổi này?'))) event.preventDefault() }}><ArrowLeft size={16} aria-hidden="true" />Danh sách chương</Link><ChevronRight size={14} aria-hidden="true" /><strong>{editorCode}</strong></nav>}

@@ -11,6 +11,9 @@ import Register from "@/pages/auth/Register";
 import AuthForm from "@/features/workspace/AuthForm";
 import { AuthLayout } from "@/pages/auth/AuthLayout";
 import InternalAuthLayout from "@/pages/auth/InternalAuthLayout";
+import KnowledgeFramework from "@/pages/KnowledgeFramework";
+import NotFoundPage from "@/pages/NotFoundPage";
+import { PageLoader } from "@/components/feedback/LoadingState";
 
 // Dashboard CHUNG cho người lớn: Guest / Parent / Teacher
 import {
@@ -46,7 +49,6 @@ import {
   LessonsEntry,
   LegacyGameEntry,
   ChapterGuard,
-  NotFound,
 } from "@/features/workspace/Guards";
 
 function AdultLearners() {
@@ -78,7 +80,7 @@ function App() {
           path="/internal/*"
           element={
             <Suspense
-              fallback={<p role="status">Đang tải không gian nội bộ…</p>}
+              fallback={<PageLoader label="Đang mở không gian nội bộ…" />}
             >
               <InternalApp />
             </Suspense>
@@ -102,6 +104,7 @@ function App() {
         />
         {/* 1. CÔNG KHAI */}
         <Route path="/" element={<Homepage />} />
+        <Route path="/khung-kien-thuc" element={<KnowledgeFramework />} />
         <Route element={<InternalAuthLayout />}>
           <Route path="/internal/login" element={<AuthForm internal />} />
         </Route>
@@ -210,10 +213,10 @@ function App() {
           />
           <Route path="/dashboard/parent/*" element={<AccountHome />} />
           <Route path="/dashboard/teacher/*" element={<AccountHome />} />
-          <Route path="/dashboard/*" element={<NotFound />} />
+          <Route path="/dashboard/*" element={<NotFoundPage />} />
         </Route>
 
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>
   );

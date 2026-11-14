@@ -6,7 +6,8 @@ const navigation = [
     title: "Khám phá FinTeen",
     links: [
       { label: "Dành cho ai", href: "/#danh-cho-ai" },
-      { label: "Hành trình học tập", href: "/#hanh-trinh" },
+      { label: "Khung kiến thức", to: "/khung-kien-thuc" },
+      { label: "Hành trình học tập", href: "/#khung-kien-thuc" },
       { label: "Theo dõi tiến bộ", href: "/#bao-cao" },
     ],
   },

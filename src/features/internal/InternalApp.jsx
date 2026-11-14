@@ -5,11 +5,12 @@ import AdminDashboard from "../../pages/Admin/Dashboard/AdminDashboard";
 import { hasInternalAccess } from "./access";
 import "@/components/public/public.css";
 import StudioWorkspace from "./StudioWorkspace";
+import { PageLoader } from "@/components/feedback/LoadingState";
 
 export default function InternalApp() {
   const { pathname } = useLocation();
   const { actor, loading } = useWorkspace();
-  if (loading) return <p role="status">Đang kiểm tra quyền truy cập…</p>;
+  if (loading) return <PageLoader label="Đang kiểm tra quyền truy cập…" />;
   if (!actor) return <Navigate to="/internal/login" replace />;
   if (!hasInternalAccess(actor))
     return <Navigate to="/internal/login" replace />;

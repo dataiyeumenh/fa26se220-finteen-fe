@@ -6,7 +6,9 @@ import {
   Users,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { Empty, Heading } from "../../../../features/workspace/ui";
+import { Heading } from "../../../../features/workspace/ui";
+import { ContentSkeleton } from "@/components/feedback/LoadingState";
+import OverviewInsights from "@/features/workspace/OverviewInsights";
 
 export default function TeacherDashboardContent({ actor, dashboardState }) {
   const { dashboard, loading, error, refetch } = dashboardState;
@@ -32,7 +34,7 @@ export default function TeacherDashboardContent({ actor, dashboardState }) {
         </p>
       )}
       {loading && !dashboard ? (
-        <Empty>Đang tải tổng quan từ máy chủ…</Empty>
+        <ContentSkeleton label="Đang tải tổng quan lớp học…" />
       ) : !group ? (
         <section className="ws-overview-hero">
           <div>
@@ -116,6 +118,7 @@ export default function TeacherDashboardContent({ actor, dashboardState }) {
               </div>
             </Link>
           </div>
+          <OverviewInsights report={dashboard.report} role="teacher" />
         </>
       )}
     </>
