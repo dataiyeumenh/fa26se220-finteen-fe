@@ -5,8 +5,9 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
 
 const endingReport = process.argv[2] === "ending-report";
-const folder = path.resolve(endingReport ? "output/ending-report" : "output/pr3");
-const fixture = endingReport ? "ending-report-browser.html" : "production-cleanup-browser.html";
+const payment = process.argv[2] === "payment";
+const folder = path.resolve(payment ? "output/payment" : endingReport ? "output/ending-report" : "output/pr3");
+const fixture = payment ? "payment-browser.html" : endingReport ? "ending-report-browser.html" : "production-cleanup-browser.html";
 mkdirSync(folder, { recursive: true });
 const server = await createServer({ server: { host: "127.0.0.1", port: 5197, strictPort: true, hmr: false, watch: null } });
 await server.listen();

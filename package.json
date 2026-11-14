@@ -7,6 +7,7 @@
     "test": "node scripts/run-tests.mjs",
     "test:production:browser": "node tests/production-cleanup-browser.mjs",
     "test:ending-report:browser": "node tests/production-cleanup-browser.mjs ending-report",
+    "test:payment:browser": "node tests/production-cleanup-browser.mjs payment",
     "dev": "vite",
     "build": "vite build",
     "audit:assets": "node scripts/audit-production-assets.mjs",

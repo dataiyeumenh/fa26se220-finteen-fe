@@ -93,9 +93,9 @@ export async function submitChapterBatch(batch, expectedCode) {
     }
     return { sent: true, result };
   } catch (error) {
-    // Chỉ giữ để gửi lại khi mất mạng / máy chủ lỗi; BE từ chối hẳn (4xx — vd 7003 sai thứ tự chương với trẻ đã chơi trước khi
-    // FE biết gửi) thì bỏ lô, không gửi lại mãi.
-    const retry = !error?.status || error.status >= 500;
+    // Invalid/conflicting batches and missing/ended resources cannot be retried. Keep results across
+    // expired sessions, denied requests, timeouts, rate limits and server outages.
+    const retry = ![400, 404, 409, 410].includes(error?.status);
     try {
       if (retry)
         localStorage.setItem(pendingKey(code, batch), JSON.stringify(batch));
