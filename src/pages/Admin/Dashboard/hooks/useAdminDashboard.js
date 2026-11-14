@@ -156,7 +156,7 @@ export function useAdminRoleAccounts(reloadKey, q = "", page = 0, size = 20) {
         .listAdminAccounts({ q, page, size })
         .then((list) => {
           if (!active) return;
-          setRows(Array.isArray(list) ? list : []);
+          setRows(Array.isArray(list) ? list : (list?.items ?? []));
           setError("");
         })
         .catch((loadError) => {
@@ -239,7 +239,7 @@ export function useAdminRoleLogs(appliedSubjectId, page, size = 50) {
     auth
       .listAdminRoleLogs({ subjectId: appliedSubjectId, page, size })
       .then((list) => {
-        setRows(Array.isArray(list) ? list : []);
+        setRows(Array.isArray(list) ? list : (list?.items ?? []));
         setError("");
       })
       .catch((loadError) => {
