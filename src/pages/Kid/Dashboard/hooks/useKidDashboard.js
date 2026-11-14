@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { auth as authSession } from "@/api/auth.api";
 import { useWorkspace } from "@/features/workspace/useWorkspace";
 import { resolveAchievements } from "../api/kidAchievements.js";
+import { useCurrentRelease } from "../../../../hooks/useCurrentRelease.js";
 
 export default function useKidDashboard() {
   const {
@@ -12,6 +13,7 @@ export default function useKidDashboard() {
     learnerDashboardError,
   } = useWorkspace();
   const navigate = useNavigate();
+  const release = useCurrentRelease();
   const refresh = useCallback(
     async (force = false) => {
       try {
@@ -36,12 +38,12 @@ export default function useKidDashboard() {
       name: learnerDashboard?.learner?.displayName || actor?.name,
     },
     dashboard: learnerDashboard,
-    loading: learnerDashboardLoading,
-    error: learnerDashboardError,
-    refresh: () => refresh(true),
+    loading: learnerDashboardLoading || release.loading,
+    error: learnerDashboardError || release.error,
+    refresh: () => { release.retry(); return refresh(true); },
     streak: progress?.streak || 0,
     completedChapters: progress?.completedChapters || 0,
-    totalChapters: progress?.totalChapters || 0,
+    totalChapters: release.chapters.length,
     continueLessons: progress?.continueChapter
       ? [
           {

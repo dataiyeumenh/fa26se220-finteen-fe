@@ -48,6 +48,21 @@ test('a continuation pointer cannot bypass unfinished earlier chapters', () => {
   for (let chapter = 1; chapter <= 8; chapter++) assert.equal(canPlayJourneyChapter(finished, chapter), true);
 });
 
+test('a ninth published chapter unlocks after eight completions without a static fallback', () => {
+  const state = { chaptersDone: [1, 2, 3, 4, 5, 6, 7, 8], totalChapters: 9 };
+  assert.equal(resumeJourneyChapter(state), 9);
+  assert.equal(canPlayJourneyChapter(state, 9), true);
+  assert.equal(journeyChapterProgress(state, 9).status, 'current');
+  assert.equal(canPlayJourneyChapter(state, 10), false);
+  assert.equal(canPlayJourneyChapter({ ...state, chaptersDone: [1, 2] }, 9), false);
+  for (const totalChapters of [undefined, null, NaN, -1]) {
+    assert.equal(isJourneyPlayState({ chaptersDone: [], totalChapters }), false);
+    assert.equal(canPlayJourneyChapter({ chaptersDone: [], totalChapters }, 1), false);
+  }
+  assert.equal(isJourneyPlayState({ chaptersDone: [], totalChapters: 0 }), true);
+  assert.equal(resumeJourneyChapter({ chaptersDone: [], totalChapters: 0 }), null);
+});
+
 test('game entry resumes the server chapter instead of defaulting to chapter one', () => {
   assert.equal(resumeJourneyChapter({ chaptersDone: [1], continueChapter: 2, totalChapters: 8 }), 2);
   assert.equal(resumeJourneyChapter({ chaptersDone: [], continueChapter: 1, totalChapters: 8 }), 1);
@@ -84,7 +99,8 @@ test('dashboard waits for pending chapter results before loading progress', asyn
   let stateRequests = 0;
   const pending = new Promise((resolve) => { finishFlush = resolve; });
   const state = { chaptersDone: [1, 2], totalChapters: 8, attemptIndex: 1 };
-  const createHook = new Function('useEffect', 'useState', 'useWorkspace', 'kidDashboardApi', 'isJourneyPlayState', 'flushPendingBatches',
+  const releasedChapters = Array.from({ length: 9 }, (_, i) => ({ chapterNumber: i + 1, title: `Published ${i + 1}` }));
+  const createHook = new Function('useEffect', 'useState', 'useWorkspace', 'kidDashboardApi', 'isJourneyPlayState', 'flushPendingBatches', 'getCurrentRelease',
     source.replace(/^import .*;\r?\n/gm, '').replace('export function', 'function') + '\nreturn useKidPlayState;');
   const useKidPlayState = createHook(
     (callback) => { effect = callback; },
@@ -93,6 +109,7 @@ test('dashboard waits for pending chapter results before loading progress', asyn
     { getPlayState: async () => { stateRequests++; return state; } },
     isJourneyPlayState,
     async (code) => { assert.equal(code, 'learner-a'); await pending; },
+    async () => ({ chapters: releasedChapters }),
   );
   assert.equal(useKidPlayState().loading, true);
   const cleanup = effect();
@@ -101,7 +118,8 @@ test('dashboard waits for pending chapter results before loading progress', asyn
   finishFlush();
   await new Promise((resolve) => setImmediate(resolve));
   assert.equal(stateRequests, 1);
-  assert.equal(result.state, state);
+  assert.deepEqual(result.state, { ...state, totalChapters: 9 });
+  assert.deepEqual(result.chapters, releasedChapters);
   assert.equal(canPlayJourneyChapter(result.state, 3), true);
   cleanup();
 });

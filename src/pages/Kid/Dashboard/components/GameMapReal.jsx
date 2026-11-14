@@ -101,14 +101,18 @@ function ChapterPoint({ chapter, point, onSelect }) {
 export default function GameMap({ chapters = [], onChapterClick }) {
   const current =
     chapters.find((chapter) => chapter.status === "current") || chapters[0];
-  const [active, setActive] = useState(() =>
-    Math.floor(((current?.id || 1) - 1) / 2),
+  const regions = Array.from({ length: Math.max(1, Math.ceil(chapters.length / 2)) }, (_, index) => ({
+    ...REGIONS[Math.min(index, REGIONS.length - 1)],
+    title: REGIONS[index]?.title || "Hành trình tiếp nối",
+    chapters: chapters.slice(index * 2, index * 2 + 2),
+  }));
+  const [selected, setActive] = useState(() =>
+    Math.floor(Math.max(0, chapters.indexOf(current)) / 2),
   );
+  const active = Math.min(selected, regions.length - 1);
   const swipeStart = useRef(null);
-  const region = REGIONS[active];
-  const visible = chapters.filter(
-    (chapter) => Math.floor((chapter.id - 1) / 2) === active,
-  );
+  const region = regions[active];
+  const visible = region.chapters;
   return (
     <section className="journey-map">
       <div className="atlas-toolbar">
@@ -117,18 +121,18 @@ export default function GameMap({ chapters = [], onChapterClick }) {
           role="group"
           aria-label="Các vùng hành trình"
         >
-          {REGIONS.map((item, index) => (
+          {regions.map((item, index) => (
             <button
-              key={item.file}
+              key={index}
               type="button"
               aria-pressed={active === index}
               onClick={() => setActive(index)}
             >
-              <span>0{index + 1}</span>
+              <span>{String(index + 1).padStart(2, "0")}</span>
               <div>
                 {item.title}
                 <small>
-                  Chương {index * 2 + 1}–{index * 2 + 2}
+                  {item.chapters.length ? `Chương ${item.chapters.map((chapter) => chapter.id).join("–")}` : "Chưa có chương"}
                 </small>
               </div>
             </button>
@@ -165,7 +169,7 @@ export default function GameMap({ chapters = [], onChapterClick }) {
                 event.currentTarget.parentElement.clientWidth
             )
               setActive((value) =>
-                Math.max(0, Math.min(3, value + (dx < 0 ? 1 : -1))),
+                Math.max(0, Math.min(regions.length - 1, value + (dx < 0 ? 1 : -1))),
               );
             swipeStart.current = null;
           }}
@@ -177,14 +181,14 @@ export default function GameMap({ chapters = [], onChapterClick }) {
             alt={`Bản đồ ${region.title}`}
           />
           <div className="atlas-world-title">
-            <span>HÀNH TRÌNH · 0{active + 1} / 04</span>
+            <span>HÀNH TRÌNH · {String(active + 1).padStart(2, "0")} / {String(regions.length).padStart(2, "0")}</span>
             <h2>{region.title}</h2>
           </div>
-          {visible.map((chapter) => (
+          {visible.map((chapter, index) => (
             <ChapterPoint
               key={chapter.id}
               chapter={chapter}
-              point={region.points[(chapter.id - 1) % 2]}
+              point={region.points[index]}
               onSelect={onChapterClick}
             />
           ))}
@@ -203,15 +207,15 @@ export default function GameMap({ chapters = [], onChapterClick }) {
           role="group"
           aria-label="Xem vùng của chương"
         >
-          {chapters.map((chapter) => (
+          {chapters.map((chapter, index) => (
             <button
               type="button"
               key={chapter.id}
               title={`${chapter.title}: ${chapter.subtitle}`}
               aria-label={`Xem vùng của chương ${chapter.id}`}
-              aria-pressed={Math.floor((chapter.id - 1) / 2) === active}
+              aria-pressed={Math.floor(index / 2) === active}
               className={chapter.status}
-              onClick={() => setActive(Math.floor((chapter.id - 1) / 2))}
+              onClick={() => setActive(Math.floor(index / 2))}
             >
               {chapter.status === "completed" ? (
                 <Check size={16} />
@@ -223,8 +227,8 @@ export default function GameMap({ chapters = [], onChapterClick }) {
         </div>
         <button
           type="button"
-          disabled={active === 3}
-          onClick={() => setActive((value) => value + 1)}
+          disabled={active === regions.length - 1}
+          onClick={() => setActive(active + 1)}
         >
           Vùng tiếp <ArrowRight size={17} />
         </button>

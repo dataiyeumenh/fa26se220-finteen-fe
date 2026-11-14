@@ -20,7 +20,6 @@ import {
   readNovelProgress,
   saveNovelProgress,
 } from "../src/pages/Kid/Dashboard/components/game/visualNovelProgress.js";
-import { CHAPTERS } from "../src/features/workspace/model.js";
 // Dữ liệu như game thấy (VisualNovelPlayer chuẩn hoá: inspect → scene, reflection → activity).
 const data = normalizeChapter(content);
 const scenes = new Map(data.scenes.map((scene) => [scene.id, scene]));
@@ -480,7 +479,6 @@ test("chapter-seven checkpoint preserves drafts and decisions; chapter requires 
     readNovelProgress(storage, { ...data, version: "old" }, "test-owner").version,
     "old",
   );
-  assert.equal(CHAPTERS[6], "Biến cố bất ngờ");
   assert.ok(
     !readFileSync("src/features/workspace/KidPages.jsx", "utf8").includes(
       "/dashboard/demo/play?chapter=7",

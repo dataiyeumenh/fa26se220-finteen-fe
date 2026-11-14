@@ -9,7 +9,7 @@ import MockChapterReport from "./components/game/MockChapterReport.jsx";
 export default function KidLessons() {
   const navigate = useNavigate();
   const [reportOpen, setReportOpen] = useState(false);
-  const { chapters, loading, error } = useKidLessons();
+  const { chapters, loading, error, retry } = useKidLessons();
 
   const handleChapterClick = (chapter) => {
     navigate(`/dashboard/kid/play?chapter=${chapter.id}`);
@@ -37,10 +37,13 @@ export default function KidLessons() {
           }}
         >
           {error}
+          <button className="ws-btn" onClick={retry}>Thử lại</button>
         </div>
       </>
     );
   }
+
+  if (!chapters.length) return <p className="py-12 text-center">Chưa có chương nào được phát hành.</p>;
 
   // Quick stats (compact)
   const completedCount = chapters.filter(
@@ -70,7 +73,7 @@ export default function KidLessons() {
                 Hành trình của bạn
               </h1>
               <p className="text-gray-500 text-xs md:text-sm font-medium">
-                Cuộc phiêu lưu tài chính qua 8 chương · {overallProgress}% hoàn
+                Cuộc phiêu lưu tài chính qua {chapters.length} chương · {overallProgress}% hoàn
                 thành
               </p>
             </div>
@@ -78,7 +81,7 @@ export default function KidLessons() {
 
           <div className="journey-overall">
             <span>
-              <span>{completedCount}/8 chương hoàn thành</span>
+              <span>{completedCount}/{chapters.length} chương hoàn thành</span>
               <strong>{overallProgress}%</strong>
             </span>
             <div

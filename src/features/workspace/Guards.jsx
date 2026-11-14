@@ -95,8 +95,15 @@ export function ChapterGuard({ children }) {
   const [params] = useSearchParams();
   const resume = actor?.role === "kid" && !params.get("chapter");
   const chapter = Number(params.get("chapter") || 1);
-  const entitled = canAccessChapter(actor, chapter);
-  const progress = useKidPlayState({ enabled: actor?.role === "kid" && entitled, refreshKey: resume ? "resume" : chapter });
+  const progress = useKidPlayState({ enabled: actor?.role === "kid", refreshKey: resume ? "resume" : chapter });
+  if (actor?.role === "kid") {
+    if (progress.loading) return <Empty><p role="status">Đang kiểm tra tiến trình học…</p></Empty>;
+    if (progress.error) return <Empty>
+      <p role="alert">{progress.error}</p>
+      <button className="ws-btn" onClick={progress.retry}>Thử lại</button>
+    </Empty>;
+  }
+  const entitled = canAccessChapter(actor, chapter, progress.chapters);
   if (!entitled) {
     return (
       <Navigate
@@ -108,11 +115,6 @@ export function ChapterGuard({ children }) {
     );
   }
   if (actor.role === "kid") {
-    if (progress.loading) return <Empty><p role="status">Đang kiểm tra tiến trình học…</p></Empty>;
-    if (progress.error) return <Empty>
-      <p role="alert">{progress.error}</p>
-      <button className="ws-btn" onClick={progress.retry}>Thử lại</button>
-    </Empty>;
     if (resume) {
       const next = resumeJourneyChapter(progress.state);
       if (next === null) return <Navigate to="/dashboard/kid/lessons" replace />;

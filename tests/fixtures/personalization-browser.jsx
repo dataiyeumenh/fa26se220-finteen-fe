@@ -1,6 +1,6 @@
 import { createRoot } from "react-dom/client";
 import { useEffect } from "react";
-import { MemoryRouter, useNavigate, useLocation } from "react-router-dom";
+import { MemoryRouter, Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import "/src/index.css";
 import ParentPersonalization from "/src/pages/Parent/Learners/components/ParentPersonalization.jsx";
 import { PersonalizationGate } from "/src/pages/Kid/Dashboard/components/PersonalizationGate.jsx";
@@ -11,6 +11,9 @@ import KidGames from "/src/pages/Kid/Dashboard/KidGames.jsx";
 import { auth } from "/src/api/auth.api.js";
 import chapter2 from "./content/CH02.json";
 import WorkspaceLayout from "/src/features/workspace/WorkspaceLayout.jsx";
+import KidLessons from "/src/pages/Kid/Dashboard/KidLessons.jsx";
+import { ChapterGuard } from "/src/features/workspace/Guards.jsx";
+import LearnerReportContent from "/src/pages/LearnerReport/components/LearnerReportContent.jsx";
 
 const childApi = { get: personalizationApi.getForChild, save: personalizationApi.saveForChild };
 
@@ -180,6 +183,7 @@ try {
   const chapterRequests = [], personalizationWrites = [];
   let serverView = view("WAITING_CHILD", { askChild: ["gender"] });
   let variant = "base", gateRequests = 0;
+  let failRelease = true;
   personalizationApi.getForChild = childApi.get;
   personalizationApi.saveForChild = childApi.save;
   window.fetch = async (url, init = {}) => {
@@ -187,7 +191,11 @@ try {
     let result;
     if (path.endsWith("/api/slots/login")) result = { accessToken: "test-slot", expiresIn: 3600, slot: { id: "personalization-test", displayName: "Bé test", groupContext: "CLASS" } };
     else if (path.endsWith("/api/learner/dashboard")) result = { learner: { displayName: "Bé test" }, progress: { completedChapters: 1, totalChapters: 8, continueChapter: 2 } };
-    else if (path.endsWith("/api/content/current")) result = { version: "test-release", chapters: [] };
+    else if (path.endsWith("/api/play/state")) result = { chaptersDone: [1, 2, 3, 4, 5, 6, 7, 8], totalChapters: 8, attemptIndex: 1 };
+    else if (path.endsWith("/api/content/current")) {
+      if (failRelease) throw Error("Release unavailable");
+      result = { version: "test-release", chapters: Array.from({ length: 9 }, (_, i) => ({ code: `CH${String(i + 1).padStart(2, "0")}`, chapterNumber: i + 1, title: `Chương API ${i + 1}` })) };
+    }
     else if (path.endsWith("/api/play/personalization")) {
       if (init.method === "PUT") {
         const { source, answers } = JSON.parse(init.body);
@@ -209,6 +217,33 @@ try {
   try {
     localStorage.setItem("finteen:voice-enabled", "false");
     await auth.slotLogin("PERSONALIZATION-TEST", "000000");
+    await mount(<KidLessons />, "/dashboard/kid/lessons");
+    await until(() => button("Thử lại"), "Release failure must allow retry");
+    assert(!document.querySelector(".atlas-stop"), "Release failure showed invented chapters");
+    failRelease = false;
+    await click(button("Thử lại"));
+    await until(() => document.querySelector('.atlas-stop.current'), "Chapter 9 map did not load");
+    assert(document.body.textContent.includes("Chương API 9"), "Map title does not match release");
+    assert(document.body.textContent.includes("8/9 chương hoàn thành"), "Map total is still hardcoded");
+    assert(document.querySelector('.atlas-stop.current').getAttribute("aria-label").includes("Chương 9"), "Ninth chapter is not accessible in the fifth map region");
+    assert(document.querySelectorAll(".atlas-tabs button").length === 5, "Map did not grow beyond four regions");
+    await mount(<Routes>
+      <Route path="/dashboard/kid/play" element={<ChapterGuard><p id="guard-allowed">Allowed</p></ChapterGuard>} />
+      <Route path="/dashboard/kid/lessons" element={<p id="guard-blocked">Blocked</p>} />
+    </Routes>, "/dashboard/kid/play?chapter=9");
+    await until(() => document.getElementById("guard-allowed"), "Guard rejected published chapter 9");
+    await mount(<Routes>
+      <Route path="/dashboard/kid/play" element={<ChapterGuard><p id="guard-allowed">Allowed</p></ChapterGuard>} />
+      <Route path="/dashboard/kid/lessons" element={<p id="guard-blocked">Blocked</p>} />
+    </Routes>, "/dashboard/kid/play?chapter=10");
+    await until(() => document.getElementById("guard-blocked"), "Guard allowed unpublished chapter 10");
+    await mount(<LearnerReportContent reportState={{ report: {
+      learner: { displayName: "Bé test", group: { name: "FAMILY" }, status: "ACTIVE" },
+      progress: { chaptersDone: [1, 2, 3, 4, 5, 6, 7, 8], completedChapters: 8, totalChapters: 8, continueChapter: 9 },
+    }, refresh: async () => {} }} />);
+    await until(() => document.querySelectorAll(".ws-chapter-timeline li").length === 9, "Report did not use release chapters");
+    assert(document.querySelector(".ws-chapter-timeline").textContent.includes("Chương API 9"), "Report chapter title differs from map");
+    results.push("Release failure retries; API titles and nine chapters appear on map/report; fifth region and chapter 9 unlock; unpublished chapter 10 is blocked");
     await mount(<GameHarness />, "/dashboard/kid/play?chapter=2");
     await until(() => button("Nữ"), "CH02 gate did not open");
     assert(chapterRequests.length === 0 && !document.querySelector(".vn-player"), "CH02 loaded before personalization finished");
