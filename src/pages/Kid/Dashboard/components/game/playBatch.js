@@ -93,9 +93,9 @@ export async function submitChapterBatch(batch, expectedCode) {
     }
     return { sent: true, result };
   } catch (error) {
-    // Only invalid/conflicting batches are permanent failures. Keep results across
+    // Invalid/conflicting batches and missing/ended resources cannot be retried. Keep results across
     // expired sessions, denied requests, timeouts, rate limits and server outages.
-    const retry = ![400, 409].includes(error?.status);
+    const retry = ![400, 404, 409, 410].includes(error?.status);
     try {
       if (retry)
         localStorage.setItem(pendingKey(code, batch), JSON.stringify(batch));

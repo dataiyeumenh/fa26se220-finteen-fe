@@ -36,7 +36,7 @@ Kiểm tra thủ công thêm trên bản build preview: trang chủ không tải
 ## PR 4: Phiên đăng nhập, gửi kết quả và polling thanh toán
 
 - SLOT login thành công xoá phiên ACCOUNT cùng cache quyền người lớn trước khi lưu SLOT. Khi khôi phục dữ liệu do bản cũ lưu cả hai phiên, ACCOUNT cũng bị xoá. Slot hết hạn không khôi phục tài khoản người lớn. Các phản hồi đăng nhập/quyền người lớn đến muộn không được ghi đè phiên bé.
-- Lô kết quả chương được giữ để gửi lại khi gặp lỗi mạng, 401/403/408/429 hoặc lỗi server; chỉ bỏ khi HTTP 400/409. Gửi lại thành công mới xoá lô đang lưu, và chỉ gửi cho đúng mã bé.
+- Lô kết quả chương được giữ để gửi lại khi gặp lỗi mạng, 401/403/408/429 hoặc lỗi server; bỏ khi HTTP 400/404/409/410 vì dữ liệu không hợp lệ, xung đột, chương/slot không còn hoặc lớp đã kết thúc. Gửi lại thành công mới xoá lô đang lưu, và chỉ gửi cho đúng mã bé.
 - Thanh toán ngừng tự kiểm tra khi quá `expiresAt`, khi PAID/FAILED, sau huỷ thành công hoặc sau 3 lần lỗi liên tiếp. Hết hạn không được tự coi là thanh toán thất bại trên server; người dùng vẫn có thể bấm **Kiểm tra ngay** để đối chiếu. Kiểm tra tay thành công với đơn còn hạn/PENDING khôi phục polling và reset bộ đếm lỗi. Request kiểm tra không chạy chồng nhau; đóng modal không lên lịch request tiếp.
 
 ```sh

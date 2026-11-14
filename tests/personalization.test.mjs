@@ -50,7 +50,14 @@ test("ACCOUNT and SLOT requests keep separate tokens, explicit nulls and empty s
   assert.equal(calls.at(-1).url, "https://example.test/api/play/releases/release%2F1/chapters/CH01");
   assert.equal(calls.at(-1).headers.Authorization, "Bearer SLOT");
   denied = true;
+  const requestCount = calls.length;
+  await assert.rejects(api.saveForParent("x", { gender: "FEMALE" }), /đăng nhập lại/);
+  assert.equal(calls.length, requestCount, "SLOT login must remove the ACCOUNT token before any parent request");
+  denied = false;
+  await client.login("parent@example.test", "password");
+  denied = true;
   await assert.rejects(api.saveForParent("class-slot", { gender: "FEMALE" }), (error) => error.status === 403 && error.code === 3004);
+  assert.equal(calls.at(-1).headers.Authorization, "Bearer ACCOUNT");
 });
 
 test("text-only variant changes preserve checkpoint decisions, money and scene progress", () => {

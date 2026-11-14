@@ -91,7 +91,7 @@ test('ending batch reaches backend with the learner slot and attempt', async () 
   } finally { delete globalThis.__playTestApi; }
 });
 
-test('chapter results survive recoverable HTTP errors and are removed only for 400 or 409', async () => {
+test('chapter results survive recoverable errors and are discarded for invalid, missing or ended resources', async () => {
   const source = await fs.readFile(new URL('../src/pages/Kid/Dashboard/components/game/playBatch.js', import.meta.url), 'utf8');
   const instrumented = source.replace('return (await import("../../api/kidDashboardApi")).kidDashboardApi;', 'return globalThis.__playRetryApi;');
   const { submitChapterBatch, flushPendingBatches } = await import(`data:text/javascript;base64,${Buffer.from(instrumented).toString('base64')}`);
@@ -117,10 +117,13 @@ test('chapter results survive recoverable HTTP errors and are removed only for 4
     },
   };
   try {
-    for (status of [undefined, 0, 401, 403, 408, 429, 500, 503, 400, 409]) {
+    for (const [failureStatus, retry] of [
+      [undefined, true], [0, true], [401, true], [403, true], [408, true], [429, true],
+      [500, true], [503, true], [400, false], [404, false], [409, false], [410, false],
+    ]) {
+      status = failureStatus;
       storage.setItem(key, JSON.stringify(batch));
       const result = await submitChapterBatch(batch, 'child-a');
-      const retry = ![400, 409].includes(status);
       assert.equal(result.retry, retry, `status ${status}`);
       assert.deepEqual(storage.getItem(key) ? JSON.parse(storage.getItem(key)) : null, retry ? batch : null);
     }
