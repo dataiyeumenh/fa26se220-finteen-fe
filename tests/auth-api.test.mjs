@@ -540,7 +540,7 @@ test("group and slot management APIs use documented methods and payloads", async
   assert.deepEqual(JSON.parse(calls[12].body), { pin: "654321" });
 });
 
-test("SLOT login normalizes code, keeps a separate session and restores the kid actor", async () => {
+test("SLOT login normalizes code, replaces the ACCOUNT session and restores the kid actor", async () => {
   const { auth, queue, calls, options } = setup();
   queue.push({ code: 0, result: token }, { code: 0, result: me });
   await auth.login("teacher@example.com", "password");
@@ -568,6 +568,7 @@ test("SLOT login normalizes code, keeps a separate session and restores the kid 
   assert.equal(auth.getSnapshot().actor.name, "Bé An");
   assert.equal(auth.getSnapshot().actor.learnerRole, "child");
   assert.equal(auth.getSnapshot().actor.plan, "parent");
+  assert.equal(JSON.parse(options.storage.getItem("finteen.account.v1:https://example.com/finteen")), null);
   const restored = createAuthClient(options);
   assert.equal(restored.getSnapshot().actor.role, "kid");
   assert.equal(restored.getSnapshot().actor.name, "Bé An");
@@ -590,6 +591,87 @@ test("SLOT login normalizes code, keeps a separate session and restores the kid 
   assert.equal(restored.getSnapshot().actor.name, "Bạn Bình");
   assert.equal(restored.getSnapshot().actor.learnerRole, "student");
   assert.equal(restored.getSnapshot().actor.plan, "teacher");
+});
+
+test("an expired SLOT cannot restore the previous adult session after refresh or reload", async () => {
+  const { auth, queue, calls, options, advance } = setup();
+  queue.push({ code: 0, result: token }, { code: 0, result: me });
+  await auth.login("adult@example.com", "password");
+  queue.push({ code: 0, result: {
+    accessToken: "slot-token", expiresIn: 1,
+    slot: { id: "child", displayName: "Child", groupContext: "FAMILY" },
+  } });
+  await auth.slotLogin("CHILD", "012345");
+  advance(1001);
+  auth.checkExpiry();
+  const requestCount = calls.length;
+  await auth.refresh();
+  assert.equal(auth.getSnapshot().actor, null);
+  assert.equal(auth.hasSession(), false);
+  const restored = createAuthClient(options);
+  await restored.refresh();
+  assert.equal(restored.getSnapshot().actor, null);
+  assert.equal(restored.hasSession(), false);
+  assert.equal(calls.length, requestCount, "expired child must not request the old adult profile");
+});
+
+test("legacy storage with both ACCOUNT and SLOT never falls back to the adult account", async () => {
+  for (const expiredSlot of [false, true]) {
+    const { options, advance, calls } = setup();
+    options.storage.setItem("finteen.account.v1:https://example.com/finteen", JSON.stringify({ type: "ACCOUNT", accessToken: "adult-token", expiresAt: 100000 }));
+    options.storage.setItem("finteen.slot.v1:https://example.com/finteen", JSON.stringify({
+      type: "SLOT", accessToken: "child-token", code: "CHILD", expiresAt: expiredSlot ? 999 : 2000,
+      slot: { id: "child", displayName: "Child", groupContext: "FAMILY" },
+    }));
+    const restored = createAuthClient(options);
+    assert.equal(restored.getSnapshot().actor?.role || null, expiredSlot ? null : "kid");
+    assert.equal(JSON.parse(options.storage.getItem("finteen.account.v1:https://example.com/finteen")), null);
+    advance(2000); restored.checkExpiry(); await restored.refresh();
+    assert.equal(restored.hasSession(), false);
+    assert.equal(restored.getSnapshot().actor, null);
+    assert.equal(restored.getSnapshot().loading, false);
+    assert.equal(calls.length, 0);
+  }
+});
+
+test("late adult login and entitlement responses cannot replace a successful SLOT login", async () => {
+  const memory = new Map();
+  const storage = { getItem: (key) => memory.get(key), setItem: (key, value) => memory.set(key, value) };
+  let finishLogin, finishEntitlements;
+  let deferLogin = false;
+  const response = (result) => ({ ok: true, status: 200, json: async () => ({ code: 0, result }) });
+  const auth = createAuthClient({ baseUrl: "https://test.invalid", storage, fetcher: async (url) => {
+    if (url.endsWith("/slots/login")) return response({ accessToken: "child-token", expiresIn: 60, slot: { id: "child", displayName: "Child", groupContext: "CLASS" } });
+    if (url.endsWith("/entitlements")) return new Promise((resolve) => { finishEntitlements = () => resolve(response([{ id: "adult-entitlement" }])); });
+    if (url.endsWith("/me")) return response(me);
+    if (deferLogin) return new Promise((resolve) => { finishLogin = () => resolve(response(token)); });
+    return response(token);
+  } });
+  await auth.login("adult@example.com", "password");
+  const entitlements = auth.ensureEntitlements();
+  deferLogin = true;
+  const adultLogin = auth.login("adult@example.com", "password");
+  await auth.slotLogin("CHILD", "012345");
+  finishLogin(); finishEntitlements();
+  await Promise.all([adultLogin, entitlements]);
+  assert.equal(auth.getSnapshot().actor.role, "kid");
+  assert.equal(auth.getSnapshot().entitlements, null);
+  assert.equal(auth.getSnapshot().entitlementsLoading, false);
+  assert.equal(JSON.parse(storage.getItem("finteen.account.v1:https://test.invalid")), null);
+});
+
+test("logout during SLOT login prevents the late response from restoring a session", async () => {
+  let finish;
+  const auth = createAuthClient({ baseUrl: "https://test.invalid", storage: { getItem() {}, setItem() {} }, fetcher: () => new Promise((resolve) => {
+    finish = () => resolve({ ok: true, status: 200, json: async () => ({ code: 0, result: {
+      accessToken: "child-token", expiresIn: 60, slot: { id: "child", displayName: "Child", groupContext: "FAMILY" },
+    } }) });
+  }) });
+  const pending = auth.slotLogin("CHILD", "012345");
+  auth.logout(); finish();
+  await pending;
+  assert.equal(auth.hasSession(), false);
+  assert.equal(auth.getSnapshot().actor, null);
 });
 
 test("report APIs use ACCOUNT authentication and encoded resource ids", async () => {

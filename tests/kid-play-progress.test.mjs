@@ -91,6 +91,53 @@ test('ending batch reaches backend with the learner slot and attempt', async () 
   } finally { delete globalThis.__playTestApi; }
 });
 
+test('chapter results survive recoverable HTTP errors and are removed only for 400 or 409', async () => {
+  const source = await fs.readFile(new URL('../src/pages/Kid/Dashboard/components/game/playBatch.js', import.meta.url), 'utf8');
+  const instrumented = source.replace('return (await import("../../api/kidDashboardApi")).kidDashboardApi;', 'return globalThis.__playRetryApi;');
+  const { submitChapterBatch, flushPendingBatches } = await import(`data:text/javascript;base64,${Buffer.from(instrumented).toString('base64')}`);
+  const previousStorage = globalThis.localStorage;
+  const storage = {};
+  Object.defineProperties(storage, {
+    getItem: { value: (key) => storage[key] ?? null },
+    setItem: { value: (key, value) => { storage[key] = value; } },
+    removeItem: { value: (key) => { delete storage[key]; } },
+  });
+  globalThis.localStorage = storage;
+  const batch = { chapter: 2, releaseVersion: 'v1', choices: [{ sceneId: 'S1', optionId: 'A' }], miniGames: [] };
+  const key = 'finteen:play:pending:child-a:2:v1';
+  let status;
+  const sent = [];
+  globalThis.__playRetryApi = {
+    getSnapshot: () => ({ actor: { code: 'child-a' } }),
+    getPlayState: async () => ({ chaptersDone: [1], totalChapters: 8, attemptIndex: 1 }),
+    submitChapterBatch: async (payload) => {
+      if (status !== null) throw Object.assign(new Error('API failure'), { status });
+      sent.push(payload);
+      return { ok: true };
+    },
+  };
+  try {
+    for (status of [undefined, 0, 401, 403, 408, 429, 500, 503, 400, 409]) {
+      storage.setItem(key, JSON.stringify(batch));
+      const result = await submitChapterBatch(batch, 'child-a');
+      const retry = ![400, 409].includes(status);
+      assert.equal(result.retry, retry, `status ${status}`);
+      assert.deepEqual(storage.getItem(key) ? JSON.parse(storage.getItem(key)) : null, retry ? batch : null);
+    }
+    status = 429;
+    await submitChapterBatch(batch, 'child-a');
+    await flushPendingBatches('different-child');
+    assert.ok(storage.getItem(key));
+    status = null;
+    await flushPendingBatches('child-a');
+    assert.deepEqual(sent, [{ ...batch, attemptIndex: 1 }]);
+    assert.equal(storage.getItem(key), null);
+  } finally {
+    globalThis.localStorage = previousStorage;
+    delete globalThis.__playRetryApi;
+  }
+});
+
 test('dashboard waits for pending chapter results before loading progress', async () => {
   const source = await fs.readFile(new URL('../src/pages/Kid/Dashboard/hooks/useKidPlayState.js', import.meta.url), 'utf8');
   let effect;

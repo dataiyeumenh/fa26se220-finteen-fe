@@ -14,6 +14,7 @@ import { workspaceApi } from "./api/workspaceApi";
 import "./workspace.css";
 
 const POLL_MS = 2500;
+const MAX_POLL_ERRORS = 3;
 const money = (value) =>
   new Intl.NumberFormat("vi-VN").format(Number(value || 0)) + "đ";
 
@@ -28,7 +29,11 @@ export default function PaymentResult({ payment: initialPayment, onClose }) {
   const [cancelling, setCancelling] = useState(false);
   const [copied, setCopied] = useState("");
   const [now, setNow] = useState(null);
+  const [pollingPaused, setPollingPaused] = useState(false);
   const timer = useRef(null);
+  const paymentRef = useRef(initialPayment);
+  const inFlight = useRef(false);
+  const consecutiveErrors = useRef(0);
   const terminal = payment.status === "PAID" || payment.status === "FAILED";
   const expiresAt = useMemo(
     () => Date.parse(payment.expiresAt || ""),
@@ -38,6 +43,7 @@ export default function PaymentResult({ payment: initialPayment, onClose }) {
     Number.isFinite(expiresAt) && now !== null
       ? Math.max(0, Math.ceil((expiresAt - now) / 1000))
       : null;
+  const expired = Number.isFinite(expiresAt) && now !== null && now >= expiresAt;
   const countdown =
     secondsLeft === null
       ? ""
@@ -67,10 +73,23 @@ export default function PaymentResult({ payment: initialPayment, onClose }) {
 
   const check = useCallback(
     async (manual = false) => {
-      if (manual) setChecking(true);
+      if (inFlight.current) return "CHECKING";
+      const current = paymentRef.current;
+      if (["PAID", "FAILED"].includes(current.status)) return current.status;
+      const deadline = Date.parse(current.expiresAt || "");
+      if (!manual && Number.isFinite(deadline) && Date.now() >= deadline) {
+        setNow(Date.now());
+        return "EXPIRED";
+      }
+      inFlight.current = true;
+      setChecking(true);
       try {
         const latest = await workspaceApi.getPayment(initialPayment.orderCode);
-        setPayment((current) => ({ ...current, ...latest }));
+        const next = { ...paymentRef.current, ...latest };
+        paymentRef.current = next;
+        setPayment(next);
+        consecutiveErrors.current = 0;
+        setPollingPaused(false);
         setError("");
         if (latest.status === "PAID") {
           await auth.refresh();
@@ -79,19 +98,26 @@ export default function PaymentResult({ payment: initialPayment, onClose }) {
         return latest.status;
       } catch (checkError) {
         setError(checkError.message);
+        consecutiveErrors.current++;
+        if (consecutiveErrors.current >= MAX_POLL_ERRORS) {
+          setPollingPaused(true);
+          return "PAUSED";
+        }
         return "ERROR";
       } finally {
-        if (manual) setChecking(false);
+        inFlight.current = false;
+        setChecking(false);
       }
     },
     [initialPayment.orderCode],
   );
 
   useEffect(() => {
+    if (terminal || expired || pollingPaused) return undefined;
     let active = true;
     const poll = async () => {
       const status = await check();
-      if (active && status !== "PAID" && status !== "FAILED")
+      if (active && !["PAID", "FAILED", "EXPIRED", "PAUSED"].includes(status))
         timer.current = window.setTimeout(poll, POLL_MS);
     };
     timer.current = window.setTimeout(poll, POLL_MS);
@@ -99,17 +125,17 @@ export default function PaymentResult({ payment: initialPayment, onClose }) {
       active = false;
       if (timer.current) window.clearTimeout(timer.current);
     };
-  }, [check]);
+  }, [check, terminal, expired, pollingPaused]);
 
   useEffect(() => {
-    if (terminal) return undefined;
+    if (terminal || expired) return undefined;
     const initialTick = window.setTimeout(() => setNow(Date.now()), 0);
     const id = window.setInterval(() => setNow(Date.now()), 1000);
     return () => {
       window.clearTimeout(initialTick);
       window.clearInterval(id);
     };
-  }, [terminal]);
+  }, [terminal, expired]);
 
   const copy = async (label, value) => {
     try {
@@ -131,7 +157,9 @@ export default function PaymentResult({ payment: initialPayment, onClose }) {
         payment.orderCode,
         "Người dùng hủy trên màn hình thanh toán",
       );
-      setPayment((current) => ({ ...current, status: "FAILED" }));
+      const failed = { ...paymentRef.current, status: "FAILED" };
+      paymentRef.current = failed;
+      setPayment(failed);
     } catch (cancelError) {
       if (cancelError.code === 4006) await check(true);
       else setError(cancelError.message);
@@ -240,8 +268,12 @@ export default function PaymentResult({ payment: initialPayment, onClose }) {
         </p>
       )}
       <div className="payment-waiting">
-        <span className="payment-pulse" />
-        <span>Đang chờ thanh toán</span>
+        {!expired && !pollingPaused && <span className="payment-pulse" />}
+        <span>{expired
+          ? "Mã thanh toán đã hết hạn. Bạn có thể kiểm tra lại trạng thái hoặc tạo đơn mới."
+          : pollingPaused
+            ? "Đã tạm dừng tự động kiểm tra sau nhiều lần lỗi. Bấm Kiểm tra ngay để thử lại."
+            : "Đang chờ thanh toán"}</span>
       </div>
       <div className="payment-actions">
         <button

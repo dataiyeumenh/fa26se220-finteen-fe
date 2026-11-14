@@ -44,6 +44,8 @@ export function createAuthClient({
     savedSlot?.type === "SLOT" && savedSlot.expiresAt > now()
       ? savedSlot
       : null;
+  // Older builds could persist both tokens. A restored SLOT must never reveal ACCOUNT.
+  if (savedSlot?.type === "SLOT") session = null;
   const slotActor = () => {
     if (!slotSession) return null;
     const classroom = slotSession.slot?.groupContext === "CLASS";
@@ -296,20 +298,23 @@ export function createAuthClient({
     if (!force && Array.isArray(state.entitlements)) return state.entitlements;
     if (entitlementsRequest) return entitlementsRequest;
     publish({ entitlementsLoading: true });
-    entitlementsRequest = request("/api/entitlements", { authenticated: true })
+    const token = session.accessToken;
+    const pending = request("/api/entitlements", { authenticated: true })
       .then((result) => {
+        if (session?.accessToken !== token) return [];
         const entitlements = Array.isArray(result) ? result : [];
         publish({ entitlements, entitlementsLoading: false });
         return entitlements;
       })
       .catch((error) => {
-        publish({ entitlementsLoading: false });
+        if (session?.accessToken === token) publish({ entitlementsLoading: false });
         throw error;
       })
       .finally(() => {
-        entitlementsRequest = null;
+        if (entitlementsRequest === pending) entitlementsRequest = null;
       });
-    return entitlementsRequest;
+    entitlementsRequest = pending;
+    return pending;
   }
   async function ensureLearnerDashboard({ force = false } = {}) {
     if (!slotSession) return null;
@@ -346,12 +351,14 @@ export function createAuthClient({
     return pending;
   }
   async function slotLogin(code, pin) {
+    const version = ++revision;
     const normalizedCode = String(code || "")
       .trim()
       .toUpperCase();
     const result = await request("/api/slots/login", {
       body: { code: normalizedCode, pin },
     });
+    if (version !== revision) return;
     if (!result?.accessToken || !(result.expiresIn > 0))
       throw new ApiError("Máy chủ chưa trả phiên học sinh hợp lệ.");
     if (
@@ -360,6 +367,8 @@ export function createAuthClient({
       !["FAMILY", "CLASS"].includes(result.slot?.groupContext)
     )
       throw new ApiError("Máy chủ chưa trả đầy đủ thông tin hồ sơ trẻ.");
+    // End the adult session and invalidate pending account logins before saving SLOT.
+    logout();
     slotSession = {
       type: "SLOT",
       code: normalizedCode,
