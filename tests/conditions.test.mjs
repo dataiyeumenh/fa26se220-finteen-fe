@@ -1,5 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import {
   choiceGroupOf,
   evaluateCondition,
@@ -106,7 +107,7 @@ test("legacy expressions are rejected while safe field comparisons and ending fa
     ),
     true,
   );
-  // Chỉ DEFAULT_FALLBACK còn được chấp nhận dưới dạng chuỗi.
+  // Biểu thức có phép so sánh vẫn bị từ chối.
   assert.equal(
     evaluateCondition(
       "money >= 1000000 && !miniGameNeedsPractice",
@@ -134,6 +135,72 @@ test("string expressions never execute code in scenes or endings", () => {
   } finally {
     delete globalThis.__conditionExecuted;
   }
+});
+
+test("ending report strings support flags, negation, derived booleans and conjunctions", () => {
+  const context = {
+    flags: { receipt_resolved: true, source_checked: false, credit_plan_fit: true, selected_loan_B: false },
+    derived: { miniGameNeedsPractice: true },
+  };
+  const cases = [
+    ["flags.receipt_resolved", true],
+    ["!flags.source_checked", true],
+    ["miniGameNeedsPractice", true],
+    ["flags.credit_plan_fit && !flags.selected_loan_B", true],
+    [" flags.credit_plan_fit  &&  !flags.selected_loan_B ", true],
+    ["!miniGameNeedsPractice", false],
+    ["flags.source_checked", false],
+    ["flags.missing", false],
+    ["missingDerived", false],
+    ["!flags.missing", true],
+  ];
+  for (const [expression, expected] of cases) {
+    assert.equal(evaluateCondition(expression, context, "ending"), expected, expression);
+    assert.equal(evaluateCondition(expression, context, "scene"), false, expression);
+  }
+  const opposite = {
+    flags: { receipt_resolved: false, source_checked: true, credit_plan_fit: true, selected_loan_B: true },
+    derived: { miniGameNeedsPractice: false },
+  };
+  for (const expression of ["flags.receipt_resolved", "!flags.source_checked", "miniGameNeedsPractice", "flags.credit_plan_fit && !flags.selected_loan_B"]) {
+    assert.equal(evaluateCondition(expression, opposite, "ending"), false, expression);
+  }
+});
+
+test("ending report parser rejects unsupported syntax and inherited properties", () => {
+  for (const expression of [
+    "alert(1)", "flags.a || 1", "constructor.x", "flags.a.constructor", "flags['a']", "flags.a === true",
+    "flags.a &&", "&& flags.a", "flags.a && && flags.b", "", " ", "!!flags.a", "(flags.a)",
+    "flags.a; alert(1)", "flags.a\nalert(1)", "constructor", "flags.constructor", "toString", "flags.__proto__",
+  ]) {
+    assert.equal(evaluateCondition(expression, { flags: { a: true }, derived: {} }, "ending"), false, expression);
+  }
+});
+
+test("all 34 published CH03–CH08 report when strings respond to matching and opposite state", () => {
+  let checked = 0;
+  for (let number = 3; number <= 8; number++) {
+    const code = `CH${String(number).padStart(2, "0")}`;
+    const chapter = JSON.parse(readFileSync(new URL(`./fixtures/content/${code}.json`, import.meta.url), "utf8"));
+    for (const section of ["achieved", "practice"]) {
+      const lines = chapter.endingReport[section];
+      for (const line of lines.filter((item) => typeof item.when === "string")) {
+        const matching = { flags: {}, derived: {} };
+        for (const term of line.when.split("&&").map((value) => value.trim())) {
+          const negated = term.startsWith("!");
+          const name = negated ? term.slice(1) : term;
+          (name.startsWith("flags.") ? matching.flags : matching.derived)[name.startsWith("flags.") ? name.slice(6) : name] = !negated;
+        }
+        assert.equal(evaluateCondition(line.when, matching, "ending"), true, `${code}.${section}: ${line.when}`);
+        for (const values of [matching.flags, matching.derived]) {
+          for (const key of Object.keys(values)) values[key] = !values[key];
+        }
+        assert.equal(evaluateCondition(line.when, matching, "ending"), false, `${code}.${section}: ${line.when}`);
+        checked++;
+      }
+    }
+  }
+  assert.equal(checked, 34, "keep coverage for all published report when strings");
 });
 
 test("khoá lựa chọn: condition khuôn + lockedReason; requires cũ; ALWAYS_UNLOCKED = mở", () => {

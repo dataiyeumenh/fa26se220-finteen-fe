@@ -7,8 +7,8 @@
 //        inspected:<mã>    — trẻ đã mở thẻ / vật đó,
 //        choice:<nhóm>     — lựa chọn cuối của câu hỏi (nhóm = choiceGroup, không có thì = mã cảnh), so == / != với mã lựa chọn,
 //        biến kết chương   — choicePercent, learningScore, miniGameNeedsPractice… (ctx.derived).
-// Biểu thức dạng chuỗi và {check|expression|formula} không được thực thi.
-// Giữ DEFAULT_FALLBACK cho kết chương và so sánh {field, operator, value} không chạy mã.
+// Chuỗi báo cáo cuối chương chỉ hỗ trợ flags.tên / tên biến derived, phủ định ! và nối &&.
+// Không chạy mã từ nội dung; giữ DEFAULT_FALLBACK và so sánh {field, operator, value}.
 
 const STAT_KEYS = ["SAVING", "HAPPINESS", "RISK", "GOAL", "WEALTH"];
 
@@ -72,6 +72,21 @@ function legacyField(c, ctx) {
   return compare(left, c.operator === "=" ? "==" : c.operator, right);
 }
 
+// Read only the boolean report syntax retained in published releases.
+function simpleEndingExpression(text, ctx) {
+  const terms = text.split("&&").map((term) => term.trim());
+  if (!terms.every((term) => /^!?(flags\.)?[A-Za-z_]\w*$/.test(term))) return false;
+  return terms.every((term) => {
+    const negated = term.startsWith("!");
+    const name = negated ? term.slice(1) : term;
+    const fromFlags = name.startsWith("flags.");
+    const values = fromFlags ? ctx.flags : ctx.derived;
+    const key = fromFlags ? name.slice(6) : name;
+    const value = values != null && Object.hasOwn(values, key) ? values[key] : undefined;
+    return Boolean(value) !== negated;
+  });
+}
+
 /**
  * Đánh giá một điều kiện. mode = "scene" (rẽ tự động) hoặc "ending" (kết chương / dòng báo cáo) — chỉ ảnh hưởng dạng CHUỖI cũ.
  * Thiếu điều kiện → false (đúng hành vi cũ; nơi gọi tự quyết mặc định).
@@ -80,7 +95,8 @@ export function evaluateCondition(condition, ctx, mode = "scene") {
   if (condition == null) return false;
   if (isStructured(condition)) return evaluateStructured(condition, ctx);
   if (typeof condition === "string") {
-    return mode === "ending" && condition === "DEFAULT_FALLBACK";
+    return mode === "ending" &&
+      (condition === "DEFAULT_FALLBACK" || simpleEndingExpression(condition, ctx));
   }
   if (mode === "scene" && typeof condition === "object") {
     if (condition.check || condition.expression || condition.formula) return false;

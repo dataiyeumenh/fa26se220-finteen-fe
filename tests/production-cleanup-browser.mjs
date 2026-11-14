@@ -4,7 +4,9 @@ import { spawn } from "node:child_process";
 import { mkdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
 
-const folder = path.resolve("output/pr3");
+const endingReport = process.argv[2] === "ending-report";
+const folder = path.resolve(endingReport ? "output/ending-report" : "output/pr3");
+const fixture = endingReport ? "ending-report-browser.html" : "production-cleanup-browser.html";
 mkdirSync(folder, { recursive: true });
 const server = await createServer({ server: { host: "127.0.0.1", port: 5197, strictPort: true, hmr: false, watch: null } });
 await server.listen();
@@ -12,7 +14,7 @@ try {
   const child = spawn(process.env.BROWSER_EXECUTABLE || "C:/Program Files/Google/Chrome/Application/chrome.exe", [
     "--headless=new", "--disable-gpu", "--no-first-run", "--no-default-browser-check", "--disable-extensions",
     `--user-data-dir=${path.join(folder, `profile-${process.pid}`)}`, "--window-size=390,844", "--virtual-time-budget=60000", "--dump-dom",
-    "http://127.0.0.1:5197/tests/fixtures/production-cleanup-browser.html",
+    `http://127.0.0.1:5197/tests/fixtures/${fixture}`,
   ], { windowsHide: true });
   let html = "", stderr = "";
   child.stdout.on("data", (chunk) => { html += chunk; });
