@@ -1,14 +1,15 @@
 import { Gamepad2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Link, useLocation, useSearchParams } from "react-router-dom";
 import useKidDashboard from "./hooks/useKidDashboard";
 import { VisualNovelPlayer } from "./components/game/VisualNovelPlayer";
 import { getChapterContent, getCurrentRelease } from "@/api/content.api";
 import { useWorkspace } from "@/features/workspace/useWorkspace";
 import { novelProgressOwner } from "./components/game/visualNovelProgress.js";
+import { PersonalizationGate } from "./components/PersonalizationGate.jsx";
 
 // MỘT nguồn nội dung (Hưng 24/10: "tất cả phải đồng nhất"): mọi chương tải từ bản phát hành hiện tại của BE
-// (GET /api/content/releases/{version}/chapters/{code}) — mọi chương dùng cùng nguồn nội dung từ BE.
+// Learners use /api/play/releases/{version}/chapters/{code}; guests use public content.
 const chapterCode = (number) => `CH${String(number).padStart(2, "0")}`;
 
 export default function KidGames() {
@@ -30,6 +31,10 @@ export default function KidGames() {
   const [runtimeError, setRuntimeError] = useState("");
   const [loadedChapter, setLoadedChapter] = useState(null);
   const [chapters, setChapters] = useState([]);
+  const isLearner = actor?.role === "kid";
+  const [gateOwner, setGateOwner] = useState(null);
+  const gateDone = !isLearner || chapterNumber !== 1 || gateOwner === progressOwner;
+  const finishGate = useCallback(() => setGateOwner(progressOwner), [progressOwner]);
 
   useEffect(() => {
     let mounted = true;
@@ -41,11 +46,12 @@ export default function KidGames() {
         mounted = false;
       };
     }
+    if (!gateDone) return undefined;
     getChapterContent(chapterCode(chapterNumber))
       .then((content) => {
         if (!mounted) return;
         setGameData({ ...content, loadedAt: new Date().toISOString() });
-        setLoadedChapter(chapterNumber);
+        setLoadedChapter(JSON.stringify([progressOwner, chapterNumber]));
         setRuntimeError("");
       })
       .catch(
@@ -55,7 +61,7 @@ export default function KidGames() {
     return () => {
       mounted = false;
     };
-  }, [chapterNumber, validChapter]);
+  }, [chapterNumber, validChapter, gateDone, progressOwner]);
 
   return (
     <>
@@ -91,13 +97,18 @@ export default function KidGames() {
         </div>
       )}
 
+      {!loading && !error && validChapter && !gateDone && (
+        <PersonalizationGate key={progressOwner} onDone={finishGate} />
+      )}
+
       {!loading &&
         !error &&
+        gateDone &&
         validChapter &&
         gameData &&
-        loadedChapter === chapterNumber && (
+        loadedChapter === JSON.stringify([progressOwner, chapterNumber]) && (
           <VisualNovelPlayer
-            key={JSON.stringify([progressOwner, gameData.id])}
+            key={JSON.stringify([progressOwner, gameData.id, gameData.variantKey])}
             data={gameData}
             progressOwner={progressOwner}
             learnerCode={actor?.role === "kid" ? actor.code : null}

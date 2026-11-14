@@ -16,6 +16,8 @@ export function readNovelProgress(storage, data, owner) {
     );
     if (!saved || !Array.isArray(saved.scenePath) || !saved.scenePath.length)
       return null;
+    // Checkpoints before personalization belong to the original (base) chapter.
+    if ((saved.variantKey ?? "base") !== (data.variantKey ?? "base")) return null;
     let scenePath = saved.scenePath;
     if (saved.sceneIds) {
       if (
@@ -74,6 +76,7 @@ export function saveNovelProgress(storage, data, snapshot, owner) {
       JSON.stringify({
         ...snapshot,
         version: data.version,
+        ...(data.variantKey != null ? { variantKey: data.variantKey } : {}),
         sceneIds: snapshot.scenePath.map((index) => data.scenes[index].id),
       }),
     );
