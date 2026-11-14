@@ -31,7 +31,7 @@ export default function StudioWorkspace({ actor }) {
   const available = getStudioMenu(actor)
   const primary = available.filter(section => section.group !== 'library')
   const shared = available.filter(section => section.group === 'library')
-  const editorCode = /^\/internal\/editor\/(CH\d{2})$/.exec(pathname)?.[1]
+  const editorCode = /^\/internal\/editor\/(CH\d{1,2})$/.exec(pathname)?.[1]
   const current = available.find(section => section.path === pathname || (editorCode && section.path === '/internal/chapters'))
   // Số chương đang chờ chính mình, hiện cạnh mục menu; tải lại mỗi lần đổi màn để số luôn đúng.
   const loader = useCallback(() => pathname && studioApi.get('/api/studio/chapters'), [pathname])
