@@ -1,10 +1,11 @@
-// Nội dung game từ BE (công khai, không token): GET /api/content/current → version, rồi
-// GET /api/content/releases/{version}/chapters/{code} → đúng object chapterNV2GameData như file data cũ
-// (ảnh đã là URL CDN). Có version trên URL nên trình duyệt cache chương vĩnh viễn; bản mới = URL mới.
+// Release metadata is public. Learners load personalized chapters with their SLOT token;
+// adults and guests keep using the public content endpoint.
 // Giữ releaseVersion của lúc bắt đầu chơi cho hết chương (xem build/api-docs/content.md của BE).
 import { apiConfig } from "./config.js";
 import { resolveContentImages } from "../lib/imageAssets.js";
 import { vietnameseApiMessage } from "../lib/vietnameseMessages.js";
+import { auth } from "./auth.api.js";
+import { personalizationApi } from "./personalization.api.js";
 
 let currentRelease = null;
 
@@ -38,6 +39,12 @@ export function getCurrentRelease() {
 }
 
 export async function getChapterContent(code) {
+  const learnerId = auth.getSnapshot().actor?.kind === "learner" ? auth.getSnapshot().actor.id : null;
   const { version } = await getCurrentRelease();
-  return resolveContentImages(await getJson(`/api/content/releases/${version}/chapters/${code}`));
+  if (learnerId) {
+    if (auth.getSnapshot().actor?.id !== learnerId || auth.getSnapshot().actor?.kind !== "learner")
+      throw new Error("Phiên học đã thay đổi. Vui lòng mở lại chương.");
+    return resolveContentImages(await personalizationApi.chapterForChild(version, code));
+  }
+  return resolveContentImages(await getJson(`/api/content/releases/${encodeURIComponent(version)}/chapters/${encodeURIComponent(code)}`));
 }

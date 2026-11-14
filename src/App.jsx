@@ -36,6 +36,7 @@ import KidDashboard from "@/pages/Kid/Dashboard/KidDashboard";
 import KidLessons from "@/pages/Kid/Dashboard/KidLessons";
 import KidGamesPage from "@/pages/Kid/Dashboard/KidGames";
 import KidAchievements from "@/pages/Kid/Dashboard/KidAchievements";
+import KidPersonalization from "@/pages/Kid/Dashboard/KidPersonalization";
 import { GuestDemo } from "@/features/workspace/KidPages";
 
 // Layout và kiểm tra quyền truy cập
@@ -145,6 +146,7 @@ function App() {
             <Route element={<DashboardShell />}>
               <Route path="/dashboard/kid" element={<KidDashboard />} />
               <Route path="/dashboard/kid/games" element={<ChapterGuard><KidGamesPage /></ChapterGuard>} />
+              <Route path="/dashboard/kid/personalization" element={<KidPersonalization />} />
               <Route
                 path="/dashboard/kid/achievements"
                 element={<KidAchievements />}

@@ -1,6 +1,7 @@
 import { Copy, KeyRound, Plus, RefreshCw, Trash2, Users } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { SlotPersonalization } from "../../../../features/personalization/SlotPersonalization.jsx";
 import {
   ActionForm,
   Empty,
@@ -138,6 +139,7 @@ export default function ParentLearnersContent({ learnerState }) {
             >
               <Users className="ws-slot-icon" />
               <h2>{slot.displayName || "Đã xóa dữ liệu"}</h2>
+              {slot.status !== "WIPED" && <SlotPersonalization slot={slot} context={group.context} />}
               {slot.code && (
                 <div className="ws-code">
                   <code>{slot.code}</code>
