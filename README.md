@@ -6,7 +6,7 @@
 
 Game học tài chính cá nhân cho trẻ 8–18 tuổi. Mỗi chương là một tình huống đời thường: tiền tiêu vặt, tháng lương đầu tiên, vay mượn, biến cố bất ngờ… Trẻ tự chọn và tự trả giá cho lựa chọn của mình. Phụ huynh và giáo viên theo dõi tiến bộ qua báo cáo.
 
-[**▶ Chơi thử bản demo**](https://fa26se220-finteen-fe.vercel.app) · [Backend](https://github.com/NamHungBBB1/do-an-BE) · [Tài liệu kỹ thuật](docs/README.md)
+[**▶ Chơi thử bản demo**](https://fa26se220-finteen-fe.vercel.app)
 
 ![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)
@@ -20,12 +20,12 @@ Game học tài chính cá nhân cho trẻ 8–18 tuổi. Mỗi chương là m�
 
 ## FinTeen có gì
 
-| Ai dùng | Làm được gì |
-| --- | --- |
-| 🧒 **Trẻ** | Đăng nhập bằng **mã + PIN** do phụ huynh/giáo viên cấp, không cần email. Đi bản đồ hành trình qua từng chương visual novel, chơi mini-game (tính lương thực nhận, so lãi suất, xử lý tin nhắn lừa đảo…), làm quiz, xem báo cáo cuối chương, chọn sở thích để nội dung gần gũi hơn. |
-| 👨‍👩‍👧 **Phụ huynh** | Mua gói gia đình qua mã QR VietQR, tạo tối đa 4 hồ sơ cho con, trả lời vài câu cá nhân hoá, xem tiến độ và 5 chỉ số tài chính của từng bé. |
-| 👩‍🏫 **Giáo viên** | Mở lớp tối đa 40 học sinh, giao và chấm quiz, xem báo cáo cả lớp lẫn từng em. |
-| 🛠️ **Nội bộ** | **Content Studio** (soạn → duyệt → phát hành chương, kho ảnh, giọng đọc, gợi ý bằng AI) và trang quản trị (tài khoản, giao dịch, phân quyền). |
+| Ai dùng       | Làm được gì                                                                                                                                                                                                                                                                        |
+| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Trẻ**       | Đăng nhập bằng **mã + PIN** do phụ huynh/giáo viên cấp, không cần email. Đi bản đồ hành trình qua từng chương visual novel, chơi mini-game (tính lương thực nhận, so lãi suất, xử lý tin nhắn lừa đảo…), làm quiz, xem báo cáo cuối chương, chọn sở thích để nội dung gần gũi hơn. |
+| **Phụ huynh** | Mua gói gia đình qua mã QR VietQR, tạo tối đa 4 hồ sơ cho con, trả lời vài câu cá nhân hoá, xem tiến độ và 5 chỉ số tài chính của từng bé.                                                                                                                                         |
+| **Giáo viên** | Mở lớp tối đa 40 học sinh, giao và chấm quiz, xem báo cáo cả lớp lẫn từng em.                                                                                                                                                                                                      |
+| **Nội bộ**    | **Content Studio** (soạn → duyệt → phát hành chương, kho ảnh, giọng đọc, gợi ý bằng AI) và trang quản trị (tài khoản, giao dịch, phân quyền).                                                                                                                                      |
 
 **Một nguồn nội dung.** Mọi chương đều tải từ bản phát hành hiện hành của API, frontend không gắn cứng chương nào. Studio phát hành bản mới thì bản đồ, game và báo cáo tự cập nhật theo.
 
@@ -37,36 +37,9 @@ Cần **Node.js 20.19+ hoặc 22.12+** (yêu cầu của Vite 8) và npm.
 git clone https://github.com/dataiyeumenh/fa26se220-finteen-fe.git
 cd fa26se220-finteen-fe
 npm install
-cp .env.example .env      # điền giá trị (xem mục bên dưới)
+cp .env.example .env      # điền giá trị cấu hình
 npm run dev               # http://localhost:5173
 ```
-
-### Biến môi trường
-
-| Biến | Ý nghĩa |
-| --- | --- |
-| `VITE_API_BASE_URL` | Địa chỉ backend. Mặc định trỏ server demo, chạy BE tại máy thì dùng `http://localhost:8080`. |
-| `VITE_SWAGGER_URL` | Link Swagger, hiển thị trong trang nội bộ. |
-| `VITE_FIREBASE_*` | Cấu hình Firebase cho nút **Đăng nhập bằng Google**. Hỏi nhóm để lấy giá trị, **không commit** file `.env`. |
-
-Đổi `.env` xong thì khởi động lại Vite.
-
-## Lệnh thường dùng
-
-| Lệnh | Việc |
-| --- | --- |
-| `npm run dev` | Chạy dev server |
-| `npm run build` / `npm run preview` | Build production / xem thử bản build |
-| `npm run lint` | ESLint |
-| `npm test` | Chạy toàn bộ unit test (`tests/*.test.mjs`, tuần tự) |
-| `npm run test:personalization:browser` | Browser test luồng cá nhân hoá + bản đồ chương |
-| `npm run test:production:browser` | Browser test lazy loading, ErrorBoundary, tải lại sau lỗi |
-| `npm run test:ending-report:browser` | Browser test báo cáo cuối chương |
-| `npm run test:payment:browser` | Browser test màn thanh toán (poll, huỷ, hết hạn) |
-| `npm run test:responsive` | Chụp và soát layout ở 320 → 1920px |
-| `npm run audit:assets` | Đối chiếu ảnh trong `public` với nội dung đang phát hành |
-
-Browser test cần Google Chrome ở đường dẫn mặc định của Windows, hoặc đặt `BROWSER_EXECUTABLE`. Test dùng profile riêng và **API giả lập**, không gửi gì lên server thật.
 
 ## Kiến trúc trong 30 giây
 
@@ -105,25 +78,3 @@ public/images/finteen-v2/ # nhân vật, bối cảnh, mini-game theo chương
 tests/                    # unit test + browser test
 docs/                     # tài liệu kỹ thuật
 ```
-
-## Tài liệu
-
-- [Mục lục tài liệu kỹ thuật](docs/README.md)
-- [Bàn giao cho AI: bản đồ game, contract dựng cảnh](docs/AI-HANDOFF.md)
-- [Content Studio và ma trận quyền](docs/STUDIO.md)
-- [Xác thực ACCOUNT / SLOT](docs/auth-integration.md)
-- [Màn Parent / Teacher](docs/parent-teacher/README.md)
-- [Hướng dẫn ảnh nhân vật & bối cảnh](public/images/finteen-v2/README.md)
-
-## Nhóm phát triển
-
-Đồ án tốt nghiệp **SEP490**, Đại học FPT, học kỳ Fall 2026. Mã đề tài FA26SE220, nhóm GFA26SE183.
-
-| Thành viên | Vai trò |
-| --- | --- |
-| Vũ Nam Hưng | Trưởng nhóm |
-| Nguyễn Phương Thanh | Backend |
-| Nguyễn Gia Triệu | Frontend |
-| Lê Hoàng Anh | Frontend |
-
-Giảng viên hướng dẫn: thầy Nguyễn Tấn Phúc.
