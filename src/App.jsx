@@ -22,24 +22,24 @@ import {
   Settings,
 } from "@/features/workspace/Overview";
 import { useWorkspace } from "@/features/workspace/useWorkspace";
-import ParentLearners from "@/pages/Parent/Learners/ParentLearners";
-import TeacherGroups from "@/pages/Teacher/Groups/TeacherGroups";
-import ParentReports from "@/pages/Parent/Reports/ParentReports";
-import TeacherReports from "@/pages/Teacher/Reports/TeacherReports";
+const ParentLearners = lazy(() => import("@/pages/Parent/Learners/ParentLearners"));
+const TeacherGroups = lazy(() => import("@/pages/Teacher/Groups/TeacherGroups"));
+const ParentReports = lazy(() => import("@/pages/Parent/Reports/ParentReports"));
+const TeacherReports = lazy(() => import("@/pages/Teacher/Reports/TeacherReports"));
 // Hai màn hình khác nhau: Teacher quản lý đề, Kid làm bài.
-import KidQuiz from "@/pages/Kid/Quiz/KidQuiz";
-import KidQuizTake from "@/pages/Kid/Quiz/KidQuizTake";
-import TeacherQuizManagement from "@/pages/Teacher/Quiz/TeacherQuizManagement";
-import ParentDashboard from "@/pages/Parent/Dashboard/ParentDashboard";
-import TeacherDashboard from "@/pages/Teacher/Dashboard/TeacherDashboard";
-import LearnerReport from "@/pages/LearnerReport/LearnerReport";
+const KidQuiz = lazy(() => import("@/pages/Kid/Quiz/KidQuiz"));
+const KidQuizTake = lazy(() => import("@/pages/Kid/Quiz/KidQuizTake"));
+const TeacherQuizManagement = lazy(() => import("@/pages/Teacher/Quiz/TeacherQuizManagement"));
+const ParentDashboard = lazy(() => import("@/pages/Parent/Dashboard/ParentDashboard"));
+const TeacherDashboard = lazy(() => import("@/pages/Teacher/Dashboard/TeacherDashboard"));
+const LearnerReport = lazy(() => import("@/pages/LearnerReport/LearnerReport"));
 
 // Khu vực RIÊNG của role kid: Bài học / Trò chơi / Cửa hàng / Quiz
-import KidDashboard from "@/pages/Kid/Dashboard/KidDashboard";
-import KidLessons from "@/pages/Kid/Dashboard/KidLessons";
-import KidGamesPage from "@/pages/Kid/Dashboard/KidGames";
-import KidAchievements from "@/pages/Kid/Dashboard/KidAchievements";
-import KidPersonalization from "@/pages/Kid/Dashboard/KidPersonalization";
+const KidDashboard = lazy(() => import("@/pages/Kid/Dashboard/KidDashboard"));
+const KidLessons = lazy(() => import("@/pages/Kid/Dashboard/KidLessons"));
+const KidGamesPage = lazy(() => import("@/pages/Kid/Dashboard/KidGames"));
+const KidAchievements = lazy(() => import("@/pages/Kid/Dashboard/KidAchievements"));
+const KidPersonalization = lazy(() => import("@/pages/Kid/Dashboard/KidPersonalization"));
 import { GuestDemo } from "@/features/workspace/KidPages";
 
 // Layout và kiểm tra quyền truy cập
@@ -76,6 +76,7 @@ function AdultDashboard() {
 function App() {
   return (
     <BrowserRouter>
+      <Suspense fallback={<PageLoader label="Đang tải trang…" />}>
       <Routes>
         <Route
           path="/internal/*"
@@ -220,6 +221,7 @@ function App() {
 
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
+      </Suspense>
     </BrowserRouter>
   );
 }

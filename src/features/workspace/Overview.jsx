@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { BookOpen, RefreshCw } from "lucide-react";
 import { useWorkspace } from "./useWorkspace";
@@ -7,8 +7,10 @@ import { Heading, Empty } from "./ui";
 import AccountSettings from "../auth/AccountSettings";
 import { auth } from "../../api/auth.api";
 import { workspaceApi } from "./api/workspaceApi";
-import PaymentResult from "./PaymentResult";
+import { PageLoader } from "../../components/feedback/LoadingState";
 import { currentEntitlements, formatPlanDate, PLAN_NAME } from "./entitlements";
+
+const PaymentResult = lazy(() => import("./PaymentResult"));
 
 const money = (value) =>
   new Intl.NumberFormat("vi-VN", {
@@ -325,13 +327,15 @@ export function Plans() {
           aria-modal="true"
           aria-label="Thanh toán gói học tập"
         >
-          <PaymentResult
-            payment={payment}
-            onClose={() => {
-              setPayment(null);
-              void loadPayments();
-            }}
-          />
+          <Suspense fallback={<PageLoader compact label="Đang mở thanh toán…" />}>
+            <PaymentResult
+              payment={payment}
+              onClose={() => {
+                setPayment(null);
+                void loadPayments();
+              }}
+            />
+          </Suspense>
         </div>
       )}
     </>

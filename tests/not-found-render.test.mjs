@@ -25,7 +25,7 @@ test("404 page renders public and internal destinations", async () => {
     );
     const publicPage = render("/khong-ton-tai");
     assert.match(publicPage, /Hình như bạn đã rẽ nhầm một chặng/);
-    assert.match(publicPage, /finteen-logo-v2\.png/);
+    assert.match(publicPage, /finteen-logo-v2\.webp/);
     assert.match(publicPage, /href="\/"/);
     const internalPage = render("/internal/khong-ton-tai", { internal: true });
     assert.match(internalPage, /Không tìm thấy trang nội bộ/);

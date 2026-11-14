@@ -7,8 +7,8 @@
 //        inspected:<mã>    — trẻ đã mở thẻ / vật đó,
 //        choice:<nhóm>     — lựa chọn cuối của câu hỏi (nhóm = choiceGroup, không có thì = mã cảnh), so == / != với mã lựa chọn,
 //        biến kết chương   — choicePercent, learningScore, miniGameNeedsPractice… (ctx.derived).
-// Dạng CŨ (còn trong dữ liệu tới khi chuyển xong) giữ ĐÚNG hành vi cũ: chuỗi chạy new Function với đúng danh sách
-// biến của từng chỗ ("scene" cho rẽ tự động, "ending" cho kết chương), {check|expression|formula}, {field, operator, value}.
+// Chuỗi báo cáo cuối chương chỉ hỗ trợ flags.tên / tên biến derived, phủ định ! và nối &&.
+// Không chạy mã từ nội dung; giữ DEFAULT_FALLBACK và so sánh {field, operator, value}.
 
 const STAT_KEYS = ["SAVING", "HAPPINESS", "RISK", "GOAL", "WEALTH"];
 
@@ -66,66 +66,25 @@ function evaluateStructured(c, ctx) {
   return false;
 }
 
-// ---------------------------------------------------------------- dạng cũ (giữ nguyên hành vi)
-
-function legacySceneExpression(expression, ctx) {
-  try {
-    const evaluator = new Function(
-      "stats",
-      "flags",
-      `const { WEALTH = 0, SAVINGS = 0, SAVING = 0, FIQ = 0, HAPPINESS = 0, RISK = 0, GOAL = 0 } = stats || {}; return Boolean(${expression});`,
-    );
-    return evaluator(ctx.stats || {}, ctx.flags || {});
-  } catch {
-    return false;
-  }
-}
-
-function legacyEndingExpression(expression, ctx) {
-  const d = ctx.derived || {};
-  try {
-    const evaluator = new Function(
-      "flag",
-      "evidenceScore",
-      "miniGameCompleted",
-      "stats",
-      "money",
-      "miniGameScore",
-      "flags",
-      "reflectionScore",
-      "choicePercent",
-      "learningScore",
-      "coreCalculationsCorrect",
-      "reflectionCompleted",
-      "miniGameGoalEligible",
-      "miniGameNeedsPractice",
-      `const { SAVING = 0, HAPPINESS = 0, RISK = 0, GOAL = 0 } = stats || {}; return Boolean(${expression});`,
-    );
-    return evaluator(
-      d.gameFlag,
-      d.evidenceScore,
-      d.miniGameCompleted,
-      ctx.stats,
-      ctx.money,
-      ctx.miniGameScore,
-      ctx.flags,
-      d.reflectionScore,
-      d.choicePercent,
-      d.learningScore,
-      d.coreCalculationsCorrect,
-      d.reflectionCompleted,
-      d.miniGameGoalEligible,
-      d.miniGameNeedsPractice,
-    );
-  } catch {
-    return false;
-  }
-}
-
 function legacyField(c, ctx) {
   const left = Number(ctx.stats?.[c.field] ?? 0);
   const right = Number(c.value ?? 0);
   return compare(left, c.operator === "=" ? "==" : c.operator, right);
+}
+
+// Read only the boolean report syntax retained in published releases.
+function simpleEndingExpression(text, ctx) {
+  const terms = text.split("&&").map((term) => term.trim());
+  if (!terms.every((term) => /^!?(flags\.)?[A-Za-z_]\w*$/.test(term))) return false;
+  return terms.every((term) => {
+    const negated = term.startsWith("!");
+    const name = negated ? term.slice(1) : term;
+    const fromFlags = name.startsWith("flags.");
+    const values = fromFlags ? ctx.flags : ctx.derived;
+    const key = fromFlags ? name.slice(6) : name;
+    const value = values != null && Object.hasOwn(values, key) ? values[key] : undefined;
+    return Boolean(value) !== negated;
+  });
 }
 
 /**
@@ -136,18 +95,11 @@ export function evaluateCondition(condition, ctx, mode = "scene") {
   if (condition == null) return false;
   if (isStructured(condition)) return evaluateStructured(condition, ctx);
   if (typeof condition === "string") {
-    if (mode === "ending")
-      return (
-        condition === "DEFAULT_FALLBACK" ||
-        legacyEndingExpression(condition, ctx)
-      );
-    return false; // bộ đọc cũ của rẽ tự động không hiểu chuỗi trần (chỉ {check|expression|formula}) — giữ y hành vi
+    return mode === "ending" &&
+      (condition === "DEFAULT_FALLBACK" || simpleEndingExpression(condition, ctx));
   }
   if (mode === "scene" && typeof condition === "object") {
-    const expression =
-      condition.check || condition.expression || condition.formula;
-    if (expression)
-      return legacySceneExpression(String(expression).trim(), ctx);
+    if (condition.check || condition.expression || condition.formula) return false;
     if (condition.field) return legacyField(condition, ctx);
   }
   return false;

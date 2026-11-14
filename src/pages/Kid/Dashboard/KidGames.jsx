@@ -9,6 +9,7 @@ import { novelProgressOwner } from "./components/game/visualNovelProgress.js";
 import { PersonalizationGate } from "./components/PersonalizationGate.jsx";
 import { personalizationApi } from "../../../api/personalization.api.js";
 import { personalizationStep } from "../../../features/personalization/model.js";
+import ErrorBoundary from "../../../components/feedback/ErrorBoundary.jsx";
 
 // MỘT nguồn nội dung (Hưng 24/10: "tất cả phải đồng nhất"): mọi chương tải từ bản phát hành hiện tại của BE
 // Learners use /api/play/releases/{version}/chapters/{code}; guests use public content.
@@ -111,12 +112,18 @@ export default function KidGames() {
         validChapter &&
         gameData &&
         loadedChapter === entryKey && (
-          <VisualNovelPlayer
-            key={JSON.stringify([progressOwner, gameData.id, gameData.variantKey])}
-            data={gameData}
-            progressOwner={progressOwner}
-            learnerCode={actor?.role === "kid" ? actor.code : null}
-          />
+          <ErrorBoundary
+            key={entryKey}
+            title="Không thể hiển thị chương này"
+            description="Vui lòng tải lại trang để mở lại chương."
+          >
+            <VisualNovelPlayer
+              key={JSON.stringify([progressOwner, gameData.id, gameData.variantKey])}
+              data={gameData}
+              progressOwner={progressOwner}
+              learnerCode={actor?.role === "kid" ? actor.code : null}
+            />
+          </ErrorBoundary>
         )}
 
       {!loading && !error && !validChapter && (
