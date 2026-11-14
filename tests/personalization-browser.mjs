@@ -6,7 +6,7 @@ import path from "node:path";
 
 const folder = path.resolve("output/personalization");
 mkdirSync(folder, { recursive: true });
-const server = await createServer({ server: { host: "127.0.0.1", port: 5198, strictPort: true, hmr: false } });
+const server = await createServer({ server: { host: "127.0.0.1", port: 5198, strictPort: true, hmr: false, watch: null } });
 await server.listen();
 try {
   const child = spawn(process.env.BROWSER_EXECUTABLE || "C:/Program Files/Google/Chrome/Application/chrome.exe", [
@@ -20,7 +20,12 @@ try {
   const timeout = setTimeout(() => child.kill(), 90000);
   try {
     await new Promise((resolve, reject) => { child.on("error", reject); child.on("exit", (code) => code === 0 ? resolve() : reject(Error(stderr.slice(-1500)))); });
-  } finally { clearTimeout(timeout); }
+  } finally {
+    clearTimeout(timeout);
+    child.stdin.destroy();
+    child.stdout.destroy();
+    child.stderr.destroy();
+  }
   writeFileSync(path.join(folder, "browser.html"), html);
   const encoded = html.match(/<pre id="personalization-result"[^>]*>([\s\S]*?)<\/pre>/)?.[1];
   const decoded = encoded?.replaceAll("&quot;", '"').replaceAll("&lt;", "<").replaceAll("&gt;", ">").replaceAll("&amp;", "&");
@@ -29,4 +34,15 @@ try {
   writeFileSync(path.join(folder, "browser.json"), JSON.stringify(result, null, 2));
   console.log(JSON.stringify(result, null, 2));
   assert.equal(result.status, "PASS");
-} finally { await server.close(); }
+} catch (error) {
+  console.error(error);
+  process.exitCode = 1;
+} finally {
+  server.httpServer?.closeAllConnections();
+  // This one-shot runner can retain Vite file watchers on Windows after HTTP closes.
+  const shutdownTimeout = setTimeout(() => process.exit(process.exitCode ?? 0), 10000);
+  shutdownTimeout.unref();
+  await server.close();
+  clearTimeout(shutdownTimeout);
+}
+process.exit(process.exitCode ?? 0);

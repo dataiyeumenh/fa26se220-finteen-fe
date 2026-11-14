@@ -7,6 +7,8 @@ import { getChapterContent, getCurrentRelease } from "@/api/content.api";
 import { useWorkspace } from "@/features/workspace/useWorkspace";
 import { novelProgressOwner } from "./components/game/visualNovelProgress.js";
 import { PersonalizationGate } from "./components/PersonalizationGate.jsx";
+import { personalizationApi } from "../../../api/personalization.api.js";
+import { personalizationStep } from "../../../features/personalization/model.js";
 
 // MỘT nguồn nội dung (Hưng 24/10: "tất cả phải đồng nhất"): mọi chương tải từ bản phát hành hiện tại của BE
 // Learners use /api/play/releases/{version}/chapters/{code}; guests use public content.
@@ -15,7 +17,7 @@ const chapterCode = (number) => `CH${String(number).padStart(2, "0")}`;
 export default function KidGames() {
   const { actor } = useWorkspace();
   const progressOwner = novelProgressOwner(actor);
-  const { pathname } = useLocation();
+  const { pathname, key: locationKey } = useLocation();
   const playPath = pathname.startsWith("/dashboard/demo")
     ? "/dashboard/demo/play"
     : "/dashboard/kid/play";
@@ -32,9 +34,11 @@ export default function KidGames() {
   const [loadedChapter, setLoadedChapter] = useState(null);
   const [chapters, setChapters] = useState([]);
   const isLearner = actor?.role === "kid";
-  const [gateOwner, setGateOwner] = useState(null);
-  const gateDone = !isLearner || chapterNumber !== 1 || gateOwner === progressOwner;
-  const finishGate = useCallback(() => setGateOwner(progressOwner), [progressOwner]);
+  const entryKey = `${progressOwner}:${chapterNumber}:${locationKey}`;
+  const [completedEntry, setCompletedEntry] = useState(null);
+  const cachedView = personalizationApi.getCachedForChild();
+  const gateDone = !isLearner || loadedChapter === entryKey || completedEntry === entryKey || personalizationStep(cachedView)?.done === true;
+  const finishGate = useCallback(() => setCompletedEntry(entryKey), [entryKey]);
 
   useEffect(() => {
     let mounted = true;
@@ -51,7 +55,7 @@ export default function KidGames() {
       .then((content) => {
         if (!mounted) return;
         setGameData({ ...content, loadedAt: new Date().toISOString() });
-        setLoadedChapter(JSON.stringify([progressOwner, chapterNumber]));
+        setLoadedChapter(entryKey);
         setRuntimeError("");
       })
       .catch(
@@ -61,7 +65,7 @@ export default function KidGames() {
     return () => {
       mounted = false;
     };
-  }, [chapterNumber, validChapter, gateDone, progressOwner]);
+  }, [chapterNumber, validChapter, gateDone, entryKey]);
 
   return (
     <>
@@ -98,7 +102,7 @@ export default function KidGames() {
       )}
 
       {!loading && !error && validChapter && !gateDone && (
-        <PersonalizationGate key={progressOwner} onDone={finishGate} />
+        <PersonalizationGate key={entryKey} onDone={finishGate} />
       )}
 
       {!loading &&
@@ -106,7 +110,7 @@ export default function KidGames() {
         gateDone &&
         validChapter &&
         gameData &&
-        loadedChapter === JSON.stringify([progressOwner, chapterNumber]) && (
+        loadedChapter === entryKey && (
           <VisualNovelPlayer
             key={JSON.stringify([progressOwner, gameData.id, gameData.variantKey])}
             data={gameData}

@@ -1,5 +1,10 @@
 export const DIMENSIONS = ["gender", "age", "interest"];
 export const DIMENSION_LABELS = { gender: "Giới tính", age: "Tuổi", interest: "Sở thích" };
+export const CHILD_QUESTIONS = {
+  gender: "Em là bạn nam hay bạn nữ?",
+  age: "Em bao nhiêu tuổi rồi?",
+  interest: "Em thích điều gì nhất?",
+};
 // These are display translations only. Available answers always come from catalog.
 export const VALUE_LABELS = {
   MALE: "Nam", FEMALE: "Nữ", "8_10": "8–10 tuổi", "11_14": "11–14 tuổi", "15_18": "15–18 tuổi",

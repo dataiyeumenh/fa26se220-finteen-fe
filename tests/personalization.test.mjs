@@ -53,17 +53,54 @@ test("ACCOUNT and SLOT requests keep separate tokens, explicit nulls and empty s
   await assert.rejects(api.saveForParent("class-slot", { gender: "FEMALE" }), (error) => error.status === 403 && error.code === 3004);
 });
 
-test("a checkpoint from another variant cannot mix old choices with new personalized content", () => {
+test("text-only variant changes preserve checkpoint decisions, money and scene progress", () => {
   const values = new Map();
   const storage = { getItem: (key) => values.get(key), setItem: (key, value) => values.set(key, value) };
   const data = { id: "CH01", version: "1", variantKey: "gender:FEMALE", scenes: [{ id: "S1" }], initialStats: {} };
-  saveNovelProgress(storage, data, initialNovelProgress(data), "slot:child");
+  const progress = { ...initialNovelProgress(data), money: 123000, choiceLedger: { choice: { optionId: "A" } } };
+  saveNovelProgress(storage, data, progress, "slot:child");
   assert.equal(readNovelProgress(storage, data, "slot:child").variantKey, "gender:FEMALE");
-  assert.equal(readNovelProgress(storage, { ...data, variantKey: "base" }, "slot:child"), null);
+  const resumed = readNovelProgress(storage, { ...data, variantKey: "base" }, "slot:child");
+  assert.equal(resumed.variantKey, "base");
+  assert.equal(resumed.money, 123000);
+  assert.deepEqual(resumed.choiceLedger, progress.choiceLedger);
+  assert.deepEqual(resumed.scenePath, progress.scenePath);
   const legacy = { ...data, variantKey: undefined };
   saveNovelProgress(storage, legacy, initialNovelProgress(legacy), "slot:legacy");
   assert.ok(readNovelProgress(storage, { ...data, variantKey: "base" }, "slot:legacy"));
-  assert.equal(readNovelProgress(storage, data, "slot:legacy"), null);
+  assert.ok(readNovelProgress(storage, data, "slot:legacy"));
+});
+
+test("personalization cache is scoped to the current SLOT login and rejects late responses from another session", async () => {
+  let actor = { kind: "learner", id: "a" };
+  let response = { status: "COMPLETED" };
+  let resolve;
+  let deferred = false;
+  const api = createPersonalizationApi({
+    getSnapshot: () => ({ actor }),
+    slotRequest: async () => deferred ? new Promise((done) => { resolve = done; }) : response,
+  });
+  assert.equal(api.getCachedForChild(), null);
+  await api.getForChild();
+  assert.equal(api.getCachedForChild().status, "COMPLETED");
+  response = { status: "WAITING_GAME" };
+  await api.saveForChild("CHILD", {});
+  assert.equal(api.getCachedForChild().status, "WAITING_GAME");
+  deferred = true;
+  const oldRequest = api.getForChild();
+  actor = { kind: "learner", id: "b" };
+  assert.equal(api.getCachedForChild(), null);
+  resolve({ status: "COMPLETED" });
+  await oldRequest;
+  assert.equal(api.getCachedForChild(), null);
+  deferred = false;
+  response = { status: "SKIPPED" };
+  await api.getForChild();
+  assert.equal(api.getCachedForChild().status, "SKIPPED");
+  actor = null;
+  assert.equal(api.getCachedForChild(), null);
+  actor = { kind: "learner", id: "b" };
+  assert.equal(api.getCachedForChild(), null, "A new login for the same child needs a fresh read");
 });
 
 test("learners fetch personalized chapters; public previews keep the original API and content metadata is preserved", async () => {

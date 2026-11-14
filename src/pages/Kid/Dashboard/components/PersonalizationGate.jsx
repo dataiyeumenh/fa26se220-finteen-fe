@@ -1,36 +1,31 @@
 import { useEffect, useState } from "react";
 import { personalizationApi } from "../../../../api/personalization.api.js";
-import { VALUE_LABELS, personalizationStep } from "../../../../features/personalization/model.js";
-
-const CHILD_QUESTIONS = {
-  gender: "Em là bạn nam hay bạn nữ?",
-  age: "Em bao nhiêu tuổi rồi?",
-  interest: "Em thích điều gì nhất?",
-};
+import { CHILD_QUESTIONS, VALUE_LABELS, personalizationStep } from "../../../../features/personalization/model.js";
 const GAME_QUESTIONS = { gender: "Chọn nhân vật đồng hành", interest: "Chọn đồ mang theo hành trình" };
 const GAME_ITEMS = {
   SPORT: "⚽ Quả bóng", GAME: "🎮 Tay cầm trò chơi", MUSIC: "🎧 Tai nghe", ANIME: "📚 Bộ truyện",
   ART: "🎨 Hộp màu", TECH: "🤖 Bộ robot", FASHION: "👟 Đôi giày", TRIP: "📷 Máy ảnh",
 };
 
-export function PersonalizationGate({ onDone }) {
-  const [view, setView] = useState(null);
+export function PersonalizationGate({ onDone, initialView = null }) {
+  const [view, setView] = useState(initialView);
   const [picked, setPicked] = useState({});
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [retry, setRetry] = useState(0);
   useEffect(() => {
+    if (initialView) return undefined;
     let alive = true;
     personalizationApi.getForChild().then((result) => {
       personalizationStep(result);
       if (alive) { setView(result); setError(""); }
     }).catch((e) => alive && setError(e.message));
     return () => { alive = false; };
-  }, [retry]);
+  }, [retry, initialView]);
   const step = personalizationStep(view);
   useEffect(() => {
-    if (step?.done) onDone();
-  }, [step?.done, onDone]);
+    if (step?.done) onDone(view);
+  }, [step?.done, onDone, view]);
 
   const send = async (answers) => {
     if (busy) return;

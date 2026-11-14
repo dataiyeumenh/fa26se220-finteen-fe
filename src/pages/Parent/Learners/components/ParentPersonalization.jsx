@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
+import { Circle, CircleCheck, Save } from "lucide-react";
 import { personalizationApi } from "../../../../api/personalization.api.js";
 import { DIMENSIONS, DIMENSION_LABELS, VALUE_LABELS, parentAnswers } from "../../../../features/personalization/model.js";
 import { PersonalizationStatus } from "../../../../features/personalization/PersonalizationStatus.jsx";
+import "./parent-personalization.css";
 
 export default function ParentPersonalization({ slot, onSaved, onClose }) {
   const [view, setView] = useState(null);
@@ -53,15 +55,26 @@ export default function ParentPersonalization({ slot, onSaved, onClose }) {
       {DIMENSIONS.map((dim) => <fieldset key={dim} className="border-0 p-0">
         <legend className="mb-2 font-semibold">{DIMENSION_LABELS[dim]}</legend>
         <div className="flex flex-wrap gap-2">
-          {(view.catalog?.[dim] || []).map((value) => <button type="button" key={value}
-            className={`ws-btn ${answers[dim] === value ? "primary" : ""}`} aria-pressed={answers[dim] === value}
-            onClick={() => setAnswers((previous) => ({ ...previous, [dim]: value }))}>{VALUE_LABELS[value] || value}</button>)}
-          <button type="button" className={`ws-btn ${answers[dim] === null ? "primary" : ""}`} aria-pressed={answers[dim] === null}
-            onClick={() => setAnswers((previous) => ({ ...previous, [dim]: null }))}>Không biết, để bé chọn</button>
+          {[...(view.catalog?.[dim] || []), null].map((value) => {
+            const selected = answers[dim] === value;
+            const Indicator = selected ? CircleCheck : Circle;
+            return <button type="button" key={value ?? "unknown"}
+              className="parent-personalization-choice" aria-pressed={selected}
+              onClick={() => setAnswers((previous) => ({ ...previous, [dim]: value }))}>
+              <Indicator size={17} aria-hidden="true" />
+              <span>{value === null ? "Không biết, để bé chọn" : VALUE_LABELS[value] || value}</span>
+            </button>;
+          })}
         </div>
       </fieldset>)}
     </fieldset>
     {error && <p className="ws-notice" role="alert">{error}</p>}
-    <button className="ws-btn primary" disabled={busy}>{busy ? "Đang lưu…" : "Lưu cá nhân hoá"}</button>
+    <div className="parent-personalization-actions">
+      <p>Bấm Lưu để cập nhật câu trả lời.</p>
+      <button type="submit" className="ws-btn primary" disabled={busy}>
+        <Save size={17} aria-hidden="true" />
+        {busy ? "Đang lưu…" : "Lưu cá nhân hoá"}
+      </button>
+    </div>
   </form>;
 }
