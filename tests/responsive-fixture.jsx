@@ -26,7 +26,6 @@ import ch8 from './fixtures/content/CH08.json';
 import { initialNovelProgress, saveNovelProgress } from '../src/pages/Kid/Dashboard/components/game/visualNovelProgress.js';
 import { resolveContentImages } from '../src/lib/imageAssets.js';
 import { auth } from '../src/api/auth.api.js';
-import { startScrollbars } from '../src/lib/scrollbars.js';
 
 const name = new URLSearchParams(location.search).get('case') || 'home';
 // Measure settled layouts; animation frames are covered by visual review separately.
@@ -69,8 +68,6 @@ else if (name === 'game' || name.startsWith('game-') || name.startsWith('minigam
   view = <VisualNovelPlayer data={data} progressOwner="responsive-fixture" />;
 }
 else view = <WorkspaceLayout>{name.startsWith('kid') ? <GameMap chapters={chapters} /> : name === 'quiz' || name === 'quiz-preview' ? <TeacherQuizContent quizState={quizState} /> : name === 'parent' ? <ParentDashboardContent actor={actor} dashboardState={dashboardState} /> : <TeacherDashboardContent actor={actor} dashboardState={dashboardState} />}</WorkspaceLayout>;
-const stopScrollbars = startScrollbars();
-if (import.meta.hot) import.meta.hot.dispose(stopScrollbars);
 createRoot(document.getElementById('root')).render(<MemoryRouter initialEntries={[route]}>{view}</MemoryRouter>);
 
 function clickText(text) { [...document.querySelectorAll('button')].find(button => button.textContent.trim() === text)?.click(); }
@@ -122,7 +119,7 @@ setTimeout(() => {
       const result = { name, width, scrollWidth: document.documentElement.scrollWidth, overflowing, imagesFailed: failedImages.filter(url => url?.startsWith('/')), externalImagesUnavailable: failedImages.filter(url => !url?.startsWith('/')), rendered: Boolean(document.querySelector('#root')?.textContent?.trim() || document.querySelector('.vn-player')), preview: name !== 'quiz-preview' || Boolean(document.querySelector('[role="dialog"]')), navigation: !name.endsWith('-menu') || width > 900 || Boolean(document.querySelector('[role="dialog"] .ft-sidebar--drawer')) };
       result.activeNavigationContrast = activeContrast;
       result.navigationCenterOffset = centerOffset;
-      result.overlayScrollbars = Boolean(document.querySelector('.os-scrollbar.os-theme-finteen'));
+      result.nativeScrollbars = getComputedStyle(document.documentElement).scrollbarWidth === 'thin' && !document.querySelector('.os-scrollbar');
       result.previewScrollWorks = previewScrollWorks;
       if (name.startsWith('editor-chapter')) {
         const sidebar = document.querySelector('.studio-workspace > .studio-sidebar')?.getBoundingClientRect();

@@ -12,7 +12,7 @@ test("shared loading states are accessible and preserve page structure", async (
     );
     const page = renderToString(React.createElement(PageLoader, { label: "Đang kiểm tra phiên…" }));
     assert.match(page, /role="status"/);
-    assert.match(page, /finteen-logo-v2\.png/);
+    assert.match(page, /finteen-logo-v2\.webp/);
     assert.match(page, /Đang kiểm tra phiên/);
 
     const dashboard = renderToString(React.createElement(ContentSkeleton, { label: "Đang tải tổng quan…" }));

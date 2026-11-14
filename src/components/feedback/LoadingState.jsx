@@ -13,7 +13,7 @@ export function PageLoader({ label = "Đang chuẩn bị không gian của bạn
   return (
     <div className={`ft-page-loader${compact ? " is-compact" : ""}`} role="status" aria-live="polite">
       <div className="ft-page-loader-mark" aria-hidden="true">
-        <img src="/brand/finteen-logo-v2.png" alt="" />
+        <img src="/brand/finteen-logo-v2.webp" alt="" />
         <span><i /><i /><i /></span>
       </div>
       <strong>{label}</strong>

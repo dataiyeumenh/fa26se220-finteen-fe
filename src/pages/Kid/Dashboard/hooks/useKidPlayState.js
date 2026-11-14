@@ -21,7 +21,14 @@ export function useKidPlayState({ enabled = true, refreshKey = null } = {}) {
     };
     Promise.all([loadState(), getCurrentRelease()]).then(([playState, release]) => {
       if (!Array.isArray(release?.chapters)) throw new Error("Không tải được danh sách chương. Vui lòng thử lại.");
-      const state = { ...playState, totalChapters: release.chapters.length };
+      const numbers = release.chapters.map((chapter) => chapter.chapterNumber);
+      const state = {
+        ...playState,
+        totalChapters: numbers.length ? Math.max(...numbers) : 0,
+        chaptersDone: Array.isArray(playState?.chaptersDone)
+          ? playState.chaptersDone.filter((id) => numbers.includes(Number(id)))
+          : playState?.chaptersDone,
+      };
       if (!isJourneyPlayState(state)) throw new Error("Dữ liệu tiến trình chưa hợp lệ. Vui lòng thử lại.");
       if (active) setResult({ key, state, chapters: release.chapters, error: "" });
     }).catch((error) => {

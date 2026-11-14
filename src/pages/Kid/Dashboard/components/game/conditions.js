@@ -7,8 +7,8 @@
 //        inspected:<mã>    — trẻ đã mở thẻ / vật đó,
 //        choice:<nhóm>     — lựa chọn cuối của câu hỏi (nhóm = choiceGroup, không có thì = mã cảnh), so == / != với mã lựa chọn,
 //        biến kết chương   — choicePercent, learningScore, miniGameNeedsPractice… (ctx.derived).
-// Dạng CŨ (còn trong dữ liệu tới khi chuyển xong) giữ ĐÚNG hành vi cũ: chuỗi chạy new Function với đúng danh sách
-// biến của từng chỗ ("scene" cho rẽ tự động, "ending" cho kết chương), {check|expression|formula}, {field, operator, value}.
+// Biểu thức dạng chuỗi và {check|expression|formula} không được thực thi.
+// Giữ DEFAULT_FALLBACK cho kết chương và so sánh {field, operator, value} không chạy mã.
 
 const STAT_KEYS = ["SAVING", "HAPPINESS", "RISK", "GOAL", "WEALTH"];
 
@@ -66,62 +66,6 @@ function evaluateStructured(c, ctx) {
   return false;
 }
 
-// ---------------------------------------------------------------- dạng cũ (giữ nguyên hành vi)
-
-function legacySceneExpression(expression, ctx) {
-  try {
-    const evaluator = new Function(
-      "stats",
-      "flags",
-      `const { WEALTH = 0, SAVINGS = 0, SAVING = 0, FIQ = 0, HAPPINESS = 0, RISK = 0, GOAL = 0 } = stats || {}; return Boolean(${expression});`,
-    );
-    return evaluator(ctx.stats || {}, ctx.flags || {});
-  } catch {
-    return false;
-  }
-}
-
-function legacyEndingExpression(expression, ctx) {
-  const d = ctx.derived || {};
-  try {
-    const evaluator = new Function(
-      "flag",
-      "evidenceScore",
-      "miniGameCompleted",
-      "stats",
-      "money",
-      "miniGameScore",
-      "flags",
-      "reflectionScore",
-      "choicePercent",
-      "learningScore",
-      "coreCalculationsCorrect",
-      "reflectionCompleted",
-      "miniGameGoalEligible",
-      "miniGameNeedsPractice",
-      `const { SAVING = 0, HAPPINESS = 0, RISK = 0, GOAL = 0 } = stats || {}; return Boolean(${expression});`,
-    );
-    return evaluator(
-      d.gameFlag,
-      d.evidenceScore,
-      d.miniGameCompleted,
-      ctx.stats,
-      ctx.money,
-      ctx.miniGameScore,
-      ctx.flags,
-      d.reflectionScore,
-      d.choicePercent,
-      d.learningScore,
-      d.coreCalculationsCorrect,
-      d.reflectionCompleted,
-      d.miniGameGoalEligible,
-      d.miniGameNeedsPractice,
-    );
-  } catch {
-    return false;
-  }
-}
-
 function legacyField(c, ctx) {
   const left = Number(ctx.stats?.[c.field] ?? 0);
   const right = Number(c.value ?? 0);
@@ -136,18 +80,10 @@ export function evaluateCondition(condition, ctx, mode = "scene") {
   if (condition == null) return false;
   if (isStructured(condition)) return evaluateStructured(condition, ctx);
   if (typeof condition === "string") {
-    if (mode === "ending")
-      return (
-        condition === "DEFAULT_FALLBACK" ||
-        legacyEndingExpression(condition, ctx)
-      );
-    return false; // bộ đọc cũ của rẽ tự động không hiểu chuỗi trần (chỉ {check|expression|formula}) — giữ y hành vi
+    return mode === "ending" && condition === "DEFAULT_FALLBACK";
   }
   if (mode === "scene" && typeof condition === "object") {
-    const expression =
-      condition.check || condition.expression || condition.formula;
-    if (expression)
-      return legacySceneExpression(String(expression).trim(), ctx);
+    if (condition.check || condition.expression || condition.formula) return false;
     if (condition.field) return legacyField(condition, ctx);
   }
   return false;

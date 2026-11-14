@@ -124,6 +124,43 @@ test('dashboard waits for pending chapter results before loading progress', asyn
   cleanup();
 });
 
+test('release changes discard removed completions and use the highest published chapter number', async () => {
+  const source = await fs.readFile(new URL('../src/pages/Kid/Dashboard/hooks/useKidPlayState.js', import.meta.url), 'utf8');
+  const createHook = new Function('useEffect', 'useState', 'useWorkspace', 'kidDashboardApi', 'isJourneyPlayState', 'flushPendingBatches', 'getCurrentRelease',
+    source.replace(/^import .*;\r?\n/gm, '').replace('export function', 'function') + '\nreturn useKidPlayState;');
+  for (const { numbers, playState, expectedDone, total, playable } of [
+    { numbers: [1, 2, 3, 4, 5, 6, 7, 8], playState: { chaptersDone: [1, '9'], continueChapter: 2 }, expectedDone: [1], total: 8, playable: 2 },
+    { numbers: [1, 2, 4, 5, 6, 7, 8, 9], playState: { chaptersDone: ['9'] }, expectedDone: ['9'], total: 9, playable: 9 },
+    { numbers: [], playState: { chaptersDone: [9] }, expectedDone: [], total: 0, playable: null },
+  ]) {
+    let effect;
+    let result;
+    const original = structuredClone(playState);
+    const chapters = numbers.map((chapterNumber) => ({ chapterNumber }));
+    const useKidPlayState = createHook(
+      (callback) => { effect = callback; },
+      (initial) => [initial, (value) => { result = value; }],
+      () => ({ actor: { id: 'kid-1', role: 'kid', code: 'learner-a' } }),
+      { getPlayState: async () => playState },
+      isJourneyPlayState,
+      async () => {},
+      async () => ({ chapters }),
+    );
+    useKidPlayState();
+    const cleanup = effect();
+    await new Promise((resolve) => setImmediate(resolve));
+    assert.equal(result.error, '');
+    assert.equal(isJourneyPlayState(result.state), true);
+    assert.equal(result.state.totalChapters, total);
+    assert.deepEqual(result.state.chaptersDone, expectedDone);
+    assert.deepEqual(result.chapters, chapters);
+    assert.deepEqual(playState, original, 'release filtering must not mutate server progress');
+    if (playable !== null) assert.equal(canPlayJourneyChapter(result.state, playable), true);
+    else assert.equal(resumeJourneyChapter(result.state), null);
+    cleanup();
+  }
+});
+
 test('switching learners during a progress request cannot submit the previous learner batch', async () => {
   const source = await fs.readFile(new URL('../src/pages/Kid/Dashboard/components/game/playBatch.js', import.meta.url), 'utf8');
   const instrumented = source.replace('return (await import("../../api/kidDashboardApi")).kidDashboardApi;', 'return globalThis.__playTestApi;');

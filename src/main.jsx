@@ -3,14 +3,15 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.jsx";
 import { startAuth } from "./api/auth.api";
-import { startScrollbars } from "./lib/scrollbars";
+import ErrorBoundary from "./components/feedback/ErrorBoundary.jsx";
 
 const stopAuth = startAuth();
-const stopScrollbars = startScrollbars();
-if (import.meta.hot) import.meta.hot.dispose(() => { stopAuth(); stopScrollbars(); });
+if (import.meta.hot) import.meta.hot.dispose(stopAuth);
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <App />
+    <ErrorBoundary>
+      <App />
+    </ErrorBoundary>
   </StrictMode>,
 );

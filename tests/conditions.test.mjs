@@ -88,15 +88,14 @@ test("biến kết chương đọc từ ctx.derived", () => {
   );
 });
 
-test("dạng cũ giữ đúng hành vi cũ", () => {
-  // rẽ tự động: {expression}/{check} chạy như trước; chuỗi trần bộ cũ không hiểu → false
+test("legacy expressions are rejected while safe field comparisons and ending fallback remain", () => {
   assert.equal(
     evaluateCondition({ expression: "flags.source_checked" }, ctx, "scene"),
-    true,
+    false,
   );
   assert.equal(
     evaluateCondition({ check: "SAVING >= 60 && RISK < 40" }, ctx, "scene"),
-    true,
+    false,
   );
   assert.equal(evaluateCondition("flags.source_checked", ctx, "scene"), false);
   assert.equal(
@@ -107,18 +106,34 @@ test("dạng cũ giữ đúng hành vi cũ", () => {
     ),
     true,
   );
-  // kết chương: chuỗi chạy với biến kết chương; DEFAULT_FALLBACK luôn đúng; object cũ → false
+  // Chỉ DEFAULT_FALLBACK còn được chấp nhận dưới dạng chuỗi.
   assert.equal(
     evaluateCondition(
       "money >= 1000000 && !miniGameNeedsPractice",
       ctx,
       "ending",
     ),
-    true,
+    false,
   );
   assert.equal(evaluateCondition("DEFAULT_FALLBACK", ctx, "ending"), true);
   assert.equal(evaluateCondition({ expression: "true" }, ctx, "ending"), false);
   assert.equal(evaluateCondition(undefined, ctx), false);
+});
+
+test("string expressions never execute code in scenes or endings", () => {
+  globalThis.__conditionExecuted = false;
+  const expression = "(globalThis.__conditionExecuted = true)";
+  try {
+    for (const mode of ["scene", "ending"]) {
+      for (const condition of [expression, { check: expression }, { expression }, { formula: expression }]) {
+        assert.equal(evaluateCondition(condition, ctx, mode), false);
+        assert.equal(globalThis.__conditionExecuted, false);
+      }
+    }
+    assert.equal(evaluateCondition("DEFAULT_FALLBACK", ctx, "scene"), false);
+  } finally {
+    delete globalThis.__conditionExecuted;
+  }
 });
 
 test("khoá lựa chọn: condition khuôn + lockedReason; requires cũ; ALWAYS_UNLOCKED = mở", () => {

@@ -11,7 +11,7 @@ allCases.push('editor-chapter', 'editor-chapter-menu');
 const cases = process.env.RESPONSIVE_CASES ? process.env.RESPONSIVE_CASES.split(',') : allCases;
 assert.ok(cases.every(name => allCases.includes(name)), 'Unknown responsive case');
 const widths = [320, 390, 768, 1024, 1440, 1920];
-const server = await createServer({ appType: 'custom', server: { host: '127.0.0.1', port: 5194, strictPort: true, hmr: false } });
+const server = await createServer({ cacheDir: path.resolve('node_modules/.vite-responsive'), appType: 'custom', server: { host: '127.0.0.1', port: 5194, strictPort: true, hmr: false } });
 server.middlewares.use('/__responsive-case', async (_req, res) => {
   res.setHeader('Content-Type', 'text/html');
   res.end(await server.transformIndexHtml('/__responsive-case', '<!doctype html><html lang="vi"><head><meta name="viewport" content="width=device-width,initial-scale=1"></head><body><div id="root"></div><script type="module" src="/tests/responsive-fixture.jsx"></script></body></html>'));
@@ -51,7 +51,7 @@ try {
   fs.writeFileSync('output/responsive-browser-audit.json', JSON.stringify(results, null, 2));
   assert.ok(results.every(result => result.gameLayout !== false), 'Game backdrop must fill the player and dialogue/choices must remain overlays');
   assert.ok(results.every(result => !result.editorLayout || (result.editorLayout.rendered && result.editorLayout.overlap <= 1 && result.editorLayout.menuReadable && result.editorLayout.contentVisible)), 'Chapter editor must render beside the sidebar without overlap or hidden menu text; see output/responsive-browser-audit.json');
-  const failures = results.filter(result => result.scrollWidth > result.width + 1 || result.overflowing.length || result.imagesFailed.length || !result.rendered || !result.preview || !result.navigation || (result.activeNavigationContrast !== null && result.activeNavigationContrast < 4.5) || (result.navigationCenterOffset !== null && result.navigationCenterOffset > 1) || !result.overlayScrollbars || !result.previewScrollWorks);
+  const failures = results.filter(result => result.scrollWidth > result.width + 1 || result.overflowing.length || result.imagesFailed.length || !result.rendered || !result.preview || !result.navigation || (result.activeNavigationContrast !== null && result.activeNavigationContrast < 4.5) || (result.navigationCenterOffset !== null && result.navigationCenterOffset > 1) || !result.nativeScrollbars || !result.previewScrollWorks);
   console.log(JSON.stringify({ checked: results.length, failures }, null, 2));
   if (process.env.RESPONSIVE_SCREENSHOTS) {
     for (const [name, width] of [['kid', 1920], ['kid', 1024], ['kid', 768], ['kid-child', 1920], ['quiz-preview', 390], ['teacher-menu', 390]]) {

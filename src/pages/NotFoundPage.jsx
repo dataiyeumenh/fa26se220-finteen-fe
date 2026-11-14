@@ -38,7 +38,7 @@ export default function NotFoundPage({ internal = false }) {
   return (
     <main className={`ft-public ft-not-found${isInternal ? " is-internal" : ""}`}>
       <Link className="ft-not-found-brand" to={home} aria-label="FinTeen">
-        <img src="/brand/finteen-logo-v2.png" alt="FinTeen" />
+        <img src="/brand/finteen-logo-v2.webp" alt="FinTeen" />
         {isInternal && <small>WORKSPACE</small>}
       </Link>
 
