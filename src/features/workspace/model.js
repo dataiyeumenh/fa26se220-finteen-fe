@@ -3,25 +3,13 @@
     name: "Gia đình",
     role: "parent",
     capacity: 4,
-    chapters: [1, 2, 3, 4, 5, 6, 7, 8],
   },
   teacher: {
     name: "Giáo viên",
     role: "teacher",
     capacity: 40,
-    chapters: [1, 2, 3, 4, 5, 6, 7, 8],
   },
 };
-export const CHAPTERS = [
-  "Khám phá tiền tệ",
-  "Quản lý chi tiêu",
-  "Chi phí sinh hoạt",
-  "Bước đầu tự lập",
-  "Vượt khủng hoảng tài chính",
-  "Mượn tiền có dễ không?",
-  "Biến cố bất ngờ",
-  "Tiền sinh tiền và kế hoạch 18 tuổi",
-];
 export const emptyDatabase = () => ({
   version: 1,
   accounts: [],
@@ -120,12 +108,13 @@ export function workspaceDatabase(db, actor) {
     ),
   };
 }
-export function canAccessChapter(actor, chapter) {
+export function canAccessChapter(actor, chapter, chapters = []) {
   return Boolean(
     actor &&
     Number.isInteger(chapter) &&
     ((actor.role === "guest" && chapter === 1) ||
-      (actor.role === "kid" && PLANS[actor.plan]?.chapters.includes(chapter))),
+      (actor.role === "kid" && Object.hasOwn(PLANS, actor.plan) &&
+        chapters.some((item) => item.chapterNumber === chapter))),
   );
 }
 export function activeLearners(db, ownerId, plan) {

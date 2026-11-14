@@ -207,7 +207,10 @@ for (const plan of ["parent", "teacher"])
     });
     assert.equal(child.plan, plan);
     assert.equal(child.role, "kid");
-    for (let i = 1; i <= 8; i++) assert.equal(canAccessChapter(child, i), true);
+    const chapters = Array.from({ length: 9 }, (_, i) => ({ chapterNumber: i + 1 }));
+    for (let i = 1; i <= 9; i++) assert.equal(canAccessChapter(child, i, chapters), true);
+    assert.equal(canAccessChapter(child, 10, chapters), false);
+    assert.equal(canAccessChapter(child, 1), false);
     assert.throws(() => activate(db, session, db.slots[0].id));
     assert.equal(
       resolveSession(db, { kind: "learner", id: l.id, authVersion: 0 }),

@@ -6,19 +6,20 @@ import {
   Trophy,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { CHAPTERS } from "../../../features/workspace/model";
+import { useCurrentRelease } from "../../../hooks/useCurrentRelease.js";
 import { dateLabel } from "../../../features/workspace/format";
 import { Empty, Heading } from "../../../features/workspace/ui";
 import { ContentSkeleton } from "@/components/feedback/LoadingState";
 
 export default function LearnerReportContent({ reportState }) {
   const { report, loading, error, refresh } = reportState;
-  if (loading) return <ContentSkeleton cards={3} label="Đang tải tiến độ học sinh…" />;
-  if (error)
+  const release = useCurrentRelease();
+  if (loading || release.loading) return <ContentSkeleton cards={3} label="Đang tải tiến độ học sinh…" />;
+  if (error || release.error)
     return (
       <Empty>
-        {error}{" "}
-        <button className="ws-btn" onClick={() => void refresh()}>
+        {error || release.error}{" "}
+        <button className="ws-btn" onClick={() => { release.retry(); void refresh(); }}>
           Thử lại
         </button>
       </Empty>
@@ -27,16 +28,13 @@ export default function LearnerReportContent({ reportState }) {
   const { learner, progress, indicators } = report;
   const done = new Set(progress.chaptersDone || []);
   const continueChapter = Number(progress.continueChapter) || null;
-  const chapters = Array.from(
-    { length: progress.totalChapters || 0 },
-    (_, index) => ({
-      number: index + 1,
-      title: CHAPTERS[index] || `Chương ${index + 1}`,
-      completed: done.has(index + 1),
-    }),
-  );
-  const percent = progress.totalChapters
-    ? Math.round((progress.completedChapters / progress.totalChapters) * 100)
+  const chapters = release.chapters.map((chapter) => ({
+    number: chapter.chapterNumber,
+    title: chapter.title,
+    completed: done.has(chapter.chapterNumber),
+  }));
+  const percent = chapters.length
+    ? Math.round((chapters.filter((chapter) => chapter.completed).length / chapters.length) * 100)
     : 0;
   const labels = {
     wealth: "Tài sản",

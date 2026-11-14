@@ -12,6 +12,7 @@
 }
 .atlas-tabs {
   display: flex;
+  flex-wrap: wrap;
   flex: 1;
   gap: 4px;
   padding: 5px;

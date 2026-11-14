@@ -1,5 +1,21 @@
 # Cá nhân hoá của phụ huynh và bé
 
+## PR 2: Danh sách chương từ release API
+
+- Bản đồ và báo cáo học sinh lấy số chương, số thứ tự và tên chương từ `getCurrentRelease().chapters` (`GET /api/content/current`). Dashboard cũng lấy tổng số chương từ danh sách này.
+- Bỏ `PLANS.*.chapters`, `CHAPTERS` và fallback `totalChapters ?? 8`. Tiến độ chơi vẫn lấy `chaptersDone` của lần chơi trên server; tổng chương được bổ sung từ release trước khi kiểm tra tiến độ.
+- Guard chỉ cho bé mở chương có trong release, đã hoàn thành hoặc là chương kế tiếp sau các chương đã xong. Khách vẫn chỉ xem thử chương 1.
+- Bản đồ tạo thêm vùng theo từng hai chương; từ chương 9 dùng lại ảnh vùng cuối. Chưa cần thêm ảnh để chương mới xuất hiện. Release rỗng hiển thị thông báo chưa có chương; lỗi tải có nút thử lại.
+- Browser test dùng release giả lập 9 chương để kiểm tra vùng thứ 5, tên chương thống nhất giữa bản đồ và báo cáo, mở chương 9, chặn chương 10 và thử lại sau lỗi API. Đây là kiểm tra với API giả lập, chưa phải xác nhận phát hành chương 9 trên production.
+
+```sh
+node --test --test-concurrency=1 tests/kid-play-progress.test.mjs tests/workspace-model.test.mjs tests/kid-demo.test.mjs tests/personalization.test.mjs tests/chapter-seven.test.mjs tests/chapter-eight.test.mjs tests/visual-novel-progress.test.mjs
+npm run test:personalization:browser
+npm run build
+```
+
+## PR 1: Luồng cá nhân hoá
+
 Triển khai theo tài liệu `personalization.md` của BE #57 và yêu cầu PR 1. Các schema đã được đối chiếu với OpenAPI production ngày 14/11/2026.
 
 - Trên thẻ hồ sơ FAMILY, phụ huynh xem trạng thái và mở “Cá nhân hoá cho bé”. Ba nhóm nút lấy giá trị từ `catalog`; mỗi nhóm có lựa chọn không biết. PUT ghi đè đủ ba chiều, dùng `null` cho chiều để bé chọn.

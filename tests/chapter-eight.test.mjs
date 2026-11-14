@@ -31,7 +31,7 @@ import {
   readNovelProgress,
   saveNovelProgress,
 } from "../src/pages/Kid/Dashboard/components/game/visualNovelProgress.js";
-import { canAccessChapter, CHAPTERS } from "../src/features/workspace/model.js";
+import { canAccessChapter } from "../src/features/workspace/model.js";
 // Dữ liệu như game thấy (VisualNovelPlayer chuẩn hoá: inspect → scene, reflection → activity).
 const data = normalizeChapter(content);
 const futurePlanConfig = data.scenes.find(
@@ -739,10 +739,10 @@ test("checkpoint saves allocation drafts and one-time settlement without changin
   assert.equal(saved.moneyEventsApplied.CH08_MARKET_SETTLEMENT, true);
 });
 test("chapter eight requires a learner profile with a subscription", () => {
-  assert.equal(CHAPTERS[7], data.title);
+  const chapters = [{ chapterNumber: 8, title: data.title }];
   assert.equal(canAccessChapter({ role: "guest" }, 8), false);
-  assert.equal(canAccessChapter({ role: "kid", plan: "parent" }, 8), true);
-  assert.equal(canAccessChapter({ role: "kid", plan: "teacher" }, 8), true);
+  assert.equal(canAccessChapter({ role: "kid", plan: "parent" }, 8, chapters), true);
+  assert.equal(canAccessChapter({ role: "kid", plan: "teacher" }, 8, chapters), true);
   assert.equal(canAccessChapter(null, 8), false);
   const read = (path) => readFileSync(path, "utf8");
   assert.ok(
