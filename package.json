@@ -13,6 +13,8 @@
     "test:workspace": "node --test tests/workspace-*.test.mjs",
     "test:internal": "node --test tests/internal-*.test.mjs",
     "test:auth": "node --test tests/auth-*.test.mjs",
+    "test:personalization": "node --test tests/personalization.test.mjs",
+    "test:personalization:browser": "node tests/personalization-browser.mjs",
     "preview": "vite preview"
   },
   "dependencies": {

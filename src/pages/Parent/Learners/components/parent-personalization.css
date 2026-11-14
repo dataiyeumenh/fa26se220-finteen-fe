@@ -1,0 +1,68 @@
+.ws-form .parent-personalization-choice {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 9px 12px;
+  border: 1px solid #dbe2ea;
+  border-radius: 10px;
+  background: #fff;
+  color: #475569;
+  font-size: 13px;
+  font-weight: 500;
+  text-align: left;
+  transition: border-color 150ms, background-color 150ms;
+}
+
+.ws-form .parent-personalization-choice svg {
+  flex-shrink: 0;
+  color: #94a3b8;
+}
+
+.ws-form .parent-personalization-choice:hover:not(:disabled) {
+  border-color: #93b4ec;
+  background: #f8faff;
+}
+
+.ws-form .parent-personalization-choice[aria-pressed="true"] {
+  border-color: #2563eb;
+  background: #eff6ff;
+  color: #1e40af;
+  font-weight: 600;
+}
+
+.ws-form .parent-personalization-choice[aria-pressed="true"] svg {
+  color: #2563eb;
+}
+
+.ws-form .parent-personalization-choice:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 3px;
+}
+
+.parent-personalization-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 4px;
+  padding-top: 16px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.parent-personalization-actions p {
+  color: #64748b;
+  font-size: 12px;
+}
+
+.parent-personalization-actions .ws-btn {
+  min-height: 44px;
+  justify-content: center;
+}
+
+@media (max-width: 480px) {
+  .parent-personalization-actions .ws-btn {
+    width: 100%;
+  }
+}

@@ -1,20 +1,23 @@
 import { Gamepad2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Link, useLocation, useSearchParams } from "react-router-dom";
 import useKidDashboard from "./hooks/useKidDashboard";
 import { VisualNovelPlayer } from "./components/game/VisualNovelPlayer";
 import { getChapterContent, getCurrentRelease } from "@/api/content.api";
 import { useWorkspace } from "@/features/workspace/useWorkspace";
 import { novelProgressOwner } from "./components/game/visualNovelProgress.js";
+import { PersonalizationGate } from "./components/PersonalizationGate.jsx";
+import { personalizationApi } from "../../../api/personalization.api.js";
+import { personalizationStep } from "../../../features/personalization/model.js";
 
 // MỘT nguồn nội dung (Hưng 24/10: "tất cả phải đồng nhất"): mọi chương tải từ bản phát hành hiện tại của BE
-// (GET /api/content/releases/{version}/chapters/{code}) — mọi chương dùng cùng nguồn nội dung từ BE.
+// Learners use /api/play/releases/{version}/chapters/{code}; guests use public content.
 const chapterCode = (number) => `CH${String(number).padStart(2, "0")}`;
 
 export default function KidGames() {
   const { actor } = useWorkspace();
   const progressOwner = novelProgressOwner(actor);
-  const { pathname } = useLocation();
+  const { pathname, key: locationKey } = useLocation();
   const playPath = pathname.startsWith("/dashboard/demo")
     ? "/dashboard/demo/play"
     : "/dashboard/kid/play";
@@ -30,6 +33,12 @@ export default function KidGames() {
   const [runtimeError, setRuntimeError] = useState("");
   const [loadedChapter, setLoadedChapter] = useState(null);
   const [chapters, setChapters] = useState([]);
+  const isLearner = actor?.role === "kid";
+  const entryKey = `${progressOwner}:${chapterNumber}:${locationKey}`;
+  const [completedEntry, setCompletedEntry] = useState(null);
+  const cachedView = personalizationApi.getCachedForChild();
+  const gateDone = !isLearner || loadedChapter === entryKey || completedEntry === entryKey || personalizationStep(cachedView)?.done === true;
+  const finishGate = useCallback(() => setCompletedEntry(entryKey), [entryKey]);
 
   useEffect(() => {
     let mounted = true;
@@ -41,11 +50,12 @@ export default function KidGames() {
         mounted = false;
       };
     }
+    if (!gateDone) return undefined;
     getChapterContent(chapterCode(chapterNumber))
       .then((content) => {
         if (!mounted) return;
         setGameData({ ...content, loadedAt: new Date().toISOString() });
-        setLoadedChapter(chapterNumber);
+        setLoadedChapter(entryKey);
         setRuntimeError("");
       })
       .catch(
@@ -55,7 +65,7 @@ export default function KidGames() {
     return () => {
       mounted = false;
     };
-  }, [chapterNumber, validChapter]);
+  }, [chapterNumber, validChapter, gateDone, entryKey]);
 
   return (
     <>
@@ -91,13 +101,18 @@ export default function KidGames() {
         </div>
       )}
 
+      {!loading && !error && validChapter && !gateDone && (
+        <PersonalizationGate key={entryKey} onDone={finishGate} />
+      )}
+
       {!loading &&
         !error &&
+        gateDone &&
         validChapter &&
         gameData &&
-        loadedChapter === chapterNumber && (
+        loadedChapter === entryKey && (
           <VisualNovelPlayer
-            key={JSON.stringify([progressOwner, gameData.id])}
+            key={JSON.stringify([progressOwner, gameData.id, gameData.variantKey])}
             data={gameData}
             progressOwner={progressOwner}
             learnerCode={actor?.role === "kid" ? actor.code : null}

@@ -356,8 +356,8 @@ export default function WorkspaceLayout({ children }) {
                     </div>
                   )}
                   <div className="ws-dropdown-links">
-                    <Link to="/dashboard/settings" onClick={closeMenus}>
-                      <Settings size={17} /> Quản lý tài khoản
+                    <Link to={learner ? "/dashboard/kid/personalization" : "/dashboard/settings"} onClick={closeMenus}>
+                      <Settings size={17} /> {learner ? "Cá nhân hoá của em" : "Quản lý tài khoản"}
                     </Link>
                     {!learner && (
                       <Link to="/dashboard/plans" onClick={closeMenus}>

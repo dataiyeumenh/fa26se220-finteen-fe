@@ -16,6 +16,8 @@ export function readNovelProgress(storage, data, owner) {
     );
     if (!saved || !Array.isArray(saved.scenePath) || !saved.scenePath.length)
       return null;
+    // Backend variants preserve scene IDs, scoring and structure. Resume decisions
+    // against the newly loaded text/images instead of discarding progress.
     let scenePath = saved.scenePath;
     if (saved.sceneIds) {
       if (
@@ -61,7 +63,12 @@ export function readNovelProgress(storage, data, owner) {
       !Array.isArray(saved.committedDecisions)
     )
       return null;
-    return { ...saved, version: data.version, scenePath };
+    return {
+      ...saved,
+      version: data.version,
+      ...(data.variantKey != null ? { variantKey: data.variantKey } : {}),
+      scenePath,
+    };
   } catch {
     return null;
   }
@@ -74,6 +81,7 @@ export function saveNovelProgress(storage, data, snapshot, owner) {
       JSON.stringify({
         ...snapshot,
         version: data.version,
+        ...(data.variantKey != null ? { variantKey: data.variantKey } : {}),
         sceneIds: snapshot.scenePath.map((index) => data.scenes[index].id),
       }),
     );
