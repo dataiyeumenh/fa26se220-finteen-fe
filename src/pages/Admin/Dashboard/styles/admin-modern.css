@@ -342,6 +342,12 @@
 .admin-log-filter label:nth-child(2) {
   width: 230px;
 }
+.admin-role-log-filter { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) auto; align-items: end; gap: 16px; padding: 18px 20px; }
+.admin-role-log-filter > label { width: auto; min-width: 0; }
+.admin-role-log-filter :is(input, select) { width: 100%; min-width: 0; }
+.admin-role-log-results { margin: -3px 0 14px; color: #778599; font-size: 11px; }
+@media (max-width: 1200px) { .admin-role-log-filter { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .admin-role-log-filter { grid-template-columns: minmax(0, 1fr); padding: 16px; } }
 .admin-log-event {
   display: flex;
   align-items: center;
@@ -770,6 +776,68 @@
 .admin-detail-table th:first-child, .admin-detail-table td:first-child { min-width: 165px; }
 .admin-detail-table th:nth-child(3), .admin-detail-table td:nth-child(3) { text-align: right; }
 .admin-detail-table tbody tr:hover { background: #fafcff; }
+.admin-accounts-page .admin-accounts-filter { grid-template-columns: minmax(0, 2fr) repeat(2, minmax(0, 1fr)) auto; }
+.admin-accounts-filter { display: grid; align-items: end; gap: 16px; padding: 16px 20px; }
+.admin-accounts-filter > label { width: auto; min-width: 0; }
+.admin-accounts-filter input, .admin-accounts-filter select { width: 100%; min-width: 0; }
+.admin-account-search-field { position: relative; }
+.admin-account-search-field > svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #8a96a8; pointer-events: none; }
+.admin-accounts-filter .admin-account-search-field input { padding-left: 38px; }
+.admin-transaction-summary { margin-bottom: 22px; }
+.admin-transaction-kpis.saas-kpis { grid-template-columns: repeat(5, minmax(0, 1fr)); margin-bottom: 0; }
+.admin-transaction-kpis .saas-kpi.rose .saas-icon { color: #c96b7c; background: #fcf0f2; }
+.admin-transaction-summary > .admin-notice { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.admin-transaction-filter { display: grid; grid-template-columns: minmax(0, 2fr) repeat(2, minmax(0, 1fr)) auto; align-items: end; gap: 14px; padding: 18px 20px; }
+.admin-transaction-filter > label { width: auto; min-width: 0; }
+.admin-transaction-filter :is(input, select) { width: 100%; min-width: 0; }
+.admin-transaction-filter .admin-account-search-field input { padding-left: 38px; }
+.admin-transaction-results { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin: 0 0 12px; font-size: 11px; color: #778599; }
+.admin-transaction-results > span:first-child { color: #405368; font-weight: 600; }
+@media (max-width: 1400px) {
+  .admin-transaction-filter { grid-template-columns: minmax(0, 2fr) repeat(2, minmax(0, 1fr)) auto; }
+}
+@media (max-width: 1100px) {
+}
+@media (max-width: 680px) {
+  .admin-transaction-filter { grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 16px; }
+  .admin-transaction-search { grid-column: 1 / -1; }
+  .admin-transaction-filter .admin-clear-filters { grid-column: 1 / -1; }
+}
+.admin-clear-filters { gap: 6px; white-space: nowrap; }
+.admin-accounts-pagination { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; padding-top: 16px; }
+.admin-accounts-pagination > span { color: #7b8799; font-size: 11px; }
+.admin-accounts-pagination .admin-pagination { margin: 0; }
+.admin-accounts-table td { padding-block: 12px; }
+.admin-accounts-table table { table-layout: fixed; }
+.admin-accounts-table th, .admin-accounts-table td { overflow-wrap: anywhere; }
+.admin-accounts-table th:first-child { width: 26%; }
+.admin-accounts-table th:nth-child(2) { width: 20%; }
+.admin-accounts-table th:nth-child(3) { width: 13%; }
+.admin-accounts-table th:nth-child(4) { width: 17%; }
+.admin-accounts-table th:nth-child(5) { width: 10%; }
+.admin-accounts-table th:last-child { width: 14%; }
+.admin-accounts-table .admin-chip { max-width: 100%; white-space: normal; }
+.admin-accounts-table .admin-secondary { flex-wrap: wrap; gap: 5px; max-width: 100%; }
+@media (max-width: 1100px) {
+  .admin-accounts-page .admin-accounts-filter { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 680px) {
+  .admin-accounts-page .admin-accounts-filter { grid-template-columns: minmax(0, 1fr); }
+  .admin-accounts-table { border: 0; background: transparent; box-shadow: none; }
+  .admin-accounts-table table, .admin-accounts-table tbody { display: block; }
+  .admin-accounts-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .admin-accounts-table tbody tr { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-bottom: 12px; padding: 8px; border: 1px solid var(--admin-border); border-radius: 12px; background: #fff; }
+  .admin-accounts-table tbody td { padding: 10px; border: 0; min-width: 0; }
+  .admin-accounts-table td:first-child { grid-column: 1 / -1; }
+  .admin-accounts-table td[data-label]::before { display: block; margin-bottom: 6px; color: #64748b; content: attr(data-label); font-size: 10px; }
+  .admin-accounts-table td:last-child { display: flex; align-items: end; justify-content: end; }
+  .admin-accounts-page .admin-pagination { flex-wrap: wrap; gap: 10px; }
+}
 @media (max-width: 1180px) { .admin-overview-grid.compact { grid-template-columns: repeat(2, 1fr); } .admin-advanced-filter { grid-template-columns: repeat(3, 1fr); } }
 @media (max-width: 800px) { .admin-overview-grid { grid-template-columns: repeat(2, 1fr); } .admin-detail-grid { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 560px) { .admin-overview-grid, .admin-overview-grid.compact, .admin-advanced-filter, .admin-detail-grid, .admin-slot-grid { grid-template-columns: 1fr; } .admin-section-inline { align-items: flex-start; flex-direction: column; } }
+
+@media (max-width: 1450px) { .admin-transaction-kpis.saas-kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 1100px) { .admin-transaction-filter { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 800px) { .admin-transaction-kpis.saas-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 480px) { .admin-transaction-kpis.saas-kpis > .saas-kpi:first-child { grid-column: 1 / -1; } .admin-transaction-filter { grid-template-columns: minmax(0, 1fr); } }

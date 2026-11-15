@@ -1,18 +1,18 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
-  Activity,
   BadgeDollarSign,
-  CreditCard,
+  CheckCircle2,
+  CircleX,
+  Clock3,
   Eye,
+  ReceiptText,
   RefreshCw,
   RotateCcw,
   Search,
-  ShieldCheck,
-  UserRound,
-  Users,
   X,
 } from "lucide-react";
 import { adminDashboardApi as api } from "../api/adminDashboardApi";
+import "../styles/admin-overview.css";
 
 const INTERNAL_ROLES = ["ADMIN", "GAME_EDITOR", "GAME_REVIEWER", "GAME_MANAGER"];
 const money = (value) => new Intl.NumberFormat("vi-VN", {
@@ -29,12 +29,33 @@ const dateOnly = (date) => {
   const day = String(date.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
 };
-const defaultRange = () => {
-  const to = new Date();
-  const from = new Date(to);
-  from.setDate(from.getDate() - 29);
-  return { from: dateOnly(from), to: dateOnly(to) };
-};
+const transactionFilters = (q = "") => ({ q, status: "", from: "", to: "" });
+const TRANSACTION_STATUSES = { PAID: "Đã thanh toán", PENDING: "Chờ thanh toán", FAILED: "Thất bại" };
+
+function TransactionSummary({ stats, loading, from, to, error, onRetry }) {
+  const count = stats?.count || {};
+  const total = Object.values(count).reduce((sum, value) => sum + Number(value || 0), 0);
+  const paid = Number(count.PAID || 0);
+  const rate = total ? Math.round(paid / total * 100) : 0;
+  const formatDay = (value) => value.split("-").reverse().join("/");
+  const range = from && to ? `${formatDay(from)} → ${formatDay(to)}` : from ? `Từ ${formatDay(from)}` : to ? `Đến ${formatDay(to)}` : "Toàn thời gian";
+  const cards = [
+    { label: "Doanh thu đã thanh toán", value: money(stats?.paidAmount), note: "Tiền đã thu · Chưa trừ hoàn tiền", Icon: BadgeDollarSign, tone: "green" },
+    { label: "Tổng giao dịch", value: total, note: range, Icon: ReceiptText, tone: "blue" },
+    { label: "Đã thanh toán", value: paid, note: `${rate}% tổng giao dịch`, Icon: CheckCircle2, tone: "purple" },
+    { label: "Chờ thanh toán", value: Number(count.PENDING || 0), note: "Đang chờ khách thanh toán", Icon: Clock3, tone: "amber" },
+    { label: "Thất bại", value: Number(count.FAILED || 0), note: "Thanh toán không thành công", Icon: CircleX, tone: "rose" },
+  ];
+  return <section className="saas-overview admin-transaction-summary" aria-label="Tổng hợp giao dịch" aria-busy={loading}>
+    {error ? <div className="admin-notice error" role="alert">{error}<button className="admin-secondary compact" onClick={onRetry}>Thử lại</button></div> : <div className="saas-kpis admin-transaction-kpis">
+      {cards.map(({ label, value, note, Icon, tone }) => <article className={`saas-kpi ${tone}`} key={label}>
+        <div className="saas-kpi-top"><span>{label}</span><span className="saas-icon"><Icon size={19} aria-hidden="true"/></span></div>
+        <strong>{loading ? "…" : typeof value === "number" ? new Intl.NumberFormat("vi-VN").format(value) : value}</strong>
+        <div className="saas-kpi-note"><span>{loading ? "Đang cập nhật…" : note}</span></div>
+      </article>)}
+    </div>}
+  </section>;
+}
 const pageShape = (value, fallbackPage = 0, fallbackSize = 20) => Array.isArray(value)
   ? { items: value, totalElements: value.length, totalPages: value.length ? 1 : 0, page: fallbackPage, size: fallbackSize }
   : {
@@ -62,42 +83,7 @@ function Pager({ page }) {
   );
 }
 
-export function AdminOverviewTab() {
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const load = useCallback(async () => {
-    setLoading(true);
-    setError("");
-    try { setData(await api.getAdminDashboard()); }
-    catch (loadError) { setError(messageOf(loadError, "Không tải được tổng quan quản trị.")); }
-    finally { setLoading(false); }
-  }, []);
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    void load();
-  }, [load]);
-  const cards = data ? [
-    ["Tài khoản", data.accounts?.total, `${data.accounts?.parents || 0} phụ huynh · ${data.accounts?.teachers || 0} giáo viên`, Users],
-    ["Người học hoạt động", data.learners?.active, `${data.learners?.archived || 0} lưu trữ · ${data.learners?.wiped || 0} đã xóa`, UserRound],
-    ["Doanh thu ròng", money(data.revenue?.netTotal), `30 ngày: ${money(data.revenue?.netLast30Days)}`, BadgeDollarSign],
-    ["Đơn chờ xử lý", data.transactions?.pending, `${data.transactions?.needsReview || 0} đơn cần kiểm tra`, CreditCard],
-    ["Đã hoàn tiền", data.transactions?.refunded, money(data.revenue?.refundedTotal), RotateCcw],
-    ["Gói còn hiệu lực", data.plans?.active, `${data.plans?.expiringIn7Days || 0} gói hết hạn trong 7 ngày`, ShieldCheck],
-  ] : [];
-  return (
-    <>
-      <header className="admin-heading"><div><span>TỔNG QUAN</span><h1>Trung tâm quản trị</h1><p>Theo dõi tài khoản, doanh thu, gói học và các thao tác quản trị gần nhất.</p></div><button className="admin-secondary" disabled={loading} onClick={() => void load()}><RefreshCw size={17}/> Làm mới</button></header>
-      <Notice error={error}/>
-      {loading ? <div className="admin-loading">Đang tải tổng quan…</div> : data && <>
-        <div className="admin-overview-grid">{cards.map(([label, value, note, Icon]) => <article className="admin-card admin-overview-card" key={label}><Icon size={20}/><span>{label}</span><strong>{value ?? 0}</strong><small>{note}</small></article>)}</div>
-        <section className="admin-card admin-table-card admin-section"><div className="admin-section-heading"><div><h2>Hoạt động quản trị gần đây</h2><p>Các lần cấp hoặc thu hồi vai trò mới nhất.</p></div></div>
-          {(data.recentAdminActions || []).length ? <div className="admin-table-wrap"><table><thead><tr><th>Thời gian</th><th>Người thực hiện</th><th>Thao tác</th><th>Tài khoản</th><th>Lý do</th></tr></thead><tbody>{data.recentAdminActions.map((row) => <tr key={row.id}><td>{dateTime(row.createdAt)}</td><td>{row.actorEmail}</td><td><span className={`admin-status ${row.granted ? "paid" : "failed"}`}>{row.granted ? "Cấp" : "Thu hồi"} {row.role}</span></td><td>{row.targetEmail}</td><td>{row.reason || "—"}</td></tr>)}</tbody></table></div> : <div className="admin-empty">Chưa có hoạt động quản trị.</div>}
-        </section>
-      </>}
-    </>
-  );
-}
+export { default as AdminOverviewTab } from "./AdminOverview";
 
 function TransactionDetail({ detail, busy, onClose, onRefund }) {
   if (!detail) return null;
@@ -122,8 +108,12 @@ function RefundDialog({ transaction, busy, error, onCancel, onSubmit }) {
 }
 
 export function AdminTransactionsTab({ initialQuery = "" }) {
-  const [filters, setFilters] = useState(() => ({ q: initialQuery, status: "", refunded: "", from: "", to: "" }));
-  const [applied, setApplied] = useState(() => ({ q: initialQuery, status: "", refunded: "", from: "", to: "" }));
+  const [filters, setFilters] = useState(() => transactionFilters(initialQuery));
+  const [applied, setApplied] = useState(() => transactionFilters(initialQuery));
+  const [period, setPeriod] = useState("all");
+  const [refreshVersion, setRefreshVersion] = useState(0);
+  const [statsLoading, setStatsLoading] = useState(true);
+  const [statsError, setStatsError] = useState("");
   const [pageIndex, setPageIndex] = useState(0);
   const [page, setPage] = useState(pageShape([], 0, 20));
   const [stats, setStats] = useState(null);
@@ -133,22 +123,35 @@ export function AdminTransactionsTab({ initialQuery = "" }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
-  const statsRange = applied.from && applied.to ? { from: applied.from, to: applied.to } : defaultRange();
-  const load = useCallback(async () => {
-    setLoading(true); setError("");
-    try {
-      const [list, summary] = await Promise.all([
-        api.listAdminTransactions({ ...applied, page: pageIndex, size: 20 }),
-        api.getAdminTransactionStats(applied.from && applied.to ? { from: applied.from, to: applied.to } : defaultRange()),
-      ]);
-      setPage(pageShape(list, pageIndex, 20)); setStats(summary);
-    } catch (loadError) { setError(messageOf(loadError, "Không tải được giao dịch.")); }
-    finally { setLoading(false); }
-  }, [applied, pageIndex]);
+  const load = () => setRefreshVersion((value) => value + 1);
   useEffect(() => {
+    if (filters.q.trim() === applied.q) return;
+    const timer = window.setTimeout(() => {
+      setApplied((current) => ({ ...current, q: filters.q.trim() }));
+      setPageIndex(0);
+    }, 300);
+    return () => window.clearTimeout(timer);
+  }, [filters.q, applied.q]);
+  useEffect(() => {
+    let active = true;
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    void load();
-  }, [load]);
+    setLoading(true); setError("");
+    api.listAdminTransactions({ ...applied, page: pageIndex, size: 20 })
+      .then((list) => { if (active) setPage(pageShape(list, pageIndex, 20)); })
+      .catch((loadError) => { if (active) setError(messageOf(loadError, "Không tải được giao dịch.")); })
+      .finally(() => { if (active) setLoading(false); });
+    return () => { active = false; };
+  }, [applied, pageIndex, refreshVersion]);
+  useEffect(() => {
+    let active = true;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setStatsLoading(true); setStatsError("");
+    api.getAdminTransactionStats({ from: applied.from, to: applied.to })
+      .then((summary) => { if (active) setStats(summary); })
+      .catch((loadError) => { if (active) setStatsError(messageOf(loadError, "Không tải được thống kê giao dịch.")); })
+      .finally(() => { if (active) setStatsLoading(false); });
+    return () => { active = false; };
+  }, [applied.from, applied.to, refreshVersion]);
   const openDetail = async (orderCode) => {
     setBusy(true); setError("");
     try { setDetail(await api.getAdminTransaction(orderCode)); }
@@ -173,18 +176,43 @@ export function AdminTransactionsTab({ initialQuery = "" }) {
       if (conflict) { setRefundTarget(null); await openDetail(refundTarget.orderCode); await load(); }
     } finally { setBusy(false); }
   };
-  const submitFilters = (event) => { event.preventDefault(); setPageIndex(0); setApplied(filters); };
-  return <>
+  const changeFilter = (key, value) => {
+    setFilters((current) => ({ ...current, [key]: value }));
+    setApplied((current) => ({ ...current, [key]: value }));
+    setPageIndex(0);
+
+  };
+  const changePeriod = (value) => {
+    setPeriod(value);
+
+    const to = new Date();
+    const from = new Date(to);
+    from.setDate(from.getDate() - Number(value) + 1);
+    const range = value === "all" ? { from: "", to: "" } : { from: dateOnly(from), to: dateOnly(to) };
+    setFilters((current) => ({ ...current, ...range }));
+    setApplied((current) => ({ ...current, ...range }));
+    setPageIndex(0);
+  };
+  const clearFilters = () => {
+    const next = transactionFilters();
+    setFilters(next); setApplied(next); setPeriod("all"); setPageIndex(0);
+  };
+  return <div className="admin-transactions-page">
     <header className="admin-heading"><div><span>THANH TOÁN</span><h1>Giao dịch và hoàn tiền</h1><p>Tìm kiếm, đối soát số liệu, xem chi tiết và ghi nhận hoàn tiền.</p></div><button className="admin-secondary" disabled={loading} onClick={() => void load()}><RefreshCw size={17}/> Làm mới</button></header>
-    {stats && <div className="admin-overview-grid compact"><article className="admin-card admin-overview-card"><CreditCard/><span>Đã thanh toán</span><strong>{stats.count?.PAID || 0}</strong><small>{money(stats.paidAmount)}</small></article><article className="admin-card admin-overview-card"><RotateCcw/><span>Đã hoàn</span><strong>{stats.refundedCount || 0}</strong><small>{money(stats.refundedAmount)}</small></article><article className="admin-card admin-overview-card"><BadgeDollarSign/><span>Doanh thu ròng</span><strong>{money(stats.netAmount)}</strong><small>{statsRange.from} → {statsRange.to}</small></article><article className="admin-card admin-overview-card"><Activity/><span>Chờ / thất bại</span><strong>{stats.count?.PENDING || 0} / {stats.count?.FAILED || 0}</strong><small>Cần theo dõi</small></article></div>}
-    <form className="admin-filter admin-advanced-filter" onSubmit={submitFilters}><label>Tìm kiếm<input value={filters.q} onChange={(e) => setFilters((v) => ({ ...v, q: e.target.value }))} placeholder="Mã đơn hoặc email"/></label><label>Trạng thái<select value={filters.status} onChange={(e) => setFilters((v) => ({ ...v, status: e.target.value }))}><option value="">Tất cả</option><option value="PENDING">Chờ thanh toán</option><option value="PAID">Đã thanh toán</option><option value="FAILED">Thất bại</option></select></label><label>Hoàn tiền<select value={filters.refunded} onChange={(e) => setFilters((v) => ({ ...v, refunded: e.target.value }))}><option value="">Tất cả</option><option value="true">Đã hoàn</option><option value="false">Chưa hoàn</option></select></label><label>Từ ngày<input type="date" value={filters.from} onChange={(e) => setFilters((v) => ({ ...v, from: e.target.value }))}/></label><label>Đến ngày<input type="date" value={filters.to} onChange={(e) => setFilters((v) => ({ ...v, to: e.target.value }))}/></label><button className="admin-primary"><Search size={16}/> Áp dụng</button></form>
+    <TransactionSummary stats={stats} loading={statsLoading} from={applied.from} to={applied.to} error={statsError} onRetry={load}/>
+    <div className="admin-filter admin-transaction-filter" role="search" aria-label="Lọc giao dịch">
+      <label className="admin-transaction-search">Tìm giao dịch<div className="admin-account-search-field"><Search size={17} aria-hidden="true"/><input type="search" value={filters.q} onChange={(event) => setFilters((current) => ({ ...current, q: event.target.value }))} placeholder="Mã đơn hàng hoặc email khách hàng"/></div></label>
+      <label>Trạng thái thanh toán<select value={filters.status} onChange={(event) => changeFilter("status", event.target.value)}><option value="">Tất cả trạng thái</option>{Object.entries(TRANSACTION_STATUSES).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label>
+      <label>Khoảng thời gian<select value={period} onChange={(event) => changePeriod(event.target.value)}><option value="7">7 ngày gần nhất</option><option value="30">30 ngày gần nhất</option><option value="90">90 ngày gần nhất</option><option value="all">Toàn thời gian</option></select></label>
+      <button type="button" className="admin-secondary admin-clear-filters" onClick={clearFilters}><X size={15}/>Xóa bộ lọc</button>
+    </div>
+    <div className="admin-transaction-results" role="status"><span>{loading ? "Đang tải giao dịch…" : `${page.totalElements} giao dịch phù hợp`}</span><span>Tìm theo mã đơn, email, trạng thái và thời gian</span></div>
     <Notice error={error}>{notice}</Notice>
-    <section className="admin-card admin-table-card">{loading ? <div className="admin-loading">Đang tải giao dịch…</div> : page.items.length ? <div className="admin-table-wrap"><table><thead><tr><th>Đơn hàng</th><th>Khách hàng</th><th>Gói</th><th>Số tiền</th><th>Trạng thái</th><th>Thời gian</th><th></th></tr></thead><tbody>{page.items.map((row) => <tr key={row.orderCode} className={row.needsReview ? "needs-review" : ""}><td><strong>#{row.orderCode}</strong><small>{row.purpose === "RENEW" ? "Gia hạn" : "Mua mới"}</small></td><td>{row.email}<small>{row.accountId}</small></td><td><span className="admin-chip">{row.kind}</span><small>{row.months} tháng</small></td><td><strong>{money(row.amount)}</strong>{row.refundedAt && <small className="admin-refunded">Đã hoàn {money(row.refundAmount)}</small>}</td><td><span className={`admin-status ${String(row.status).toLowerCase()}`}>{row.status}</span></td><td>{dateTime(row.createdAt)}<small>{row.paidAt ? `Trả: ${dateTime(row.paidAt)}` : "Chưa thanh toán"}</small></td><td><button className="admin-secondary compact" disabled={busy} onClick={() => void openDetail(row.orderCode)}><Eye size={15}/> Chi tiết</button></td></tr>)}</tbody></table></div> : <div className="admin-empty">Không có giao dịch phù hợp.</div>}</section>
+    <section className="admin-card admin-table-card">{loading ? <div className="admin-loading">Đang tải giao dịch…</div> : page.items.length ? <div className="admin-table-wrap"><table><thead><tr><th>Đơn hàng</th><th>Khách hàng</th><th>Gói</th><th>Số tiền</th><th>Trạng thái</th><th>Thời gian</th><th></th></tr></thead><tbody>{page.items.map((row) => <tr key={row.orderCode} className={row.needsReview ? "needs-review" : ""}><td><strong>#{row.orderCode}</strong><small>{row.purpose === "RENEW" ? "Gia hạn" : "Mua mới"}</small></td><td>{row.email}<small>{row.accountId}</small></td><td><span className="admin-chip">{row.kind}</span><small>{row.months} tháng</small></td><td><strong>{money(row.amount)}</strong>{row.refundedAt && <small className="admin-refunded">Đã hoàn {money(row.refundAmount)}</small>}</td><td><span className={`admin-status ${String(row.status).toLowerCase()}`}>{TRANSACTION_STATUSES[row.status] || row.status}</span></td><td>{dateTime(row.createdAt)}<small>{row.paidAt ? `Trả: ${dateTime(row.paidAt)}` : "Chưa thanh toán"}</small></td><td><button className="admin-secondary compact" disabled={busy} onClick={() => void openDetail(row.orderCode)}><Eye size={15}/> Chi tiết</button></td></tr>)}</tbody></table></div> : <div className="admin-empty">Không có giao dịch phù hợp.</div>}</section>
     <Pager page={{ index: pageIndex, totalPages: page.totalPages, totalElements: page.totalElements, loading, onChange: setPageIndex }}/>
-    {stats?.byDay?.length > 0 && <section className="admin-card admin-table-card admin-section"><div className="admin-section-heading"><div><h2>Doanh thu theo ngày</h2><p>Dựa trên ngày thanh toán và ngày hoàn tiền.</p></div></div><div className="admin-table-wrap"><table><thead><tr><th>Ngày</th><th>Đơn trả</th><th>Tiền trả</th><th>Đơn hoàn</th><th>Tiền hoàn</th><th>Ròng</th></tr></thead><tbody>{stats.byDay.map((row) => <tr key={row.date}><td>{row.date}</td><td>{row.paidCount}</td><td>{money(row.paidAmount)}</td><td>{row.refundedCount}</td><td>{money(row.refundedAmount)}</td><td><strong>{money(row.netAmount)}</strong></td></tr>)}</tbody></table></div></section>}
     <TransactionDetail detail={detail} busy={busy} onClose={() => setDetail(null)} onRefund={() => { setRefundTarget(detail); setError(""); }}/>
     <RefundDialog transaction={refundTarget} busy={busy} error={error} onCancel={() => { setRefundTarget(null); setError(""); }} onSubmit={(value) => void refund(value)}/>
-  </>;
+  </div>;
 }
 
 function AccountDetail({ detail, onClose, onShowTransactions }) {
@@ -194,36 +222,98 @@ function AccountDetail({ detail, onClose, onShowTransactions }) {
 }
 
 export function AdminAccountsTab({ onShowTransactions }) {
+  const [pageSize, setPageSize] = useState(8);
+  const pageSizeRef = useRef(8);
+  const tableRef = useRef(null);
+  const pagerRef = useRef(null);
   const [filters, setFilters] = useState({ q: "", role: "", plan: "" });
   const [applied, setApplied] = useState(filters);
   const [pageIndex, setPageIndex] = useState(0);
-  const [page, setPage] = useState(pageShape([], 0, 20));
+  const [page, setPage] = useState(pageShape([], 0, pageSize));
+  const [refreshVersion, setRefreshVersion] = useState(0);
   const [detail, setDetail] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const load = useCallback(async () => {
-    setLoading(true); setError("");
-    try { setPage(pageShape(await api.listAdminAccounts({ ...applied, page: pageIndex, size: 20 }), pageIndex, 20)); }
-    catch (loadError) { setError(messageOf(loadError, "Không tải được danh sách tài khoản.")); }
-    finally { setLoading(false); }
-  }, [applied, pageIndex]);
   useEffect(() => {
+    if (filters.q.trim() === applied.q) return;
+    const timer = window.setTimeout(() => {
+      setApplied((current) => current.q === filters.q.trim() ? current : { ...current, q: filters.q.trim() });
+      setPageIndex(0);
+    }, 300);
+    return () => window.clearTimeout(timer);
+  }, [filters.q, applied.q]);
+  useLayoutEffect(() => {
+    const table = tableRef.current;
+    if (!table) return;
+    const fitRows = () => {
+      const top = table.getBoundingClientRect().top + window.scrollY;
+      const headerHeight = table.querySelector("thead")?.getBoundingClientRect().height || 44;
+      const rowHeight = Math.max(62, ...Array.from(table.querySelectorAll("tbody tr"), (row) => row.getBoundingClientRect().height));
+      const pagerHeight = pagerRef.current?.getBoundingClientRect().height || 60;
+      const size = window.innerWidth <= 680 ? 5 : Math.max(3, Math.min(20, Math.floor((window.innerHeight - top - headerHeight - pagerHeight - 24) / rowHeight)));
+      if (pageSizeRef.current !== size) {
+        pageSizeRef.current = size;
+        setPageSize(size);
+        setPageIndex(0);
+      }
+    };
+    fitRows();
+    const observer = new ResizeObserver(fitRows);
+    observer.observe(table);
+    const filter = table.previousElementSibling;
+    if (filter) observer.observe(filter);
+    window.addEventListener("resize", fitRows);
+    return () => { observer.disconnect(); window.removeEventListener("resize", fitRows); };
+  }, [page.items]);
+  useEffect(() => {
+    let active = true;
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    void load();
-  }, [load]);
+    setLoading(true); setError("");
+    api.listAdminAccounts({ ...applied, page: pageIndex, size: pageSize })
+      .then((result) => { if (active) setPage(pageShape(result, pageIndex, pageSize)); })
+      .catch((loadError) => { if (active) setError(messageOf(loadError, "Không tải được danh sách tài khoản.")); })
+      .finally(() => { if (active) setLoading(false); });
+    return () => { active = false; };
+  }, [applied, pageIndex, pageSize, refreshVersion]);
   const open = async (id) => {
     setLoading(true); setError("");
     try { setDetail(await api.getAdminAccount(id)); }
     catch (loadError) { setError(messageOf(loadError, "Không tải được chi tiết tài khoản.")); }
     finally { setLoading(false); }
   };
-  const submit = (event) => { event.preventDefault(); setPageIndex(0); setApplied(filters); };
-  return <>
-    <header className="admin-heading"><div><span>TÀI KHOẢN</span><h1>Danh sách tài khoản</h1><p>Lọc theo vai trò nội bộ hoặc gói còn hiệu lực, sau đó xem hồ sơ quản trị đầy đủ.</p></div><button className="admin-secondary" disabled={loading} onClick={() => void load()}><RefreshCw size={17}/> Làm mới</button></header>
-    <form className="admin-filter admin-advanced-filter" onSubmit={submit}><label>Tìm kiếm<input value={filters.q} onChange={(e) => setFilters((v) => ({ ...v, q: e.target.value }))} placeholder="Email hoặc tên hiển thị"/></label><label>Vai trò nội bộ<select value={filters.role} onChange={(e) => setFilters((v) => ({ ...v, role: e.target.value }))}><option value="">Tất cả</option>{INTERNAL_ROLES.map((role) => <option key={role}>{role}</option>)}</select></label><label>Gói còn hạn<select value={filters.plan} onChange={(e) => setFilters((v) => ({ ...v, plan: e.target.value }))}><option value="">Tất cả</option><option value="PARENT">Phụ huynh</option><option value="TEACHER">Giáo viên</option></select></label><button className="admin-primary"><Search size={16}/> Áp dụng</button></form>
+  const changeFilter = (key, value) => {
+    setFilters((current) => ({ ...current, [key]: value }));
+    setApplied((current) => ({ ...current, [key]: value }));
+    setPageIndex(0);
+  };
+  const clearFilters = () => {
+    setFilters({ q: "", role: "", plan: "" });
+    setApplied({ q: "", role: "", plan: "" });
+    setPageIndex(0);
+  };
+  return <div className="admin-accounts-page">
+    <header className="admin-heading"><div><span>TÀI KHOẢN</span><h1>Danh sách tài khoản</h1><p>Tìm kiếm và lọc tài khoản theo vai trò hoặc gói còn hiệu lực.</p></div><button className="admin-secondary" disabled={loading} onClick={() => setRefreshVersion((value) => value + 1)}><RefreshCw size={17}/> Làm mới</button></header>
+    <div className="admin-filter admin-accounts-filter" role="search" aria-label="Lọc tài khoản">
+      <label>Tìm kiếm<div className="admin-account-search-field"><Search size={17} aria-hidden="true"/><input type="search" value={filters.q} onChange={(event) => setFilters((current) => ({ ...current, q: event.target.value }))} placeholder="Email hoặc tên hiển thị"/></div></label>
+      <label>Vai trò nội bộ<select value={filters.role} onChange={(event) => changeFilter("role", event.target.value)}><option value="">Tất cả vai trò</option>{INTERNAL_ROLES.map((role) => <option key={role} value={role}>{{ ADMIN: "Quản trị viên", GAME_EDITOR: "Biên tập viên", GAME_REVIEWER: "Kiểm duyệt viên", GAME_MANAGER: "Quản lý nội dung" }[role]}</option>)}</select></label>
+      <label>Gói còn hạn<select value={filters.plan} onChange={(event) => changeFilter("plan", event.target.value)}><option value="">Tất cả gói</option><option value="PARENT">Phụ huynh</option><option value="TEACHER">Giáo viên</option></select></label>
+      <button type="button" className="admin-secondary admin-clear-filters" disabled={!filters.q && !filters.role && !filters.plan} onClick={clearFilters}><X size={15}/>Xóa bộ lọc</button>
+    </div>
     <Notice error={error}/>
-    <section className="admin-card admin-table-card">{loading && !page.items.length ? <div className="admin-loading">Đang tải tài khoản…</div> : page.items.length ? <div className="admin-table-wrap"><table><thead><tr><th>Tài khoản</th><th>Vai trò nội bộ</th><th>Gói</th><th>Ngày tạo</th><th>Người học</th><th></th></tr></thead><tbody>{page.items.map((row) => <tr key={row.id}><td><strong>{row.displayName || "Chưa đặt tên"}</strong><small>{row.email}</small></td><td><div className="admin-chip-list">{row.roles?.length ? row.roles.map((role) => <span className="admin-chip purple" key={role}>{role}</span>) : <em>Không có</em>}</div></td><td><div className="admin-chip-list">{row.plans?.length ? row.plans.map((plan) => <span className="admin-chip" key={plan}>{plan}</span>) : <em>Chưa có gói</em>}</div></td><td>{dateTime(row.createdAt)}</td><td>{row.slots?.length || 0}</td><td><button className="admin-secondary compact" onClick={() => void open(row.id)}><Eye size={15}/> Chi tiết</button></td></tr>)}</tbody></table></div> : <div className="admin-empty">Không có tài khoản phù hợp.</div>}</section>
-    <Pager page={{ index: pageIndex, totalPages: page.totalPages, totalElements: page.totalElements, loading, onChange: setPageIndex }}/>
+    <section ref={tableRef} className="admin-card admin-table-card admin-accounts-table" aria-busy={loading}>
+      {loading && !page.items.length ? <div className="admin-loading">Đang tải tài khoản…</div> : page.items.length ? <table>
+        <thead><tr><th>Tài khoản</th><th>Vai trò nội bộ</th><th>Gói</th><th>Ngày tạo</th><th>Người học</th><th><span className="sr-only">Thao tác</span></th></tr></thead>
+        <tbody>{page.items.map((row) => <tr key={row.id}>
+          <td data-label="Tài khoản"><strong>{row.displayName || "Chưa đặt tên"}</strong><small>{row.email}</small></td>
+          <td data-label="Vai trò nội bộ"><div className="admin-chip-list">{row.roles?.length ? row.roles.map((role) => <span className="admin-chip purple" key={role}>{role}</span>) : <em>Không có</em>}</div></td>
+          <td data-label="Gói"><div className="admin-chip-list">{row.plans?.length ? row.plans.map((plan) => <span className="admin-chip" key={plan}>{plan}</span>) : <em>Chưa có gói</em>}</div></td>
+          <td data-label="Ngày tạo">{dateTime(row.createdAt)}</td>
+          <td data-label="Người học">{row.slots?.length || 0}</td>
+          <td><button className="admin-secondary compact" onClick={() => void open(row.id)}><Eye size={15}/> Chi tiết</button></td>
+        </tr>)}</tbody>
+      </table> : <div className="admin-empty">Không có tài khoản phù hợp.</div>}
+    </section>
+    <div ref={pagerRef} className="admin-accounts-pagination"><span>{pageSize} tài khoản / trang{loading ? " · Đang tải…" : ""}</span><Pager page={{ index: pageIndex, totalPages: page.totalPages, totalElements: page.totalElements, loading, onChange: setPageIndex }}/></div>
     <AccountDetail detail={detail} onClose={() => setDetail(null)} onShowTransactions={onShowTransactions}/>
-  </>;
+  </div>;
 }
