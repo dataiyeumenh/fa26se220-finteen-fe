@@ -1,4 +1,5 @@
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, Send } from "lucide-react";
+import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Modal } from "@/features/workspace/ui";
 import { useKidQuiz } from "./hooks/useKidQuizzes";
@@ -8,6 +9,7 @@ export default function KidQuizTake() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { quiz, answers, result, busy, error, choose, submit } = useKidQuiz(id);
+  const [confirmSubmit, setConfirmSubmit] = useState(false);
   if (error && !quiz)
     return (
       <>
@@ -38,8 +40,7 @@ export default function KidQuizTake() {
           className="ws-quiz-page-form"
           onSubmit={(event) => {
             event.preventDefault();
-            if (window.confirm("Nộp bài ngay? Bạn chỉ được nộp một lần."))
-              void submit();
+            if (!busy) setConfirmSubmit(true);
           }}
         >
           <div className="ws-quiz-question-list">
@@ -67,6 +68,43 @@ export default function KidQuizTake() {
             {busy ? "Đang nộp…" : "Nộp bài"}
           </button>
         </form>
+      )}
+      {confirmSubmit && !result && (
+        <Modal
+          className="ws-quiz-submit-modal"
+          title="Sẵn sàng nộp bài?"
+          description="Bạn chỉ được nộp bài một lần. Hãy kiểm tra lại các câu trả lời trước khi xác nhận."
+          onClose={() => setConfirmSubmit(false)}
+        >
+          <div className="ws-quiz-submit-summary">
+            <span className="ws-quiz-submit-icon" aria-hidden="true"><Send size={26} /></span>
+            <div>
+              <strong>{quiz.title}</strong>
+              <p>Đã trả lời {quiz.questions.filter((question) => answers[question.id] != null).length}/{quiz.questions.length} câu</p>
+            </div>
+          </div>
+          {quiz.questions.some((question) => answers[question.id] == null) && (
+            <p className="ws-quiz-submit-warning" role="status">
+              Còn {quiz.questions.filter((question) => answers[question.id] == null).length} câu chưa trả lời. Bạn có thể quay lại để hoàn thành bài.
+            </p>
+          )}
+          <div className="ws-quiz-submit-actions">
+            <button type="button" className="ws-btn" autoFocus onClick={() => setConfirmSubmit(false)}>
+              Quay lại làm bài
+            </button>
+            <button
+              type="button"
+              className="ws-btn primary"
+              disabled={busy}
+              onClick={() => {
+                setConfirmSubmit(false);
+                void submit();
+              }}
+            >
+              <Send size={16} /> Xác nhận nộp bài
+            </button>
+          </div>
+        </Modal>
       )}
       {result && (
         <Modal
