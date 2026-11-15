@@ -41,6 +41,38 @@ auth.getSnapshot = () => snapshot;
 auth.ensureEntitlements = async () => [];
 auth.ensureLearnerDashboard = async () => ({});
 auth.accountRequest = async (path) => {
+  if (path === '/api/admin/dashboard') return {
+    accounts: { total: 2840, parents: 2180, teachers: 640 },
+    learners: { active: 4260, archived: 120, wiped: 12 },
+    revenue: { paidTotal: 186450000, paidLast30Days: 28450000 },
+    transactions: { pending: 18, needsReview: 3 },
+    plans: { active: 1248, expiringIn7Days: 24 },
+    recentAdminActions: [
+      { id: 'a1', actorEmail: 'admin@finteen.vn', targetEmail: 'editor@finteen.vn', role: 'GAME_EDITOR', granted: true, createdAt: '2026-11-16T02:15:00Z', reason: 'Bổ sung nhân sự nội dung' },
+      { id: 'a2', actorEmail: 'admin@finteen.vn', targetEmail: 'reviewer@finteen.vn', role: 'GAME_REVIEWER', granted: false, createdAt: '2026-11-15T08:30:00Z', reason: 'Điều chỉnh phân công' },
+    ],
+  };
+  if (path.startsWith('/api/admin/transactions/stats?')) {
+    const params = new URLSearchParams(path.split('?')[1]);
+    const byDay = [];
+    const from = params.get('from') || new Date(Date.now() - 29 * 86400000).toISOString().slice(0, 10);
+    const to = params.get('to') || new Date().toISOString().slice(0, 10);
+    const cursor = new Date(`${from}T12:00:00`);
+    while (cursor.toISOString().slice(0, 10) <= to) {
+      const paidAmount = 350000 + ((byDay.length * 7919) % 650000) + Math.round(Math.sin(byDay.length) * 150000);
+      byDay.push({ date: cursor.toISOString().slice(0, 10), paidAmount, paidCount: 3 });
+      cursor.setDate(cursor.getDate() + 1);
+    }
+    const paidAmount = byDay.reduce((sum, row) => sum + row.paidAmount, 0);
+    return { paidAmount, byDay, count: { PAID: byDay.length * 3 } };
+  }
+  if (path.startsWith('/api/admin/accounts/list?')) return {
+    items: [
+      { id: 'today-1', displayName: 'Nguyễn Hà Anh', email: 'haanh@example.test', plans: ['PARENT'], createdAt: new Date().toISOString() },
+      { id: 'today-2', displayName: 'Trần Minh', email: 'minh@example.test', plans: [], createdAt: new Date().toISOString() },
+      { id: 'yesterday', displayName: 'Tài khoản cũ', email: 'old@example.test', plans: [], createdAt: new Date(Date.now() - 86400000).toISOString() },
+    ], totalElements: 3, totalPages: 1, page: 0, size: 100,
+  };
   if (path === '/api/studio/chapters/CH01/draft') return { draft: { status: 'DRAFT', revision: 34 }, content: resolveContentImages(ch1) };
   if (path === '/api/studio/scene-schema') return {};
   if (path.endsWith('/voice')) return { missing: 0, failed: 0, entries: [] };

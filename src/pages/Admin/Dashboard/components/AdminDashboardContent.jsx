@@ -881,13 +881,11 @@ function RolesTab({ actor }) {
 
 function RoleLogsTab() {
   const [page, setPage] = useState(0);
-  const [subjectId, setSubjectId] = useState("");
-  const [appliedSubjectId, setAppliedSubjectId] = useState("");
   const [search, setSearch] = useState("");
   const [action, setAction] = useState("");
   const size = 50;
   const { rows, pagination, loading, error, startLoading, reload } = useAdminRoleLogs(
-    appliedSubjectId,
+    "",
     page,
     size,
   );
@@ -901,11 +899,10 @@ function RoleLogsTab() {
     const matchesAction = action === "" || String(row.granted) === action;
     return matchesSearch && matchesAction;
   });
-  const applySubject = (event) => {
-    event.preventDefault();
-    startLoading();
+  const clearFilters = () => {
+    setSearch("");
+    setAction("");
     setPage(0);
-    setAppliedSubjectId(subjectId.trim());
   };
   const changePage = (nextPage) => {
     startLoading();
@@ -926,35 +923,7 @@ function RoleLogsTab() {
           <RefreshCw size={17} /> Làm mới
         </button>
       </header>
-      <form className="admin-log-subject-filter" onSubmit={applySubject}>
-        <label>
-          Lọc theo Account ID
-          <input
-            value={subjectId}
-            onChange={(event) => setSubjectId(event.target.value)}
-            placeholder="UUID tài khoản bị tác động"
-          />
-        </label>
-        <button className="admin-primary" disabled={loading}>
-          <Search size={16} /> Áp dụng
-        </button>
-        {appliedSubjectId && (
-          <button
-            type="button"
-            className="admin-secondary"
-            disabled={loading}
-            onClick={() => {
-              setSubjectId("");
-              startLoading();
-              setPage(0);
-              setAppliedSubjectId("");
-            }}
-          >
-            Xem tất cả
-          </button>
-        )}
-      </form>
-      <div className="admin-filter admin-log-filter">
+      <div className="admin-filter admin-role-log-filter" role="search" aria-label="Lọc nhật ký phân quyền">
         <label>
           Tìm trong trang
           <input
@@ -964,7 +933,7 @@ function RoleLogsTab() {
           />
         </label>
         <label>
-          Thao tác
+          Thao tác trong trang
           <select
             value={action}
             onChange={(event) => setAction(event.target.value)}
@@ -974,7 +943,9 @@ function RoleLogsTab() {
             <option value="false">Thu hồi vai trò</option>
           </select>
         </label>
+        <button type="button" className="admin-secondary admin-clear-filters" disabled={!search && !action} onClick={clearFilters}><X size={15}/>Xóa bộ lọc</button>
       </div>
+      <p className="admin-role-log-results" role="status">{loading ? "Đang tải nhật ký…" : `Hiển thị ${visibleRows.length}/${rows.length} nhật ký trong trang · ${pagination.totalElements} nhật ký tổng cộng`}</p>
       <Notice type="error">{error}</Notice>
       <section className="admin-card admin-table-card admin-role-log-table">
         {loading ? (
@@ -1167,7 +1138,7 @@ export default function AdminDashboardContent({ actor }) {
   const { logout } = useAdminDashboard();
   const content =
     tab === "overview" ? (
-      <AdminOverviewTab />
+      <AdminOverviewTab onNavigate={setTab} />
     ) : tab === "accounts" ? (
       <AdminAccountsTab
         onShowTransactions={(email) => {
@@ -1191,7 +1162,7 @@ export default function AdminDashboardContent({ actor }) {
       <PlansTab />
     );
   return (
-    <div className="admin-shell">
+    <div className={`admin-shell${tab === "overview" ? " admin-saas-shell" : ""}`}>
       <ResponsiveSidebar className="admin-sidebar" scopeClass="admin-shell" title="Quản trị hệ thống" role="admin">
         <a className="admin-brand" href="/">
           <img src="/brand/finteen-logo-v2.webp" alt="FinTeen" />

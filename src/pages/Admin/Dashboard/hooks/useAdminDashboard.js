@@ -237,9 +237,13 @@ export function useAdminRoleLogs(appliedSubjectId, page, size = 50) {
   const [error, setError] = useState("");
   const [refreshVersion, setRefreshVersion] = useState(0);
   useEffect(() => {
+    let active = true;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setLoading(true);
     auth
       .listAdminRoleLogs({ subjectId: appliedSubjectId, page, size })
       .then((list) => {
+        if (!active) return;
         setRows(Array.isArray(list) ? list : (list?.items ?? []));
         setPagination(Array.isArray(list)
           ? { totalElements: list.length, totalPages: list.length ? 1 : 0 }
@@ -247,11 +251,13 @@ export function useAdminRoleLogs(appliedSubjectId, page, size = 50) {
         setError("");
       })
       .catch((loadError) => {
+        if (!active) return;
         setRows([]);
         setPagination({ totalElements: 0, totalPages: 0 });
         setError(errorMessage(loadError, "Không tải được nhật ký phân quyền."));
       })
-      .finally(() => setLoading(false));
+      .finally(() => { if (active) setLoading(false); });
+    return () => { active = false; };
   }, [appliedSubjectId, page, refreshVersion, size]);
   return {
     rows,
