@@ -29,7 +29,7 @@ import ChoiceConditions from "./ChoiceConditions";
 import StoryMap from "./StoryMap";
 import { ChoicePanel, InspectPanel } from "./ScenePanels";
 import { CharacterPersonalization, PersonalizationControls } from "./PersonalizationPanel";
-import { personalizedScenePatch, previewPersonalization, VOICES } from './variantOps.js';
+import { CATALOG, personalizedScenePatch, previewPersonalization, VOICES } from './variantOps.js';
 import { sceneVoicePlayback } from './sceneVoice.js';
 import { SceneThumb } from "./SceneDialogs";
 import {
@@ -433,6 +433,7 @@ export default function EditorCanvas(props) {
     save,
     update,
     schemaQuery,
+    warnings = [],
     refreshError = "",
     conditionDrafts = {},
     editCondition,
@@ -526,6 +527,23 @@ export default function EditorCanvas(props) {
     });
   const pickTarget = (label, current, apply) =>
     openDialog({ kind: "target", title: label, currentId: current, apply });
+  const openWarning = warning => {
+    if (!warning.sceneId) return;
+    const index = scenes.findIndex(item => item.id === warning.sceneId);
+    if (index < 0) return;
+    setIdx(index); setView('frame'); setPanel(true);
+    const labels = warning.scopes[0] || [];
+    if (labels.length) {
+      setPersonalizing(true);
+      const choices = labels.map(label => label.split(':')).filter(([dim, value]) => CATALOG[dim]?.includes(value));
+      setAnswers(previous => ({ ...previous, ...Object.fromEntries(choices) }));
+    } else setPersonalizing(false);
+    setPersonalTab(warning.path.startsWith('game') ? 'minigame' : 'dialogue');
+    requestAnimationFrame(() => {
+      const target = document.querySelector(warning.field === 'spokenText' ? '[aria-label="Cách đọc cho giọng"]' : 'textarea.stage-text');
+      target?.focus();
+    });
+  };
   return (
     <section className="scene-editor" aria-label="Trình biên tập chương">
       <header className="scene-editor-toolbar">
@@ -656,6 +674,28 @@ export default function EditorCanvas(props) {
             </button>
           )}
         </div>
+      )}
+      {!!warnings.length && (
+        <details open className="scene-draft-warnings" aria-live="polite">
+          <summary><ChevronRight className="draft-warning-chevron" size={16} aria-hidden="true" />Cảnh báo cần kiểm tra ({warnings.length})<span className="draft-warning-when-closed">Mở</span><span className="draft-warning-when-open">Thu gọn</span></summary>
+          <p>Bản nháp vẫn được lưu. Sửa các mục này trước khi gửi duyệt.</p>
+          <ul className="draft-warning-list">
+            {warnings.map((warning, index) => {
+              const currentIndex = warning.sceneId ? scenes.findIndex(item => item.id === warning.sceneId) : -1;
+              return <li key={index} className="draft-warning-card">
+                <div className="draft-warning-heading">
+                  <strong>{warning.sceneIndex == null ? 'Nội dung chương' : `Cảnh ${(currentIndex >= 0 ? currentIndex : warning.sceneIndex) + 1}${warning.sceneTitle ? ` — ${warning.sceneTitle}` : ''}`} · {warning.fieldName}</strong>
+                  {currentIndex >= 0 && <button type="button" className="scene-primary" disabled={busy} onClick={() => openWarning(warning)}>Mở cảnh {currentIndex + 1} để sửa<ChevronRight size={16} aria-hidden="true" /></button>}
+                </div>
+                {warning.scopeText && <p className="draft-warning-scope">{warning.scopeText}</p>}
+                <p>{warning.description}</p>
+                <p><b>Cách sửa:</b> {warning.action}</p>
+                {warning.sourceText && <details className="draft-warning-reference"><summary><ChevronRight className="draft-warning-chevron" size={16} aria-hidden="true" />Xem nội dung gốc để đối chiếu<span className="draft-warning-when-closed">Mở</span><span className="draft-warning-when-open">Thu gọn</span></summary><p>{warning.sourceText}</p></details>}
+                <details className="draft-warning-technical"><summary><ChevronRight className="draft-warning-chevron" size={16} aria-hidden="true" />Chi tiết dành cho kỹ thuật<span className="draft-warning-when-closed">Mở</span><span className="draft-warning-when-open">Thu gọn</span></summary><ul>{warning.rawMessages.map((raw, i) => <li key={i}>{raw}</li>)}</ul></details>
+              </li>;
+            })}
+          </ul>
+        </details>
       )}
       {refreshError && (
         <p role="alert" className="scene-editor-notice">

@@ -20,11 +20,15 @@ let saved = { id: 'CH01', title: 'Kiểm thử Editor cá nhân hóa', initialSt
   { id: 'END', type: 'ending', title: 'Kết thúc' },
 ] };
 let writes = 0;
+let warningMode = false;
 let generated = false, voicePolls = 0, voiceRequests = 0;
 const errors = [];
 auth.getSnapshot = () => ({ actor: { id: 'fixture-editor', roles: ['GAME_EDITOR'] }, loading: false });
 auth.accountRequest = async (path, options = {}) => {
-  if (options.method === 'PUT' && path.endsWith('/draft')) { saved = structuredClone(options.body); writes++; return { warnings: [] }; }
+  if (options.method === 'PUT' && path.endsWith('/draft')) {
+    saved = structuredClone(options.body); writes++;
+    return { warnings: warningMode ? ['interest:MUSIC', 'gender:MALE|interest:MUSIC', 'gender:FEMALE|interest:MUSIC'].map(scope => `cá nhân hoá: scenes[0].text: số trong chữ khác bản gốc [250.000] → [] (${scope})`) : [] };
+  }
   if (options.method === 'POST' && path.endsWith('/voice')) { voiceRequests++; generated = true; voicePolls = 0; return { queued: 1, alreadyPending: 0, ready: 1, dispatched: true }; }
   if (options.method && options.method !== 'GET') throw Error(`Unexpected write: ${path}`);
   if (path.endsWith('/draft')) return { draft: { status: 'DRAFT', revision: writes + 1 }, content: structuredClone(saved) };
@@ -179,9 +183,29 @@ async function run() {
   assert(stageText() === customText, 'Reload lost personalized text');
   assert(stageImage() === customImage, 'Reload lost character appearance');
   assert(document.querySelector('.stage-dialogue .stage-speaker').value === 'Mai', 'Reload lost personalized name');
+  warningMode = true;
+  await choose('Sở thích', 'MUSIC');
+  await setValue(document.querySelector('textarea.stage-text'), 'Mình thích nghe nhạc!');
+  await click(button('Lưu nháp'));
+  const warningPanel = document.querySelector('.scene-draft-warnings');
+  assert(warningPanel?.querySelector('summary').textContent.includes('Cảnh báo cần kiểm tra (1)'), 'Warnings with the same cause were not grouped');
+  assert(warningPanel.querySelectorAll('.draft-warning-card').length === 1, 'Duplicate warning cards remained');
+  const card = warningPanel.querySelector('.draft-warning-card');
+  assert(card.innerText.includes('bỏ mất số “250.000”') && card.innerText.includes('Cách sửa:'), 'Warning did not explain the problem and fix');
+  assert(card.innerText.includes('Sở thích: Âm nhạc') && !card.innerText.includes('scenes[0]') && !card.innerText.includes('interest:MUSIC'), 'Warning exposed code instead of readable labels');
+  assert(!card.querySelector('.draft-warning-technical').open && card.querySelectorAll('.draft-warning-technical li').length === 3, 'Technical evidence was lost or shown by default');
+  await choose('Sở thích', 'TECH');
+  await click(document.querySelector('[aria-label="Cảnh sau"]'));
+  await click(button('Mở cảnh 1 để sửa', card));
+  assert(document.querySelector('select[aria-label="Sở thích"]').value === 'MUSIC' && stageText() === 'Mình thích nghe nhạc!', 'Warning action did not open the correct scene and label');
+  assert(document.activeElement === document.querySelector('textarea.stage-text'), 'Warning action did not focus the dialogue to fix');
+  warningMode = false;
+  await setValue(document.querySelector('textarea.stage-text'), originalText);
+  await click(button('Lưu nháp'));
+  assert(!document.querySelector('.scene-draft-warnings'), 'Resolved warning remained after a clean save');
   assert(document.querySelector('.scene-editor').getBoundingClientRect().right <= testWidth + 1, 'Editor overflowed the requested width');
   assert(document.documentElement.scrollWidth <= window.innerWidth + 1, 'Editor overflowed the viewport horizontally');
   assert(errors.length === 0, errors.join('; '));
-  document.getElementById('result').textContent = JSON.stringify({ status: 'PASS', writes, checks: ['selected-scene dialogue and playback', 'render panel only after generate', 'new render batch excludes old READY clips', 'all-ready generates nothing', 'shared scene tools', 'personalized names', 'live preview', 'interest fallback', 'gender + age appearance', 'undo/redo', 'key-only READY audio in sidebar/list/play', 'save/reload', 'mini-game asset and scoring'], errors });
+  document.getElementById('result').textContent = JSON.stringify({ status: 'PASS', writes, checks: ['readable grouped warnings and direct scene/label navigation', 'selected-scene dialogue and playback', 'render panel only after generate', 'new render batch excludes old READY clips', 'all-ready generates nothing', 'shared scene tools', 'personalized names', 'live preview', 'interest fallback', 'gender + age appearance', 'undo/redo', 'key-only READY audio in sidebar/list/play', 'save/reload', 'mini-game asset and scoring'], errors });
 }
 run().catch(error => { document.getElementById('result').textContent = JSON.stringify({ status: 'FAIL', message: error.message, errors }); });

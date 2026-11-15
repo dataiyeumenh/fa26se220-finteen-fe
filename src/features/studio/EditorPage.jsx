@@ -18,6 +18,7 @@ import { AssetPicker } from './AssetsPage'
 import { Btn, Panel } from './ui'
 import { normalizeVoiceReading, patchSceneVoice, pendingVoiceBatch, sceneReadText, sceneVoicePlayback, voiceBatchItems, voiceClipUrl, withSceneVoicePlayback } from './sceneVoice.js'
 import { AudioLines, Sparkles } from 'lucide-react'
+import { describeDraftWarnings } from './draftWarnings.js'
 
 function template(code) {
   const n = Number(code.slice(2))
@@ -114,6 +115,7 @@ export default function EditorPage({ notify, code, onNavigationStateChange }) {
   const [loadError, setLoadError] = useState('')
   const [dirty, setDirty] = useState(false)
   const [attempt, setAttempt] = useState(0)
+  const [warnings, setWarnings] = useState([])
   const [refreshError, setRefreshError] = useState('')
   const [conditionDrafts, setConditionDrafts] = useState({})
   const [voice, setVoice] = useState(null) // trạng thái giọng từng câu (GET …/voice): READY / MISSING / PENDING / FAILED
@@ -292,6 +294,7 @@ export default function EditorPage({ notify, code, onNavigationStateChange }) {
     }, 'Đã lưu nháp ' + code, result => {
       if (result.refreshed) setMeta(result.refreshed.draft)
       setContent(prepareDraftV2(result.refreshed?.content || body)); setJson(null); setHistory({ past: [], future: [] }); setDirty(false); setConditionDrafts({})
+      setWarnings(describeDraftWarnings(result.saved?.warnings || [], body.scenes))
       setRefreshError(result.refreshError || '')
       if (search.has('new') && result.refreshed) setSearch({}, { replace: true })
     })
@@ -379,7 +382,7 @@ export default function EditorPage({ notify, code, onNavigationStateChange }) {
       onCharacterAppearance={(index, gender, age, url) => commit(setCharacterAppearance(content, scene.id, index, gender, age, url))}
       write={write} busy={busy} dirty={dirty} json={json}
       setJson={value => { setJson(value); setDirty(true) }} toggleJson={toggleJson} save={save} update={update} schemaQuery={schemaQuery}
-      refreshError={refreshError} conditionDrafts={conditionDrafts} editCondition={editCondition} onSuggestVoice={suggestVoice} onRenderVoice={renderVoice} voice={voice}
+      warnings={warnings} refreshError={refreshError} conditionDrafts={conditionDrafts} editCondition={editCondition} onSuggestVoice={suggestVoice} onRenderVoice={renderVoice} voice={voice}
       history={{ undo, redo, canUndo: history.past.length > 0, canRedo: history.future.length > 0 }} notice={notice} issues={storyIssues(scenes)}
       onAdd={() => setDialog({ kind: 'add' })} onDuplicate={duplicateScene} onDelete={deleteScene} onPickBackground={() => setPicking('background')}
       onAddCharacter={() => setDialog({ kind: 'character' })} onPlay={playDraft} openDialog={setDialog} onBranch={createBranch} onLaneEnd={addLaneEnd} onPickImage={apply => setPicking(() => apply)} onOpenTokens={() => setDialog({ kind: 'tokens' })} />
