@@ -5,6 +5,7 @@ import {
   Code2,
   Copy,
   ImagePlus,
+  Languages,
   Layers3,
   Lock,
   Mic,
@@ -20,13 +21,16 @@ import {
   UserPlus,
   X,
 } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { STATUS_LABEL } from "./studioClient";
 import { Tag } from "./ui";
 import SchemaFields from "./SchemaFields";
 import ChoiceConditions from "./ChoiceConditions";
 import StoryMap from "./StoryMap";
 import { ChoicePanel, InspectPanel } from "./ScenePanels";
+import { CharacterPersonalization, PersonalizationControls } from "./PersonalizationPanel";
+import { CATALOG, personalizedScenePatch, previewPersonalization, VOICES } from './variantOps.js';
+import { sceneVoicePlayback } from './sceneVoice.js';
 import { SceneThumb } from "./SceneDialogs";
 import {
   TYPE_LABEL,
@@ -68,12 +72,24 @@ const VOICE_STATE = {
   FAILED: "Sinh giọng lỗi",
 };
 
-function VoiceFields({ scene, update, status }) {
+function VoicePreview({ scene, status }) {
+  if (scene.voice === 'off') return <small>Câu này không đọc</small>;
+  if (status?.voiceUrl) return <audio key={status.voiceUrl} controls preload="none" src={status.voiceUrl} aria-label="Nghe giọng đọc" />;
+  return <small className={`scene-voice-state scene-voice-${(status?.status || 'none').toLowerCase()}`}>
+    {status?.status === 'READY' ? 'Đã sinh giọng nhưng chưa xác định được tệp nghe của bản này.'
+      : VOICE_STATE[status?.status] ? VOICE_STATE[status.status] + (status.error ? `: ${status.error}` : '')
+      : 'Lưu nháp rồi bấm Sinh giọng để nghe nội dung này.'}
+  </small>;
+}
+
+function VoiceFields({ scene, update, status, write, busy, showProfile }) {
   return (
     <div className="scene-voice-fields">
       <label>
         Cách đọc cho giọng <small>để trống thì đọc đúng lời thoại</small>
         <input
+          aria-label="Cách đọc cho giọng"
+          readOnly={!write || busy}
           value={scene.spokenText || ""}
           onChange={(event) =>
             update({ spokenText: event.target.value || undefined })
@@ -82,33 +98,17 @@ function VoiceFields({ scene, update, status }) {
         />
       </label>
       <div className="scene-voice-row">
-        {scene.voice === "off" ? (
-          <small>Câu này không đọc</small>
-        ) : scene.voiceUrl ? (
-          <audio
-            controls
-            preload="none"
-            src={scene.voiceUrl}
-            aria-label="Nghe giọng đọc"
-          />
-        ) : (
-          <small className={`scene-voice-state scene-voice-${(status?.status || "none").toLowerCase()}`}>
-            {status?.status && VOICE_STATE[status.status]
-              ? VOICE_STATE[status.status] + (status.error ? `: ${status.error}` : "")
-              : "Lời thoại đã sửa — lưu nháp rồi bấm Sinh giọng"}
-          </small>
-        )}
+        <VoicePreview scene={scene} status={status} />
         <label className="scene-voice-off">
-          <input
-            type="checkbox"
-            checked={scene.voice === "off"}
-            onChange={(event) =>
-              update({ voice: event.target.checked ? "off" : undefined })
-            }
-          />{" "}
-          Tắt giọng câu này
+          <input type="checkbox" disabled={!write || busy} checked={scene.voice === 'off'} onChange={event => update({ voice: event.target.checked ? 'off' : undefined })} /> Tắt giọng câu này
         </label>
       </div>
+      {showProfile && <label>Giọng đọc
+        <select aria-label="Chọn giọng đọc" disabled={!write || busy} value={scene.voice === 'off' ? '' : scene.voice || ''} onChange={event => update({ voice: event.target.value || undefined })}>
+          <option value="">Mặc định theo nhân vật</option>
+          {VOICES.map(([id, name]) => <option key={id} value={id}>{name}</option>)}
+        </select>
+      </label>}
     </div>
   );
 }
@@ -129,6 +129,12 @@ function SceneStage({
   onBackground,
   onAddCharacter,
   onOpenLock,
+  personalized = false,
+  onCharacterChange,
+  onCharacterRemove,
+  onOptionText,
+  onSpeakerRoleChange,
+  baseScene = scene,
 }) {
   const [picked, setPicked] = useState(null);
   const type = typeOf(scene);
@@ -141,7 +147,7 @@ function SceneStage({
   ];
   const character = picked != null ? scene.characters?.[picked] : null;
   const setCharacter = (patch) =>
-    update({
+    onCharacterChange ? onCharacterChange(picked, patch) : update({
       characters: scene.characters.map((item, index) =>
         index === picked ? { ...item, ...patch } : item,
       ),
@@ -248,8 +254,8 @@ function SceneStage({
             type="button"
             className="stage-remove"
             onClick={() => {
-              update({
-                characters: scene.characters.filter(
+              onCharacterRemove ? onCharacterRemove(picked) : update({
+                characters: baseScene.characters.filter(
                   (_, index) => index !== picked,
                 ),
               });
@@ -279,13 +285,13 @@ function SceneStage({
             (write ? (
               <select
                 className="stage-speaker"
-                aria-label="Người nói"
+                aria-label={personalized ? 'Vai trò người nói (dùng chung)' : 'Người nói'}
                 value={scene.speaker || ""}
                 onChange={(event) => {
                   const pair = speakers.find(
                     ([name]) => name === event.target.value,
                   );
-                  update({
+                  (onSpeakerRoleChange || update)({
                     speaker: event.target.value || undefined,
                     speakerId: pair?.[1] || undefined,
                   });
@@ -324,7 +330,7 @@ function SceneStage({
                   onChange={(event) =>
                     update({
                       inspect: {
-                        ...scene.inspect,
+                        ...baseScene.inspect,
                         buttonText: event.target.value,
                       },
                     })
@@ -345,8 +351,8 @@ function SceneStage({
                     value={option.text ?? option.label ?? ""}
                     placeholder="Gõ chữ của lựa chọn"
                     onChange={(event) =>
-                      update({
-                        options: scene.options.map((value, k) =>
+                      onOptionText ? onOptionText(index, event.target.value) : update({
+                        options: baseScene.options.map((value, k) =>
                           k === index
                             ? {
                                 ...value,
@@ -447,10 +453,26 @@ export default function EditorCanvas(props) {
     onBranch,
     onLaneEnd,
     onPickImage,
+    onOpenTokens,
+    onCharacterAppearance,
   } = props;
   const trackRef = useRef(null);
   const [panel, setPanel] = useState(true);
   const [view, setView] = useState("frame"); // khung hình | bản đồ truyện
+  const [personalizing, setPersonalizing] = useState(false);
+  const [answers, setAnswers] = useState({ gender: 'MALE', age: '8_10', interest: 'SPORT' });
+  const [personalTab, setPersonalTab] = useState('dialogue');
+  const preview = useMemo(() => personalizing ? previewPersonalization(content, answers) : content, [content, answers, personalizing]);
+  const previewScene = preview.scenes[idx];
+  const updateCurrent = patch => update(personalizing ? personalizedScenePatch(scene, answers, patch) : patch);
+  const playback = sceneVoicePlayback(previewScene, voice?.items);
+  const voiceSection = (typeof previewScene?.text === 'string' || typeof previewScene?.prompt === 'string') && (
+    <section className="inspector-group scene-current-voice" aria-labelledby="group-voice">
+      <h3 id="group-voice">Giọng đọc</h3>
+      <VoiceFields scene={previewScene} update={updateCurrent} status={playback} write={write} busy={busy} showProfile={personalizing} />
+      {dirty && <small>Lưu nháp trước khi sinh giọng cho nội dung vừa sửa.</small>}
+    </section>
+  );
   const visualMode = json === null;
   const schema = schemaQuery.data;
   const stats = schema?.stats || [];
@@ -505,6 +527,23 @@ export default function EditorCanvas(props) {
     });
   const pickTarget = (label, current, apply) =>
     openDialog({ kind: "target", title: label, currentId: current, apply });
+  const openWarning = warning => {
+    if (!warning.sceneId) return;
+    const index = scenes.findIndex(item => item.id === warning.sceneId);
+    if (index < 0) return;
+    setIdx(index); setView('frame'); setPanel(true);
+    const labels = warning.scopes[0] || [];
+    if (labels.length) {
+      setPersonalizing(true);
+      const choices = labels.map(label => label.split(':')).filter(([dim, value]) => CATALOG[dim]?.includes(value));
+      setAnswers(previous => ({ ...previous, ...Object.fromEntries(choices) }));
+    } else setPersonalizing(false);
+    setPersonalTab(warning.path.startsWith('game') ? 'minigame' : 'dialogue');
+    requestAnimationFrame(() => {
+      const target = document.querySelector(warning.field === 'spokenText' ? '[aria-label="Cách đọc cho giọng"]' : 'textarea.stage-text');
+      target?.focus();
+    });
+  };
   return (
     <section className="scene-editor" aria-label="Trình biên tập chương">
       <header className="scene-editor-toolbar">
@@ -546,27 +585,15 @@ export default function EditorCanvas(props) {
             </>
           )}
           {scene && (
-            <button type="button" disabled={busy} onClick={onPlay}>
+            <button type="button" disabled={busy} onClick={() => onPlay(personalizing ? answers : null)}>
               <Play size={16} />
               Chơi thử từ cảnh này
             </button>
           )}
-          {write && onSuggestVoice && (
-            <button
-              type="button"
-              className="scene-quiet"
-              disabled={busy || dirty}
-              title={
-                dirty
-                  ? "Lưu nháp trước để AI đọc bản mới nhất"
-                  : "AI đề xuất cách đọc cho câu có số, ký hiệu, chữ viết tắt"
-              }
-              onClick={onSuggestVoice}
-            >
-              <Mic size={16} />
-              Gợi ý cách đọc (AI)
-            </button>
-          )}
+          {write && onSuggestVoice && <button type="button" className="scene-quiet" disabled={busy || dirty}
+            title={dirty ? 'Lưu nháp trước để AI đọc bản mới nhất' : 'AI đề xuất cách đọc cho câu có số, ký hiệu, chữ viết tắt'} onClick={onSuggestVoice}>
+            <Mic size={16} />Gợi ý cách đọc (AI)
+          </button>}
           {write && onRenderVoice && (
             <button
               type="button"
@@ -584,7 +611,19 @@ export default function EditorCanvas(props) {
               <AudioLines size={16} />
               {voice?.pending
                 ? `Đang sinh ${voice.pending} câu…`
-                : `Sinh giọng${voice ? ` (${voice.missing + voice.failed} câu)` : ""}`}
+                : 'Sinh giọng đọc'}
+            </button>
+          )}
+          {write && visualMode && onOpenTokens && (
+            <button
+              type="button"
+              className="scene-quiet"
+              disabled={busy}
+              title="Từ đổi theo giới tính / tuổi / sở thích của bé, dùng lại ở nhiều câu"
+              onClick={onOpenTokens}
+            >
+              <Languages size={16} />
+              Từ thay theo bé
             </button>
           )}
           <button
@@ -638,12 +677,23 @@ export default function EditorCanvas(props) {
       )}
       {!!warnings.length && (
         <details open className="scene-draft-warnings" aria-live="polite">
-          <summary>Cảnh báo cần kiểm tra ({warnings.length})</summary>
+          <summary><ChevronRight className="draft-warning-chevron" size={16} aria-hidden="true" />Cảnh báo cần kiểm tra ({warnings.length})<span className="draft-warning-when-closed">Mở</span><span className="draft-warning-when-open">Thu gọn</span></summary>
           <p>Bản nháp vẫn được lưu. Sửa các mục này trước khi gửi duyệt.</p>
-          <ul>
-            {warnings.map((warning, index) => (
-              <li key={index}>{warning}</li>
-            ))}
+          <ul className="draft-warning-list">
+            {warnings.map((warning, index) => {
+              const currentIndex = warning.sceneId ? scenes.findIndex(item => item.id === warning.sceneId) : -1;
+              return <li key={index} className="draft-warning-card">
+                <div className="draft-warning-heading">
+                  <strong>{warning.sceneIndex == null ? 'Nội dung chương' : `Cảnh ${(currentIndex >= 0 ? currentIndex : warning.sceneIndex) + 1}${warning.sceneTitle ? ` — ${warning.sceneTitle}` : ''}`} · {warning.fieldName}</strong>
+                  {currentIndex >= 0 && <button type="button" className="scene-primary" disabled={busy} onClick={() => openWarning(warning)}>Mở cảnh {currentIndex + 1} để sửa<ChevronRight size={16} aria-hidden="true" /></button>}
+                </div>
+                {warning.scopeText && <p className="draft-warning-scope">{warning.scopeText}</p>}
+                <p>{warning.description}</p>
+                <p><b>Cách sửa:</b> {warning.action}</p>
+                {warning.sourceText && <details className="draft-warning-reference"><summary><ChevronRight className="draft-warning-chevron" size={16} aria-hidden="true" />Xem nội dung gốc để đối chiếu<span className="draft-warning-when-closed">Mở</span><span className="draft-warning-when-open">Thu gọn</span></summary><p>{warning.sourceText}</p></details>}
+                <details className="draft-warning-technical"><summary><ChevronRight className="draft-warning-chevron" size={16} aria-hidden="true" />Chi tiết dành cho kỹ thuật<span className="draft-warning-when-closed">Mở</span><span className="draft-warning-when-open">Thu gọn</span></summary><ul>{warning.rawMessages.map((raw, i) => <li key={i}>{raw}</li>)}</ul></details>
+              </li>;
+            })}
           </ul>
         </details>
       )}
@@ -686,6 +736,8 @@ export default function EditorCanvas(props) {
           />
         </div>
       ) : (
+        <>
+        <PersonalizationControls active={personalizing} onActive={value => { setPersonalizing(value); setPanel(true); setView('frame'); }} answers={answers} onAnswers={setAnswers} />
         <div
           className={`scene-editor-body${panel && view === "frame" ? "" : " is-wide"}`}
         >
@@ -775,12 +827,23 @@ export default function EditorCanvas(props) {
                 <div className="scene-editor-canvas">
                   {scene ? (
                     <SceneStage
-                      key={scene.id}
-                      scene={scene}
-                      scenes={scenes}
-                      sprites={content.sprites}
+                      key={`${scene.id}-${personalizing}`}
+                      scene={previewScene}
+                      scenes={preview.scenes}
+                      sprites={preview.sprites}
                       write={write && !busy}
-                      update={update}
+                      update={updateCurrent}
+                      personalized={personalizing}
+                      baseScene={scene}
+                      onSpeakerRoleChange={update}
+                      onCharacterChange={(index, patch) => {
+                        if (personalizing && patch.src) onCharacterAppearance(index, answers.gender, answers.age, patch.src);
+                        else update({ characters: scene.characters.map((item, i) => i === index ? { ...item, ...patch } : item) });
+                      }}
+                      onCharacterRemove={index => update({ characters: scene.characters.filter((_, i) => i !== index) })}
+                      onOptionText={(index, text) => update({ options: scene.options.map((item, i) => i !== index ? item : personalizing
+                        ? { ...item, ...personalizedScenePatch(item, answers, { text, ...(item.label !== undefined ? { label: text } : {}) }) }
+                        : { ...item, text, ...(item.label !== undefined ? { label: text } : {}) }) })}
                       onBackground={onPickBackground}
                       onAddCharacter={onAddCharacter}
                       onOpenLock={(index) =>
@@ -829,6 +892,10 @@ export default function EditorCanvas(props) {
                       {scene.id}
                     </code>
                   </div>
+                  {personalizing && <div className="personalization-tabs scene-inspector-tabs" role="group" aria-label="Nội dung cá nhân hóa">
+                    {[['dialogue', 'Lời thoại'], ['characters', 'Nhân vật'], ['minigame', 'Mini-game']].map(([value, label]) => <button type="button" key={value} aria-pressed={personalTab === value} onClick={() => setPersonalTab(value)}>{label}</button>)}
+                  </div>}
+                  {(!personalizing || personalTab === 'dialogue') && <>
                   <fieldset
                     disabled={!write || busy}
                     className="inspector-group"
@@ -989,17 +1056,7 @@ export default function EditorCanvas(props) {
                       </button>
                     </section>
                   )}
-                  {(scene.speaker || scene.speakerId) && scene.text && (
-                    <section
-                      className="inspector-group"
-                      aria-labelledby="group-voice"
-                    >
-                      <h3 id="group-voice">Giọng đọc</h3>
-                      <fieldset disabled={!write || busy}>
-                        <VoiceFields scene={scene} update={update} status={voice?.items?.find((item) => item.sceneId === scene.id)} />
-                      </fieldset>
-                    </section>
-                  )}
+                  {voiceSection}
                   {write && (
                     <div className="scene-inspector-actions inspector-group">
                       <button
@@ -1027,9 +1084,9 @@ export default function EditorCanvas(props) {
                       <label>
                         Người nói (tên hiển thị)
                         <input
-                          value={scene.speaker || ""}
+                          value={previewScene.speaker || ""}
                           onChange={(event) =>
-                            update({ speaker: event.target.value })
+                            updateCurrent({ speaker: event.target.value })
                           }
                           placeholder="Ví dụ: An"
                         />
@@ -1078,6 +1135,17 @@ export default function EditorCanvas(props) {
                       />
                     )}
                   </details>
+                  </>}
+                  {personalizing && personalTab !== 'dialogue' && <section className="inspector-group personalization-editing">
+                    {personalTab === 'characters' && <>
+                      <fieldset disabled={!write || busy}><label>Tên nhân vật đang nói<input aria-label="Tên nhân vật theo nhãn" value={previewScene.speaker || ''} onChange={event => updateCurrent({ speaker: event.target.value })} placeholder={scene.speaker || 'Tên hiển thị'} /><small>Tên theo nhãn đang chọn. Để trống để dùng tên gốc.</small></label></fieldset>
+                      <CharacterPersonalization scene={scene} preview={previewScene} answers={answers} tokens={content.personalization?.tokens} write={write && !busy} onPickImage={onPickImage} onChange={onCharacterAppearance} />
+                    </>}
+                    {personalTab === 'minigame' && (scene.game ? <>
+                      <p className="scene-hint">Đổi nội dung và ảnh theo sở thích. Bấm Xong trong cửa sổ soạn để áp dụng, rồi Chơi thử để kiểm tra.</p>
+                      <button type="button" disabled={!write || busy} onClick={() => openDialog({ kind: 'minigame', initialTab: 'variants', interest: answers.interest })}>Chỉnh mini-game theo sở thích</button>
+                    </> : <p className="scene-hint">Cảnh này không có mini-game. Chọn một cảnh mini-game ở dải cảnh bên dưới.</p>)}
+                  </section>}
                 </>
               ) : (
                 <p className="scene-schema-status">
@@ -1117,7 +1185,7 @@ export default function EditorCanvas(props) {
                       title="Cảnh này còn chỗ cần sửa"
                     />
                   )}
-                  <Thumbnail scene={item} />
+                  <Thumbnail scene={preview.scenes[index] || item} />
                   <span className="scene-thumbnail-label">
                     {sceneLabel(item)}
                   </span>
@@ -1137,6 +1205,7 @@ export default function EditorCanvas(props) {
             </div>
           </section>
         </div>
+        </>
       )}
     </section>
   );

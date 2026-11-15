@@ -12,26 +12,32 @@ import {
   settingFields,
   textGroups,
 } from "./minigameOps";
+import { MinigamePersonalization } from "./PersonalizationPanel";
 
 const TABS = [
   ["texts", "Chữ trên màn chơi"],
   ["answers", "Đáp án"],
   ["settings", "Con số và ảnh"],
+  ["variants", "Theo bé"],
   ["json", "Nâng cao (JSON)"],
 ];
 
 export default function MinigameDialog({
   game,
   kind,
+  tokens,
+  initialTab = 'texts',
+  interest,
   onPickImage,
   onSave,
   onClose,
 }) {
   const [draft, setDraft] = useState(() => structuredClone(game || {}));
-  const [tab, setTab] = useState("texts");
+  const [tab, setTab] = useState(initialTab);
   const [json, setJson] = useState(null);
   const [error, setError] = useState("");
   const edit = (path, value) => {
+    if (!path.length) { setDraft(value); return; }
     const next = structuredClone(draft);
     setAt(next, path, value);
     setDraft(next);
@@ -284,6 +290,16 @@ export default function MinigameDialog({
               </p>
             )}
           </div>
+        )}
+
+        {tab === "variants" && (
+          <MinigamePersonalization
+            initialInterest={interest}
+            draft={draft}
+            tokens={tokens}
+            onPickImage={onPickImage}
+            onChange={(path, value) => edit(path, value)}
+          />
         )}
 
         {tab === "json" && (

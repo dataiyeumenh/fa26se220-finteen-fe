@@ -501,3 +501,21 @@ textarea.sp-input { min-height: 88px; resize: vertical; line-height: 1.5; }
 .sp-key:first-child { border-top: 1px solid #e1e7ed; }
 .sp-chip { font-weight: 450; }
 .sp-chip[aria-pressed=true] { background: #eaf7f2; border-color: #8bcbb7; color: #087052; }
+
+/* Cá nhân hoá (PersonalizationPanel.jsx) */
+.studio-personalization { display: grid; gap: 12px; }
+.studio-variant-block { display: grid; gap: 8px; }
+.studio-variant-block h4 { margin: 0; font-size: 13px; font-weight: 600; }
+.studio-variant { display: grid; gap: 6px; border: 1px solid #e2d9c6; border-radius: 10px; padding: 8px 10px; }
+.studio-variant legend { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; padding: 0 4px; }
+.studio-variant label { display: grid; gap: 2px; font-size: 12px; }
+.studio-variant textarea, .studio-variant select { width: 100%; font: inherit; }
+.studio-variant-base { color: #6b7280; white-space: pre-wrap; }
+.studio-variant-image { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: 12px; }
+.studio-variant-image img { width: 44px; height: 44px; object-fit: contain; border-radius: 6px; background: #faf6ee; }
+.studio-variant-add { display: flex; gap: 6px; }
+.studio-variant-add select { flex: 1; min-width: 0; }
+.studio-variant-problems { margin: 0; padding-left: 18px; color: #b42318; font-size: 12px; }
+.studio-token { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 6px 10px; border: 1px solid #e2d9c6; border-radius: 10px; padding: 8px 10px; margin-bottom: 10px; }
+.studio-token legend { display: flex; align-items: center; gap: 8px; }
+.studio-token label { display: grid; gap: 2px; font-size: 12px; }
