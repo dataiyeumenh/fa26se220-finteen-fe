@@ -790,7 +790,8 @@
   color: #fff !important;
 }
 .ws[data-ws-role="kid"] .ws-kid-bottom-nav a.active {
-  color: #fff;
+  background: #f4b400;
+  color: #3e3212;
 }
 .ws[data-ws-role="kid"] .atlas-tabs button[aria-pressed="true"],
 .ws[data-ws-role="kid"] .atlas-resume,
@@ -2078,8 +2079,8 @@
     text-align: center;
   }
   .ws .ws-kid-bottom-nav a.active {
-    background: var(--page-primary);
-    color: #fff;
+    background: #f4b400;
+    color: #3e3212;
   }
   .ws .ws-kid-welcome {
     align-items: flex-start;

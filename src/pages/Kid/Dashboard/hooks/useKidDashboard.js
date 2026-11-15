@@ -44,6 +44,8 @@ export default function useKidDashboard() {
     streak: progress?.streak || 0,
     completedChapters: progress?.completedChapters || 0,
     totalChapters: release.chapters.length,
+    chapters: release.chapters,
+    continueChapter: progress?.continueChapter || release.chapters[0]?.id || 1,
     continueLessons: progress?.continueChapter
       ? [
           {
