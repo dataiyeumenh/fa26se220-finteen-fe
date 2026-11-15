@@ -488,6 +488,98 @@
 .ws-slot-result-detail .ws-row h3 {
   margin: 8px 0 0;
 }
+.ws-quiz-answer {
+  display: grid;
+  gap: 12px;
+  padding: 20px;
+  border: 1px solid;
+  border-left-width: 4px;
+  border-radius: 14px;
+  overflow-wrap: anywhere;
+}
+.ws-quiz-answer > strong {
+  color: #25324a;
+  line-height: 1.6;
+}
+.ws-quiz-answer.is-correct {
+  border-color: #8ad0ad;
+  background: #f0fbf5;
+  color: #176b45;
+}
+.ws-quiz-answer.is-wrong {
+  border-color: #f0a5ad;
+  background: #fff5f5;
+  color: #b42336;
+}
+.ws-quiz-answer .ws-quiz-answer-status {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0;
+  color: inherit;
+  font-weight: 700;
+}
+.ws-quiz-answer-choice,
+.ws-quiz-answer-solution {
+  display: grid;
+  gap: 5px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: #ffffffb3;
+}
+.ws-quiz-answer-choice > span,
+.ws-quiz-answer-solution > span {
+  font-size: 12px;
+}
+.ws-quiz-answer-solution {
+  background: #e6f7ed;
+  color: #176b45;
+}
+.ws-modal.ws-quiz-submit-modal {
+  width: min(520px, calc(100vw - 32px));
+}
+.ws-quiz-submit-summary {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px;
+  border: 1px solid var(--role-border);
+  border-radius: 14px;
+  background: var(--role-soft);
+  overflow-wrap: anywhere;
+}
+.ws-quiz-submit-icon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: var(--role-color);
+  color: var(--role-ink);
+}
+.ws-quiz-submit-summary p {
+  margin: 5px 0 0;
+  color: #596174;
+  font-size: 13px;
+}
+.ws-quiz-submit-warning {
+  margin: 0;
+  padding: 12px 14px;
+  border: 1px solid #f3d391;
+  border-radius: 10px;
+  background: #fffbeb;
+  color: #854d0e;
+  font-size: 13px;
+}
+.ws-quiz-submit-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+}
+.ws-quiz-submit-actions > button {
+  flex: 1 1 180px;
+}
 .ws-kid-quiz {
   display: grid;
   gap: 8px;
@@ -777,7 +869,13 @@
   gap: 22px;
 }
 .ws-quiz-page .ws-question {
+  min-width: 0;
   padding: 24px;
+  overflow-wrap: anywhere;
+}
+.ws-quiz-page .ws-question.ws-checks {
+  max-height: none;
+  overflow: visible;
 }
 .ws-quiz-page .ws-question legend {
   display: flex;
@@ -804,6 +902,7 @@
 .ws-quiz-page .ws-checks label b {
   display: grid;
   place-items: center;
+  flex-shrink: 0;
   width: 26px;
   height: 26px;
   border-radius: 7px;

@@ -8,6 +8,7 @@ import {
   RefreshCw,
   Send,
   Trash2,
+  XCircle,
 } from "lucide-react";
 import { useState } from "react";
 import { teacherQuizApi } from "../api/teacherQuizApi";
@@ -385,6 +386,8 @@ function QuizDetail({ quiz, onClose }) {
 function QuizResults({ quiz, onClose }) {
   const { data, slotResult, setSlotResult, error, viewSlot } =
     useTeacherQuizResults(quiz.id);
+  const { detail } = useTeacherQuizDetail(quiz.id);
+  const questionsById = new Map((detail?.questions || []).map((question) => [question.id, question]));
   const rows = data?.rows || [];
   const submitted = rows.filter((row) => row.attempted);
   const average = submitted.length
@@ -502,14 +505,35 @@ function QuizResults({ quiz, onClose }) {
           <button className="ws-btn" onClick={() => setSlotResult(null)}>
             Đóng chi tiết
           </button>
-          {slotResult.answers.map((answer, index) => (
-            <article className="ws-question" key={answer.questionId}>
-              <strong>
-                {index + 1}. {answer.stem}
-              </strong>
-              <p>{answer.correct ? "✓ Trả lời đúng" : "✕ Trả lời sai"}</p>
-            </article>
-          ))}
+          {slotResult.answers.map((result, index) => {
+            const question = questionsById.get(result.questionId);
+            const answer = { ...question, ...result, options: result.options ?? question?.options };
+            return (
+              <article className={`ws-quiz-answer ${answer.correct ? "is-correct" : "is-wrong"}`} key={answer.questionId}>
+                <strong>
+                  {index + 1}. {answer.stem}
+                </strong>
+                <p className="ws-quiz-answer-status">
+                  {answer.correct ? <CheckCircle2 size={18} aria-hidden="true" /> : <XCircle size={18} aria-hidden="true" />}
+                  {answer.correct ? "Trả lời đúng" : "Trả lời sai"}
+                </p>
+                <div className="ws-quiz-answer-choice">
+                  <span>Học sinh đã chọn</span>
+                  <strong>
+                    {Number.isInteger(answer.chosenIndex) && answer.chosenIndex >= 0
+                      ? `${String.fromCharCode(65 + answer.chosenIndex)}. ${answer.options?.[answer.chosenIndex] ?? "Không có nội dung đáp án"}`
+                      : "Chưa trả lời"}
+                  </strong>
+                </div>
+                {!answer.correct && Number.isInteger(answer.correctIndex) && answer.correctIndex >= 0 && answer.options?.[answer.correctIndex] != null && (
+                  <div className="ws-quiz-answer-solution">
+                    <span>Đáp án đúng</span>
+                    <strong>{String.fromCharCode(65 + answer.correctIndex)}. {answer.options[answer.correctIndex]}</strong>
+                  </div>
+                )}
+              </article>
+            );
+          })}
         </section>
       )}
     </Modal>
