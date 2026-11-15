@@ -1010,6 +1010,7 @@ export function PlayDialog({ content, startIndex, stats, onEdit, onClose }) {
         )}
       </div>}
       {note}
+      {scene?.voice !== 'off' && scene?.voiceUrl && <audio key={`${scene.id}-${scene.voiceUrl}`} controls preload="none" src={scene.voiceUrl} aria-label="Nghe giọng đọc cảnh đang chơi thử" />}
       {controls && <div className="studio-play-controls">{controls}</div>}
       <div className="studio-dialog-actions">
         <span className="studio-muted">

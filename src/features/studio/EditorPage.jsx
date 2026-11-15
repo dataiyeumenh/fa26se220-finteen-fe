@@ -10,11 +10,13 @@ import EditorCanvas from './EditorCanvas'
 import { nextSceneId } from './sceneEditing'
 import { TYPE_LABEL, duplicateLinked, insertLinked, isLinear, removeLinked, storyIssues } from './storyOps'
 import MinigameDialog from './MinigameDialog'
+import { TokensDialog } from './PersonalizationPanel'
+import { previewPersonalization, pruneEmptyVariants, setCharacterAppearance } from './variantOps.js'
 import { AddSceneDialog, CharacterDialog, ConditionDialog, EffectDialog, PlayDialog, ScenePickerDialog } from './SceneDialogs'
 import { prepareDraftV2, parseCondition } from './draftV2'
 import { AssetPicker } from './AssetsPage'
 import { Btn, Panel } from './ui'
-import { patchSceneVoice } from './sceneVoice.js'
+import { normalizeVoiceReading, patchSceneVoice, pendingVoiceBatch, sceneReadText, sceneVoicePlayback, voiceBatchItems, voiceClipUrl, withSceneVoicePlayback } from './sceneVoice.js'
 import { AudioLines, Sparkles } from 'lucide-react'
 
 function template(code) {
@@ -68,18 +70,26 @@ function VoiceHints({ hints, scenes, write, onAccept, onDrop, onOpen, onClose })
 const VOICE_LABEL = { MISSING: 'Cần sinh', FAILED: 'Lỗi — sinh lại', PENDING: 'Đang sinh…', READY: 'Đã có giọng' }
 const VOICE_TONE = { MISSING: 'text-amber-700', FAILED: 'text-red-700', PENDING: 'text-blue-700', READY: 'text-emerald-700' }
 
-/** Danh sách câu sẽ sinh giọng (câu mới / đã sửa / lỗi) — xem trước rồi mới bấm; câu trùng khoá dùng lại giọng cũ nên không có ở đây. */
-function VoiceRenderList({ voice, scenes, busy, onRender, onOpen, onClose }) {
+/** Only the clips submitted in this render action, including their completed results. */
+function VoiceRenderList({ voice, batch, scenes, onOpen, onClose }) {
   const number = id => scenes.findIndex(s => s.id === id) + 1
   const speaker = id => scenes.find(s => s.id === id)?.speaker
-  const todo = voice.items.filter(i => i.status !== 'READY')
-  const count = voice.missing + voice.failed
+  const items = voiceBatchItems(batch, voice)
+  const ready = items.filter(item => item.status === 'READY').length
+  const failed = items.filter(item => item.status === 'FAILED').length
   return <Panel className="studio-voice-panel studio-voice-panel--render" title={<span className="studio-voice-title"><span className="studio-voice-icon"><AudioLines size={21} aria-hidden="true" /></span>Sinh giọng đọc</span>} actions={<>
-    {count > 0 && <Btn tone="primary" disabled={busy || voice.pending > 0} onClick={onRender}>Sinh {count} câu này</Btn>}
     <Btn onClick={onClose}>Đóng</Btn>
   </>}>
-    {!todo.length && <p>Mọi câu đã có giọng — không cần sinh.</p>}
-    <ul className="studio-voice-items">{todo.map(item => <li key={item.sceneId} className="studio-voice-item">
+    <p role="status">{ready === items.length ? `Đã sinh xong ${ready} câu trong lần này. Bấm phát để nghe thử.` : `Lần sinh này: ${ready}/${items.length} câu đã xong${failed ? `, ${failed} câu lỗi` : ''}.`}</p>
+    <ul className="studio-voice-items">{items.map((item, index) => {
+      const source = scenes.find(scene => scene.id === item.sceneId)
+      const sameReading = items.filter(other => other.sceneId === item.sceneId && normalizeVoiceReading(other.readText) === normalizeVoiceReading(item.readText))
+      const matchesSource = source && (!item.readText || normalizeVoiceReading(item.readText) === normalizeVoiceReading(sceneReadText(source)))
+        && (!item.speakerId || item.speakerId === source.speakerId)
+        && (source.voice ? source.voice === item.profile : new Set(sameReading.map(other => other.profile)).size <= 1)
+      const playback = sceneVoicePlayback({ id: item.sceneId, text: item.readText, voice: item.profile, speakerId: item.speakerId,
+        voiceUrl: voiceClipUrl(item) || (matchesSource ? source.voiceUrl : undefined) }, [item])
+      return <li key={`${item.sceneId}-${index}`} className="studio-voice-item">
       <div className="flex items-center justify-between gap-2 text-xs">
         <button type="button" className="text-blue-700 underline" onClick={() => onOpen(item.sceneId)}>
           Cảnh {number(item.sceneId)} · {speaker(item.sceneId) || item.speakerId}
@@ -88,7 +98,9 @@ function VoiceRenderList({ voice, scenes, busy, onRender, onOpen, onClose }) {
       </div>
       <p className="mt-1 text-sm">{item.readText}</p>
       <p className="text-xs text-slate-500">Giọng: {item.profile}{item.error ? ` · ${item.error}` : ''}</p>
-    </li>)}</ul>
+      {item.status === 'READY' && playback.voiceUrl && <audio controls preload="none" src={playback.voiceUrl} aria-label={`Nghe giọng cảnh ${number(item.sceneId)} — ${item.profile || 'mặc định'}`} />}
+      {item.status === 'READY' && !playback.voiceUrl && <p className="studio-muted">Đã sinh giọng nhưng phản hồi thiếu mã tệp audio hợp lệ.</p>}
+    </li>})}</ul>
   </Panel>
 }
 
@@ -102,12 +114,14 @@ export default function EditorPage({ notify, code, onNavigationStateChange }) {
   const [loadError, setLoadError] = useState('')
   const [dirty, setDirty] = useState(false)
   const [attempt, setAttempt] = useState(0)
-  const [warnings, setWarnings] = useState([])
   const [refreshError, setRefreshError] = useState('')
   const [conditionDrafts, setConditionDrafts] = useState({})
   const [voice, setVoice] = useState(null) // trạng thái giọng từng câu (GET …/voice): READY / MISSING / PENDING / FAILED
   const [voiceList, setVoiceList] = useState(false)
+  const [voiceBatch, setVoiceBatch] = useState(null)
   const [voiceHints, setVoiceHints] = useState(null) // gợi ý cách đọc của AI — chưa ghi vào nháp tới khi người soạn bấm Nhận
+  const voiceToolsRef = useRef(null)
+  useEffect(() => { if (voiceList || voiceHints) voiceToolsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }, [voiceList, voiceHints])
   const [history, setHistory] = useState({ past: [], future: [] })
   const [notice, setNotice] = useState(null) // ví dụ "Đã xoá cảnh 3" kèm nút Hoàn tác
   const [dialog, setDialog] = useState(null)
@@ -131,7 +145,7 @@ export default function EditorPage({ notify, code, onNavigationStateChange }) {
     }).catch(error => { if (active) setLoadError(formatError(error)) })
     return () => { active = false }
   }, [code, search, attempt])
-  const loadVoice = useCallback(() => studioApi.get(`/api/studio/chapters/${encodeURIComponent(code)}/voice`).then(setVoice).catch(() => setVoice(null)), [code])
+  const loadVoice = useCallback(() => studioApi.get(`/api/studio/chapters/${encodeURIComponent(code)}/voice`).then(result => { setVoice(result); return result }).catch(() => null), [code])
   useEffect(() => { if (meta?.revision) loadVoice() }, [meta?.revision, loadVoice])
   useEffect(() => {
     if (!voice?.pending) return
@@ -217,12 +231,25 @@ export default function EditorPage({ notify, code, onNavigationStateChange }) {
     result => result.aiCalls ? `AI gợi ý ${result.suggestions.length} câu (${result.aiCalls} lần gọi)` : 'Không có câu nào cần đổi cách đọc.',
     result => setVoiceHints(result),
   )
-  const renderVoice = () => void run(
-    () => studioApi.post(`/api/studio/chapters/${encodeURIComponent(code)}/voice`),
-    r => r.queued + r.alreadyPending === 0 ? 'Mọi câu đã có giọng — không cần sinh.'
-      : `Đang sinh ${r.queued + r.alreadyPending} câu (${r.ready} câu giữ giọng cũ)` + (r.dispatched ? '' : ` — chưa gọi được máy sinh: ${r.dispatchNote}`),
-    () => loadVoice(),
-  )
+  const renderVoice = () => {
+    if (!write || busy || dirty) return
+    void run(async () => {
+      const before = await studioApi.get(`/api/studio/chapters/${encodeURIComponent(code)}/voice`)
+      const batch = pendingVoiceBatch(before)
+      setVoice(before)
+      if (!batch.length) { setVoiceList(false); setVoiceBatch(null); return { queued: 0, alreadyPending: 0 } }
+      const result = await studioApi.post(`/api/studio/chapters/${encodeURIComponent(code)}/voice`)
+      if (!result.queued && !result.alreadyPending) { setVoiceList(false); setVoiceBatch(null); await loadVoice(); return result }
+      setVoiceBatch({ code, items: batch })
+      setVoiceList(true)
+      // Start polling even if the status refresh temporarily fails after enqueue.
+      setVoice({ ...before, pending: result.queued + result.alreadyPending || before.pending,
+        items: before.items.map(item => item.status === 'MISSING' || item.status === 'FAILED' ? { ...item, status: 'PENDING' } : item) })
+      await loadVoice()
+      return result
+    }, r => r.queued + r.alreadyPending === 0 ? 'Không có câu mới cần sinh giọng.'
+      : `Đang sinh ${r.queued + r.alreadyPending} câu` + (r.dispatched ? '' : ` — chưa gọi được máy sinh: ${r.dispatchNote}`))
+  }
   const acceptHint = (hint, all = false) => {
     if (!write) return
     const picked = all ? voiceHints.suggestions : [hint]
@@ -255,7 +282,7 @@ export default function EditorPage({ notify, code, onNavigationStateChange }) {
       }
     }
     if (!body || typeof body !== 'object' || Array.isArray(body) || !Array.isArray(body.scenes) || !body.scenes.length) return notify('Nội dung phải là đối tượng JSON có ít nhất một scene.')
-    body = prepareDraftV2(body)
+    body = pruneEmptyVariants(prepareDraftV2(body))
     await run(async () => {
       const saved = await studioApi.put(`/api/studio/chapters/${encodeURIComponent(code)}/draft`, body)
       try {
@@ -265,7 +292,7 @@ export default function EditorPage({ notify, code, onNavigationStateChange }) {
     }, 'Đã lưu nháp ' + code, result => {
       if (result.refreshed) setMeta(result.refreshed.draft)
       setContent(prepareDraftV2(result.refreshed?.content || body)); setJson(null); setHistory({ past: [], future: [] }); setDirty(false); setConditionDrafts({})
-      setWarnings(result.saved?.warnings || []); setRefreshError(result.refreshError || '')
+      setRefreshError(result.refreshError || '')
       if (search.has('new') && result.refreshed) setSearch({}, { replace: true })
     })
   }
@@ -338,25 +365,26 @@ export default function EditorPage({ notify, code, onNavigationStateChange }) {
   if (!content) return <p role="status">Đang tải {code}…</p>
   const option = dialog?.index != null ? scene?.options?.[dialog.index] : null
   const close = () => setDialog(null)
-  const playDraft = () => {
+  const playDraft = (answers) => {
     try {
       const preview = json === null ? content : JSON.parse(json)
       if (!preview || !Array.isArray(preview.scenes) || !preview.scenes.length)
         throw new Error('Nội dung JSON cần có ít nhất một cảnh để chơi thử.')
       const currentIndex = preview.scenes.findIndex(item => item.id === scene?.id)
-      setDialog({ kind: 'play', content: prepareDraftV2(preview), startIndex: currentIndex >= 0 ? currentIndex : 0 })
+      setDialog({ kind: 'play', content: withSceneVoicePlayback(prepareDraftV2(answers ? previewPersonalization(preview, answers) : preview), voice?.items), startIndex: currentIndex >= 0 ? currentIndex : 0 })
     } catch (error) { notify(formatError(error)) }
   }
   return <>
     <EditorCanvas code={code} content={content} meta={meta} scenes={scenes} scene={scene} idx={idx} setIdx={setIdx}
+      onCharacterAppearance={(index, gender, age, url) => commit(setCharacterAppearance(content, scene.id, index, gender, age, url))}
       write={write} busy={busy} dirty={dirty} json={json}
       setJson={value => { setJson(value); setDirty(true) }} toggleJson={toggleJson} save={save} update={update} schemaQuery={schemaQuery}
-      warnings={warnings} refreshError={refreshError} conditionDrafts={conditionDrafts} editCondition={editCondition} onSuggestVoice={suggestVoice} onRenderVoice={() => { setVoiceList(true); loadVoice() }} voice={voice}
+      refreshError={refreshError} conditionDrafts={conditionDrafts} editCondition={editCondition} onSuggestVoice={suggestVoice} onRenderVoice={renderVoice} voice={voice}
       history={{ undo, redo, canUndo: history.past.length > 0, canRedo: history.future.length > 0 }} notice={notice} issues={storyIssues(scenes)}
       onAdd={() => setDialog({ kind: 'add' })} onDuplicate={duplicateScene} onDelete={deleteScene} onPickBackground={() => setPicking('background')}
-      onAddCharacter={() => setDialog({ kind: 'character' })} onPlay={playDraft} openDialog={setDialog} onBranch={createBranch} onLaneEnd={addLaneEnd} onPickImage={apply => setPicking(() => apply)} />
-    {((voiceList && voice) || voiceHints) && <div className="studio-voice-tools">
-      {voiceList && voice && <VoiceRenderList voice={voice} scenes={scenes} busy={busy} onRender={renderVoice} onOpen={id => go(id)} onClose={() => setVoiceList(false)} />}
+      onAddCharacter={() => setDialog({ kind: 'character' })} onPlay={playDraft} openDialog={setDialog} onBranch={createBranch} onLaneEnd={addLaneEnd} onPickImage={apply => setPicking(() => apply)} onOpenTokens={() => setDialog({ kind: 'tokens' })} />
+    {((voiceList && voiceBatch?.code === code) || voiceHints) && <div className="studio-voice-tools" ref={voiceToolsRef}>
+      {voiceList && voiceBatch?.code === code && <VoiceRenderList voice={voice} batch={voiceBatch.items} scenes={scenes} onOpen={id => go(id)} onClose={() => setVoiceList(false)} />}
       {voiceHints && <VoiceHints hints={voiceHints} scenes={scenes} write={write} onAccept={acceptHint} onDrop={dropHint} onOpen={id => go(id)} onClose={() => setVoiceHints(null)} />}
     </div>}
     {picking && <AssetPicker chapter={code} notify={notify} onClose={() => setPicking(false)} onPick={asset => {
@@ -376,7 +404,8 @@ export default function EditorPage({ notify, code, onNavigationStateChange }) {
     {dialog?.kind === 'character' && <CharacterDialog sprites={content.sprites} present={(scene.characters || []).map(item => item.id)} onClose={close}
       onLibrary={() => { close(); setPicking('character') }}
       onPick={(id, src, expression) => { const used = new Set((scene.characters || []).map(item => String(item.position).toLowerCase())); update({ characters: [...(scene.characters || []), { id, expression, src, position: ['center', 'right', 'left'].find(p => !used.has(p)) || 'right' }] }); close() }} />}
-    {dialog?.kind === 'minigame' && <MinigameDialog game={scene.game} kind={schemaQuery.data?.minigameKinds?.[scene.game?.kind]} onClose={close}
+    {dialog?.kind === 'tokens' && <TokensDialog content={content} onClose={close} onSave={next => { commit(next); close(); notify('Đã cập nhật từ thay theo bé.', true) }} />}
+    {dialog?.kind === 'minigame' && <MinigameDialog game={scene.game} tokens={content.personalization?.tokens} initialTab={dialog.initialTab} interest={dialog.interest} kind={schemaQuery.data?.minigameKinds?.[scene.game?.kind]} onClose={close}
       onPickImage={apply => setPicking(() => apply)} onSave={game => { update({ game }); close(); notify('Đã cập nhật mini-game.', true) }} />}
     {dialog?.kind === 'play' && <PlayDialog content={dialog.content} startIndex={dialog.startIndex} stats={stats} onClose={close} onEdit={index => { setIdx(index); close() }} />}
   </>

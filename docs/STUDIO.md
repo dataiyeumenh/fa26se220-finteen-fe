@@ -75,3 +75,9 @@ The browser smoke script uses Playwright and local Chrome/Edge. Use an available
 Manual production test: Editor saves/submits a draft, a different Reviewer approves it, then a different Manager previews/publishes the release. Reviewer should see read-only asset/question controls. ADMIN can use the Studio link to test all operations, subject to the same author restrictions.
 
 Production authenticated operations still need validation with actual internal accounts; no credentials are included in this repository.
+
+### Generated voice playback
+
+`GET /api/studio/chapters/{code}/voice` returns `ChapterVoice.items` as `LineStatus`: `sceneId`, `speakerId`, `profile`, `readText`, `key`, `status`, and `error`. The deployed OpenAPI schema does not include `voiceUrl` on these items. For a `READY` item, resolve its `key` to `${VITE_API_BASE_URL}/assets/v/${key}.mp3`. Keep the API base prefix (such as `/finteen`). Draft scene `voiceUrl` remains supported, but must not be substituted for a different personalized recording.
+
+The contract was checked against the deployed `/v3/api-docs`; a public `/assets/v/<key>.mp3` sample returned HTTP 200 with `audio/mpeg`. Run `node --test tests/studio-scene-voice.test.mjs` and `node tests/studio-personalization-browser.mjs` to cover key-only responses in the list, inspector and play dialog. Browser fixture writes are mocked.
