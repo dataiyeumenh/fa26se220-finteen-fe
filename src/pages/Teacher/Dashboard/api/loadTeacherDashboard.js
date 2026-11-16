@@ -1,0 +1,39 @@
+export async function loadTeacherDashboard(api) {
+  const groups = ((await api.listGroups()) || [])
+    .filter((group) => group.context === "CLASS")
+    .sort((a, b) => Number(Boolean(a.closedAt)) - Number(Boolean(b.closedAt)));
+  const results = await Promise.all(groups.map(async (group) => {
+    const [report, quizzes] = await Promise.allSettled([
+      api.getGroupReport(group.id),
+      api.listQuizzes(group.id),
+    ]);
+    return { report, quizzes };
+  }));
+  const reportsComplete = results.every(({ report }) =>
+    report.status === "fulfilled" && Number.isFinite(report.value?.summary?.learners),
+  );
+  const quizzesComplete = results.every(({ quizzes }) =>
+    quizzes.status === "fulfilled" && Array.isArray(quizzes.value),
+  );
+  const studentCount = reportsComplete
+    ? results.reduce((sum, { report }) => sum + report.value.summary.learners, 0)
+    : null;
+  const quizzes = new Set();
+  if (quizzesComplete) {
+    for (const { quizzes: result } of results) {
+      for (const quiz of result.value) quizzes.add(quiz.id);
+    }
+  }
+  const warnings = [];
+  if (!reportsComplete) warnings.push("Chưa tải đầy đủ số học sinh trên tất cả lớp.");
+  if (!quizzesComplete) warnings.push("Chưa tải đầy đủ số bài quiz đang quản lý.");
+  return {
+    group: groups[0] || null,
+    report: results[0]?.report.status === "fulfilled" ? results[0].report.value : null,
+    groupCount: groups.length,
+    activeGroupCount: groups.filter((group) => !group.closedAt).length,
+    studentCount,
+    quizCount: quizzesComplete ? quizzes.size : null,
+    warning: warnings.join(" "),
+  };
+}

@@ -2,13 +2,16 @@ import {
   Activity,
   ArrowRight,
   BookOpen,
-  CheckCircle2,
+  ClipboardList,
   Users,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Heading } from "../../../../features/workspace/ui";
 import { ContentSkeleton } from "@/components/feedback/LoadingState";
 import OverviewInsights from "@/features/workspace/OverviewInsights";
+import "../styles/teacher-dashboard.css";
+
+const count = (value) => value == null ? "—" : new Intl.NumberFormat("vi-VN").format(value);
 
 export default function TeacherDashboardContent({ actor, dashboardState }) {
   const { dashboard, loading, error, refetch } = dashboardState;
@@ -17,8 +20,8 @@ export default function TeacherDashboardContent({ actor, dashboardState }) {
   return (
     <>
       <Heading
-        title={`Chào ${actor.name}!`}
-        description="Tình hình lớp học và hoạt động của học sinh hôm nay."
+        title={`Chào ${actor.displayName || actor.name}!`}
+        description="Tổng quan các lớp học, học sinh và bài quiz bạn đang quản lý."
       >
         <button
           className="ws-btn"
@@ -35,7 +38,7 @@ export default function TeacherDashboardContent({ actor, dashboardState }) {
       )}
       {loading && !dashboard ? (
         <ContentSkeleton label="Đang tải tổng quan lớp học…" />
-      ) : !group ? (
+      ) : !dashboard ? null : !group ? (
         <section className="ws-overview-hero">
           <div>
             <span className="ws-overview-kicker">BẮT ĐẦU THIẾT LẬP</span>
@@ -52,12 +55,11 @@ export default function TeacherDashboardContent({ actor, dashboardState }) {
           <section className="ws-overview-live">
             <div>
               <span className="ws-overview-kicker">
-                {group.closedAt ? "LỚP ĐÃ KẾT THÚC" : "ĐANG HOẠT ĐỘNG"}
+                {group.closedAt ? "LỚP ĐANG THEO DÕI · ĐÃ KẾT THÚC" : "LỚP ĐANG THEO DÕI · ĐANG MỞ"}
               </span>
               <h2>{group.name}</h2>
               <p>
-                Theo dõi nhịp học của cả lớp và nhận ra học sinh cần được hỗ
-                trợ.
+                {count(summary?.learners)} học sinh trong lớp · {count(summary?.active)} đang hoạt động.
               </p>
               <div className="ws-actions">
                 <Link className="ws-btn primary" to="/dashboard/reports">
@@ -70,57 +72,28 @@ export default function TeacherDashboardContent({ actor, dashboardState }) {
             </div>
             <div className="ws-overview-live-score">
               <Activity />
-              <strong>{summary?.activeLast7Days ?? 0}</strong>
-              <span>hoạt động trong 7 ngày</span>
+              <strong>{count(summary?.activeLast7Days)}</strong>
+              <span>học sinh lớp này hoạt động trong 7 ngày</span>
             </div>
           </section>
-          <div className="ws-overview-metrics">
-            <Link to="/dashboard/learners">
-              <span>
-                <Users />
-              </span>
-              <div>
-                <small>TỔNG HỌC SINH</small>
-                <strong>{summary?.learners ?? 0}</strong>
-                <p>{summary?.active ?? 0} đang hoạt động</p>
-              </div>
-            </Link>
-            <Link to="/dashboard/reports">
-              <span>
-                <Activity />
-              </span>
-              <div>
-                <small>HOẠT ĐỘNG GẦN ĐÂY</small>
-                <strong>{summary?.activeLast7Days ?? 0}</strong>
-                <p>Trong 7 ngày gần nhất</p>
-              </div>
-            </Link>
-            <Link to="/dashboard/reports">
-              <span>
-                <CheckCircle2 />
-              </span>
-              <div>
-                <small>CHƯƠNG HOÀN THÀNH</small>
-                <strong>{summary?.chaptersCompleted ?? 0}</strong>
-                <p>Tổng trên mọi học sinh</p>
-              </div>
-            </Link>
-            <Link to="/dashboard/groups">
-              <span>
-                <BookOpen />
-              </span>
-              <div>
-                <small>LỚP HỌC</small>
-                <strong>{dashboard.groupCount}</strong>
-                <p>
-                  {summary?.active ?? 0}/{group.slotLimit} chỗ đang dùng
-                </p>
-              </div>
-            </Link>
-          </div>
-          <OverviewInsights report={dashboard.report} role="teacher" />
+
         </>
       )}
+      {dashboard && <div className="ws-overview-metrics ws-teacher-metrics" aria-label="Tổng quan trên tất cả lớp" aria-busy={loading}>
+        <Link to="/dashboard/groups">
+          <span><BookOpen /></span>
+          <div><small>TỔNG LỚP HỌC</small><strong>{count(dashboard.groupCount)}</strong><p>{loading ? "Đang cập nhật…" : `${count(dashboard.activeGroupCount)} lớp đang mở · ${count(dashboard.groupCount - dashboard.activeGroupCount)} đã kết thúc`}</p></div>
+        </Link>
+        <Link to="/dashboard/learners">
+          <span><Users /></span>
+          <div><small>TỔNG HỌC SINH</small><strong>{count(dashboard.studentCount)}</strong><p>{loading ? "Đang cập nhật…" : dashboard.studentCount == null ? "Chưa tải đầy đủ dữ liệu" : "Trên tất cả lớp học"}</p></div>
+        </Link>
+        <Link to="/dashboard/quiz-management">
+          <span><ClipboardList /></span>
+          <div><small>BÀI QUIZ ĐANG QUẢN LÝ</small><strong>{count(dashboard.quizCount)}</strong><p>{loading ? "Đang cập nhật…" : dashboard.quizCount == null ? "Chưa tải đầy đủ dữ liệu" : "Tổng bài quiz trên tất cả lớp"}</p></div>
+        </Link>
+      </div>}
+      {dashboard?.report && <OverviewInsights report={dashboard.report} role="teacher" />}
     </>
   );
 }

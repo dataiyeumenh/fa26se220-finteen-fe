@@ -80,7 +80,7 @@ auth.accountRequest = async (path) => {
   if (path.includes('/assets')) return { items: [], total: 0, page: 0, size: 24 };
   return [];
 };
-const dashboardState = { loading: false, refetch() {}, dashboard: { group: { id: 'g1', name: 'Lớp học tài chính cùng FinTeen' }, report: { summary: { learners: 40, active: 30, activeLast7Days: 25 } } } };
+const dashboardState = { loading: false, refetch() {}, dashboard: { groupCount: 3, activeGroupCount: 2, studentCount: 90, quizCount: 12, group: { id: 'g1', name: 'Lớp học tài chính cùng FinTeen' }, report: { summary: { learners: 40, active: 30, activeLast7Days: 25 } } } };
 const quizState = { groups: [{ id: 'g1', name: 'Lớp học tài chính cùng FinTeen' }], currentGroup: { id: 'g1' }, groupId: 'g1', quizzes: [], loading: false, setGroupId() {}, reload() {}, refresh() {} };
 const chapters = Array.from({ length: 8 }, (_, i) => ({ id: i + 1, title: `Chương ${i + 1}`, subtitle: 'Hành trình học tài chính', status: i ? 'locked' : 'current', progress: 25, lessonsCompleted: 1, totalLessons: 4 }));
 let view;
