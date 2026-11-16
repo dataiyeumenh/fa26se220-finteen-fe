@@ -1,0 +1,9 @@
+.ws .ws-overview-metrics.ws-teacher-metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-bottom: 24px; }
+.ws-teacher-metrics > a { min-height: 132px; padding: 22px; gap: 16px; }
+.ws-teacher-metrics > a:nth-child(1) > span { color: #6489bf; background: #edf4fc; }
+.ws-teacher-metrics > a:nth-child(2) > span { color: #228b70; background: #ebf7f0; }
+.ws-teacher-metrics > a:nth-child(3) > span { color: #8a62ce; background: #f4effc; }
+.ws-teacher-metrics strong { margin-block: 5px; font-size: 32px; }
+.ws-teacher-metrics p { white-space: normal; line-height: 1.6; }
+@media (max-width: 1100px) { .ws-teacher-metrics > a { padding: 18px; gap: 12px; } }
+@media (max-width: 680px) { .ws .ws-overview-metrics.ws-teacher-metrics { grid-template-columns: 1fr; gap: 12px; } .ws-teacher-metrics > a { min-height: 104px; } }
