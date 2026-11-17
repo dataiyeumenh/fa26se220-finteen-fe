@@ -26,3 +26,15 @@ export function toggleQuestionSet(selected, questions) {
   }
   return next;
 }
+
+export function selectRandomQuestions(selected, sourceQuestions, count, random = Math.random) {
+  const sourceIds = new Set(sourceQuestions.map((question) => question.id));
+  const next = new Set([...selected].filter((id) => !sourceIds.has(id)));
+  const shuffled = [...sourceQuestions];
+  for (let index = shuffled.length - 1; index > 0; index -= 1) {
+    const swap = Math.floor(random() * (index + 1));
+    [shuffled[index], shuffled[swap]] = [shuffled[swap], shuffled[index]];
+  }
+  shuffled.slice(0, count).forEach((question) => next.add(question.id));
+  return next;
+}

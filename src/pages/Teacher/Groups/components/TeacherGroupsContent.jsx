@@ -103,8 +103,8 @@ export default function TeacherGroupsContent({ learnerState, groupsOnly }) {
             }
           />
           <span>
-            <strong>Kiểm tra hậu trắc</strong>
-            <small>Tự mở hậu trắc sau khi học sinh hoàn thành chương.</small>
+            <strong>Bật bài ôn tập sau chương</strong>
+            <small>Còn gọi là hậu trắc, tự mở khi học sinh hoàn thành từng chương.</small>
           </span>
         </label>
         <div className="ws-actions">
@@ -279,7 +279,7 @@ function TeacherLearnerList({ learnerState }) {
                       className="ws-btn warning"
                       onClick={() => setModal({ type: "return", slot })}
                     >
-                      Thu hồi
+                      Thu hồi quyền truy cập
                     </button>
                   </>
                 )}{" "}
@@ -304,14 +304,21 @@ function TeacherLearnerList({ learnerState }) {
             {
               create: "Tạo hồ sơ học sinh",
               pin: "Đổi mã PIN",
-              return: "Thu hồi học sinh",
+              return: "Thu hồi quyền truy cập của học sinh",
               wipe: "Xóa dữ liệu học sinh",
             }[modal.type]
+          }
+          description={
+            modal.type === "return"
+              ? "Học sinh sẽ không thể đăng nhập bằng hồ sơ này. Tiến độ, bài Quiz và kết quả học tập vẫn được giữ trong báo cáo lớp."
+              : modal.type === "wipe"
+                ? "Thao tác này xóa vĩnh viễn tên và mã đăng nhập của học sinh. Số liệu lịch sử vẫn được giữ nhưng sẽ hiển thị là “Đã xóa”."
+                : undefined
           }
           onClose={() => setModal(null)}
         >
           <ActionForm
-            submit="Xác nhận"
+            submit={modal.type === "return" ? "Thu hồi quyền truy cập" : modal.type === "wipe" ? "Xóa vĩnh viễn dữ liệu" : "Xác nhận"}
             onSubmit={(form) =>
               finish(
                 modal.type === "create"
@@ -327,6 +334,16 @@ function TeacherLearnerList({ learnerState }) {
               )
             }
           >
+            {modal.type === "return" && (
+              <p className="ws-notice" role="note">
+                Học sinh sẽ được chuyển sang danh sách đã thu hồi; giáo viên vẫn xem được báo cáo trước đây.
+              </p>
+            )}
+            {modal.type === "wipe" && (
+              <p className="ws-notice danger" role="alert">
+                Không thể khôi phục tên, mã đăng nhập hoặc kích hoạt lại hồ sơ sau khi xóa dữ liệu.
+              </p>
+            )}
             {modal.type === "create" && (
                 <label>
                   Tên học sinh
@@ -349,7 +366,7 @@ function TeacherLearnerList({ learnerState }) {
             )}
             {modal.type === "wipe" && (
               <label>
-                Nhập XOA để xác nhận xóa vĩnh viễn dữ liệu học sinh
+                Nhập XOA để xác nhận xóa vĩnh viễn
                 <input name="confirm" pattern="XOA" required />
               </label>
             )}

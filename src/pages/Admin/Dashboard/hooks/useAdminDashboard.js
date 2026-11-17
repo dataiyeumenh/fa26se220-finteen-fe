@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { adminDashboardApi as auth } from "../api/adminDashboardApi";
+import { adminRoleLabel } from "../adminLabels";
 import { auth as authSession } from "@/api/auth.api";
 import { useWorkspace } from "../../../../features/workspace/useWorkspace";
 
@@ -206,7 +207,7 @@ export function useAdminRoles() {
       setListVersion((version) => version + 1);
       setNotice({
         type: "success",
-        text: `${action === "grant" ? "Đã cấp" : "Đã thu hồi"} vai trò ${role} cho ${account.email}.`,
+        text: `${action === "grant" ? "Đã cấp" : "Đã thu hồi"} vai trò ${adminRoleLabel(role)} cho ${account.email}.`,
       });
       return true;
     } catch (error) {

@@ -38,6 +38,7 @@ import {
   AdminOverviewTab,
   AdminTransactionsTab,
 } from "./AdminInsightsTabs";
+import { adminRoleLabel, planClassName, planLabel } from "../adminLabels";
 
 const PLAN_KINDS = ["PARENT", "TEACHER"];
 const STATUS_LABELS = {
@@ -336,9 +337,9 @@ function TransactionsTab() {
                     </td>
                     <td>
                       <span
-                        className={`admin-chip ${row.kind === "TEACHER" ? "purple" : ""}`}
+                        className={`admin-chip ${planClassName(row.kind)}`}
                       >
-                        {row.kind}
+                        {planLabel(row.kind)}
                       </span>
                       <small>
                         {row.months
@@ -473,10 +474,10 @@ function AccountCard({ account }) {
           {account.plans?.length ? (
             account.plans.map((plan) => (
               <b
-                className={`admin-chip ${plan === "TEACHER" ? "purple" : ""}`}
+                className={`admin-chip ${planClassName(plan)}`}
                 key={plan}
               >
-                {plan}
+                {planLabel(plan)}
               </b>
             ))
           ) : (
@@ -603,7 +604,7 @@ function InternalAccounts({
                           className={`admin-chip ${role === "ADMIN" ? "purple" : ""}`}
                           key={role}
                         >
-                          {role}
+                          {adminRoleLabel(role)}
                         </span>
                       ))}
                     </div>
@@ -613,10 +614,10 @@ function InternalAccounts({
                       {row.plans?.length ? (
                         row.plans.map((plan) => (
                           <span
-                            className={`admin-chip ${plan === "TEACHER" ? "purple" : ""}`}
+                            className={`admin-chip ${planClassName(plan)}`}
                             key={plan}
                           >
-                            {plan}
+                            {planLabel(plan)}
                           </span>
                         ))
                       ) : (
@@ -802,7 +803,7 @@ function RolesTab({ actor }) {
                             disabled={busy || selfAdmin}
                             title={
                               selfAdmin
-                                ? "Bạn không thể tự thu hồi quyền ADMIN của mình."
+                                ? "Bạn không thể tự thu hồi quyền quản trị viên của mình."
                                 : ""
                             }
                             onClick={() =>
@@ -816,7 +817,7 @@ function RolesTab({ actor }) {
                           </button>
                           {selfAdmin && (
                             <small className="admin-role-warning">
-                              Không thể tự thu hồi quyền ADMIN.
+                              Không thể tự thu hồi quyền quản trị viên.
                             </small>
                           )}
                         </div>
@@ -850,7 +851,7 @@ function RolesTab({ actor }) {
             <Notice type={notice?.type}>{notice?.text}</Notice>
             {pending.role === "ADMIN" && pending.action === "grant" && (
               <p className="admin-confirm-warning">
-                Vai trò ADMIN có toàn quyền quản trị hệ thống. Hãy chắc chắn đây
+                Vai trò quản trị viên có toàn quyền quản trị hệ thống. Hãy chắc chắn đây
                 là đúng người.
               </p>
             )}
@@ -1079,8 +1080,8 @@ function GrantTab() {
                 <label>
                   Loại gói
                   <select name="kind" defaultValue="PARENT">
-                    <option value="PARENT">PARENT — Phụ huynh</option>
-                    <option value="TEACHER">TEACHER — Giáo viên</option>
+                    <option value="PARENT">Phụ huynh</option>
+                    <option value="TEACHER">Giáo viên</option>
                   </select>
                 </label>
                 <label>
@@ -1116,7 +1117,7 @@ function GrantTab() {
                 <li>Email và tên tài khoản phải đúng người nhận.</li>
                 <li>Thời hạn cho phép từ 1 đến 36 tháng.</li>
                 <li>Ghi lý do cụ thể để thuận tiện đối soát.</li>
-                <li>Gói có hiệu lực ngay sau khi backend xác nhận.</li>
+                <li>Gói có hiệu lực ngay sau khi máy chủ xác nhận.</li>
               </ul>
             </aside>
           </div>
@@ -1125,7 +1126,7 @@ function GrantTab() {
         <div className="admin-card admin-account-empty">
           <Search />
           <h2>Tìm tài khoản trước khi cấp gói</h2>
-          <p>Bạn không cần nhập hoặc sao chép Account ID thủ công nữa.</p>
+          <p>Bạn không cần nhập hoặc sao chép mã tài khoản thủ công nữa.</p>
         </div>
       )}
     </>
@@ -1205,7 +1206,7 @@ export default function AdminDashboardContent({ actor }) {
         <div className="admin-topbar">
           <span>Hệ thống quản trị FinTeen</span>
           <span className="admin-admin-badge">
-            <ShieldCheck size={15} /> ADMIN
+            <ShieldCheck size={15} /> Quản trị viên
           </span>
         </div>
         <div className="admin-content">{content}</div>

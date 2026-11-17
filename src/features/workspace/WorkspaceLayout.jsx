@@ -46,6 +46,7 @@ export default function WorkspaceLayout({ children }) {
   const navigate = useNavigate();
   const location = useLocation();
   const learner = actor?.role === "kid";
+  const familyChild = learner && (actor?.learnerRole === "child" || actor?.plan === "parent");
   const teacher = actor?.role === "teacher";
   const paid = actor?.role === "parent" || teacher;
   const dualContext =
@@ -78,9 +79,7 @@ export default function WorkspaceLayout({ children }) {
         ["/dashboard/kid", "Trang chủ", Home],
         ["/dashboard/kid/lessons", "Hành trình", MapPinned],
         ["/dashboard/kid/games", "Trò chơi", Gamepad2],
-        ...(actor?.learnerRole === "student"
-          ? [["/dashboard/kid/quiz", "Quiz", ClipboardList]]
-          : []),
+        ["/dashboard/kid/quiz", familyChild ? "Hậu trắc" : "Quiz", ClipboardList],
         ["/dashboard/kid/achievements", "Thành tích", Award],
       ]
     : [
@@ -93,7 +92,7 @@ export default function WorkspaceLayout({ children }) {
           ? [
               [
                 "/dashboard/learners",
-                teacher ? "Học sinh & slot" : "Các con & slot",
+                teacher ? "Học sinh" : "Các con",
                 Users,
               ],
               ["/dashboard/reports", "Tiến độ & báo cáo", BarChart3],

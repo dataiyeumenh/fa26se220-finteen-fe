@@ -8,8 +8,8 @@ const groups = [
   { id: "open", context: "CLASS", closedAt: null },
 ];
 const reports = {
-  closed: { group: groups[0], summary: { learners: 12 } },
-  open: { group: groups[2], summary: { learners: 25 } },
+  closed: { group: groups[0], summary: { learners: 12, quizAssigned: 4, quizSubmitted: 3, averageScore: 2 } },
+  open: { group: groups[2], summary: { learners: 25, quizAssigned: 6, quizSubmitted: 5, averageScore: 4 } },
 };
 const api = {
   listGroups: async () => groups,
@@ -26,6 +26,9 @@ test("teacher dashboard aggregates every class and uses an open class for the de
   assert.equal(dashboard.activeGroupCount, 1);
   assert.equal(dashboard.studentCount, 37);
   assert.equal(dashboard.quizCount, 4);
+  assert.equal(dashboard.quizAssigned, 10);
+  assert.equal(dashboard.quizSubmitted, 8);
+  assert.equal(dashboard.averageScore, 3.25);
   assert.equal(dashboard.group.id, "open");
   assert.equal(dashboard.report, reports.open);
   assert.deepEqual(requested.sort(), ["closed", "open"]);
@@ -38,6 +41,9 @@ test("no classes yields three real zeros and does not request reports or quizzes
   assert.equal(dashboard.groupCount, 0);
   assert.equal(dashboard.studentCount, 0);
   assert.equal(dashboard.quizCount, 0);
+  assert.equal(dashboard.quizAssigned, 0);
+  assert.equal(dashboard.quizSubmitted, 0);
+  assert.equal(dashboard.averageScore, null);
   assert.equal(dashboard.group, null);
   assert.equal(dashboard.warning, "");
 });

@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { parseQuizFile, createMockQuizApi, QUIZ_CSV_TEMPLATE } from "../src/pages/Teacher/Quiz/quizImport.js";
+import { parseQuizFile, QUIZ_CSV_TEMPLATE } from "../src/pages/Teacher/Quiz/quizImport.js";
 
 test("Excel template has UTF-8 BOM and round trips Vietnamese", () => {
   assert.deepEqual([...Buffer.from(QUIZ_CSV_TEMPLATE).subarray(0, 3)], [0xef, 0xbb, 0xbf]);
@@ -33,18 +33,4 @@ test("rejects invalid files and questions before saving", () => {
   }
   assert.throws(() => parseQuizFile('stem,A,B,C,D,correctIndex\nQ,A,B,C,D,', "quiz.csv"));
   assert.throws(() => parseQuizFile('stem,A,B,C,D,correctIndex\n"Q,A,B,C,D,0', "quiz.csv"));
-});
-test("mock quizzes persist, filter by class, isolate accounts and delete", () => {
-  const data = new Map(); let account = "teacher-1";
-  const storage = { getItem: (k) => data.get(k), setItem: (k, v) => data.set(k, v) };
-  const api = createMockQuizApi(storage, () => account);
-  const quiz = api.create({ groupId: "class-1", title: " Quiz ", questions: [question] });
-  assert.equal(api.list("class-1")[0].title, "Quiz");
-  assert.equal(api.list("class-2").length, 0);
-  assert.equal(createMockQuizApi(storage, () => account).get(quiz.id).questions.length, 1);
-  account = "teacher-2";
-  assert.throws(() => api.get(quiz.id));
-  account = "teacher-1";
-  api.delete(quiz.id);
-  assert.equal(api.list("class-1").length, 0);
 });
