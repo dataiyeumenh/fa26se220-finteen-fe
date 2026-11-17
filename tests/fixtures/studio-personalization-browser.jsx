@@ -11,12 +11,20 @@ const customText = 'Giày thể thao đang giảm còn 250.000đ!';
 const serverReadText = customText.replace('250.000đ', '250.000 đồng');
 const originalImage = '/images/c1/ti/c1_ti_neutral.webp';
 const customImage = '/images/c1/teo/c1_teo_neutral.webp';
+const originalInspectText = 'Bạn nhận 500.000đ. Đóng học phí ngày 28.';
+const personalizedInspectText = 'Bạn nhận 500.000đ. Đóng phí học thể thao ngày 28.';
+const editedBaseInspectText = 'Bạn nhận 500.000đ. Nhớ đóng học phí ngày 28.';
 // Real LineStatus has `key` and no `voiceUrl`. Use a verified public test clip.
 const generatedKey = '364b59d6f1d5c5faccc5';
 const generatedAudio = `${apiConfig.baseUrl}/assets/v/${generatedKey}.mp3`;
 let saved = { id: 'CH01', title: 'Kiểm thử Editor cá nhân hóa', initialStats: {}, sprites: {}, scenes: [
   { id: 'S1', type: 'dialogue', title: 'Lời rủ của Minh', text: originalText, speaker: 'Minh', speakerId: 'MINH', background: '/images/c1/scene/c1_cutscene_reading_manga.webp', characters: [{ id: 'MINH', src: originalImage, position: 'left' }], nextSceneId: 'S2' },
-  { id: 'S2', type: 'minigame', title: 'Phân loại', game: { id: 'G', kind: 'NEED_WANT', title: 'Phân loại nhu cầu', items: [{ id: 'I', label: 'Tai nghe', image: originalImage, category: 'WANTS' }] }, nextSceneId: 'END' },
+  { id: 'S2', type: 'minigame', title: 'Phân loại', game: { id: 'G', kind: 'NEED_WANT', title: 'Phân loại nhu cầu', items: [{ id: 'I', label: 'Tai nghe', image: originalImage, category: 'WANTS' }] }, nextSceneId: 'S3' },
+  { id: 'S3', type: 'inspect', title: 'Phong bì', text: '', characters: [], inspect: { id: 'INSPECT_ENVELOPE', buttonText: 'Mở phong bì', dataText: originalInspectText, popupImage: originalImage, setFlags: { envelopeOpened: true }, autoNextSceneOnClose: true }, nextSceneId: 'S4' },
+  { id: 'S4', type: 'choice', title: 'Mua sắm', text: 'Bạn muốn mua gì?', speaker: 'An', speakerId: 'AN', characters: [], options: [
+    { id: 'OPT_A', text: 'Mua tai nghe', label: 'Mua tai nghe', nextSceneId: 'END', deltaStats: { SAVING: -10 } },
+    { id: 'OPT_B', label: 'Để dành tiền', nextSceneId: 'END' },
+  ] },
   { id: 'END', type: 'ending', title: 'Kết thúc' },
 ] };
 let writes = 0;
@@ -176,6 +184,34 @@ async function run() {
   await click(button('Lưu nháp'));
   assert(saved.scenes[1].game.items[0].variants['interest:SPORT'].image === customImage, 'Mini-game image not saved');
   assert(saved.scenes[1].game.items[0].category === 'WANTS', 'Mini-game scoring changed');
+  await click(document.querySelector('[aria-label="Cảnh sau"]'));
+  await click(button('Lời thoại', document.querySelector('.personalization-tabs')));
+  await setValue(document.querySelector('[aria-label="Nội dung khi bấm xem"]'), personalizedInspectText);
+  await setValue(document.querySelector('[aria-label="Chữ trên nút bấm để xem"]'), 'Xem phí học thể thao');
+  await click(button('Đổi ảnh', document.querySelector('[aria-labelledby="inspect-panel-title"]')));
+  for (let i = 0; i < 60 && !document.querySelector('.sp-asset'); i++) await wait();
+  await click(document.querySelector('.sp-asset'));
+  assert(document.querySelector('.inspect-image img').getAttribute('src') === customImage, 'Inspect image ignored selected interest');
+  assert(document.querySelector('#inspect-panel-title').textContent.includes('Xem phí học thể thao'), 'Inspect button label not previewed');
+  await choose('Sở thích', 'MUSIC');
+  assert(document.querySelector('[aria-label="Nội dung khi bấm xem"]').value === originalInspectText && document.querySelector('.inspect-image img').getAttribute('src') === originalImage, 'Inspect edits leaked to an unedited interest');
+  assert(document.querySelector('[aria-label="Chữ trên nút bấm để xem"]').value === 'Mở phong bì', 'Inspect button label leaked to another interest');
+  await choose('Sở thích', 'SPORT');
+  await click(button('Lưu nháp'));
+  assert(saved.scenes[2].inspect.dataText === originalInspectText && saved.scenes[2].inspect.popupImage === originalImage, 'Inspect personalized edit overwrote the base');
+  assert(saved.scenes[2].inspect.variants['interest:SPORT'].dataText === personalizedInspectText && saved.scenes[2].inspect.variants['interest:SPORT'].popupImage === customImage, 'Inspect variants were not saved');
+  assert(saved.scenes[2].inspect.id === 'INSPECT_ENVELOPE' && saved.scenes[2].inspect.setFlags.envelopeOpened === true && saved.scenes[2].nextSceneId === 'S4', 'Inspect IDs, flags or routing changed');
+  await click(button('Bản gốc'));
+  assert(document.querySelector('[aria-label="Nội dung khi bấm xem"]').value === originalInspectText, 'Base inspect form did not show original content');
+  await setValue(document.querySelector('[aria-label="Nội dung khi bấm xem"]'), editedBaseInspectText);
+  await click(button('Lưu nháp'));
+  await click(button('Cá nhân hóa'));
+  assert(document.querySelector('[aria-label="Nội dung khi bấm xem"]').value === personalizedInspectText, 'Editing the base discarded an inspect variant');
+  await click(button('Chơi thử từ cảnh này'));
+  await click(button('Xem phí học thể thao', document.querySelector('[role="dialog"]')));
+  assert(document.querySelector('[role="dialog"]').textContent.includes(personalizedInspectText), 'Inspect play preview used base text');
+  assert(document.querySelector('.studio-play-inspect-images img')?.getAttribute('src') === customImage, 'Inspect play preview used base image');
+  await click(button('Đóng', document.querySelector('[role="dialog"]')));
   mount(2); await wait(200);
   await click(button('Cá nhân hóa'));
   assert(!document.querySelector('.studio-voice-panel--render'), 'Reload automatically showed old render results');
@@ -203,6 +239,48 @@ async function run() {
   await setValue(document.querySelector('textarea.stage-text'), originalText);
   await click(button('Lưu nháp'));
   assert(!document.querySelector('.scene-draft-warnings'), 'Resolved warning remained after a clean save');
+  await click(document.querySelector('[aria-label="Cảnh sau"]'));
+  await click(document.querySelector('[aria-label="Cảnh sau"]'));
+  await choose('Sở thích', 'SPORT');
+  assert(document.querySelector('[aria-label="Nội dung khi bấm xem"]').value === personalizedInspectText && document.querySelector('.inspect-image img').getAttribute('src') === customImage, 'Reload lost inspect customization');
+  await choose('Sở thích', 'MUSIC');
+  assert(document.querySelector('[aria-label="Nội dung khi bấm xem"]').value === editedBaseInspectText, 'Inspect fallback ignored the latest base content');
+  await click(document.querySelector('[aria-label="Cảnh sau"]'));
+  await choose('Sở thích', 'SPORT');
+  await setValue(document.querySelector('[aria-label="Chữ lựa chọn 1 (khung bên)"]'), 'Mua giày thể thao');
+  assert(document.querySelector('[aria-label="Chữ lựa chọn 1"]').value === 'Mua giày thể thao', 'Lower choice editor did not update personalized stage text');
+  await setValue(document.querySelector('[aria-label="Chữ lựa chọn 2"]'), 'Tiết kiệm để mua bóng');
+  assert(document.querySelector('[aria-label="Chữ lựa chọn 2 (khung bên)"]').value === 'Tiết kiệm để mua bóng', 'Stage editor did not update personalized lower choice text');
+  await choose('Sở thích', 'MUSIC');
+  assert(document.querySelector('[aria-label="Chữ lựa chọn 1"]').value === 'Mua tai nghe' && document.querySelector('[aria-label="Chữ lựa chọn 2 (khung bên)"]').value === 'Để dành tiền', 'Choices leaked into another interest');
+  await choose('Sở thích', 'SPORT');
+  await choose('Giới tính', 'MALE'); await choose('Tuổi', '15_18');
+  assert(document.querySelector('[aria-label="Chữ lựa chọn 1 (khung bên)"]').value === 'Mua giày thể thao', 'Gender/age unexpectedly changed choice wording');
+  await click(button('Lưu nháp'));
+  const options = saved.scenes[3].options;
+  assert(options[0].text === 'Mua tai nghe' && options[0].label === 'Mua tai nghe', 'Choice customization overwrote base text/label');
+  assert(options[0].variants['interest:SPORT'].text === 'Mua giày thể thao' && options[0].variants['interest:SPORT'].label === 'Mua giày thể thao', 'Choice text/label variants not saved together');
+  assert(options[1].variants['interest:SPORT'].label === 'Tiết kiệm để mua bóng' && !options[1].variants['interest:SPORT'].text, 'Label-only choice schema was changed');
+  assert(options[0].id === 'OPT_A' && options[0].nextSceneId === 'END' && options[0].deltaStats.SAVING === -10, 'Choice IDs, routing or scoring changed');
+  await click(button('Bản gốc'));
+  assert(document.querySelector('[aria-label="Chữ lựa chọn 1 (khung bên)"]').value === 'Mua tai nghe', 'Base choice editor did not show original text');
+  await setValue(document.querySelector('[aria-label="Chữ lựa chọn 1 (khung bên)"]'), 'Mua đồ dùng');
+  await click(button('Lưu nháp'));
+  await click(button('Cá nhân hóa'));
+  assert(document.querySelector('[aria-label="Chữ lựa chọn 1"]').value === 'Mua giày thể thao', 'Base choice edit discarded custom wording');
+  await click(document.querySelector('[aria-label="Đưa lựa chọn 1 xuống"]'));
+  assert(document.querySelector('[aria-label="Chữ lựa chọn 1"]').value === 'Tiết kiệm để mua bóng', 'Reordering lost choice variants');
+  await click(document.querySelector('[aria-label="Đưa lựa chọn 2 lên"]'));
+  await click(button('Chơi thử từ cảnh này'));
+  await click(button('Mua giày thể thao', document.querySelector('[role="dialog"]')));
+  assert(document.querySelector('[role="dialog"]').textContent.includes('Đang ở cảnh 5'), 'Personalized choice changed the destination');
+  await click(button('Đóng', document.querySelector('[role="dialog"]')));
+  mount(3); await wait(200);
+  await click(document.querySelector('[aria-label="Cảnh 4: Mua sắm"]'));
+  await click(button('Cá nhân hóa'));
+  assert(document.querySelector('[aria-label="Chữ lựa chọn 1 (khung bên)"]').value === 'Mua giày thể thao' && document.querySelector('[aria-label="Chữ lựa chọn 2"]').value === 'Tiết kiệm để mua bóng', 'Reload lost choice variants');
+  await choose('Sở thích', 'TECH');
+  assert(document.querySelector('[aria-label="Chữ lựa chọn 1"]').value === 'Mua đồ dùng', 'Unedited interest did not inherit the updated base choice');
   assert(document.querySelector('.scene-editor').getBoundingClientRect().right <= testWidth + 1, 'Editor overflowed the requested width');
   assert(document.documentElement.scrollWidth <= window.innerWidth + 1, 'Editor overflowed the viewport horizontally');
   assert(errors.length === 0, errors.join('; '));

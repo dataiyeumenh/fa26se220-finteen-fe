@@ -13,7 +13,6 @@ export function createPersonalizationApi(auth) {
   }
   return {
     getForParent: (id) => auth.accountRequest(slotPath(id)),
-    saveForParent: (id, answers) => auth.accountRequest(slotPath(id), { method: "PUT", body: answers }),
     // Session memory only: a new login/actor or page reload requires a fresh read.
     getCachedForChild: () => {
       const actor = auth.getSnapshot?.().actor;
