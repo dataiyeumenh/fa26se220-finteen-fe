@@ -215,6 +215,9 @@ textarea.stage-text:focus { background: #fff; }
 .studio-play-text b { color: #6b4410; }
 .studio-play-text p { margin: 2px 0 0; }
 .studio-play-opened { padding-top: 6px; border-top: 1px solid #e3d8be; }
+.studio-play-inspect-images { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 12px; }
+.studio-play-inspect-images img { max-width: 100%; width: 220px; height: 180px; object-fit: contain; }
+.studio-play-inspect-images figure { margin: 0; max-width: 240px; }
 .studio-play-controls { display: grid; gap: 8px; }
 .studio-play-controls form { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 .studio-play-option { display: grid; gap: 2px; }
@@ -348,6 +351,7 @@ textarea.choice-text:focus { border-color: var(--accent); background: #fff; outl
 .inspect-image { margin: 0; display: grid; gap: 8px; }
 .inspect-image img, .inspect-image > span { width: 100%; aspect-ratio: 4 / 3; object-fit: contain; background: #fff; border: 1px solid var(--line); border-radius: 8px; display: grid; place-items: center; font-size: 13px; color: var(--muted); }
 .inspect-text { display: grid; gap: 6px; font-size: 13px; color: var(--muted); }
+.inspect-personalization-hint, .choice-personalization-hint { margin: 0 0 12px; font-size: 13px; color: var(--accent-strong); }
 .inspect-text textarea { border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; font: inherit; font-size: 15px; color: var(--ink); background: #fff; resize: vertical; }
 
 /* bảng thuộc tính: nhóm có tiêu đề, cách nhau bằng đường kẻ — không lồng thẻ */

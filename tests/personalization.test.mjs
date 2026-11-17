@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { createAuthClient } from "../src/api/auth.client.js";
 import { createPersonalizationApi } from "../src/api/personalization.client.js";
-import { parentAnswers, personalizationStep } from "../src/features/personalization/model.js";
+import { personalizationStep } from "../src/features/personalization/model.js";
 import { initialNovelProgress, saveNovelProgress, readNovelProgress } from "../src/pages/Kid/Dashboard/components/game/visualNovelProgress.js";
 import { createServer } from "vite";
 
@@ -14,10 +14,9 @@ test("status controls each step; GAME never asks age; terminal states never ask 
   for (const status of ["COMPLETED", "SKIPPED"])
     assert.deepEqual(personalizationStep({ ...fields, status }), { done: true });
   assert.throws(() => personalizationStep({ status: "UNKNOWN" }));
-  assert.deepEqual(parentAnswers({ gender: "FEMALE" }), { gender: "FEMALE", age: null, interest: null });
 });
 
-test("ACCOUNT and SLOT requests keep separate tokens, explicit nulls and empty skip answers; CLASS 403 propagates", async () => {
+test("ACCOUNT status reads and SLOT answers keep separate tokens and empty skips; CLASS 403 propagates", async () => {
   const calls = [], values = new Map();
   let denied = false;
   const client = createAuthClient({
@@ -33,12 +32,12 @@ test("ACCOUNT and SLOT requests keep separate tokens, explicit nulls and empty s
   });
   const api = createPersonalizationApi(client);
   await client.login("parent@example.test", "password");
-  await api.saveForParent("slot/id", parentAnswers({ gender: "FEMALE" }));
+  await api.getForParent("slot/id");
   const parent = calls.at(-1);
   assert.equal(parent.url, "https://example.test/api/slots/slot%2Fid/personalization");
   assert.equal(parent.headers.Authorization, "Bearer ACCOUNT");
-  assert.equal(parent.method, "PUT");
-  assert.deepEqual(JSON.parse(parent.body), { gender: "FEMALE", age: null, interest: null });
+  assert.equal(parent.method, "GET");
+  assert.equal(parent.body, undefined);
   await client.slotLogin("CHILD", "000000");
   await api.getForChild();
   assert.equal(calls.at(-1).headers.Authorization, "Bearer SLOT");
@@ -51,12 +50,12 @@ test("ACCOUNT and SLOT requests keep separate tokens, explicit nulls and empty s
   assert.equal(calls.at(-1).headers.Authorization, "Bearer SLOT");
   denied = true;
   const requestCount = calls.length;
-  await assert.rejects(api.saveForParent("x", { gender: "FEMALE" }), /đăng nhập lại/);
+  await assert.rejects(api.getForParent("x"), /đăng nhập lại/);
   assert.equal(calls.length, requestCount, "SLOT login must remove the ACCOUNT token before any parent request");
   denied = false;
   await client.login("parent@example.test", "password");
   denied = true;
-  await assert.rejects(api.saveForParent("class-slot", { gender: "FEMALE" }), (error) => error.status === 403 && error.code === 3004);
+  await assert.rejects(api.getForParent("class-slot"), (error) => error.status === 403 && error.code === 3004);
   assert.equal(calls.at(-1).headers.Authorization, "Bearer ACCOUNT");
 });
 

@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { SceneThumb } from "./SceneDialogs";
 import { conditionSentence, isStructured, sceneLabel, vnd } from "./storyOps";
+import { patchChoiceText, patchInspect } from './variantOps.js';
 
 function optionProblems(option, scenes) {
   const out = [];
@@ -66,6 +67,9 @@ export function ChoicePanel({
   setOptions,
   openDialog,
   pickTarget,
+  previewScene,
+  onOptionText,
+  scopeLabel,
 }) {
   const [drag, setDrag] = useState(null);
   const options = scene.options || [];
@@ -104,9 +108,11 @@ export function ChoicePanel({
           </button>
         )}
       </header>
+      {scopeLabel && <p className="choice-personalization-hint">{scopeLabel} · Chữ lựa chọn được chỉnh riêng cho nhãn này. Số lựa chọn, thứ tự, cảnh đích, điểm và điều kiện dùng chung cho mọi bản.</p>}
       <ol className="choice-list">
         {options.map((option, index) => {
-          const problems = optionProblems(option, scenes);
+          const shown = previewScene?.options?.[index] || option;
+          const problems = optionProblems(shown, scenes);
           const target = scenes.find((item) => item.id === option.nextSceneId),
             targetIndex = scenes.indexOf(target);
           return (
@@ -148,26 +154,20 @@ export function ChoicePanel({
                     className="choice-text"
                     rows={1}
                     aria-label={`Chữ lựa chọn ${index + 1} (khung bên)`}
-                    value={option.text ?? option.label ?? ""}
+                    value={shown.text ?? shown.label ?? ""}
                     placeholder="Chữ trẻ bấm chọn"
                     onChange={(event) =>
-                      setOptions(
+                      onOptionText ? onOptionText(index, event.target.value) : setOptions(
                         options.map((value, k) =>
                           k === index
-                            ? {
-                                ...value,
-                                text: event.target.value,
-                                ...(value.label !== undefined
-                                  ? { label: event.target.value }
-                                  : {}),
-                              }
+                            ? patchChoiceText(value, event.target.value)
                             : value,
                         ),
                       )
                     }
                   />
                 ) : (
-                  <p className="choice-text">{option.text || option.label}</p>
+                  <p className="choice-text">{shown.text || shown.label}</p>
                 )}
                 {write && (
                   <span className="choice-tools">
@@ -223,7 +223,7 @@ export function ChoicePanel({
                       disabled={!write}
                       onClick={() =>
                         pickTarget(
-                          `Bấm “${String(option.text || "").slice(0, 40)}” xong thì sang cảnh nào?`,
+                          `Bấm “${String(shown.text || shown.label || "").slice(0, 40)}” xong thì sang cảnh nào?`,
                           option.nextSceneId,
                           (id) =>
                             setOptions(
@@ -319,10 +319,10 @@ export function ChoicePanel({
 }
 
 /** cảnh Bấm để xem: chữ và ảnh hiện ra khi trẻ bấm nút — trước đây không sửa được ở chế độ đơn giản */
-export function InspectPanel({ scene, write, update, onPickImage }) {
+export function InspectPanel({ scene, write, update, onPickImage, onChange, scopeLabel }) {
   const inspect = scene.inspect || {};
   const image = inspect.popupImage || inspect.popupImages?.[0]?.src;
-  const set = (patch) => update({ inspect: { ...inspect, ...patch } });
+  const set = (patch) => onChange ? onChange(patch) : update({ inspect: patchInspect(inspect, patch) });
   return (
     <section className="content-panel" aria-labelledby="inspect-panel-title">
       <header className="content-panel-head">
@@ -330,6 +330,7 @@ export function InspectPanel({ scene, write, update, onPickImage }) {
           Khi trẻ bấm “{inspect.buttonText || "Bấm để xem"}” sẽ thấy
         </h2>
       </header>
+      {scopeLabel && <p className="inspect-personalization-hint">{scopeLabel} · Ảnh, chữ trên nút và nội dung hiện ra được chỉnh riêng cho nhãn này.</p>}
       <div className="inspect-body">
         <figure className="inspect-image">
           {image ? <img src={image} alt="" /> : <span>Chưa có ảnh</span>}
@@ -340,10 +341,7 @@ export function InspectPanel({ scene, write, update, onPickImage }) {
                 onPickImage((url) =>
                   inspect.popupImages?.length && !inspect.popupImage
                     ? set({
-                        popupImages: [
-                          { ...inspect.popupImages[0], src: url },
-                          ...inspect.popupImages.slice(1),
-                        ],
+                        popupImages: [{ src: url }],
                       })
                     : set({ popupImage: url }),
                 )
@@ -357,6 +355,7 @@ export function InspectPanel({ scene, write, update, onPickImage }) {
         <label className="inspect-text">
           Chữ hiện ra
           <textarea
+            aria-label="Nội dung khi bấm xem"
             rows={4}
             disabled={!write}
             value={inspect.dataText || ""}

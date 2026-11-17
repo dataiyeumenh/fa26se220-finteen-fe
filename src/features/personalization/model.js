@@ -26,6 +26,3 @@ export function personalizationStep(view) {
   }
   throw new Error("Chưa đọc được trạng thái cá nhân hoá. Vui lòng thử lại.");
 }
-export function parentAnswers(answers = {}) {
-  return Object.fromEntries(DIMENSIONS.map((dim) => [dim, answers?.[dim] ?? null]));
-}

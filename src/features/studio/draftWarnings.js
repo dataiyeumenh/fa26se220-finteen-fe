@@ -3,7 +3,7 @@ import { DIMENSION_LABELS, VALUE_LABELS } from '../personalization/model.js';
 const FIELD_NAMES = {
   text: 'Lời thoại', spokenText: 'Cách đọc cho giọng', prompt: 'Câu hỏi',
   speaker: 'Tên người nói', title: 'Tiêu đề', label: 'Nội dung hiển thị',
-  image: 'Ảnh', src: 'Ảnh nhân vật', background: 'Ảnh nền',
+  image: 'Ảnh', src: 'Ảnh nhân vật', popupImage: 'Ảnh khi bấm xem', background: 'Ảnh nền',
   nextSceneId: 'Cảnh tiếp theo', dataText: 'Nội dung khi mở', buttonText: 'Chữ trên nút',
 };
 const labelsIn = message => [...message.matchAll(/\b(gender|age|interest):([A-Z0-9_]+)/g)].map(([, dim, value]) => `${dim}:${value}`);

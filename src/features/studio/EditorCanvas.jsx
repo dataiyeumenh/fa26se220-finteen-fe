@@ -29,7 +29,7 @@ import ChoiceConditions from "./ChoiceConditions";
 import StoryMap from "./StoryMap";
 import { ChoicePanel, InspectPanel } from "./ScenePanels";
 import { CharacterPersonalization, PersonalizationControls } from "./PersonalizationPanel";
-import { CATALOG, personalizedScenePatch, previewPersonalization, VOICES } from './variantOps.js';
+import { CATALOG, labelText, patchChoiceText, patchInspect, personalizedScenePatch, previewPersonalization, VOICES } from './variantOps.js';
 import { sceneVoicePlayback } from './sceneVoice.js';
 import { SceneThumb } from "./SceneDialogs";
 import {
@@ -133,6 +133,7 @@ function SceneStage({
   onCharacterChange,
   onCharacterRemove,
   onOptionText,
+  onInspectChange,
   onSpeakerRoleChange,
   baseScene = scene,
 }) {
@@ -328,7 +329,7 @@ function SceneStage({
                   aria-label="Chữ trên nút bấm để xem"
                   value={scene.inspect.buttonText || ""}
                   onChange={(event) =>
-                    update({
+                    onInspectChange ? onInspectChange({ buttonText: event.target.value }) : update({
                       inspect: {
                         ...baseScene.inspect,
                         buttonText: event.target.value,
@@ -465,6 +466,8 @@ export default function EditorCanvas(props) {
   const preview = useMemo(() => personalizing ? previewPersonalization(content, answers) : content, [content, answers, personalizing]);
   const previewScene = preview.scenes[idx];
   const updateCurrent = patch => update(personalizing ? personalizedScenePatch(scene, answers, patch) : patch);
+  const updateInspect = patch => update({ inspect: patchInspect(scene.inspect, patch, personalizing ? answers : null) });
+  const updateOptionText = (index, text) => update({ options: scene.options.map((option, i) => i === index ? patchChoiceText(option, text, personalizing ? answers.interest : null) : option) });
   const playback = sceneVoicePlayback(previewScene, voice?.items);
   const voiceSection = (typeof previewScene?.text === 'string' || typeof previewScene?.prompt === 'string') && (
     <section className="inspector-group scene-current-voice" aria-labelledby="group-voice">
@@ -540,7 +543,10 @@ export default function EditorCanvas(props) {
     } else setPersonalizing(false);
     setPersonalTab(warning.path.startsWith('game') ? 'minigame' : 'dialogue');
     requestAnimationFrame(() => {
-      const target = document.querySelector(warning.field === 'spokenText' ? '[aria-label="Cách đọc cho giọng"]' : 'textarea.stage-text');
+      const selector = warning.path.startsWith('inspect')
+        ? warning.field === 'buttonText' ? '[aria-label="Chữ trên nút bấm để xem"]' : warning.field === 'popupImage' ? '.inspect-image button' : '[aria-label="Nội dung khi bấm xem"]'
+        : warning.field === 'spokenText' ? '[aria-label="Cách đọc cho giọng"]' : 'textarea.stage-text';
+      const target = document.querySelector(selector);
       target?.focus();
     });
   };
@@ -835,15 +841,14 @@ export default function EditorCanvas(props) {
                       update={updateCurrent}
                       personalized={personalizing}
                       baseScene={scene}
+                      onInspectChange={updateInspect}
                       onSpeakerRoleChange={update}
                       onCharacterChange={(index, patch) => {
                         if (personalizing && patch.src) onCharacterAppearance(index, answers.gender, answers.age, patch.src);
                         else update({ characters: scene.characters.map((item, i) => i === index ? { ...item, ...patch } : item) });
                       }}
                       onCharacterRemove={index => update({ characters: scene.characters.filter((_, i) => i !== index) })}
-                      onOptionText={(index, text) => update({ options: scene.options.map((item, i) => i !== index ? item : personalizing
-                        ? { ...item, ...personalizedScenePatch(item, answers, { text, ...(item.label !== undefined ? { label: text } : {}) }) }
-                        : { ...item, text, ...(item.label !== undefined ? { label: text } : {}) }) })}
+                      onOptionText={updateOptionText}
                       onBackground={onPickBackground}
                       onAddCharacter={onAddCharacter}
                       onOpenLock={(index) =>
@@ -861,6 +866,9 @@ export default function EditorCanvas(props) {
             {view === "frame" && scene && type === "choice" && (
               <ChoicePanel
                 scene={scene}
+                previewScene={previewScene}
+                onOptionText={updateOptionText}
+                scopeLabel={personalizing ? labelText(`interest:${answers.interest}`) : undefined}
                 scenes={scenes}
                 write={write && !busy}
                 statLabels={statLabels}
@@ -874,9 +882,11 @@ export default function EditorCanvas(props) {
               type === "inspect" &&
               scene.inspect && (
                 <InspectPanel
-                  scene={scene}
+                  scene={previewScene}
                   write={write && !busy}
                   update={update}
+                  onChange={updateInspect}
+                  scopeLabel={personalizing ? labelText(`interest:${answers.interest}`) : undefined}
                   onPickImage={onPickImage}
                 />
               )}
