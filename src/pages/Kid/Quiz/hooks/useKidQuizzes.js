@@ -105,9 +105,18 @@ export function useKidQuiz(quizId, quizHint = null) {
               writePendingAnswers(attemptId, next);
               updatePendingState({ failed: false });
             }
-          } catch {
-            failed = true;
-            break;
+          } catch (error) {
+            if (error?.code) {
+              const next = { ...pendingAnswersRef.current };
+              delete next[position];
+              pendingAnswersRef.current = next;
+              writePendingAnswers(attemptId, next);
+              updatePendingState({ failed: false });
+              setError(message(error));
+            } else {
+              failed = true;
+              break;
+            }
           }
         }
       }
