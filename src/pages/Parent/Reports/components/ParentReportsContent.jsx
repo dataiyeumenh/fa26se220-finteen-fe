@@ -41,7 +41,6 @@ export default function ParentReportsContent({ reportState }) {
     error,
     warning,
     refresh,
-    setPostTest,
   } = reportState;
   const quizAverage = report?.summary?.averageScore == null
     ? "—"
@@ -110,7 +109,6 @@ export default function ParentReportsContent({ reportState }) {
         </label>
       </div>
       <div className="ws-actions ws-export">
-        <label className="ws-post-test-toggle"><input type="checkbox" checked={Boolean(report.group.postTestEnabled)} onChange={(event) => void setPostTest(event.target.checked)}/><span><strong>Bật bài ôn tập sau chương</strong><small>Còn gọi là hậu trắc, giúp xem trẻ đã hiểu nội dung chương đến đâu.</small></span></label>
         <button
           disabled={!rows.length}
           className="ws-btn"

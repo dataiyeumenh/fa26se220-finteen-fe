@@ -94,19 +94,6 @@ export default function TeacherGroupsContent({ learnerState, groupsOnly }) {
         <p>
           {available} chỗ trống trên tổng số {group.slotLimit}.
         </p>
-        <label className="ws-post-test-toggle">
-          <input
-            type="checkbox"
-            checked={Boolean(group.postTestEnabled)}
-            onChange={(event) =>
-              void actions.setPostTest(event.target.checked).catch(() => {})
-            }
-          />
-          <span>
-            <strong>Bật bài ôn tập sau chương</strong>
-            <small>Còn gọi là hậu trắc, tự mở khi học sinh hoàn thành từng chương.</small>
-          </span>
-        </label>
         <div className="ws-actions">
           {!group.consentConfirmed && (
             <button

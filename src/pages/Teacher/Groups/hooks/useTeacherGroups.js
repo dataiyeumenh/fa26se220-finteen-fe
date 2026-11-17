@@ -94,11 +94,6 @@ export default function useTeacherGroups() {
         ),
       closeGroup: () =>
         run(() => auth.closeGroup(group.id), "Đã kết thúc nhóm."),
-      setPostTest: (value) =>
-        run(
-          () => auth.setGroupPostTest(group.id, value),
-          value ? "Đã bật hậu trắc cho lớp." : "Đã tắt hậu trắc cho lớp.",
-        ),
       openSlot: ({ displayName, pin }) =>
         run(
           () => withGroupConsent(auth, group, () =>

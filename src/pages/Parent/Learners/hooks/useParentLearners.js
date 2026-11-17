@@ -92,11 +92,6 @@ export default function useParentLearners() {
         ),
       closeGroup: () =>
         run(() => auth.closeGroup(group.id), "Đã kết thúc nhóm."),
-      setPostTest: (value) =>
-        run(
-          () => auth.setGroupPostTest(group.id, value),
-          value ? "Đã bật hậu trắc." : "Đã tắt hậu trắc.",
-        ),
       openSlot: ({ displayName, pin }) =>
         run(
           () => auth.openSlot({ groupId: group.id, displayName, pin }),

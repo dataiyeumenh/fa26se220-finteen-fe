@@ -23,11 +23,6 @@ export const createParentLearnersApi = (client) => ({
     client.accountRequest(`/api/groups/${encodeURIComponent(groupId)}/close`, {
       method: "POST",
     }),
-  setGroupPostTest: (groupId, enabled) =>
-    client.accountRequest(
-      `/api/groups/${encodeURIComponent(groupId)}/post-test`,
-      { body: { enabled: Boolean(enabled) } },
-    ),
   openSlot: ({ groupId, displayName, pin, badge }) =>
     client.accountRequest("/api/slots", {
       body: {

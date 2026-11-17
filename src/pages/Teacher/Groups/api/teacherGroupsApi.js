@@ -18,11 +18,6 @@ export const teacherGroupsApi = {
     auth.accountRequest(`/api/groups/${encodeURIComponent(groupId)}/close`, {
       method: "POST",
     }),
-  setGroupPostTest: (groupId, enabled) =>
-    auth.accountRequest(
-      `/api/groups/${encodeURIComponent(groupId)}/post-test`,
-      { body: { enabled: Boolean(enabled) } },
-    ),
   openSlot: ({ groupId, displayName, pin, badge }) =>
     auth.accountRequest("/api/slots", {
       body: {

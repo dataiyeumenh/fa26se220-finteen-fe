@@ -42,8 +42,4 @@ export const teacherQuizApi = {
     auth.accountRequest(
       `/api/quizzes/${encodeURIComponent(quizId)}/results/${encodeURIComponent(slotId)}`,
     ),
-  setPostTest: (groupId, enabled) =>
-    auth.accountRequest(`/api/groups/${encodeURIComponent(groupId)}/post-test`, {
-      body: { enabled: Boolean(enabled) },
-    }),
 };
