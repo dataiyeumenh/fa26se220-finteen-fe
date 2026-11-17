@@ -1,4 +1,4 @@
-import { MapPinned, RefreshCw } from "lucide-react";
+import { BarChart3, CheckCircle2, ClipboardList, MapPinned, RefreshCw } from "lucide-react";
 import { Link } from "react-router-dom";
 import { dateLabel } from "../../../../features/workspace/format";
 import {
@@ -7,6 +7,7 @@ import {
 } from "../../../../features/workspace/reporting";
 import { Empty, Heading } from "../../../../features/workspace/ui";
 import { ContentSkeleton } from "@/components/feedback/LoadingState";
+import ReportIndicatorHelp from "@/features/workspace/ReportIndicatorHelp";
 
 const statusLabel = (status) =>
   ({ ACTIVE: "Hoạt động", ARCHIVED: "Đã thu hồi", WIPED: "Đã xoá" })[status] ||
@@ -40,7 +41,11 @@ export default function ParentReportsContent({ reportState }) {
     error,
     warning,
     refresh,
+    setPostTest,
   } = reportState;
+  const quizAverage = report?.summary?.averageScore == null
+    ? "—"
+    : new Intl.NumberFormat("vi-VN", { maximumFractionDigits: 1 }).format(report.summary.averageScore);
   if (loading) return <ContentSkeleton variant="table" label="Đang tải báo cáo gia đình…" />;
   if (error)
     return (
@@ -105,6 +110,7 @@ export default function ParentReportsContent({ reportState }) {
         </label>
       </div>
       <div className="ws-actions ws-export">
+        <label className="ws-post-test-toggle"><input type="checkbox" checked={Boolean(report.group.postTestEnabled)} onChange={(event) => void setPostTest(event.target.checked)}/><span><strong>Bật bài ôn tập sau chương</strong><small>Còn gọi là hậu trắc, giúp xem trẻ đã hiểu nội dung chương đến đâu.</small></span></label>
         <button
           disabled={!rows.length}
           className="ws-btn"
@@ -116,7 +122,7 @@ export default function ParentReportsContent({ reportState }) {
             )
           }
         >
-          Xuất CSV
+          Tải bảng dữ liệu
         </button>
         <button
           disabled={!rows.length}
@@ -135,10 +141,15 @@ export default function ParentReportsContent({ reportState }) {
         <p className="ws-muted">
           Đã hoàn thành {report.summary.chaptersCompleted} chương
           {report.frozenAt
-            ? ` · Đóng băng ${dateLabel(report.frozenAt)}`
-            : " · Dữ liệu trực tiếp"}
+            ? ` · Báo cáo đã được chốt ${dateLabel(report.frozenAt)}`
+            : " · Tự động cập nhật theo hoạt động mới nhất"}
           .
         </p>
+        <div className="ws-grid three" aria-label="Kết quả bài ôn tập sau chương">
+          <article><ClipboardList /><strong>{report.summary.quizAssigned ?? 0}</strong><p>Bài ôn tập đã giao</p></article>
+          <article><CheckCircle2 /><strong>{report.summary.quizSubmitted ?? 0}</strong><p>Lượt các con đã nộp</p></article>
+          <article><BarChart3 /><strong>{quizAverage}</strong><p>{report.summary.averageScore == null ? "Chưa có bài đã chấm" : "Số câu đúng trung bình mỗi lượt"}</p></article>
+        </div>
         {rows.length ? (
           <div className="ws-table-wrap">
             <table>
@@ -147,7 +158,7 @@ export default function ParentReportsContent({ reportState }) {
                   <th>Trẻ</th>
                   <th>Trạng thái</th>
                   <th>Tiến độ</th>
-                  <th>5 chỉ số</th>
+                  <th><span className="ws-indicator-heading">5 chỉ số <ReportIndicatorHelp /></span></th>
                   <th>Hoạt động gần nhất</th>
                   <th>Chi tiết</th>
                 </tr>

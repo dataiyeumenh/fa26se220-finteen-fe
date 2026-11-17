@@ -18,6 +18,30 @@ export async function loadTeacherDashboard(api) {
   const studentCount = reportsComplete
     ? results.reduce((sum, { report }) => sum + report.value.summary.learners, 0)
     : null;
+  const quizStatsComplete = results.every(({ report }) =>
+    report.status === "fulfilled" &&
+    Number.isFinite(report.value?.summary?.quizAssigned) &&
+    Number.isFinite(report.value?.summary?.quizSubmitted),
+  );
+  const quizAssigned = quizStatsComplete
+    ? results.reduce((sum, { report }) => sum + report.value.summary.quizAssigned, 0)
+    : null;
+  const quizSubmitted = quizStatsComplete
+    ? results.reduce((sum, { report }) => sum + report.value.summary.quizSubmitted, 0)
+    : null;
+  const scoredSubmissions = quizStatsComplete
+    ? results.filter(({ report }) =>
+        report.value.summary.quizSubmitted > 0 &&
+        Number.isFinite(report.value.summary.averageScore),
+      )
+    : [];
+  const averageScore = quizStatsComplete && quizSubmitted > 0 &&
+    scoredSubmissions.reduce((sum, { report }) => sum + report.value.summary.quizSubmitted, 0) === quizSubmitted
+    ? scoredSubmissions.reduce(
+        (sum, { report }) => sum + report.value.summary.averageScore * report.value.summary.quizSubmitted,
+        0,
+      ) / quizSubmitted
+    : null;
   const quizzes = new Set();
   if (quizzesComplete) {
     for (const { quizzes: result } of results) {
@@ -34,6 +58,9 @@ export async function loadTeacherDashboard(api) {
     activeGroupCount: groups.filter((group) => !group.closedAt).length,
     studentCount,
     quizCount: quizzesComplete ? quizzes.size : null,
+    quizAssigned,
+    quizSubmitted,
+    averageScore,
     warning: warnings.join(" "),
   };
 }

@@ -1,47 +1,40 @@
 import { auth } from "@/api/auth.api";
-import { createMockQuizApi, MOCK_QUIZ_PREFIX } from "../quizImport.js";
 
-const mock = createMockQuizApi({
-  getItem: (key) => localStorage.getItem(key),
-  setItem: (key, value) => localStorage.setItem(key, value),
-}, () => auth.getSnapshot().actor?.id);
+const suffix = (filters = {}) => {
+  const query = new URLSearchParams();
+  Object.entries(filters).forEach(([key, value]) => {
+    const normalized = String(value ?? "").trim();
+    if (normalized) query.set(key, normalized);
+  });
+  return query.size ? `?${query}` : "";
+};
 
 export const teacherQuizApi = {
   listGroups: () => auth.accountRequest("/api/groups"),
-  listQuestions: (filters = {}) => {
-    const query = new URLSearchParams();
-    ["standard", "concept", "pool", "q"].forEach((key) => {
-      const value = String(filters[key] || "").trim();
-      if (value) query.set(key, value);
-    });
-    return auth.accountRequest(
-      `/api/questions${query.size ? `?${query}` : ""}`,
-    );
-  },
-  importQuiz: async (payload) => mock.create(payload),
-  listQuizzes: async (groupId) => [
-    ...(await auth.accountRequest(`/api/quizzes?groupId=${encodeURIComponent(groupId)}`) || []),
-    ...mock.list(groupId),
-  ],
-  getQuiz: (quizId) =>
-    quizId?.startsWith(MOCK_QUIZ_PREFIX) ? Promise.resolve(mock.get(quizId)) :
-      auth.accountRequest(`/api/quizzes/${encodeURIComponent(quizId)}`),
+  listQuestions: (filters = {}) => auth.accountRequest(`/api/questions${suffix(filters)}`),
+  listMyQuestions: (filters = {}) => auth.accountRequest(`/api/questions/mine${suffix(filters)}`),
+  createMyQuestions: (questions) => auth.accountRequest("/api/questions/mine", { body: questions }),
+  updateMyQuestion: (id, question) => auth.accountRequest(`/api/questions/mine/${encodeURIComponent(id)}`, { method: "PUT", body: question }),
+  deleteMyQuestion: (id) => auth.accountRequest(`/api/questions/mine/${encodeURIComponent(id)}`, { method: "DELETE" }),
+  copyQuestion: (id) => auth.accountRequest(`/api/questions/${encodeURIComponent(id)}/copy`, { method: "POST" }),
+  listQuizzes: (groupId) => auth.accountRequest(`/api/quizzes?groupId=${encodeURIComponent(groupId)}`),
+  getQuiz: (quizId) => auth.accountRequest(`/api/quizzes/${encodeURIComponent(quizId)}`),
   publishQuiz: (quizId) =>
     auth.accountRequest(`/api/quizzes/${encodeURIComponent(quizId)}/publish`, {
       method: "POST",
     }),
   deleteQuiz: (quizId) =>
-    quizId.startsWith(MOCK_QUIZ_PREFIX) ? Promise.resolve(mock.delete(quizId)) : auth.accountRequest(`/api/quizzes/${encodeURIComponent(quizId)}`, {
+    auth.accountRequest(`/api/quizzes/${encodeURIComponent(quizId)}`, {
       method: "DELETE",
     }),
-  createQuiz: ({ groupId, title, questionIds, dueAt }) =>
+  createQuiz: (payload) =>
     auth.accountRequest("/api/quizzes", {
-      body: { groupId, title: title.trim(), questionIds, dueAt },
+      body: { ...payload, title: payload.title.trim() },
     }),
-  updateQuiz: (quizId, { title, questionIds, dueAt }) =>
+  updateQuiz: (quizId, payload) =>
     auth.accountRequest(`/api/quizzes/${encodeURIComponent(quizId)}`, {
       method: "PUT",
-      body: { title: title.trim(), questionIds, dueAt },
+      body: { ...payload, title: payload.title.trim() },
     }),
   getQuizResults: (quizId) =>
     auth.accountRequest(`/api/quizzes/${encodeURIComponent(quizId)}/results`),
@@ -49,4 +42,8 @@ export const teacherQuizApi = {
     auth.accountRequest(
       `/api/quizzes/${encodeURIComponent(quizId)}/results/${encodeURIComponent(slotId)}`,
     ),
+  setPostTest: (groupId, enabled) =>
+    auth.accountRequest(`/api/groups/${encodeURIComponent(groupId)}/post-test`, {
+      body: { enabled: Boolean(enabled) },
+    }),
 };

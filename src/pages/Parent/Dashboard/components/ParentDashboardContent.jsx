@@ -3,6 +3,8 @@ import {
   ArrowRight,
   BookOpen,
   CheckCircle2,
+  ClipboardList,
+  BarChart3,
   Users,
 } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -14,6 +16,9 @@ export default function ParentDashboardContent({ actor, dashboardState }) {
   const { dashboard, loading, error, refetch } = dashboardState;
   const summary = dashboard?.report?.summary;
   const group = dashboard?.report?.group || dashboard?.group;
+  const quizAverage = summary?.averageScore == null
+    ? "—"
+    : new Intl.NumberFormat("vi-VN", { maximumFractionDigits: 1 }).format(summary.averageScore);
   return (
     <>
       <Heading
@@ -112,6 +117,36 @@ export default function ParentDashboardContent({ actor, dashboardState }) {
                 <p>
                   {summary?.active ?? 0}/{group.slotLimit} chỗ đang dùng
                 </p>
+              </div>
+            </Link>
+            <Link to="/dashboard/reports">
+              <span>
+                <ClipboardList />
+              </span>
+              <div>
+                <small>BÀI ÔN TẬP SAU CHƯƠNG</small>
+                <strong>{summary?.quizAssigned ?? 0}</strong>
+                <p>Còn gọi là hậu trắc</p>
+              </div>
+            </Link>
+            <Link to="/dashboard/reports">
+              <span>
+                <CheckCircle2 />
+              </span>
+              <div>
+                <small>LƯỢT ĐÃ HOÀN THÀNH</small>
+                <strong>{summary?.quizSubmitted ?? 0}</strong>
+                <p>{summary?.quizAssigned ? "Tổng lượt nộp của các con" : "Chưa có bài ôn tập được giao"}</p>
+              </div>
+            </Link>
+            <Link to="/dashboard/reports">
+              <span>
+                <BarChart3 />
+              </span>
+              <div>
+                <small>KẾT QUẢ TRUNG BÌNH</small>
+                <strong>{quizAverage}</strong>
+                <p>{summary?.averageScore == null ? "Chưa có bài đã chấm" : "Số câu đúng trung bình mỗi lượt"}</p>
               </div>
             </Link>
           </div>

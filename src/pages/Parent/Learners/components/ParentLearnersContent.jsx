@@ -200,14 +200,21 @@ export default function ParentLearnersContent({ learnerState }) {
             {
               create: "Tạo hồ sơ cho trẻ",
               pin: "Đổi mã PIN",
-              return: "Thu hồi hồ sơ",
+              return: "Thu hồi quyền truy cập của trẻ",
               wipe: "Xóa dữ liệu",
             }[modal.type]
+          }
+          description={
+            modal.type === "return"
+              ? "Trẻ sẽ không thể đăng nhập bằng hồ sơ này. Tiến độ và kết quả học tập vẫn được giữ trong báo cáo."
+              : modal.type === "wipe"
+                ? "Thao tác này xóa vĩnh viễn tên và mã đăng nhập của trẻ. Số liệu lịch sử vẫn được giữ nhưng sẽ hiển thị là “Đã xóa”."
+                : undefined
           }
           onClose={() => setModal(null)}
         >
           <ActionForm
-            submit="Xác nhận"
+            submit={modal.type === "return" ? "Thu hồi quyền truy cập" : modal.type === "wipe" ? "Xóa vĩnh viễn dữ liệu" : "Xác nhận"}
             onSubmit={(form) => {
               if (modal.type === "create")
                 return finish(
@@ -225,6 +232,16 @@ export default function ParentLearnersContent({ learnerState }) {
               return finish(actions.wipeSlot(modal.slot.id));
             }}
           >
+            {modal.type === "return" && (
+              <p className="ws-notice" role="note">
+                Bạn có thể tiếp tục xem kết quả học tập trước đây của trẻ trong báo cáo sau khi thu hồi.
+              </p>
+            )}
+            {modal.type === "wipe" && (
+              <p className="ws-notice danger" role="alert">
+                Không thể khôi phục tên, mã đăng nhập hoặc kích hoạt lại hồ sơ sau khi xóa dữ liệu.
+              </p>
+            )}
             {modal.type === "create" && (
               <label>
                 Tên trẻ
@@ -245,7 +262,7 @@ export default function ParentLearnersContent({ learnerState }) {
             )}
             {modal.type === "wipe" && (
               <label>
-                Nhập XOA để xác nhận
+                Nhập XOA để xác nhận xóa vĩnh viễn
                 <input name="confirm" pattern="XOA" required />
               </label>
             )}

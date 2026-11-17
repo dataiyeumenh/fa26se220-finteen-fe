@@ -159,6 +159,10 @@ export default function LearnerReportContent({ reportState }) {
         )}
       </section>
       <section className="ws-card">
+        <h2>Hậu trắc</h2>
+        {(report.quizzes?.results || report.quizzes || []).length ? <div className="ws-bank-list">{(report.quizzes?.results || report.quizzes || []).map((quiz) => <article key={quiz.quizId || quiz.id}><div><strong>{quiz.title || `Hậu trắc chương ${quiz.chapter}`}</strong><p>{quiz.submittedAt ? `Đã nộp ${dateLabel(quiz.submittedAt)}` : "Chưa nộp"}</p></div><strong>{quiz.score == null ? "Chờ công bố" : `${quiz.score}/${quiz.totalQuestions}`}</strong></article>)}</div> : <Empty>Chưa có kết quả hậu trắc.</Empty>}
+      </section>
+      <section className="ws-card">
         <h2>
           <Trophy size={20} /> Thành tích
         </h2>
