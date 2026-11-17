@@ -16,7 +16,7 @@ import "./overview-insights.css";
 const quickActions = {
   parent: [
     ["/dashboard/learners", "Quản lý hồ sơ", "Tạo mã, đổi PIN và quản lý các con", UserPlus],
-    ["/dashboard/reports", "Xem báo cáo", "Theo dõi tiến độ và 5 chỉ số", BarChart3],
+    ["/dashboard/reports", "Xem báo cáo", "Theo dõi tiến độ và xu hướng lựa chọn tài chính", BarChart3],
     ["/dashboard/plans", "Gói học tập", "Kiểm tra thời hạn và quyền lợi", BookOpenCheck],
   ],
   teacher: [

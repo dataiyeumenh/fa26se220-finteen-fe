@@ -74,12 +74,14 @@ export function ActionForm({
   children,
   submit = "Lưu thay đổi",
   submitTone = "primary",
+  noValidate = false,
 }) {
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   return (
     <form
       className="ws-form"
+      noValidate={noValidate}
       onSubmit={async (e) => {
         e.preventDefault();
         setError("");

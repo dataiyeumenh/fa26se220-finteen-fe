@@ -3,6 +3,8 @@ import {
   ArrowRight,
   BookOpen,
   ClipboardList,
+  CheckCircle2,
+  BarChart3,
   Users,
 } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -12,6 +14,7 @@ import OverviewInsights from "@/features/workspace/OverviewInsights";
 import "../styles/teacher-dashboard.css";
 
 const count = (value) => value == null ? "—" : new Intl.NumberFormat("vi-VN").format(value);
+const average = (value) => value == null ? "—" : new Intl.NumberFormat("vi-VN", { maximumFractionDigits: 1 }).format(value);
 
 export default function TeacherDashboardContent({ actor, dashboardState }) {
   const { dashboard, loading, error, refetch } = dashboardState;
@@ -91,6 +94,18 @@ export default function TeacherDashboardContent({ actor, dashboardState }) {
         <Link to="/dashboard/quiz-management">
           <span><ClipboardList /></span>
           <div><small>BÀI QUIZ ĐANG QUẢN LÝ</small><strong>{count(dashboard.quizCount)}</strong><p>{loading ? "Đang cập nhật…" : dashboard.quizCount == null ? "Chưa tải đầy đủ dữ liệu" : "Tổng bài quiz trên tất cả lớp"}</p></div>
+        </Link>
+        <Link to="/dashboard/reports">
+          <span><ClipboardList /></span>
+          <div><small>QUIZ ĐÃ GIAO</small><strong>{count(dashboard.quizAssigned)}</strong><p>{loading ? "Đang cập nhật…" : "Tổng trên tất cả lớp"}</p></div>
+        </Link>
+        <Link to="/dashboard/reports">
+          <span><CheckCircle2 /></span>
+          <div><small>LƯỢT ĐÃ NỘP</small><strong>{count(dashboard.quizSubmitted)}</strong><p>{loading ? "Đang cập nhật…" : dashboard.quizAssigned > 0 ? "Tổng lượt nộp của học sinh" : "Chưa có quiz được giao"}</p></div>
+        </Link>
+        <Link to="/dashboard/reports">
+          <span><BarChart3 /></span>
+          <div><small>ĐIỂM QUIZ TRUNG BÌNH</small><strong>{average(dashboard.averageScore)}</strong><p>{dashboard.averageScore == null ? "Chưa có bài đã chấm" : "Số câu đúng trung bình mỗi lượt"}</p></div>
         </Link>
       </div>}
       {dashboard?.report && <OverviewInsights report={dashboard.report} role="teacher" />}

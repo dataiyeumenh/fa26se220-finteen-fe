@@ -169,9 +169,8 @@ function App() {
                 element={<Navigate to="/dashboard/kid/lessons" replace />}
               />
 
-              {/* QUIZ CỦA KID — làm bài, nộp bài và xem kết quả giáo viên giao. */}
-              {/* Áp dụng cho Kid thuộc gói Teacher. */}
-              <Route element={<RequireAccount plans={["teacher"]} />}>
+              {/* QUIZ CỦA KID — học sinh làm đề được giao; trẻ gia đình làm hậu trắc. */}
+              <Route element={<RequireAccount plans={["teacher", "parent"]} />}>
                 <Route path="/dashboard/kid/quiz" element={<KidQuiz />} />
                 <Route
                   path="/dashboard/kid/quiz/:id"

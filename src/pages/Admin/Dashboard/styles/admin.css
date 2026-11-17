@@ -288,6 +288,16 @@
   background: #fff1c2;
   color: #785d00;
 }
+.admin-chip.plan-parent {
+  border: 1px solid #bde8d3;
+  background: #e5f8ee;
+  color: #14734a;
+}
+.admin-chip.plan-teacher {
+  border: 1px solid #d9c9f5;
+  background: #f1eafd;
+  color: #68439a;
+}
 .admin-notice {
   margin: 0 0 20px;
   padding: 13px 16px;

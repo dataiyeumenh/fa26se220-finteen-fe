@@ -1,8 +1,16 @@
 import { useCallback, useEffect, useState } from "react";
 import { teacherQuizApi as auth } from "../api/teacherQuizApi";
 
-const quizError = (error) =>
-  ({
+const quizError = (error) => {
+  if (Array.isArray(error?.result) && error.result.length) {
+    const details = error.result.slice(0, 5).map((item) => {
+      const position = Number.isInteger(item?.index) ? `Câu ${item.index + 1}` : "Câu hỏi";
+      const field = ({ stem: "nội dung", options: "các lựa chọn", correctIndex: "đáp án đúng", question: "dữ liệu" })[item?.field] || item?.field;
+      return `${position}${field ? ` – ${field}` : ""}: ${item?.message || "chưa hợp lệ"}`;
+    });
+    return `Vui lòng sửa các câu hỏi sau: ${details.join("; ")}${error.result.length > 5 ? `; và ${error.result.length - 5} lỗi khác` : ""}.`;
+  }
+  return ({
     3004: "Bạn không có quyền thao tác với lớp hoặc đề này.",
     3005: "Gói giáo viên đã hết hạn. Hãy gia hạn để tạo, sửa hoặc phát hành đề.",
     8001: "Không tìm thấy đề phù hợp.",
@@ -16,6 +24,7 @@ const quizError = (error) =>
   })[error?.code] ||
   error?.message ||
   "Không thể hoàn thành yêu cầu.";
+};
 
 export default function useTeacherQuizzes() {
   const [groups, setGroups] = useState([]);
@@ -120,6 +129,7 @@ export default function useTeacherQuizzes() {
 
 export function useTeacherQuestionBank(filters) {
   const [questions, setQuestions] = useState([]);
+  const [myQuestions, setMyQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   useEffect(() => {
@@ -127,10 +137,12 @@ export function useTeacherQuestionBank(filters) {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoading(true);
     setError("");
-    auth
-      .listQuestions(filters)
-      .then((rows) => {
-        if (active) setQuestions(rows || []);
+    Promise.all([auth.listQuestions(filters), auth.listMyQuestions()])
+      .then(([sharedRows, mineRows]) => {
+        if (active) {
+          setQuestions(Array.isArray(sharedRows) ? sharedRows : (sharedRows?.items ?? []));
+          setMyQuestions(Array.isArray(mineRows) ? mineRows : (mineRows?.items ?? []));
+        }
       })
       .catch((value) => {
         if (active) setError(quizError(value));
@@ -150,7 +162,7 @@ export function useTeacherQuestionBank(filters) {
       throw new Error(quizError(value), { cause: value });
     }
   };
-  return { questions, loading, error, saveQuiz };
+  return { questions, myQuestions, loading, error, saveQuiz };
 }
 
 export function useTeacherQuizDetail(quizId) {
@@ -177,6 +189,7 @@ export function useTeacherQuizDetail(quizId) {
 export function useTeacherQuizResults(quizId) {
   const [data, setData] = useState(null);
   const [slotResult, setSlotResult] = useState(null);
+  const [viewingSlotId, setViewingSlotId] = useState("");
   const [error, setError] = useState("");
   useEffect(() => {
     let active = true;
@@ -194,11 +207,14 @@ export function useTeacherQuizResults(quizId) {
   }, [quizId]);
   const viewSlot = async (slotId) => {
     setError("");
+    setViewingSlotId(slotId);
     try {
       setSlotResult(await auth.getQuizSlotResult(quizId, slotId));
     } catch (value) {
       setError(quizError(value));
+    } finally {
+      setViewingSlotId("");
     }
   };
-  return { data, slotResult, setSlotResult, error, viewSlot };
+  return { data, slotResult, setSlotResult, viewingSlotId, error, viewSlot };
 }

@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { groupQuestionSets, questionSetCode, toggleQuestionSet } from "../src/pages/Teacher/Quiz/questionSets.js";
+import { groupQuestionSets, questionSetCode, selectRandomQuestions, toggleQuestionSet } from "../src/pages/Teacher/Quiz/questionSets.js";
 
 test("question sets use the source code rather than a shared bank or question number", () => {
   const questions = [
@@ -15,6 +15,15 @@ test("question sets use the source code rather than a shared bank or question nu
   assert.deepEqual(sets.find((set) => set.code === "FDIC").questions.map((question) => question.id), ["f1", "f2"]);
   assert.equal(questionSetCode({ externalId: "123", pool: "FDIC_MONEY_SMART" }), "FDIC");
   assert.equal(questionSetCode({}), "KHÁC");
+});
+
+test("random selection replaces only its own bank and preserves the other bank", () => {
+  const shared = [{ id: "s1" }, { id: "s2" }, { id: "s3" }];
+  const selected = new Set(["s1", "mine-1"]);
+  const next = selectRandomQuestions(selected, shared, 2, () => 0);
+  assert.equal(next.size, 3);
+  assert.equal(next.has("mine-1"), true);
+  assert.equal([...next].filter((id) => id.startsWith("s")).length, 2);
 });
 
 test("selecting a set adds every question and deselecting preserves other sets", () => {
