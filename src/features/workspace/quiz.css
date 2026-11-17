@@ -839,6 +839,24 @@
 .ws-quiz-page-header h1 {
   margin-top: 10px;
 }
+.ws-quiz-save-status {
+  width: fit-content;
+  margin: -14px 0 18px auto;
+  padding: 7px 12px;
+  border-radius: 999px;
+  color: #166534;
+  background: #dcfce7;
+  font-size: 13px;
+  font-weight: 700;
+}
+.ws-quiz-save-status.is-saving {
+  color: #765f00;
+  background: #fff7c2;
+}
+.ws-quiz-save-status.is-offline {
+  color: #9f1239;
+  background: #ffe4e6;
+}
 .ws-quiz-timer {
   display: flex;
   align-items: center;

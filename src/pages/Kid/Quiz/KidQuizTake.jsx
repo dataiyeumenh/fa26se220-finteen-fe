@@ -19,7 +19,7 @@ export default function KidQuizTake() {
   const { id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
-  const { quiz, answers, result, busy, error, choose, submit, attempt, leaveCount } = useKidQuiz(id, location.state?.quiz);
+  const { quiz, answers, result, busy, error, choose, submit, attempt, leaveCount, answerSync } = useKidQuiz(id, location.state?.quiz);
   const [confirmSubmit, setConfirmSubmit] = useState(false);
   const [remainingSeconds, setRemainingSeconds] = useState(null);
   const [autoSubmitting, setAutoSubmitting] = useState(false);
@@ -49,7 +49,7 @@ export default function KidQuizTake() {
         autoSubmittedRef.current = true;
         setConfirmSubmit(false);
         setAutoSubmitting(true);
-        void Promise.resolve(submitRef.current()).finally(() => setAutoSubmitting(false));
+        void Promise.resolve(submitRef.current({ allowUnsaved: true })).finally(() => setAutoSubmitting(false));
       }
     };
 
@@ -94,6 +94,19 @@ export default function KidQuizTake() {
         )}
       </header>
       {autoSubmitting && <p className="ws-notice" role="status">Đã hết thời gian. Hệ thống đang tự động nộp bài của em…</p>}
+      {attempt && !result && (
+        <p
+          className={`ws-quiz-save-status${answerSync.failed ? " is-offline" : answerSync.saving || answerSync.pendingCount ? " is-saving" : " is-saved"}`}
+          role="status"
+          aria-live="polite"
+        >
+          {answerSync.failed
+            ? "Mất mạng — sẽ tự lưu khi có mạng"
+            : answerSync.saving || answerSync.pendingCount
+              ? "Đang lưu…"
+              : "Đã lưu"}
+        </p>
+      )}
       {error && (
         <p className="ws-notice" role="alert">
           {error}
