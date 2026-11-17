@@ -585,6 +585,39 @@
 .ws-quiz-submit-actions > button {
   flex: 1 1 180px;
 }
+.ws-quiz-result-modal {
+  width: min(720px, calc(100vw - 32px));
+  max-height: min(86vh, 820px);
+  overflow: auto;
+}
+.ws-quiz-result-summary {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+  border-radius: 14px;
+  background: #eefbf4;
+  color: #176a4b;
+}
+.ws-quiz-result-summary > svg {
+  flex: 0 0 auto;
+  width: 34px;
+  height: 34px;
+}
+.ws-quiz-result-summary small {
+  font-weight: 800;
+  letter-spacing: .08em;
+}
+.ws-quiz-result-summary h2 {
+  margin: 2px 0 0;
+}
+.ws-quiz-result-review {
+  display: grid;
+  gap: 12px;
+}
+.ws-quiz-result-review .ws-quiz-answer {
+  margin: 0;
+}
 .ws-kid-quiz {
   display: grid;
   gap: 8px;

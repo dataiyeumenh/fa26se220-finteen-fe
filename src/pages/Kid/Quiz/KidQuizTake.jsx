@@ -1,4 +1,4 @@
-import { CheckCircle2, Clock3, Send } from "lucide-react";
+import { CheckCircle2, Clock3, Send, XCircle } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { Modal } from "@/features/workspace/ui";
@@ -26,6 +26,24 @@ export default function KidQuizTake() {
   const submitRef = useRef(submit);
   const autoSubmittedRef = useRef(false);
   const resultTotal = Number(result?.totalQuestions ?? result?.total ?? quiz?.questions?.length) || quiz?.questions?.length || 0;
+  const resultAnswers = result?.paper || result?.answers || result?.results || result?.questionResults || [];
+  const reviewAnswers = quiz?.questions?.map((question, index) => {
+    const position = question.pos ?? index;
+    const submitted = Array.isArray(resultAnswers)
+      ? resultAnswers.find((item) =>
+          (item?.questionId != null && String(item.questionId) === String(question.id)) ||
+          (item?.pos != null && Number(item.pos) === Number(position)) ||
+          (item?.position != null && Number(item.position) === Number(position)))
+      : null;
+    const chosenIndex = submitted?.chosen ?? submitted?.chosenPos ?? submitted?.chosenIndex ?? answers[String(position)] ?? answers[question.id];
+    const correctIndex = submitted?.correctPos ?? submitted?.correctIndex;
+    const correct = typeof submitted?.correct === "boolean"
+      ? submitted.correct
+      : Number.isInteger(correctIndex) && Number.isInteger(chosenIndex)
+        ? correctIndex === chosenIndex
+        : null;
+    return { ...question, ...submitted, position, chosenIndex, correctIndex, correct };
+  }) || [];
 
   useEffect(() => {
     submitRef.current = submit;
@@ -189,11 +207,47 @@ export default function KidQuizTake() {
       )}
       {result && (
         <Modal
+          className="ws-quiz-result-modal"
           title="Kết quả bài làm"
           onClose={() => navigate("/dashboard/kid/quiz")}
         >
-          <CheckCircle2 />
-          <h2>{result.score == null ? "Kết quả sẽ có sau hạn nộp" : resultTotal > 0 ? `${result.score}/${resultTotal} câu đúng` : `${result.score} câu đúng`}</h2>
+          <div className="ws-quiz-result-summary">
+            <CheckCircle2 aria-hidden="true" />
+            <div>
+              <small>ĐÃ HOÀN THÀNH</small>
+              <h2>{result.score == null ? "Kết quả sẽ có sau hạn nộp" : resultTotal > 0 ? `${result.score}/${resultTotal} câu đúng` : `${result.score} câu đúng`}</h2>
+            </div>
+          </div>
+          <div className="ws-quiz-result-review" aria-label="Chi tiết câu trả lời">
+            {reviewAnswers.map((answer, index) => {
+              const hasCorrectness = typeof answer.correct === "boolean";
+              const chosenText = Number.isInteger(answer.chosenIndex) && answer.chosenIndex >= 0
+                ? `${String.fromCharCode(65 + answer.chosenIndex)}. ${answer.options?.[answer.chosenIndex] ?? "Không có nội dung đáp án"}`
+                : "Chưa trả lời";
+              return (
+                <article
+                  className={`ws-quiz-answer ${!hasCorrectness ? "is-pending" : answer.correct ? "is-correct" : "is-wrong"}`}
+                  key={answer.questionId || answer.id || answer.position}
+                >
+                  <strong>{index + 1}. {answer.stem}</strong>
+                  <p className="ws-quiz-answer-status">
+                    {!hasCorrectness ? <Clock3 size={18} aria-hidden="true" /> : answer.correct ? <CheckCircle2 size={18} aria-hidden="true" /> : <XCircle size={18} aria-hidden="true" />}
+                    {!hasCorrectness ? "Đã ghi nhận câu trả lời" : answer.correct ? "Trả lời đúng" : "Trả lời sai"}
+                  </p>
+                  <div className="ws-quiz-answer-choice">
+                    <span>Em đã chọn</span>
+                    <strong>{chosenText}</strong>
+                  </div>
+                  {hasCorrectness && !answer.correct && Number.isInteger(answer.correctIndex) && answer.correctIndex >= 0 && answer.options?.[answer.correctIndex] != null && (
+                    <div className="ws-quiz-answer-solution">
+                      <span>Đáp án đúng</span>
+                      <strong>{String.fromCharCode(65 + answer.correctIndex)}. {answer.options[answer.correctIndex]}</strong>
+                    </div>
+                  )}
+                </article>
+              );
+            })}
+          </div>
           <button
             className="ws-btn primary"
             onClick={() => navigate("/dashboard/kid/quiz")}
