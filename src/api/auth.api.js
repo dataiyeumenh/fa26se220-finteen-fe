@@ -15,13 +15,17 @@ export const auth = createAuthClient({
     getItem: (key) => sessionStorage.getItem(key),
     setItem: (key, value) => sessionStorage.setItem(key, value),
   },
+  beforeSlotSignOut: async (slotSession) => {
+    const { flushPendingBatches } = await import(
+      "../pages/Kid/Dashboard/components/game/playBatch.js"
+    );
+    await flushPendingBatches(slotSession?.code);
+  },
   clearSlotData: (slotSession) => {
     const slotId = slotSession?.slot?.id;
-    const code = slotSession?.code;
     const prefixes = [
       slotId ? `finteen:quiz-attempt:${encodeURIComponent(slotId)}:` : null,
       slotId ? `finteen:vn:v2:${encodeURIComponent(`slot:${slotId}`)}:` : null,
-      code ? `finteen:play:pending:${code}:` : null,
     ].filter(Boolean);
     for (let index = localStorage.length - 1; index >= 0; index--) {
       const key = localStorage.key(index);

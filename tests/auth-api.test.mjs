@@ -693,7 +693,7 @@ test("logout during SLOT login prevents the late response from restoring a sessi
 });
 
 test("SLOT sessions use session storage and signOut revokes before clearing learner data", async () => {
-  const accountData = new Map(), slotData = new Map(), calls = [], cleared = [];
+  const accountData = new Map(), slotData = new Map(), calls = [], events = [];
   const storage = (data) => ({
     getItem: (key) => data.get(key),
     setItem: (key, value) => data.set(key, value),
@@ -702,9 +702,11 @@ test("SLOT sessions use session storage and signOut revokes before clearing lear
     baseUrl: "https://example.com",
     storage: storage(accountData),
     slotStorage: storage(slotData),
-    clearSlotData: (slot) => cleared.push(slot.slot.id),
+    beforeSlotSignOut: async (slot) => events.push(`flush:${slot.code}`),
+    clearSlotData: (slot) => events.push(`clear:${slot.slot.id}`),
     fetcher: async (url, init) => {
       calls.push({ url, ...init });
+      if (url.endsWith("/api/auth/logout")) events.push("revoke");
       const result = url.endsWith("/api/slots/login")
         ? { accessToken: "slot-token", expiresIn: 60, slot: { id: "kid-1", displayName: "Kid", groupContext: "FAMILY" } }
         : null;
@@ -717,7 +719,7 @@ test("SLOT sessions use session storage and signOut revokes before clearing lear
   await auth.signOut();
   assert.match(calls.at(-1).url, /\/api\/auth\/logout$/);
   assert.equal(calls.at(-1).headers.Authorization, "Bearer slot-token");
-  assert.deepEqual(cleared, ["kid-1"]);
+  assert.deepEqual(events, ["flush:KIDCODE1", "revoke", "clear:kid-1"]);
   assert.equal(auth.hasSession(), false);
   assert.equal(JSON.parse(slotData.get("finteen.slot.v1:https://example.com")), null);
 });
