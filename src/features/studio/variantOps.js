@@ -75,6 +75,10 @@ export function setVariantField(obj, label, field, value) {
  * fields remain shared. Keep existing per-field dimensions for older drafts. */
 export function personalizedScenePatch(scene, answers, patch) {
   const dimensions = { text: 'interest', prompt: 'interest', spokenText: 'interest', speaker: 'gender', voice: 'gender' };
+  return personalizedFieldsPatch(scene, answers, patch, dimensions);
+}
+
+function personalizedFieldsPatch(scene, answers, patch, dimensions) {
   const shared = {};
   let next = scene;
   for (const [field, value] of Object.entries(patch)) {
@@ -84,6 +88,35 @@ export function personalizedScenePatch(scene, answers, patch) {
     if (CATALOG[dim]?.includes(answers[dim])) next = setVariantField(next, `${dim}:${answers[dim]}`, field, value);
   }
   return next === scene ? shared : { ...shared, variants: next.variants };
+}
+
+/** Inspect appearance changes only; IDs, flags, rewards and gallery structure
+ * remain shared. Gallery image patches are partial and preserve other images. */
+export function patchInspect(inspect, patch, answers = null) {
+  const fields = { buttonText: 'interest', dataText: 'interest', popupImage: 'interest' };
+  const surface = Object.fromEntries(Object.entries(patch).filter(([field]) => Object.hasOwn(fields, field)));
+  const next = { ...inspect, ...(answers ? personalizedFieldsPatch(inspect, answers, surface, fields) : surface) };
+  if (!next.variants) delete next.variants;
+  if (Array.isArray(inspect.popupImages) && Array.isArray(patch.popupImages)) {
+    next.popupImages = inspect.popupImages.map((image, index) => {
+      const imagePatch = patch.popupImages[index];
+      if (!imagePatch || !Object.hasOwn(imagePatch, 'src')) return image;
+      const surface = { src: imagePatch.src };
+      const nextImage = { ...image, ...(answers ? personalizedFieldsPatch(image, answers, surface, { src: 'interest' }) : surface) };
+      if (!nextImage.variants) delete nextImage.variants;
+      return nextImage;
+    });
+  }
+  return next;
+}
+
+/** Choice wording follows interest; keep IDs, targets, scoring and locks intact. */
+export function patchChoiceText(option, text, interest = null) {
+  const fields = typeof option.text === 'string' || typeof option.label !== 'string' ? ['text'] : ['label'];
+  if (fields[0] === 'text' && typeof option.label === 'string' && option.label === option.text) fields.push('label');
+  if (interest == null) return { ...option, ...Object.fromEntries(fields.map(field => [field, text])) };
+  if (!CATALOG.interest.includes(interest)) return option;
+  return fields.reduce((next, field) => setVariantField(next, `interest:${interest}`, field, text), option);
 }
 
 /** Thêm biến thể rỗng để hiện ô nhập (chưa ghi gì vào JSON cho tới khi có chữ). */
@@ -156,7 +189,7 @@ export function variantProblems(obj, tokens = {}) {
 }
 
 /** = Personalizer.surfaceTexts(): ảnh / giọng là đường dẫn (hash có chữ số) — không kiểm số. */
-const MEDIA_FIELDS = new Set(["image", "src", "background", "voice"]);
+const MEDIA_FIELDS = new Set(["image", "src", "background", "popupImage", "voice"]);
 const isReadable = (field, value) =>
   typeof value === "string" && !MEDIA_FIELDS.has(field) && !value.startsWith("http") && !value.startsWith(`{{${RESERVED}}}`);
 

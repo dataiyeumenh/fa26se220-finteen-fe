@@ -1,4 +1,4 @@
-import { Copy, KeyRound, Plus, RefreshCw, Trash2, Users } from "lucide-react";
+import { BarChart3, Copy, KeyRound, Plus, RefreshCw, RotateCcw, Trash2, Users } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { SlotPersonalization } from "../../../../features/personalization/SlotPersonalization.jsx";
@@ -95,8 +95,8 @@ export default function ParentLearnersContent({ learnerState }) {
         </div>
       )}
       <div className="ws-toolbar ws-parent-learners-toolbar">
-        <label>
-          Tìm hồ sơ
+        <label className="ws-learner-search">
+          <span>Tìm hồ sơ</span>
           <input
             value={search}
             onChange={(event) => setSearch(event.target.value)}
@@ -140,7 +140,7 @@ export default function ParentLearnersContent({ learnerState }) {
             >
               <Users className="ws-slot-icon" />
               <h2>{slot.displayName || "Đã xóa dữ liệu"}</h2>
-              {slot.status !== "WIPED" && <SlotPersonalization slot={slot} context={group.context} />}
+              {slot.status !== "WIPED" && <SlotPersonalization slot={slot} />}
               {slot.code && (
                 <div className="ws-code">
                   <code>{slot.code}</code>
@@ -159,9 +159,9 @@ export default function ParentLearnersContent({ learnerState }) {
                   </button>
                 </div>
               )}
-              <div className="ws-actions">
+              <div className="ws-actions ws-learner-actions">
                 <Link className="ws-btn" to={`/dashboard/learners/${slot.id}`}>
-                  Xem tiến độ
+                  <BarChart3 size={16} aria-hidden="true" /> Xem tiến độ
                 </Link>
                 {slot.status === "ACTIVE" && (
                   <>
@@ -169,13 +169,13 @@ export default function ParentLearnersContent({ learnerState }) {
                       className="ws-btn"
                       onClick={() => setModal({ type: "pin", slot })}
                     >
-                      <KeyRound size={15} /> Đổi PIN
+                      <KeyRound size={16} aria-hidden="true" /> Đổi PIN
                     </button>
                     <button
                       className="ws-btn warning"
                       onClick={() => setModal({ type: "return", slot })}
                     >
-                      Thu hồi quyền truy cập
+                      <RotateCcw size={16} aria-hidden="true" /> Thu hồi
                     </button>
                   </>
                 )}{" "}
@@ -184,7 +184,7 @@ export default function ParentLearnersContent({ learnerState }) {
                     className="ws-btn danger"
                     onClick={() => setModal({ type: "wipe", slot })}
                   >
-                    <Trash2 size={15} /> Xóa dữ liệu
+                    <Trash2 size={16} aria-hidden="true" /> Xóa dữ liệu
                   </button>
                 )}
               </div>

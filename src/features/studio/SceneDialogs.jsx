@@ -1009,6 +1009,10 @@ export function PlayDialog({ content, startIndex, stats, onEdit, onClose }) {
           </div>
         )}
       </div>}
+      {run.opened && (run.opened.popupImage || run.opened.popupImages?.length > 0) && <div className="studio-play-inspect-images" aria-label="Ảnh khi bấm xem">
+        {run.opened.popupImage && <img src={run.opened.popupImage} alt={run.opened.buttonText || 'Ảnh khi bấm xem'} />}
+        {run.opened.popupImages?.map((image, index) => <figure key={index}><img src={image.src} alt={image.caption || 'Ảnh khi bấm xem'} />{image.caption && <figcaption>{image.caption}</figcaption>}{image.description && <p>{image.description}</p>}</figure>)}
+      </div>}
       {note}
       {scene?.voice !== 'off' && scene?.voiceUrl && <audio key={`${scene.id}-${scene.voiceUrl}`} controls preload="none" src={scene.voiceUrl} aria-label="Nghe giọng đọc cảnh đang chơi thử" />}
       {controls && <div className="studio-play-controls">{controls}</div>}
