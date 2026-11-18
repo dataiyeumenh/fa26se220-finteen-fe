@@ -85,12 +85,20 @@ export function Overview() {
 
 export function Plans() {
   const { actor } = useWorkspace();
+  const paymentStorageKey = `finteen:payment:active:${actor.id}`;
   const [plans, setPlans] = useState([]);
   const [quotas, setQuotas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [buying, setBuying] = useState("");
-  const [payment, setPayment] = useState(null);
+  const [addonPacks, setAddonPacks] = useState({});
+  const [payment, setPayment] = useState(() => {
+    try {
+      return JSON.parse(sessionStorage.getItem(paymentStorageKey) || "null");
+    } catch {
+      return null;
+    }
+  });
   const [payments, setPayments] = useState([]);
   const [paymentPage, setPaymentPage] = useState(0);
   const [paymentsLoading, setPaymentsLoading] = useState(true);
@@ -136,14 +144,15 @@ export function Plans() {
     void loadPayments();
     void auth.ensureEntitlements().catch(() => {});
   }, []);
-  const buy = async (kind, addon = false) => {
+  const buy = async (kind, addon = false, packs = 1) => {
     setBuying(kind);
     setError("");
     try {
       const created = addon
-        ? await workspaceApi.createAddonPayment(kind, 1)
+        ? await workspaceApi.createAddonPayment(kind, packs)
         : await workspaceApi.createPayment(kind);
       setPayment(created);
+      try { sessionStorage.setItem(paymentStorageKey, JSON.stringify(created)); } catch { /* QR remains visible in memory. */ }
       setBuying("");
     } catch (buyError) {
       setError(buyError.message);
@@ -211,6 +220,7 @@ export function Plans() {
               benefits: [],
             };
             const owned = actor.plans.includes(String(plan.kind).toLowerCase());
+            const packs = Math.max(1, Number(addonPacks[plan.kind]) || 1);
             return (
               <article
                 className={`ws-card ws-plan ws-plan-${String(plan.kind).toLowerCase()} ${plan.kind === "TEACHER" ? "featured" : ""}`}
@@ -226,9 +236,24 @@ export function Plans() {
                   {money(plan.price)} <span>· mua 1 lần, dùng mãi</span>
                 </div>
                 {owned && plan.addonPrice != null && (
-                  <p className="ws-plan-note">
-                    Gói thêm {plan.addonSlots} slot: {money(plan.addonPrice)} / pack
-                  </p>
+                  <div className="ws-plan-note">
+                    <label>
+                      Số pack
+                      <input
+                        type="number"
+                        min="1"
+                        step="1"
+                        value={packs}
+                        onChange={(event) => setAddonPacks((current) => ({
+                          ...current,
+                          [plan.kind]: Math.max(1, Number(event.target.value) || 1),
+                        }))}
+                      />
+                    </label>
+                    <p>
+                      Nhận thêm {Number(plan.addonSlots || 0) * packs} slot · Tổng {money(Number(plan.addonPrice) * packs)}
+                    </p>
+                  </div>
                 )}
                 <ul>
                   {copy.benefits.map((benefit) => (
@@ -237,14 +262,13 @@ export function Plans() {
                 </ul>
                 <button
                   className="ws-btn primary"
-                  disabled={Boolean(buying)}
-                  onClick={() => void buy(plan.kind, owned)}
                   disabled={Boolean(buying) || (owned && plan.addonPrice == null)}
+                  onClick={() => void buy(plan.kind, owned, packs)}
                 >
                   {buying === plan.kind
                     ? "Đang tạo đơn…"
                     : owned
-                      ? plan.addonPrice == null ? "Chưa mở bán slot thêm" : `Mua thêm ${plan.addonSlots} slot`
+                      ? plan.addonPrice == null ? "Chưa mở bán slot thêm" : `Mua ${packs} pack slot`
                       : "Mua gói ngay"}
                 </button>
                 <small className="ws-plan-note">
@@ -293,7 +317,13 @@ export function Plans() {
                       <strong>{row.orderCode}</strong>
                     </td>
                     <td>{PLAN_NAME[row.kind] || row.kind}</td>
-                    <td>{row.purpose === "RENEW" ? "Gia hạn" : "Mua mới"}</td>
+                    <td>
+                      {row.purpose === "ADDON"
+                        ? `Mua thêm ${row.packs || 1} pack slot`
+                        : row.purpose === "RENEW"
+                          ? "Gia hạn cũ"
+                          : "Mua gói"}
+                    </td>
                     <td>
                       <strong>{money(row.amount)}</strong>
                     </td>
@@ -342,6 +372,7 @@ export function Plans() {
               payment={payment}
               onClose={() => {
                 setPayment(null);
+                try { sessionStorage.removeItem(paymentStorageKey); } catch { /* Ignore unavailable storage. */ }
                 void loadPayments();
               }}
             />

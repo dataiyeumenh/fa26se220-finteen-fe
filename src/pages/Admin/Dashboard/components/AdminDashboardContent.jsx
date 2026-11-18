@@ -325,7 +325,11 @@ function TransactionsTab() {
                     <td>
                       <strong>{row.orderCode}</strong>
                       <small>
-                        {row.purpose === "RENEW" ? "Gia hạn" : "Mua mới"}
+                        {row.purpose === "ADDON"
+                          ? "Mua thêm slot"
+                          : row.purpose === "RENEW"
+                            ? "Gia hạn cũ"
+                            : "Mua gói"}
                       </small>
                       {row.needsReview && (
                         <span className="admin-review-flag">CẦN KIỂM TRA</span>
@@ -342,9 +346,9 @@ function TransactionsTab() {
                         {planLabel(row.kind)}
                       </span>
                       <small>
-                        {row.months
-                          ? `${row.months} tháng`
-                          : "Chưa có thời hạn"}
+                        {row.purpose === "ADDON"
+                          ? `${row.packs || 1} pack slot`
+                          : "Quyền sử dụng vĩnh viễn"}
                       </small>
                     </td>
                     <td>

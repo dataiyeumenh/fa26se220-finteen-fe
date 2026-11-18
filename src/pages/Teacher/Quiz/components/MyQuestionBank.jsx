@@ -77,11 +77,13 @@ function QuestionReference({ value }) {
 
 function QuestionEditor({ value, onClose, onSave }) {
   const [question, setQuestion] = useState(value);
+  const [error, setError] = useState("");
   const updateOption = (index, text) => setQuestion((old) => ({...old, options: old.options.map((v,i) => i === index ? text : v)}));
-  return <Modal title={question.id ? "Sửa câu hỏi" : "Thêm câu hỏi"} onClose={onClose}><form className="ws-question-form" onSubmit={(e) => { e.preventDefault(); void onSave({...question, stem:question.stem.trim(), options:question.options.map(v=>v.trim())}); }}>
+  return <Modal title={question.id ? "Sửa câu hỏi" : "Thêm câu hỏi"} onClose={onClose}><form className="ws-question-form" onSubmit={(e) => { e.preventDefault(); const options=question.options.map(v=>v.trim()); const normalized=options.map(v=>v.toLocaleLowerCase("vi-VN")); if(new Set(normalized).size!==normalized.length){setError("Các lựa chọn phải khác nhau. Vui lòng sửa nội dung bị trùng.");return;} setError(""); void onSave({...question, stem:question.stem.trim(), options}); }}>
     <label>Nội dung<textarea required maxLength={500} value={question.stem} onChange={(e)=>setQuestion({...question,stem:e.target.value})}/></label>
     {question.options.map((option,index)=><label key={index}>Lựa chọn {String.fromCharCode(65+index)}<span><input type="radio" name="correct" checked={question.correctIndex===index} onChange={()=>setQuestion({...question,correctIndex:index})}/><input required maxLength={200} value={option} onChange={(e)=>updateOption(index,e.target.value)}/>{question.options.length>2 && <button type="button" className="ws-btn compact" onClick={()=>setQuestion((old)=>({...old,options:old.options.filter((_,i)=>i!==index),correctIndex:old.correctIndex===index?0:Math.min(old.correctIndex,old.options.length-2)}))}>Bỏ</button>}</span></label>)}
     {question.options.length<4 && <button type="button" className="ws-btn" onClick={()=>setQuestion({...question,options:[...question.options,""]})}>+ Thêm lựa chọn</button>}
+    <Notice text={error}/>
     <div className="ws-actions"><button type="button" className="ws-btn" onClick={onClose}>Hủy</button><button className="ws-btn primary">Lưu câu hỏi</button></div>
   </form></Modal>;
 }

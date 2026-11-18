@@ -10,6 +10,13 @@ import {
 } from "../../../../features/workspace/ui";
 import { ContentSkeleton } from "@/components/feedback/LoadingState";
 
+const searchText = (value) => String(value || "")
+  .normalize("NFD")
+  .replace(/[\u0300-\u036f]/g, "")
+  .replace(/đ/g, "d")
+  .replace(/Đ/g, "D")
+  .toLowerCase();
+
 export default function ParentLearnersContent({ learnerState }) {
   const {
     group,
@@ -30,9 +37,8 @@ export default function ParentLearnersContent({ learnerState }) {
   const rows = (tab === "ACTIVE" ? active : inactive).filter(
     (item) =>
       !search ||
-      `${item.displayName || ""} ${item.code || ""}`
-        .toLowerCase()
-        .includes(search.toLowerCase()),
+      searchText(`${item.displayName || ""} ${item.code || ""}`)
+        .includes(searchText(search)),
   );
   const finish = (promise) =>
     promise.then((result) => {
@@ -199,7 +205,9 @@ export default function ParentLearnersContent({ learnerState }) {
             }[modal.type]
           }
           description={
-            modal.type === "wipe"
+            modal.type === "pin"
+              ? `Đang cập nhật hồ sơ của ${modal.slot.displayName}. Để trống PIN nếu chỉ đổi tên.`
+              : modal.type === "wipe"
               ? "Thao tác này xóa tên, PIN và cá nhân hóa. Kết quả học tập được giữ ẩn danh, nhưng slot đã xóa sẽ không được hoàn lại vào ví."
               : undefined
           }

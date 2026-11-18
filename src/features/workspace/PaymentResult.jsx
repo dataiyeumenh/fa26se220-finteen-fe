@@ -150,6 +150,7 @@ export default function PaymentResult({ payment: initialPayment, onClose }) {
   };
 
   const cancel = async () => {
+    if (!window.confirm("Hủy giao dịch này? Mã QR hiện tại sẽ không còn dùng để thanh toán.")) return;
     setCancelling(true);
     setError("");
     try {

@@ -12,7 +12,7 @@ const quizError = (error) => {
   }
   return ({
     3004: "Bạn không có quyền thao tác với lớp hoặc đề này.",
-    3005: "Gói giáo viên đã hết hạn. Hãy gia hạn để tạo, sửa hoặc phát hành đề.",
+    3005: "Cần mua gói giáo viên trước khi tạo, sửa hoặc phát hành đề.",
     8001: "Không tìm thấy đề phù hợp.",
     8002: "Đề đã phát hành hoặc là hậu trắc nên không thể thay đổi.",
     8003: "Học sinh này chưa nộp bài.",

@@ -7,7 +7,7 @@ import { useKidQuizzes } from "./hooks/useKidQuizzes";
 import { ContentSkeleton } from "@/components/feedback/LoadingState";
 
 const quizTotal = (quiz) => Number(quiz?.totalQuestions ?? quiz?.total ?? quiz?.questionCount) || 0;
-const scoreOnTen = (value, total) => total > 0 ? `${Number(((Number(value) / total) * 10).toFixed(1))}/10` : `${value} câu đúng`;
+const scoreOnTen = (value, total) => total > 0 ? `${value}/${total} câu đúng` : `${value} câu đúng`;
 const scoreLabel = (quiz) => {
   if (quiz?.score == null) return "Chờ công bố";
   const total = quizTotal(quiz);

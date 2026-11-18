@@ -19,10 +19,12 @@ export const mockAchievementCatalog = Array.from({ length: 8 }, (_, index) => {
 }).flat();
 
 export function resolveAchievements(achievements) {
-  if (Array.isArray(achievements) && achievements.length) {
-    return { source: "api", items: achievements.map((item) => ({ ...item, unlocked: true })) };
-  }
-  return { source: "mock", items: mockAchievementCatalog };
+  return {
+    source: "api",
+    items: Array.isArray(achievements)
+      ? achievements.map((item) => ({ ...item, unlocked: true }))
+      : [],
+  };
 }
 
 export const mockAchievementNote = "Đang sử dụng mock thành tựu vì dashboard chưa trả huy hiệu. Ví dụ chương 1 hạng A, chương 2 hạng B, chương 3 hạng C; đây không phải kết quả chơi của bạn. Các huy hiệu còn lại là mục tiêu minh họa, chưa có quy tắc chấm hạng từ máy chủ.";

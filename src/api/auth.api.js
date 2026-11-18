@@ -4,8 +4,8 @@ import { apiConfig } from "./config.js";
 export const auth = createAuthClient({
   baseUrl: apiConfig.baseUrl,
   storage: {
-    getItem: (key) => sessionStorage.getItem(key),
-    setItem: (key, value) => sessionStorage.setItem(key, value),
+    getItem: (key) => localStorage.getItem(key),
+    setItem: (key, value) => localStorage.setItem(key, value),
   },
   contextStorage: {
     getItem: (key) => localStorage.getItem(key),

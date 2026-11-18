@@ -277,6 +277,7 @@ export function VisualNovelPlayer({ data: rawData, progressOwner = null, learner
   const stageRef = useRef(null);
   const dialogueRef = useRef(null);
   const pendingTransitionRef = useRef(null);
+  const choiceSelectionRef = useRef(false);
   const committedDecisionsRef = useRef(
     new Set(savedProgress?.committedDecisions || []),
   );
@@ -372,6 +373,9 @@ export function VisualNovelPlayer({ data: rawData, progressOwner = null, learner
           flags,
         )
       : data.scenes[sceneIndex];
+  useEffect(() => {
+    choiceSelectionRef.current = false;
+  }, [scene.id]);
   const progress = Math.round(((sceneIndex + 1) / totalScenes) * 100);
 
   const sceneIndexById = useMemo(() => {
@@ -716,12 +720,14 @@ export function VisualNovelPlayer({ data: rawData, progressOwner = null, learner
 
   const selectChoice = (option) => {
     if (isReviewing) return;
+    if (choiceSelectionRef.current) return;
     if (getOptionLock(option)) return;
     if (
       data.metadata?.lockDecisions &&
       committedDecisionsRef.current.has(scene.id)
     )
       return;
+    choiceSelectionRef.current = true;
     if (option.deferLedger) {
       const nextIndex = sceneIndexById[option.nextSceneId];
       if (typeof nextIndex === "number") goToSceneIndex(nextIndex);

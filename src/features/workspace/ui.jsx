@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { LoaderCircle } from "lucide-react";
 import {
   Dialog,
@@ -78,12 +78,15 @@ export function ActionForm({
 }) {
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  const submittingRef = useRef(false);
   return (
     <form
       className="ws-form"
       noValidate={noValidate}
       onSubmit={async (e) => {
         e.preventDefault();
+        if (submittingRef.current) return;
+        submittingRef.current = true;
         setError("");
         setBusy(true);
         try {
@@ -91,6 +94,7 @@ export function ActionForm({
         } catch (err) {
           setError(err.message);
         } finally {
+          submittingRef.current = false;
           setBusy(false);
         }
       }}

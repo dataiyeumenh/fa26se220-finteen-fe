@@ -47,7 +47,7 @@ export function KidPersonalizationEditor({ onClose }) {
     {phase === "view" ? <>
       <p className="text-sm text-slate-600">Em có thể chọn lại thông tin và sở thích của mình bất cứ lúc nào.</p>
       <div className="flex flex-wrap gap-3">
-        <button className="ws-btn primary" onClick={() => { setPicked({}); setSaved(false); setError(""); setPhase("edit"); }}>Thay đổi câu trả lời</button>
+        <button className="ws-btn primary" onClick={() => { setPicked(Object.fromEntries(DIMENSIONS.map((dim) => [dim, view.labels?.[dim] ?? null]))); setSaved(false); setError(""); setPhase("edit"); }}>Thay đổi câu trả lời</button>
         {onClose && <button className="ws-btn" onClick={onClose}>Xong</button>}
       </div>
     </> : <form className="grid gap-5" onSubmit={async (event) => {
@@ -73,7 +73,7 @@ export function KidPersonalizationEditor({ onClose }) {
               className={`min-h-11 rounded-xl border-2 px-3 py-2 text-sm font-semibold ${(picked[dim] ?? null) === value ? "border-amber-500 bg-amber-50 text-amber-900" : "border-slate-200 bg-white text-slate-700"}`}
               onClick={() => setPicked((previous) => {
                 const next = { ...previous };
-                if (value === null) delete next[dim]; else next[dim] = value;
+                next[dim] = value;
                 return next;
               })}>{value === null ? "Chưa muốn trả lời" : VALUE_LABELS[value] || value}</button>)}
           </div>
