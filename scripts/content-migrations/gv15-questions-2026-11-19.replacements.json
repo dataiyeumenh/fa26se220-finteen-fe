@@ -1,0 +1,237 @@
+[
+  {
+    "replacesId": "c7fdd3eb-34e5-422a-b054-6ebbc9de8788",
+    "body": {
+      "externalId": "OECD_INFE-002-R1",
+      "pool": "OECD_INFE",
+      "stem": "Năm người được tặng chung 1.000.000 đồng, chia đều mỗi người 200.000 đồng. Họ phải chờ một năm mới nhận được tiền. Giả sử trong năm đó, giá các hàng hóa và dịch vụ đều tăng 5%, còn số tiền mỗi người được nhận không thay đổi.\nSau một năm, với 200.000 đồng, mỗi người mua được lượng hàng hóa và dịch vụ như thế nào so với hôm nay?",
+      "options": [
+        "Nhiều hơn hôm nay.",
+        "Bằng hôm nay.",
+        "Ít hơn hôm nay."
+      ],
+      "correctIndex": 2,
+      "standard": "CEE-III",
+      "concept": null,
+      "source": "Phỏng theo OECD/INFE Toolkit 2022, QK3, tr.31. https://doi.org/10.1787/cbc4114f-en",
+      "chapter": null,
+      "replacesId": "c7fdd3eb-34e5-422a-b054-6ebbc9de8788",
+      "license": "© OECD 2022. Tái sử dụng theo OECD Terms & Conditions. FinTeen biên soạn; không phải bản dịch chính thức của OECD."
+    }
+  },
+  {
+    "replacesId": "87ceaa1a-a20e-4059-bf39-eb6673e4150a",
+    "body": {
+      "externalId": "OECD_INFE-005-R1",
+      "pool": "OECD_INFE",
+      "stem": "An gửi 1.000.000 đồng vào tài khoản tiết kiệm có lãi suất cố định 2%/năm. Cuối mỗi năm, tiền lãi được nhập vào tiền gốc để tính lãi cho năm tiếp theo. An không gửi thêm, không rút tiền; tài khoản không có phí và không bị khấu trừ thuế.\nSau 5 năm, tổng tiền trong tài khoản của An sẽ như thế nào so với 1.100.000 đồng?",
+      "options": [
+        "Nhiều hơn 1.100.000 đồng.",
+        "Đúng bằng 1.100.000 đồng.",
+        "Ít hơn 1.100.000 đồng.",
+        "Không đủ thông tin để xác định."
+      ],
+      "correctIndex": 0,
+      "standard": "CEE-III",
+      "concept": null,
+      "source": "Phỏng theo OECD/INFE Toolkit 2022, QK6, tr.32. https://doi.org/10.1787/cbc4114f-en",
+      "chapter": null,
+      "replacesId": "87ceaa1a-a20e-4059-bf39-eb6673e4150a",
+      "license": "© OECD 2022. Tái sử dụng theo OECD Terms & Conditions. FinTeen biên soạn; không phải bản dịch chính thức của OECD."
+    }
+  },
+  {
+    "replacesId": "06c4be0e-47ca-4aa9-af8e-51c2e1fc316a",
+    "body": {
+      "externalId": "OECD_INFE-006-R1",
+      "pool": "OECD_INFE",
+      "stem": "Một khoản đầu tư có lợi nhuận kỳ vọng cao thường đi kèm rủi ro cao. Phát biểu này đúng hay sai?",
+      "options": [
+        "Đúng",
+        "Sai"
+      ],
+      "correctIndex": 0,
+      "standard": "CEE-IV",
+      "concept": null,
+      "source": "Phỏng theo OECD/INFE Toolkit 2022, QK7, tr.32. https://doi.org/10.1787/cbc4114f-en",
+      "chapter": null,
+      "replacesId": "06c4be0e-47ca-4aa9-af8e-51c2e1fc316a",
+      "license": "© OECD 2022. Tái sử dụng theo OECD Terms & Conditions. FinTeen biên soạn; không phải bản dịch chính thức của OECD."
+    }
+  },
+  {
+    "replacesId": "f0ce922a-5fc0-49b3-a622-ff6557bc7aba",
+    "body": {
+      "externalId": "OECD_INFE-007-R1",
+      "pool": "OECD_INFE",
+      "stem": "Một cơ hội kiếm được nhiều tiền cũng có thể khiến người tham gia mất nhiều tiền. Phát biểu này đúng hay sai?",
+      "options": [
+        "Đúng",
+        "Sai"
+      ],
+      "correctIndex": 0,
+      "standard": "CEE-IV",
+      "concept": null,
+      "source": "Phỏng theo OECD/INFE Toolkit 2022, QK7, tr.32. https://doi.org/10.1787/cbc4114f-en",
+      "chapter": null,
+      "replacesId": "f0ce922a-5fc0-49b3-a622-ff6557bc7aba",
+      "license": "© OECD 2022. Tái sử dụng theo OECD Terms & Conditions. FinTeen biên soạn; không phải bản dịch chính thức của OECD."
+    }
+  },
+  {
+    "replacesId": "dd99cd39-8888-4481-bea2-e9237732a711",
+    "body": {
+      "externalId": "OECD_INFE-008-R1",
+      "pool": "OECD_INFE",
+      "stem": "Lạm phát cao có nghĩa là chi phí sinh hoạt đang tăng nhanh. Phát biểu này đúng hay sai?",
+      "options": [
+        "Đúng",
+        "Sai"
+      ],
+      "correctIndex": 0,
+      "standard": "CEE-III",
+      "concept": null,
+      "source": "Phỏng theo OECD/INFE Toolkit 2022, QK7, tr.32. https://doi.org/10.1787/cbc4114f-en",
+      "chapter": null,
+      "replacesId": "dd99cd39-8888-4481-bea2-e9237732a711",
+      "license": "© OECD 2022. Tái sử dụng theo OECD Terms & Conditions. FinTeen biên soạn; không phải bản dịch chính thức của OECD."
+    }
+  },
+  {
+    "replacesId": "60f7f0a7-458f-4569-ba8d-b171a328545d",
+    "body": {
+      "externalId": "OECD_INFE-009-R1",
+      "pool": "OECD_INFE",
+      "stem": "Mua nhiều loại cổ phiếu khác nhau thường giúp giảm rủi ro so với chỉ đầu tư vào một loại cổ phiếu. Phát biểu này đúng hay sai?",
+      "options": [
+        "Đúng",
+        "Sai"
+      ],
+      "correctIndex": 0,
+      "standard": "CEE-IV",
+      "concept": null,
+      "source": "Phỏng theo OECD/INFE Toolkit 2022, QK7, tr.32. https://doi.org/10.1787/cbc4114f-en",
+      "chapter": null,
+      "replacesId": "60f7f0a7-458f-4569-ba8d-b171a328545d",
+      "license": "© OECD 2022. Tái sử dụng theo OECD Terms & Conditions. FinTeen biên soạn; không phải bản dịch chính thức của OECD."
+    }
+  },
+  {
+    "replacesId": "13e94c21-53a9-4a4c-b022-eb98d83b0ffd",
+    "body": {
+      "externalId": "OECD_INFE-010-R1",
+      "pool": "OECD_INFE",
+      "stem": "Phân chia tiền tiết kiệm ở nhiều nơi thường giúp giảm nguy cơ mất toàn bộ tiền so với giữ tất cả ở một nơi. Phát biểu này đúng hay sai?",
+      "options": [
+        "Đúng",
+        "Sai"
+      ],
+      "correctIndex": 0,
+      "standard": "CEE-IV",
+      "concept": null,
+      "source": "Phỏng theo OECD/INFE Toolkit 2022, QK7, tr.32. https://doi.org/10.1787/cbc4114f-en",
+      "chapter": null,
+      "replacesId": "13e94c21-53a9-4a4c-b022-eb98d83b0ffd",
+      "license": "© OECD 2022. Tái sử dụng theo OECD Terms & Conditions. FinTeen biên soạn; không phải bản dịch chính thức của OECD."
+    }
+  },
+  {
+    "replacesId": "8bf4b0e7-3d0c-40c9-b853-0394bf82f5a2",
+    "body": {
+      "externalId": "OECD_INFE-011-R1",
+      "pool": "OECD_INFE",
+      "stem": "Hợp đồng tài chính điện tử chỉ có giá trị khi người tham gia ký thêm một hợp đồng giấy. Phát biểu này đúng hay sai?",
+      "options": [
+        "Đúng",
+        "Sai"
+      ],
+      "correctIndex": 1,
+      "standard": "CEE-VI",
+      "concept": null,
+      "source": "Phỏng theo OECD/INFE Toolkit 2022, QK7, tr.32. https://doi.org/10.1787/cbc4114f-en",
+      "chapter": null,
+      "replacesId": "8bf4b0e7-3d0c-40c9-b853-0394bf82f5a2",
+      "license": "© OECD 2022. Tái sử dụng theo OECD Terms & Conditions. FinTeen biên soạn; không phải bản dịch chính thức của OECD."
+    }
+  },
+  {
+    "replacesId": "a3192f3a-553f-46fb-b008-c614e68b4b54",
+    "body": {
+      "externalId": "OECD_INFE-012-R1",
+      "pool": "OECD_INFE",
+      "stem": "Dữ liệu cá nhân được chia sẻ công khai trên mạng có thể được dùng để gửi lời chào mời mua sắm hoặc dịch vụ tài chính phù hợp với từng người. Phát biểu này đúng hay sai?",
+      "options": [
+        "Đúng",
+        "Sai"
+      ],
+      "correctIndex": 0,
+      "standard": "CEE-VI",
+      "concept": null,
+      "source": "Phỏng theo OECD/INFE Toolkit 2022, QK7, tr.32. https://doi.org/10.1787/cbc4114f-en",
+      "chapter": null,
+      "replacesId": "a3192f3a-553f-46fb-b008-c614e68b4b54",
+      "license": "© OECD 2022. Tái sử dụng theo OECD Terms & Conditions. FinTeen biên soạn; không phải bản dịch chính thức của OECD."
+    }
+  },
+  {
+    "replacesId": "9afdd1fc-f09b-4221-8eac-c8e9696d7b1c",
+    "body": {
+      "externalId": "OECD_INFE-013-R1",
+      "pool": "OECD_INFE",
+      "stem": "Tiền mã hóa luôn có giá trị thanh toán hợp pháp giống như tiền giấy và tiền xu. Phát biểu này đúng hay sai?",
+      "options": [
+        "Đúng",
+        "Sai"
+      ],
+      "correctIndex": 1,
+      "standard": "CEE-VI",
+      "concept": null,
+      "source": "Phỏng theo OECD/INFE Toolkit 2022, QK7, tr.32. https://doi.org/10.1787/cbc4114f-en",
+      "chapter": null,
+      "replacesId": "9afdd1fc-f09b-4221-8eac-c8e9696d7b1c",
+      "license": "© OECD 2022. Tái sử dụng theo OECD Terms & Conditions. FinTeen biên soạn; không phải bản dịch chính thức của OECD."
+    }
+  },
+  {
+    "replacesId": "e62a5035-2bf4-4917-ad87-826023aff008",
+    "body": {
+      "externalId": "PISA-021-R1",
+      "pool": "PISA",
+      "stem": "Sarah nhận được hóa đơn sau từ cửa hàng Breezy Clothing:\n\nHÓA ĐƠN SỐ 2034 — Ngày lập: 28/02\nKhách hàng: Sarah Johanson\n\nÁo thun: 3 chiếc × 20.000 đồng = 60.000 đồng\nQuần jeans: 1 chiếc × 60.000 đồng = 60.000 đồng\nKhăn quàng: 1 chiếc × 10.000 đồng = 10.000 đồng\n\nTổng tiền hàng chưa thuế: 130.000 đồng\nThuế 10% trên tiền hàng: 13.000 đồng\nPhí gửi hàng: 10.000 đồng\nTổng cộng: 153.000 đồng\nĐã thanh toán: 0 đồng\nCòn phải trả: 153.000 đồng\nHạn thanh toán: 31/03\n\nVì sao cửa hàng gửi hóa đơn này cho Sarah?",
+      "options": [
+        "Vì Sarah cần trả tiền cho Breezy Clothing.",
+        "Vì Breezy Clothing cần trả tiền cho Sarah.",
+        "Vì Sarah đã trả tiền cho Breezy Clothing.",
+        "Vì Breezy Clothing đã trả tiền cho Sarah."
+      ],
+      "correctIndex": 0,
+      "standard": "CEE-II",
+      "concept": null,
+      "source": "Phỏng theo OECD, PISA 2012 Results VI (2014), INVOICE Q1, tr.43–44. https://doi.org/10.1787/9789264208094-en",
+      "chapter": null,
+      "replacesId": "e62a5035-2bf4-4917-ad87-826023aff008",
+      "license": "© OECD 2014. Tái sử dụng theo OECD Terms & Conditions. FinTeen biên soạn; không phải bản dịch chính thức của OECD."
+    }
+  },
+  {
+    "replacesId": "cd23f08b-b73e-48c1-b2cd-216e9eb5ced2",
+    "body": {
+      "externalId": "PISA-035-R1",
+      "pool": "PISA",
+      "stem": "Greg vừa mua một chiếc xe đạp bằng khoản vay tại cửa hàng và cất xe trong nhà để xe của mình. Gần đây, khu vực Greg sống xảy ra nhiều vụ trộm xe đạp.\nLoại sản phẩm nào sau đây giúp bảo vệ Greg về mặt tài chính nếu chiếc xe đạp bị lấy trộm khỏi nhà để xe?",
+      "options": [
+        "Bảo hiểm tài sản trong nhà.",
+        "Séc du lịch.",
+        "Trái phiếu chính phủ.",
+        "Vay mua nhà (thế chấp)."
+      ],
+      "correctIndex": 0,
+      "standard": "CEE-VI",
+      "concept": null,
+      "source": "Phỏng theo OECD, PISA 2022 Results IV (2024), NEW BIKE Q2, tr.202. https://doi.org/10.1787/5a849c2a-en",
+      "chapter": null,
+      "replacesId": "cd23f08b-b73e-48c1-b2cd-216e9eb5ced2",
+      "license": "© OECD 2024, CC BY-NC-SA 3.0 IGO. FinTeen biên soạn; không phải bản dịch chính thức của OECD."
+    }
+  }
+]

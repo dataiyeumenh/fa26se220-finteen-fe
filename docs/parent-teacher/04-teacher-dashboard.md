@@ -2,7 +2,7 @@
 
 ## Mục tiêu
 
-Trang tổng quan Teacher nằm ở `/dashboard`, hiển thị lớp đang hoạt động, số học sinh, hoạt động gần đây và tổng chương hoàn thành.
+Trang tổng quan Teacher nằm ở `/dashboard`, hiển thị tổng số lớp, học sinh và bài quiz trên tất cả lớp. Hoạt động gần đây và tiến độ bên dưới thuộc lớp đang theo dõi.
 
 ## Cấu trúc
 
@@ -22,8 +22,9 @@ Luồng gần giống Parent Dashboard, nhưng có một khác biệt nghiệp v
 GET /api/groups
   -> lọc group.context === "CLASS"
   -> ưu tiên lớp chưa đóng
-  -> GET /api/groups/{id}/report
-  -> render tổng quan lớp
+  -> lấy report và danh sách quiz của từng lớp
+  -> cộng số học sinh trên tất cả report, đếm quiz theo ID
+  -> render ba thẻ tổng hợp và báo cáo của lớp đầu tiên
 ```
 
 Parent dùng `FAMILY`; Teacher dùng `CLASS`. Backend dùng cùng endpoint nhưng frontend chọn đúng ngữ cảnh.
@@ -33,7 +34,8 @@ Parent dùng `FAMILY`; Teacher dùng `CLASS`. Backend dùng cùng endpoint nhưn
 | Hàm | Method | Endpoint | Kết quả dùng ở đâu |
 |---|---|---|---|
 | `listGroups()` | GET | `/api/groups` | Chọn lớp hiện tại, đếm số lớp |
-| `getGroupReport(id)` | GET | `/api/groups/{id}/report` | Lấy summary của lớp |
+| `getGroupReport(id)` | GET | `/api/groups/{id}/report` | Cộng `summary.learners` của tất cả lớp và lấy chi tiết lớp đang theo dõi |
+| `listQuizzes(id)` | GET | `/api/quizzes?groupId={id}` | Đếm tất cả quiz đang quản lý; dùng chung nguồn với trang Quản lý Quiz, bao gồm bài nhập lưu trong trình duyệt |
 
 ## Giao diện theo trạng thái
 
@@ -42,7 +44,9 @@ Parent dùng `FAMILY`; Teacher dùng `CLASS`. Backend dùng cùng endpoint nhưn
 - Không có lớp: nút sang `/dashboard/groups`.
 - Có lớp: link đến báo cáo, học sinh và quản lý lớp.
 
-Các chỉ số lấy từ `report.summary`: `learners`, `active`, `activeLast7Days`, `chaptersCompleted`.
+Ba thẻ đầu trang dùng `groupCount`, `studentCount`, `quizCount`; `activeGroupCount` cho biết số lớp đang mở. Nếu chưa tải đủ report hoặc quiz, chỉ số tương ứng hiển thị `—` kèm cảnh báo, không dùng tổng thiếu làm tổng toàn bộ. `loadTeacherDashboard.js` tổng hợp dữ liệu; hook bỏ qua phản hồi cũ khi làm mới.
+
+Phần lớp đang theo dõi dùng `report.summary.learners`, `active` và `activeLast7Days` của riêng lớp đó.
 
 ## So sánh với Parent Dashboard
 

@@ -1,0 +1,159 @@
+{
+  "verified": [
+    {
+      "originalCode": "FDIC_MONEY_SMART-001",
+      "originalId": "2845489f-549b-4334-989d-49c0b8afd82c",
+      "replacementCode": "FDIC_MONEY_SMART-001-R1",
+      "replacementId": "0e64f99b-6a3e-4246-8906-c761544fc883",
+      "originalRetired": true,
+      "originalUnchanged": true,
+      "replacementMatches": true
+    },
+    {
+      "originalCode": "FDIC_MONEY_SMART-083",
+      "originalId": "fd2a1545-ea88-4679-a20b-c035a81a85dc",
+      "replacementCode": "FDIC_MONEY_SMART-083-R1",
+      "replacementId": "bd14c9cb-6ec3-4f43-8800-ba17abea05b9",
+      "originalRetired": true,
+      "originalUnchanged": true,
+      "replacementMatches": true
+    },
+    {
+      "originalCode": "FDIC_MONEY_SMART-097",
+      "originalId": "cccf2ddd-f234-4e37-ba3d-bfae88eb45a5",
+      "replacementCode": "FDIC_MONEY_SMART-097-R1",
+      "replacementId": "d6e0d8de-b877-4f71-81d8-9fdccc7f2ee7",
+      "originalRetired": true,
+      "originalUnchanged": true,
+      "replacementMatches": true
+    },
+    {
+      "originalCode": "FDIC_MONEY_SMART-099",
+      "originalId": "99f99d80-6146-4367-85eb-3fa01d98392f",
+      "replacementCode": "FDIC_MONEY_SMART-099-R1",
+      "replacementId": "4c019248-a74b-48db-b5fb-6ee9f6c34fb9",
+      "originalRetired": true,
+      "originalUnchanged": true,
+      "replacementMatches": true
+    },
+    {
+      "originalCode": "FDIC_MONEY_SMART-107",
+      "originalId": "4dfd44c3-68f8-47eb-982c-7b2be4fc5f33",
+      "replacementCode": "FDIC_MONEY_SMART-107-R1",
+      "replacementId": "049a4032-91c1-4294-bed8-eab15a5b4806",
+      "originalRetired": true,
+      "originalUnchanged": true,
+      "replacementMatches": true
+    },
+    {
+      "originalCode": "FDIC_MONEY_SMART-108",
+      "originalId": "6eb08677-ba40-4522-b8b1-8cb0e3882cc5",
+      "replacementCode": "FDIC_MONEY_SMART-108-R1",
+      "replacementId": "c2f7e271-33fb-4865-994b-0b67dcce0551",
+      "originalRetired": true,
+      "originalUnchanged": true,
+      "replacementMatches": true
+    },
+    {
+      "originalCode": "FDIC_MONEY_SMART-110",
+      "originalId": "dbe46f5b-5632-4d30-8a6d-7700c02d50bd",
+      "replacementCode": "FDIC_MONEY_SMART-110-R1",
+      "replacementId": "2eb1dcdd-417d-4a4c-9205-715d213f64c1",
+      "originalRetired": true,
+      "originalUnchanged": true,
+      "replacementMatches": true
+    },
+    {
+      "originalCode": "FDIC_MONEY_SMART-111",
+      "originalId": "88d94e8c-9438-4354-b586-523e04fb6a96",
+      "replacementCode": "FDIC_MONEY_SMART-111-R1",
+      "replacementId": "903264b4-a9a8-40ec-bef7-a4bbf642c31d",
+      "originalRetired": true,
+      "originalUnchanged": true,
+      "replacementMatches": true
+    },
+    {
+      "originalCode": "FDIC_MONEY_SMART-112",
+      "originalId": "96a9ccf5-9c1d-46b0-b8b4-689ebc0ac1a3",
+      "replacementCode": "FDIC_MONEY_SMART-112-R1",
+      "replacementId": "55d21042-e400-4571-8c17-5aa78cfb834c",
+      "originalRetired": true,
+      "originalUnchanged": true,
+      "replacementMatches": true
+    },
+    {
+      "originalCode": "FDIC_MONEY_SMART-121",
+      "originalId": "adbcc339-0b98-493a-af80-6482c1f102b5",
+      "replacementCode": "FDIC_MONEY_SMART-121-R1",
+      "replacementId": "aaa73d99-e1c2-446f-b7d7-117bce6844f0",
+      "originalRetired": true,
+      "originalUnchanged": true,
+      "replacementMatches": true
+    },
+    {
+      "originalCode": "FDIC_MONEY_SMART-126",
+      "originalId": "11b38cec-bc40-493c-8034-f406db2b1dd2",
+      "replacementCode": "FDIC_MONEY_SMART-126-R1",
+      "replacementId": "59a39325-f123-4aa1-999f-1f6339c3f45f",
+      "originalRetired": true,
+      "originalUnchanged": true,
+      "replacementMatches": true
+    },
+    {
+      "originalCode": "PISA-017",
+      "originalId": "4698c97b-f6a4-44d0-b178-7f700e77d602",
+      "replacementCode": "PISA-017-R1",
+      "replacementId": "246f1d9a-c343-4281-8241-6df5ca45be16",
+      "originalRetired": true,
+      "originalUnchanged": true,
+      "replacementMatches": true
+    },
+    {
+      "originalCode": "PISA-020",
+      "originalId": "a6d7e683-c232-4629-a7ef-d6a5300a08b2",
+      "replacementCode": "PISA-020-R1",
+      "replacementId": "8a4d8451-58ce-4642-959f-c4c7eb1f72d3",
+      "originalRetired": true,
+      "originalUnchanged": true,
+      "replacementMatches": true
+    },
+    {
+      "originalCode": "PISA-028",
+      "originalId": "8e2f6356-e22b-46a2-93dd-71db983f0919",
+      "replacementCode": "PISA-028-R1",
+      "replacementId": "d1adb97c-2ecf-427f-9656-a8fd45095289",
+      "originalRetired": true,
+      "originalUnchanged": true,
+      "replacementMatches": true
+    },
+    {
+      "originalCode": "PISA-032",
+      "originalId": "024516d4-3da0-40b1-a1d7-66fbfff91625",
+      "replacementCode": "PISA-032-R1",
+      "replacementId": "7a5ee288-c752-48f1-a334-97775a1ed51b",
+      "originalRetired": true,
+      "originalUnchanged": true,
+      "replacementMatches": true
+    },
+    {
+      "originalCode": "PISA-033",
+      "originalId": "95fd5060-5571-403a-916e-788ac7b4a026",
+      "replacementCode": "PISA-033-R1",
+      "replacementId": "6e9e7940-f75d-489e-b962-2c31c9749d05",
+      "originalRetired": true,
+      "originalUnchanged": true,
+      "replacementMatches": true
+    },
+    {
+      "originalCode": "PISA-034",
+      "originalId": "b707a134-7c17-4b66-ae7d-aa85b0a31b84",
+      "replacementCode": "PISA-034-R1",
+      "replacementId": "6f313334-e3a9-4dbd-abdd-2e775875e52a",
+      "originalRetired": true,
+      "originalUnchanged": true,
+      "replacementMatches": true
+    }
+  ],
+  "remaining": [],
+  "allVerified": true
+}

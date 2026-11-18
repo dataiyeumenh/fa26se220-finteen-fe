@@ -1,0 +1,125 @@
+{
+  "verified": [
+    {
+      "originalId": "c7fdd3eb-34e5-422a-b054-6ebbc9de8788",
+      "originalCode": "OECD_INFE-002",
+      "replacementId": "82596b29-d727-42c2-b34c-7684a4d7568a",
+      "replacementCode": "OECD_INFE-002-R1",
+      "originalRetired": true,
+      "replacementActive": true,
+      "originalUnchanged": true,
+      "replacementMatches": true
+    },
+    {
+      "originalId": "87ceaa1a-a20e-4059-bf39-eb6673e4150a",
+      "originalCode": "OECD_INFE-005",
+      "replacementId": "0978ba5c-85ec-4c39-8cf2-7da4bbc595ef",
+      "replacementCode": "OECD_INFE-005-R1",
+      "originalRetired": true,
+      "replacementActive": true,
+      "originalUnchanged": true,
+      "replacementMatches": true
+    },
+    {
+      "originalId": "06c4be0e-47ca-4aa9-af8e-51c2e1fc316a",
+      "originalCode": "OECD_INFE-006",
+      "replacementId": "446dfc22-fee4-4b74-831d-f2c7e65344a4",
+      "replacementCode": "OECD_INFE-006-R1",
+      "originalRetired": true,
+      "replacementActive": true,
+      "originalUnchanged": true,
+      "replacementMatches": true
+    },
+    {
+      "originalId": "f0ce922a-5fc0-49b3-a622-ff6557bc7aba",
+      "originalCode": "OECD_INFE-007",
+      "replacementId": "d004949e-5780-4017-b520-6de4b31f5259",
+      "replacementCode": "OECD_INFE-007-R1",
+      "originalRetired": true,
+      "replacementActive": true,
+      "originalUnchanged": true,
+      "replacementMatches": true
+    },
+    {
+      "originalId": "dd99cd39-8888-4481-bea2-e9237732a711",
+      "originalCode": "OECD_INFE-008",
+      "replacementId": "1f0d14fe-47b6-45cc-96fc-76666905b9c3",
+      "replacementCode": "OECD_INFE-008-R1",
+      "originalRetired": true,
+      "replacementActive": true,
+      "originalUnchanged": true,
+      "replacementMatches": true
+    },
+    {
+      "originalId": "60f7f0a7-458f-4569-ba8d-b171a328545d",
+      "originalCode": "OECD_INFE-009",
+      "replacementId": "83e5abf9-7692-4bef-9e40-e2af3748694b",
+      "replacementCode": "OECD_INFE-009-R1",
+      "originalRetired": true,
+      "replacementActive": true,
+      "originalUnchanged": true,
+      "replacementMatches": true
+    },
+    {
+      "originalId": "13e94c21-53a9-4a4c-b022-eb98d83b0ffd",
+      "originalCode": "OECD_INFE-010",
+      "replacementId": "ed776e44-93f9-458b-9d4e-01a4fd1dba26",
+      "replacementCode": "OECD_INFE-010-R1",
+      "originalRetired": true,
+      "replacementActive": true,
+      "originalUnchanged": true,
+      "replacementMatches": true
+    },
+    {
+      "originalId": "8bf4b0e7-3d0c-40c9-b853-0394bf82f5a2",
+      "originalCode": "OECD_INFE-011",
+      "replacementId": "a3650230-71ef-4a96-b14a-9379572a73b0",
+      "replacementCode": "OECD_INFE-011-R1",
+      "originalRetired": true,
+      "replacementActive": true,
+      "originalUnchanged": true,
+      "replacementMatches": true
+    },
+    {
+      "originalId": "a3192f3a-553f-46fb-b008-c614e68b4b54",
+      "originalCode": "OECD_INFE-012",
+      "replacementId": "27fe426b-a2d6-4f7f-894e-65d65888a4f7",
+      "replacementCode": "OECD_INFE-012-R1",
+      "originalRetired": true,
+      "replacementActive": true,
+      "originalUnchanged": true,
+      "replacementMatches": true
+    },
+    {
+      "originalId": "9afdd1fc-f09b-4221-8eac-c8e9696d7b1c",
+      "originalCode": "OECD_INFE-013",
+      "replacementId": "babe57a8-64f2-4202-986a-438fa329c85a",
+      "replacementCode": "OECD_INFE-013-R1",
+      "originalRetired": true,
+      "replacementActive": true,
+      "originalUnchanged": true,
+      "replacementMatches": true
+    },
+    {
+      "originalId": "e62a5035-2bf4-4917-ad87-826023aff008",
+      "originalCode": "PISA-021",
+      "replacementId": "9e2adbdc-4410-4cbd-961e-badd84e2d7d9",
+      "replacementCode": "PISA-021-R1",
+      "originalRetired": true,
+      "replacementActive": true,
+      "originalUnchanged": true,
+      "replacementMatches": true
+    },
+    {
+      "originalId": "cd23f08b-b73e-48c1-b2cd-216e9eb5ced2",
+      "originalCode": "PISA-035",
+      "replacementId": "bad14d50-47e1-413c-8812-ce6f9688d3e4",
+      "replacementCode": "PISA-035-R1",
+      "originalRetired": true,
+      "replacementActive": true,
+      "originalUnchanged": true,
+      "replacementMatches": true
+    }
+  ],
+  "allVerified": true
+}

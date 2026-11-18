@@ -1,12 +1,13 @@
 // Phát hành (kế hoạch bản sắp ra) và Lịch sử phiên bản (chọn bản đang chạy, thu hồi).
 import { useCallback, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, History, PackageCheck, Radio } from "lucide-react";
+import { ArrowRight, BookOpen, CircleCheck, History, Info, PackageCheck, Radio, Rocket } from "lucide-react";
 import { auth } from "../../api/auth.api";
 import { canManage, canPublish } from "./permissions";
 import { CHANGE_CLASS, fmtTime, studioApi } from "./studioClient";
 import { useStudioAction, useStudioResource } from "./useStudioResource";
 import { Btn, ConfirmDialog, PageHeader, Panel, StateBox, Tag } from "./ui";
+import "./release-plan.css";
 
 const chapterName = (draft) =>
   `Chương ${draft.chapterNumber ?? Number(draft.code?.slice(2))}`;
@@ -95,56 +96,62 @@ function PlanView({ actor, notify, title, intro }) {
   return (
     <>
       {head}
-      <div className="sp-release-plan">
-        <Panel title="Bản sẽ phát hành">
+      <div className="sp-release-plan sp-release-layout">
+        <Panel
+          title="Bản phát hành tiếp theo"
+          className="sp-release-summary"
+          actions={changeLabel(plan.changeClass) && <Tag tone="info">{changeLabel(plan.changeClass)}</Tag>}
+        >
           <div className="sp-versions">
             <div className="sp-version">
               <span>Game đang chạy</span>
               <strong>{plan.currentVersion || "Chưa có"}</strong>
             </div>
-            <ArrowRight size={22} aria-hidden="true" />
+            <span className="sp-version-arrow"><ArrowRight size={20} aria-hidden="true" /></span>
             <div className="sp-version is-next">
               <span>Sau khi phát hành</span>
               <strong>{plan.version}</strong>
             </div>
-            {changeLabel(plan.changeClass) && (
-              <Tag tone="info">{changeLabel(plan.changeClass)}</Tag>
-            )}
+          </div>
+          <div className="sp-plan-chapters-heading">
+            <h3>Nội dung cập nhật</h3>
+            <span>{plan.drafts?.length || 0} chương</span>
           </div>
           <ul className="sp-plan-list" aria-label="Chương sẽ vào bản này">
             {plan.drafts?.map((draft) => (
               <li key={draft.code}>
-                <strong>
-                  {chapterName(draft)}: {draft.title}
-                </strong>
-                <span>
-                  {draft.reviewerName || "Người duyệt"} chấm Đạt, bản nháp số{" "}
-                  {draft.revision}
+                <span className="sp-plan-chapter-icon" aria-hidden="true"><BookOpen size={19} /></span>
+                <div className="sp-plan-chapter-copy">
+                  <strong>{chapterName(draft)}: {draft.title}</strong>
+                  <span>{draft.reviewerName || "Người duyệt"} chấm Đạt · Bản nháp #{draft.revision}</span>
+                </div>
+                <span className="sp-plan-chapter-status">
+                  <CircleCheck size={14} aria-hidden="true" /> Đã duyệt
                 </span>
               </li>
             ))}
           </ul>
-          <p className="sp-hint" style={{ marginTop: 12 }}>
-            Các chương khác giữ nguyên như bản{" "}
-            {plan.currentVersion || "hiện tại"}. Số bản do hệ thống tự tính theo
-            mức thay đổi lớn nhất.
-          </p>
+          <div className="sp-release-preserved">
+            <Info size={17} aria-hidden="true" />
+            <p>Các chương khác giữ nguyên như bản {plan.currentVersion || "hiện tại"}. Số phiên bản được hệ thống tính tự động.</p>
+          </div>
         </Panel>
-        <Panel title="Phát hành">
+        <Panel title="Chuẩn bị phát hành" className="sp-release-publish">
           {canManage(actor) ? (
-            <div className="sp-dialog-body">
-              <label className="sp-field">
-                Ghi chú cho bản này
-                <small>
-                  Không bắt buộc. Ví dụ: thêm chương 6, sửa lỗi chính tả chương
-                  4.
-                </small>
+            <div className="sp-publish-form">
+              <label className="sp-field sp-release-note" htmlFor="release-note">
+                <span>Ghi chú cho bản này <small>Không bắt buộc</small></span>
                 <textarea
+                  id="release-note"
                   className="sp-input"
+                  rows={5}
+                  placeholder="Tóm tắt những thay đổi của phiên bản…"
+                  aria-describedby="release-note-help"
                   value={note}
                   disabled={busy}
                   onChange={(event) => setNote(event.target.value)}
                 />
+                <small id="release-note-help">Giúp cả nhóm tra cứu thay đổi trong lịch sử phiên bản.</small>
               </label>
               {!allowed && (
                 <div className="sp-inline-error" role="note">
@@ -153,16 +160,19 @@ function PlanView({ actor, notify, title, intro }) {
                     : "Bản này chưa đủ điều kiện phát hành."}
                 </div>
               )}
-              <Btn
-                tone="primary"
-                disabled={busy || !allowed}
-                onClick={() => {
-                  clearError();
-                  setConfirming(true);
-                }}
-              >
-                Phát hành bản {plan.version}
-              </Btn>
+              <div className="sp-publish-actions">
+                <p>Bạn sẽ xem lại và xác nhận trước khi phát hành.</p>
+                <Btn
+                  tone="primary"
+                  disabled={busy || !allowed}
+                  onClick={() => {
+                    clearError();
+                    setConfirming(true);
+                  }}
+                >
+                  <Rocket size={17} aria-hidden="true" /> Phát hành bản {plan.version}
+                </Btn>
+              </div>
             </div>
           ) : (
             <p className="sp-hint">
@@ -173,6 +183,7 @@ function PlanView({ actor, notify, title, intro }) {
       </div>
       {confirming && (
         <ConfirmDialog
+          className="sp-release-confirm"
           title={`Phát hành bản ${plan.version}?`}
           confirmLabel={`Phát hành ${plan.version}`}
           busy={busy}
