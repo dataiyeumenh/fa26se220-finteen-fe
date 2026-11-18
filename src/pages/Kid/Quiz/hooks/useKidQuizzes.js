@@ -11,22 +11,23 @@ const message = (error) => ({
   8013: "Không tìm thấy phiên làm bài của bạn.",
 })[error?.code] || error?.message || "Không thể hoàn thành yêu cầu.";
 
-const pendingStorageKey = (attemptId) => `finteen:quiz-attempt:${attemptId}:pending-answers`;
+const pendingStorageKey = (ownerId, attemptId) =>
+  `finteen:quiz-attempt:${encodeURIComponent(ownerId)}:${attemptId}:pending-answers`;
 
-const readPendingAnswers = (attemptId) => {
-  if (!attemptId) return {};
+const readPendingAnswers = (ownerId, attemptId) => {
+  if (!ownerId || !attemptId) return {};
   try {
-    const value = JSON.parse(window.localStorage.getItem(pendingStorageKey(attemptId)) || "{}");
+    const value = JSON.parse(window.localStorage.getItem(pendingStorageKey(ownerId, attemptId)) || "{}");
     return value && typeof value === "object" && !Array.isArray(value) ? value : {};
   } catch {
     return {};
   }
 };
 
-const writePendingAnswers = (attemptId, pending) => {
-  if (!attemptId) return;
+const writePendingAnswers = (ownerId, attemptId, pending) => {
+  if (!ownerId || !attemptId) return;
   try {
-    const key = pendingStorageKey(attemptId);
+    const key = pendingStorageKey(ownerId, attemptId);
     if (Object.keys(pending).length) window.localStorage.setItem(key, JSON.stringify(pending));
     else window.localStorage.removeItem(key);
   } catch {
@@ -63,6 +64,7 @@ export function useKidQuizzes() {
 }
 
 export function useKidQuiz(quizId, quizHint = null) {
+  const ownerId = authSession.getSnapshot().actor?.id;
   const [quiz, setQuiz] = useState(null);
   const [answers, setAnswers] = useState({});
   const [attempt, setAttempt] = useState(null);
@@ -102,7 +104,7 @@ export function useKidQuiz(quizId, quizHint = null) {
               const next = { ...pendingAnswersRef.current };
               delete next[position];
               pendingAnswersRef.current = next;
-              writePendingAnswers(attemptId, next);
+              writePendingAnswers(ownerId, attemptId, next);
               updatePendingState({ failed: false });
             }
           } catch (error) {
@@ -110,7 +112,7 @@ export function useKidQuiz(quizId, quizHint = null) {
               const next = { ...pendingAnswersRef.current };
               delete next[position];
               pendingAnswersRef.current = next;
-              writePendingAnswers(attemptId, next);
+              writePendingAnswers(ownerId, attemptId, next);
               updatePendingState({ failed: false });
               setError(message(error));
             } else {
@@ -128,7 +130,7 @@ export function useKidQuiz(quizId, quizHint = null) {
       flushPromiseRef.current = null;
     });
     return flushPromiseRef.current;
-  }, [updatePendingState]);
+  }, [ownerId, updatePendingState]);
 
   useEffect(() => {
     let active = true;
@@ -141,7 +143,7 @@ export function useKidQuiz(quizId, quizHint = null) {
           if (!active) return;
           const attemptQuestions = started?.questions || started?.paper || [];
           const attemptId = started?.attemptId || started?.id;
-          const restoredPending = readPendingAnswers(attemptId);
+          const restoredPending = readPendingAnswers(ownerId, attemptId);
           attemptIdRef.current = attemptId;
           pendingAnswersRef.current = restoredPending;
           setAttempt(started);
@@ -164,7 +166,7 @@ export function useKidQuiz(quizId, quizHint = null) {
     return () => {
       active = false;
     };
-  }, [quizId, quizHint, updatePendingState]);
+  }, [ownerId, quizId, quizHint, updatePendingState]);
 
   useEffect(() => {
     if (!attempt) return undefined;
@@ -195,7 +197,7 @@ export function useKidQuiz(quizId, quizHint = null) {
         ...pendingAnswersRef.current,
         [String(position)]: { choice: optionIndex, leaveCount },
       };
-      writePendingAnswers(attemptId, pendingAnswersRef.current);
+      writePendingAnswers(ownerId, attemptId, pendingAnswersRef.current);
       updatePendingState({ failed: false });
       void flushPendingAnswers();
     }
@@ -216,7 +218,7 @@ export function useKidQuiz(quizId, quizHint = null) {
         }
         setResult(await auth.submitAttempt(attempt.attemptId || attempt.id, leaveCount));
         pendingAnswersRef.current = {};
-        writePendingAnswers(attempt.attemptId || attempt.id, {});
+        writePendingAnswers(ownerId, attempt.attemptId || attempt.id, {});
         updatePendingState({ saving: false, failed: false });
       } else {
         const payload = Object.entries(answers).map(([questionId, chosenIndex]) => ({ questionId, chosenIndex }));

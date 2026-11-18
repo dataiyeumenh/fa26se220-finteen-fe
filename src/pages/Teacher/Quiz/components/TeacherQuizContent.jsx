@@ -34,6 +34,14 @@ const kindLabel = (quiz) =>
     : "Đề giáo viên";
 const dateTime = (value) =>
   value ? new Date(value).toLocaleString("vi-VN") : "Không có hạn";
+const localDateTimeInput = (value) => {
+  if (!value) return "";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  return new Date(date.getTime() - date.getTimezoneOffset() * 60_000)
+    .toISOString()
+    .slice(0, 16);
+};
 const quizQuestionSummary = (quiz) => {
   const sourceCount = Number(quiz?.questionCount) || 0;
   const assignedCount = quiz?.mode === "TEST" && Number(quiz?.drawCount) > 0
@@ -270,7 +278,7 @@ function QuizEditor({ groups, quiz, onClose, onSaved }) {
   const [formValues, setFormValues] = useState(() => ({
     groupId: quiz?.groupId || groups.find((item) => !item.closedAt)?.id || "",
     title: quiz?.title || "",
-    dueAt: quiz?.dueAt ? quiz.dueAt.slice(0, 16) : "",
+    dueAt: localDateTimeInput(quiz?.dueAt),
     drawCount: quiz?.drawCount ? String(quiz.drawCount) : "",
     durationMinutes: quiz?.durationSeconds ? String(Math.ceil(quiz.durationSeconds / 60)) : "",
   }));

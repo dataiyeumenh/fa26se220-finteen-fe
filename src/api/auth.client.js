@@ -20,7 +20,9 @@ export class ApiError extends Error {
 export function createAuthClient({
   baseUrl,
   storage,
+  slotStorage = storage,
   contextStorage = storage,
+  clearSlotData = () => {},
   fetcher = (...args) => fetch(...args),
   now = Date.now,
 }) {
@@ -34,7 +36,7 @@ export function createAuthClient({
     /* Invalid or unavailable storage. */
   }
   try {
-    savedSlot = JSON.parse(storage.getItem(slotKey));
+    savedSlot = JSON.parse(slotStorage.getItem(slotKey));
   } catch {
     /* Invalid or unavailable storage. */
   }
@@ -92,11 +94,19 @@ export function createAuthClient({
   };
   const persistSlot = () => {
     try {
-      storage.setItem(slotKey, JSON.stringify(slotSession));
+      slotStorage.setItem(slotKey, JSON.stringify(slotSession));
     } catch {
       /* In-memory session still works. */
     }
   };
+  // Remove SLOT tokens persisted by older builds after SLOT storage moved to sessionStorage.
+  if (slotStorage !== storage) {
+    try {
+      storage.setItem(slotKey, JSON.stringify(null));
+    } catch {
+      /* The current session still uses slotStorage. */
+    }
+  }
   if (saved && !session) persist();
   if (savedSlot && !slotSession) persistSlot();
   const logout = () => {
@@ -131,6 +141,24 @@ export function createAuthClient({
       loading: false,
       error: message || "",
     });
+  };
+  const signOut = async () => {
+    const activeSlot = slotSession;
+    try {
+      if (slotSession)
+        await request("/api/auth/logout", { method: "POST", slotAuthenticated: true });
+      else if (session)
+        await request("/api/auth/logout", { method: "POST", authenticated: true });
+    } catch {
+      // Local logout must still finish if the server is unavailable or not deployed yet.
+    } finally {
+      try {
+        if (activeSlot) clearSlotData(activeSlot);
+      } catch {
+        /* Session cleanup must continue if browser storage is unavailable. */
+      }
+      logout();
+    }
   };
   const expired = () => {
     logout();
@@ -394,6 +422,7 @@ export function createAuthClient({
     },
     getSnapshot: () => state,
     logout,
+    signOut,
     logoutSlot,
     refresh,
     ensureEntitlements,

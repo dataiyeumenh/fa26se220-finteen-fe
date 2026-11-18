@@ -4,7 +4,7 @@ import { withGroupConsent } from "../api/withGroupConsent.js";
 
 const errorMessage = (error) =>
   ({
-    3005: "Gói đã hết hạn — hãy gia hạn để mở thêm hồ sơ trẻ.",
+    3005: "Cần mua gói trước khi tạo lớp hoặc hồ sơ học sinh.",
     5001: "Bạn đã có nhóm đang mở — hãy kết thúc nhóm cũ trước.",
     5002: "Nhóm đã kết thúc.",
     5003: "Lớp cần xác nhận đã có sự đồng ý của phụ huynh trước.",

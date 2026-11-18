@@ -484,7 +484,7 @@ test("payment API creates a VietQR order, lists, checks and cancels it", async (
     { code: 0, message: "OK" },
   );
   const created = await api.createPayment("PARENT");
-  const addon = await api.createAddonPayment("PARENT", 2);
+  const addon = await api.createAddonPayment("PARENT", 2.9);
   const history = await api.listPayments({ page: 0, size: 20 });
   const checked = await api.getPayment(created.orderCode);
   const cancelled = await api.cancelPayment(
@@ -690,6 +690,36 @@ test("logout during SLOT login prevents the late response from restoring a sessi
   await pending;
   assert.equal(auth.hasSession(), false);
   assert.equal(auth.getSnapshot().actor, null);
+});
+
+test("SLOT sessions use session storage and signOut revokes before clearing learner data", async () => {
+  const accountData = new Map(), slotData = new Map(), calls = [], cleared = [];
+  const storage = (data) => ({
+    getItem: (key) => data.get(key),
+    setItem: (key, value) => data.set(key, value),
+  });
+  const auth = createAuthClient({
+    baseUrl: "https://example.com",
+    storage: storage(accountData),
+    slotStorage: storage(slotData),
+    clearSlotData: (slot) => cleared.push(slot.slot.id),
+    fetcher: async (url, init) => {
+      calls.push({ url, ...init });
+      const result = url.endsWith("/api/slots/login")
+        ? { accessToken: "slot-token", expiresIn: 60, slot: { id: "kid-1", displayName: "Kid", groupContext: "FAMILY" } }
+        : null;
+      return { ok: true, status: 200, json: async () => ({ code: 0, result }) };
+    },
+  });
+  await auth.slotLogin("kidcode1", "012345");
+  assert.equal(JSON.parse(accountData.get("finteen.slot.v1:https://example.com")), null);
+  assert.equal(JSON.parse(slotData.get("finteen.slot.v1:https://example.com")).accessToken, "slot-token");
+  await auth.signOut();
+  assert.match(calls.at(-1).url, /\/api\/auth\/logout$/);
+  assert.equal(calls.at(-1).headers.Authorization, "Bearer slot-token");
+  assert.deepEqual(cleared, ["kid-1"]);
+  assert.equal(auth.hasSession(), false);
+  assert.equal(JSON.parse(slotData.get("finteen.slot.v1:https://example.com")), null);
 });
 
 test("report APIs use ACCOUNT authentication and encoded resource ids", async () => {

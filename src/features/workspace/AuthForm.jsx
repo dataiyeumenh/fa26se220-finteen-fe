@@ -97,7 +97,7 @@ export default function AuthForm({ registration = false, internal = false }) {
       <section className="ft-auth-form">
         <h1>Không thể đăng nhập</h1>
         <p role="alert">{wrongLoginMessage()}</p>
-        <button className="ft-button ft-primary" onClick={() => auth.logout()}>
+        <button className="ft-button ft-primary" onClick={() => void auth.signOut()}>
           Đăng nhập tài khoản khác
         </button>
       </section>
@@ -255,7 +255,7 @@ export default function AuthForm({ registration = false, internal = false }) {
           >
             <GraduationCap size={20} aria-hidden="true" />
             <span>
-              Trẻ em<small>Học sinh 13–18 tuổi</small>
+              Trẻ em<small>Học sinh 8–18 tuổi</small>
             </span>
           </button>
         </div>
@@ -336,6 +336,9 @@ export default function AuthForm({ registration = false, internal = false }) {
             maxLength={kid ? 6 : undefined}
             pattern={kid ? "[0-9]{6}" : undefined}
             inputMode={kid ? "numeric" : undefined}
+            onInput={kid ? (event) => {
+              event.currentTarget.value = event.currentTarget.value.replace(/\D/g, "").slice(0, 6);
+            } : undefined}
             hint={registration ? "Sử dụng ít nhất 8 ký tự." : undefined}
             required
           />

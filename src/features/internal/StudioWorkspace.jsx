@@ -59,7 +59,7 @@ export default function StudioWorkspace({ actor }) {
         <p className="studio-nav-group-label">Thư viện dùng chung</p>
         {shared.map(({ path, title, icon, readOnly }) => <NavLink key={path} to={path} title={`${title}${readOnly ? ' · Chỉ xem' : ''}`}><MenuIcon name={icon} /><span className="studio-menu-label">{title}</span>{readOnly && <ViewBadge />}</NavLink>)}
       </nav>
-      <div className="studio-sidebar-bottom"><button type="button" title="Đăng xuất" onClick={() => auth.logout()}><LogOut size={18} aria-hidden="true" />Đăng xuất</button></div>
+      <div className="studio-sidebar-bottom"><button type="button" title="Đăng xuất" onClick={() => void auth.signOut()}><LogOut size={18} aria-hidden="true" />Đăng xuất</button></div>
     </ResponsiveSidebar>
     <div className="studio-main">
       <header className="studio-global-header">

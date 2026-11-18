@@ -14,6 +14,7 @@ export default function TeacherGroupsContent({ learnerState, groupsOnly }) {
   const {
     group,
     groups,
+    slots,
     active,
     available,
     quotaFree,
@@ -88,11 +89,15 @@ export default function TeacherGroupsContent({ learnerState, groupsOnly }) {
     );
   if (!groupsOnly) return <TeacherLearnerList learnerState={learnerState} />;
   const closed = groups.filter((item) => item.closedAt);
+  const createdSlotCount = Math.max(
+    Number(group.slotUsed) || 0,
+    slots.length,
+  );
   return (
     <>
       <Heading
         title="Quản lý lớp học"
-        description={`${group.name} · ${active.length}/${group.plannedSize ?? group.slotLimit} học sinh.`}
+        description={`${group.name} · ${active.length}/${group.slotLimit} học sinh.`}
       >
         {groups.filter((item) => !item.closedAt).length > 1 && (
           <label>
@@ -129,7 +134,7 @@ export default function TeacherGroupsContent({ learnerState, groupsOnly }) {
             : "Chưa xác nhận đồng ý của phụ huynh."}
         </p>
         <p>
-          {available} chỗ trống trong lớp trên tổng sĩ số {group.plannedSize ?? group.slotLimit}.
+          {available} chỗ trống trong lớp trên tổng sĩ số {group.slotLimit}.
         </p>
         <div className="ws-actions">
           {!group.consentConfirmed && (
@@ -217,7 +222,14 @@ export default function TeacherGroupsContent({ learnerState, groupsOnly }) {
             {modal.type === "size" && (
               <label>
                 Sĩ số mới
-                <input name="plannedSize" type="number" min={Math.max(5, active.length)} max={(group.plannedSize ?? active.length) + quotaFree} defaultValue={group.plannedSize ?? Math.max(5, active.length)} required />
+                <input
+                  name="plannedSize"
+                  type="number"
+                  min={Math.max(5, createdSlotCount)}
+                  max={Number(group.slotLimit) + quotaFree}
+                  defaultValue={group.slotLimit}
+                  required
+                />
               </label>
             )}
             {modal.type === "close" && (
@@ -257,7 +269,7 @@ function TeacherLearnerList({ learnerState }) {
     <>
       <Heading
         title="Học sinh và hồ sơ đăng nhập"
-        description={`${active.length}/${group.plannedSize ?? group.slotLimit} đang hoạt động · ${available} chỗ trống trong lớp.`}
+        description={`${active.length}/${group.slotLimit} đang hoạt động · ${available} chỗ trống trong lớp.`}
       >
         <button className="ws-btn" onClick={() => void refresh()}>
           <RefreshCw size={16} /> Làm mới
@@ -359,7 +371,9 @@ function TeacherLearnerList({ learnerState }) {
             }[modal.type]
           }
           description={
-            modal.type === "wipe"
+            modal.type === "pin"
+              ? `Đang cập nhật hồ sơ của ${modal.slot.displayName}. Để trống PIN nếu chỉ đổi tên.`
+              : modal.type === "wipe"
               ? "Thao tác này xóa tên, PIN và cá nhân hóa. Kết quả học tập được giữ ẩn danh, nhưng slot đã xóa sẽ không được hoàn lại vào ví."
               : undefined
           }

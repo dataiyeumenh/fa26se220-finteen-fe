@@ -11,7 +11,7 @@ import ReportIndicatorHelp from "@/features/workspace/ReportIndicatorHelp";
 
 const statusLabel = (status) =>
   ({ ACTIVE: "Hoạt động", ARCHIVED: "Đã thu hồi", WIPED: "Đã xoá" })[status] ||
-  status;
+  (status ? "Không xác định" : "—");
 const indicatorLabels = {
   wealth: "Tài sản",
   saving: "Tiết kiệm",

@@ -28,6 +28,7 @@ export default function LearnerReportContent({ reportState }) {
   const { learner, progress, indicators } = report;
   const done = new Set(progress.chaptersDone || []);
   const continueChapter = Number(progress.continueChapter) || null;
+  const hasStarted = Boolean(progress.lastPlayedAt || done.size > 0);
   const chapters = release.chapters.map((chapter) => ({
     number: chapter.chapterNumber,
     title: chapter.title,
@@ -102,7 +103,7 @@ export default function LearnerReportContent({ reportState }) {
         <ol className="ws-chapter-timeline">
           {chapters.map((chapter) => {
             const isPlaying =
-              !chapter.completed && chapter.number === continueChapter;
+              hasStarted && !chapter.completed && chapter.number === continueChapter;
             const stateClass = chapter.completed
               ? "is-done"
               : isPlaying

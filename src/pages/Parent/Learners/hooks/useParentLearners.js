@@ -3,7 +3,7 @@ import { parentLearnersApi as auth } from "../api/parentLearnersApi";
 
 const errorMessage = (error) =>
   ({
-    3005: "Gói đã hết hạn — hãy gia hạn để mở thêm hồ sơ trẻ.",
+    3005: "Cần mua gói trước khi tạo thêm hồ sơ trẻ.",
     5001: "Bạn đã có nhóm đang mở — hãy kết thúc nhóm cũ trước.",
     5002: "Nhóm đã kết thúc.",
     3006: "Ví đã hết slot. Hãy mua thêm slot để tiếp tục.",
