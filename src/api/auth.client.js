@@ -22,6 +22,7 @@ export function createAuthClient({
   storage,
   slotStorage = storage,
   contextStorage = storage,
+  beforeSlotSignOut = async () => {},
   clearSlotData = () => {},
   fetcher = (...args) => fetch(...args),
   now = Date.now,
@@ -145,9 +146,14 @@ export function createAuthClient({
   const signOut = async () => {
     const activeSlot = slotSession;
     try {
-      if (slotSession)
+      if (slotSession) {
+        try {
+          await beforeSlotSignOut(activeSlot);
+        } catch {
+          /* A failed sync must not prevent server-side session revocation. */
+        }
         await request("/api/auth/logout", { method: "POST", slotAuthenticated: true });
-      else if (session)
+      } else if (session)
         await request("/api/auth/logout", { method: "POST", authenticated: true });
     } catch {
       // Local logout must still finish if the server is unavailable or not deployed yet.

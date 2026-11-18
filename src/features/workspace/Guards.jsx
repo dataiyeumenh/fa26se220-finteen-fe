@@ -23,7 +23,7 @@ export function RequireAccount({ kind, roles, plans }) {
         <button onClick={() => void auth.refresh().catch(() => {})}>
           Thử lại
         </button>{" "}
-        <button onClick={() => auth.logout()}>Đăng nhập lại</button>
+        <button onClick={() => void auth.signOut()}>Đăng nhập lại</button>
       </Empty>
     );
   if (!actor) return <Navigate to="/login" replace />;
