@@ -138,7 +138,7 @@ function PlansTab() {
   const handleSave = async (event, kind) => {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
-    await savePlan(kind, Number(form.get("price")), Number(form.get("months")));
+    await savePlan(kind, Number(form.get("price")), Number(form.get("addonPrice")));
   };
   return (
     <>
@@ -182,7 +182,7 @@ function PlansTab() {
                   <span>{plan ? "Giá đang áp dụng" : "Thiết lập gói học"}</span>
                   <div>
                     <strong>{plan ? money(plan.price) : "Chưa mở bán"}</strong>
-                    {plan && <small>/ {plan.months} tháng</small>}
+                    {plan && <small>· mua 1 lần, dùng mãi</small>}
                   </div>
                   <p>
                     {kind === "PARENT"
@@ -203,14 +203,14 @@ function PlansTab() {
                   />
                 </label>
                 <label>
-                  Thời hạn (tháng)
+                  Giá 1 pack thêm ({plan?.addonSlots ?? (kind === "PARENT" ? 2 : 20)} slot)
                   <input
-                    name="months"
+                    name="addonPrice"
                     type="number"
                     min="1"
-                    max="36"
-                    required
-                    defaultValue={plan?.months || 3}
+                    step="1"
+                    defaultValue={plan?.addonPrice || ""}
+                    placeholder="Để trống nếu chưa mở bán"
                   />
                 </label>
                 <p className="admin-meta">

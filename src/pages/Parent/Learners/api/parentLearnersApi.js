@@ -8,6 +8,7 @@ export const createParentLearnersApi = (client) => ({
     client.accountRequest(
       `/api/groups/${encodeURIComponent(groupId)}/capacity`,
     ),
+  getQuota: () => client.accountRequest("/api/me/quota"),
   openGroup: (name, context) =>
     client.accountRequest("/api/groups", {
       body: { name: name.trim(), context },
@@ -23,11 +24,6 @@ export const createParentLearnersApi = (client) => ({
     client.accountRequest(`/api/groups/${encodeURIComponent(groupId)}/close`, {
       method: "POST",
     }),
-  setGroupPostTest: (groupId, enabled) =>
-    client.accountRequest(
-      `/api/groups/${encodeURIComponent(groupId)}/post-test`,
-      { body: { enabled: Boolean(enabled) } },
-    ),
   openSlot: ({ groupId, displayName, pin, badge }) =>
     client.accountRequest("/api/slots", {
       body: {
@@ -47,13 +43,10 @@ export const createParentLearnersApi = (client) => ({
         })),
       },
     }),
-  changeSlotPin: (slotId, pin) =>
-    client.accountRequest(`/api/slots/${encodeURIComponent(slotId)}/pin`, {
-      body: { pin },
-    }),
-  returnSlot: (slotId) =>
-    client.accountRequest(`/api/slots/${encodeURIComponent(slotId)}/return`, {
-      method: "POST",
+  updateSlot: (slotId, displayName, pin) =>
+    client.accountRequest(`/api/slots/${encodeURIComponent(slotId)}`, {
+      method: "PATCH",
+      body: { displayName: displayName.trim(), ...(pin ? { pin } : {}) },
     }),
   wipeSlot: (slotId) =>
     client.accountRequest(`/api/slots/${encodeURIComponent(slotId)}`, {

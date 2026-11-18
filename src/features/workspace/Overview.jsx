@@ -8,7 +8,7 @@ import AccountSettings from "../auth/AccountSettings";
 import { auth } from "../../api/auth.api";
 import { workspaceApi } from "./api/workspaceApi";
 import { PageLoader } from "../../components/feedback/LoadingState";
-import { currentEntitlements, formatPlanDate, PLAN_NAME } from "./entitlements";
+import { PLAN_NAME } from "./entitlements";
 
 const PaymentResult = lazy(() => import("./PaymentResult"));
 
@@ -84,8 +84,9 @@ export function Overview() {
 }
 
 export function Plans() {
-  const { actor, entitlements, entitlementsLoading } = useWorkspace();
+  const { actor } = useWorkspace();
   const [plans, setPlans] = useState([]);
+  const [quotas, setQuotas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [buying, setBuying] = useState("");
@@ -98,7 +99,12 @@ export function Plans() {
     setLoading(true);
     setError("");
     try {
-      setPlans((await workspaceApi.listPlans()) || []);
+      const [planRows, quotaRows] = await Promise.all([
+        workspaceApi.listPlans(),
+        workspaceApi.getQuota(),
+      ]);
+      setPlans(planRows || []);
+      setQuotas(Array.isArray(quotaRows) ? quotaRows : quotaRows?.items || quotaRows?.quotas || []);
     } catch (loadError) {
       setError(loadError.message);
     } finally {
@@ -130,12 +136,13 @@ export function Plans() {
     void loadPayments();
     void auth.ensureEntitlements().catch(() => {});
   }, []);
-  const activeEntitlements = currentEntitlements(actor, entitlements);
-  const buy = async (kind) => {
+  const buy = async (kind, addon = false) => {
     setBuying(kind);
     setError("");
     try {
-      const created = await workspaceApi.createPayment(kind);
+      const created = addon
+        ? await workspaceApi.createAddonPayment(kind, 1)
+        : await workspaceApi.createPayment(kind);
       setPayment(created);
       setBuying("");
     } catch (buyError) {
@@ -168,29 +175,26 @@ export function Plans() {
               "Tài khoản của bạn hiện chưa có gói học tập."}
           </p>
         </div>
-        {entitlementsLoading && !entitlements ? (
-          <span className="ws-plan-validity">Đang tải thời hạn…</span>
-        ) : (
-          activeEntitlements.length > 0 && (
-            <div className="ws-plan-validities">
-              {activeEntitlements.map((item) => (
-                <span className="ws-plan-validity" key={item.id}>
-                  <strong>{PLAN_NAME[item.kind] || item.kind}</strong>
-                  <span>
-                    Kỳ hiện tại: {formatPlanDate(item.startsOn)} –{" "}
-                    {formatPlanDate(item.currentExpiresOn || item.expiresOn)}
-                  </span>
-                  {item.renewalCount > 0 && (
-                    <span>
-                      Đã gia hạn đến: {formatPlanDate(item.expiresOn)}
-                    </span>
-                  )}
-                </span>
-              ))}
-            </div>
-          )
+        {actor.plans.length > 0 && (
+          <span className="ws-plan-validity">Quyền sử dụng vĩnh viễn</span>
         )}
       </section>
+      {quotas.length > 0 && (
+        <section className="ws-card">
+          <h2>Ví slot</h2>
+          <p>Slot đã xóa vẫn được tính là đã dùng và không được hoàn lại.</p>
+          <div className="ws-grid two">
+            {quotas.map((quota) => (
+              <article className="ws-card" key={quota.context || quota.plan}>
+                <strong>{quota.context === "CLASS" || quota.plan === "TEACHER" ? "Ví giáo viên" : "Ví gia đình"}</strong>
+                <p>Đã có: {quota.limit ?? 0} · Đã dùng: {quota.used ?? 0}</p>
+                <p>Đang giữ cho lớp: {quota.reserved ?? 0} · Còn trống: {quota.free ?? 0}</p>
+                <small>Gói gốc {quota.base ?? 0} + mua thêm {quota.extra ?? 0} · đã xóa {quota.wiped ?? 0}</small>
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
       {error && (
         <p className="ws-notice" role="alert">
           {error}
@@ -219,8 +223,13 @@ export function Plans() {
                 <h2>{copy.name}</h2>
                 <p>{copy.description}</p>
                 <div className="ws-plan-number">
-                  {money(plan.price)} <span>/ {plan.months} tháng</span>
+                  {money(plan.price)} <span>· mua 1 lần, dùng mãi</span>
                 </div>
+                {owned && plan.addonPrice != null && (
+                  <p className="ws-plan-note">
+                    Gói thêm {plan.addonSlots} slot: {money(plan.addonPrice)} / pack
+                  </p>
+                )}
                 <ul>
                   {copy.benefits.map((benefit) => (
                     <li key={benefit}>{benefit}</li>
@@ -229,12 +238,13 @@ export function Plans() {
                 <button
                   className="ws-btn primary"
                   disabled={Boolean(buying)}
-                  onClick={() => void buy(plan.kind)}
+                  onClick={() => void buy(plan.kind, owned)}
+                  disabled={Boolean(buying) || (owned && plan.addonPrice == null)}
                 >
                   {buying === plan.kind
                     ? "Đang tạo đơn…"
                     : owned
-                      ? "Gia hạn gói"
+                      ? plan.addonPrice == null ? "Chưa mở bán slot thêm" : `Mua thêm ${plan.addonSlots} slot`
                       : "Mua gói ngay"}
                 </button>
                 <small className="ws-plan-note">

@@ -75,10 +75,5 @@ export default function useParentReports(options = {}) {
     error,
     warning,
     refresh,
-    setPostTest: async (enabled) => {
-      if (!report?.group?.id) return;
-      await auth.setPostTest(report.group.id, enabled);
-      await refresh();
-    },
   };
 }

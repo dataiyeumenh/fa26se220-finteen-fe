@@ -2,8 +2,13 @@ import { auth } from "../../../api/auth.api.js";
 
 export const createWorkspaceApi = (client) => ({
   listPlans: () => client.publicRequest("/api/plans"),
+  getQuota: () => client.accountRequest("/api/me/quota"),
   createPayment: (kind) =>
     client.accountRequest("/api/payments", { body: { kind } }),
+  createAddonPayment: (kind, packs = 1) =>
+    client.accountRequest("/api/payments/addon", {
+      body: { kind, packs: Number(packs) },
+    }),
   listPayments: ({ page = 0, size = 20 } = {}) =>
     client.accountRequest(
       `/api/payments?page=${encodeURIComponent(page)}&size=${encodeURIComponent(size)}`,

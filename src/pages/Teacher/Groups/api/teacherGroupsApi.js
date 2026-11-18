@@ -6,9 +6,10 @@ export const teacherGroupsApi = {
     auth.accountRequest(`/api/groups/${encodeURIComponent(groupId)}/slots`),
   groupCapacity: (groupId) =>
     auth.accountRequest(`/api/groups/${encodeURIComponent(groupId)}/capacity`),
-  openGroup: (name, context) =>
+  getQuota: () => auth.accountRequest("/api/me/quota"),
+  openGroup: (name, context, plannedSize) =>
     auth.accountRequest("/api/groups", {
-      body: { name: name.trim(), context },
+      body: { name: name.trim(), context, plannedSize: Number(plannedSize) },
     }),
   confirmConsent: (groupId) =>
     auth.accountRequest(`/api/groups/${encodeURIComponent(groupId)}/consent`, {
@@ -18,11 +19,11 @@ export const teacherGroupsApi = {
     auth.accountRequest(`/api/groups/${encodeURIComponent(groupId)}/close`, {
       method: "POST",
     }),
-  setGroupPostTest: (groupId, enabled) =>
-    auth.accountRequest(
-      `/api/groups/${encodeURIComponent(groupId)}/post-test`,
-      { body: { enabled: Boolean(enabled) } },
-    ),
+  updateGroupSize: (groupId, plannedSize) =>
+    auth.accountRequest(`/api/groups/${encodeURIComponent(groupId)}`, {
+      method: "PATCH",
+      body: { plannedSize: Number(plannedSize) },
+    }),
   openSlot: ({ groupId, displayName, pin, badge }) =>
     auth.accountRequest("/api/slots", {
       body: {
@@ -42,13 +43,10 @@ export const teacherGroupsApi = {
         })),
       },
     }),
-  changeSlotPin: (slotId, pin) =>
-    auth.accountRequest(`/api/slots/${encodeURIComponent(slotId)}/pin`, {
-      body: { pin },
-    }),
-  returnSlot: (slotId) =>
-    auth.accountRequest(`/api/slots/${encodeURIComponent(slotId)}/return`, {
-      method: "POST",
+  updateSlot: (slotId, displayName, pin) =>
+    auth.accountRequest(`/api/slots/${encodeURIComponent(slotId)}`, {
+      method: "PATCH",
+      body: { displayName: displayName.trim(), ...(pin ? { pin } : {}) },
     }),
   wipeSlot: (slotId) =>
     auth.accountRequest(`/api/slots/${encodeURIComponent(slotId)}`, {

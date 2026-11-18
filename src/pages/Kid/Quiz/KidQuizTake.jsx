@@ -26,7 +26,7 @@ export default function KidQuizTake() {
   const submitRef = useRef(submit);
   const autoSubmittedRef = useRef(false);
   const resultTotal = Number(result?.totalQuestions ?? result?.total ?? quiz?.questions?.length) || quiz?.questions?.length || 0;
-  const resultAnswers = result?.paper || result?.answers || result?.results || result?.questionResults || [];
+  const resultAnswers = result?.review || result?.paper || result?.answers || result?.results || result?.questionResults || [];
   const reviewAnswers = quiz?.questions?.map((question, index) => {
     const position = question.pos ?? index;
     const submitted = Array.isArray(resultAnswers)

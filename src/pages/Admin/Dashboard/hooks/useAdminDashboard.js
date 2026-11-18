@@ -43,12 +43,17 @@ export function useAdminPlans() {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     void load();
   }, []);
-  const save = async (kind, price, months) => {
+  const save = async (kind, price, addonPrice) => {
     setSaving(kind);
     setNotice(null);
     try {
-      const result = await auth.setPlanPrice(kind, price, months);
-      setPlans((current) => ({ ...current, [kind]: result }));
+      const result = await auth.setPlanPrice(kind, price);
+      let updated = result;
+      if (Number.isFinite(addonPrice) && addonPrice > 0) {
+        const addonResult = await auth.setAddonPrice(kind, addonPrice);
+        updated = { ...result, ...addonResult, addonPrice };
+      }
+      setPlans((current) => ({ ...current, [kind]: updated }));
       setNotice({
         type: "success",
         text: `Đã cập nhật gói ${kind}. Bảng giá công khai có hiệu lực ngay.`,
