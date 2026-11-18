@@ -16,11 +16,13 @@ export default function TeacherGroupsContent({ learnerState, groupsOnly }) {
     groups,
     active,
     available,
+    quotaFree,
     loading,
     message,
     error,
     refresh,
     actions,
+    selectGroup,
   } = learnerState;
   const [modal, setModal] = useState(null);
   const finish = (promise) =>
@@ -43,23 +45,41 @@ export default function TeacherGroupsContent({ learnerState, groupsOnly }) {
         )}
         <button
           className="ws-btn primary"
+          disabled={available < 5}
           onClick={() => setModal({ type: "group" })}
         >
           <Plus size={17} /> Tạo lớp học
         </button>
+        {available < 5 && (
+          <p className="ws-notice" role="status">
+            Ví cần ít nhất 5 slot trống để tạo lớp. Hãy mua thêm slot trước khi tiếp tục.
+          </p>
+        )}
         {modal && (
           <Modal
             title="Tạo lớp học"
-            description="Lớp có tối đa 40 học sinh."
+            description={`Chọn sĩ số dự kiến từ 5 đến ${available} học sinh theo số slot còn trống trong ví.`}
             onClose={() => setModal(null)}
           >
             <ActionForm
               submit="Tạo lớp"
-              onSubmit={(form) => finish(actions.openGroup(form.get("name")))}
+              onSubmit={(form) => finish(actions.openGroup(form.get("name"), form.get("plannedSize")))}
             >
               <label>
                 Tên lớp
                 <input name="name" required maxLength={80} />
+              </label>
+              <label>
+                Sĩ số
+                <input
+                  name="plannedSize"
+                  type="number"
+                  min="5"
+                  max={available}
+                  defaultValue={Math.min(40, available)}
+                  required
+                />
+                <small>Còn {available} slot trong ví giáo viên.</small>
               </label>
             </ActionForm>
           </Modal>
@@ -72,8 +92,25 @@ export default function TeacherGroupsContent({ learnerState, groupsOnly }) {
     <>
       <Heading
         title="Quản lý lớp học"
-        description={`${group.name} · ${active.length}/${group.slotLimit} học sinh.`}
+        description={`${group.name} · ${active.length}/${group.plannedSize ?? group.slotLimit} học sinh.`}
       >
+        {groups.filter((item) => !item.closedAt).length > 1 && (
+          <label>
+            <span className="sr-only">Chọn lớp đang quản lý</span>
+            <select value={group.id} onChange={(event) => selectGroup(event.target.value)}>
+              {groups.filter((item) => !item.closedAt).map((item) => (
+                <option value={item.id} key={item.id}>{item.name}</option>
+              ))}
+            </select>
+          </label>
+        )}
+        <button
+          className="ws-btn primary"
+          disabled={quotaFree < 5}
+          onClick={() => setModal({ type: "group" })}
+        >
+          <Plus size={16} /> Tạo lớp mới
+        </button>
         <button className="ws-btn" onClick={() => void refresh()}>
           <RefreshCw size={16} /> Làm mới
         </button>
@@ -92,7 +129,7 @@ export default function TeacherGroupsContent({ learnerState, groupsOnly }) {
             : "Chưa xác nhận đồng ý của phụ huynh."}
         </p>
         <p>
-          {available} chỗ trống trên tổng số {group.slotLimit}.
+          {available} chỗ trống trong lớp trên tổng sĩ số {group.plannedSize ?? group.slotLimit}.
         </p>
         <div className="ws-actions">
           {!group.consentConfirmed && (
@@ -109,6 +146,12 @@ export default function TeacherGroupsContent({ learnerState, groupsOnly }) {
           <Link className="ws-btn" to="/dashboard/quiz-management">
             Quản lý Quiz
           </Link>
+          <button
+            className="ws-btn"
+            onClick={() => setModal({ type: "size" })}
+          >
+            Sửa sĩ số
+          </button>
           <button
             className="ws-btn danger"
             onClick={() => setModal({ type: "close" })}
@@ -136,20 +179,47 @@ export default function TeacherGroupsContent({ learnerState, groupsOnly }) {
       {modal && (
         <Modal
           title={
-            modal.type === "consent" ? "Xác nhận sự đồng ý" : "Kết thúc lớp"
+            modal.type === "group"
+              ? "Tạo lớp học"
+              : modal.type === "size"
+                ? "Sửa sĩ số lớp"
+                : modal.type === "consent"
+                  ? "Xác nhận sự đồng ý"
+                  : "Kết thúc lớp"
           }
+          description={modal.type === "group" ? `Ví còn ${quotaFree} slot; mỗi lớp cần ít nhất 5.` : undefined}
           onClose={() => setModal(null)}
         >
           <ActionForm
-            submit="Xác nhận"
-            onSubmit={() =>
-              finish(
-                modal.type === "consent"
-                  ? actions.confirmConsent()
-                  : actions.closeGroup(),
-              )
-            }
+            submit={modal.type === "group" ? "Tạo lớp" : "Xác nhận"}
+            onSubmit={(form) => finish(
+              modal.type === "group"
+                ? actions.openGroup(form.get("name"), form.get("plannedSize"))
+                : modal.type === "size"
+                  ? actions.updatePlannedSize(form.get("plannedSize"))
+                  : modal.type === "consent"
+                    ? actions.confirmConsent()
+                    : actions.closeGroup(),
+            )}
           >
+            {modal.type === "group" && (
+              <>
+                <label>
+                  Tên lớp
+                  <input name="name" required maxLength={80} />
+                </label>
+                <label>
+                  Sĩ số
+                  <input name="plannedSize" type="number" min="5" max={quotaFree} defaultValue={Math.min(40, quotaFree)} required />
+                </label>
+              </>
+            )}
+            {modal.type === "size" && (
+              <label>
+                Sĩ số mới
+                <input name="plannedSize" type="number" min={Math.max(5, active.length)} max={(group.plannedSize ?? active.length) + quotaFree} defaultValue={group.plannedSize ?? Math.max(5, active.length)} required />
+              </label>
+            )}
             {modal.type === "close" && (
               <label>
                 Nhập DONG để xác nhận
@@ -187,7 +257,7 @@ function TeacherLearnerList({ learnerState }) {
     <>
       <Heading
         title="Học sinh và hồ sơ đăng nhập"
-        description={`${active.length}/${group.slotLimit} đang hoạt động · ${available} chỗ trống.`}
+        description={`${active.length}/${group.plannedSize ?? group.slotLimit} đang hoạt động · ${available} chỗ trống trong lớp.`}
       >
         <button className="ws-btn" onClick={() => void refresh()}>
           <RefreshCw size={16} /> Làm mới
@@ -260,13 +330,7 @@ function TeacherLearnerList({ learnerState }) {
                       className="ws-btn"
                       onClick={() => setModal({ type: "pin", slot })}
                     >
-                      <KeyRound size={15} /> Đổi PIN
-                    </button>
-                    <button
-                      className="ws-btn warning"
-                      onClick={() => setModal({ type: "return", slot })}
-                    >
-                      Thu hồi quyền truy cập
+                      <KeyRound size={15} /> Sửa hồ sơ
                     </button>
                   </>
                 )}{" "}
@@ -290,22 +354,19 @@ function TeacherLearnerList({ learnerState }) {
           title={
             {
               create: "Tạo hồ sơ học sinh",
-              pin: "Đổi mã PIN",
-              return: "Thu hồi quyền truy cập của học sinh",
+              pin: "Sửa tên và mã PIN",
               wipe: "Xóa dữ liệu học sinh",
             }[modal.type]
           }
           description={
-            modal.type === "return"
-              ? "Học sinh sẽ không thể đăng nhập bằng hồ sơ này. Tiến độ, bài Quiz và kết quả học tập vẫn được giữ trong báo cáo lớp."
-              : modal.type === "wipe"
-                ? "Thao tác này xóa vĩnh viễn tên và mã đăng nhập của học sinh. Số liệu lịch sử vẫn được giữ nhưng sẽ hiển thị là “Đã xóa”."
-                : undefined
+            modal.type === "wipe"
+              ? "Thao tác này xóa tên, PIN và cá nhân hóa. Kết quả học tập được giữ ẩn danh, nhưng slot đã xóa sẽ không được hoàn lại vào ví."
+              : undefined
           }
           onClose={() => setModal(null)}
         >
           <ActionForm
-            submit={modal.type === "return" ? "Thu hồi quyền truy cập" : modal.type === "wipe" ? "Xóa vĩnh viễn dữ liệu" : "Xác nhận"}
+            submit={modal.type === "wipe" ? "Xóa hồ sơ và mất 1 slot" : "Xác nhận"}
             onSubmit={(form) =>
               finish(
                 modal.type === "create"
@@ -314,27 +375,20 @@ function TeacherLearnerList({ learnerState }) {
                       pin: form.get("pin"),
                     })
                   : modal.type === "pin"
-                    ? actions.changeSlotPin(modal.slot.id, form.get("pin"))
-                    : modal.type === "wipe"
-                      ? actions.wipeSlot(modal.slot.id)
-                      : actions.returnSlot(modal.slot.id),
+                    ? actions.changeSlotPin(modal.slot.id, form.get("name"), form.get("pin"))
+                    : actions.wipeSlot(modal.slot.id),
               )
             }
           >
-            {modal.type === "return" && (
-              <p className="ws-notice" role="note">
-                Học sinh sẽ được chuyển sang danh sách đã thu hồi; giáo viên vẫn xem được báo cáo trước đây.
-              </p>
-            )}
             {modal.type === "wipe" && (
               <p className="ws-notice danger" role="alert">
-                Không thể khôi phục tên, mã đăng nhập hoặc kích hoạt lại hồ sơ sau khi xóa dữ liệu.
+                Xóa là mất 1 slot vĩnh viễn, không trả lại ví. Không thể khôi phục tên, PIN hoặc cá nhân hóa.
               </p>
             )}
-            {modal.type === "create" && (
+            {["create", "pin"].includes(modal.type) && (
                 <label>
                   Tên học sinh
-                  <input name="name" required maxLength={40} />
+                  <input name="name" required maxLength={40} defaultValue={modal.slot?.displayName || ""} />
                 </label>
             )}
             {["create", "pin"].includes(modal.type) && (
@@ -347,7 +401,7 @@ function TeacherLearnerList({ learnerState }) {
                     pattern="[0-9]{6}"
                     minLength={6}
                     maxLength={6}
-                    required
+                    required={modal.type === "create"}
                   />
                 </label>
             )}

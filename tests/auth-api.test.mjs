@@ -337,6 +337,7 @@ test("admin API methods use the account token and documented payloads", async ()
     { code: 0, result: { subjectId: "account-1", roles: ["GAME_EDITOR"] } },
     { code: 0, result: { subjectId: "account-1", roles: [] } },
     { code: 0, result: {} },
+    { code: 0, result: { kind: "PARENT", addonPrice: 49000 } },
   );
   await api.listPlans();
   await api.setPlanPrice("PARENT", 99000, 3);
@@ -361,9 +362,12 @@ test("admin API methods use the account token and documented payloads", async ()
     months: 6,
     reason: " Demo ",
   });
+  await api.setAddonPrice("PARENT", 49000);
   assert.equal(calls[2].headers.Authorization, undefined);
   assert.equal(calls[3].method, "PUT");
-  assert.deepEqual(JSON.parse(calls[3].body), { price: 99000, months: 3 });
+  assert.deepEqual(JSON.parse(calls[3].body), { price: 99000 });
+  assert.match(calls.at(-1).url, /\/api\/admin\/addon-price\/PARENT$/);
+  assert.deepEqual(JSON.parse(calls.at(-1).body), { price: 49000 });
   assert.match(calls[4].url, /status=PENDING/);
   assert.equal(calls[5].method, "POST");
   assert.match(
@@ -460,6 +464,11 @@ test("payment API creates a VietQR order, lists, checks and cancels it", async (
     {
       code: 0,
       message: "OK",
+      result: { orderCode: 1791234567890124, status: "PENDING" },
+    },
+    {
+      code: 0,
+      message: "OK",
       result: [{ orderCode: 1791234567890123, status: "PENDING" }],
     },
     {
@@ -475,6 +484,7 @@ test("payment API creates a VietQR order, lists, checks and cancels it", async (
     { code: 0, message: "OK" },
   );
   const created = await api.createPayment("PARENT");
+  const addon = await api.createAddonPayment("PARENT", 2);
   const history = await api.listPayments({ page: 0, size: 20 });
   const checked = await api.getPayment(created.orderCode);
   const cancelled = await api.cancelPayment(
@@ -482,17 +492,20 @@ test("payment API creates a VietQR order, lists, checks and cancels it", async (
     "Người dùng hủy",
   );
   assert.equal(created.qrCode, "000201010212385700...");
+  assert.equal(addon.orderCode, 1791234567890124);
   assert.equal(history[0].status, "PENDING");
   assert.equal(checked.status, "PENDING");
   assert.equal(cancelled, undefined);
   assert.deepEqual(JSON.parse(calls[2].body), { kind: "PARENT" });
-  assert.match(calls[3].url, /\/api\/payments\?page=0&size=20$/);
-  assert.match(calls[4].url, /\/api\/payments\/1791234567890123$/);
+  assert.match(calls[3].url, /\/api\/payments\/addon$/);
+  assert.deepEqual(JSON.parse(calls[3].body), { kind: "PARENT", packs: 2 });
+  assert.match(calls[4].url, /\/api\/payments\?page=0&size=20$/);
+  assert.match(calls[5].url, /\/api\/payments\/1791234567890123$/);
   assert.match(
-    calls[5].url,
+    calls[6].url,
     /\/cancel\?reason=Ng%C6%B0%E1%BB%9Di%20d%C3%B9ng%20h%E1%BB%A7y$/,
   );
-  assert.equal(calls[5].method, "POST");
+  assert.equal(calls[6].method, "POST");
   for (const call of calls.slice(2))
     assert.equal(call.headers.Authorization, "Bearer account-token");
 });
@@ -506,6 +519,7 @@ test("group and slot management APIs use documented methods and payloads", async
   await auth.login("parent@example.com", "password");
   queue.push(...Array.from({ length: 11 }, () => ({ code: 0, result: [] })));
   await api.listGroups();
+  await api.getQuota();
   await api.openGroup(" Nhà mình ", "FAMILY");
   await api.confirmConsent("group-1");
   await api.closeGroup("group-1");
@@ -517,27 +531,31 @@ test("group and slot management APIs use documented methods and payloads", async
     pin: "012345",
   });
   await api.openSlots("group-1", [{ displayName: " Bé Bình ", pin: "123456" }]);
-  await api.returnSlot("slot-1");
   await api.wipeSlot("slot-1");
-  await api.changeSlotPin("slot-1", "654321");
-  assert.deepEqual(JSON.parse(calls[3].body), {
+  await api.updateSlot("slot-1", " Bé An mới ", "654321");
+  assert.match(calls[3].url, /\/api\/me\/quota$/);
+  assert.deepEqual(JSON.parse(calls[4].body), {
     name: "Nhà mình",
     context: "FAMILY",
   });
-  assert.equal(calls[4].method, "POST");
-  assert.match(calls[4].url, /\/groups\/group-1\/consent$/);
   assert.equal(calls[5].method, "POST");
-  assert.match(calls[5].url, /\/groups\/group-1\/close$/);
-  assert.deepEqual(JSON.parse(calls[8].body), {
+  assert.match(calls[5].url, /\/groups\/group-1\/consent$/);
+  assert.equal(calls[6].method, "POST");
+  assert.match(calls[6].url, /\/groups\/group-1\/close$/);
+  assert.deepEqual(JSON.parse(calls[9].body), {
     groupId: "group-1",
     displayName: "Bé An",
     pin: "012345",
   });
-  assert.deepEqual(JSON.parse(calls[9].body), {
+  assert.deepEqual(JSON.parse(calls[10].body), {
     slots: [{ groupId: "group-1", displayName: "Bé Bình", pin: "123456" }],
   });
   assert.equal(calls[11].method, "DELETE");
-  assert.deepEqual(JSON.parse(calls[12].body), { pin: "654321" });
+  assert.equal(calls[12].method, "PATCH");
+  assert.deepEqual(JSON.parse(calls[12].body), {
+    displayName: "Bé An mới",
+    pin: "654321",
+  });
 });
 
 test("SLOT login normalizes code, replaces the ACCOUNT session and restores the kid actor", async () => {

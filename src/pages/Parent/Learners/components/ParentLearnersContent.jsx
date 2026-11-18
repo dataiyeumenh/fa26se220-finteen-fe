@@ -1,4 +1,4 @@
-import { BarChart3, Copy, KeyRound, Plus, RefreshCw, RotateCcw, Trash2, Users } from "lucide-react";
+import { BarChart3, Copy, KeyRound, Plus, RefreshCw, Trash2, Users } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { SlotPersonalization } from "../../../../features/personalization/SlotPersonalization.jsx";
@@ -16,6 +16,7 @@ export default function ParentLearnersContent({ learnerState }) {
     active,
     inactive,
     available,
+    quota,
     loading,
     message,
     error,
@@ -80,7 +81,7 @@ export default function ParentLearnersContent({ learnerState }) {
     <>
       <Heading
         title="Không gian của các con"
-        description={`${active.length}/${group.slotLimit} hồ sơ đang hoạt động · ${available == null ? "Chưa xác định số" : available} chỗ trống.`}
+        description={`${active.length} hồ sơ đang hoạt động · ${available == null ? "Chưa xác định số" : available} slot còn trống trong ví${quota?.limit != null ? ` ${quota.limit} slot` : ""}.`}
       >
         <button className="ws-btn" onClick={() => void refresh()}>
           <RefreshCw size={16} /> Làm mới
@@ -128,7 +129,7 @@ export default function ParentLearnersContent({ learnerState }) {
       </div>
       {available === 0 && (
         <p className="ws-notice" id="learner-capacity-notice" role="status">
-          Nhóm đã hết chỗ tạo hồ sơ trẻ. Thu hồi hồ sơ không còn sử dụng rồi bấm Làm mới để kiểm tra lại.
+          Ví đã hết slot. Xóa hồ sơ không hoàn lại slot; hãy mua thêm slot để tạo hồ sơ mới.
         </p>
       )}
       {rows.length ? (
@@ -169,13 +170,7 @@ export default function ParentLearnersContent({ learnerState }) {
                       className="ws-btn"
                       onClick={() => setModal({ type: "pin", slot })}
                     >
-                      <KeyRound size={16} aria-hidden="true" /> Đổi PIN
-                    </button>
-                    <button
-                      className="ws-btn warning"
-                      onClick={() => setModal({ type: "return", slot })}
-                    >
-                      <RotateCcw size={16} aria-hidden="true" /> Thu hồi
+                      <KeyRound size={16} aria-hidden="true" /> Sửa hồ sơ
                     </button>
                   </>
                 )}{" "}
@@ -199,22 +194,19 @@ export default function ParentLearnersContent({ learnerState }) {
           title={
             {
               create: "Tạo hồ sơ cho trẻ",
-              pin: "Đổi mã PIN",
-              return: "Thu hồi quyền truy cập của trẻ",
+              pin: "Sửa tên và mã PIN",
               wipe: "Xóa dữ liệu",
             }[modal.type]
           }
           description={
-            modal.type === "return"
-              ? "Trẻ sẽ không thể đăng nhập bằng hồ sơ này. Tiến độ và kết quả học tập vẫn được giữ trong báo cáo."
-              : modal.type === "wipe"
-                ? "Thao tác này xóa vĩnh viễn tên và mã đăng nhập của trẻ. Số liệu lịch sử vẫn được giữ nhưng sẽ hiển thị là “Đã xóa”."
-                : undefined
+            modal.type === "wipe"
+              ? "Thao tác này xóa tên, PIN và cá nhân hóa. Kết quả học tập được giữ ẩn danh, nhưng slot đã xóa sẽ không được hoàn lại vào ví."
+              : undefined
           }
           onClose={() => setModal(null)}
         >
           <ActionForm
-            submit={modal.type === "return" ? "Thu hồi quyền truy cập" : modal.type === "wipe" ? "Xóa vĩnh viễn dữ liệu" : "Xác nhận"}
+            submit={modal.type === "wipe" ? "Xóa hồ sơ và mất 1 slot" : "Xác nhận"}
             onSubmit={(form) => {
               if (modal.type === "create")
                 return finish(
@@ -225,27 +217,20 @@ export default function ParentLearnersContent({ learnerState }) {
                 );
               if (modal.type === "pin")
                 return finish(
-                  actions.changeSlotPin(modal.slot.id, form.get("pin")),
+                  actions.changeSlotPin(modal.slot.id, form.get("name"), form.get("pin")),
                 );
-              if (modal.type === "return")
-                return finish(actions.returnSlot(modal.slot.id));
               return finish(actions.wipeSlot(modal.slot.id));
             }}
           >
-            {modal.type === "return" && (
-              <p className="ws-notice" role="note">
-                Bạn có thể tiếp tục xem kết quả học tập trước đây của trẻ trong báo cáo sau khi thu hồi.
-              </p>
-            )}
             {modal.type === "wipe" && (
               <p className="ws-notice danger" role="alert">
-                Không thể khôi phục tên, mã đăng nhập hoặc kích hoạt lại hồ sơ sau khi xóa dữ liệu.
+                Xóa là mất 1 slot vĩnh viễn, không trả lại ví. Không thể khôi phục tên, PIN hoặc cá nhân hóa.
               </p>
             )}
-            {modal.type === "create" && (
+            {["create", "pin"].includes(modal.type) && (
               <label>
                 Tên trẻ
-                <input name="name" required maxLength={40} />
+                <input name="name" required maxLength={40} defaultValue={modal.slot?.displayName || ""} />
               </label>
             )}
             {["create", "pin"].includes(modal.type) && (
@@ -256,7 +241,7 @@ export default function ParentLearnersContent({ learnerState }) {
                   type="password"
                   inputMode="numeric"
                   pattern="[0-9]{6}"
-                  required
+                  required={modal.type === "create"}
                 />
               </label>
             )}

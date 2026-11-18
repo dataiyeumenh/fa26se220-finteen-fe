@@ -109,7 +109,7 @@ export default function AdminOverview({ onNavigate }) {
     { label: "Doanh thu đã thanh toán", value: money(data.revenue?.paidTotal), note: `Toàn thời gian · 30 ngày: ${money(data.revenue?.paidLast30Days)}`, Icon: BadgeDollarSign, tone: "green", tab: "transactions" },
     { label: "Tổng tài khoản", value: number(data.accounts?.total), note: `${number(data.accounts?.parents)} phụ huynh · ${number(data.accounts?.teachers)} giáo viên`, Icon: Users, tone: "blue", tab: "accounts" },
     { label: "Người học hoạt động", value: number(data.learners?.active), note: `${number(data.learners?.archived)} lưu trữ · ${number(data.learners?.wiped)} đã xóa`, Icon: UserRound, tone: "purple", tab: "accounts" },
-    { label: "Gói còn hiệu lực", value: number(data.plans?.active), note: `${number(data.plans?.expiringIn7Days)} gói hết hạn trong 7 ngày`, Icon: ShieldCheck, tone: "amber", tab: "plans" },
+    { label: "Gói đã kích hoạt", value: number(data.plans?.active), note: "Quyền sử dụng vĩnh viễn", Icon: ShieldCheck, tone: "amber", tab: "plans" },
   ] : [];
   return <div className="saas-overview">
     <header className="saas-heading"><div><div className="saas-eyebrow"><span/>KHÔNG GIAN QUẢN TRỊ</div><h1>Tổng quan hệ thống</h1><p>Mọi chỉ số quan trọng, trong một góc nhìn.</p></div><div className="saas-heading-actions"><span className="saas-date"><CalendarDays size={15}/>{new Intl.DateTimeFormat("vi-VN", { day: "numeric", month: "long", year: "numeric" }).format(new Date())}</span><button className="admin-secondary" onClick={refresh} disabled={loading}><RefreshCw size={15} className={loading ? "saas-spin" : ""}/>Làm mới</button></div></header>

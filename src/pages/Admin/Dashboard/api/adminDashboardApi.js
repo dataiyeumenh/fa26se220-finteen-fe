@@ -3,10 +3,15 @@ import { auth } from "../../../../api/auth.api.js";
 export const createAdminDashboardApi = (client) => ({
   getAdminDashboard: () => client.accountRequest("/api/admin/dashboard"),
   listPlans: () => client.publicRequest("/api/plans"),
-  setPlanPrice: (kind, price, months) =>
+  setPlanPrice: (kind, price) =>
     client.accountRequest(`/api/admin/plans/${encodeURIComponent(kind)}`, {
       method: "PUT",
-      body: { price, months },
+      body: { price },
+    }),
+  setAddonPrice: (kind, price) =>
+    client.accountRequest(`/api/admin/addon-price/${encodeURIComponent(kind)}`, {
+      method: "PUT",
+      body: { price },
     }),
   reconcileTransaction: (orderCode) =>
     client.accountRequest(
