@@ -7,7 +7,7 @@ export const createWorkspaceApi = (client) => ({
     client.accountRequest("/api/payments", { body: { kind } }),
   createAddonPayment: (kind, packs = 1) =>
     client.accountRequest("/api/payments/addon", {
-      body: { kind, packs: Number(packs) },
+      body: { kind, packs: Math.max(1, Math.floor(Number(packs) || 1)) },
     }),
   listPayments: ({ page = 0, size = 20 } = {}) =>
     client.accountRequest(

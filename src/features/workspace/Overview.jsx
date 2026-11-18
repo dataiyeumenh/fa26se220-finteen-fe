@@ -145,11 +145,12 @@ export function Plans() {
     void auth.ensureEntitlements().catch(() => {});
   }, []);
   const buy = async (kind, addon = false, packs = 1) => {
+    const normalizedPacks = Math.max(1, Math.floor(Number(packs) || 1));
     setBuying(kind);
     setError("");
     try {
       const created = addon
-        ? await workspaceApi.createAddonPayment(kind, packs)
+        ? await workspaceApi.createAddonPayment(kind, normalizedPacks)
         : await workspaceApi.createPayment(kind);
       setPayment(created);
       try { sessionStorage.setItem(paymentStorageKey, JSON.stringify(created)); } catch { /* QR remains visible in memory. */ }
@@ -220,7 +221,7 @@ export function Plans() {
               benefits: [],
             };
             const owned = actor.plans.includes(String(plan.kind).toLowerCase());
-            const packs = Math.max(1, Number(addonPacks[plan.kind]) || 1);
+            const packs = Math.max(1, Math.floor(Number(addonPacks[plan.kind]) || 1));
             return (
               <article
                 className={`ws-card ws-plan ws-plan-${String(plan.kind).toLowerCase()} ${plan.kind === "TEACHER" ? "featured" : ""}`}
@@ -246,7 +247,7 @@ export function Plans() {
                         value={packs}
                         onChange={(event) => setAddonPacks((current) => ({
                           ...current,
-                          [plan.kind]: Math.max(1, Number(event.target.value) || 1),
+                          [plan.kind]: Math.max(1, Math.floor(Number(event.target.value) || 1)),
                         }))}
                       />
                     </label>

@@ -97,7 +97,7 @@ export default function AuthForm({ registration = false, internal = false }) {
       <section className="ft-auth-form">
         <h1>Không thể đăng nhập</h1>
         <p role="alert">{wrongLoginMessage()}</p>
-        <button className="ft-button ft-primary" onClick={() => auth.logout()}>
+        <button className="ft-button ft-primary" onClick={() => void auth.signOut()}>
           Đăng nhập tài khoản khác
         </button>
       </section>

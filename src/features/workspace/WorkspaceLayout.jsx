@@ -195,8 +195,8 @@ export default function WorkspaceLayout({ children }) {
           </nav>
           <button
             className="ws-logout"
-            onClick={() => {
-              auth.logout();
+            onClick={async () => {
+              await auth.signOut();
               navigate("/login");
             }}
           >
@@ -364,8 +364,8 @@ export default function WorkspaceLayout({ children }) {
                       </Link>
                     )}
                     <button
-                      onClick={() => {
-                        auth.logout();
+                      onClick={async () => {
+                        await auth.signOut();
                         navigate("/login");
                       }}
                     >

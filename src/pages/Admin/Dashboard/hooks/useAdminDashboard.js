@@ -12,7 +12,7 @@ export default function useAdminDashboard() {
     actor,
     loading,
     error: authError,
-    logout: () => authSession.logout(),
+    logout: () => authSession.signOut(),
   };
 }
 
