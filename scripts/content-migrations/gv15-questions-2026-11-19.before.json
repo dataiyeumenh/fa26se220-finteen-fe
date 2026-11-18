@@ -1,0 +1,450 @@
+[
+  {
+    "id": "c7fdd3eb-34e5-422a-b054-6ebbc9de8788",
+    "externalId": "OECD_INFE-002",
+    "pool": "OECD_INFE",
+    "stem": "Bây giờ hãy tưởng tượng <các anh em> phải chờ một năm mới nhận được phần của mình trong số tiền $1.000 và lạm phát giữ nguyên ở mức <X> phần trăm. Sau một năm nữa, họ sẽ mua được:",
+    "options": [
+      "Nhiều hơn so với hôm nay bằng phần tiền của mình",
+      "Cùng một lượng như vậy; hay",
+      "Ít hơn so với những gì họ mua được hôm nay",
+      "[Tự phát] Còn tuỳ vào loại hàng hoá mà họ muốn mua"
+    ],
+    "correctIndex": 2,
+    "standard": "CEE-III",
+    "concept": null,
+    "source": "OECD (2022), OECD/INFE Toolkit for Measuring Financial Literacy and Financial Inclusion 2022, PDF p.31 (printed p.31); scoring Table A1 PDF p.44 (printed p.44)",
+    "chapter": null,
+    "retiredAt": null,
+    "replacesId": null,
+    "reference": {
+      "title": "OECD (2022), OECD/INFE Toolkit for Measuring Financial Literacy and Financial Inclusion 2022",
+      "url": "https://www.oecd.org/content/dam/oecd/en/publications/reports/2022/03/oecd-infe-toolkit-for-measuring-financial-literacy-and-financial-inclusion-2022_54dba970/cbc4114f-en.pdf",
+      "page": "PDF p.31 (printed p.31); scoring Table A1 PDF p.44 (printed p.44)",
+      "location": "Toolkit 2022, Section 'Financial knowledge', Question QK3",
+      "accessedOn": "2026-10-02",
+      "image": null,
+      "stemOriginal": "Now imagine that the <brothers> have to wait for one year to get their share of the $1,000 and inflation stays at <X> percent. In one year's time will they be able to buy:",
+      "optionsOriginal": [
+        "More with their share of the money than they could today",
+        "The same amount; or",
+        "Less than they could buy today",
+        "[Spontaneous] It depends on the types of things that they want to buy"
+      ],
+      "license": "OECD Terms & Conditions (pre-1 July 2024 content): reuse/adapt allowed for commercial and non-commercial purposes with citation [OECD (2022), OECD/INFE Toolkit for Measuring Financial Literacy and Financial Inclusion 2022, URL]; adaptation disclaimer required. https://www.oecd.org/en/about/terms-conditions.html",
+      "licenseClass": "attribution",
+      "standardFromSource": false
+    },
+    "keepOptionOrder": false,
+    "copiedFromId": null,
+    "usedInPublished": null
+  },
+  {
+    "id": "87ceaa1a-a20e-4059-bf39-eb6673e4150a",
+    "externalId": "OECD_INFE-005",
+    "pool": "OECD_INFE",
+    "stem": "và sau năm năm thì trong tài khoản sẽ có bao nhiêu tiền [thêm nếu cần: nhớ rằng không có phí hay khoản khấu trừ thuế nào]? Số tiền đó sẽ là:",
+    "options": [
+      "Nhiều hơn $110",
+      "Đúng bằng $110",
+      "Ít hơn $110; hay là",
+      "Không thể biết được từ thông tin đã cho"
+    ],
+    "correctIndex": 0,
+    "standard": "CEE-III",
+    "concept": null,
+    "source": "OECD (2022), OECD/INFE Toolkit for Measuring Financial Literacy and Financial Inclusion 2022, PDF p.32 (printed p.32); scoring Table A1 PDF p.44",
+    "chapter": null,
+    "retiredAt": null,
+    "replacesId": null,
+    "reference": {
+      "title": "OECD (2022), OECD/INFE Toolkit for Measuring Financial Literacy and Financial Inclusion 2022",
+      "url": "https://www.oecd.org/content/dam/oecd/en/publications/reports/2022/03/oecd-infe-toolkit-for-measuring-financial-literacy-and-financial-inclusion-2022_54dba970/cbc4114f-en.pdf",
+      "page": "PDF p.32 (printed p.32); scoring Table A1 PDF p.44",
+      "location": "Toolkit 2022, Section 'Financial knowledge', Question QK6",
+      "accessedOn": "2026-10-02",
+      "image": null,
+      "stemOriginal": "and how much would be in the account at the end of five years [add if necessary: remembering there are no fees or tax deductions]? Would it be:",
+      "optionsOriginal": [
+        "More than $110",
+        "Exactly $110",
+        "Less than $110; or is it",
+        "Impossible to tell from the information given"
+      ],
+      "license": "OECD Terms & Conditions (pre-1 July 2024 content): reuse/adapt allowed with citation [OECD (2022), OECD/INFE Toolkit..., URL]; adaptation disclaimer required. https://www.oecd.org/en/about/terms-conditions.html",
+      "licenseClass": "attribution",
+      "standardFromSource": false
+    },
+    "keepOptionOrder": false,
+    "copiedFromId": null,
+    "usedInPublished": null
+  },
+  {
+    "id": "06c4be0e-47ca-4aa9-af8e-51c2e1fc316a",
+    "externalId": "OECD_INFE-006",
+    "pool": "OECD_INFE",
+    "stem": "Tôi muốn biết bạn cho rằng phát biểu sau đây là đúng hay sai: Một khoản đầu tư có lợi nhuận cao thì nhiều khả năng cũng có rủi ro cao",
+    "options": [
+      "Đúng",
+      "Sai"
+    ],
+    "correctIndex": 0,
+    "standard": "CEE-IV",
+    "concept": null,
+    "source": "OECD (2022), OECD/INFE Toolkit for Measuring Financial Literacy and Financial Inclusion 2022, PDF p.32 (printed p.32); scoring Table A1 PDF p.44",
+    "chapter": null,
+    "retiredAt": null,
+    "replacesId": null,
+    "reference": {
+      "title": "OECD (2022), OECD/INFE Toolkit for Measuring Financial Literacy and Financial Inclusion 2022",
+      "url": "https://www.oecd.org/content/dam/oecd/en/publications/reports/2022/03/oecd-infe-toolkit-for-measuring-financial-literacy-and-financial-inclusion-2022_54dba970/cbc4114f-en.pdf",
+      "page": "PDF p.32 (printed p.32); scoring Table A1 PDF p.44",
+      "location": "Toolkit 2022, Question QK7, statement _1",
+      "accessedOn": "2026-10-02",
+      "image": null,
+      "stemOriginal": "I would like to know whether you think the following statements are true or false: An investment with a high return is likely to be high risk",
+      "optionsOriginal": [
+        "True",
+        "False"
+      ],
+      "license": "OECD Terms & Conditions (pre-1 July 2024 content): reuse/adapt allowed with citation [OECD (2022), OECD/INFE Toolkit..., URL]; adaptation disclaimer required. https://www.oecd.org/en/about/terms-conditions.html",
+      "licenseClass": "attribution",
+      "standardFromSource": false
+    },
+    "keepOptionOrder": false,
+    "copiedFromId": null,
+    "usedInPublished": null
+  },
+  {
+    "id": "f0ce922a-5fc0-49b3-a622-ff6557bc7aba",
+    "externalId": "OECD_INFE-007",
+    "pool": "OECD_INFE",
+    "stem": "Tôi muốn biết bạn cho rằng phát biểu sau đây là đúng hay sai: Nếu ai đó mời chào bạn một cơ hội kiếm được nhiều tiền thì nhiều khả năng cũng có nguy cơ bạn sẽ mất nhiều tiền",
+    "options": [
+      "Đúng",
+      "Sai"
+    ],
+    "correctIndex": 0,
+    "standard": "CEE-IV",
+    "concept": null,
+    "source": "OECD (2022), OECD/INFE Toolkit for Measuring Financial Literacy and Financial Inclusion 2022, PDF p.32 (printed p.32); scoring Table A1 PDF p.44",
+    "chapter": null,
+    "retiredAt": null,
+    "replacesId": null,
+    "reference": {
+      "title": "OECD (2022), OECD/INFE Toolkit for Measuring Financial Literacy and Financial Inclusion 2022",
+      "url": "https://www.oecd.org/content/dam/oecd/en/publications/reports/2022/03/oecd-infe-toolkit-for-measuring-financial-literacy-and-financial-inclusion-2022_54dba970/cbc4114f-en.pdf",
+      "page": "PDF p.32 (printed p.32); scoring Table A1 PDF p.44",
+      "location": "Toolkit 2022, Question QK7, statement _1alt",
+      "accessedOn": "2026-10-02",
+      "image": null,
+      "stemOriginal": "I would like to know whether you think the following statements are true or false: If someone offers you the chance to make a lot of money it is likely that there is also a chance that you will lose a lot of money",
+      "optionsOriginal": [
+        "True",
+        "False"
+      ],
+      "license": "OECD Terms & Conditions (pre-1 July 2024 content): reuse/adapt allowed with citation [OECD (2022), OECD/INFE Toolkit..., URL]; adaptation disclaimer required. https://www.oecd.org/en/about/terms-conditions.html",
+      "licenseClass": "attribution",
+      "standardFromSource": false
+    },
+    "keepOptionOrder": false,
+    "copiedFromId": null,
+    "usedInPublished": null
+  },
+  {
+    "id": "dd99cd39-8888-4481-bea2-e9237732a711",
+    "externalId": "OECD_INFE-008",
+    "pool": "OECD_INFE",
+    "stem": "Tôi muốn biết bạn cho rằng phát biểu sau đây là đúng hay sai: Lạm phát cao nghĩa là chi phí sinh hoạt đang tăng nhanh",
+    "options": [
+      "Đúng",
+      "Sai"
+    ],
+    "correctIndex": 0,
+    "standard": "CEE-III",
+    "concept": null,
+    "source": "OECD (2022), OECD/INFE Toolkit for Measuring Financial Literacy and Financial Inclusion 2022, PDF p.32 (printed p.32); scoring Table A1 PDF p.44",
+    "chapter": null,
+    "retiredAt": null,
+    "replacesId": null,
+    "reference": {
+      "title": "OECD (2022), OECD/INFE Toolkit for Measuring Financial Literacy and Financial Inclusion 2022",
+      "url": "https://www.oecd.org/content/dam/oecd/en/publications/reports/2022/03/oecd-infe-toolkit-for-measuring-financial-literacy-and-financial-inclusion-2022_54dba970/cbc4114f-en.pdf",
+      "page": "PDF p.32 (printed p.32); scoring Table A1 PDF p.44",
+      "location": "Toolkit 2022, Question QK7, statement _2",
+      "accessedOn": "2026-10-02",
+      "image": null,
+      "stemOriginal": "I would like to know whether you think the following statements are true or false: High inflation means that the cost of living is increasing rapidly",
+      "optionsOriginal": [
+        "True",
+        "False"
+      ],
+      "license": "OECD Terms & Conditions (pre-1 July 2024 content): reuse/adapt allowed with citation [OECD (2022), OECD/INFE Toolkit..., URL]; adaptation disclaimer required. https://www.oecd.org/en/about/terms-conditions.html",
+      "licenseClass": "attribution",
+      "standardFromSource": false
+    },
+    "keepOptionOrder": false,
+    "copiedFromId": null,
+    "usedInPublished": null
+  },
+  {
+    "id": "60f7f0a7-458f-4569-ba8d-b171a328545d",
+    "externalId": "OECD_INFE-009",
+    "pool": "OECD_INFE",
+    "stem": "Tôi muốn biết bạn cho rằng phát biểu sau đây là đúng hay sai: Thường thì có thể giảm rủi ro khi đầu tư vào thị trường chứng khoán bằng cách mua nhiều loại cổ phiếu khác nhau",
+    "options": [
+      "Đúng",
+      "Sai"
+    ],
+    "correctIndex": 0,
+    "standard": "CEE-IV",
+    "concept": null,
+    "source": "OECD (2022), OECD/INFE Toolkit for Measuring Financial Literacy and Financial Inclusion 2022, PDF p.32 (printed p.32); scoring Table A1 PDF p.44",
+    "chapter": null,
+    "retiredAt": null,
+    "replacesId": null,
+    "reference": {
+      "title": "OECD (2022), OECD/INFE Toolkit for Measuring Financial Literacy and Financial Inclusion 2022",
+      "url": "https://www.oecd.org/content/dam/oecd/en/publications/reports/2022/03/oecd-infe-toolkit-for-measuring-financial-literacy-and-financial-inclusion-2022_54dba970/cbc4114f-en.pdf",
+      "page": "PDF p.32 (printed p.32); scoring Table A1 PDF p.44",
+      "location": "Toolkit 2022, Question QK7, statement _3",
+      "accessedOn": "2026-10-02",
+      "image": null,
+      "stemOriginal": "I would like to know whether you think the following statements are true or false: It is usually possible to reduce the risk of investing in the stock market by buying a wide range of stocks and shares",
+      "optionsOriginal": [
+        "True",
+        "False"
+      ],
+      "license": "OECD Terms & Conditions (pre-1 July 2024 content): reuse/adapt allowed with citation [OECD (2022), OECD/INFE Toolkit..., URL]; adaptation disclaimer required. https://www.oecd.org/en/about/terms-conditions.html",
+      "licenseClass": "attribution",
+      "standardFromSource": false
+    },
+    "keepOptionOrder": false,
+    "copiedFromId": null,
+    "usedInPublished": null
+  },
+  {
+    "id": "13e94c21-53a9-4a4c-b022-eb98d83b0ffd",
+    "externalId": "OECD_INFE-010",
+    "pool": "OECD_INFE",
+    "stem": "Tôi muốn biết bạn cho rằng phát biểu sau đây là đúng hay sai: Khả năng bạn mất toàn bộ số tiền của mình sẽ thấp hơn nếu bạn tiết kiệm tiền ở nhiều hơn một nơi",
+    "options": [
+      "Đúng",
+      "Sai"
+    ],
+    "correctIndex": 0,
+    "standard": "CEE-IV",
+    "concept": null,
+    "source": "OECD (2022), OECD/INFE Toolkit for Measuring Financial Literacy and Financial Inclusion 2022, PDF p.32 (printed p.32); scoring Table A1 PDF p.44",
+    "chapter": null,
+    "retiredAt": null,
+    "replacesId": null,
+    "reference": {
+      "title": "OECD (2022), OECD/INFE Toolkit for Measuring Financial Literacy and Financial Inclusion 2022",
+      "url": "https://www.oecd.org/content/dam/oecd/en/publications/reports/2022/03/oecd-infe-toolkit-for-measuring-financial-literacy-and-financial-inclusion-2022_54dba970/cbc4114f-en.pdf",
+      "page": "PDF p.32 (printed p.32); scoring Table A1 PDF p.44",
+      "location": "Toolkit 2022, Question QK7, statement _3alt",
+      "accessedOn": "2026-10-02",
+      "image": null,
+      "stemOriginal": "I would like to know whether you think the following statements are true or false: It is less likely that you will lose all of your money if you save it in more than one place",
+      "optionsOriginal": [
+        "True",
+        "False"
+      ],
+      "license": "OECD Terms & Conditions (pre-1 July 2024 content): reuse/adapt allowed with citation [OECD (2022), OECD/INFE Toolkit..., URL]; adaptation disclaimer required. https://www.oecd.org/en/about/terms-conditions.html",
+      "licenseClass": "attribution",
+      "standardFromSource": false
+    },
+    "keepOptionOrder": false,
+    "copiedFromId": null,
+    "usedInPublished": null
+  },
+  {
+    "id": "8bf4b0e7-3d0c-40c9-b853-0394bf82f5a2",
+    "externalId": "OECD_INFE-011",
+    "pool": "OECD_INFE",
+    "stem": "Tôi muốn biết bạn cho rằng phát biểu sau đây là đúng hay sai: Một hợp đồng tài chính kỹ thuật số cần có chữ ký trên một hợp đồng giấy thì mới được coi là hợp lệ",
+    "options": [
+      "Đúng",
+      "Sai"
+    ],
+    "correctIndex": 1,
+    "standard": "CEE-VI",
+    "concept": null,
+    "source": "OECD (2022), OECD/INFE Toolkit for Measuring Financial Literacy and Financial Inclusion 2022, PDF p.32 (printed p.32); scoring Table A1 PDF p.44",
+    "chapter": null,
+    "retiredAt": null,
+    "replacesId": null,
+    "reference": {
+      "title": "OECD (2022), OECD/INFE Toolkit for Measuring Financial Literacy and Financial Inclusion 2022",
+      "url": "https://www.oecd.org/content/dam/oecd/en/publications/reports/2022/03/oecd-infe-toolkit-for-measuring-financial-literacy-and-financial-inclusion-2022_54dba970/cbc4114f-en.pdf",
+      "page": "PDF p.32 (printed p.32); scoring Table A1 PDF p.44",
+      "location": "Toolkit 2022, Question QK7, statement _4",
+      "accessedOn": "2026-10-02",
+      "image": null,
+      "stemOriginal": "I would like to know whether you think the following statements are true or false: A digital financial contract requires signature of a paper contract to be considered valid",
+      "optionsOriginal": [
+        "True",
+        "False"
+      ],
+      "license": "OECD Terms & Conditions (pre-1 July 2024 content): reuse/adapt allowed with citation [OECD (2022), OECD/INFE Toolkit..., URL]; adaptation disclaimer required. https://www.oecd.org/en/about/terms-conditions.html",
+      "licenseClass": "attribution",
+      "standardFromSource": false
+    },
+    "keepOptionOrder": false,
+    "copiedFromId": null,
+    "usedInPublished": null
+  },
+  {
+    "id": "a3192f3a-553f-46fb-b008-c614e68b4b54",
+    "externalId": "OECD_INFE-012",
+    "pool": "OECD_INFE",
+    "stem": "Tôi muốn biết bạn cho rằng phát biểu sau đây là đúng hay sai: Dữ liệu cá nhân mà bạn chia sẻ công khai trên mạng có thể được dùng để nhắm vào bạn bằng những lời chào mời thương mại hoặc tài chính được cá nhân hoá",
+    "options": [
+      "Đúng",
+      "Sai"
+    ],
+    "correctIndex": 0,
+    "standard": "CEE-VI",
+    "concept": null,
+    "source": "OECD (2022), OECD/INFE Toolkit for Measuring Financial Literacy and Financial Inclusion 2022, PDF p.32 (printed p.32); scoring Table A1 PDF p.44",
+    "chapter": null,
+    "retiredAt": null,
+    "replacesId": null,
+    "reference": {
+      "title": "OECD (2022), OECD/INFE Toolkit for Measuring Financial Literacy and Financial Inclusion 2022",
+      "url": "https://www.oecd.org/content/dam/oecd/en/publications/reports/2022/03/oecd-infe-toolkit-for-measuring-financial-literacy-and-financial-inclusion-2022_54dba970/cbc4114f-en.pdf",
+      "page": "PDF p.32 (printed p.32); scoring Table A1 PDF p.44",
+      "location": "Toolkit 2022, Question QK7, statement _5",
+      "accessedOn": "2026-10-02",
+      "image": null,
+      "stemOriginal": "I would like to know whether you think the following statements are true or false: The personal data that I share publicly online may be used to target me with personalised commercial or financial offers",
+      "optionsOriginal": [
+        "True",
+        "False"
+      ],
+      "license": "OECD Terms & Conditions (pre-1 July 2024 content): reuse/adapt allowed with citation [OECD (2022), OECD/INFE Toolkit..., URL]; adaptation disclaimer required. https://www.oecd.org/en/about/terms-conditions.html",
+      "licenseClass": "attribution",
+      "standardFromSource": false
+    },
+    "keepOptionOrder": false,
+    "copiedFromId": null,
+    "usedInPublished": null
+  },
+  {
+    "id": "9afdd1fc-f09b-4221-8eac-c8e9696d7b1c",
+    "externalId": "OECD_INFE-013",
+    "pool": "OECD_INFE",
+    "stem": "Tôi muốn biết bạn cho rằng phát biểu sau đây là đúng hay sai: Tiền mã hoá có giá trị thanh toán hợp pháp giống như tiền giấy và tiền xu",
+    "options": [
+      "Đúng",
+      "Sai"
+    ],
+    "correctIndex": 1,
+    "standard": "CEE-VI",
+    "concept": null,
+    "source": "OECD (2022), OECD/INFE Toolkit for Measuring Financial Literacy and Financial Inclusion 2022, PDF p.32 (printed p.32); scoring Table A1 PDF p.44",
+    "chapter": null,
+    "retiredAt": null,
+    "replacesId": null,
+    "reference": {
+      "title": "OECD (2022), OECD/INFE Toolkit for Measuring Financial Literacy and Financial Inclusion 2022",
+      "url": "https://www.oecd.org/content/dam/oecd/en/publications/reports/2022/03/oecd-infe-toolkit-for-measuring-financial-literacy-and-financial-inclusion-2022_54dba970/cbc4114f-en.pdf",
+      "page": "PDF p.32 (printed p.32); scoring Table A1 PDF p.44",
+      "location": "Toolkit 2022, Question QK7, statement _6",
+      "accessedOn": "2026-10-02",
+      "image": null,
+      "stemOriginal": "I would like to know whether you think the following statements are true or false: Crypto-currencies have the same legal tender as banknotes and coins",
+      "optionsOriginal": [
+        "True",
+        "False"
+      ],
+      "license": "OECD Terms & Conditions (pre-1 July 2024 content): reuse/adapt allowed with citation [OECD (2022), OECD/INFE Toolkit..., URL]; adaptation disclaimer required. https://www.oecd.org/en/about/terms-conditions.html",
+      "licenseClass": "attribution",
+      "standardFromSource": false
+    },
+    "keepOptionOrder": false,
+    "copiedFromId": null,
+    "usedInPublished": null
+  },
+  {
+    "id": "e62a5035-2bf4-4917-ad87-826023aff008",
+    "externalId": "PISA-021",
+    "pool": "PISA",
+    "stem": "Sarah nhận được hoá đơn này qua đường bưu điện. [Breezy Clothing - Số hoá đơn: 2034, Ngày phát hành: 28 tháng 2. Gửi đến: Sarah Johanson, 29 Worthill Rd, Kensington, Zedland 3122. Gửi từ: Breezy Clothing, 498 Marple Lane, Brightwell, Zedland 2090. Mặt hàng: T011 áo thun, số lượng 3, đơn giá 20, thành tiền 60 zeds; J023 quần jeans, 1, 60, 60 zeds; S002 khăn quàng, 1, 10, 10 zeds. Tổng chưa gồm thuế: 130 zeds; Thuế 10%: 13 zeds; Bưu phí: 10 zeds; Tổng gồm thuế: 153 zeds; Đã thanh toán: 0 zeds; Tổng còn phải trả: 153 zeds; Hạn thanh toán: 31 tháng 3]\n\nVì sao hoá đơn này được gửi cho Sarah?",
+    "options": [
+      "Vì Sarah cần trả tiền cho Breezy Clothing.",
+      "Vì Breezy Clothing cần trả tiền cho Sarah.",
+      "Vì Sarah đã trả tiền cho Breezy Clothing.",
+      "Vì Breezy Clothing đã trả tiền cho Sarah."
+    ],
+    "correctIndex": 0,
+    "standard": "CEE-II",
+    "concept": null,
+    "source": "OECD (2014), PISA 2012 Results: Students and Money: Financial Literacy Skills for the 21st Century (Volume VI), PDF p.45-46 (printed p.43-44); stimulus Figure V",
+    "chapter": null,
+    "retiredAt": null,
+    "replacesId": null,
+    "reference": {
+      "title": "OECD (2014), PISA 2012 Results: Students and Money: Financial Literacy Skills for the 21st Century (Volume VI)",
+      "url": "https://www.oecd.org/content/dam/oecd/en/publications/reports/2014/07/pisa-2012-results-students-and-money-volume-vi_g1g3b027/9789264208094-en.pdf",
+      "page": "PDF p.45-46 (printed p.43-44); stimulus Figure VI.1.8 on PDF p.45",
+      "location": "PISA 2012 Results Vol VI, Chapter 1, released unit INVOICE - Question 1",
+      "accessedOn": "2026-10-02",
+      "image": null,
+      "stemOriginal": "Sarah receives this invoice in the mail. [Breezy Clothing - Invoice Number: 2034, Date issued: 28 February. To: Sarah Johanson, 29 Worthill Rd, Kensington, Zedland 3122. From: Breezy Clothing, 498 Marple Lane, Brightwell, Zedland 2090. Items: T011 T-shirt, quantity 3, unit cost 20, total 60 zeds; J023 jeans, 1, 60, 60 zeds; S002 scarf, 1, 10, 10 zeds. Total Excluding Tax: 130 zeds; Tax 10%: 13 zeds; Postage: 10 zeds; Total Including Tax: 153 zeds; Already Paid: 0 zeds; Total due: 153 zeds; Date due: 31 March]\n\nWhy was this invoice sent to Sarah?",
+      "optionsOriginal": [
+        "Because Sarah needs to pay the money to Breezy Clothing.",
+        "Because Breezy Clothing needs to pay the money to Sarah.",
+        "Because Sarah has paid the money to Breezy Clothing.",
+        "Because Breezy Clothing has paid the money to Sarah."
+      ],
+      "license": "© OECD 2014. Copyright page: excerpts may be included in teaching materials with acknowledgement of OECD as source and copyright owner; OECD Terms & Conditions (pre-1 July 2024) allow commercial and non-commercial reuse/adaptation with citation [OECD (2014), Title, URL]. Copy in PISA 2022 Results Vol IV is CC BY-NC-SA 3.0 IGO.",
+      "licenseClass": "attribution",
+      "standardFromSource": false
+    },
+    "keepOptionOrder": false,
+    "copiedFromId": null,
+    "usedInPublished": null
+  },
+  {
+    "id": "cd23f08b-b73e-48c1-b2cd-216e9eb5ced2",
+    "externalId": "PISA-035",
+    "pool": "PISA",
+    "stem": "Cùng bài với NEW BIKE - Câu hỏi 1 (Greg mua xe đạp bằng khoản vay tại cửa hàng).\n\nĐã có một số xe đạp bị trộm ở khu vực Greg sống. Loại sản phẩm nào sẽ bảo vệ Greg về mặt tài chính nếu xe đạp của anh ấy bị lấy trộm khỏi nhà để xe?",
+    "options": [
+      "Bảo hiểm tài sản trong nhà.",
+      "Séc du lịch.",
+      "Trái phiếu chính phủ.",
+      "Vay mua nhà (thế chấp)."
+    ],
+    "correctIndex": 0,
+    "standard": "CEE-VI",
+    "concept": null,
+    "source": "OECD (2024), PISA 2022 Results (Volume IV): How Financially Smart Are Students?, Annex C 'Financial literacy released items', PDF p.204 (printed p.202)",
+    "chapter": null,
+    "retiredAt": null,
+    "replacesId": null,
+    "reference": {
+      "title": "OECD (2024), PISA 2022 Results (Volume IV): How Financially Smart Are Students?, Annex C 'Financial literacy released items'",
+      "url": "https://www.oecd.org/content/dam/oecd/en/publications/reports/2024/06/pisa-2022-results-volume-iv_125a58b3/5a849c2a-en.pdf",
+      "page": "PDF p.204 (printed p.202)",
+      "location": "PISA 2022 Results Vol IV, Annex C, unit New bike, Question 2",
+      "accessedOn": "2026-10-02",
+      "image": null,
+      "stemOriginal": "Same unit as NEW BIKE - Question 1 (Greg buys a bike with an in-store loan).\n\nSeveral bikes have been stolen in the area where Greg lives. What type of product will protect Greg financially if his bike is stolen from his garage?",
+      "optionsOriginal": [
+        "Home contents insurance.",
+        "Travellers' cheques.",
+        "Government bonds.",
+        "Mortgage."
+      ],
+      "license": "© OECD 2024, CC BY-NC-SA 3.0 IGO (copyright page, PDF p.4). Non-commercial use only, attribution and share-alike required.",
+      "licenseClass": "non-commercial",
+      "standardFromSource": false
+    },
+    "keepOptionOrder": false,
+    "copiedFromId": null,
+    "usedInPublished": null
+  }
+]

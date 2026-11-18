@@ -1,0 +1,44 @@
+{
+  "chapters": [
+    {
+      "code": "CH01",
+      "status": "SUBMITTED",
+      "revision": 90,
+      "changeClass": "PATCH",
+      "submittedAt": "2026-11-18T21:11:24.403374Z",
+      "voice": {
+        "missing": 0,
+        "failed": 0,
+        "pending": 0
+      }
+    },
+    {
+      "code": "CH02",
+      "status": "SUBMITTED",
+      "revision": 24,
+      "changeClass": "PATCH",
+      "submittedAt": "2026-11-18T21:11:31.749457Z",
+      "voice": {
+        "missing": 0,
+        "failed": 0,
+        "pending": 0
+      }
+    },
+    {
+      "code": "CH03",
+      "status": "SUBMITTED",
+      "revision": 7,
+      "changeClass": "PATCH",
+      "submittedAt": "2026-11-18T21:12:08.567714Z",
+      "voice": {
+        "missing": 0,
+        "failed": 0,
+        "pending": 0
+      },
+      "lowMonth": "Tháng hoa hồng thấp, An có thu nhập 2.000.000đ và phải chi 1.800.000đ cho sinh hoạt thiết yếu. Sau khi trả đủ chi phí thiết yếu, quỹ linh hoạt của An còn bao nhiêu?"
+    }
+  ],
+  "currentRelease": "2.7.1",
+  "allSubmitted": true,
+  "allVoiceReady": true
+}
