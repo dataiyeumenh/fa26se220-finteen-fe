@@ -4,11 +4,12 @@ import { budgetFeedback, needWantFeedback } from "../src/pages/Kid/Dashboard/com
 import { chapter2V2GameData } from "./fixtures/content/index.mjs";
 import patch from "../scripts/content-migrations/lead-review-2026-11-19.json" with { type: "json" };
 
-test("wrong placements name the personalized item, correct basket and reason", () => {
+test("wrong placements show the correct basket and reason without repeating the item label", () => {
   const item = { label: "Bộ màu vẽ cao cấp", category: "WANTS", explanation: "Bộ màu cơ bản đã đủ để học; phần nâng cấp có thể hoãn." };
   const zones = [{ id: "NEEDS", title: "Giỏ Cần" }, { id: "WANTS", title: "Giỏ Muốn" }];
   const feedback = needWantFeedback(item, false, zones);
-  assert.match(feedback, /Chưa đúng: Bộ màu vẽ cao cấp thuộc Giỏ Muốn/);
+  assert.match(feedback, /Chưa đúng: thuộc Giỏ Muốn/);
+  assert.ok(!feedback.includes(item.label));
   assert.ok(feedback.includes(item.explanation));
   assert.match(needWantFeedback(item, true, zones), /^Đúng rồi/);
 });

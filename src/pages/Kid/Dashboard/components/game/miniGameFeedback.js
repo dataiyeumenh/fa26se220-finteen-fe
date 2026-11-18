@@ -1,8 +1,8 @@
 export function needWantFeedback(item, correct, zones) {
   const destination = zones.find((zone) => zone.id === item.category)?.title;
   const verdict = destination
-    ? `${correct ? "Đúng rồi" : "Chưa đúng"}: ${item.label} thuộc ${destination}.`
-    : `${correct ? "Đúng rồi" : "Chưa đúng"}: ${item.label}.`;
+    ? `${correct ? "Đúng rồi" : "Chưa đúng"}: thuộc ${destination}.`
+    : `${correct ? "Đúng rồi" : "Chưa đúng"}.`;
   return `${verdict}${item.explanation ? ` ${item.explanation}` : ""}`;
 }
 

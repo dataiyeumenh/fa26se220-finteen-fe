@@ -97,7 +97,7 @@ async function checkWrongFeedback() {
   await click(document.querySelector(".nw-NEEDS .nw-place"));
   await click(button("Kiểm tra"));
   const message = document.querySelector(".nw-item-feedback").textContent;
-  assert(message.includes("Bộ màu vẽ cao cấp thuộc Giỏ Muốn") && message.includes("có thể hoãn"), "Wrong item lacks classification/reason");
+  assert(message.includes("thuộc Giỏ Muốn") && !message.includes("Bộ màu vẽ cao cấp") && message.includes("có thể hoãn"), "Wrong item must explain classification without repeating its label");
 
   const budget = gameOf(ch2, "BUDGET_BUILDER");
   const Budget = MINI_GAME_FRAMES.BUDGET_BUILDER;

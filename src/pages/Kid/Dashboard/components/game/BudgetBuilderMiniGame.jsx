@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Check,
   Coins,
@@ -18,6 +18,19 @@ export function BudgetBuilderMiniGame({ game, onComplete, className }) {
   const [selectedAmountId, setSelectedAmountId] = useState(null);
   const [submitted, setSubmitted] = useState(false);
   const [firstCheck, setFirstCheck] = useState(null); // ô → mã thẻ lúc Kiểm tra lần đầu
+  const [draggingAmountId, setDraggingAmountId] = useState(null);
+  const [hoveredZoneId, setHoveredZoneId] = useState(null);
+  const [recentDrop, setRecentDrop] = useState(null);
+  const [dragNote, setDragNote] = useState(null);
+  const touchDrag = useRef(null);
+  const ignoreClickUntil = useRef(0);
+  useEffect(() => {
+    if (!recentDrop) return;
+    const timer = setTimeout(() => setRecentDrop(null), 500);
+    return () => clearTimeout(timer);
+  }, [recentDrop]);
+  useEffect(() => () => clearTimeout(touchDrag.current?.timer), []);
+  const heldAmount = game.draggables.find((item) => item.id === (draggingAmountId || selectedAmountId));
 
   const usedAmountIds = useMemo(
     () => new Set(Object.values(assignments)),
@@ -41,7 +54,7 @@ export function BudgetBuilderMiniGame({ game, onComplete, className }) {
   const passed = correctCount === game.dropZones.length;
 
   const assign = (zoneId, amountId) => {
-    if (!amountId) return;
+    if (!game.dropZones.some((zone) => zone.id === zoneId) || !game.draggables.some((amount) => amount.id === amountId)) return;
     setAssignments((current) => {
       const next = { ...current };
       for (const [key, value] of Object.entries(next)) {
@@ -52,9 +65,62 @@ export function BudgetBuilderMiniGame({ game, onComplete, className }) {
     });
     setSelectedAmountId(null);
     setSubmitted(false);
+    setDraggingAmountId(null);
+    setHoveredZoneId(null);
+    setDragNote(null);
+    setRecentDrop(zoneId);
   };
 
-  const handleEnvelopeClick = (zoneId) => {
+  const endDrag = () => {
+    clearTimeout(touchDrag.current?.timer);
+    touchDrag.current = null;
+    setDraggingAmountId(null);
+    setHoveredZoneId(null);
+    setDragNote(null);
+  };
+  const zoneAt = (event) => document.elementFromPoint(event.clientX, event.clientY)?.closest("[data-budget-zone]")?.dataset.budgetZone;
+  const beginTouchDrag = (event, amountId) => {
+    if (event.pointerType === "mouse") return;
+    const drag = { amountId, x: event.clientX, y: event.clientY, active: false };
+    const start = () => {
+      drag.active = true;
+      ignoreClickUntil.current = event.timeStamp + 500;
+      setDraggingAmountId(amountId);
+      setDragNote({ amountId, x: drag.x, y: drag.y });
+    };
+    drag.start = start;
+    drag.timer = setTimeout(start, 180);
+    touchDrag.current = drag;
+    event.currentTarget.setPointerCapture(event.pointerId);
+  };
+  const moveTouchDrag = (event) => {
+    const drag = touchDrag.current;
+    if (!drag) return;
+    if (!drag.active && Math.hypot(event.clientX - drag.x, event.clientY - drag.y) > 6) {
+      clearTimeout(drag.timer);
+      drag.start();
+    }
+    if (!drag.active) return;
+    event.preventDefault();
+    drag.x = event.clientX;
+    drag.y = event.clientY;
+    setDragNote({ amountId: drag.amountId, x: drag.x, y: drag.y });
+    setHoveredZoneId(zoneAt(event) || null);
+  };
+  const dropTouchDrag = (event) => {
+    const drag = touchDrag.current;
+    if (!drag) return;
+    clearTimeout(drag?.timer);
+    if (drag?.active) {
+      ignoreClickUntil.current = event.timeStamp + 500;
+      const zoneId = zoneAt(event);
+      if (zoneId) assign(zoneId, drag.amountId);
+    }
+    endDrag();
+  };
+
+  const handleEnvelopeClick = (zoneId, timeStamp) => {
+    if (timeStamp < ignoreClickUntil.current) return;
     if (selectedAmountId) {
       assign(zoneId, selectedAmountId);
       return;
@@ -71,6 +137,8 @@ export function BudgetBuilderMiniGame({ game, onComplete, className }) {
   };
 
   const reset = () => {
+    endDrag();
+    setRecentDrop(null);
     setAssignments({});
     setSelectedAmountId(null);
     setSubmitted(false);
@@ -83,7 +151,7 @@ export function BudgetBuilderMiniGame({ game, onComplete, className }) {
 
   return (
     <section
-      className={cn("c2-game", className)}
+      className={cn("c2-game c2-budget-game", className)}
       aria-label="Mini-game phân bổ ngân sách"
     >
       <header className="c2-header">
@@ -127,14 +195,25 @@ export function BudgetBuilderMiniGame({ game, onComplete, className }) {
                       )}
                       disabled={used}
                       draggable={!used}
-                      onClick={() =>
+                      onClick={(event) => {
+                        if (event.timeStamp < ignoreClickUntil.current) return;
                         setSelectedAmountId(
                           selectedAmountId === amount.id ? null : amount.id,
-                        )
-                      }
-                      onDragStart={(event) =>
-                        event.dataTransfer.setData("text/plain", amount.id)
-                      }
+                        );
+                      }}
+                      onDragStart={(event) => {
+                        event.dataTransfer.setData("text/plain", amount.id);
+                        event.dataTransfer.effectAllowed = "move";
+                        setDraggingAmountId(amount.id);
+                      }}
+                      onDragEnd={endDrag}
+                      onPointerDown={(event) => beginTouchDrag(event, amount.id)}
+                      onPointerMove={moveTouchDrag}
+                      onPointerUp={dropTouchDrag}
+                      onPointerCancel={() => {
+                        // Native mouse dragging cancels pointer events, but dragover/dragend still follow.
+                        if (touchDrag.current) endDrag();
+                      }}
                     >
                       <span className="c2-banknote-mark">₫</span>
                       <strong>{amount.label}</strong>
@@ -150,6 +229,8 @@ export function BudgetBuilderMiniGame({ game, onComplete, className }) {
                 (item) => item.id === assignments[zone.id],
               );
               const correct = amount?.value === zone.expectedValue;
+              const receiving = hoveredZoneId === zone.id && !!heldAmount;
+              const open = !amount || receiving;
               return (
                 <button
                   key={zone.id}
@@ -158,22 +239,57 @@ export function BudgetBuilderMiniGame({ game, onComplete, className }) {
                     "c2-envelope",
                     `tone-${index + 1}`,
                     amount && "has-money",
+                    open && "is-open",
+                    receiving && "is-receiving",
+                    recentDrop === zone.id && "is-depositing",
                     submitted && (correct ? "is-correct" : "is-incorrect"),
                   )}
-                  onClick={() => handleEnvelopeClick(zone.id)}
-                  onDragOver={(event) => event.preventDefault()}
+                  onClick={(event) => handleEnvelopeClick(zone.id, event.timeStamp)}
+                  data-budget-zone={zone.id}
+                  aria-label={`${zone.label}: ${amount ? `đã có ${amount.label}` : "chưa có tiền, phong bì đang mở"}`}
+                  onPointerEnter={() => setHoveredZoneId(zone.id)}
+                  onPointerLeave={() => setHoveredZoneId((current) => current === zone.id ? null : current)}
+                  onFocus={() => setHoveredZoneId(zone.id)}
+                  onBlur={() => setHoveredZoneId(null)}
+                  onDragEnter={(event) => {
+                    event.preventDefault();
+                    setHoveredZoneId(zone.id);
+                  }}
+                  onDragOver={(event) => {
+                    event.preventDefault();
+                    event.dataTransfer.dropEffect = "move";
+                    setHoveredZoneId(zone.id);
+                  }}
+                  onDragLeave={(event) => {
+                    const rect = event.currentTarget.getBoundingClientRect();
+                    if (event.clientX <= rect.left || event.clientX >= rect.right || event.clientY <= rect.top || event.clientY >= rect.bottom) {
+                      setHoveredZoneId((current) => current === zone.id ? null : current);
+                    }
+                  }}
                   onDrop={(event) => {
                     event.preventDefault();
                     assign(zone.id, event.dataTransfer.getData("text/plain"));
                   }}
                 >
-                  <span className="c2-envelope-flap" aria-hidden="true" />
-                  <span className="c2-envelope-art">
-                    <img src={zone.image} alt="" />
+                  <span className="c2-envelope-shell" aria-hidden="true">
+                    <span className="c2-envelope-back" />
+                    <span className="c2-envelope-lining" />
+                    <span className="c2-envelope-lid" />
+                    <span className={cn("c2-envelope-note", (amount || receiving) && "is-visible")}>
+                      <b>₫</b>{(receiving ? heldAmount : amount)?.label}
+                    </span>
+                    <span className="c2-envelope-fold c2-envelope-fold-left" />
+                    <span className="c2-envelope-fold c2-envelope-fold-right" />
+                    <span className="c2-envelope-pocket" />
                   </span>
-                  <span className="c2-envelope-copy">
-                    <span>{zone.label}</span>
-                    <strong>{amount?.label || "Đặt tiền vào đây"}</strong>
+                  <span className="c2-envelope-label">
+                    <span className="c2-envelope-art">
+                      <img src={zone.image} alt="" />
+                    </span>
+                    <span className="c2-envelope-copy">
+                      <span>{zone.label}</span>
+                      <strong>{amount?.label || "Thả tiền vào phong bì"}</strong>
+                    </span>
                   </span>
                   {submitted && (
                     <small>
@@ -231,6 +347,12 @@ export function BudgetBuilderMiniGame({ game, onComplete, className }) {
           </div>
         </aside>
       </div>
+
+      {dragNote && (
+        <span className="c2-drag-note" aria-hidden="true" style={{ left: dragNote.x, top: dragNote.y }}>
+          ₫ {game.draggables.find((amount) => amount.id === dragNote.amountId)?.label}
+        </span>
+      )}
 
       <footer className="c2-footer">
         <p aria-live="polite">

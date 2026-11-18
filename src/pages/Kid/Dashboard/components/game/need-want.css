@@ -327,6 +327,7 @@
 }
 .nw-item-feedback {
   font-size: 12px;
+  line-height: 1.4;
   margin-top: 4px;
   color: #86582e;
 }
@@ -336,6 +337,9 @@
   color: #6f604d;
   font-size: 11px;
   line-height: 1.35;
+}
+.nw-game.is-checked .nw-item-picture {
+  height: 60px;
 }
 .vn-minigame-host {
   position: absolute;
