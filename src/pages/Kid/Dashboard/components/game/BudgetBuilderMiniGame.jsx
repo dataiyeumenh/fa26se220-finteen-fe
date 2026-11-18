@@ -10,6 +10,7 @@ import {
 import { cn } from "@/lib/utils";
 import "./chapter-two-minigames.css";
 import { compactInputs } from "./miniGameInputs.js";
+import { budgetFeedback } from "./miniGameFeedback.js";
 
 export function BudgetBuilderMiniGame({ game, onComplete, className }) {
   const t = game.texts ?? {};
@@ -176,13 +177,7 @@ export function BudgetBuilderMiniGame({ game, onComplete, className }) {
                   </span>
                   {submitted && (
                     <small>
-                      {correct ? (
-                        <>
-                          <Check size={13} /> Hợp lý
-                        </>
-                      ) : (
-                        "Cần cân đối lại"
-                      )}
+                      {budgetFeedback(zone, amount?.value)}
                     </small>
                   )}
                 </button>

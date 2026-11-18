@@ -25,7 +25,7 @@ const knowledgeByChapter = [
   { title: "Đầu tư luôn đi cùng rủi ro", intro: "Lợi nhuận cao không bao giờ được bảo đảm, vì vậy cần hiểu rõ trước khi quyết định.", points: ["Không dùng tiền cần cho mục tiêu gần để đầu tư rủi ro.", "Chia tiền vào nhiều loại tài sản thay vì một nơi.", "Không đầu tư vào điều mình chưa hiểu."] },
 ];
 const chapterTitles = ["Tiền đầu tiên", "Mục tiêu lớn", "Công việc đầu tiên", "Mua thông minh", "Ngân hàng và lãi", "Mượn tiền có dễ không?", "Biến cố bất ngờ", "Kế hoạch 18 tuổi"];
-const chapterGames = ["Needs or Wants", "Budget Builder", "Career Match", "Smart Shopping", "Compound Timeline", "Loan Detective", "Scam or Safe", "Portfolio Builder"];
+const chapterGames = ["Cần hay Muốn?", "Chia phong bì thật hợp lý", "Ghép việc phù hợp", "Smart Shopping", "Compound Timeline", "Loan Detective", "Scam or Safe", "Portfolio Builder"];
 
 function chapterNumber(value) {
   const parsed = Number(String(value ?? "").match(/\d+/)?.[0]);

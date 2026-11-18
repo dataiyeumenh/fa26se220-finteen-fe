@@ -82,9 +82,9 @@ export function CareerMatchMiniGame({ game, onComplete, className }) {
         : { ...current, [question.id]: option.id },
     );
     if (option.id === question.correctId) {
-      setFeedback({ tone: "good", text: question.explain });
+      setFeedback({ tone: "good", text: "Đúng rồi! Đọc lời giải bên dưới câu hỏi." });
     } else {
-      setFeedback({ tone: "bad", text: question.hint });
+      setFeedback({ tone: "bad", text: "Chưa đúng. Đọc gợi ý bên dưới câu hỏi rồi thử lại nhé." });
     }
   };
 
@@ -245,7 +245,7 @@ export function CareerMatchMiniGame({ game, onComplete, className }) {
                   ))}
                 </div>
                 {picked[question.id] && (
-                  <p className="c3-explain">{question.explain}</p>
+                  <p className="c3-explain" role="status">{solved ? question.explain : question.hint}</p>
                 )}
               </article>
             );
@@ -291,7 +291,7 @@ export function CareerMatchMiniGame({ game, onComplete, className }) {
               disabled={!calcAnswered}
               onClick={finish}
             >
-              {t.finish ?? "Hoàn tất Career Match"} →
+              {t.finish ?? "Hoàn tất Ghép việc phù hợp"} →
             </button>
           )}
         </div>

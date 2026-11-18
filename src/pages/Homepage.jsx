@@ -34,9 +34,9 @@ const audiences = [
 ];
 
 const chapters = [
-  ["01", "Tiền đầu tiên", "Nhu cầu và mong muốn", ["Phân biệt nhu cầu với mong muốn", "Biết ưu tiên khi sử dụng tiền"], "Needs or Wants", "chapter-01/scene/sc01-receiving-allowance.webp", "lime"],
-  ["02", "Mục tiêu lớn", "Ngân sách và tiết kiệm", ["Lập ngân sách theo tháng", "Chuẩn bị cho chi phí phát sinh"], "Budget Builder", "chapter-02/scene/sc02-dividing-envelopes.webp", "coral"],
-  ["03", "Công việc đầu tiên", "Thu nhập và nghề nghiệp", ["Hiểu thu nhập thực nhận", "Kiểm chứng thông tin nghề nghiệp"], "Career Match", "chapter-03/scene/sc01-three-career-offers.webp", "amber"],
+  ["01", "Tiền đầu tiên", "Nhu cầu và mong muốn", ["Phân biệt nhu cầu với mong muốn", "Biết ưu tiên khi sử dụng tiền"], "Cần hay Muốn?", "chapter-01/scene/sc01-receiving-allowance.webp", "lime"],
+  ["02", "Mục tiêu lớn", "Ngân sách và tiết kiệm", ["Lập ngân sách theo tháng", "Chuẩn bị cho chi phí phát sinh"], "Chia phong bì thật hợp lý", "chapter-02/scene/sc02-dividing-envelopes.webp", "coral"],
+  ["03", "Công việc đầu tiên", "Thu nhập và nghề nghiệp", ["Hiểu thu nhập thực nhận", "Kiểm chứng thông tin nghề nghiệp"], "Ghép việc phù hợp", "chapter-03/scene/sc01-three-career-offers.webp", "amber"],
   ["04", "Mua thông minh", "So sánh tổng chi phí", ["So sánh giá và giá trị sử dụng", "Lưu bằng chứng mua hàng"], "Smart Shopping", "chapter-04/scene/sc02-comparing-three-phones.webp", "coral"],
   ["05", "Ngân hàng và lãi", "Phí, lãi và sức mua", ["Hiểu phí và lãi suất", "Quan sát tác động của lạm phát"], "Compound Timeline", "chapter-05/scene/sc03-money-and-purchasing-power.webp", "sky"],
   ["06", "Mượn tiền có dễ không?", "Vay và tổng chi phí", ["Tính tổng chi phí khi vay", "Nhận diện rủi ro trả góp"], "Loan Detective", "chapter-06/scene/sc02-comparing-loan-offers.webp", "amber"],

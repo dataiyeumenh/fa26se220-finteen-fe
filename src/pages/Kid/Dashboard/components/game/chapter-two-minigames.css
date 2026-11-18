@@ -265,18 +265,15 @@
   font-size: 14px;
 }
 .c2-envelope small {
-  position: absolute;
+  grid-column: 1 / -1;
   z-index: 2;
-  right: 8px;
-  bottom: 7px;
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
+  display: block;
   padding: 3px 7px;
-  border-radius: 999px;
+  border-radius: 8px;
   background: #fff8e8d9;
-  font-size: 9px;
-  font-weight: 900;
+  font-size: 12px;
+  line-height: 1.5;
+  font-weight: 600;
 }
 .c2-envelope.has-money .c2-envelope-copy strong {
   animation: c2-money-drop 0.25s ease-out;

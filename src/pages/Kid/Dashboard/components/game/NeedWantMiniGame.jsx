@@ -9,6 +9,7 @@ import {
 import { cn } from "@/lib/utils";
 import "./need-want.css";
 import { compactInputs } from "./miniGameInputs.js";
+import { needWantFeedback } from "./miniGameFeedback.js";
 
 // Quầy + các giỏ: game.zones trong JSON chương; thiếu → bộ bản 1.1.0 (giỏ Cần / Muốn).
 const DEFAULT_ZONES = [
@@ -22,7 +23,7 @@ const DEFAULT_ZONES = [
   { id: "WANTS", title: "Giỏ Muốn", hint: "Những điều làm bạn vui", icon: "♡" },
 ];
 
-function Item({ item, selected, onSelect, onDragStart, checked, correct }) {
+function Item({ item, selected, onSelect, onDragStart, checked, correct, zones }) {
   const [broken, setBroken] = useState(false);
   return (
     <button
@@ -58,11 +59,8 @@ function Item({ item, selected, onSelect, onDragStart, checked, correct }) {
       )}
       {checked && (
         <span className="nw-item-feedback">
-          {correct ? "Đúng rồi" : "Thử xem lại nhé"}
+          {needWantFeedback(item, correct, zones)}
         </span>
-      )}
-      {checked && item.explanation && (
-        <span className="nw-item-explanation">{item.explanation}</span>
       )}
     </button>
   );
@@ -202,6 +200,7 @@ export function NeedWantMiniGame({
                 <Item
                   key={item.id}
                   item={item}
+                  zones={zones}
                   selected={selected === item.id}
                   checked={submitted && zone.id !== "inventory"}
                   correct={placements[item.id] === item.category}
