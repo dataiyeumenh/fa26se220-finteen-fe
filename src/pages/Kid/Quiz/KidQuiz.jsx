@@ -20,7 +20,7 @@ const questionCountLabel = (quiz) => {
 };
 export default function KidQuiz() {
   const { actor } = useWorkspace();
-  const { pending, completed, loading, error, refresh } = useKidQuizzes();
+  const { pending, pendingPostTests, completed, loading, error, refresh } = useKidQuizzes();
   const familyChild = actor?.learnerRole === "child" || actor?.plan === "parent";
   return (
     <div className="ws-kid-quiz">
@@ -46,7 +46,7 @@ export default function KidQuiz() {
           <section className="ws-kid-quiz-overview">
             <article>
               <ClipboardList />
-              <strong>{pending.length}</strong>
+              <strong>{familyChild ? pendingPostTests.length : pending.length}</strong>
               <p>{familyChild ? "Hậu trắc chờ làm" : "Bài chờ làm"}</p>
             </article>
             <article>

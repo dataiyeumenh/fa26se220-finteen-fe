@@ -18,6 +18,7 @@ export function useKidLessons() {
       color: "#82a267",
       ...progress,
       status: canAccessChapter(actor, id, releasedChapters) ? progress.status : "locked",
+      postTestRequired: state?.postTestRequired || null,
     };
   });
   return {

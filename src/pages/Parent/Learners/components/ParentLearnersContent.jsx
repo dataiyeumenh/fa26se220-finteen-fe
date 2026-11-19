@@ -135,7 +135,7 @@ export default function ParentLearnersContent({ learnerState }) {
       </div>
       {available === 0 && (
         <p className="ws-notice" id="learner-capacity-notice" role="status">
-          Ví đã hết slot. Xóa hồ sơ không hoàn lại slot; hãy mua thêm slot để tạo hồ sơ mới.
+          Ví slot đã hết chỗ trống. Hãy mua thêm slot để tiếp tục.
         </p>
       )}
       {rows.length ? (

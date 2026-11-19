@@ -106,6 +106,7 @@ export async function submitChapterBatch(batch, expectedCode) {
     return {
       failed: error?.message || String(error),
       code: error?.code,
+      postTestRequired: error?.code === 7004,
       retry,
     };
   }

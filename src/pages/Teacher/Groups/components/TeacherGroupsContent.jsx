@@ -99,26 +99,28 @@ export default function TeacherGroupsContent({ learnerState, groupsOnly }) {
         title="Quản lý lớp học"
         description={`${group.name} · ${active.length}/${group.slotLimit} học sinh.`}
       >
-        {groups.filter((item) => !item.closedAt).length > 1 && (
-          <label>
-            <span className="sr-only">Chọn lớp đang quản lý</span>
-            <select value={group.id} onChange={(event) => selectGroup(event.target.value)}>
-              {groups.filter((item) => !item.closedAt).map((item) => (
-                <option value={item.id} key={item.id}>{item.name}</option>
-              ))}
-            </select>
-          </label>
-        )}
-        <button
-          className="ws-btn primary"
-          disabled={quotaFree < 5}
-          onClick={() => setModal({ type: "group" })}
-        >
-          <Plus size={16} /> Tạo lớp mới
-        </button>
-        <button className="ws-btn" onClick={() => void refresh()}>
-          <RefreshCw size={16} /> Làm mới
-        </button>
+        <div className="ws-actions teacher-groups-heading-actions">
+          {groups.filter((item) => !item.closedAt).length > 1 && (
+            <label>
+              <span className="sr-only">Chọn lớp đang quản lý</span>
+              <select value={group.id} onChange={(event) => selectGroup(event.target.value)}>
+                {groups.filter((item) => !item.closedAt).map((item) => (
+                  <option value={item.id} key={item.id}>{item.name}</option>
+                ))}
+              </select>
+            </label>
+          )}
+          <button
+            className="ws-btn primary"
+            disabled={quotaFree < 5}
+            onClick={() => setModal({ type: "group" })}
+          >
+            <Plus size={16} /> Tạo lớp mới
+          </button>
+          <button className="ws-btn" onClick={() => void refresh()}>
+            <RefreshCw size={16} /> Làm mới
+          </button>
+        </div>
       </Heading>
       {(error || message) && (
         <div className={`ws-toast ${error ? "error" : "success"}`}>
@@ -295,15 +297,20 @@ function TeacherLearnerList({ learnerState }) {
             Đã thu hồi ({inactive.length})
           </button>
         </div>
-        {available > 0 && (
-          <button
-            className="ws-btn primary"
-            onClick={() => setModal({ type: "create" })}
-          >
-            <Plus size={16} /> Tạo học sinh
-          </button>
-        )}
+        <button
+          className="ws-btn primary"
+          disabled={available === 0}
+          aria-describedby={available === 0 ? "teacher-capacity-notice" : undefined}
+          onClick={() => setModal({ type: "create" })}
+        >
+          <Plus size={16} /> Tạo học sinh
+        </button>
       </div>
+      {available === 0 && (
+        <p className="ws-notice" id="teacher-capacity-notice" role="status">
+          Ví slot đã hết chỗ trống. Hãy mua thêm slot để tiếp tục.
+        </p>
+      )}
       {rows.length ? (
         <div className="ws-grid three">
           {rows.map((slot) => (
@@ -332,7 +339,7 @@ function TeacherLearnerList({ learnerState }) {
                   </button>
                 </div>
               )}
-              <div className="ws-actions">
+              <div className="ws-actions ws-learner-actions">
                 <Link className="ws-btn" to={`/dashboard/learners/${slot.id}`}>
                   Xem tiến độ
                 </Link>

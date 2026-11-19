@@ -46,6 +46,7 @@ export default function useKidDashboard() {
     totalChapters: release.chapters.length,
     chapters: release.chapters,
     continueChapter: progress?.continueChapter || release.chapters[0]?.id || 1,
+    postTestRequired: progress?.postTestRequired || null,
     continueLessons: progress?.continueChapter
       ? [
           {

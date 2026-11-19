@@ -56,6 +56,7 @@ export function useKidQuizzes() {
   }, [refresh]);
   return {
     pending: data?.pending || [],
+    pendingPostTests: (data?.pending || []).filter((quiz) => quiz?.kind === "POST_TEST"),
     completed: data?.completed || [],
     loading,
     error,
