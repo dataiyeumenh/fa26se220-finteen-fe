@@ -9,6 +9,7 @@ const folder = path.resolve("output/minigame-texts/browser");
 mkdirSync(folder, { recursive: true });
 await server.listen();
 const scenarios = [
+  ["gv15-question-preview", "gv15-question-preview", "gv15-question-preview-result"],
   ["json-overrides", "minigame-texts", "minigame-texts-result"],
   ["chapter-five", "chapter-five", "ch5-browser-result"],
   ["chapter-six", "chapter-six", "ch6-browser-result"],

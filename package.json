@@ -19,6 +19,7 @@
     "test:auth": "node --test tests/auth-*.test.mjs",
     "test:personalization": "node --test tests/personalization.test.mjs",
     "test:personalization:browser": "node tests/personalization-browser.mjs",
+    "test:minigame-envelope:browser": "node --experimental-websocket tests/minigame-envelope-browser.mjs",
     "preview": "vite preview"
   },
   "dependencies": {

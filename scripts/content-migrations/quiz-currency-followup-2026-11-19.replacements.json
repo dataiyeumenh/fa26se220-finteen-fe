@@ -1,0 +1,340 @@
+[
+  {
+    "replacesId": "2845489f-549b-4334-989d-49c0b8afd82c",
+    "body": {
+      "pool": "FDIC_MONEY_SMART",
+      "stem": "Bảo hiểm tiền gửi có giới hạn và phạm vi bảo vệ; không nên hiểu rằng mọi số tiền trong mọi tài khoản đều được bảo hiểm không giới hạn. Phát biểu này đúng hay sai?",
+      "options": [
+        "Đúng",
+        "Sai"
+      ],
+      "correctIndex": 0,
+      "standard": "CEE-II",
+      "concept": null,
+      "chapter": null,
+      "externalId": "FDIC_MONEY_SMART-001-R1",
+      "replacesId": "2845489f-549b-4334-989d-49c0b8afd82c",
+      "source": "Phỏng theo FDIC Money Smart, câu 001. https://catalog.fdic.gov/catalog/sfc/servlet.shepherd/document/download/069t000000ghq1PAAQ",
+      "license": "FDIC: US government work, public domain. FinTeen Việt hóa; số tiền mô phỏng, không phải quy định sản phẩm."
+    }
+  },
+  {
+    "replacesId": "fd2a1545-ea88-4679-a20b-c035a81a85dc",
+    "body": {
+      "pool": "FDIC_MONEY_SMART",
+      "stem": "Trong tình huống mô phỏng, Alex thấy báo cáo tín dụng ghi một khoản nợ khám bệnh 6.000.000 đồng từ 13 tháng trước đã được chuyển sang thu hồi nợ. Alex gọi phòng khám để hỏi thông tin, nhưng chưa thực hiện thanh toán hay thay đổi khoản nợ.\nGiả sử mọi thông tin trên báo cáo tín dụng đều giữ nguyên, riêng việc gọi điện hỏi này làm điểm tín dụng của Alex thay đổi thế nào?",
+      "options": [
+        "Tăng",
+        "Giảm",
+        "Không đổi"
+      ],
+      "correctIndex": 2,
+      "standard": "CEE-V",
+      "concept": null,
+      "chapter": null,
+      "externalId": "FDIC_MONEY_SMART-083-R1",
+      "replacesId": "fd2a1545-ea88-4679-a20b-c035a81a85dc",
+      "source": "Phỏng theo FDIC Money Smart, câu 083. https://catalog.fdic.gov/catalog/sfc/servlet.shepherd/document/download/069t000000ghq5RAAQ",
+      "license": "FDIC: US government work, public domain. FinTeen Việt hóa; số tiền mô phỏng, không phải quy định sản phẩm."
+    }
+  },
+  {
+    "replacesId": "cccf2ddd-f234-4e37-ba3d-bfae88eb45a5",
+    "body": {
+      "pool": "FDIC_MONEY_SMART",
+      "stem": "Selena đang tiết kiệm để mua xe đi học và đi làm. Bạn bè rủ cô đi xem ban nhạc yêu thích; vé giá 1.000.000 đồng, chưa gồm áo lưu niệm và đồ ăn. Để tránh cảm giác bị bỏ lỡ, Selena quyết định lấy tiền từ quỹ mua xe và chỉ hy vọng tháng sau sẽ bù lại, chưa xác định nguồn tiền hay kế hoạch hoàn quỹ.\nKế hoạch sử dụng tiền này hợp lý hay chưa hợp lý?",
+      "options": [
+        "Chưa hợp lý",
+        "Hợp lý"
+      ],
+      "correctIndex": 0,
+      "standard": "CEE-II",
+      "concept": null,
+      "chapter": null,
+      "externalId": "FDIC_MONEY_SMART-097-R1",
+      "replacesId": "cccf2ddd-f234-4e37-ba3d-bfae88eb45a5",
+      "source": "Phỏng theo FDIC Money Smart, câu 097. https://catalog.fdic.gov/catalog/sfc/servlet.shepherd/document/download/069SJ00001GT7PdYAL",
+      "license": "FDIC: US government work, public domain. FinTeen Việt hóa; số tiền mô phỏng, không phải quy định sản phẩm."
+    }
+  },
+  {
+    "replacesId": "99f99d80-6146-4367-85eb-3fa01d98392f",
+    "body": {
+      "pool": "FDIC_MONEY_SMART",
+      "stem": "Trong tình huống mô phỏng, Kaelan vừa nhận việc bán thời gian, được trả 180.000 đồng/giờ và hiện chỉ được làm 20 giờ/tuần. Anh thuê căn hộ giá 11.000.000 đồng/tháng vì có phòng tập và hồ bơi. Kaelan cho rằng mình sẽ đủ tiền vì sếp nói có thể cho làm toàn thời gian sau vài tháng, nhưng chưa có cam kết. Anh chưa lập ngân sách cho các chi phí sinh hoạt khác.\nKế hoạch thuê nhà dựa trên thu nhập chưa được bảo đảm này hợp lý hay chưa hợp lý?",
+      "options": [
+        "Chưa hợp lý",
+        "Hợp lý"
+      ],
+      "correctIndex": 0,
+      "standard": "CEE-II",
+      "concept": null,
+      "chapter": null,
+      "externalId": "FDIC_MONEY_SMART-099-R1",
+      "replacesId": "99f99d80-6146-4367-85eb-3fa01d98392f",
+      "source": "Phỏng theo FDIC Money Smart, câu 099. https://catalog.fdic.gov/catalog/sfc/servlet.shepherd/document/download/069SJ00001GT7PdYAL",
+      "license": "FDIC: US government work, public domain. FinTeen Việt hóa; số tiền mô phỏng, không phải quy định sản phẩm."
+    }
+  },
+  {
+    "replacesId": "4dfd44c3-68f8-47eb-982c-7b2be4fc5f33",
+    "body": {
+      "pool": "FDIC_MONEY_SMART",
+      "stem": "Collin có hạn mức thẻ tín dụng 30.000.000 đồng và đang nợ đúng 30.000.000 đồng. Trong tình huống mô phỏng, mỗi tháng anh chỉ trả mức tối thiểu 500.000 đồng, tiếp tục duy trì dư nợ gần chạm hạn mức và chưa có kế hoạch giảm nợ.\nCollin đang sử dụng thẻ có trách nhiệm hay thiếu trách nhiệm?",
+      "options": [
+        "Có trách nhiệm",
+        "Thiếu trách nhiệm"
+      ],
+      "correctIndex": 1,
+      "standard": "CEE-V",
+      "concept": null,
+      "chapter": null,
+      "externalId": "FDIC_MONEY_SMART-107-R1",
+      "replacesId": "4dfd44c3-68f8-47eb-982c-7b2be4fc5f33",
+      "source": "Phỏng theo FDIC Money Smart, câu 107. https://catalog.fdic.gov/catalog/sfc/servlet.shepherd/document/download/069SJ00001GT7PdYAL",
+      "license": "FDIC: US government work, public domain. FinTeen Việt hóa; số tiền mô phỏng, không phải quy định sản phẩm."
+    }
+  },
+  {
+    "replacesId": "6eb08677-ba40-4522-b8b1-8cb0e3882cc5",
+    "body": {
+      "pool": "FDIC_MONEY_SMART",
+      "stem": "Trong tình huống mô phỏng, Lynda dùng thẻ tín dụng cho các khoản mua trên 1.000.000 đồng và trả tiền mặt cho phần lớn khoản mua nhỏ hơn. Cô chỉ mua trong khả năng chi trả và thanh toán đủ toàn bộ dư nợ thẻ đúng hạn mỗi tháng.\nLynda đang sử dụng thẻ có trách nhiệm hay thiếu trách nhiệm?",
+      "options": [
+        "Có trách nhiệm",
+        "Thiếu trách nhiệm"
+      ],
+      "correctIndex": 0,
+      "standard": "CEE-V",
+      "concept": null,
+      "chapter": null,
+      "externalId": "FDIC_MONEY_SMART-108-R1",
+      "replacesId": "6eb08677-ba40-4522-b8b1-8cb0e3882cc5",
+      "source": "Phỏng theo FDIC Money Smart, câu 108. https://catalog.fdic.gov/catalog/sfc/servlet.shepherd/document/download/069SJ00001GT7PdYAL",
+      "license": "FDIC: US government work, public domain. FinTeen Việt hóa; số tiền mô phỏng, không phải quy định sản phẩm."
+    }
+  },
+  {
+    "replacesId": "dbe46f5b-5632-4d30-8a6d-7700c02d50bd",
+    "body": {
+      "pool": "FDIC_MONEY_SMART",
+      "stem": "James đã dành dụm 30.000.000 đồng và vay thêm để mua một chiếc xe máy giá 50.000.000 đồng. Hiện xe có thể bán được 45.000.000 đồng, còn khoản vay chưa trả là 15.000.000 đồng. Đây là số liệu mô phỏng.\nĐể so sánh khoản nợ còn lại với giá trị hiện tại của xe, James nên dùng tỷ lệ nào?",
+      "options": [
+        "nợ trên thu nhập",
+        "nợ trên tài sản",
+        "nợ trên hạn mức"
+      ],
+      "correctIndex": 1,
+      "standard": "CEE-I",
+      "concept": null,
+      "chapter": null,
+      "externalId": "FDIC_MONEY_SMART-110-R1",
+      "replacesId": "dbe46f5b-5632-4d30-8a6d-7700c02d50bd",
+      "source": "Phỏng theo FDIC Money Smart, câu 110. https://catalog.fdic.gov/catalog/sfc/servlet.shepherd/document/download/069SJ00001GT7PdYAL",
+      "license": "FDIC: US government work, public domain. FinTeen Việt hóa; số tiền mô phỏng, không phải quy định sản phẩm."
+    }
+  },
+  {
+    "replacesId": "88d94e8c-9438-4354-b586-523e04fb6a96",
+    "body": {
+      "pool": "FDIC_MONEY_SMART",
+      "stem": "Trong tình huống mô phỏng, Elizabeth có thu nhập trước thuế 32.000.000 đồng/tháng. Mỗi tháng, cô trả bốn khoản nợ thẻ lần lượt 500.000 đồng, 2.000.000 đồng, 250.000 đồng và 1.750.000 đồng; ngoài ra trả khoản vay mua nhà 9.000.000 đồng.\nĐể đánh giá tổng tiền trả nợ hằng tháng so với thu nhập hằng tháng, Elizabeth nên dùng tỷ lệ nào?",
+      "options": [
+        "nợ trên thu nhập",
+        "nợ trên tài sản",
+        "nợ trên hạn mức"
+      ],
+      "correctIndex": 0,
+      "standard": "CEE-II",
+      "concept": null,
+      "chapter": null,
+      "externalId": "FDIC_MONEY_SMART-111-R1",
+      "replacesId": "88d94e8c-9438-4354-b586-523e04fb6a96",
+      "source": "Phỏng theo FDIC Money Smart, câu 111. https://catalog.fdic.gov/catalog/sfc/servlet.shepherd/document/download/069SJ00001GT7PdYAL",
+      "license": "FDIC: US government work, public domain. FinTeen Việt hóa; số tiền mô phỏng, không phải quy định sản phẩm."
+    }
+  },
+  {
+    "replacesId": "96a9ccf5-9c1d-46b0-b8b4-689ebc0ac1a3",
+    "body": {
+      "pool": "FDIC_MONEY_SMART",
+      "stem": "Trong tình huống mô phỏng, Michael có một thẻ tín dụng với hạn mức 10.000.000 đồng và dư nợ hiện tại 1.000.000 đồng.\nĐể biết mình đã sử dụng bao nhiêu phần trăm hạn mức thẻ, Michael nên dùng tỷ lệ nào?",
+      "options": [
+        "nợ trên thu nhập",
+        "nợ trên tài sản",
+        "nợ trên hạn mức"
+      ],
+      "correctIndex": 2,
+      "standard": "CEE-I",
+      "concept": null,
+      "chapter": null,
+      "externalId": "FDIC_MONEY_SMART-112-R1",
+      "replacesId": "96a9ccf5-9c1d-46b0-b8b4-689ebc0ac1a3",
+      "source": "Phỏng theo FDIC Money Smart, câu 112. https://catalog.fdic.gov/catalog/sfc/servlet.shepherd/document/download/069SJ00001GT7PdYAL",
+      "license": "FDIC: US government work, public domain. FinTeen Việt hóa; số tiền mô phỏng, không phải quy định sản phẩm."
+    }
+  },
+  {
+    "replacesId": "adbcc339-0b98-493a-af80-6482c1f102b5",
+    "body": {
+      "pool": "FDIC_MONEY_SMART",
+      "stem": "Trong tình huống mô phỏng, bà của Olivia tặng cô một khoản đầu tư trị giá 250.000 đồng. Khoản đầu tư là một khoản cho Chính phủ vay; theo điều kiện đã ghi, người sở hữu được hoàn trả gốc và nhận tiền lãi khi đến hạn.\nOlivia đang sở hữu loại đầu tư nào?",
+      "options": [
+        "Trái phiếu",
+        "Cổ phiếu",
+        "Tài khoản hưu trí",
+        "Quỹ tương hỗ"
+      ],
+      "correctIndex": 0,
+      "standard": "CEE-IV",
+      "concept": null,
+      "chapter": null,
+      "externalId": "FDIC_MONEY_SMART-121-R1",
+      "replacesId": "adbcc339-0b98-493a-af80-6482c1f102b5",
+      "source": "Phỏng theo FDIC Money Smart, câu 121. https://catalog.fdic.gov/catalog/sfc/servlet.shepherd/document/download/069SJ00001GT7PdYAL",
+      "license": "FDIC: US government work, public domain. FinTeen Việt hóa; số tiền mô phỏng, không phải quy định sản phẩm."
+    }
+  },
+  {
+    "replacesId": "11b38cec-bc40-493c-8034-f406db2b1dd2",
+    "body": {
+      "pool": "FDIC_MONEY_SMART",
+      "stem": "Jillian đang tìm mua laptop có giá thông thường 5.000.000 đồng. Trên mạng xã hội, một cửa hàng lạ quảng cáo đúng mẫu máy đó, kèm tai nghe, túi đựng và phần mềm, nhưng giá cả bộ chỉ 500.000 đồng. Jillian định đặt mua ngay mà chưa xác minh người bán hay điều kiện giao dịch.\nLời chào mời này đáng tin cậy hay có dấu hiệu lừa đảo cần kiểm tra?",
+      "options": [
+        "Đáng tin cậy",
+        "Có dấu hiệu lừa đảo, cần kiểm tra"
+      ],
+      "correctIndex": 1,
+      "standard": "CEE-VI",
+      "concept": null,
+      "chapter": null,
+      "externalId": "FDIC_MONEY_SMART-126-R1",
+      "replacesId": "11b38cec-bc40-493c-8034-f406db2b1dd2",
+      "source": "Phỏng theo FDIC Money Smart, câu 126. https://catalog.fdic.gov/catalog/sfc/servlet.shepherd/document/download/069SJ00001GT7PdYAL",
+      "license": "FDIC: US government work, public domain. FinTeen Việt hóa; số tiền mô phỏng, không phải quy định sản phẩm."
+    }
+  },
+  {
+    "replacesId": "4698c97b-f6a4-44d0-b178-7f700e77d602",
+    "body": {
+      "pool": "PISA",
+      "stem": "Trong tình huống mô phỏng, Jane nhận được phiếu lương tháng 7 như sau:\n\nPHIẾU LƯƠNG THÁNG 7\nLương gộp: 28.000.000 đồng\nCác khoản khấu trừ: 3.000.000 đồng\nLương thực nhận: 25.000.000 đồng\nTổng lương gộp từ đầu năm: 196.000.000 đồng\n\nNgày 31/7, chủ lao động chuyển khoản lương tháng 7 vào tài khoản của Jane. Số tiền được chuyển là bao nhiêu?",
+      "options": [
+        "3.000.000 đồng",
+        "25.000.000 đồng",
+        "28.000.000 đồng",
+        "196.000.000 đồng"
+      ],
+      "correctIndex": 1,
+      "standard": "CEE-I",
+      "concept": null,
+      "chapter": null,
+      "externalId": "PISA-017-R1",
+      "replacesId": "4698c97b-f6a4-44d0-b178-7f700e77d602",
+      "source": "Phỏng theo OECD PISA 2012 Framework, câu 017. https://doi.org/10.1787/9789264190511-en",
+      "license": "© OECD 2013. Theo OECD Terms & Conditions. FinTeen biên soạn; không phải bản dịch chính thức của OECD."
+    }
+  },
+  {
+    "replacesId": "a6d7e683-c232-4629-a7ef-d6a5300a08b2",
+    "body": {
+      "pool": "PISA",
+      "stem": "Lisa vừa nhận được thẻ ngân hàng mới. Ngân hàng cung cấp riêng mã PIN để Lisa xác thực khi sử dụng thẻ.\nLisa nên làm gì với mã PIN này?",
+      "options": [
+        "Viết mã PIN ra giấy và cất trong ví.",
+        "Nói mã PIN cho bạn bè biết.",
+        "Viết mã PIN lên mặt sau của thẻ.",
+        "Ghi nhớ mã PIN."
+      ],
+      "correctIndex": 3,
+      "standard": "CEE-VI",
+      "concept": null,
+      "chapter": null,
+      "externalId": "PISA-020-R1",
+      "replacesId": "a6d7e683-c232-4629-a7ef-d6a5300a08b2",
+      "source": "Phỏng theo OECD PISA 2012 Framework, câu 020. https://doi.org/10.1787/9789264190511-en",
+      "license": "© OECD 2013. Theo OECD Terms & Conditions. FinTeen biên soạn; không phải bản dịch chính thức của OECD."
+    }
+  },
+  {
+    "replacesId": "8e2f6356-e22b-46a2-93dd-71db983f0919",
+    "body": {
+      "pool": "PISA",
+      "stem": "Ben cần chọn một gói điện thoại trả sau. Trong tháng mô phỏng gồm 30 ngày, Ben gọi 60 phút mỗi ngày và không gửi tin nhắn. Phí tháng đã bao gồm số phút gọi miễn phí; chỉ tính cước cho phần vượt quá.\n\nCông ty 1: phí 200.000 đồng/tháng; miễn phí 90 phút gọi; phần vượt quá 2.700 đồng/phút; miễn phí 200 tin nhắn, sau đó 200 đồng/tin.\nCông ty 2: phí 200.000 đồng/tháng; miễn phí 90 phút gọi; phần vượt quá 2.500 đồng/phút; miễn phí 100 tin nhắn, sau đó 200 đồng/tin.\nCông ty 3: phí 300.000 đồng/tháng; miễn phí 60 phút gọi; phần vượt quá 3.000 đồng/phút; tin nhắn miễn phí không giới hạn.\nCông ty 4: phí 300.000 đồng/tháng; miễn phí 60 phút gọi; phần vượt quá 2.500 đồng/phút; miễn phí 200 tin nhắn, sau đó 100 đồng/tin.\n\nVới cách sử dụng trên, Ben trả tổng chi phí tháng thấp nhất cho công ty nào?",
+      "options": [
+        "Công ty 1",
+        "Công ty 2",
+        "Công ty 3",
+        "Công ty 4"
+      ],
+      "correctIndex": 1,
+      "standard": "CEE-II",
+      "concept": null,
+      "chapter": null,
+      "externalId": "PISA-028-R1",
+      "replacesId": "8e2f6356-e22b-46a2-93dd-71db983f0919",
+      "source": "OECD PISA 2018, câu 028. https://www.oecd.org/content/dam/oecd/en/about/programmes/edu/pisa/pisa-test/PISA2018-financial-literacy-items.pdf",
+      "license": "© OECD 2018. Theo OECD Terms & Conditions. FinTeen biên soạn; không phải bản dịch chính thức của OECD."
+    }
+  },
+  {
+    "replacesId": "024516d4-3da0-40b1-a1d7-66fbfff91625",
+    "body": {
+      "pool": "PISA",
+      "stem": "Julie dùng dịch vụ thuê xe đạp ZCycle. Bảng phí mô phỏng:\n\nGói năm: 1.800.000 đồng, đã bao gồm mọi chuyến đi trong năm.\nGói tháng: 200.000 đồng/tháng; chuyến đi không quá 60 phút được miễn phí; chuyến đi trên 120 phút tính thêm 60.000 đồng/chuyến.\n\nJulie chỉ sử dụng dịch vụ trong 6 tháng. Mỗi ngày cô đi làm và về nhà, mỗi chiều 45 phút. Ngoài ra, mỗi tháng cô đi thêm 2 chuyến, mỗi chuyến dài hơn 3 giờ.\nSo sánh mua 1 gói năm với mua liên tiếp 6 gói tháng, phương án nào rẻ hơn và tiết kiệm được bao nhiêu?",
+      "options": [
+        "Gói năm, tiết kiệm 120.000 đồng so với 6 gói tháng.",
+        "6 gói tháng, tiết kiệm 120.000 đồng so với gói năm."
+      ],
+      "correctIndex": 0,
+      "standard": "CEE-II",
+      "concept": null,
+      "chapter": null,
+      "externalId": "PISA-032-R1",
+      "replacesId": "024516d4-3da0-40b1-a1d7-66fbfff91625",
+      "source": "OECD PISA 2018, câu 032. https://www.oecd.org/content/dam/oecd/en/about/programmes/edu/pisa/pisa-test/PISA2018-financial-literacy-items.pdf",
+      "license": "© OECD 2018. Theo OECD Terms & Conditions. FinTeen biên soạn; không phải bản dịch chính thức của OECD."
+    }
+  },
+  {
+    "replacesId": "95fd5060-5571-403a-916e-788ac7b4a026",
+    "body": {
+      "pool": "PISA",
+      "stem": "Julie dùng thử dịch vụ thuê xe đạp ZCycle trong một tháng. Theo bảng phí mô phỏng, gói tháng giá 200.000 đồng; chuyến đi không quá 60 phút được miễn phí; chuyến đi trên 120 phút có phí 60.000 đồng/chuyến.\nJulie đã kiểm tra và xác nhận số chuyến cùng thời lượng đều đúng. Hóa đơn của cô ghi:\n\nPhí thành viên 1 tháng: 200.000 đồng\n10 chuyến không quá 60 phút: 100.000 đồng\n0 chuyến từ 61 đến 120 phút: 0 đồng\n2 chuyến trên 120 phút: 120.000 đồng\nTổng yêu cầu thanh toán: 420.000 đồng\n\nKhoản phí nào bị tính sai và cần bỏ khỏi hóa đơn?",
+      "options": [
+        "Phí thành viên 1 tháng: 200.000 đồng.",
+        "10 chuyến không quá 60 phút: 100.000 đồng.",
+        "0 chuyến từ 61 đến 120 phút: 0 đồng.",
+        "2 chuyến trên 120 phút: 120.000 đồng."
+      ],
+      "correctIndex": 1,
+      "standard": "CEE-II",
+      "concept": null,
+      "chapter": null,
+      "externalId": "PISA-033-R1",
+      "replacesId": "95fd5060-5571-403a-916e-788ac7b4a026",
+      "source": "OECD PISA 2018, câu 033. https://www.oecd.org/content/dam/oecd/en/about/programmes/edu/pisa/pisa-test/PISA2018-financial-literacy-items.pdf",
+      "license": "© OECD 2018. Theo OECD Terms & Conditions. FinTeen biên soạn; không phải bản dịch chính thức của OECD."
+    }
+  },
+  {
+    "replacesId": "b707a134-7c17-4b66-ae7d-aa85b0a31b84",
+    "body": {
+      "pool": "PISA",
+      "stem": "Một cửa hàng bán xe đạp leo núi với giá trả ngay 6.000.000 đồng. Greg vay đủ số tiền mua xe từ công ty tài chính của cửa hàng. Khoản vay có lãi suất lớn hơn 0; không có ưu đãi giảm giá hay trợ cấp tiền lãi.\nSo với giá trả ngay, tổng tiền Greg phải trả cho khoản vay sẽ như thế nào?",
+      "options": [
+        "Ít hơn 6.000.000 đồng.",
+        "Nhiều hơn 6.000.000 đồng.",
+        "Đúng 6.000.000 đồng."
+      ],
+      "correctIndex": 1,
+      "standard": "CEE-V",
+      "concept": null,
+      "chapter": null,
+      "externalId": "PISA-034-R1",
+      "replacesId": "b707a134-7c17-4b66-ae7d-aa85b0a31b84",
+      "source": "Phỏng theo OECD PISA 2022 IV, NEW BIKE Q1. https://doi.org/10.1787/5a849c2a-en",
+      "license": "© OECD 2024, CC BY-NC-SA 3.0 IGO. FinTeen biên soạn; không phải bản dịch chính thức của OECD."
+    }
+  }
+]

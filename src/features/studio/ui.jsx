@@ -80,6 +80,7 @@ export function StudioDialog({
   onClose,
   busy = false,
   wide = false,
+  className,
   children,
 }) {
   return (
@@ -93,6 +94,7 @@ export function StudioDialog({
         className={cn(
           "sp-dialog max-h-[88vh] overflow-auto",
           wide ? "max-w-4xl" : "max-w-xl",
+          className,
         )}
         aria-describedby={undefined}
       >
@@ -108,6 +110,7 @@ export function StudioDialog({
  * Nút xác nhận mang đúng tên hành động, không dùng chữ chung chung.
  */
 export function ConfirmDialog({
+  className,
   title,
   confirmLabel,
   tone = "primary",
@@ -120,7 +123,7 @@ export function ConfirmDialog({
   children,
 }) {
   return (
-    <StudioDialog title={title} onClose={onClose} busy={busy}>
+    <StudioDialog title={title} onClose={onClose} busy={busy} className={className}>
       <form
         className="sp-dialog-body"
         onSubmit={(event) => {

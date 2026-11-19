@@ -344,7 +344,7 @@ textarea.sp-input { min-height: 88px; resize: vertical; line-height: 1.5; }
 .sp-table tr:last-child td { border-bottom: 0; }
 .sp-table tr.is-retired td { background: #fafbfa; }
 .sp-table tr.is-retired .sp-q-stem { color: var(--sp-muted); }
-.sp-q-stem { font-size: 15px; font-weight: 500; line-height: 1.5; margin: 0 0 8px; max-width: 75ch; }
+.sp-q-stem { font-size: 15px; font-weight: 500; line-height: 1.5; margin: 0 0 8px; max-width: 75ch; white-space: pre-line; overflow-wrap: anywhere; }
 .sp-q-options { list-style: none; margin: 0 0 10px; padding: 0; display: grid; gap: 4px; }
 .sp-q-options li { display: flex; gap: 8px; align-items: baseline; color: var(--sp-muted); line-height: 1.45; }
 .sp-q-options li b { font-weight: 600; min-width: 1.4em; }

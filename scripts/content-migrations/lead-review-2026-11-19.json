@@ -1,0 +1,55 @@
+{
+  "CH01": {
+    "scenes": [{
+      "id": "CH01_SC03_MINIGAME",
+      "game": {
+        "title": "Cần hay Muốn?",
+        "items": [
+          { "id": "ITEM_MEAL", "explanation": "Bữa ăn hằng ngày thuộc nhu cầu Cần vì cung cấp năng lượng và giúp duy trì sức khỏe; đây là khoản thiết yếu cần ưu tiên." },
+          { "id": "ITEM_BUS_TICKET", "explanation": "Vé xe đi học thuộc nhu cầu Cần vì giúp An đến trường; cần dành tiền đi học trước các món mua thêm." },
+          { "id": "ITEM_ART_CLASS", "explanation": "Phí lớp vẽ đã đăng ký thuộc khoản Cần trong tình huống này vì An đã cam kết thanh toán vào ngày 28; phải dành đủ tiền thực hiện cam kết." },
+          { "id": "ITEM_REPLACEMENT_HEADPHONES", "explanation": "Tai nghe cũ vẫn dùng được nên mua tai nghe mới thuộc mong Muốn; An vẫn có thể học với thiết bị hiện có và hoãn khoản mua này." },
+          { "id": "ITEM_UPGRADE_HEADPHONES", "explanation": "Tai nghe cao cấp thuộc mong Muốn vì tai nghe hiện tại vẫn hoạt động tốt; nâng cấp là sở thích, có thể chờ sau các khoản thiết yếu." },
+          { "id": "ITEM_DESK_DECORATION", "explanation": "Tượng mèo trang trí thuộc mong Muốn vì làm góc học tập đẹp hơn nhưng thiếu món này An vẫn học được; có thể hoãn mua để ưu tiên khoản Cần." }
+        ]
+      }
+    }]
+  },
+  "CH02": {
+    "scenes": [{
+      "id": "CH02_SC02_BUDGET_BUILDER",
+      "title": "Thực hành: Chia phong bì thật hợp lý",
+      "game": {
+        "title": "Chia phong bì thật hợp lý",
+        "dropZones": [
+          { "id": "housing", "explanation": "Ưu tiên đủ tiền phòng để bảo đảm chỗ ở." },
+          { "id": "food", "explanation": "Giữ đủ tiền ăn uống cho cả tháng trước khi chi cho sở thích." },
+          { "id": "transport", "explanation": "Dành đủ tiền đi lại để duy trì việc học và công việc." },
+          { "id": "entertainment", "explanation": "Giải trí có thể điều chỉnh để ưu tiên sinh hoạt và mục tiêu tiết kiệm." },
+          { "id": "savings_laptop", "explanation": "Dành khoản tiết kiệm theo kế hoạch để kịp mục tiêu mua laptop." },
+          { "id": "emergency_buffer", "explanation": "Giữ quỹ dự trù cho chi phí phát sinh, tránh phải lấy tiền từ mục tiêu tiết kiệm." }
+        ]
+      }
+    }]
+  },
+  "CH03": {
+    "scenes": [{
+      "id": "CH03_SC03_CAREER_MATCH",
+      "title": "Ghép việc phù hợp: kỹ năng và thời gian",
+      "game": {
+        "title": "Ghép việc phù hợp",
+        "texts": { "finish": "Hoàn tất Ghép việc phù hợp" },
+        "questions": [
+          { "id": "net_salary", "formula": "An làm trợ lý thiết kế với lương gộp 3.000.000đ/tháng và khoản khấu trừ 300.000đ/tháng. Lương thực nhận của An là bao nhiêu?" },
+          { "id": "profit", "formula": "An bán sản phẩm nhỏ, thu được doanh thu 1.200.000đ và đã bỏ ra chi phí 800.000đ. Lợi nhuận của An là bao nhiêu?" },
+          {
+            "id": "low_month",
+            "formula": "Tháng hoa hồng thấp, An có thu nhập 2.000.000đ và phải chi 1.800.000đ cho sinh hoạt thiết yếu. Sau khi trả đủ chi phí thiết yếu, quỹ linh hoạt của An còn bao nhiêu?",
+            "hint": "Quỹ linh hoạt là phần còn lại sau khi lấy thu nhập 2.000.000đ trừ chi phí thiết yếu 1.800.000đ. Hãy thực hiện phép trừ, không cộng hai khoản này.",
+            "explain": "Quỹ linh hoạt = 2.000.000đ − 1.800.000đ = 200.000đ. An chỉ nên dùng tối đa khoản còn lại này cho các chi tiêu linh hoạt trong tháng."
+          }
+        ]
+      }
+    }]
+  }
+}

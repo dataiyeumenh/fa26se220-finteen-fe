@@ -1,0 +1,644 @@
+[
+  {
+    "id": "2845489f-549b-4334-989d-49c0b8afd82c",
+    "externalId": "FDIC_MONEY_SMART-001",
+    "pool": "FDIC_MONEY_SMART",
+    "stem": "Tiền của bạn trong tài khoản tiền gửi được FDIC bảo hiểm (bao gồm tài khoản thanh toán và tài khoản tiết kiệm) được bảo hiểm tối đa $250.000.",
+    "options": [
+      "Đúng",
+      "Sai"
+    ],
+    "correctIndex": 0,
+    "standard": "CEE-II",
+    "concept": null,
+    "source": "FDIC Money Smart for Young Adults, Module 1: Bank On It - Participant Guide (FDIC-011-2022), PDF p37 (printed p33)",
+    "chapter": null,
+    "retiredAt": null,
+    "replacesId": null,
+    "reference": {
+      "title": "FDIC Money Smart for Young Adults, Module 1: Bank On It - Participant Guide (FDIC-011-2022)",
+      "url": "https://catalog.fdic.gov/catalog/sfc/servlet.shepherd/document/download/069t000000ghq1PAAQ",
+      "page": "PDF p37 (printed p33)",
+      "location": "Module 1 Pre-/Post-Training Survey, Q1",
+      "accessedOn": "2026-10-02",
+      "image": null,
+      "stemOriginal": "Your money in an FDIC-insured deposit account (including checking accounts and savings accounts) is insured up to $250,000.",
+      "optionsOriginal": [
+        "True",
+        "False"
+      ],
+      "license": "US government work, public domain",
+      "licenseClass": "public-domain",
+      "standardFromSource": false
+    },
+    "keepOptionOrder": false,
+    "copiedFromId": null,
+    "usedInPublished": null
+  },
+  {
+    "id": "fd2a1545-ea88-4679-a20b-c035a81a85dc",
+    "externalId": "FDIC_MONEY_SMART-083",
+    "pool": "FDIC_MONEY_SMART",
+    "stem": "Tình huống sau đây có thể đã ảnh hưởng thế nào đến điểm tín dụng của Alex? Xét riêng tình huống này, giả sử không có gì khác trên báo cáo tín dụng của Alex thay đổi. Alex nhận thấy mình có một khoản nợ bị chuyển sang thu hồi nợ từ một lần khám bệnh cách đây 13 tháng. Số tiền anh nợ là $600. Anh gọi cho phòng khám nơi phát sinh khoản nợ để hỏi về khoản nợ này.",
+    "options": [
+      "Tăng",
+      "Giảm",
+      "Không đổi"
+    ],
+    "correctIndex": 2,
+    "standard": "CEE-V",
+    "concept": null,
+    "source": "FDIC Money Smart for Young Adults, Module 6: Building Your Credit History - Participant Guide (FDIC-021-2022), PDF p13 (printed p9)",
+    "chapter": null,
+    "retiredAt": null,
+    "replacesId": null,
+    "reference": {
+      "title": "FDIC Money Smart for Young Adults, Module 6: Building Your Credit History - Participant Guide (FDIC-021-2022)",
+      "url": "https://catalog.fdic.gov/catalog/sfc/servlet.shepherd/document/download/069t000000ghq5RAAQ",
+      "page": "PDF p13 (printed p9)",
+      "location": "Module 6 Try It: What Makes Credit Scores Go Up and Down?, Q9",
+      "accessedOn": "2026-10-02",
+      "image": null,
+      "stemOriginal": "What effect did each situation likely have on Alex’s credit scores? Consider each on its own, assuming that nothing else on Alex’s credit reports changed. — Alex notices he has an account in collections from a medical visit 13 months ago. The amount he owes is $600. He calls the medical clinic where the debt originated and asks them about it.",
+      "optionsOriginal": [
+        "Up",
+        "Down",
+        "No change"
+      ],
+      "license": "US government work, public domain",
+      "licenseClass": "public-domain",
+      "standardFromSource": false
+    },
+    "keepOptionOrder": false,
+    "copiedFromId": null,
+    "usedInPublished": null
+  },
+  {
+    "id": "cccf2ddd-f234-4e37-ba3d-bfae88eb45a5",
+    "externalId": "FDIC_MONEY_SMART-097",
+    "pool": "FDIC_MONEY_SMART",
+    "stem": "Đọc tình huống và quyết định xem kế hoạch tài chính của người này là kém hay chỉn chu. - Selena, 17 tuổi, học sinh năm cuối trung học: “Vài tuần nữa bạn bè tôi đi xem hoà nhạc và đang năn nỉ tôi đi cùng. Đó là ban nhạc tôi thích nhất và tôi rất muốn đi. Vé giá $100, cộng thêm chắc tôi sẽ cần thêm tiền vì tôi muốn mua áo thun và có thể cả đồ ăn. Tôi đang cố dành dụm mua xe hơi để đi học và đi làm thuận tiện hơn, nhưng nếu không đi xem hoà nhạc thì tôi sẽ là người duy nhất bỏ lỡ. Bạn bè sẽ nhắc mãi chuyện này! Tôi nghĩ tôi sẽ đi và cứ mượn tạm tiền từ khoản tiết kiệm mua xe để trả, rồi hy vọng tháng sau bù lại.”",
+    "options": [
+      "Kém",
+      "Chỉn chu"
+    ],
+    "correctIndex": 0,
+    "standard": "CEE-II",
+    "concept": null,
+    "source": "FDIC Money Smart for Young People: Grades 9-12 Educator Guide (full curriculum PDF, 271 pages), PDF p44 (printed: Lesson 2 pg.10)",
+    "chapter": null,
+    "retiredAt": null,
+    "replacesId": null,
+    "reference": {
+      "title": "FDIC Money Smart for Young People: Grades 9-12 Educator Guide (full curriculum PDF, 271 pages)",
+      "url": "https://catalog.fdic.gov/catalog/sfc/servlet.shepherd/document/download/069SJ00001GT7PdYAL",
+      "page": "PDF p44 (printed: Lesson 2 pg.10)",
+      "location": "Lesson 2: Designing Dreams, Student Handout 'Poor or Polished Plan?', item 1",
+      "accessedOn": "2026-10-02",
+      "image": null,
+      "stemOriginal": "Read the scenario and decide whether the person’s financial plan is poor or polished. — Selena, 17 years old, high school senior: “My friends are going to a concert in a few weeks and they’re begging me to come. It’s my favorite band and I really want to go. It’s $100 for the ticket, plus I’ll probably need extra because I’ll want to buy a T-shirt and maybe food. I am trying to save up for a car so I can get to school and work easier, but if I don’t go to the concert, I’ll be the only one who misses it. I’ll never hear the end of it from my friends! I think I’m going to go and I’ll just borrow the money from my car savings to pay for it and then hopefully catch up on savings next month.”",
+      "optionsOriginal": [
+        "Poor",
+        "Polished"
+      ],
+      "license": "US government work, public domain",
+      "licenseClass": "public-domain",
+      "standardFromSource": false
+    },
+    "keepOptionOrder": false,
+    "copiedFromId": null,
+    "usedInPublished": null
+  },
+  {
+    "id": "99f99d80-6146-4367-85eb-3fa01d98392f",
+    "externalId": "FDIC_MONEY_SMART-099",
+    "pool": "FDIC_MONEY_SMART",
+    "stem": "Đọc tình huống và quyết định xem kế hoạch tài chính của người này là kém hay chỉn chu. - Kaelan, 22 tuổi, công nhân xây dựng bán thời gian: “Tôi vừa chuyển vào một căn hộ chung cư mới và nó khá tuyệt. Hơi đắt, $1.100 một tháng, nhưng có rất nhiều tiện ích… phòng tập, hồ bơi, thậm chí cả phòng sinh hoạt chung và bàn bi-a trong toà nhà chính. Mọi thứ thật hoàn hảo vì tôi vừa bắt đầu công việc mới và kiếm được $18 một giờ. Hiện tại tôi chỉ được làm 20 giờ một tuần, nhưng sếp nói vài tháng nữa tôi sẽ có thể làm toàn thời gian.”",
+    "options": [
+      "Kém",
+      "Chỉn chu"
+    ],
+    "correctIndex": 0,
+    "standard": "CEE-II",
+    "concept": null,
+    "source": "FDIC Money Smart for Young People: Grades 9-12 Educator Guide (full curriculum PDF, 271 pages), PDF p44 (printed: Lesson 2 pg.10)",
+    "chapter": null,
+    "retiredAt": null,
+    "replacesId": null,
+    "reference": {
+      "title": "FDIC Money Smart for Young People: Grades 9-12 Educator Guide (full curriculum PDF, 271 pages)",
+      "url": "https://catalog.fdic.gov/catalog/sfc/servlet.shepherd/document/download/069SJ00001GT7PdYAL",
+      "page": "PDF p44 (printed: Lesson 2 pg.10)",
+      "location": "Lesson 2: Designing Dreams, Student Handout 'Poor or Polished Plan?', item 3",
+      "accessedOn": "2026-10-02",
+      "image": null,
+      "stemOriginal": "Read the scenario and decide whether the person’s financial plan is poor or polished. — Kaelan, 22 years old, part-time construction worker: “I just moved into a new condo and it’s pretty sweet. A little pricey at $1,100 month, but I have lots of amenities…gym, pool, even a lounge and pool table in the main building. It works out perfectly because I started a new job and I’m making $18 an hour. I can only get 20 hours a week right now, but my boss said in a few months I should be able to work full-time.”",
+      "optionsOriginal": [
+        "Poor",
+        "Polished"
+      ],
+      "license": "US government work, public domain",
+      "licenseClass": "public-domain",
+      "standardFromSource": false
+    },
+    "keepOptionOrder": false,
+    "copiedFromId": null,
+    "usedInPublished": null
+  },
+  {
+    "id": "4dfd44c3-68f8-47eb-982c-7b2be4fc5f33",
+    "externalId": "FDIC_MONEY_SMART-107",
+    "pool": "FDIC_MONEY_SMART",
+    "stem": "Đọc tình huống và xác định xem người dùng thẻ tín dụng này sử dụng thẻ có trách nhiệm hay thiếu trách nhiệm. - Số dư nợ trên thẻ tín dụng của Collin là $3.000, bằng đúng hạn mức tín dụng của anh ấy. Anh ấy chỉ trả khoản thanh toán tối thiểu hằng tháng là $50 và lúc nào cũng gần chạm hạn mức thẻ. Bạn nghĩ gì về cách Collin dùng thẻ tín dụng?",
+    "options": [
+      "Có trách nhiệm",
+      "Thiếu trách nhiệm"
+    ],
+    "correctIndex": 1,
+    "standard": "CEE-V",
+    "concept": null,
+    "source": "FDIC Money Smart for Young People: Grades 9-12 Educator Guide (full curriculum PDF, 271 pages), PDF p122 (printed: Lesson 8 pg.10)",
+    "chapter": null,
+    "retiredAt": null,
+    "replacesId": null,
+    "reference": {
+      "title": "FDIC Money Smart for Young People: Grades 9-12 Educator Guide (full curriculum PDF, 271 pages)",
+      "url": "https://catalog.fdic.gov/catalog/sfc/servlet.shepherd/document/download/069SJ00001GT7PdYAL",
+      "page": "PDF p122 (printed: Lesson 8 pg.10)",
+      "location": "Lesson 8: The Almighty Dollar?, Student Handout 'Credit Responsibility', item 2",
+      "accessedOn": "2026-10-02",
+      "image": null,
+      "stemOriginal": "Read the scenario and determine whether the credit card user is responsible or irresponsible with his or her credit card use. — The balance on Collin’s credit card is $3,000, which is his credit limit. He makes only the minimum monthly payment of $50 and is always close to the limit on his credit card. What do you think about Collin’s use of a credit card?",
+      "optionsOriginal": [
+        "Responsible",
+        "Irresponsible"
+      ],
+      "license": "US government work, public domain",
+      "licenseClass": "public-domain",
+      "standardFromSource": false
+    },
+    "keepOptionOrder": false,
+    "copiedFromId": null,
+    "usedInPublished": null
+  },
+  {
+    "id": "6eb08677-ba40-4522-b8b1-8cb0e3882cc5",
+    "externalId": "FDIC_MONEY_SMART-108",
+    "pool": "FDIC_MONEY_SMART",
+    "stem": "Đọc tình huống và xác định xem người dùng thẻ tín dụng này sử dụng thẻ có trách nhiệm hay thiếu trách nhiệm. - Lynda dùng thẻ tín dụng cho tiện lợi và chỉ cho những khoản mua lớn trên $100. Cô ấy trả tiền mặt cho hầu hết các khoản mua nhỏ dưới $100. Mỗi tháng cô ấy trả hết toàn bộ hoá đơn thẻ tín dụng. Bạn nghĩ gì về cách Lynda dùng thẻ tín dụng?",
+    "options": [
+      "Có trách nhiệm",
+      "Thiếu trách nhiệm"
+    ],
+    "correctIndex": 0,
+    "standard": "CEE-V",
+    "concept": null,
+    "source": "FDIC Money Smart for Young People: Grades 9-12 Educator Guide (full curriculum PDF, 271 pages), PDF p122 (printed: Lesson 8 pg.10)",
+    "chapter": null,
+    "retiredAt": null,
+    "replacesId": null,
+    "reference": {
+      "title": "FDIC Money Smart for Young People: Grades 9-12 Educator Guide (full curriculum PDF, 271 pages)",
+      "url": "https://catalog.fdic.gov/catalog/sfc/servlet.shepherd/document/download/069SJ00001GT7PdYAL",
+      "page": "PDF p122 (printed: Lesson 8 pg.10)",
+      "location": "Lesson 8: The Almighty Dollar?, Student Handout 'Credit Responsibility', item 3",
+      "accessedOn": "2026-10-02",
+      "image": null,
+      "stemOriginal": "Read the scenario and determine whether the credit card user is responsible or irresponsible with his or her credit card use. — Lynda uses her credit card for convenience and only for larger purchases of more than $100. She pays cash for most small purchases under $100. She pays her credit card bill in full each month. What do you think about Lynda’s use of a credit card?",
+      "optionsOriginal": [
+        "Responsible",
+        "Irresponsible"
+      ],
+      "license": "US government work, public domain",
+      "licenseClass": "public-domain",
+      "standardFromSource": false
+    },
+    "keepOptionOrder": false,
+    "copiedFromId": null,
+    "usedInPublished": null
+  },
+  {
+    "id": "dbe46f5b-5632-4d30-8a6d-7700c02d50bd",
+    "externalId": "FDIC_MONEY_SMART-110",
+    "pool": "FDIC_MONEY_SMART",
+    "stem": "Các tỷ lệ tài chính để lựa chọn gồm: nợ trên thu nhập, nợ trên tài sản và nợ trên hạn mức. - James, 18 tuổi: “Năm ngoái tôi mua chiếc xe bán tải đầu tiên và nó thật tuyệt. Giờ đi học và đi làm dễ hơn nhiều. Nhưng tôi đã phải vay tiền, vì tôi chỉ dành dụm được $3.000 mà chiếc xe giá $5.000. Tôi vừa lên mạng xem hôm nay xe của mình đáng giá bao nhiêu, và nó đã giảm giá trị một chút. Nếu bán ngay bây giờ thì xe được $4.500. Nhưng tôi vẫn còn nợ $1.500 tiền vay. Tôi đang băn khoăn làm sao để đo khoản vay so với giá trị chiếc xe. Bạn nghĩ sao… tôi nên tính tỷ lệ nào?” James nên dùng tỷ lệ nào?",
+    "options": [
+      "nợ trên thu nhập",
+      "nợ trên tài sản",
+      "nợ trên hạn mức"
+    ],
+    "correctIndex": 1,
+    "standard": "CEE-I",
+    "concept": null,
+    "source": "FDIC Money Smart for Young People: Grades 9-12 Educator Guide (full curriculum PDF, 271 pages), PDF p132 (printed: Lesson 9 pg.8)",
+    "chapter": null,
+    "retiredAt": null,
+    "replacesId": null,
+    "reference": {
+      "title": "FDIC Money Smart for Young People: Grades 9-12 Educator Guide (full curriculum PDF, 271 pages)",
+      "url": "https://catalog.fdic.gov/catalog/sfc/servlet.shepherd/document/download/069SJ00001GT7PdYAL",
+      "page": "PDF p132 (printed: Lesson 9 pg.8)",
+      "location": "Lesson 9: As Easy as Pi, Student Handout 'Ratios Race', item 1",
+      "accessedOn": "2026-10-02",
+      "image": null,
+      "stemOriginal": "The financial ratios to choose from are debt-to-income, debt-to-assets, and debt-to-limits. — James, 18 years old: “I bought my first truck last year and it’s great. It’s so much easier to get to school and work now. I did have to borrow money, though, because I only had $3,000 saved up and the truck cost $5,000. I just checked online to see how much my truck is worth today, and it’s dropped a little in value. If I sold it right now, it’s worth $4,500. I still have $1,500 left on my loan, though. I’m wondering how I can measure my loan to the value of my truck. What do you think…which ratio should I calculate?” What ratio should James use?",
+      "optionsOriginal": [
+        "debt-to-income",
+        "debt-to-assets",
+        "debt-to-limits"
+      ],
+      "license": "US government work, public domain",
+      "licenseClass": "public-domain",
+      "standardFromSource": false
+    },
+    "keepOptionOrder": false,
+    "copiedFromId": null,
+    "usedInPublished": null
+  },
+  {
+    "id": "88d94e8c-9438-4354-b586-523e04fb6a96",
+    "externalId": "FDIC_MONEY_SMART-111",
+    "pool": "FDIC_MONEY_SMART",
+    "stem": "Các tỷ lệ tài chính để lựa chọn gồm: nợ trên thu nhập, nợ trên tài sản và nợ trên hạn mức. - Elizabeth, 28 tuổi: “Tôi quản lý nợ chưa tốt lắm và đang cố tìm hiểu xem nợ của mình so với thu nhập ra sao. Hiện tôi có bốn thẻ tín dụng khác nhau nhưng tôi thực sự muốn sớm trả hết tất cả. Còn hiện tại, mỗi tháng tôi trả $50 cho một thẻ, $200 cho thẻ khác, $25 cho thẻ thứ ba và $175 cho thẻ thứ tư. Tôi cũng sở hữu một căn nhà, và khoản vay mua nhà tốn thêm $900 mỗi tháng. Tôi kiếm được $3.200 mỗi tháng trước thuế. Bạn có thể giúp tôi xác định nên dùng tỷ lệ tài chính nào không?” Elizabeth nên dùng tỷ lệ nào?",
+    "options": [
+      "nợ trên thu nhập",
+      "nợ trên tài sản",
+      "nợ trên hạn mức"
+    ],
+    "correctIndex": 0,
+    "standard": "CEE-II",
+    "concept": null,
+    "source": "FDIC Money Smart for Young People: Grades 9-12 Educator Guide (full curriculum PDF, 271 pages), PDF p132 (printed: Lesson 9 pg.8)",
+    "chapter": null,
+    "retiredAt": null,
+    "replacesId": null,
+    "reference": {
+      "title": "FDIC Money Smart for Young People: Grades 9-12 Educator Guide (full curriculum PDF, 271 pages)",
+      "url": "https://catalog.fdic.gov/catalog/sfc/servlet.shepherd/document/download/069SJ00001GT7PdYAL",
+      "page": "PDF p132 (printed: Lesson 9 pg.8)",
+      "location": "Lesson 9: As Easy as Pi, Student Handout 'Ratios Race', item 2",
+      "accessedOn": "2026-10-02",
+      "image": null,
+      "stemOriginal": "The financial ratios to choose from are debt-to-income, debt-to-assets, and debt-to-limits. — Elizabeth, 28 years old: “I haven’t been very good about managing my debt, and I’m trying to figure out how my debt relates to my income. I have four different credit cards right now but I really want to pay them all off soon. For now, though, I’m making monthly payments of $50 on one, $200 on another, $25 on a third, and $175 on the fourth. I also own a home, and my mortgage is another $900 a month. I earn $3,200 each month before taxes. Can you help me figure out what financial ratio to use?” What ratio should Elizabeth use?",
+      "optionsOriginal": [
+        "debt-to-income",
+        "debt-to-assets",
+        "debt-to-limits"
+      ],
+      "license": "US government work, public domain",
+      "licenseClass": "public-domain",
+      "standardFromSource": false
+    },
+    "keepOptionOrder": false,
+    "copiedFromId": null,
+    "usedInPublished": null
+  },
+  {
+    "id": "96a9ccf5-9c1d-46b0-b8b4-689ebc0ac1a3",
+    "externalId": "FDIC_MONEY_SMART-112",
+    "pool": "FDIC_MONEY_SMART",
+    "stem": "Các tỷ lệ tài chính để lựa chọn gồm: nợ trên thu nhập, nợ trên tài sản và nợ trên hạn mức. - Michael, 23 tuổi: “Một ngày nào đó tôi muốn mua nhà, nên tôi đang đảm bảo điểm tín dụng của mình ở mức tốt. Tôi có một thẻ tín dụng được chi tiêu tối đa $1.000 nhưng số dư nợ chỉ có $100. Tỷ lệ tài chính nào sẽ giúp tôi? Hãy tính thử… tỷ lệ phần trăm của tôi là bao nhiêu?” Michael nên dùng tỷ lệ nào?",
+    "options": [
+      "nợ trên thu nhập",
+      "nợ trên tài sản",
+      "nợ trên hạn mức"
+    ],
+    "correctIndex": 2,
+    "standard": "CEE-I",
+    "concept": null,
+    "source": "FDIC Money Smart for Young People: Grades 9-12 Educator Guide (full curriculum PDF, 271 pages), PDF p132 (printed: Lesson 9 pg.8)",
+    "chapter": null,
+    "retiredAt": null,
+    "replacesId": null,
+    "reference": {
+      "title": "FDIC Money Smart for Young People: Grades 9-12 Educator Guide (full curriculum PDF, 271 pages)",
+      "url": "https://catalog.fdic.gov/catalog/sfc/servlet.shepherd/document/download/069SJ00001GT7PdYAL",
+      "page": "PDF p132 (printed: Lesson 9 pg.8)",
+      "location": "Lesson 9: As Easy as Pi, Student Handout 'Ratios Race', item 3",
+      "accessedOn": "2026-10-02",
+      "image": null,
+      "stemOriginal": "The financial ratios to choose from are debt-to-income, debt-to-assets, and debt-to-limits. — Michael, 23 years old: “I want to purchase a home someday, so I’m making sure my credit score is in good shape. I have a credit card that I can spend up to $1,000 on but I only have a balance of $100. What financial ratio would help me? Do the math…what’s my percentage?” What ratio should Michael use?",
+      "optionsOriginal": [
+        "debt-to-income",
+        "debt-to-assets",
+        "debt-to-limits"
+      ],
+      "license": "US government work, public domain",
+      "licenseClass": "public-domain",
+      "standardFromSource": false
+    },
+    "keepOptionOrder": false,
+    "copiedFromId": null,
+    "usedInPublished": null
+  },
+  {
+    "id": "adbcc339-0b98-493a-af80-6482c1f102b5",
+    "externalId": "FDIC_MONEY_SMART-121",
+    "pool": "FDIC_MONEY_SMART",
+    "stem": "Olivia nhận được một món quà đầu tư dạng điện tử từ bà của mình, được mua với giá $25. Bà nói với cô ấy rằng khoản đầu tư này là một khoản cho chính phủ vay và cô ấy có thể nhận lại khoản hoàn trả cùng tiền lãi khi hết kỳ hạn. Olivia đang có loại đầu tư nào?",
+    "options": [
+      "Trái phiếu",
+      "Cổ phiếu",
+      "Tài khoản hưu trí",
+      "Quỹ tương hỗ"
+    ],
+    "correctIndex": 0,
+    "standard": "CEE-IV",
+    "concept": null,
+    "source": "FDIC Money Smart for Young People: Grades 9-12 Educator Guide (full curriculum PDF, 271 pages), PDF p189 (printed: Lesson 14 pg.10)",
+    "chapter": null,
+    "retiredAt": null,
+    "replacesId": null,
+    "reference": {
+      "title": "FDIC Money Smart for Young People: Grades 9-12 Educator Guide (full curriculum PDF, 271 pages)",
+      "url": "https://catalog.fdic.gov/catalog/sfc/servlet.shepherd/document/download/069SJ00001GT7PdYAL",
+      "page": "PDF p189 (printed: Lesson 14 pg.10)",
+      "location": "Lesson 14: Increasing the Value of Your Money, Student Handout 'Investment Products', item 1",
+      "accessedOn": "2026-10-02",
+      "image": null,
+      "stemOriginal": "Olivia received an electronic investment gift from her grandmother that was purchased for $25. Her grandmother told her the investment was a loan to the government and that she could collect her repayment and interest at the end of the term. What type of investment does Olivia have?",
+      "optionsOriginal": [
+        "Bonds",
+        "Stocks",
+        "Retirement account",
+        "Mutual funds"
+      ],
+      "license": "US government work, public domain",
+      "licenseClass": "public-domain",
+      "standardFromSource": false
+    },
+    "keepOptionOrder": false,
+    "copiedFromId": null,
+    "usedInPublished": null
+  },
+  {
+    "id": "11b38cec-bc40-493c-8034-f406db2b1dd2",
+    "externalId": "FDIC_MONEY_SMART-126",
+    "pool": "FDIC_MONEY_SMART",
+    "stem": "Đọc tình huống và quyết định xem đây là một nguồn đáng tin cậy hay một chiêu lừa đảo. - Jillian đang tìm hiểu các mẫu laptop mới nhưng thương hiệu cô ấy muốn có giá $500 và cô ấy vẫn ngần ngại chi nhiều đến vậy. Khi đang lướt các tài khoản mạng xã hội, Jillian thấy một quảng cáo của một cửa hàng trực tuyến bán đúng chiếc máy tính cô ấy muốn, kèm quà tặng là một bộ tai nghe, một túi đựng laptop và một gói phần mềm, tất cả chỉ với $50. Cô ấy hào hứng đến mức bấm vào và bắt đầu đặt hàng.",
+    "options": [
+      "Đáng tin cậy",
+      "Lừa đảo"
+    ],
+    "correctIndex": 1,
+    "standard": "CEE-VI",
+    "concept": null,
+    "source": "FDIC Money Smart for Young People: Grades 9-12 Educator Guide (full curriculum PDF, 271 pages), PDF p237 (printed: Lesson 19 pg.8)",
+    "chapter": null,
+    "retiredAt": null,
+    "replacesId": null,
+    "reference": {
+      "title": "FDIC Money Smart for Young People: Grades 9-12 Educator Guide (full curriculum PDF, 271 pages)",
+      "url": "https://catalog.fdic.gov/catalog/sfc/servlet.shepherd/document/download/069SJ00001GT7PdYAL",
+      "page": "PDF p237 (printed: Lesson 19 pg.8)",
+      "location": "Lesson 19: Financial Sleuth, Student Handout 'Solid or Scam?', item 2",
+      "accessedOn": "2026-10-02",
+      "image": null,
+      "stemOriginal": "Read the scenario and decide whether the situation is a solid, credible resource or a deceitful scam. — Jillian has been researching new laptops but the brand she wants costs $500 and she has been reluctant to spend that much. While she’s scrolling through her social media accounts, Jillian sees an ad from an online store selling the same computer she wants plus a bonus set of headphones, a laptop case, and a software package for only $50. She’s so excited she clicks through and starts to place an order.",
+      "optionsOriginal": [
+        "Solid",
+        "Scam"
+      ],
+      "license": "US government work, public domain",
+      "licenseClass": "public-domain",
+      "standardFromSource": false
+    },
+    "keepOptionOrder": false,
+    "copiedFromId": null,
+    "usedInPublished": null
+  },
+  {
+    "id": "4698c97b-f6a4-44d0-b178-7f700e77d602",
+    "externalId": "PISA-017",
+    "pool": "PISA",
+    "stem": "Mỗi tháng, chủ lao động của Jane trả tiền vào tài khoản ngân hàng của Jane. Đây là phiếu lương tháng 7 của Jane. PHIẾU LƯƠNG NHÂN VIÊN: Jane Citizen | Chức vụ: Quản lý | Từ 1 tháng 7 đến 31 tháng 7 | Lương gộp 2 800 zeds | Các khoản khấu trừ 300 zeds | Lương thực nhận 2 500 zeds | Lương gộp tính từ đầu năm đến nay 19 600 zeds\n\nChủ lao động của Jane đã trả bao nhiêu tiền vào tài khoản ngân hàng của Jane vào ngày 31 tháng 7?",
+    "options": [
+      "300 zeds",
+      "2 500 zeds",
+      "2 800 zeds",
+      "19 600 zeds"
+    ],
+    "correctIndex": 1,
+    "standard": "CEE-I",
+    "concept": null,
+    "source": "OECD (2013), PISA 2012 Assessment and Analytical Framework, Chapter 5 'PISA 2012 Financial Literacy Framework', PDF p.153 (printed p.152)",
+    "chapter": null,
+    "retiredAt": null,
+    "replacesId": null,
+    "reference": {
+      "title": "OECD (2013), PISA 2012 Assessment and Analytical Framework, Chapter 5 'PISA 2012 Financial Literacy Framework'",
+      "url": "https://www.oecd.org/content/dam/oecd/en/publications/reports/2013/02/pisa-2012-assessment-and-analytical-framework_g1g27388/9789264190511-en.pdf",
+      "page": "PDF p.153 (printed p.152)",
+      "location": "PISA 2012 framework, Illustrative item 5, Figure 5.6 'Item for the unit PAY SLIP'",
+      "accessedOn": "2026-10-02",
+      "image": null,
+      "stemOriginal": "Each month, Jane's employer pays money into Jane's bank account. This is Jane's pay slip for July. EMPLOYEE PAY SLIP: Jane Citizen | Position: Manager | 1 July to 31 July | Gross salary 2 800 zeds | Deductions 300 zeds | Net salary 2 500 zeds | Gross salary to date this year 19 600 zeds\n\nHow much money did Jane's employer pay into Jane's bank account on 31 July?",
+      "optionsOriginal": [
+        "300 zeds",
+        "2 500 zeds",
+        "2 800 zeds",
+        "19 600 zeds"
+      ],
+      "license": "© OECD 2013 / © OECD 2014; OECD Terms & Conditions (pre-1 July 2024) allow commercial and non-commercial reuse/adaptation with citation. Copy in PISA 2022 Results Vol IV is CC BY-NC-SA 3.0 IGO.",
+      "licenseClass": "attribution",
+      "standardFromSource": false
+    },
+    "keepOptionOrder": false,
+    "copiedFromId": null,
+    "usedInPublished": null
+  },
+  {
+    "id": "a6d7e683-c232-4629-a7ef-d6a5300a08b2",
+    "externalId": "PISA-020",
+    "pool": "PISA",
+    "stem": "Lisa sống ở Zedland. Cô ấy nhận được chiếc thẻ ngân hàng mới này. [Hình thẻ ngân hàng: 4000 0012 3456 7899, CÓ GIÁ TRỊ ĐẾN 12/14, MISS LISA BENETTO]\n\nNgày hôm sau, Lisa nhận được mã số nhận dạng cá nhân (PIN) của thẻ ngân hàng. Lisa nên làm gì với mã PIN?",
+    "options": [
+      "Viết mã PIN ra giấy và cất trong ví.",
+      "Nói mã PIN cho bạn bè biết.",
+      "Viết mã PIN lên mặt sau của thẻ.",
+      "Ghi nhớ mã PIN."
+    ],
+    "correctIndex": 3,
+    "standard": "CEE-VI",
+    "concept": null,
+    "source": "OECD (2013), PISA 2012 Assessment and Analytical Framework, Chapter 5 'PISA 2012 Financial Literacy Framework', PDF p.157-158 (printed p.156-157)",
+    "chapter": null,
+    "retiredAt": null,
+    "replacesId": null,
+    "reference": {
+      "title": "OECD (2013), PISA 2012 Assessment and Analytical Framework, Chapter 5 'PISA 2012 Financial Literacy Framework'",
+      "url": "https://www.oecd.org/content/dam/oecd/en/publications/reports/2013/02/pisa-2012-assessment-and-analytical-framework_g1g27388/9789264190511-en.pdf",
+      "page": "PDF p.157-158 (printed p.156-157)",
+      "location": "PISA 2012 framework, Illustrative item 10, Figure 5.11 'Item for the unit NEW BANK CARD'",
+      "accessedOn": "2026-10-02",
+      "image": null,
+      "stemOriginal": "Lisa lives in Zedland. She receives this new bank card. [Image of a bank card: 4000 0012 3456 7899, VALID UNTIL 12/14, MISS LISA BENETTO]\n\nThe following day, Lisa receives the Personal Identification Number (PIN) for the bank card. What should Lisa do with the PIN?",
+      "optionsOriginal": [
+        "Write the PIN on notepaper and keep this in her wallet.",
+        "Tell the PIN to her friends.",
+        "Write the PIN on the back of the card.",
+        "Memorise the PIN."
+      ],
+      "license": "© OECD 2013; OECD Terms & Conditions (pre-1 July 2024) allow commercial and non-commercial reuse/adaptation with citation [OECD (2013), Title, URL].",
+      "licenseClass": "attribution",
+      "standardFromSource": false
+    },
+    "keepOptionOrder": false,
+    "copiedFromId": null,
+    "usedInPublished": null
+  },
+  {
+    "id": "8e2f6356-e22b-46a2-93dd-71db983f0919",
+    "externalId": "PISA-028",
+    "pool": "PISA",
+    "stem": "Ben sống ở Zedland và có một chiếc điện thoại di động. Ở Zedland có hai loại gói cước điện thoại khác nhau. Gói 1: Bạn trả hoá đơn điện thoại vào cuối tháng. Hoá đơn gồm chi phí các cuộc gọi bạn đã thực hiện cộng với phí hằng tháng. Gói 2: Bạn nạp tiền cước trước cho điện thoại. Số tiền cước này có hiệu lực tối đa một tháng hoặc cho đến khi dùng hết. Tình huống tiếp theo: Ben quyết định dùng Gói 1. Bây giờ Ben phải chọn công ty điện thoại nào để dùng. Bảng dưới đây cho biết thông tin của bốn công ty điện thoại khác nhau cung cấp Gói 1. Mọi chi phí tính bằng zeds. Công ty 1 / 2 / 3 / 4 - Phí hằng tháng (zeds): 20 / 20 / 30 / 30; Cước gọi mỗi phút (zeds): 0,27 / 0,25 / 0,30 / 0,25; Số phút gọi miễn phí mỗi tháng: 90 / 90 / 60 / 60; Cước mỗi tin nhắn (zeds): 0,02 / 0,02 / miễn phí / 0,01; Số tin nhắn miễn phí mỗi tháng: 200 / 100 / không giới hạn / 200. Ben: \"Tôi nói chuyện điện thoại khoảng một giờ mỗi ngày, nhưng rất hiếm khi nhắn tin.\"\n\nCông ty điện thoại nào có lợi nhất về mặt tài chính cho Ben?",
+    "options": [
+      "Công ty 1",
+      "Công ty 2",
+      "Công ty 3",
+      "Công ty 4"
+    ],
+    "correctIndex": 1,
+    "standard": "CEE-II",
+    "concept": null,
+    "source": "OECD (2018), PISA 2018 released financial literacy items (version 06 August 2018), PDF p.11-13 (printed p.11-13); question and answer on p.13",
+    "chapter": null,
+    "retiredAt": null,
+    "replacesId": null,
+    "reference": {
+      "title": "OECD (2018), PISA 2018 released financial literacy items (version 06 August 2018)",
+      "url": "https://www.oecd.org/content/dam/oecd/en/about/programmes/edu/pisa/pisa-test/PISA2018-financial-literacy-items.pdf",
+      "page": "PDF p.11-13 (printed p.11-13); question and answer on p.13",
+      "location": "PISA 2018 released items, unit PHONE PLANS, Question 2, item F028Q03",
+      "accessedOn": "2026-10-02",
+      "image": null,
+      "stemOriginal": "Ben lives in Zedland and has a mobile phone. In Zedland there are two different kinds of phone plan available. Plan 1: You pay the phone bill at the end of the month. The bill is the cost of the calls you make plus a monthly fee. Plan 2: You buy credit for the phone in advance. The credit lasts for a maximum of one month or until all credit has been used. Stimulus update: Ben decides to use Plan 1. He must now choose which phone company to use. The table below shows the details of the four different phone companies that offer Plan 1. All costs are shown in zeds. Company 1 / 2 / 3 / 4 - Monthly fee (zeds): 20 / 20 / 30 / 30; Cost of call per minute (zeds): 0.27 / 0.25 / 0.30 / 0.25; Number of free minutes per month: 90 / 90 / 60 / 60; Cost of text message (zeds): 0.02 / 0.02 / free / 0.01; Number of free text messages per month: 200 / 100 / unlimited / 200. Ben: \"I speak on the phone for about an hour each day, but I very rarely send text messages.\"\n\nWhich phone company offers the best financial deal for Ben?",
+      "optionsOriginal": [
+        "Company 1",
+        "Company 2",
+        "Company 3",
+        "Company 4"
+      ],
+      "license": "© OECD 2018; OECD Terms & Conditions (pre-1 July 2024) allow commercial and non-commercial reuse/adaptation with citation. Copy in PISA 2022 Results Vol IV is CC BY-NC-SA 3.0 IGO.",
+      "licenseClass": "attribution",
+      "standardFromSource": false
+    },
+    "keepOptionOrder": false,
+    "copiedFromId": null,
+    "usedInPublished": null
+  },
+  {
+    "id": "024516d4-3da0-40b1-a1d7-66fbfff91625",
+    "externalId": "PISA-032",
+    "pool": "PISA",
+    "stem": "Cùng ứng dụng ZCycle như ở câu F306Q01 (gói thành viên năm 180 zeds, đã bao gồm cả chuyến đi ngắn lẫn chuyến đi dài; gói thành viên tháng 20 zeds; sáu gói thành viên tháng là 120 zeds cộng thêm 6 zeds cho mỗi chuyến đi trên 120 phút - theo giải thích của OECD).\n\nCâu hỏi 2: Julie muốn biết nếu chỉ dùng ZCycle trong sáu tháng thì mua sáu gói thành viên tháng hay một gói thành viên năm sẽ rẻ hơn. Nhớ rằng Julie muốn đạp xe đi làm và về nhà mỗi ngày (mỗi chiều 45 phút) và hai lần mỗi tháng đi xe hơn ba giờ. Gói thành viên nào rẻ hơn? [Gói thành viên năm / 6 gói thành viên tháng] Gói rẻ hơn sẽ giúp Julie tiết kiệm được bao nhiêu trong sáu tháng? ___ zeds",
+    "options": [
+      "Gói thành viên năm",
+      "6 gói thành viên tháng"
+    ],
+    "correctIndex": 0,
+    "standard": "CEE-II",
+    "concept": null,
+    "source": "OECD (2018), PISA 2018 released financial literacy items (version 06 August 2018), PDF p.23 (printed p.23)",
+    "chapter": null,
+    "retiredAt": null,
+    "replacesId": null,
+    "reference": {
+      "title": "OECD (2018), PISA 2018 released financial literacy items (version 06 August 2018)",
+      "url": "https://www.oecd.org/content/dam/oecd/en/about/programmes/edu/pisa/pisa-test/PISA2018-financial-literacy-items.pdf",
+      "page": "PDF p.23 (printed p.23)",
+      "location": "PISA 2018 released items, unit ZCYCLE, Question 2, item F306Q02",
+      "accessedOn": "2026-10-02",
+      "image": null,
+      "stemOriginal": "Same ZCycle app as F306Q01 (annual membership 180 zeds including short and long rides; monthly membership 20 zeds; six monthly memberships 120 zeds plus 6 zeds per ride over 120 minutes - per the OECD explanation).\n\nQuestion 2: Julie wants to know if it would be cheaper for her to purchase six monthly memberships or one annual membership if she is only going to use ZCycle for six months. Remember that Julie wants to ride a bike to and from work every day (45 minutes each way) and twice a month for more than three hours. Which membership is less expensive? [Annual Membership / 6 Monthly Memberships] How much would the less expensive membership save Julie in six months? ___ zeds",
+      "optionsOriginal": [
+        "Annual Membership",
+        "6 Monthly Memberships"
+      ],
+      "license": "© OECD 2018; OECD Terms & Conditions (pre-1 July 2024) allow commercial and non-commercial reuse/adaptation with citation. Copy in PISA 2022 Results Vol IV is CC BY-NC-SA 3.0 IGO.",
+      "licenseClass": "attribution",
+      "standardFromSource": false
+    },
+    "keepOptionOrder": false,
+    "copiedFromId": null,
+    "usedInPublished": null
+  },
+  {
+    "id": "95fd5060-5571-403a-916e-788ac7b4a026",
+    "externalId": "PISA-033",
+    "pool": "PISA",
+    "stem": "Hoá đơn của Julie từ ZCycle (ảnh chụp màn hình điện thoại): ZCycle Bike-Sharing - SỐ TÀI KHOẢN 271828. Phí thành viên: 1 tháng = 20 zeds. Các chuyến đi: 10 chuyến tối đa 60 phút = 10 zeds; 0 chuyến 61-120 phút = 0 zeds; 2 chuyến từ 121 phút trở lên = 12 zeds. TỔNG SỐ TIỀN PHẢI TRẢ = 42 zeds. (Theo bảng phí của ứng dụng, các chuyến đi tối đa 60 phút được MIỄN PHÍ.)\n\nCâu hỏi 3: Julie quyết định dùng thử chương trình chia sẻ xe đạp ZCycle trong một tháng. Cuối tháng, cô ấy nhận được hoá đơn như hình bên từ ZCycle trên điện thoại. Cô ấy đã ghi chép cẩn thận số chuyến đi và thời gian của mỗi chuyến. Vì vậy, cô ấy chắc chắn rằng có sai sót trong các khoản phí mình bị tính. Khoản phí nào sai? Tổng số tiền phải trả đúng là bao nhiêu? ___ zeds",
+    "options": [
+      "Phí thành viên 1 tháng - 20 zeds",
+      "10 chuyến tối đa 60 phút - 10 zeds",
+      "0 chuyến 61-120 phút - 0 zeds",
+      "2 chuyến từ 121 phút trở lên - 12 zeds"
+    ],
+    "correctIndex": 1,
+    "standard": "CEE-II",
+    "concept": null,
+    "source": "OECD (2018), PISA 2018 released financial literacy items (version 06 August 2018), PDF p.24 (printed p.24)",
+    "chapter": null,
+    "retiredAt": null,
+    "replacesId": null,
+    "reference": {
+      "title": "OECD (2018), PISA 2018 released financial literacy items (version 06 August 2018)",
+      "url": "https://www.oecd.org/content/dam/oecd/en/about/programmes/edu/pisa/pisa-test/PISA2018-financial-literacy-items.pdf",
+      "page": "PDF p.24 (printed p.24)",
+      "location": "PISA 2018 released items, unit ZCYCLE, Question 3, item F306Q03",
+      "accessedOn": "2026-10-02",
+      "image": null,
+      "stemOriginal": "Julie's bill from ZCycle (smartphone screenshot): ZCycle Bike-Sharing - ACCOUNT NUMBER 271828. Membership Fee: 1 Month = 20 zeds. Rides: 10 rides Up to 60 minutes = 10 zeds; 0 rides 61-120 minutes = 0 zeds; 2 rides 121 or more minutes = 12 zeds. TOTAL AMOUNT DUE = 42 zeds. (Rides up to 60 minutes are FREE according to the app's fee table.)\n\nQuestion 3: Julie decides to try the ZCycle bike-sharing program for one month. At the end of the month she receives the bill shown on the right from ZCycle on her smartphone. She has kept careful records of the number of rides she has taken and how long each lasted. Therefore, she's sure that there is a mistake in the fees that she has been charged. Which fee is incorrect? What is the correct total amount due? ___ zeds",
+      "optionsOriginal": [
+        "1 Month Membership - 20 zeds",
+        "10 Rides Up to 60 Minutes - 10 zeds",
+        "0 Rides 61-120 minutes - 0 zeds",
+        "2 Rides 121 or more minutes - 12 zeds"
+      ],
+      "license": "© OECD 2018; OECD Terms & Conditions (pre-1 July 2024) allow commercial and non-commercial reuse/adaptation with citation. Copy in PISA 2022 Results Vol IV is CC BY-NC-SA 3.0 IGO.",
+      "licenseClass": "attribution",
+      "standardFromSource": false
+    },
+    "keepOptionOrder": false,
+    "copiedFromId": null,
+    "usedInPublished": null
+  },
+  {
+    "id": "b707a134-7c17-4b66-ae7d-aa85b0a31b84",
+    "externalId": "PISA-034",
+    "pool": "PISA",
+    "stem": "[Biển hiệu cửa hàng: Xe đạp leo núi - 600 zeds tiền mặt! Không có tiền mặt? Hãy hỏi về các gói vay hấp dẫn ngay tại cửa hàng. Lãi suất thấp!] Greg mua một chiếc xe đạp. Anh ấy vay tiền của công ty tài chính ngay tại cửa hàng xe đạp.\n\nGreg nhiều khả năng sẽ phải trả bao nhiêu? Hãy giải thích câu trả lời của bạn.",
+    "options": [
+      "Ít hơn 600 zeds.",
+      "Nhiều hơn 600 zeds.",
+      "Đúng 600 zeds."
+    ],
+    "correctIndex": 1,
+    "standard": "CEE-V",
+    "concept": null,
+    "source": "OECD (2024), PISA 2022 Results (Volume IV): How Financially Smart Are Students?, Annex C 'Financial literacy released items', PDF p.203-204 (printed p.201-202)",
+    "chapter": null,
+    "retiredAt": null,
+    "replacesId": null,
+    "reference": {
+      "title": "OECD (2024), PISA 2022 Results (Volume IV): How Financially Smart Are Students?, Annex C 'Financial literacy released items'",
+      "url": "https://www.oecd.org/content/dam/oecd/en/publications/reports/2024/06/pisa-2022-results-volume-iv_125a58b3/5a849c2a-en.pdf",
+      "page": "PDF p.203-204 (printed p.201-202)",
+      "location": "PISA 2022 Results Vol IV, Annex C, 'Financial literacy items released from the PISA 2022 assessment', unit New bike, Question 1",
+      "accessedOn": "2026-10-02",
+      "image": null,
+      "stemOriginal": "[Shop sign: Mountain Bike - 600 zeds cash! Don't have the cash? Ask about our great in-store finance deals. Low interest rates available!] Greg buys a bike. He takes out a loan with the bike shop's in-store finance company.\n\nHow much is Greg likely to pay? Explain your answer.",
+      "optionsOriginal": [
+        "Less than 600 zeds.",
+        "More than 600 zeds.",
+        "Exactly 600 zeds."
+      ],
+      "license": "© OECD 2024. Copyright page (PDF p.4): 'This work is available under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 IGO (CC BY-NC-SA 3.0 IGO).' Non-commercial use only, attribution and share-alike required; commercial use must be cleared via OECD Terms and Conditions.",
+      "licenseClass": "non-commercial",
+      "standardFromSource": false
+    },
+    "keepOptionOrder": false,
+    "copiedFromId": null,
+    "usedInPublished": null
+  }
+]

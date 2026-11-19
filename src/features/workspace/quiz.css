@@ -1201,6 +1201,16 @@
 .ws-bank-list { display:grid; gap:12px; margin-top:20px; }
 .ws-bank-list>article { padding:18px; border:1px solid #e3e7ef; border-radius:14px; background:#fbfcfe; }
 .ws-bank-list h3 { margin:4px 0 10px; font-size:16px; }
+
+/* Keep invoice rows and other structured question data readable in every quiz view. */
+.ws-set-preview__content h3,
+.ws-quiz-preview-question-head h3,
+.ws-bank-list h3,
+.ws-question legend,
+.ws-quiz-answer > strong {
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
 .ws-bank-list ol { margin:0; padding-left:24px; color:#53627b; }
 .ws-bank-list li.correct { color:#168456; font-weight:700; }
 .ws-question-reference { color:#7a8598; font-size:13px; }

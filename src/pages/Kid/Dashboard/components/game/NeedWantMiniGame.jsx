@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+﻿import { useLayoutEffect, useRef, useState } from "react";
 import {
   ShoppingBasket as Basket,
   Check,
@@ -9,6 +9,7 @@ import {
 import { cn } from "@/lib/utils";
 import "./need-want.css";
 import { compactInputs } from "./miniGameInputs.js";
+import { needWantFeedback } from "./miniGameFeedback.js";
 
 // Quầy + các giỏ: game.zones trong JSON chương; thiếu → bộ bản 1.1.0 (giỏ Cần / Muốn).
 const DEFAULT_ZONES = [
@@ -22,7 +23,7 @@ const DEFAULT_ZONES = [
   { id: "WANTS", title: "Giỏ Muốn", hint: "Những điều làm bạn vui", icon: "♡" },
 ];
 
-function Item({ item, selected, onSelect, onDragStart, checked, correct }) {
+function Item({ item, selected, onSelect, onDragStart, checked, correct, zones }) {
   const [broken, setBroken] = useState(false);
   return (
     <button
@@ -58,11 +59,8 @@ function Item({ item, selected, onSelect, onDragStart, checked, correct }) {
       )}
       {checked && (
         <span className="nw-item-feedback">
-          {correct ? "Đúng rồi" : "Thử xem lại nhé"}
+          {needWantFeedback(item, correct, zones)}
         </span>
-      )}
-      {checked && item.explanation && (
-        <span className="nw-item-explanation">{item.explanation}</span>
       )}
     </button>
   );
@@ -82,12 +80,25 @@ export function NeedWantMiniGame({
   const [submitted, setSubmitted] = useState(false);
   const [finished, setFinished] = useState(false);
   const [firstCheck, setFirstCheck] = useState(null); // vị trí thẻ lúc bấm Kiểm tra lần đầu — BE chấm theo lần này
+  const boardRef = useRef(null);
+  useLayoutEffect(() => {
+    if (!submitted) return;
+    const board = boardRef.current;
+    board.querySelectorAll(".nw-items").forEach((list) => { list.scrollTop = 0; });
+    const firstWrong = board.querySelector(".nw-item.is-incorrect");
+    if (firstWrong) {
+      firstWrong.focus({ preventScroll: true });
+      firstWrong.scrollIntoView({ block: "nearest", inline: "nearest" });
+    }
+  }, [submitted]);
   const grouped = Object.fromEntries(
     zones.map((zone) => [
       zone.id,
       game.items.filter(
         (item) => (placements[item.id] || "inventory") === zone.id,
-      ),
+      ).sort((a, b) => submitted
+        ? Number(placements[a.id] === a.category) - Number(placements[b.id] === b.category)
+        : 0),
     ]),
   );
   const placed = game.items.length - grouped.inventory.length;
@@ -129,7 +140,7 @@ export function NeedWantMiniGame({
 
   return (
     <section
-      className={cn("nw-game", immersive && "nw-immersive", className)}
+      className={cn("nw-game", immersive && "nw-immersive", submitted && "is-checked", className)}
       aria-label="Minigame Cần hay Muốn"
     >
       <header className="nw-header">
@@ -165,7 +176,7 @@ export function NeedWantMiniGame({
           {t.tip ?? <><b>Cần</b> là thiết yếu. <b>Muốn</b> là thứ bạn thích có thêm.</>}
         </span>
       </div>
-      <div className="nw-board">
+      <div className="nw-board" ref={boardRef}>
         {zones.map((zone) => (
           <section
             key={zone.id}
@@ -202,6 +213,7 @@ export function NeedWantMiniGame({
                 <Item
                   key={item.id}
                   item={item}
+                  zones={zones}
                   selected={selected === item.id}
                   checked={submitted && zone.id !== "inventory"}
                   correct={placements[item.id] === item.category}

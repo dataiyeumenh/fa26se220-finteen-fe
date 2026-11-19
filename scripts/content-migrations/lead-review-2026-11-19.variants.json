@@ -1,0 +1,126 @@
+{
+  "CH01": {
+    "scenes": [
+      {
+        "id": "CH01_SC03_MINIGAME",
+        "game": {
+          "items": [
+            {
+              "id": "ITEM_ART_CLASS",
+              "variants": {
+                "interest:SPORT": {
+                  "explanation": "Tiền buổi tập ở câu lạc bộ thể thao đã đăng ký là khoản Cần trong tình huống này vì An đã đăng ký và cam kết thanh toán vào ngày 28. Cần giữ đủ tiền thực hiện cam kết trước khi mua thêm đồ theo sở thích."
+                },
+                "interest:GAME": {
+                  "explanation": "Tiền hoạt động học kỹ năng số đã đăng ký là khoản Cần trong tình huống này vì An đã đăng ký và cam kết thanh toán vào ngày 28. Cần giữ đủ tiền thực hiện cam kết trước khi mua thêm đồ theo sở thích."
+                },
+                "interest:MUSIC": {
+                  "explanation": "Tiền buổi học hát đã đăng ký là khoản Cần trong tình huống này vì An đã đăng ký và cam kết thanh toán vào ngày 28. Cần giữ đủ tiền thực hiện cam kết trước khi mua thêm đồ theo sở thích."
+                },
+                "interest:ANIME": {
+                  "explanation": "Tiền câu lạc bộ đọc và sáng tác truyện đã đăng ký là khoản Cần trong tình huống này vì An đã đăng ký và cam kết thanh toán vào ngày 28. Cần giữ đủ tiền thực hiện cam kết trước khi mua thêm đồ theo sở thích."
+                },
+                "interest:TECH": {
+                  "explanation": "Tiền khóa học lập trình đã đăng ký là khoản Cần trong tình huống này vì An đã đăng ký và cam kết thanh toán vào ngày 28. Cần giữ đủ tiền thực hiện cam kết trước khi mua thêm đồ theo sở thích."
+                },
+                "interest:FASHION": {
+                  "explanation": "Tiền câu lạc bộ thiết kế trang phục đã đăng ký là khoản Cần trong tình huống này vì An đã đăng ký và cam kết thanh toán vào ngày 28. Cần giữ đủ tiền thực hiện cam kết trước khi mua thêm đồ theo sở thích."
+                },
+                "interest:TRIP": {
+                  "explanation": "Tiền chuyến tham quan theo nhóm đã đăng ký là khoản Cần trong tình huống này vì An đã đăng ký và cam kết thanh toán vào ngày 28. Cần giữ đủ tiền thực hiện cam kết trước khi mua thêm đồ theo sở thích."
+                }
+              }
+            },
+            {
+              "id": "ITEM_REPLACEMENT_HEADPHONES",
+              "variants": {
+                "interest:SPORT": {
+                  "explanation": "Dụng cụ thể thao bản mới đẹp hơn là phần nâng cấp thuộc mong Muốn. Chỉ cần chọn dụng cụ cơ bản đáp ứng việc tập luyện; có thể hoãn mua bản mới để ưu tiên khoản thiết yếu."
+                },
+                "interest:GAME": {
+                  "explanation": "Vật phẩm trong game chỉ làm nhân vật đẹp và khác biệt hơn, không phục vụ sinh hoạt hay học tập thiết yếu. Đây là mong Muốn, có thể hoãn mua."
+                },
+                "interest:MUSIC": {
+                  "explanation": "Album của thần tượng dùng để nghe và sưu tầm theo sở thích, không phải khoản thiết yếu. Đây là mong Muốn, nên mua sau khi đã đủ tiền cho khoản Cần."
+                },
+                "interest:ANIME": {
+                  "explanation": "Poster dùng để trang trí bằng hình nhân vật yêu thích; thiếu poster không ảnh hưởng việc học hay sinh hoạt. Đây là mong Muốn, có thể hoãn mua."
+                },
+                "interest:ART": {
+                  "explanation": "Dụng cụ vẽ cơ bản giúp đáp ứng việc học; chọn bộ màu cao cấp để có thêm màu và chất lượng tốt hơn là phần nâng cấp thuộc mong Muốn. Có thể hoãn nâng cấp để ưu tiên các khoản Cần."
+                },
+                "interest:TECH": {
+                  "explanation": "Đèn RGB và thiết kế nổi bật là tính năng mua thêm theo sở thích, không phải điều kiện bắt buộc để học hay dùng máy tính. Đây là mong Muốn, có thể hoãn mua."
+                },
+                "interest:FASHION": {
+                  "explanation": "Mua giày chỉ để theo mẫu đang thịnh hành thuộc mong Muốn. Nhu cầu Cần là đôi giày phù hợp để đi lại; có thể hoãn việc chạy theo mẫu mới."
+                },
+                "interest:TRIP": {
+                  "explanation": "Trải nghiệm IMAX hoặc hạng VIP là nâng cấp giải trí theo sở thích. Đây là mong Muốn, có thể chọn cách giải trí ít tốn kém hơn hoặc hoãn mua."
+                }
+              }
+            },
+            {
+              "id": "ITEM_UPGRADE_HEADPHONES",
+              "variants": {
+                "interest:SPORT": {
+                  "explanation": "Đồ lưu niệm thể thao phục vụ sưu tầm và trưng bày, không bắt buộc để tập luyện. Đây là mong Muốn, có thể hoãn mua."
+                },
+                "interest:GAME": {
+                  "explanation": "Tay cầm giúp chơi game thú vị hơn nhưng không phải khoản sinh hoạt hay học tập thiết yếu. Đây là mong Muốn, nên hoãn nếu chưa đủ tiền cho khoản Cần."
+                },
+                "interest:MUSIC": {
+                  "explanation": "Thẻ hình thần tượng phục vụ sưu tầm và trang trí theo sở thích. Đây là mong Muốn, có thể mua sau các khoản thiết yếu."
+                },
+                "interest:ANIME": {
+                  "explanation": "Mô hình nhân vật dùng để sưu tầm, trưng bày; thiếu mô hình vẫn học và sinh hoạt bình thường. Đây là mong Muốn, có thể hoãn mua."
+                },
+                "interest:ART": {
+                  "explanation": "Bút cảm ứng là công cụ mua thêm cho việc vẽ bằng phần mềm trong tình huống này; chưa có yêu cầu bắt buộc phải dùng. Đây là mong Muốn, có thể hoãn mua và ưu tiên dụng cụ học cơ bản."
+                },
+                "interest:TECH": {
+                  "explanation": "Chuột gaming có thêm thiết kế và tính năng phục vụ sở thích chơi game. Phần nâng cấp này thuộc mong Muốn; nên ưu tiên thiết bị cơ bản đủ dùng trước."
+                },
+                "interest:FASHION": {
+                  "explanation": "Mỹ phẩm cao cấp mới ra mắt là lựa chọn theo sở thích và thương hiệu, không phải chi phí thiết yếu. Đây là mong Muốn, có thể hoãn mua."
+                },
+                "interest:TRIP": {
+                  "explanation": "Đồ lưu niệm giúp lưu giữ kỷ niệm nhưng không bắt buộc cho chuyến đi hay sinh hoạt. Đây là mong Muốn, có thể hoãn mua để giữ ngân sách."
+                }
+              }
+            },
+            {
+              "id": "ITEM_DESK_DECORATION",
+              "variants": {
+                "interest:SPORT": {
+                  "explanation": "Áo đấu được mua thêm để thể hiện sự hâm mộ đội bóng. Đây là mong Muốn; nhu cầu mặc có thể đáp ứng bằng trang phục thông thường, nên có thể hoãn mua."
+                },
+                "interest:GAME": {
+                  "explanation": "Tai nghe gaming với thiết kế đẹp hoặc đèn RGB là nâng cấp phục vụ sở thích. Đây là mong Muốn, không cần ưu tiên trước dụng cụ học tập cơ bản."
+                },
+                "interest:MUSIC": {
+                  "explanation": "Đèn cổ vũ dùng để sưu tầm hoặc tham gia sự kiện theo sở thích, không phải khoản thiết yếu. Đây là mong Muốn, có thể hoãn mua."
+                },
+                "interest:ANIME": {
+                  "explanation": "Bìa đặc biệt và quà tặng của bộ truyện bản giới hạn là phần mua thêm để sưu tầm. Đây là mong Muốn, có thể chọn bản thường hoặc hoãn mua."
+                },
+                "interest:ART": {
+                  "explanation": "Bảng vẽ điện tử là thiết bị mua thêm để trải nghiệm vẽ kỹ thuật số trong tình huống này, chưa phải yêu cầu bắt buộc của lớp học. Đây là mong Muốn, có thể hoãn mua để ưu tiên dụng cụ cơ bản."
+                },
+                "interest:TECH": {
+                  "explanation": "Đèn LED chỉ làm góc học tập đẹp hơn; thiếu đèn trang trí vẫn có thể học bình thường. Đây là mong Muốn, có thể hoãn mua."
+                },
+                "interest:FASHION": {
+                  "explanation": "Thương hiệu và thiết kế sang trọng của túi xách là phần lựa chọn theo sở thích. Đây là mong Muốn; có thể chọn túi cơ bản phù hợp và dành tiền cho khoản Cần trước."
+                },
+                "interest:TRIP": {
+                  "explanation": "Máy ảnh được mua để chụp kỷ niệm theo sở thích, chưa phải dụng cụ học tập hay công việc bắt buộc. Đây là mong Muốn, có thể hoãn mua để giữ đủ tiền cho khoản thiết yếu."
+                }
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

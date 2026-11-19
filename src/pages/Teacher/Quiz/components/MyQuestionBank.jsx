@@ -61,7 +61,7 @@ export default function MyQuestionBank({ shared = false }) {
     <Notice text={error || notice}/>
     {loading ? <Empty>Đang tải câu hỏi…</Empty> : rows.length ? <div className="ws-bank-list">{rows.map((q, index) => <article key={q.id || index}>
       <div><small>Câu {index + 1}</small><h3>{q.stem}</h3><ol type="A">{q.options?.map((option, i) => <li className={i === q.correctIndex ? "correct" : ""} key={i}>{option}</li>)}</ol>
-      {shared && <QuestionReference value={q.reference}/>}</div>
+      {shared && <QuestionReference value={q.reference || q.source}/>}</div>
       <div className="ws-actions">{shared ? <button className="ws-btn" onClick={async () => { try { await teacherQuizApi.copyQuestion(q.id); setNotice("Đã sao chép vào Câu của tôi."); } catch (e) { setError(errorText(e)); } }}><Copy size={15}/>Sao chép để sửa</button> : <><button className="ws-btn" onClick={() => setEditor({...q, options:[...q.options]})}><Pencil size={15}/>Sửa</button><button className="ws-btn danger" onClick={async () => { if (!confirm("Xóa câu hỏi này?")) return; try { await teacherQuizApi.deleteMyQuestion(q.id); await load(); } catch(e) { setError(errorText(e)); } }}><Trash2 size={15}/>Xóa</button></>}</div>
     </article>)}</div> : <Empty>Chưa có câu hỏi.</Empty>}
     {editor && <QuestionEditor value={editor} onClose={() => setEditor(null)} onSave={save}/>} 

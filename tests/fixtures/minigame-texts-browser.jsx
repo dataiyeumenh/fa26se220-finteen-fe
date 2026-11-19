@@ -75,12 +75,45 @@ async function checkCareer() {
   }
   await click(button("Kiểm tra"));
   await click(button("Sang bước tính toán →"));
+  const first = game.questions[0];
+  await click(button(first.options.find(item => item.id !== first.correctId).label, document.querySelector(".c3-question")));
+  assert(document.querySelector(".c3-explain").textContent === first.hint, "Wrong answer must show its hint");
+  assert(!document.body.textContent.includes(first.explain), "Wrong answer leaked full solution");
   for (const [index, question] of game.questions.entries()) {
     await click(button(question.options.find(item => item.id === question.correctId).label, document.querySelectorAll(".c3-question")[index]));
+    assert(document.body.textContent.split(question.explain).length === 2, "Career explanation rendered more than once");
   }
   await click(button("TEST FINISH →"));
   assert(result?.passed && result.score === game.jobs.length + game.questions.length, "Career score changed");
   completed.push("CAREER_MATCH: JSON steps/name/finish and full correct playthrough");
+}
+
+async function checkWrongFeedback() {
+  const need = gameOf(ch1, "NEED_WANT");
+  need.items = [{ ...need.items[0], label: "Bộ màu vẽ cao cấp", category: "WANTS", explanation: "Nâng cấp có thể hoãn vì bộ màu cơ bản đã đủ dùng." }];
+  const Need = MINI_GAME_FRAMES.NEED_WANT;
+  await mount(<Need game={need} />);
+  await click(document.querySelector(".nw-item"));
+  await click(document.querySelector(".nw-NEEDS .nw-place"));
+  await click(button("Kiểm tra"));
+  const message = document.querySelector(".nw-item-feedback").textContent;
+  assert(message.includes("thuộc Giỏ Muốn") && !message.includes("Bộ màu vẽ cao cấp") && message.includes("có thể hoãn"), "Wrong item must explain classification without repeating its label");
+
+  const budget = gameOf(ch2, "BUDGET_BUILDER");
+  const Budget = MINI_GAME_FRAMES.BUDGET_BUILDER;
+  await mount(<Budget game={budget} />);
+  for (const [index, amount] of budget.draggables.entries()) {
+    const transfer = new DataTransfer();
+    transfer.setData("text/plain", amount.id);
+    document.querySelectorAll(".c2-envelope")[(index + 1) % budget.dropZones.length].dispatchEvent(new DragEvent("drop", { bubbles: true, cancelable: true, dataTransfer: transfer }));
+    await wait();
+  }
+  await click(button("Kiểm tra"));
+  for (const envelope of document.querySelectorAll(".c2-envelope.is-incorrect")) {
+    assert(/quá cao|Còn thiếu/.test(envelope.querySelector("small").textContent), "Envelope lacks direction");
+    assert(getComputedStyle(envelope.querySelector("small")).position !== "absolute", "Feedback must have space in layout");
+  }
+  completed.push("WRONG_FEEDBACK: personalized item classification, per-envelope corrections, Career hint and single explanation");
 }
 
 async function checkSavings() {
@@ -156,6 +189,7 @@ async function checkStudio() {
 }
 
 async function run() {
+  await checkWrongFeedback();
   await checkNeedWant();
   await checkBudget();
   await checkCareer();
