@@ -14,7 +14,6 @@ import {
   MapPinned,
   Award,
   Play,
-  CalendarDays,
   AlertTriangle,
   Bell,
   ChevronDown,
@@ -34,7 +33,6 @@ import "./workspace-design-system.css";
 import "./quiz.css";
 import {
   currentEntitlements,
-  daysUntilExpiry,
   formatPlanDate,
   PLAN_LIMIT,
   PLAN_NAME,
@@ -52,12 +50,8 @@ export default function WorkspaceLayout({ children }) {
   const dualContext =
     actor?.plans?.includes("parent") && actor?.plans?.includes("teacher");
   const activeEntitlements = currentEntitlements(actor, entitlements);
-  const expiringEntitlements = activeEntitlements
-    .map((item) => ({ ...item, daysLeft: daysUntilExpiry(item.expiresOn) }))
-    .filter(
-      (item) =>
-        item.daysLeft !== null && item.daysLeft >= 0 && item.daysLeft <= 7,
-    );
+  // Gói FinTeen hiện được mua một lần và sử dụng vĩnh viễn, không cảnh báo gia hạn.
+  const expiringEntitlements = [];
   const [profileOpen, setProfileOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   useEffect(() => {
@@ -325,7 +319,7 @@ export default function WorkspaceLayout({ children }) {
                     <div className="ws-dropdown-plans">
                       <div className="ws-dropdown-heading">
                         <strong>Gói đang sử dụng</strong>
-                        <CalendarDays size={16} />
+                        <Package size={16} />
                       </div>
                       {entitlementsLoading && !entitlements ? (
                         <p>Đang tải thông tin gói…</p>
@@ -341,12 +335,7 @@ export default function WorkspaceLayout({ children }) {
                             <small>
                               Hạn mức {PLAN_LIMIT[item.kind] || "—"}
                             </small>
-                            <small>
-                              {item.renewalCount
-                                ? "Đã gia hạn đến"
-                                : "Sử dụng đến"}{" "}
-                              <b>{formatPlanDate(item.expiresOn)}</b>
-                            </small>
+                            <small className="ws-lifetime-plan"><CheckCircle2 size={13} /> <b>Quyền sử dụng vĩnh viễn</b></small>
                           </div>
                         ))
                       ) : (

@@ -41,7 +41,11 @@ export default function KidDashboard() {
   const achievementCount = Array.isArray(dashboard.dashboard?.achievements) ? dashboard.dashboard.achievements.length : 0;
   const newestAchievement = dashboard.achievements[0];
   const knowledge = knowledgeByChapter[activeChapter - 1];
+  const requiredPostTest = dashboard.postTestRequired;
   const playChapter = (chapter = activeChapter) => navigate(`/dashboard/kid/play?chapter=${chapter}`);
+  const continueJourney = () => requiredPostTest?.quizId
+    ? navigate(`/dashboard/kid/quiz/${requiredPostTest.quizId}`, { state: { quiz: { id: requiredPostTest.quizId, chapter: requiredPostTest.chapter, kind: "POST_TEST" } } })
+    : playChapter();
 
   if (dashboard.loading) return <div className="kid-home-state">Đang chuẩn bị hành trình của em…</div>;
   if (dashboard.error) return <div className="kid-home-state is-error" role="alert"><strong>Chưa tải được hành trình.</strong><span>{dashboard.error}</span><button type="button" onClick={dashboard.refresh}>Thử lại</button></div>;
@@ -58,7 +62,7 @@ export default function KidDashboard() {
             <div><strong>Chương {activeChapter} · {chapterNames[activeChapter - 1]}</strong><p>Bài tiếp theo: Khám phá thử thách mới</p></div>
           </div>
           <div className="kid-home-actions">
-            <button className="kid-home-primary" type="button" onClick={() => playChapter()}><Play /> Học tiếp</button>
+            <button className="kid-home-primary" type="button" onClick={continueJourney}><Play /> {requiredPostTest ? `Làm hậu trắc chương ${requiredPostTest.chapter}` : "Học tiếp"}</button>
             <button className="kid-home-secondary" type="button" onClick={() => navigate("/dashboard/kid/lessons")}><Map /> Xem hành trình</button>
           </div>
         </div>
@@ -75,7 +79,8 @@ export default function KidDashboard() {
       <div className="kid-home-track" style={{ "--journey-progress": `${Math.max(0, ((activeChapter - 1) / 7) * 100)}%` }}>
         {chapterNames.map((name, index) => {
           const number = index + 1, done = number < activeChapter, current = number === activeChapter;
-          return <button key={name} type="button" className={`kid-home-stop${done ? " is-done" : ""}${current ? " is-current" : ""}`} onClick={() => number <= activeChapter && playChapter(number)} disabled={number > activeChapter}><span>{done ? <Check /> : current ? <BookOpen /> : <LockKeyhole />}</span><strong>{name}</strong></button>;
+          const blockedByPostTest = requiredPostTest && number > Number(requiredPostTest.chapter);
+          return <button key={name} type="button" className={`kid-home-stop${done ? " is-done" : ""}${current ? " is-current" : ""}`} onClick={() => number <= activeChapter && !blockedByPostTest && playChapter(number)} disabled={number > activeChapter || blockedByPostTest}><span>{done ? <Check /> : current && !blockedByPostTest ? <BookOpen /> : <LockKeyhole />}</span><strong>{name}</strong></button>;
         })}
       </div>
     </section>

@@ -12,6 +12,8 @@ export function isJourneyPlayState(state) {
 
 export function canPlayJourneyChapter(state, chapter) {
   if (!isJourneyPlayState(state) || !Number.isInteger(chapter) || chapter < 1 || chapter > Number(state.totalChapters)) return false;
+  const requiredChapter = Number(state?.postTestRequired?.chapter);
+  if (Number.isInteger(requiredChapter) && chapter > requiredChapter) return false;
   const done = state.chaptersDone.map(Number);
   if (done.includes(chapter)) return true;
   const next = state.continueChapter ?? state.nextChapter ??
@@ -33,8 +35,10 @@ export function journeyChapterProgress(state, chapter) {
   const completed = done.includes(chapter);
   const next = valid ? state.continueChapter ?? state.nextChapter ??
     Array.from({ length: Number(state.totalChapters) }, (_, i) => i + 1).find((id) => !done.includes(id)) : null;
+  const waitingForPostTest = Number(state?.postTestRequired?.chapter) === chapter - 1;
   return {
     status: completed ? "completed" : chapter === Number(next) && canPlayJourneyChapter(state, chapter) ? "current" : "locked",
+    lockReason: waitingForPostTest ? "post-test" : null,
     progress: completed ? 100 : 0,
     lessonsCompleted: completed ? 1 : 0,
     totalLessons: 1,

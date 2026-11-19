@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { BookOpen, RefreshCw } from "lucide-react";
+import { BookOpen, RefreshCw, WalletCards } from "lucide-react";
 import { useWorkspace } from "./useWorkspace";
 import { PLANS } from "./model";
 import { Heading, Empty } from "./ui";
@@ -37,6 +37,13 @@ const PLAN_COPY = {
       "Báo cáo kết quả học tập",
     ],
   },
+};
+const quotaBelongsToRole = (quota, role) => {
+  const context = String(quota?.context || "").toUpperCase();
+  const plan = String(quota?.plan || quota?.kind || "").toUpperCase();
+  if (role === "teacher") return context === "CLASS" || plan === "TEACHER";
+  if (role === "parent") return context === "FAMILY" || plan === "PARENT";
+  return true;
 };
 const PAYMENT_STATUS = {
   PENDING: "Chờ thanh toán",
@@ -103,6 +110,7 @@ export function Plans() {
   const [paymentPage, setPaymentPage] = useState(0);
   const [paymentsLoading, setPaymentsLoading] = useState(true);
   const [hasMorePayments, setHasMorePayments] = useState(false);
+  const visibleQuotas = quotas.filter((quota) => quotaBelongsToRole(quota, actor.role));
   const load = async () => {
     setLoading(true);
     setError("");
@@ -189,20 +197,26 @@ export function Plans() {
           <span className="ws-plan-validity">Quyền sử dụng vĩnh viễn</span>
         )}
       </section>
-      {quotas.length > 0 && (
-        <section className="ws-card">
-          <h2>Ví slot</h2>
-          <p>Slot đã xóa vẫn được tính là đã dùng và không được hoàn lại.</p>
-          <div className="ws-grid two">
-            {quotas.map((quota) => (
-              <article className="ws-card" key={quota.context || quota.plan}>
-                <strong>{quota.context === "CLASS" || quota.plan === "TEACHER" ? "Ví giáo viên" : "Ví gia đình"}</strong>
-                <p>Đã có: {quota.limit ?? 0} · Đã dùng: {quota.used ?? 0}</p>
-                <p>Đang giữ cho lớp: {quota.reserved ?? 0} · Còn trống: {quota.free ?? 0}</p>
-                <small>Gói gốc {quota.base ?? 0} + mua thêm {quota.extra ?? 0} · đã xóa {quota.wiped ?? 0}</small>
+      {visibleQuotas.length > 0 && (
+        <section className="ws-card ws-slot-wallet-section">
+          <div className="ws-slot-wallet-heading">
+            <div><span className="ws-slot-wallet-icon"><WalletCards /></span><div><h2>Ví slot {actor.role === "teacher" ? "giáo viên" : "gia đình"}</h2><p>Quản lý số chỗ có thể cấp cho {actor.role === "teacher" ? "học sinh và lớp học" : "các hồ sơ con"}.</p></div></div>
+            <span className="ws-pill">Sử dụng vĩnh viễn</span>
+          </div>
+          <div className="ws-slot-wallet-list">
+            {visibleQuotas.map((quota) => (
+              <article className="ws-slot-wallet-card" key={quota.context || quota.plan}>
+                <div className="ws-slot-wallet-total"><span>Tổng sức chứa</span><strong>{quota.limit ?? 0}</strong><small>slot đã sở hữu</small></div>
+                <div className="ws-slot-wallet-stats">
+                  <div><span>Còn trống</span><strong>{quota.free ?? 0}</strong><small>Sẵn sàng cấp mới</small></div>
+                  <div><span>Đã sử dụng</span><strong>{quota.used ?? 0}</strong><small>Đang dùng và đã xóa</small></div>
+                  <div><span>Giữ cho lớp</span><strong>{quota.reserved ?? 0}</strong><small>Đã dành trước</small></div>
+                </div>
+                <footer><span>Gói gốc <b>{quota.base ?? 0}</b> + mua thêm <b>{quota.extra ?? 0}</b></span><span>Đã xóa <b>{quota.wiped ?? 0}</b> slot</span></footer>
               </article>
             ))}
           </div>
+          <p className="ws-slot-wallet-note">Slot đã xóa vẫn được tính là đã sử dụng và không được hoàn lại.</p>
         </section>
       )}
       {error && (
@@ -234,12 +248,17 @@ export function Plans() {
                 <h2>{copy.name}</h2>
                 <p>{copy.description}</p>
                 <div className="ws-plan-number">
-                  {money(plan.price)} <span>· mua 1 lần, dùng mãi</span>
+                  {money(owned && plan.addonPrice != null ? plan.addonPrice : plan.price)}{" "}
+                  <span>
+                    {owned && plan.addonPrice != null
+                      ? `· thêm ${Number(plan.addonSlots || 0)} slot`
+                      : "· mua 1 lần, dùng mãi"}
+                  </span>
                 </div>
                 {owned && plan.addonPrice != null && (
                   <div className="ws-plan-note">
                     <label>
-                      Số pack
+                      Số lượng mua thêm
                       <input
                         type="number"
                         min="1"
@@ -269,7 +288,7 @@ export function Plans() {
                   {buying === plan.kind
                     ? "Đang tạo đơn…"
                     : owned
-                      ? plan.addonPrice == null ? "Chưa mở bán slot thêm" : `Mua ${packs} pack slot`
+                      ? plan.addonPrice == null ? "Chưa mở bán slot thêm" : `Mua thêm ${Number(plan.addonSlots || 0) * packs} slot`
                       : "Mua gói ngay"}
                 </button>
                 <small className="ws-plan-note">
@@ -320,7 +339,9 @@ export function Plans() {
                     <td>{PLAN_NAME[row.kind] || row.kind}</td>
                     <td>
                       {row.purpose === "ADDON"
-                        ? `Mua thêm ${row.packs || 1} pack slot`
+                        ? Number(row.slots || row.addonSlots || 0) > 0
+                          ? `Mua thêm ${Number(row.slots || row.addonSlots)} slot`
+                          : "Mua thêm slot"
                         : row.purpose === "RENEW"
                           ? "Gia hạn cũ"
                           : "Mua gói"}

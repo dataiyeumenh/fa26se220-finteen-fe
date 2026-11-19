@@ -38,7 +38,7 @@ import {
   RotateCcw,
 } from "lucide-react";
 import { createPortal } from "react-dom";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./visual-novel.css";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -251,6 +251,7 @@ function EndingReport({ report }) {
 }
 
 export function VisualNovelPlayer({ data: rawData, progressOwner = null, learnerCode = null }) {
+  const navigate = useNavigate();
   const data = useMemo(() => normalizeChapter(rawData), [rawData]);
   // Cấu hình mini-game FUTURE_PLAN của chương (nếu có): settlement / bảng kế hoạch cấp chương đọc số liệu từ đây.
   const futurePlan = useMemo(
@@ -535,15 +536,23 @@ export function VisualNovelPlayer({ data: rawData, progressOwner = null, learner
     batchSentRef.current = true;
     const batch = buildChapterBatch(data, choiceLedger, miniGameResults);
     if (import.meta.env.DEV) window.__finteenLastBatch = batch;
-    void submitChapterBatch(batch, learnerCode).then((outcome) => {
+    void submitChapterBatch(batch, learnerCode).then(async (outcome) => {
       if (import.meta.env.DEV) window.__finteenLastSubmit = outcome;
+      if (outcome.code === 7004) {
+        const { auth } = await import("@/api/auth.api");
+        const dashboard = await auth.ensureLearnerDashboard({ force: true }).catch(() => null);
+        const required = dashboard?.progress?.postTestRequired;
+        if (required?.quizId) navigate(`/dashboard/kid/quiz/${required.quizId}`, { state: { quiz: { id: required.quizId, chapter: required.chapter, kind: "POST_TEST" } } });
+        else navigate("/dashboard/kid/quiz");
+        return;
+      }
       if (outcome.failed)
         console.warn(
           "Chưa gửi được kết quả chương, sẽ gửi lại sau:",
           outcome.failed,
         );
     });
-  }, [scene?.type, isReviewing, data, choiceLedger, miniGameResults, learnerCode]);
+  }, [scene?.type, isReviewing, data, choiceLedger, miniGameResults, learnerCode, navigate]);
 
   const miniGameKind =
     scene?.type === "minigame" ? miniGameKindOf(scene.game) : undefined;

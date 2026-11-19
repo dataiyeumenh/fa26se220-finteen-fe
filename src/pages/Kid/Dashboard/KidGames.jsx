@@ -29,7 +29,8 @@ export default function KidGames() {
     Number.isInteger(chapterNumber) &&
     chapterNumber >= 1 &&
     chapterNumber <= 99;
-  const { loading, error } = useKidDashboard();
+  const dashboard = useKidDashboard();
+  const { loading, error } = dashboard;
   const [gameData, setGameData] = useState(null);
   const [runtimeError, setRuntimeError] = useState("");
   const [loadedChapter, setLoadedChapter] = useState(null);
@@ -39,6 +40,8 @@ export default function KidGames() {
   const [completedEntry, setCompletedEntry] = useState(null);
   const cachedView = personalizationApi.getCachedForChild();
   const gateDone = !isLearner || loadedChapter === entryKey || completedEntry === entryKey || personalizationStep(cachedView)?.done === true;
+  const requiredPostTest = dashboard.postTestRequired;
+  const blockedByPostTest = isLearner && requiredPostTest && chapterNumber > Number(requiredPostTest.chapter);
   const finishGate = useCallback(() => setCompletedEntry(entryKey), [entryKey]);
 
   useEffect(() => {
@@ -51,7 +54,7 @@ export default function KidGames() {
         mounted = false;
       };
     }
-    if (!gateDone) return undefined;
+    if (!gateDone || blockedByPostTest) return undefined;
     getChapterContent(chapterCode(chapterNumber))
       .then((content) => {
         if (!mounted) return;
@@ -66,7 +69,7 @@ export default function KidGames() {
     return () => {
       mounted = false;
     };
-  }, [chapterNumber, validChapter, gateDone, entryKey]);
+  }, [chapterNumber, validChapter, gateDone, blockedByPostTest, entryKey]);
 
   return (
     <>
@@ -102,13 +105,21 @@ export default function KidGames() {
         </div>
       )}
 
-      {!loading && !error && validChapter && !gateDone && (
+      {!loading && !error && blockedByPostTest && (
+        <div className="mx-auto max-w-2xl rounded-3xl border border-amber-200 bg-white p-8 text-center">
+          <h1 className="text-2xl font-bold text-gray-800">Hoàn thành hậu trắc để mở chương tiếp theo</h1>
+          <p className="mt-3 text-gray-600">Em cần nộp bài hậu trắc chương {requiredPostTest.chapter} trước khi tiếp tục hành trình.</p>
+          <Link className="ws-btn primary mt-5" to={`/dashboard/kid/quiz/${requiredPostTest.quizId}`} state={{ quiz: { id: requiredPostTest.quizId, chapter: requiredPostTest.chapter, kind: "POST_TEST" } }}>Làm bài hậu trắc</Link>
+        </div>
+      )}
+
+      {!loading && !error && validChapter && !gateDone && !blockedByPostTest && (
         <PersonalizationGate key={entryKey} onDone={finishGate} />
       )}
 
       {!loading &&
         !error &&
-        gateDone &&
+        gateDone && !blockedByPostTest &&
         validChapter &&
         gameData &&
         loadedChapter === entryKey && (

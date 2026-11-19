@@ -1,20 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { teacherGroupsApi as auth } from "../api/teacherGroupsApi";
 import { withGroupConsent } from "../api/withGroupConsent.js";
-
-const errorMessage = (error) =>
-  ({
-    3005: "Cần mua gói trước khi tạo lớp hoặc hồ sơ học sinh.",
-    5001: "Bạn đã có nhóm đang mở — hãy kết thúc nhóm cũ trước.",
-    5002: "Nhóm đã kết thúc.",
-    5003: "Lớp cần xác nhận đã có sự đồng ý của phụ huynh trước.",
-    3006: "Ví đã hết slot. Hãy mua thêm slot để tiếp tục.",
-    3026: "Lớp đã đủ sĩ số dự kiến.",
-    5004: "Hồ sơ trẻ này không còn hoạt động.",
-    3004: "Bạn không có quyền thao tác với nhóm hoặc hồ sơ này.",
-  })[error?.code] ||
-  error?.message ||
-  "Đã xảy ra lỗi. Vui lòng thử lại.";
+import { learnerManagementError as errorMessage } from "../../../../features/workspace/learnerMessages.js";
 
 const capacityFree = (value) => {
   const candidate = value?.free ?? value?.available ?? value;
