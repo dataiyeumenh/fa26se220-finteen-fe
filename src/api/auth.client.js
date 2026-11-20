@@ -1,4 +1,4 @@
-// ACCOUNT endpoints and ApiResponse handling. No SLOT tokens or demo data.
+// ACCOUNT/SLOT session lifecycle and ApiResponse handling.
 import { vietnameseApiMessage } from "../lib/vietnameseMessages.js";
 import { loginErrorMessage } from "../lib/authMessages.js";
 
@@ -22,6 +22,7 @@ export function createAuthClient({
   storage,
   slotStorage = storage,
   contextStorage = storage,
+  sharedStorage = null,
   beforeSlotSignOut = async () => {},
   clearSlotData = () => {},
   fetcher = (...args) => fetch(...args),
@@ -30,6 +31,8 @@ export function createAuthClient({
   const key = `finteen.account.v1:${baseUrl}`;
   const slotKey = `finteen.slot.v1:${baseUrl}`;
   const contextKey = `finteen.account.context.v1:${baseUrl}`;
+  const browserKey = `finteen.session.v1:${baseUrl}`;
+  let lastBrowserRecord;
   let saved, savedSlot;
   try {
     saved = JSON.parse(storage.getItem(key));
@@ -40,6 +43,19 @@ export function createAuthClient({
     savedSlot = JSON.parse(slotStorage.getItem(slotKey));
   } catch {
     /* Invalid or unavailable storage. */
+  }
+  if (sharedStorage) {
+    try {
+      lastBrowserRecord = sharedStorage.getItem(browserKey);
+      if (lastBrowserRecord != null) {
+        const browserSession = JSON.parse(lastBrowserRecord);
+        saved = browserSession?.type === "ACCOUNT" ? browserSession : null;
+        savedSlot = browserSession?.type === "SLOT" ? browserSession : null;
+      }
+    } catch {
+      saved = null;
+      savedSlot = null;
+    }
   }
   let session =
     saved?.type === "ACCOUNT" && saved.expiresAt > now() ? saved : null;
@@ -80,6 +96,7 @@ export function createAuthClient({
   };
   let entitlementsRequest = null;
   let learnerDashboardRequest = null;
+  let profileRequest = null;
   let revision = 0;
   const listeners = new Set();
   const publish = (value) => {
@@ -100,6 +117,16 @@ export function createAuthClient({
       /* In-memory session still works. */
     }
   };
+  const persistBrowserSession = () => {
+    if (!sharedStorage) return;
+    try {
+      const record = JSON.stringify(slotSession || session);
+      sharedStorage.setItem(browserKey, record);
+      lastBrowserRecord = record;
+    } catch {
+      /* In-memory authentication remains usable if browser storage is blocked. */
+    }
+  };
   // Remove SLOT tokens persisted by older builds after SLOT storage moved to sessionStorage.
   if (slotStorage !== storage) {
     try {
@@ -110,14 +137,21 @@ export function createAuthClient({
   }
   if (saved && !session) persist();
   if (savedSlot && !slotSession) persistSlot();
-  const logout = () => {
+  if (sharedStorage && lastBrowserRecord != null) {
+    persist();
+    persistSlot();
+  }
+  if (sharedStorage && lastBrowserRecord == null) persistBrowserSession();
+  const logout = (share = true) => {
     revision++;
     session = null;
     slotSession = null;
     entitlementsRequest = null;
     learnerDashboardRequest = null;
+    profileRequest = null;
     persist();
     persistSlot();
+    if (share) persistBrowserSession();
     publish({
       actor: null,
       entitlements: null,
@@ -134,6 +168,7 @@ export function createAuthClient({
     slotSession = null;
     learnerDashboardRequest = null;
     persistSlot();
+    persistBrowserSession();
     publish({
       actor: null,
       learnerDashboard: null,
@@ -144,7 +179,9 @@ export function createAuthClient({
     });
   };
   const signOut = async () => {
+    if (syncBrowserSession()) return;
     const activeSlot = slotSession;
+    const version = revision;
     try {
       if (slotSession) {
         try {
@@ -152,18 +189,21 @@ export function createAuthClient({
         } catch {
           /* A failed sync must not prevent server-side session revocation. */
         }
+        if (version !== revision) return;
         await request("/api/auth/logout", { method: "POST", slotAuthenticated: true });
       } else if (session)
         await request("/api/auth/logout", { method: "POST", authenticated: true });
     } catch {
       // Local logout must still finish if the server is unavailable or not deployed yet.
     } finally {
-      try {
-        if (activeSlot) clearSlotData(activeSlot);
-      } catch {
-        /* Session cleanup must continue if browser storage is unavailable. */
+      if (version === revision) {
+        try {
+          if (activeSlot) clearSlotData(activeSlot);
+        } catch {
+          /* Session cleanup must continue if browser storage is unavailable. */
+        }
+        logout();
       }
-      logout();
     }
   };
   const expired = () => {
@@ -179,6 +219,9 @@ export function createAuthClient({
       slotAuthenticated = false,
     } = {},
   ) {
+    if ((authenticated || slotAuthenticated) && syncBrowserSession()) {
+      throw new ApiError("Phiên đăng nhập đã thay đổi ở tab khác. Vui lòng thử lại.", null, 409);
+    }
     const multipart =
       typeof FormData !== "undefined" && body instanceof FormData;
     const activeSession = slotAuthenticated ? slotSession : session;
@@ -187,9 +230,9 @@ export function createAuthClient({
       (authenticated || slotAuthenticated) &&
       (!token || activeSession.expiresAt <= now())
     ) {
-      if (slotAuthenticated)
+      if (slotAuthenticated && slotSession)
         logoutSlot("Phiên học tập đã hết hạn. Vui lòng đăng nhập lại.");
-      else expired();
+      else if (authenticated && session) expired();
       throw new ApiError("Vui lòng đăng nhập lại.", 3003, 401);
     }
     let response;
@@ -228,6 +271,7 @@ export function createAuthClient({
         response.status,
       );
     }
+    if (authenticated || slotAuthenticated) syncBrowserSession();
     if (!response.ok || data?.code !== 0) {
       if (
         slotAuthenticated &&
@@ -268,14 +312,45 @@ export function createAuthClient({
   function storeToken(result) {
     if (!result?.accessToken || !(result.expiresIn > 0))
       throw new ApiError("Máy chủ chưa trả phiên đăng nhập hợp lệ.");
+    revision++;
     session = {
       type: "ACCOUNT",
       accessToken: result.accessToken,
       expiresAt: now() + result.expiresIn * 1000,
     };
     slotSession = null;
+    entitlementsRequest = null;
+    learnerDashboardRequest = null;
+    profileRequest = null;
     persistSlot();
     persist();
+    persistBrowserSession();
+    publish({ actor: null, entitlements: null, entitlementsLoading: false, learnerDashboard: null, learnerDashboardLoading: false, learnerDashboardError: "", loading: true, error: "" });
+  }
+  function syncBrowserSession() {
+    if (!sharedStorage) return false;
+    let raw;
+    try { raw = sharedStorage.getItem(browserKey); }
+    catch { return false; }
+    if (raw === lastBrowserRecord) return false;
+    lastBrowserRecord = raw;
+    let incoming = null;
+    try { incoming = JSON.parse(raw); } catch { /* Invalid records are signed out. */ }
+    const valid = ["ACCOUNT", "SLOT"].includes(incoming?.type) && incoming.accessToken && incoming.expiresAt > now();
+    if (valid && (incoming.type === "ACCOUNT" ? session : slotSession)?.accessToken === incoming.accessToken) return false;
+    logout(false);
+    if (!valid || !["ACCOUNT", "SLOT"].includes(incoming.type)) return true;
+    if (incoming.type === "SLOT") {
+      slotSession = incoming;
+      persistSlot();
+      publish({ actor: slotActor(), loading: false, error: "" });
+    } else {
+      session = incoming;
+      persist();
+      publish({ loading: true, error: "" });
+      void refresh().catch(() => {});
+    }
+    return true;
   }
   async function refresh() {
     if (slotSession) {
@@ -284,6 +359,16 @@ export function createAuthClient({
     }
     if (!session) return;
     const token = session.accessToken;
+    if (profileRequest?.token === token) return profileRequest.promise;
+    const pending = refreshAccount(token);
+    profileRequest = { token, promise: pending };
+    try {
+      return await pending;
+    } finally {
+      if (profileRequest?.promise === pending) profileRequest = null;
+    }
+  }
+  async function refreshAccount(token) {
     publish({ loading: !state.actor, error: "" });
     try {
       const account = await request("/api/auth/me", { authenticated: true });
@@ -316,16 +401,20 @@ export function createAuthClient({
       });
     } catch (error) {
       if (session?.accessToken === token)
-        publish({ actor: null, loading: false, error: error.message });
+        publish({ loading: false, error: error.message });
       throw error;
     }
   }
   async function signIn(path, body) {
+    syncBrowserSession();
     const version = ++revision;
     const result = await request(path, { body });
-    if (version !== revision) return;
+    syncBrowserSession();
+    if (version !== revision) return false;
     storeToken(result);
+    const token = session.accessToken;
     await refresh();
+    return session?.accessToken === token;
   }
   async function ensureEntitlements({ force = false } = {}) {
     if (!session) return [];
@@ -385,6 +474,7 @@ export function createAuthClient({
     return pending;
   }
   async function slotLogin(code, pin) {
+    syncBrowserSession();
     const version = ++revision;
     const normalizedCode = String(code || "")
       .trim()
@@ -392,7 +482,8 @@ export function createAuthClient({
     const result = await request("/api/slots/login", {
       body: { code: normalizedCode, pin },
     });
-    if (version !== revision) return;
+    syncBrowserSession();
+    if (version !== revision) return false;
     if (!result?.accessToken || !(result.expiresIn > 0))
       throw new ApiError("Máy chủ chưa trả phiên học sinh hợp lệ.");
     if (
@@ -412,6 +503,7 @@ export function createAuthClient({
     };
     learnerDashboardRequest = null;
     persistSlot();
+    persistBrowserSession();
     publish({
       actor: slotActor(),
       learnerDashboard: null,
@@ -420,6 +512,7 @@ export function createAuthClient({
       loading: false,
       error: "",
     });
+    return true;
   }
   return {
     subscribe: (fn) => {
@@ -427,10 +520,13 @@ export function createAuthClient({
       return () => listeners.delete(fn);
     },
     getSnapshot: () => state,
+    getSessionVersion: () => revision,
     logout,
     signOut,
     logoutSlot,
     refresh,
+    syncBrowserSession,
+    isSessionStorageEvent: (event) => event.key === browserKey || event.key === null,
     ensureEntitlements,
     ensureLearnerDashboard,
     publicRequest: (path, options = {}) => request(path, options),
@@ -448,6 +544,7 @@ export function createAuthClient({
       }),
     hasSession: () => Boolean(session || slotSession),
     checkExpiry: () => {
+      syncBrowserSession();
       if (slotSession && slotSession.expiresAt <= now())
         logoutSlot("Phiên học tập đã hết hạn. Vui lòng đăng nhập lại.");
       else if (session && session.expiresAt <= now()) expired();
@@ -468,10 +565,15 @@ export function createAuthClient({
     verify: (email, otp) =>
       signIn("/api/auth/verify", { email: email.trim(), otp: otp.trim() }),
     async resetPassword(email, otp, newPassword) {
+      syncBrowserSession();
+      const version = revision;
       await request("/api/auth/password/reset", {
         body: { email: email.trim(), otp: otp.trim(), newPassword },
       });
+      syncBrowserSession();
+      if (version !== revision) return false;
       logout();
+      return true;
     },
     googleLogin: (idToken) =>
       signIn("/api/auth/login/google", { provider: "GOOGLE", idToken }),

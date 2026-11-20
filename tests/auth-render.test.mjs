@@ -7,8 +7,12 @@ import { MemoryRouter } from "react-router-dom";
 import { LOGIN_FAILURE_MESSAGE } from "../src/lib/authMessages.js";
 
 test("wrong-portal screens never link to or identify the other login portal in either direction", async () => {
-  globalThis.localStorage = { getItem() {}, setItem() {} };
-  globalThis.sessionStorage = { getItem() {}, setItem() {} };
+  const memory = () => {
+    const data = new Map();
+    return { getItem: (key) => data.get(key) ?? null, setItem: (key, value) => data.set(key, value) };
+  };
+  globalThis.localStorage = memory();
+  globalThis.sessionStorage = memory();
   const server = await createServer({ server: { middlewareMode: true, hmr: false }, appType: "custom" });
   const originalFetch = globalThis.fetch;
   let roles = ["GAME_EDITOR"];

@@ -154,11 +154,11 @@ export default function AuthForm({ registration = false, internal = false }) {
         setCooldown(60);
         return;
       } else if (kid) {
-        await auth.slotLogin(form.get("identifier"), form.get("secret"));
+        if (await auth.slotLogin(form.get("identifier"), form.get("secret")) === false) return;
       } else if (internal) {
-        await auth.internalLogin(form.get("identifier"), form.get("secret"));
+        if (await auth.internalLogin(form.get("identifier"), form.get("secret")) === false) return;
       } else {
-        await auth.login(form.get("identifier"), form.get("secret"));
+        if (await auth.login(form.get("identifier"), form.get("secret")) === false) return;
       }
       navigate(completeLogin(auth, internal), { replace: true });
     } catch (err) {
@@ -198,7 +198,7 @@ export default function AuthForm({ registration = false, internal = false }) {
     setMessage("");
     try {
       const token = await googleIdToken();
-      await auth.googleLogin(token);
+      if (await auth.googleLogin(token) === false) return;
       navigate(completeLogin(auth, internal), { replace: true });
     } catch (err) {
       setError(loginErrorMessage(err));

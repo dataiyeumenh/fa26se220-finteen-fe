@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react'
-import { Link, NavLink, useLocation } from 'react-router-dom'
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { ArrowLeft, BookOpen, CheckCheck, ChevronRight, Image, History, LayoutDashboard, LogOut, PenLine, Rocket } from 'lucide-react'
 import { auth } from '../../api/auth.api'
 import ChaptersPage from '../studio/ChaptersPage'
@@ -16,6 +16,7 @@ import { useToast } from '../studio/useToast'
 import './studio-workspace.css'
 import ResponsiveSidebar from '@/components/shared/ResponsiveSidebar'
 import NotFoundPage from '@/pages/NotFoundPage'
+import ConfirmDialog from '@/components/shared/ConfirmDialog'
 
 const menuIcons = { chapter: PenLine, review: CheckCheck, release: Rocket, history: History, asset: Image, question: BookOpen }
 
@@ -25,7 +26,9 @@ function ViewBadge() { return <span className="studio-view-badge">Chỉ xem</spa
 
 export default function StudioWorkspace({ actor }) {
   const { pathname } = useLocation()
+  const navigate = useNavigate()
   const [editorNavigation, setEditorNavigation] = useState({ dirty: false, busy: false })
+  const [leavingEditor, setLeavingEditor] = useState(null)
   const { notify, view } = useToast()
   const roleChoices = ['GAME_EDITOR', 'GAME_REVIEWER', 'GAME_MANAGER'].filter(role => actor.roles.includes('ADMIN') || actor.roles.includes(role))
   const available = getStudioMenu(actor)
@@ -72,7 +75,20 @@ export default function StudioWorkspace({ actor }) {
           <span className="studio-role-pill">{isAdmin ? 'Quản trị viên' : 'Thành viên Studio'}</span>
         </div>
       </header>
-      {editorCode && <nav className="studio-topbar" aria-label="Vị trí"><Link className="scene-editor-back" to="/internal/chapters" onClick={event => { if (editorNavigation.busy || (editorNavigation.dirty && !window.confirm('Bạn có thay đổi chưa lưu. Quay về danh sách chương và bỏ các thay đổi này?'))) event.preventDefault() }}><ArrowLeft size={16} aria-hidden="true" />Danh sách chương</Link><ChevronRight size={14} aria-hidden="true" /><strong>{editorCode}</strong></nav>}
+      {editorCode && <nav className="studio-topbar" aria-label="Vị trí"><Link className="scene-editor-back" to="/internal/chapters" onClick={event => {
+        if (editorNavigation.busy) { event.preventDefault(); return }
+        if (editorNavigation.dirty) { event.preventDefault(); setLeavingEditor(editorCode) }
+      }}><ArrowLeft size={16} aria-hidden="true" />Danh sách chương</Link><ChevronRight size={14} aria-hidden="true" /><strong>{editorCode}</strong></nav>}
+      {editorCode && leavingEditor === editorCode && <ConfirmDialog
+        className="ft-leave-editor-confirm"
+        title="Rời trình soạn khi chưa lưu?"
+        description="Bạn đang có thay đổi chưa lưu. Nếu rời đi, những chỉnh sửa này sẽ bị mất. Hãy ở lại để lưu chương trước khi thoát."
+        confirmLabel="Bỏ thay đổi và rời đi"
+        cancelLabel="Ở lại chỉnh sửa"
+        disabled={editorNavigation.busy}
+        onClose={() => setLeavingEditor(null)}
+        onConfirm={() => { setLeavingEditor(null); navigate('/internal/chapters') }}
+      ><div className="ft-leave-editor-note"><span>Bản soạn hiện tại</span><strong>{editorCode}</strong></div></ConfirmDialog>}
       <main className={`studio-content${editorCode ? ' studio-content-editor' : ''}`}>
         {editorCode ? <div className="studio-api-content"><EditorPage key={editorCode} code={editorCode} notify={notify} onNavigationStateChange={setEditorNavigation} /></div>
           : !current ? <RoleOverview actor={actor} name={name} roles={roleChoices} />

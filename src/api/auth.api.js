@@ -15,6 +15,10 @@ export const auth = createAuthClient({
     getItem: (key) => sessionStorage.getItem(key),
     setItem: (key, value) => sessionStorage.setItem(key, value),
   },
+  sharedStorage: {
+    getItem: (key) => localStorage.getItem(key),
+    setItem: (key, value) => localStorage.setItem(key, value),
+  },
   beforeSlotSignOut: async (slotSession) => {
     const { flushPendingBatches } = await import(
       "../pages/Kid/Dashboard/components/game/playBatch.js"
@@ -35,15 +39,21 @@ export const auth = createAuthClient({
   },
 });
 
-export function startAuth() {
+export function startAuth(client = auth) {
   const refresh = () => {
-    if (auth.hasSession()) void auth.refresh().catch(() => {});
+    client.syncBrowserSession();
+    if (client.hasSession()) void client.refresh().catch(() => {});
+  };
+  const synchronize = (event) => {
+    if (client.isSessionStorageEvent(event)) client.syncBrowserSession();
   };
   refresh();
   window.addEventListener("focus", refresh);
-  const timer = window.setInterval(() => auth.checkExpiry(), 1000);
+  window.addEventListener("storage", synchronize);
+  const timer = window.setInterval(() => client.checkExpiry(), 1000);
   return () => {
     window.removeEventListener("focus", refresh);
+    window.removeEventListener("storage", synchronize);
     window.clearInterval(timer);
   };
 }

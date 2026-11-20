@@ -44,6 +44,9 @@ export default function WorkspaceLayout({ children }) {
   const navigate = useNavigate();
   const location = useLocation();
   const learner = actor?.role === "kid";
+  const navigationPath = !learner && /^\/dashboard\/learners\/[^/]+\/?$/.test(location.pathname)
+    ? "/dashboard/reports"
+    : location.pathname.replace(/\/+$/, "") || "/";
   const familyChild = learner && (actor?.learnerRole === "child" || actor?.plan === "parent");
   const teacher = actor?.role === "teacher";
   const paid = actor?.role === "parent" || teacher;
@@ -90,6 +93,7 @@ export default function WorkspaceLayout({ children }) {
                 Users,
               ],
               ["/dashboard/reports", "Tiến độ & báo cáo", BarChart3],
+              ...(!teacher ? [["/dashboard/quiz-management", "Quản lý Quiz", ClipboardList]] : []),
             ]
           : []),
         ...(teacher
@@ -104,21 +108,21 @@ export default function WorkspaceLayout({ children }) {
     setProfileOpen(false);
     setNotificationsOpen(false);
   };
-  const pageTheme = location.pathname.includes("/plans")
+  const pageTheme = navigationPath.includes("/plans")
     ? "packages"
-    : location.pathname.includes("/learners")
+    : navigationPath.includes("/learners")
       ? "children"
-      : location.pathname.includes("/reports")
+      : navigationPath.includes("/reports")
         ? "reports"
-        : location.pathname.includes("/settings")
+        : navigationPath.includes("/settings")
           ? "account"
-          : location.pathname.includes("/groups")
+          : navigationPath.includes("/groups")
             ? "groups"
-            : location.pathname.includes("/quiz")
+            : navigationPath.includes("/quiz")
               ? "quiz"
-              : location.pathname.includes("/games") ||
-                  location.pathname.includes("/shop") ||
-                  location.pathname.includes("/lessons")
+              : navigationPath.includes("/games") ||
+                  navigationPath.includes("/shop") ||
+                  navigationPath.includes("/lessons")
                 ? "learning"
                 : "overview";
   return (
@@ -181,10 +185,15 @@ export default function WorkspaceLayout({ children }) {
           )}
           <nav aria-label="Điều hướng dashboard">
             {links.map(([to, text, Icon]) => (
-              <NavLink end key={to} to={to}>
+              <Link
+                key={to}
+                to={to}
+                className={navigationPath === to ? "active" : undefined}
+                aria-current={navigationPath === to ? "page" : undefined}
+              >
                 <Icon size={19} />
                 {text}
-              </NavLink>
+              </Link>
             ))}
           </nav>
           <button

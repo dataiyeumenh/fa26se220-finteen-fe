@@ -16,7 +16,7 @@ import { PageLoader } from "@/components/feedback/LoadingState";
 export function RequireAccount({ kind, roles, plans }) {
   const { actor, loading, authError } = useWorkspace();
   if (loading) return <PageLoader label="Đang kiểm tra phiên đăng nhập…" />;
-  if (authError && auth.hasSession())
+  if (authError && auth.hasSession() && !actor)
     return (
       <Empty>
         {authError}{" "}

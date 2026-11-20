@@ -34,7 +34,8 @@ window.setInterval = (callback, delay, ...args) => {
 window.clearInterval = (id) => { if (!intervals.delete(id)) realClearInterval(id); };
 let reply = async () => ({ status: "PENDING" });
 workspaceApi.getPayment = async () => { requests++; return reply(); };
-workspaceApi.cancelPayment = async () => ({});
+let cancellations = 0;
+workspaceApi.cancelPayment = async () => { cancellations++; return {}; };
 let refreshed = 0, entitlements = 0;
 auth.refresh = async () => { refreshed++; };
 auth.ensureEntitlements = async () => { entitlements++; return []; };
@@ -104,9 +105,24 @@ try {
 
   await mount(); await advance(2500);
   [...document.querySelectorAll("button")].find((button) => button.textContent.includes("Hủy giao dịch")).click();
+  await wait();
+  const cancelDialog = document.querySelector('[role="alertdialog"]');
+  assert(cancelDialog, "Payment cancellation must ask for confirmation in the app");
+  [...cancelDialog.querySelectorAll("button")].find((button) => button.textContent.includes("Hủy giao dịch")).click();
   await wait(); await advance(10000);
   assert(requests === 1 && document.querySelector("#root").textContent.includes("Giao dịch chưa thành công"), "Cancellation did not stop polling");
   results.push("Successful cancellation stops pending polling");
+
+  await mount();
+  const previousCancellations = cancellations;
+  [...document.querySelectorAll("button")].find((button) => button.textContent.includes("Hủy giao dịch")).click();
+  await wait();
+  assert(document.querySelector('[role="alertdialog"]'), "Cancel confirmation did not open");
+  reply = async () => ({ status: "PAID" });
+  await advance(2500);
+  assert(!document.querySelector('[role="alertdialog"]') && document.querySelector("#root").textContent.includes("Thanh toán thành công"), "Paid status did not replace the cancellation confirmation");
+  assert(cancellations === previousCancellations, "Order was cancelled without confirmation after payment");
+  results.push("Payment success dismisses an open cancellation popup without cancelling the paid order");
 
   await mount();
   let resolveRequest;
