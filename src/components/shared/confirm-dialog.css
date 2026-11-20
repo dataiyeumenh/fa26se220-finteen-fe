@@ -1,0 +1,27 @@
+.ft-confirm-dialog { width:min(480px,calc(100vw - 32px)); max-width:480px; max-height:calc(100dvh - 32px); overflow-y:auto; gap:14px; padding:24px; border:1px solid #e2e8f0; border-radius:20px; }
+.ft-confirm-dialog.ft-question-delete-confirm { width:min(560px,calc(100vw - 32px)); max-width:560px; gap:16px; padding:28px; }
+.ft-confirm-dialog.ft-question-delete-confirm .ft-confirm-title { font-size:22px; }
+.ft-question-delete-confirm .ft-confirm-preview { padding:14px 16px; font-size:14px; }
+.ft-confirm-dialog.ft-leave-editor-confirm { width:min(560px,calc(100vw - 32px)); max-width:560px; gap:18px; padding:28px; border-radius:22px; }
+.ft-leave-editor-confirm .ft-confirm-icon { width:50px; height:50px; border-radius:16px; background:#fff5df; color:#a66b12; }
+.ft-confirm-dialog.ft-leave-editor-confirm .ft-confirm-title { font-size:22px; line-height:1.45; }
+.ft-leave-editor-note { display:flex; justify-content:space-between; align-items:center; gap:16px; padding:14px 16px; border:1px solid #e2e8f0; border-radius:12px; background:#f8fafc; color:#64748b; font-size:13px; }
+.ft-leave-editor-note strong { color:#334155; font-size:14px; }
+.ft-confirm-icon { display:inline-flex; align-items:center; justify-content:center; width:44px; height:44px; border-radius:14px; background:#fff1f2; color:#c4323e; }
+.ft-confirm-dialog .ft-confirm-title { margin:0; font-size:20px; line-height:1.4; font-weight:750; color:#17283f; }
+.ft-confirm-dialog .ft-confirm-description { margin:0; color:#64748b; font-size:14px; line-height:1.7; }
+.ft-confirm-preview { margin:0; padding:12px 14px; border:1px solid #e2e8f0; border-radius:12px; background:#f8fafc; color:#334155; font-size:13px; line-height:1.7; overflow-wrap:anywhere; }
+.ft-confirm-error { margin:0; padding:10px 12px; border-radius:10px; background:#fff1f2; color:#a82334; font-size:13px; line-height:1.6; }
+.ft-confirm-actions { display:flex; justify-content:flex-end; gap:10px; margin-top:6px; }
+.ft-confirm-actions button { display:inline-flex; justify-content:center; align-items:center; gap:8px; min-height:42px; padding:10px 16px; border:1px solid #cbd5e1; border-radius:10px; background:#fff; color:#334155; font-size:13px; font-weight:600; cursor:pointer; }
+.ft-confirm-actions button:hover:not(:disabled) { background:#f1f5f9; }
+.ft-confirm-actions button.is-danger { border-color:#dc2626; background:#dc2626; color:#fff; }
+.ft-confirm-actions button.is-danger:hover:not(:disabled) { border-color:#b91c1c; background:#b91c1c; }
+.ft-confirm-actions button:disabled { opacity:.6; cursor:wait; }
+.ft-confirm-actions button:focus-visible { outline:2px solid #64748b; outline-offset:3px; }
+.ft-confirm-spinner { animation:ft-confirm-spin 1s linear infinite; }
+@keyframes ft-confirm-spin { to { transform:rotate(360deg); } }
+@media(prefers-reduced-motion:reduce){.ft-confirm-spinner{animation:none}}
+@media(max-width:480px){.ft-confirm-actions{flex-direction:column-reverse}.ft-confirm-actions button{width:100%}}
+@media(max-width:480px){.ft-confirm-dialog.ft-question-delete-confirm{padding:24px}}
+@media(max-width:480px){.ft-confirm-dialog.ft-leave-editor-confirm{padding:24px;gap:16px}}

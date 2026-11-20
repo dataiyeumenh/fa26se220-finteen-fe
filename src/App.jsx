@@ -30,6 +30,7 @@ const TeacherReports = lazy(() => import("@/pages/Teacher/Reports/TeacherReports
 const KidQuiz = lazy(() => import("@/pages/Kid/Quiz/KidQuiz"));
 const KidQuizTake = lazy(() => import("@/pages/Kid/Quiz/KidQuizTake"));
 const TeacherQuizManagement = lazy(() => import("@/pages/Teacher/Quiz/TeacherQuizManagement"));
+const ParentQuizResults = lazy(() => import("@/pages/Parent/Quiz/ParentQuizResults"));
 const ParentDashboard = lazy(() => import("@/pages/Parent/Dashboard/ParentDashboard"));
 const TeacherDashboard = lazy(() => import("@/pages/Teacher/Dashboard/TeacherDashboard"));
 const LearnerReport = lazy(() => import("@/pages/LearnerReport/LearnerReport"));
@@ -64,6 +65,11 @@ function AdultLearners() {
 function AdultReports() {
   const { actor } = useWorkspace();
   return actor.role === "teacher" ? <TeacherReports /> : <ParentReports />;
+}
+
+function AdultQuizzes() {
+  const { actor } = useWorkspace();
+  return actor.role === "teacher" ? <TeacherQuizManagement /> : <ParentQuizResults />;
 }
 
 function AdultDashboard() {
@@ -132,15 +138,12 @@ function App() {
                   element={<LearnerReport />}
                 />
                 <Route path="/dashboard/reports" element={<AdultReports />} />
+                <Route path="/dashboard/quiz-management" element={<AdultQuizzes />} />
               </Route>
 
               {/* 2b. RIÊNG TEACHER — Quản lý Quiz: tạo đề, giao bài, theo dõi kết quả */}
               <Route element={<RequireAccount roles={["teacher"]} />}>
                 <Route path="/dashboard/groups" element={<TeacherGroups />} />
-                <Route
-                  path="/dashboard/quiz-management"
-                  element={<TeacherQuizManagement />}
-                />
               </Route>
             </Route>
           </Route>

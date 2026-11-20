@@ -6,8 +6,12 @@ import path from "node:path";
 
 const endingReport = process.argv[2] === "ending-report";
 const payment = process.argv[2] === "payment";
-const folder = path.resolve(payment ? "output/payment" : endingReport ? "output/ending-report" : "output/pr3");
-const fixture = payment ? "payment-browser.html" : endingReport ? "ending-report-browser.html" : "production-cleanup-browser.html";
+const parentQuiz = process.argv[2] === "parent-quiz";
+const learnerReport = process.argv[2] === "learner-report";
+const authTabs = process.argv[2] === "auth-tabs";
+const confirm = process.argv[2] === "confirm";
+const folder = path.resolve(confirm ? "output/confirm" : authTabs ? "output/auth-tabs" : learnerReport ? "output/learner-report" : parentQuiz ? "output/parent-quiz" : payment ? "output/payment" : endingReport ? "output/ending-report" : "output/pr3");
+const fixture = confirm ? "confirm-browser.html" : authTabs ? "auth-tabs-browser.html" : learnerReport ? "learner-report-browser.html" : parentQuiz ? "parent-quiz-browser.html" : payment ? "payment-browser.html" : endingReport ? "ending-report-browser.html" : "production-cleanup-browser.html";
 mkdirSync(folder, { recursive: true });
 const server = await createServer({ server: { host: "127.0.0.1", port: 5197, strictPort: true, hmr: false, watch: null } });
 await server.listen();

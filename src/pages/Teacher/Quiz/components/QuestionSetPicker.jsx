@@ -7,7 +7,7 @@ import QuestionSetPreview from "./QuestionSetPreview.jsx";
 export default function QuestionSetPicker({ questions, selected, onChange, loading, error, source = "shared" }) {
   const [query, setQuery] = useState("");
   const [preview, setPreview] = useState(null);
-  const sets = useMemo(() => source === "mine" && questions.length ? [{ code: "CÂU CỦA TÔI", questions }] : groupQuestionSets(questions), [questions, source]);
+  const sets = useMemo(() => source === "mine" && questions.length ? [{ code: "KHO CÂU HỎI RIÊNG", questions }] : groupQuestionSets(questions), [questions, source]);
   const term = query.trim().toLocaleLowerCase("vi-VN");
   const visible = source === "mine"
     ? sets.map((set) => ({ ...set, questions: set.questions.filter((question) => `${question.stem || ""} ${question.externalId || ""}`.toLocaleLowerCase("vi-VN").includes(term)) })).filter((set) => set.questions.length)
@@ -22,7 +22,7 @@ export default function QuestionSetPicker({ questions, selected, onChange, loadi
 
   return (
     <fieldset className="ws-question-sets">
-      <legend>{source === "mine" ? "Chọn từ Câu của tôi" : "Chọn câu hỏi từ kho chung"}</legend>
+      <legend>{source === "mine" ? "Chọn từ Kho câu hỏi riêng" : "Chọn câu hỏi từ kho chung"}</legend>
       <p className="ws-question-sets__intro">{source === "mine" ? "Chọn những câu thầy cô đã tự tạo hoặc nhập trước đó." : "Thầy cô có thể chọn nhanh cả bộ hoặc mở bộ để tích từng câu phù hợp với đề."}</p>
       <div className="ws-question-sets__toolbar">
         <label>
@@ -59,7 +59,7 @@ export default function QuestionSetPicker({ questions, selected, onChange, loadi
                 </article>
               );
             })}
-          </div> : <Empty>{sets.length ? "Không tìm thấy câu hỏi phù hợp." : source === "mine" ? "Thầy cô chưa có câu hỏi riêng. Hãy tạo ở tab Câu của tôi hoặc nhập câu mới bên trên." : "Kho câu hỏi chưa có bộ nào để chọn."}</Empty>}
+          </div> : <Empty>{sets.length ? "Không tìm thấy câu hỏi phù hợp." : source === "mine" ? "Thầy cô chưa có câu hỏi riêng. Hãy tạo ở tab Kho câu hỏi riêng hoặc nhập câu mới bên trên." : "Kho câu hỏi chưa có bộ nào để chọn."}</Empty>}
         </>
       )}
       {preview && <QuestionSetPreview key={preview.code} set={preview} selected={selected} onChange={onChange} onClose={() => setPreview(null)} />}

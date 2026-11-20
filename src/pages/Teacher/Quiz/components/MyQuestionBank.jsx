@@ -1,8 +1,9 @@
-import { Copy, Pencil, Plus, RefreshCw, Trash2, Upload } from "lucide-react";
+import { Copy, ExternalLink, Pencil, Plus, RefreshCw, Trash2, Upload } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import QuestionFileImport from "@/components/public/QuestionFileImport.jsx";
 import { teacherQuizApi } from "../api/teacherQuizApi";
 import { Empty, Modal, Notice } from "@/features/workspace/ui";
+import ConfirmDialog from "@/components/shared/ConfirmDialog";
 
 const blank = () => ({ stem: "", options: ["", ""], correctIndex: 0 });
 const errorText = (error) => error?.message || "Không thể hoàn thành yêu cầu.";
@@ -16,7 +17,8 @@ const normalizeReference = (reference) => {
   return {
     title: reference.title || reference.standardFromSource || "Nguồn tham khảo",
     url: typeof reference.url === "string" ? reference.url : "",
-    detail: [reference.page && `trang ${reference.page}`, reference.location, reference.accessedOn && `truy cập ${reference.accessedOn}`].filter(Boolean).join(" · "),
+    page: reference.page,
+    location: reference.location,
   };
 };
 
@@ -27,6 +29,7 @@ export default function MyQuestionBank({ shared = false }) {
   const [notice, setNotice] = useState("");
   const [editor, setEditor] = useState(null);
   const [importing, setImporting] = useState(false);
+  const [deleting, setDeleting] = useState(null);
 
   const load = useCallback(async () => {
     setLoading(true); setError("");
@@ -47,32 +50,57 @@ export default function MyQuestionBank({ shared = false }) {
     try {
       if (question.id) await teacherQuizApi.updateMyQuestion(question.id, question);
       else await teacherQuizApi.createMyQuestions([question]);
-      setEditor(null); setNotice("Đã lưu câu hỏi vào Câu của tôi."); await load();
+      setEditor(null); setNotice("Đã lưu câu hỏi vào Kho câu hỏi riêng."); await load();
     } catch (value) { setError(errorText(value)); }
   };
 
   return <section className="ws-card ws-question-bank-v3">
     <header className="ws-bank-head">
-      <div><span className="ws-pill">{shared ? "Kho dùng chung" : "Kho riêng"}</span><h2>{shared ? "Kho câu hỏi chung" : "Câu của tôi"}</h2>
-      <p>{shared ? "Xem nguồn tham khảo hoặc sao chép một câu trước khi chỉnh sửa." : "Tạo, nhập và chỉnh sửa câu hỏi riêng; không ảnh hưởng kho chung."}</p></div>
+      <div><span className="ws-pill">{shared ? "Kho dùng chung" : "Kho riêng"}</span><h2>{shared ? "Kho câu hỏi chung" : "Kho câu hỏi riêng"}</h2>
+      <p>{shared ? "Thêm câu hỏi vào kho riêng để chỉnh sửa và sử dụng trong đề của bạn." : "Tạo, nhập và chỉnh sửa câu hỏi riêng; không ảnh hưởng kho chung."}</p></div>
       <div className="ws-actions"><button className="ws-btn" onClick={() => void load()}><RefreshCw size={16}/>Làm mới</button>
       {!shared && <><button className="ws-btn" onClick={() => setImporting(true)}><Upload size={16}/>Nhập tệp</button><button className="ws-btn primary" onClick={() => setEditor(blank())}><Plus size={16}/>Thêm câu</button></>}</div>
     </header>
     <Notice text={error || notice}/>
     {loading ? <Empty>Đang tải câu hỏi…</Empty> : rows.length ? <div className="ws-bank-list">{rows.map((q, index) => <article key={q.id || index}>
-      <div><small>Câu {index + 1}</small><h3>{q.stem}</h3><ol type="A">{q.options?.map((option, i) => <li className={i === q.correctIndex ? "correct" : ""} key={i}>{option}</li>)}</ol>
+      <div><small>Câu {index + 1}</small><h3>{q.stem}</h3><ol className="ws-bank-options" type="A">{q.options?.map((option, i) => <li className={i === q.correctIndex ? "correct" : ""} key={i}>
+        <span className="ws-bank-option-letter" aria-hidden="true">{String.fromCharCode(65 + i)}</span>
+        <span className="ws-bank-option-text">{option}</span>
+        {i === q.correctIndex && <span className="ws-bank-option-correct">Đáp án đúng</span>}
+      </li>)}</ol>
       {shared && <QuestionReference value={q.reference || q.source}/>}</div>
-      <div className="ws-actions">{shared ? <button className="ws-btn" onClick={async () => { try { await teacherQuizApi.copyQuestion(q.id); setNotice("Đã sao chép vào Câu của tôi."); } catch (e) { setError(errorText(e)); } }}><Copy size={15}/>Sao chép để sửa</button> : <><button className="ws-btn" onClick={() => setEditor({...q, options:[...q.options]})}><Pencil size={15}/>Sửa</button><button className="ws-btn danger" onClick={async () => { if (!confirm("Xóa câu hỏi này?")) return; try { await teacherQuizApi.deleteMyQuestion(q.id); await load(); } catch(e) { setError(errorText(e)); } }}><Trash2 size={15}/>Xóa</button></>}</div>
+      <div className="ws-actions">{shared ? <button className="ws-btn" onClick={async () => { try { await teacherQuizApi.copyQuestion(q.id); setNotice("Đã thêm câu hỏi vào Kho câu hỏi riêng. Bạn có thể chỉnh sửa tại đó."); } catch (e) { setError(errorText(e)); } }}><Copy size={15}/>Thêm vào kho riêng</button> : <><button className="ws-btn" onClick={() => setEditor({...q, options:[...q.options]})}><Pencil size={15}/>Sửa</button><button className="ws-btn danger" onClick={() => setDeleting(q)}><Trash2 size={15}/>Xóa</button></>}</div>
     </article>)}</div> : <Empty>Chưa có câu hỏi.</Empty>}
     {editor && <QuestionEditor value={editor} onClose={() => setEditor(null)} onSave={save}/>} 
+    {deleting && <ConfirmDialog className="ft-question-delete-confirm" title="Xóa câu hỏi này?" description="Câu hỏi sẽ bị xóa khỏi Kho câu hỏi riêng. Thao tác này không thể hoàn tác." confirmLabel="Xóa câu hỏi" busyLabel="Đang xóa…" onClose={() => setDeleting(null)} onConfirm={async () => {
+      await teacherQuizApi.deleteMyQuestion(deleting.id);
+      setNotice("Đã xóa câu hỏi khỏi Kho câu hỏi riêng.");
+      await load();
+    }}><p className="ft-confirm-preview">{deleting.stem}</p></ConfirmDialog>}
     {importing && <ImportQuestions onClose={() => setImporting(false)} onSaved={async () => { setImporting(false); setNotice("Đã nhập câu hỏi vào kho riêng."); await load(); }}/>} 
   </section>;
 }
 
 function QuestionReference({ value }) {
   const reference = normalizeReference(value);
-  if (!reference) return <p className="ws-question-reference">Nguồn: Chưa cập nhật</p>;
-  return <p className="ws-question-reference">Nguồn: {reference.url ? <a href={reference.url} target="_blank" rel="noreferrer">{reference.title}</a> : reference.title}{reference.detail ? ` · ${reference.detail}` : ""}</p>;
+  if (!reference) return <p className="ws-question-reference-empty">Nguồn tham khảo chưa cập nhật.</p>;
+  const details = [
+    ["Trang tài liệu", reference.page],
+    ["Mục / câu hỏi", reference.location],
+  ].filter(([, text]) => text != null && text !== "");
+  const url = /^https?:\/\//i.test(reference.url || "") ? reference.url : null;
+  return <aside className="ws-question-reference" aria-label="Nguồn tham khảo">
+    <div className="ws-question-reference-body">
+      <span className="ws-question-reference-label">Nguồn tham khảo</span>
+      <div className="ws-question-reference-title">
+        {url ? <a href={url} target="_blank" rel="noreferrer" aria-label={`${reference.title} (mở trong tab mới)`}>{reference.title}<ExternalLink size={13} aria-hidden="true" /></a> : reference.title}
+      </div>
+      {details.length > 0 && <details className="ws-question-reference-details">
+        <summary>Chi tiết trích dẫn</summary>
+        <dl>{details.map(([label, text]) => <div key={label}><dt>{label}</dt><dd>{text}</dd></div>)}</dl>
+      </details>}
+    </div>
+  </aside>;
 }
 
 function QuestionEditor({ value, onClose, onSave }) {
@@ -90,5 +118,5 @@ function QuestionEditor({ value, onClose, onSave }) {
 
 function ImportQuestions({ onClose, onSaved }) {
   const [questions,setQuestions]=useState([]); const [error,setError]=useState("");
-  return <Modal title="Nhập câu hỏi từ tệp" onClose={onClose}><p>Tải danh sách câu hỏi lên, kiểm tra lại nội dung rồi lưu vào “Câu của tôi”.</p><QuestionFileImport questions={questions} onChange={setQuestions}/><Notice text={error}/>{questions.length>0&&<button className="ws-btn primary" onClick={async()=>{try{await teacherQuizApi.createMyQuestions(questions.map(({stem,options,correctIndex})=>({stem,options,correctIndex})));await onSaved();}catch(e){setError(errorText(e));}}}>Lưu {questions.length} câu vào Câu của tôi</button>}</Modal>;
+  return <Modal title="Nhập câu hỏi từ tệp" onClose={onClose}><p>Tải danh sách câu hỏi lên, kiểm tra lại nội dung rồi lưu vào “Kho câu hỏi riêng”.</p><QuestionFileImport questions={questions} onChange={setQuestions}/><Notice text={error}/>{questions.length>0&&<button className="ws-btn primary" onClick={async()=>{try{await teacherQuizApi.createMyQuestions(questions.map(({stem,options,correctIndex})=>({stem,options,correctIndex})));await onSaved();}catch(e){setError(errorText(e));}}}>Lưu {questions.length} câu vào Kho câu hỏi riêng</button>}</Modal>;
 }

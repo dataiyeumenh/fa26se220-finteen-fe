@@ -169,6 +169,7 @@ export default function EditorPage({ notify, code, onNavigationStateChange }) {
   }, [voice, code, dirty, notify])
   useEffect(() => {
     if (!dirty) return
+    // Closing/reloading a browser tab requires the native warning; in-app navigation uses a popup.
     const warn = event => { event.preventDefault(); event.returnValue = '' }
     window.addEventListener('beforeunload', warn)
     return () => window.removeEventListener('beforeunload', warn)

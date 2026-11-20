@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
 import { learnerReportApi as auth } from "../api/learnerReportApi";
-import { getChapterContent } from "../../../api/content.api.js";
 
 const reportError = (error) =>
   ({
@@ -14,27 +13,6 @@ export default function useLearnerReport(id) {
   const [report, setReport] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [itemLabels, setItemLabels] = useState({});
-
-  const loadItemLabels = useCallback(async (value) => {
-    const chapters = (value?.chapters || []).filter((chapter) => chapter?.miniGames?.wrong?.length);
-    const labels = {};
-    await Promise.all(chapters.map(async (chapter, index) => {
-      const number = Number(chapter.chapter ?? chapter.chapterNumber ?? index + 1);
-      if (!Number.isInteger(number) || number < 1) return;
-      const content = await getChapterContent(`CH${String(number).padStart(2, "0")}`).catch(() => null);
-      const visit = (node) => {
-        if (!node || typeof node !== "object") return;
-        if (!Array.isArray(node) && typeof node.id === "string") {
-          const label = node.label || node.title || node.question;
-          if (typeof label === "string" && label.trim()) labels[node.id] = label.trim();
-        }
-        Object.values(node).forEach(visit);
-      };
-      visit(content);
-    }));
-    setItemLabels(labels);
-  }, []);
 
   const refresh = useCallback(async () => {
     setLoading(true);
@@ -42,13 +20,12 @@ export default function useLearnerReport(id) {
     try {
       const value = await auth.getSlotReport(id);
       setReport(value);
-      void loadItemLabels(value);
     } catch (loadError) {
       setError(reportError(loadError));
     } finally {
       setLoading(false);
     }
-  }, [id, loadItemLabels]);
+  }, [id]);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -64,5 +41,5 @@ export default function useLearnerReport(id) {
     return () => window.clearInterval(timer);
   }, [isGenerating, refresh]);
 
-  return { report, loading, error, refresh, isGenerating, itemLabels };
+  return { report, loading, error, refresh, isGenerating };
 }

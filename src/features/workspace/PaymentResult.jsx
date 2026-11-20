@@ -12,6 +12,7 @@ import QRCode from "qrcode";
 import { auth } from "../../api/auth.api";
 import { workspaceApi } from "./api/workspaceApi";
 import "./workspace.css";
+import ConfirmDialog from "../../components/shared/ConfirmDialog";
 
 const POLL_MS = 2500;
 const MAX_POLL_ERRORS = 3;
@@ -27,11 +28,12 @@ export default function PaymentResult({ payment: initialPayment, onClose }) {
   const [error, setError] = useState("");
   const [checking, setChecking] = useState(false);
   const [cancelling, setCancelling] = useState(false);
+  const [confirmCancel, setConfirmCancel] = useState(false);
   const [copied, setCopied] = useState("");
   const [now, setNow] = useState(null);
   const [pollingPaused, setPollingPaused] = useState(false);
   const timer = useRef(null);
-  const paymentRef = useRef(initialPayment);
+  const paymentRef = useRef(payment);
   const inFlight = useRef(false);
   const consecutiveErrors = useRef(0);
   const terminal = payment.status === "PAID" || payment.status === "FAILED";
@@ -113,7 +115,7 @@ export default function PaymentResult({ payment: initialPayment, onClose }) {
   );
 
   useEffect(() => {
-    if (terminal || expired || pollingPaused) return undefined;
+    if (terminal || expired || pollingPaused || cancelling) return undefined;
     let active = true;
     const poll = async () => {
       const status = await check();
@@ -125,7 +127,7 @@ export default function PaymentResult({ payment: initialPayment, onClose }) {
       active = false;
       if (timer.current) window.clearTimeout(timer.current);
     };
-  }, [check, terminal, expired, pollingPaused]);
+  }, [check, terminal, expired, pollingPaused, cancelling]);
 
   useEffect(() => {
     if (terminal || expired) return undefined;
@@ -150,7 +152,8 @@ export default function PaymentResult({ payment: initialPayment, onClose }) {
   };
 
   const cancel = async () => {
-    if (!window.confirm("Hủy giao dịch này? Mã QR hiện tại sẽ không còn dùng để thanh toán.")) return;
+    if (paymentRef.current.status !== "PENDING") return;
+    if (inFlight.current) throw new Error("Đang kiểm tra trạng thái thanh toán. Vui lòng chờ rồi thử lại.");
     setCancelling(true);
     setError("");
     try {
@@ -162,8 +165,11 @@ export default function PaymentResult({ payment: initialPayment, onClose }) {
       paymentRef.current = failed;
       setPayment(failed);
     } catch (cancelError) {
-      if (cancelError.code === 4006) await check(true);
-      else setError(cancelError.message);
+      if (cancelError.code === 4006) {
+        const status = await check(true);
+        if (["PAID", "FAILED"].includes(status)) return;
+      }
+      throw cancelError;
     } finally {
       setCancelling(false);
     }
@@ -287,12 +293,21 @@ export default function PaymentResult({ payment: initialPayment, onClose }) {
         </button>
         <button
           className="ws-btn danger"
-          onClick={() => void cancel()}
+          onClick={() => setConfirmCancel(true)}
           disabled={checking || cancelling}
         >
           {cancelling ? "Đang hủy…" : "Hủy giao dịch"}
         </button>
       </div>
+      {confirmCancel && <ConfirmDialog
+        title="Hủy giao dịch này?"
+        description="Mã QR của giao dịch này sẽ không còn dùng để thanh toán. Bạn có thể tạo đơn mới sau khi hủy."
+        confirmLabel="Hủy giao dịch"
+        cancelLabel="Tiếp tục thanh toán"
+        busyLabel="Đang hủy…"
+        onClose={() => setConfirmCancel(false)}
+        onConfirm={cancel}
+      />}
     </section>
   );
 }

@@ -88,7 +88,7 @@ export default function TeacherQuizContent({ quizState }) {
         </div>
       )}
       <nav className="ws-quiz-v3-nav" aria-label="Chức năng Quiz">
-        {[["overview","Tổng quan"],["create","Tạo đề"],["shared","Kho chung"],["mine","Câu của tôi"],["results","Kết quả đề"]].map(([id,label]) => <button key={id} className={view===id?"active":""} onClick={()=>{setModal(null); setView(id); if(id==="create") setModal({type:"edit"});}}>{label}</button>)}
+        {[["overview","Tổng quan"],["create","Tạo đề"],["shared","Kho câu hỏi chung"],["mine","Kho câu hỏi riêng"],["results","Kết quả đề"]].map(([id,label]) => <button key={id} className={view===id?"active":""} onClick={()=>{setModal(null); setView(id); if(id==="create") setModal({type:"edit"});}}>{label}</button>)}
       </nav>
       {view === "shared" && <MyQuestionBank shared />}
       {view === "mine" && <MyQuestionBank />}
@@ -473,7 +473,8 @@ function QuizDetail({ quiz, onClose }) {
     </Modal>
   );
 }
-function QuizResults({ quiz, onClose }) {
+export function QuizResults({ quiz, onClose, family = false }) {
+  const learnerLabel = family ? "trẻ" : "học sinh";
   const { data, slotResult, setSlotResult, viewingSlotId, error, viewSlot } =
     useTeacherQuizResults(quiz.id);
   const { detail } = useTeacherQuizDetail(quiz.id);
@@ -496,7 +497,7 @@ function QuizResults({ quiz, onClose }) {
     <Modal
       className="ws-quiz-results-modal"
       title={`Kết quả · ${quiz.title}`}
-      description="Theo dõi tình trạng nộp bài và kết quả của từng học sinh."
+      description={`Theo dõi tình trạng nộp bài và kết quả của từng ${learnerLabel}.`}
       onClose={onClose}
     >
       {!slotResult && <div className="ws-quiz-results">
@@ -505,14 +506,14 @@ function QuizResults({ quiz, onClose }) {
           <>
             <div className="ws-quiz-results-summary" aria-label="Tổng quan kết quả">
               <article>
-                <span>Sĩ số</span>
+                <span>{family ? "Số trẻ" : "Sĩ số"}</span>
                 <strong>{rows.length}</strong>
-                <small>học sinh trong lớp</small>
+                <small>{family ? "trẻ trong gia đình" : "học sinh trong lớp"}</small>
               </article>
               <article className="highlight">
                 <span>Đã nộp</span>
                 <strong>{submitted.length}/{rows.length}</strong>
-                <small>{rows.length - submitted.length} học sinh chưa nộp</small>
+                <small>{rows.length - submitted.length} {learnerLabel} chưa nộp</small>
               </article>
               <article>
                 <span>Điểm trung bình</span>
@@ -523,10 +524,10 @@ function QuizResults({ quiz, onClose }) {
 
             <div className="ws-quiz-results-toolbar">
               <div>
-                <h3>Bài làm của học sinh</h3>
+                <h3>Bài làm của {learnerLabel}</h3>
                 <p>Chọn “Xem bài” để kiểm tra chi tiết từng câu trả lời.</p>
               </div>
-              <span className="ws-result-count">{rows.length} học sinh</span>
+              <span className="ws-result-count">{rows.length} {learnerLabel}</span>
             </div>
 
             {rows.length ? (
@@ -534,7 +535,7 @@ function QuizResults({ quiz, onClose }) {
                 <table>
                   <thead>
                     <tr>
-                      <th>Học sinh</th>
+                      <th>{family ? "Trẻ" : "Học sinh"}</th>
                       <th>Trạng thái</th>
                       <th>Điểm</th>
                       <th><span className="sr-only">Thao tác</span></th>
@@ -550,7 +551,7 @@ function QuizResults({ quiz, onClose }) {
                               <span aria-hidden="true">{name.slice(0, 1).toUpperCase()}</span>
                               <div>
                                 <strong>{name}</strong>
-                                <small>{row.code || "Đã xóa thông tin học sinh"}</small>
+                                <small>{row.code || `Đã xóa thông tin ${learnerLabel}`}</small>
                               </div>
                             </div>
                           </td>
@@ -584,17 +585,17 @@ function QuizResults({ quiz, onClose }) {
                 </table>
               </div>
             ) : (
-              <Empty>Chưa có học sinh trong danh sách kết quả.</Empty>
+              <Empty>Chưa có {learnerLabel} trong danh sách kết quả.</Empty>
             )}
           </>
         ) : (
-          <Empty>Đang tải kết quả…</Empty>
+          !error && <Empty>Đang tải kết quả…</Empty>
         )}
       </div>}
       {slotResult && (
         <section className="ws-slot-result-detail" ref={(node) => node?.scrollIntoView({ block: "start" })}>
           <button className="ws-btn" onClick={() => setSlotResult(null)}>
-            ← Quay lại danh sách học sinh
+            ← Quay lại danh sách {learnerLabel}
           </button>
           {(slotResult.paper || slotResult.answers || []).map((result, index) => {
             const question = questionsById.get(result.questionId);
@@ -616,7 +617,7 @@ function QuizResults({ quiz, onClose }) {
                   {correctnessAvailable ? (answer.correct ? "Trả lời đúng" : "Trả lời sai") : "Đã ghi nhận câu trả lời"}
                 </p>
                 <div className="ws-quiz-answer-choice">
-                  <span>Học sinh đã chọn</span>
+                  <span>{family ? "Trẻ" : "Học sinh"} đã chọn</span>
                   <strong>
                     {Number.isInteger(answer.chosenIndex) && answer.chosenIndex >= 0
                       ? `${String.fromCharCode(65 + answer.chosenIndex)}. ${answer.options?.[answer.chosenIndex] ?? "Không có nội dung đáp án"}`

@@ -48,9 +48,13 @@ export default function OtpForm({
     lock.current = true;
     setBusy(true);
     try {
-      if (reset) await auth.resetPassword(email, otp, data.get("newPassword"));
-      else if (auth.hasSession()) await auth.refresh();
-      else await auth.verify(email, otp);
+      if (reset) {
+        if (await auth.resetPassword(email, otp, data.get("newPassword")) === false) return;
+      } else if (auth.hasSession()) {
+        const version = auth.getSessionVersion();
+        await auth.refresh();
+        if (version !== auth.getSessionVersion()) return;
+      } else if (await auth.verify(email, otp) === false) return;
       onSuccess(reset);
     } catch (err) {
       setError(authServiceErrorMessage(err) || errors[err.code] ||
