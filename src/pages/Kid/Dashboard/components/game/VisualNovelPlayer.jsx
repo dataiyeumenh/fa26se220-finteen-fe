@@ -57,8 +57,7 @@ import {
   submitChapterBatch,
 } from "./playBatch.js";
 import { normalizeChapter } from "./chapterShape.js";
-import { endingReportMock } from "./endingReportMock.js";
-import MockChapterReport from "./MockChapterReport.jsx";
+import { buildChildChapterReport, firstMiniGameScore } from "./chapterReport.js";
 import SceneVoice from "./SceneVoice.jsx";
 
 // Khung mini-game theo `game.kind` (bộ khuôn BE: scene-schema.json → minigameKinds). Dữ liệu cũ chưa có kind (bản 1.1.0)
@@ -169,58 +168,30 @@ function SpeakerTag({ scene }) {
 
 function EndingReport({ report }) {
   if (!report) return null;
-  if (report.source === "mock") return <MockChapterReport />;
   const format = (value) => Number(value || 0).toLocaleString("vi-VN");
 
   return (
     <div className="vn-report">
-      <p role="note">Đang phát triển · Báo cáo tính từ lượt chơi trên trình duyệt; kết quả máy chủ có thể khác.</p>
       <div className="vn-report-grid">
         <div className="vn-report-card">
           <small>Số dư cuối chương</small>
           <strong>{format(report.money.end)} đ</strong>
           <span>Ban đầu {format(report.money.start)} đ</span>
         </div>
-        {report.learningScore !== null && (
-          <div className="vn-report-card">
-            <small>Điểm học chương</small>
-            <strong>{report.learningScore}/100</strong>
-            <span>{report.bandLabel}</span>
-          </div>
-        )}
       </div>
-      <ul className="vn-report-metrics">
-        {report.choicePercent !== null && (
-          <li>
-            Quyết định trong truyện: <b>{report.choicePercent}%</b>
-            {report.firstPercent !== null &&
-            report.firstPercent !== report.choicePercent ? (
-              <span> (lần đầu {report.firstPercent}%)</span>
-            ) : null}
-          </li>
-        )}
-        {report.miniPercent !== null && (
-          <li>
-            Mini-game{report.miniGameLabel ? `: ${report.miniGameLabel}` : ""}:{" "}
-            <b>{report.miniPercent}%</b>
-            {report.miniFirstPercent != null &&
-              report.miniFirstPercent !== report.miniPercent && (
-                <span> (lần đầu {report.miniFirstPercent}%)</span>
-              )}
-          </li>
-        )}
-        {report.reflectionPercent !== null && (
-          <li>
-            Phản tư sau trải nghiệm: <b>{report.reflectionPercent}%</b>
-          </li>
-        )}
-      </ul>
+      {report.miniGames.length > 0 && <div className="vn-report-minigames">
+        <h3>Kết quả mini-game</h3>
+        <p>Lần trả lời đầu tiên của bạn</p>
+        <ul className="vn-report-metrics">{report.miniGames.map((game) => <li key={game.id}>
+          {game.title}: <b>{game.correct == null ? "Chưa ghi nhận kết quả lần đầu" : `${game.correct}/${game.total} câu đúng`}</b>
+        </li>)}</ul>
+      </div>}
       {report.decisions.length > 0 && (
         <div className="vn-report-decisions">
           <h3>Những quyết định của bạn</h3>
           <ol>
             {report.decisions.map((item) => (
-              <li key={item.title + item.label}>
+              <li key={item.id}>
                 <b>{item.title}</b>
                 <span>
                   {item.label}
@@ -243,7 +214,7 @@ function EndingReport({ report }) {
       )}
       {report.next && (
         <p className="vn-report-line">
-          <b>Chương tiếp theo:</b> {report.next}
+          <b>Bước tiếp theo:</b> {report.next}
         </p>
       )}
     </div>
@@ -336,7 +307,7 @@ export function VisualNovelPlayer({ data: rawData, progressOwner = null, learner
   const [miniGameResults, setMiniGameResults] = useState(
     savedProgress?.miniGameResults || {},
   );
-  const { score: miniGameScore, percent: miniGamePercent } =
+  const { score: miniGameScore } =
     summarizeMiniGames(miniGameResults);
   const [money, setMoney] = useState(
     savedProgress?.money ?? data.initialMoney ?? 0,
@@ -880,7 +851,11 @@ export function VisualNovelPlayer({ data: rawData, progressOwner = null, learner
           sceneId: scene.id,
           gameId: scene.game?.id || scene.id,
         },
-        { ...(result || {}), playedAt: new Date().toISOString() },
+        {
+          ...(result || {}),
+          firstScore: firstMiniGameScore(scene.game, previous[scene.id]) ?? firstMiniGameScore(scene.game, result),
+          playedAt: new Date().toISOString(),
+        },
       ),
     );
     setMiniGameDoneByScene((prev) => ({
@@ -971,131 +946,9 @@ export function VisualNovelPlayer({ data: rawData, progressOwner = null, learner
       derived: endingDerived(),
     });
 
-  const buildEndingReport = () => {
-    const config = data.endingReport;
-    if (!config) return endingReportMock;
-    const normalizedLearning = config.choiceGroupMaxima
-      ? learningSummary(choiceLedger, miniGameResults, config)
-      : null;
-
-    const sumScore = (scores) =>
-      (scores?.I || 0) + (scores?.C || 0) + (scores?.P || 0);
-    const scored = Object.entries(choiceLedger).filter(
-      ([, entry]) => entry.evidenceScores,
-    );
-    const maxPerChoice = config.maxChoiceScore || 6;
-    const toPercent = (value) =>
-      scored.length
-        ? Math.round((100 * value) / (maxPerChoice * scored.length))
-        : null;
-    const choicePercent = toPercent(
-      scored.reduce(
-        (total, [, entry]) => total + sumScore(entry.evidenceScores),
-        0,
-      ),
-    );
-    const firstPercent = toPercent(
-      scored.reduce(
-        (total, [group]) => total + sumScore(firstChoiceScores[group]),
-        0,
-      ),
-    );
-    const miniPercent = config.requiredGameIds
-      ? chapterMiniGameSummary(miniGameResults, config).miniPercent
-      : miniGamePercent;
-    const reflectionPercent = config.reflectionMax
-      ? Math.min(
-          100,
-          Math.round((100 * reflectionScore) / config.reflectionMax),
-        )
-      : null;
-
-    const weights = config.weights || {
-      choices: 0.6,
-      miniGame: 0.3,
-      reflection: 0.1,
-    };
-    const parts = [
-      [choicePercent, weights.choices],
-      [miniPercent, weights.miniGame],
-      [reflectionPercent, weights.reflection],
-    ].filter(([value]) => value !== null);
-    const weightTotal = parts.reduce((total, [, weight]) => total + weight, 0);
-    const learningScore = weightTotal
-      ? Math.round(
-          parts.reduce((total, [value, weight]) => total + value * weight, 0) /
-            weightTotal,
-        )
-      : null;
-    const band = (config.bands || []).find(
-      (item) => learningScore !== null && learningScore >= item.min,
-    );
-
-    const pickLine = (list) =>
-      (list || []).find(
-        (item) => !item.when || evaluateEndingCondition(item.when),
-      )?.text || null;
-
-    return {
-      money: { start: data.initialMoney || 0, end: money },
-      choicePercent,
-      firstPercent,
-      miniPercent,
-      miniGameScore,
-      reflectionPercent,
-      learningScore,
-      bandLabel: band?.label || null,
-      decisions: Object.values(choiceLedger).map((entry) => ({
-        title: entry.sceneTitle,
-        label: entry.label,
-        revised: entry.revised,
-      })),
-      achieved: pickLine(config.achieved),
-      practice: pickLine(config.practice),
-      next: config.nextStep || null,
-      ...(config.choiceGroupMaxima
-        ? {
-            ...Object.fromEntries(
-              Object.entries(normalizedLearning).map(([key, value]) => [
-                key,
-                typeof value === "number" ? Math.round(value) : value,
-              ]),
-            ),
-            bandLabel:
-              (config.bands || []).find(
-                (item) => normalizedLearning.learningScore >= item.min,
-              )?.label || null,
-            miniGameLabel: config.miniGameLabel,
-            miniFirstPercent: ["CH06", "CH07", "CH08"].includes(
-              data.metadata?.chapterId,
-            )
-              ? (() => {
-                  const games = Object.values(miniGameResults).filter(
-                    (result) => config.requiredGameIds.includes(result.gameId),
-                  );
-                  const total = games.reduce((n, g) => n + g.total, 0);
-                  return total
-                    ? Math.round(
-                        games.reduce(
-                          (n, g) => n + g.firstPercent * g.total,
-                          0,
-                        ) / total,
-                      )
-                    : null;
-                })()
-              : Object.values(miniGameResults).find(
-                  (result) => result.gameId === "COMPOUND_TIMELINE_CH05",
-                )?.firstPercent,
-            statDeltas: Object.fromEntries(
-              Object.keys(data.initialStats).map((key) => [
-                key,
-                (stats[key] || 0) - data.initialStats[key],
-              ]),
-            ),
-          }
-        : {}),
-    };
-  };
+  const buildEndingReport = () => buildChildChapterReport(
+    data, choiceLedger, miniGameResults, money, evaluateEndingCondition,
+  );
 
   useEffect(() => {
     // A choice with a stats popup commits atomically after the player acknowledges it.
@@ -1638,7 +1491,7 @@ export function VisualNovelPlayer({ data: rawData, progressOwner = null, learner
               </p>
             </section>
           </div>
-        ) : scene.type === "ending" && data.endingReport ? (
+        ) : scene.type === "ending" ? (
           <div className="vn-choice-overlay" key={scene.id}>
             <section
               className="vn-choice-panel vn-ending-panel"
@@ -1655,15 +1508,15 @@ export function VisualNovelPlayer({ data: rawData, progressOwner = null, learner
                 )}
                 <div>
                   <h2 id="vn-ending-title">
-                    {resolveEnding()?.title || "Kết thúc"}
+                    {resolveEnding()?.title || scene.title || "Hoàn thành chương"}
                   </h2>
                   <p className="vn-ending-story">
-                    {resolveEnding()?.storyText}
+                    {resolveEnding()?.storyText || scene.text}
                   </p>
                 </div>
               </header>
               <EndingReport report={buildEndingReport()} />
-              {data.endingReport.reviewSceneId && (
+              {data.endingReport?.reviewSceneId && (
                 <button
                   className="vn-choice-option"
                   onClick={() =>
@@ -1699,22 +1552,6 @@ export function VisualNovelPlayer({ data: rawData, progressOwner = null, learner
                     Chương tiếp theo: {scene.nextChapter.toUpperCase()}
                   </p>
                 )}
-              </div>
-            ) : scene.type === "ending" ? (
-              <div className="vn-dialogue">
-                <p className="text-2xl font-black mb-3 text-center">
-                  {resolveEnding()?.title || "Kết thúc"}
-                </p>
-                <p className="text-center mb-4">
-                  {resolveEnding()?.storyText || scene.text}
-                </p>
-                <EndingReport report={buildEndingReport()} />
-                <Link
-                  to="/dashboard/kid/lessons"
-                  className="w-full inline-block bg-green-600 text-white p-3 rounded-lg text-center hover:bg-green-700"
-                >
-                  Quay lại bản đồ chương
-                </Link>
               </div>
             ) : (
               <div

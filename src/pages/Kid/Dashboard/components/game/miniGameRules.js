@@ -71,10 +71,14 @@ export function recordMiniGameResult(
   }
   const total = Math.max(0, Number(result.total) || 0);
   const score = Math.max(0, Math.min(total, Number(result.score) || 0));
+  const previous = results[sceneId];
+  const keepFirst = previous?.completed && previous.gameId === gameId;
   return {
     ...results,
     [sceneId]: {
       ...result,
+      ...(keepFirst && Number.isFinite(previous.firstScore) ? { firstScore: previous.firstScore } : {}),
+      ...(keepFirst && previous.inputs ? { inputs: previous.inputs, playedAt: previous.playedAt } : {}),
       chapterId,
       sceneId,
       gameId,

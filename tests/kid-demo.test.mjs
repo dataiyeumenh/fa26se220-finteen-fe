@@ -2,7 +2,6 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { journeyDemoProgress } from "../src/pages/Kid/Dashboard/api/kidJourneyMock.js";
-import { endingReportMock } from "../src/pages/Kid/Dashboard/components/game/endingReportMock.js";
 import { createServer } from "vite";
 import React from "react";
 import { renderToString } from "react-dom/server";
@@ -76,7 +75,6 @@ test("journey preview has completed, current and upcoming chapters with consiste
   assert.equal(chapters.filter((c) => c.status === "completed").length, 2);
   assert.equal(chapters.filter((c) => c.status === "current").length, 1);
   assert.equal(chapters.reduce((sum, c) => sum + c.lessonsCompleted, 0), 12);
-  assert.equal(endingReportMock.source, "mock");
 });
 test("Studio validation messages preserve exact Vietnamese text", async () => {
   const studio = await readFile("src/features/studio/studioClient.js", "utf8");
