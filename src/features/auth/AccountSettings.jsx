@@ -1,4 +1,4 @@
-import { AlertCircle, CheckCircle2, Eye, EyeOff, GraduationCap, Info, LockKeyhole, Mail, ShieldCheck, UserRound, UsersRound } from "lucide-react";
+import { AlertCircle, CheckCircle2, Eye, EyeOff, GraduationCap, LockKeyhole, Mail, ShieldCheck, UserRound, UsersRound } from "lucide-react";
 import { useEffect, useState } from "react";
 import { auth } from "../../api/auth.api";
 import { googleIdToken, googleReady } from "../../api/firebase";
@@ -29,6 +29,16 @@ export default function AccountSettings({ actor }) {
     const timer = window.setTimeout(() => { setMessage(""); setError(""); }, 4500);
     return () => window.clearTimeout(timer);
   }, [message, error]);
+
+  async function updateProfile(event) {
+    event.preventDefault();
+    const nextName = String(new FormData(event.currentTarget).get("displayName") || "").trim();
+    setMessage(""); setError(""); setBusyAction("profile");
+    try {
+      await auth.updateProfile(nextName);
+      setMessage("Đã cập nhật tên hiển thị.");
+    } catch (err) { setError(err.message); } finally { setBusyAction(""); }
+  }
 
   async function change(event) {
     event.preventDefault();
@@ -68,10 +78,12 @@ export default function AccountSettings({ actor }) {
       <section className="account-panel account-profile-panel">
         <div className="account-panel-heading"><span><UserRound size={19} /></span><div><h2>Thông tin tài khoản</h2><p>Thông tin nhận diện từ hệ thống.</p></div></div>
         <dl className="account-readonly-list">
-          <div><dt><UserRound size={17} />Họ và tên</dt><dd>{displayName}</dd></div>
           <div><dt><Mail size={17} />Email</dt><dd>{actor?.email}</dd></div>
         </dl>
-        <div className="account-info-note"><Info size={18} /><p>Hiện tại FinTeen chưa hỗ trợ chỉnh sửa hồ sơ. Thông tin của bạn vẫn được đồng bộ an toàn từ máy chủ.</p></div>
+        <form className="account-profile-form" onSubmit={updateProfile}>
+          <label><span><UserRound size={17} />Họ và tên</span><input key={displayName} name="displayName" required maxLength={80} defaultValue={displayName} /></label>
+          <button className="ws-btn primary" disabled={Boolean(busyAction)}>{busyAction === "profile" ? "Đang lưu…" : "Lưu thay đổi"}</button>
+        </form>
         <div className="account-linked-login"><div className="account-section-title"><h3>Đăng nhập liên kết</h3><p>Dùng một tài khoản quen thuộc để đăng nhập nhanh hơn.</p></div>
           <div className="account-google-row"><span className="account-google-mark" aria-hidden="true">G</span><div><strong>Google</strong><small>Email Google có thể khác email FinTeen.</small></div><button className="ws-btn" disabled={Boolean(busyAction) || !googleReady} onClick={link}>{busyAction === "google" ? "Đang liên kết…" : "Liên kết Google"}</button></div>
           {!googleReady && <p className="account-firebase-note">Đang chờ cấu hình Firebase để bật liên kết Google.</p>}
