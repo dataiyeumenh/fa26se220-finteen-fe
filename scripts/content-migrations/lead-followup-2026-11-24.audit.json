@@ -1,0 +1,120 @@
+{
+  "checkedAt": "2026-11-24T08:54:41.116Z",
+  "pr": 78,
+  "miniGames": 13,
+  "gradedQuestions": 63,
+  "ch01PersonalizationConfirmed": [
+    {
+      "sceneId": "CH01_SC02_A",
+      "field": "title",
+      "value": "Đắn đo tại cửa hàng {{item}}"
+    },
+    {
+      "sceneId": "CH01_SC02_CHOICE",
+      "field": "options[0].moneyEvents[0].description",
+      "value": "Thanh toán mua {{item}} tại cửa hàng"
+    },
+    {
+      "sceneId": "CH01_SC02_CHOICE_B_1",
+      "field": "text",
+      "value": "{{Item}} cũ của mình vẫn xài tạm được. Mình giữ tiền đóng tiền học vẽ trước."
+    }
+  ],
+  "voice": {
+    "render": {
+      "queued": 0,
+      "alreadyPending": 0,
+      "ready": 160,
+      "dispatched": false,
+      "dispatchNote": "không có câu nào cần sinh"
+    },
+    "ready": 160,
+    "missing": 0,
+    "pending": 0,
+    "failed": 0,
+    "targetRecordings": 18
+  },
+  "submissions": [
+    {
+      "code": "CH01",
+      "status": "SUBMITTED",
+      "revision": 91,
+      "changeClass": "PATCH",
+      "submittedAt": "2026-11-24T08:53:18.017220Z",
+      "note": "Theo lead 24/11: mã mini-game đã khớp bảng duyệt; 3 chỗ {{item}}/{{Item}} là cá nhân hóa có chủ ý. Sinh giọng CH01: 160 READY, 0 thiếu/lỗi. Chưa áp dụng đề xuất stat/I/C/P; chưa phát hành.",
+      "contentUnchanged": true
+    },
+    {
+      "code": "CH02",
+      "status": "SUBMITTED",
+      "revision": 25,
+      "changeClass": "PATCH",
+      "submittedAt": "2026-11-24T08:53:49.655255Z",
+      "note": "Theo lead 24/11: gắn mã mini-game đã đối chiếu bảng duyệt; toàn bộ 8 chương đủ 13 game/63 câu. Không đổi lời thoại, đáp án, luật chấm. Đề xuất stat/I/C/P bàn giao CSV riêng cho lead kiểm/nhập; chưa phát hành.",
+      "contentUnchanged": true
+    },
+    {
+      "code": "CH03",
+      "status": "SUBMITTED",
+      "revision": 8,
+      "changeClass": "PATCH",
+      "submittedAt": "2026-11-24T08:53:50.312222Z",
+      "note": "Theo lead 24/11: gắn mã mini-game đã đối chiếu bảng duyệt; toàn bộ 8 chương đủ 13 game/63 câu. Không đổi lời thoại, đáp án, luật chấm. Đề xuất stat/I/C/P bàn giao CSV riêng cho lead kiểm/nhập; chưa phát hành.",
+      "contentUnchanged": true
+    },
+    {
+      "code": "CH04",
+      "status": "SUBMITTED",
+      "revision": 6,
+      "changeClass": "PATCH",
+      "submittedAt": "2026-11-24T08:53:51.898920Z",
+      "note": "Theo lead 24/11: gắn mã mini-game đã đối chiếu bảng duyệt; toàn bộ 8 chương đủ 13 game/63 câu. Không đổi lời thoại, đáp án, luật chấm. Đề xuất stat/I/C/P bàn giao CSV riêng cho lead kiểm/nhập; chưa phát hành.",
+      "contentUnchanged": true
+    },
+    {
+      "code": "CH05",
+      "status": "SUBMITTED",
+      "revision": 7,
+      "changeClass": "PATCH",
+      "submittedAt": "2026-11-24T08:53:54.029306Z",
+      "note": "Theo lead 24/11: gắn mã mini-game đã đối chiếu bảng duyệt; toàn bộ 8 chương đủ 13 game/63 câu. Không đổi lời thoại, đáp án, luật chấm. Đề xuất stat/I/C/P bàn giao CSV riêng cho lead kiểm/nhập; chưa phát hành.",
+      "contentUnchanged": true
+    },
+    {
+      "code": "CH06",
+      "status": "SUBMITTED",
+      "revision": 6,
+      "changeClass": "PATCH",
+      "submittedAt": "2026-11-24T08:53:57.486918Z",
+      "note": "Theo lead 24/11: gắn mã mini-game đã đối chiếu bảng duyệt; toàn bộ 8 chương đủ 13 game/63 câu. Không đổi lời thoại, đáp án, luật chấm. Đề xuất stat/I/C/P bàn giao CSV riêng cho lead kiểm/nhập; chưa phát hành.",
+      "contentUnchanged": true
+    },
+    {
+      "code": "CH07",
+      "status": "SUBMITTED",
+      "revision": 6,
+      "changeClass": "PATCH",
+      "submittedAt": "2026-11-24T08:54:00.005731Z",
+      "note": "Theo lead 24/11: gắn mã mini-game đã đối chiếu bảng duyệt; toàn bộ 8 chương đủ 13 game/63 câu. Không đổi lời thoại, đáp án, luật chấm. Đề xuất stat/I/C/P bàn giao CSV riêng cho lead kiểm/nhập; chưa phát hành.",
+      "contentUnchanged": true
+    },
+    {
+      "code": "CH08",
+      "status": "SUBMITTED",
+      "revision": 7,
+      "changeClass": "PATCH",
+      "submittedAt": "2026-11-24T08:54:01.146752Z",
+      "note": "Theo lead 24/11: gắn mã mini-game đã đối chiếu bảng duyệt; toàn bộ 8 chương đủ 13 game/63 câu. Không đổi lời thoại, đáp án, luật chấm. Đề xuất stat/I/C/P bàn giao CSV riêng cho lead kiểm/nhập; chưa phát hành.",
+      "contentUnchanged": true
+    }
+  ],
+  "currentVersion": "2.7.2",
+  "published": false,
+  "statsOrICPChangedInStudio": false,
+  "initialSubmitError": {
+    "httpStatus": 500,
+    "code": 1000,
+    "message": "Lỗi chưa phân loại",
+    "resolution": "Rút ngắn ghi chú xuống dưới 255 ký tự; gửi lại thành công. Chưa xác minh giới hạn phía BE."
+  }
+}

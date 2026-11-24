@@ -1,0 +1,1074 @@
+{
+  "checkedAt": "2026-11-24T00:24:11.322Z",
+  "source": "docs/knowledge-base/bao-cao-duyet-noi-dung-2026-11-23.md#task-2",
+  "currentRelease": "2.7.2",
+  "status": "DRAFT",
+  "totalGames": 13,
+  "gradedQuestions": 63,
+  "chapters": [
+    {
+      "code": "CH01",
+      "status": "DRAFT",
+      "revision": 91,
+      "changedPaths": [
+        "scenes.17.game.items.0.grade.concept",
+        "scenes.17.game.items.1.grade.concept",
+        "scenes.17.game.items.2.grade.concept",
+        "scenes.17.game.items.3.grade.concept",
+        "scenes.17.game.items.4.grade.concept",
+        "scenes.17.game.items.5.grade.concept",
+        "scenes.17.knowledgeUnits.1",
+        "scenes.17.knowledgeUnits.2",
+        "scenes.17.knowledgeUnits.3",
+        "scenes.17.knowledgeUnits.4",
+        "scenes.17.knowledgeUnits.5"
+      ],
+      "unexpectedChanges": [],
+      "warnings": [
+        "cá nhân hoá: scenes[0].inspect.dataText: số trong chữ khác bản gốc [500.000, 28] → [500.000, 300.000, 28] (interest:SPORT)",
+        "cá nhân hoá: scenes[1].text: số trong chữ khác bản gốc [28] → [500.000, 28, 300.000] (interest:SPORT)",
+        "cá nhân hoá: scenes[10].text: số trong chữ khác bản gốc [250.000, 50.000] → [250.000, 28, 300.000, 50.000] (interest:SPORT)",
+        "cá nhân hoá: scenes[10].spokenText: số trong chữ khác bản gốc [] → [250.000, 28, 300.000, 50.000] (interest:SPORT)",
+        "cá nhân hoá: scenes[13].text: số trong chữ khác bản gốc [200.000, 300.000, 200.000] → [200.000, 300.000, 500.000] (interest:SPORT)",
+        "cá nhân hoá: scenes[13].spokenText: số trong chữ khác bản gốc [] → [200.000, 300.000, 500.000] (interest:SPORT)",
+        "cá nhân hoá: scenes[0].inspect.dataText: số trong chữ khác bản gốc [500.000, 28] → [500.000, 300.000, 28] (interest:GAME)",
+        "cá nhân hoá: scenes[1].text: số trong chữ khác bản gốc [28] → [500.000, 28, 300.000] (interest:GAME)",
+        "cá nhân hoá: scenes[10].text: số trong chữ khác bản gốc [250.000, 50.000] → [250.000, 28, 300.000, 50.000] (interest:GAME)",
+        "cá nhân hoá: scenes[10].spokenText: số trong chữ khác bản gốc [] → [250.000, 28, 300.000, 50.000] (interest:GAME)",
+        "cá nhân hoá: scenes[13].text: số trong chữ khác bản gốc [200.000, 300.000, 200.000] → [200.000, 300.000, 500.000] (interest:GAME)",
+        "cá nhân hoá: scenes[13].spokenText: số trong chữ khác bản gốc [] → [200.000, 300.000, 500.000] (interest:GAME)",
+        "cá nhân hoá: scenes[0].inspect.dataText: số trong chữ khác bản gốc [500.000, 28] → [500.000, 300.000, 28] (interest:MUSIC)",
+        "cá nhân hoá: scenes[1].text: số trong chữ khác bản gốc [28] → [500.000, 28, 300.000] (interest:MUSIC)",
+        "cá nhân hoá: scenes[10].text: số trong chữ khác bản gốc [250.000, 50.000] → [250.000, 28, 300.000, 50.000] (interest:MUSIC)",
+        "cá nhân hoá: scenes[10].spokenText: số trong chữ khác bản gốc [] → [250.000, 28, 300.000, 50.000] (interest:MUSIC)",
+        "cá nhân hoá: scenes[13].text: số trong chữ khác bản gốc [200.000, 300.000, 200.000] → [200.000, 300.000, 500.000] (interest:MUSIC)",
+        "cá nhân hoá: scenes[13].spokenText: số trong chữ khác bản gốc [] → [200.000, 300.000, 500.000] (interest:MUSIC)",
+        "cá nhân hoá: scenes[0].inspect.dataText: số trong chữ khác bản gốc [500.000, 28] → [500.000, 300.000, 28] (interest:ANIME)",
+        "cá nhân hoá: scenes[1].text: số trong chữ khác bản gốc [28] → [500.000, 28, 300.000] (interest:ANIME)",
+        "cá nhân hoá: scenes[10].text: số trong chữ khác bản gốc [250.000, 50.000] → [250.000, 28, 300.000, 50.000] (interest:ANIME)",
+        "cá nhân hoá: scenes[10].spokenText: số trong chữ khác bản gốc [] → [250.000, 28, 300.000, 50.000] (interest:ANIME)",
+        "cá nhân hoá: scenes[13].text: số trong chữ khác bản gốc [200.000, 300.000, 200.000] → [200.000, 300.000, 500.000] (interest:ANIME)",
+        "cá nhân hoá: scenes[13].spokenText: số trong chữ khác bản gốc [] → [200.000, 300.000, 500.000] (interest:ANIME)",
+        "cá nhân hoá: scenes[0].inspect.dataText: số trong chữ khác bản gốc [500.000, 28] → [500.000, 300.000, 28] (interest:ART)",
+        "cá nhân hoá: scenes[1].text: số trong chữ khác bản gốc [28] → [500.000, 28, 300.000] (interest:ART)",
+        "cá nhân hoá: scenes[10].text: số trong chữ khác bản gốc [250.000, 50.000] → [250.000, 28, 300.000, 50.000] (interest:ART)",
+        "cá nhân hoá: scenes[10].spokenText: số trong chữ khác bản gốc [] → [250.000, 28, 300.000, 50.000] (interest:ART)",
+        "cá nhân hoá: scenes[13].text: số trong chữ khác bản gốc [200.000, 300.000, 200.000] → [200.000, 300.000, 500.000] (interest:ART)",
+        "cá nhân hoá: scenes[13].spokenText: số trong chữ khác bản gốc [] → [200.000, 300.000, 500.000] (interest:ART)"
+      ],
+      "scenes": [
+        {
+          "sceneId": "CH01_SC03_MINIGAME",
+          "knowledgeUnits": [
+            "D01.02"
+          ],
+          "gradedQuestions": 6,
+          "practiceOnly": false,
+          "grades": [
+            {
+              "id": "ITEM_MEAL",
+              "path": "game.items.0.grade.concept",
+              "concept": "D01.02"
+            },
+            {
+              "id": "ITEM_BUS_TICKET",
+              "path": "game.items.1.grade.concept",
+              "concept": "D01.02"
+            },
+            {
+              "id": "ITEM_ART_CLASS",
+              "path": "game.items.2.grade.concept",
+              "concept": "D01.02"
+            },
+            {
+              "id": "ITEM_REPLACEMENT_HEADPHONES",
+              "path": "game.items.3.grade.concept",
+              "concept": "D01.02"
+            },
+            {
+              "id": "ITEM_UPGRADE_HEADPHONES",
+              "path": "game.items.4.grade.concept",
+              "concept": "D01.02"
+            },
+            {
+              "id": "ITEM_DESK_DECORATION",
+              "path": "game.items.5.grade.concept",
+              "concept": "D01.02"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "code": "CH02",
+      "status": "DRAFT",
+      "revision": 25,
+      "changedPaths": [
+        "metadata.allKnowledgeUnits.8",
+        "metadata.allKnowledgeUnits.9",
+        "scenes.5.game.dropZones.0.grade.concept",
+        "scenes.5.game.dropZones.1.grade.concept",
+        "scenes.5.game.dropZones.2.grade.concept",
+        "scenes.5.game.dropZones.3.grade.concept",
+        "scenes.5.game.dropZones.4.grade.concept",
+        "scenes.5.game.dropZones.5.grade.concept",
+        "scenes.5.knowledgeUnits.0",
+        "scenes.11.knowledgeUnits.0"
+      ],
+      "unexpectedChanges": [],
+      "warnings": [
+        "scenes[15].options[0].requires: khoá dạng cũ — chuyển sang condition + lockedReason"
+      ],
+      "scenes": [
+        {
+          "sceneId": "CH02_SC02_BUDGET_BUILDER",
+          "knowledgeUnits": [
+            "D03.01"
+          ],
+          "gradedQuestions": 6,
+          "practiceOnly": false,
+          "grades": [
+            {
+              "id": "housing",
+              "path": "game.dropZones.0.grade.concept",
+              "concept": "D03.01"
+            },
+            {
+              "id": "food",
+              "path": "game.dropZones.1.grade.concept",
+              "concept": "D03.01"
+            },
+            {
+              "id": "transport",
+              "path": "game.dropZones.2.grade.concept",
+              "concept": "D03.01"
+            },
+            {
+              "id": "entertainment",
+              "path": "game.dropZones.3.grade.concept",
+              "concept": "D03.01"
+            },
+            {
+              "id": "savings_laptop",
+              "path": "game.dropZones.4.grade.concept",
+              "concept": "D03.01"
+            },
+            {
+              "id": "emergency_buffer",
+              "path": "game.dropZones.5.grade.concept",
+              "concept": "D03.01"
+            }
+          ]
+        },
+        {
+          "sceneId": "CH02_SC03_SAVINGS_RACE",
+          "knowledgeUnits": [
+            "D04.02"
+          ],
+          "gradedQuestions": 0,
+          "practiceOnly": true,
+          "grades": []
+        }
+      ]
+    },
+    {
+      "code": "CH03",
+      "status": "DRAFT",
+      "revision": 8,
+      "changedPaths": [
+        "scenes.19.game.jobs.0.grade.concept",
+        "scenes.19.game.jobs.1.grade.concept",
+        "scenes.19.game.jobs.2.grade.concept",
+        "scenes.19.game.questions.0.grade.concept",
+        "scenes.19.game.questions.1.grade.concept",
+        "scenes.19.game.questions.2.grade.concept",
+        "scenes.19.knowledgeUnits.0",
+        "scenes.19.knowledgeUnits.1",
+        "scenes.19.knowledgeUnits.2",
+        "scenes.19.knowledgeUnits.3"
+      ],
+      "unexpectedChanges": [],
+      "warnings": [],
+      "scenes": [
+        {
+          "sceneId": "CH03_SC03_CAREER_MATCH",
+          "knowledgeUnits": [
+            "D02.04",
+            "D02.02",
+            "D02.05",
+            "D02.07"
+          ],
+          "gradedQuestions": 6,
+          "practiceOnly": false,
+          "grades": [
+            {
+              "id": "commission",
+              "path": "game.jobs.0.grade.concept",
+              "concept": "D02.04"
+            },
+            {
+              "id": "design",
+              "path": "game.jobs.1.grade.concept",
+              "concept": "D02.04"
+            },
+            {
+              "id": "small-business",
+              "path": "game.jobs.2.grade.concept",
+              "concept": "D02.04"
+            },
+            {
+              "id": "net_salary",
+              "path": "game.questions.0.grade.concept",
+              "concept": "D02.02"
+            },
+            {
+              "id": "profit",
+              "path": "game.questions.1.grade.concept",
+              "concept": "D02.05"
+            },
+            {
+              "id": "low_month",
+              "path": "game.questions.2.grade.concept",
+              "concept": "D02.07"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "code": "CH04",
+      "status": "DRAFT",
+      "revision": 6,
+      "changedPaths": [
+        "scenes.28.game.config.criteria.budget.grade.concept",
+        "scenes.28.game.config.criteria.evidence.grade.concept",
+        "scenes.28.game.config.criteria.rights.grade.concept",
+        "scenes.28.knowledgeUnits.1",
+        "scenes.28.knowledgeUnits.2",
+        "scenes.28.knowledgeUnits.3",
+        "scenes.28.knowledgeUnits.4"
+      ],
+      "unexpectedChanges": [],
+      "warnings": [],
+      "scenes": [
+        {
+          "sceneId": "CH04_SC02_GAME",
+          "knowledgeUnits": [
+            "D03.04"
+          ],
+          "gradedQuestions": 3,
+          "practiceOnly": false,
+          "grades": [
+            {
+              "id": "budget",
+              "path": "game.config.criteria.budget.grade.concept",
+              "concept": "D03.04"
+            },
+            {
+              "id": "evidence",
+              "path": "game.config.criteria.evidence.grade.concept",
+              "concept": "D03.04"
+            },
+            {
+              "id": "rights",
+              "path": "game.config.criteria.rights.grade.concept",
+              "concept": "D03.04"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "code": "CH05",
+      "status": "DRAFT",
+      "revision": 7,
+      "changedPaths": [
+        "scenes.38.game.config.questions.0.grade.concept",
+        "scenes.38.game.config.questions.1.grade.concept",
+        "scenes.38.game.config.questions.2.grade.concept",
+        "scenes.38.game.config.questions.3.grade.concept",
+        "scenes.38.game.config.questions.4.grade.concept",
+        "scenes.38.game.config.questions.5.grade.concept",
+        "scenes.38.game.config.questions.6.grade.concept",
+        "scenes.38.game.config.questions.7.grade.concept",
+        "scenes.38.game.config.questions.8.grade.concept",
+        "scenes.38.game.config.questions.9.grade.concept",
+        "scenes.38.game.config.questions.10.grade.concept",
+        "scenes.38.game.config.questions.11.grade.concept",
+        "scenes.38.knowledgeUnits.2",
+        "scenes.38.knowledgeUnits.3",
+        "scenes.38.knowledgeUnits.4"
+      ],
+      "unexpectedChanges": [],
+      "warnings": [],
+      "scenes": [
+        {
+          "sceneId": "CH05_GAME",
+          "knowledgeUnits": [
+            "D04.05",
+            "D04.06",
+            "D04.04"
+          ],
+          "gradedQuestions": 12,
+          "practiceOnly": false,
+          "grades": [
+            {
+              "id": "growth",
+              "path": "game.config.questions.0.grade.concept",
+              "concept": "D04.05"
+            },
+            {
+              "id": "simple",
+              "path": "game.config.questions.1.grade.concept",
+              "concept": "D04.05"
+            },
+            {
+              "id": "compound",
+              "path": "game.config.questions.2.grade.concept",
+              "concept": "D04.05"
+            },
+            {
+              "id": "difference",
+              "path": "game.config.questions.3.grade.concept",
+              "concept": "D04.05"
+            },
+            {
+              "id": "basket",
+              "path": "game.config.questions.4.grade.concept",
+              "concept": "D04.06"
+            },
+            {
+              "id": "power",
+              "path": "game.config.questions.5.grade.concept",
+              "concept": "D04.06"
+            },
+            {
+              "id": "aInterest",
+              "path": "game.config.questions.6.grade.concept",
+              "concept": "D04.05"
+            },
+            {
+              "id": "aFees",
+              "path": "game.config.questions.7.grade.concept",
+              "concept": "D04.04"
+            },
+            {
+              "id": "aBalance",
+              "path": "game.config.questions.8.grade.concept",
+              "concept": "D04.04"
+            },
+            {
+              "id": "aGap",
+              "path": "game.config.questions.9.grade.concept",
+              "concept": "D04.04"
+            },
+            {
+              "id": "bInterest",
+              "path": "game.config.questions.10.grade.concept",
+              "concept": "D04.05"
+            },
+            {
+              "id": "bBalance",
+              "path": "game.config.questions.11.grade.concept",
+              "concept": "D04.04"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "code": "CH06",
+      "status": "DRAFT",
+      "revision": 6,
+      "changedPaths": [
+        "metadata.allKnowledgeUnits.12",
+        "scenes.53.knowledgeUnits.0",
+        "scenes.53.knowledgeUnits.1",
+        "scenes.53.knowledgeUnits.2",
+        "scenes.53.knowledgeUnits.3",
+        "scenes.53.knowledgeUnits.4",
+        "scenes.53.knowledgeUnits.5",
+        "scenes.53.knowledgeUnits.6",
+        "scenes.53.knowledgeUnits.7",
+        "scenes.53.knowledgeUnits.8",
+        "scenes.53.knowledgeUnits.9",
+        "scenes.53.knowledgeUnits.10",
+        "scenes.53.knowledgeUnits.11",
+        "scenes.53.game.config.tasks.0.grade.concept",
+        "scenes.53.game.config.tasks.1.grade.concept",
+        "scenes.53.game.config.tasks.2.grade.concept",
+        "scenes.53.game.config.tasks.3.grade.concept",
+        "scenes.53.game.config.tasks.4.grade.concept",
+        "scenes.53.game.config.tasks.5.grade.concept",
+        "scenes.53.game.config.tasks.6.grade.concept",
+        "scenes.53.game.config.tasks.7.grade.concept",
+        "scenes.53.game.config.tasks.8.grade.concept",
+        "scenes.53.game.config.tasks.9.grade.concept",
+        "scenes.88.knowledgeUnits.0",
+        "scenes.88.knowledgeUnits.1",
+        "scenes.88.knowledgeUnits.2",
+        "scenes.88.knowledgeUnits.3",
+        "scenes.88.knowledgeUnits.4",
+        "scenes.88.knowledgeUnits.5",
+        "scenes.88.knowledgeUnits.6",
+        "scenes.88.knowledgeUnits.7",
+        "scenes.88.knowledgeUnits.8",
+        "scenes.88.knowledgeUnits.9",
+        "scenes.88.knowledgeUnits.10",
+        "scenes.88.knowledgeUnits.11",
+        "scenes.88.game.config.tasks.0.grade.concept",
+        "scenes.88.game.config.tasks.1.grade.concept",
+        "scenes.88.game.config.tasks.2.grade.concept",
+        "scenes.88.game.config.tasks.3.grade.concept",
+        "scenes.88.game.config.tasks.4.grade.concept",
+        "scenes.88.game.config.tasks.5.grade.concept",
+        "scenes.88.game.config.tasks.6.grade.concept",
+        "scenes.88.game.config.tasks.7.grade.concept",
+        "scenes.88.game.config.tasks.8.grade.concept",
+        "scenes.88.game.config.tasks.9.grade.concept"
+      ],
+      "unexpectedChanges": [],
+      "warnings": [],
+      "scenes": [
+        {
+          "sceneId": "CH06_GAME_OFFERS",
+          "knowledgeUnits": [
+            "D06.02",
+            "D06.06"
+          ],
+          "gradedQuestions": 6,
+          "practiceOnly": false,
+          "grades": [
+            {
+              "id": "receiptA",
+              "path": "game.config.tasks.0.grade.concept",
+              "concept": "D06.02",
+              "part": 0
+            },
+            {
+              "id": "receiptB",
+              "path": "game.config.tasks.1.grade.concept",
+              "concept": "D06.02",
+              "part": 0
+            },
+            {
+              "id": "receiptC",
+              "path": "game.config.tasks.2.grade.concept",
+              "concept": "D06.02",
+              "part": 0
+            },
+            {
+              "id": "sortA",
+              "path": "game.config.tasks.3.grade.concept",
+              "concept": "D06.06",
+              "part": 1
+            },
+            {
+              "id": "sortB",
+              "path": "game.config.tasks.4.grade.concept",
+              "concept": "D06.06",
+              "part": 1
+            },
+            {
+              "id": "sortC",
+              "path": "game.config.tasks.5.grade.concept",
+              "concept": "D06.06",
+              "part": 1
+            },
+            {
+              "id": "cartNeed",
+              "path": "game.config.tasks.6.grade.concept",
+              "concept": "D01.02",
+              "part": 2
+            },
+            {
+              "id": "cartBudget",
+              "path": "game.config.tasks.7.grade.concept",
+              "concept": "D06.08",
+              "part": 2
+            },
+            {
+              "id": "statementLiving",
+              "path": "game.config.tasks.8.grade.concept",
+              "concept": "D06.06",
+              "part": 3
+            },
+            {
+              "id": "statementCost",
+              "path": "game.config.tasks.9.grade.concept",
+              "concept": "D06.05",
+              "part": 3
+            }
+          ]
+        },
+        {
+          "sceneId": "CH06_GAME_REPAYMENT",
+          "knowledgeUnits": [
+            "D01.02",
+            "D06.08",
+            "D06.06",
+            "D06.05"
+          ],
+          "gradedQuestions": 4,
+          "practiceOnly": false,
+          "grades": [
+            {
+              "id": "receiptA",
+              "path": "game.config.tasks.0.grade.concept",
+              "concept": "D06.02",
+              "part": 0
+            },
+            {
+              "id": "receiptB",
+              "path": "game.config.tasks.1.grade.concept",
+              "concept": "D06.02",
+              "part": 0
+            },
+            {
+              "id": "receiptC",
+              "path": "game.config.tasks.2.grade.concept",
+              "concept": "D06.02",
+              "part": 0
+            },
+            {
+              "id": "sortA",
+              "path": "game.config.tasks.3.grade.concept",
+              "concept": "D06.06",
+              "part": 1
+            },
+            {
+              "id": "sortB",
+              "path": "game.config.tasks.4.grade.concept",
+              "concept": "D06.06",
+              "part": 1
+            },
+            {
+              "id": "sortC",
+              "path": "game.config.tasks.5.grade.concept",
+              "concept": "D06.06",
+              "part": 1
+            },
+            {
+              "id": "cartNeed",
+              "path": "game.config.tasks.6.grade.concept",
+              "concept": "D01.02",
+              "part": 2
+            },
+            {
+              "id": "cartBudget",
+              "path": "game.config.tasks.7.grade.concept",
+              "concept": "D06.08",
+              "part": 2
+            },
+            {
+              "id": "statementLiving",
+              "path": "game.config.tasks.8.grade.concept",
+              "concept": "D06.06",
+              "part": 3
+            },
+            {
+              "id": "statementCost",
+              "path": "game.config.tasks.9.grade.concept",
+              "concept": "D06.05",
+              "part": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "code": "CH07",
+      "status": "DRAFT",
+      "revision": 6,
+      "changedPaths": [
+        "scenes.30.knowledgeUnits.0",
+        "scenes.30.knowledgeUnits.1",
+        "scenes.30.knowledgeUnits.2",
+        "scenes.30.knowledgeUnits.3",
+        "scenes.30.knowledgeUnits.4",
+        "scenes.30.knowledgeUnits.5",
+        "scenes.30.knowledgeUnits.6",
+        "scenes.30.knowledgeUnits.7",
+        "scenes.30.knowledgeUnits.8",
+        "scenes.30.knowledgeUnits.9",
+        "scenes.30.knowledgeUnits.10",
+        "scenes.30.game.config.insurance.questions.0.grade.concept",
+        "scenes.30.game.config.insurance.questions.1.grade.concept",
+        "scenes.30.game.config.inbox.messages.0.grade.concept",
+        "scenes.30.game.config.inbox.messages.1.grade.concept",
+        "scenes.30.game.config.inbox.messages.2.grade.concept",
+        "scenes.30.game.config.inbox.messages.3.grade.concept",
+        "scenes.30.game.config.inbox.messages.4.grade.concept",
+        "scenes.30.game.config.inbox.messages.5.grade.concept",
+        "scenes.30.game.config.response.grading.0.grade.concept",
+        "scenes.30.game.config.response.grading.1.grade.concept",
+        "scenes.30.game.config.response.grading.2.grade.concept",
+        "scenes.30.game.config.response.grading.3.grade.concept",
+        "scenes.104.knowledgeUnits.0",
+        "scenes.104.knowledgeUnits.1",
+        "scenes.104.knowledgeUnits.2",
+        "scenes.104.knowledgeUnits.3",
+        "scenes.104.knowledgeUnits.4",
+        "scenes.104.knowledgeUnits.5",
+        "scenes.104.knowledgeUnits.6",
+        "scenes.104.knowledgeUnits.7",
+        "scenes.104.knowledgeUnits.8",
+        "scenes.104.knowledgeUnits.9",
+        "scenes.104.knowledgeUnits.10",
+        "scenes.104.game.config.insurance.questions.0.grade.concept",
+        "scenes.104.game.config.insurance.questions.1.grade.concept",
+        "scenes.104.game.config.inbox.messages.0.grade.concept",
+        "scenes.104.game.config.inbox.messages.1.grade.concept",
+        "scenes.104.game.config.inbox.messages.2.grade.concept",
+        "scenes.104.game.config.inbox.messages.3.grade.concept",
+        "scenes.104.game.config.inbox.messages.4.grade.concept",
+        "scenes.104.game.config.inbox.messages.5.grade.concept",
+        "scenes.104.game.config.response.grading.0.grade.concept",
+        "scenes.104.game.config.response.grading.1.grade.concept",
+        "scenes.104.game.config.response.grading.2.grade.concept",
+        "scenes.104.game.config.response.grading.3.grade.concept"
+      ],
+      "unexpectedChanges": [],
+      "warnings": [],
+      "scenes": [
+        {
+          "sceneId": "CH07_GAME_INSURANCE",
+          "knowledgeUnits": [
+            "D07.04"
+          ],
+          "gradedQuestions": 2,
+          "practiceOnly": false,
+          "grades": [
+            {
+              "id": "insurancePayment",
+              "path": "game.config.insurance.questions.0.grade.concept",
+              "concept": "D07.04",
+              "part": 0
+            },
+            {
+              "id": "insurancePacket",
+              "path": "game.config.insurance.questions.1.grade.concept",
+              "concept": "D07.04",
+              "part": 0
+            },
+            {
+              "id": "instantRefund",
+              "path": "game.config.inbox.messages.0.grade.concept",
+              "concept": "D07.06",
+              "part": 1
+            },
+            {
+              "id": "claimStatus",
+              "path": "game.config.inbox.messages.1.grade.concept",
+              "concept": "D07.04",
+              "part": 1
+            },
+            {
+              "id": "fakeLink",
+              "path": "game.config.inbox.messages.2.grade.concept",
+              "concept": "D07.06",
+              "part": 1
+            },
+            {
+              "id": "officialDesk",
+              "path": "game.config.inbox.messages.3.grade.concept",
+              "concept": "D07.08",
+              "part": 1
+            },
+            {
+              "id": "remoteApp",
+              "path": "game.config.inbox.messages.4.grade.concept",
+              "concept": "D07.06",
+              "part": 1
+            },
+            {
+              "id": "verifiedSupport",
+              "path": "game.config.inbox.messages.5.grade.concept",
+              "concept": "D07.06",
+              "part": 1
+            },
+            {
+              "id": "response_stop",
+              "path": "game.config.response.grading.0.grade.concept",
+              "concept": "D07.10",
+              "part": 2
+            },
+            {
+              "id": "response_contact",
+              "path": "game.config.response.grading.1.grade.concept",
+              "concept": "D07.10",
+              "part": 2
+            },
+            {
+              "id": "response_protect",
+              "path": "game.config.response.grading.2.grade.concept",
+              "concept": "D07.10",
+              "part": 2
+            },
+            {
+              "id": "response_save",
+              "path": "game.config.response.grading.3.grade.concept",
+              "concept": "D07.10",
+              "part": 2
+            }
+          ]
+        },
+        {
+          "sceneId": "CH07_GAME_SAFETY",
+          "knowledgeUnits": [
+            "D07.06",
+            "D07.04",
+            "D07.08",
+            "D07.10"
+          ],
+          "gradedQuestions": 10,
+          "practiceOnly": false,
+          "grades": [
+            {
+              "id": "insurancePayment",
+              "path": "game.config.insurance.questions.0.grade.concept",
+              "concept": "D07.04",
+              "part": 0
+            },
+            {
+              "id": "insurancePacket",
+              "path": "game.config.insurance.questions.1.grade.concept",
+              "concept": "D07.04",
+              "part": 0
+            },
+            {
+              "id": "instantRefund",
+              "path": "game.config.inbox.messages.0.grade.concept",
+              "concept": "D07.06",
+              "part": 1
+            },
+            {
+              "id": "claimStatus",
+              "path": "game.config.inbox.messages.1.grade.concept",
+              "concept": "D07.04",
+              "part": 1
+            },
+            {
+              "id": "fakeLink",
+              "path": "game.config.inbox.messages.2.grade.concept",
+              "concept": "D07.06",
+              "part": 1
+            },
+            {
+              "id": "officialDesk",
+              "path": "game.config.inbox.messages.3.grade.concept",
+              "concept": "D07.08",
+              "part": 1
+            },
+            {
+              "id": "remoteApp",
+              "path": "game.config.inbox.messages.4.grade.concept",
+              "concept": "D07.06",
+              "part": 1
+            },
+            {
+              "id": "verifiedSupport",
+              "path": "game.config.inbox.messages.5.grade.concept",
+              "concept": "D07.06",
+              "part": 1
+            },
+            {
+              "id": "response_stop",
+              "path": "game.config.response.grading.0.grade.concept",
+              "concept": "D07.10",
+              "part": 2
+            },
+            {
+              "id": "response_contact",
+              "path": "game.config.response.grading.1.grade.concept",
+              "concept": "D07.10",
+              "part": 2
+            },
+            {
+              "id": "response_protect",
+              "path": "game.config.response.grading.2.grade.concept",
+              "concept": "D07.10",
+              "part": 2
+            },
+            {
+              "id": "response_save",
+              "path": "game.config.response.grading.3.grade.concept",
+              "concept": "D07.10",
+              "part": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "code": "CH08",
+      "status": "DRAFT",
+      "revision": 7,
+      "changedPaths": [
+        "metadata.allKnowledgeUnits.18",
+        "metadata.allKnowledgeUnits.19",
+        "scenes.38.knowledgeUnits.0",
+        "scenes.38.knowledgeUnits.1",
+        "scenes.38.knowledgeUnits.2",
+        "scenes.38.knowledgeUnits.3",
+        "scenes.38.knowledgeUnits.4",
+        "scenes.38.knowledgeUnits.5",
+        "scenes.38.knowledgeUnits.6",
+        "scenes.38.knowledgeUnits.7",
+        "scenes.38.knowledgeUnits.8",
+        "scenes.38.knowledgeUnits.9",
+        "scenes.38.knowledgeUnits.10",
+        "scenes.38.knowledgeUnits.11",
+        "scenes.38.knowledgeUnits.12",
+        "scenes.38.knowledgeUnits.13",
+        "scenes.38.knowledgeUnits.14",
+        "scenes.38.knowledgeUnits.15",
+        "scenes.38.knowledgeUnits.16",
+        "scenes.38.knowledgeUnits.17",
+        "scenes.38.game.config.portfolio.questions.0.grade.concept",
+        "scenes.38.game.config.portfolio.questions.1.grade.concept",
+        "scenes.38.game.config.claims.checks.0.grade.concept",
+        "scenes.38.game.config.claims.checks.2.grade.concept",
+        "scenes.38.game.config.claims.checks.4.grade.concept",
+        "scenes.38.game.config.planner.months.0.grade.concept",
+        "scenes.38.game.config.planner.months.1.grade.concept",
+        "scenes.38.game.config.planner.months.2.grade.concept",
+        "scenes.83.knowledgeUnits.0",
+        "scenes.83.knowledgeUnits.1",
+        "scenes.83.knowledgeUnits.2",
+        "scenes.83.knowledgeUnits.3",
+        "scenes.83.knowledgeUnits.4",
+        "scenes.83.knowledgeUnits.5",
+        "scenes.83.knowledgeUnits.6",
+        "scenes.83.knowledgeUnits.7",
+        "scenes.83.knowledgeUnits.8",
+        "scenes.83.knowledgeUnits.9",
+        "scenes.83.knowledgeUnits.10",
+        "scenes.83.knowledgeUnits.11",
+        "scenes.83.knowledgeUnits.12",
+        "scenes.83.knowledgeUnits.13",
+        "scenes.83.knowledgeUnits.14",
+        "scenes.83.knowledgeUnits.15",
+        "scenes.83.knowledgeUnits.16",
+        "scenes.83.knowledgeUnits.17",
+        "scenes.83.game.config.portfolio.questions.0.grade.concept",
+        "scenes.83.game.config.portfolio.questions.1.grade.concept",
+        "scenes.83.game.config.claims.checks.0.grade.concept",
+        "scenes.83.game.config.claims.checks.2.grade.concept",
+        "scenes.83.game.config.claims.checks.4.grade.concept",
+        "scenes.83.game.config.planner.months.0.grade.concept",
+        "scenes.83.game.config.planner.months.1.grade.concept",
+        "scenes.83.game.config.planner.months.2.grade.concept",
+        "scenes.108.knowledgeUnits.0",
+        "scenes.108.knowledgeUnits.1",
+        "scenes.108.knowledgeUnits.2",
+        "scenes.108.knowledgeUnits.3",
+        "scenes.108.knowledgeUnits.4",
+        "scenes.108.knowledgeUnits.5",
+        "scenes.108.knowledgeUnits.6",
+        "scenes.108.knowledgeUnits.7",
+        "scenes.108.knowledgeUnits.8",
+        "scenes.108.knowledgeUnits.9",
+        "scenes.108.knowledgeUnits.10",
+        "scenes.108.knowledgeUnits.11",
+        "scenes.108.knowledgeUnits.12",
+        "scenes.108.knowledgeUnits.13",
+        "scenes.108.knowledgeUnits.14",
+        "scenes.108.knowledgeUnits.15",
+        "scenes.108.knowledgeUnits.16",
+        "scenes.108.knowledgeUnits.17",
+        "scenes.108.game.config.portfolio.questions.0.grade.concept",
+        "scenes.108.game.config.portfolio.questions.1.grade.concept",
+        "scenes.108.game.config.claims.checks.0.grade.concept",
+        "scenes.108.game.config.claims.checks.2.grade.concept",
+        "scenes.108.game.config.claims.checks.4.grade.concept",
+        "scenes.108.game.config.planner.months.0.grade.concept",
+        "scenes.108.game.config.planner.months.1.grade.concept",
+        "scenes.108.game.config.planner.months.2.grade.concept"
+      ],
+      "unexpectedChanges": [],
+      "warnings": [],
+      "scenes": [
+        {
+          "sceneId": "CH08_GAME_PORTFOLIO",
+          "knowledgeUnits": [
+            "D05.06",
+            "D05.05"
+          ],
+          "gradedQuestions": 2,
+          "practiceOnly": false,
+          "grades": [
+            {
+              "id": "allocation_near",
+              "path": "game.config.portfolio.questions.0.grade.concept",
+              "concept": "D05.06",
+              "part": "portfolio"
+            },
+            {
+              "id": "allocation_spread",
+              "path": "game.config.portfolio.questions.1.grade.concept",
+              "concept": "D05.05",
+              "part": "portfolio"
+            },
+            {
+              "id": "claim_risk",
+              "path": "game.config.claims.checks.0.grade.concept",
+              "concept": "D08.01",
+              "part": "claims"
+            },
+            {
+              "id": "claim_commission",
+              "path": "game.config.claims.checks.2.grade.concept",
+              "concept": "D08.07",
+              "part": "claims"
+            },
+            {
+              "id": "claim_esg",
+              "path": "game.config.claims.checks.4.grade.concept",
+              "concept": "D05.09",
+              "part": "claims"
+            },
+            {
+              "id": "plan_normal",
+              "path": "game.config.planner.months.0.grade.concept",
+              "concept": "D04.02",
+              "part": "planner"
+            },
+            {
+              "id": "plan_low",
+              "path": "game.config.planner.months.1.grade.concept",
+              "concept": "D02.07",
+              "part": "planner"
+            },
+            {
+              "id": "plan_prices",
+              "path": "game.config.planner.months.2.grade.concept",
+              "concept": "D08.08",
+              "part": "planner"
+            }
+          ]
+        },
+        {
+          "sceneId": "CH08_GAME_CLAIMS",
+          "knowledgeUnits": [
+            "D08.01",
+            "D08.07",
+            "D05.09"
+          ],
+          "gradedQuestions": 3,
+          "practiceOnly": false,
+          "grades": [
+            {
+              "id": "allocation_near",
+              "path": "game.config.portfolio.questions.0.grade.concept",
+              "concept": "D05.06",
+              "part": "portfolio"
+            },
+            {
+              "id": "allocation_spread",
+              "path": "game.config.portfolio.questions.1.grade.concept",
+              "concept": "D05.05",
+              "part": "portfolio"
+            },
+            {
+              "id": "claim_risk",
+              "path": "game.config.claims.checks.0.grade.concept",
+              "concept": "D08.01",
+              "part": "claims"
+            },
+            {
+              "id": "claim_commission",
+              "path": "game.config.claims.checks.2.grade.concept",
+              "concept": "D08.07",
+              "part": "claims"
+            },
+            {
+              "id": "claim_esg",
+              "path": "game.config.claims.checks.4.grade.concept",
+              "concept": "D05.09",
+              "part": "claims"
+            },
+            {
+              "id": "plan_normal",
+              "path": "game.config.planner.months.0.grade.concept",
+              "concept": "D04.02",
+              "part": "planner"
+            },
+            {
+              "id": "plan_low",
+              "path": "game.config.planner.months.1.grade.concept",
+              "concept": "D02.07",
+              "part": "planner"
+            },
+            {
+              "id": "plan_prices",
+              "path": "game.config.planner.months.2.grade.concept",
+              "concept": "D08.08",
+              "part": "planner"
+            }
+          ]
+        },
+        {
+          "sceneId": "CH08_GAME_PLANNER",
+          "knowledgeUnits": [
+            "D04.02",
+            "D02.07",
+            "D08.08"
+          ],
+          "gradedQuestions": 3,
+          "practiceOnly": false,
+          "grades": [
+            {
+              "id": "allocation_near",
+              "path": "game.config.portfolio.questions.0.grade.concept",
+              "concept": "D05.06",
+              "part": "portfolio"
+            },
+            {
+              "id": "allocation_spread",
+              "path": "game.config.portfolio.questions.1.grade.concept",
+              "concept": "D05.05",
+              "part": "portfolio"
+            },
+            {
+              "id": "claim_risk",
+              "path": "game.config.claims.checks.0.grade.concept",
+              "concept": "D08.01",
+              "part": "claims"
+            },
+            {
+              "id": "claim_commission",
+              "path": "game.config.claims.checks.2.grade.concept",
+              "concept": "D08.07",
+              "part": "claims"
+            },
+            {
+              "id": "claim_esg",
+              "path": "game.config.claims.checks.4.grade.concept",
+              "concept": "D05.09",
+              "part": "claims"
+            },
+            {
+              "id": "plan_normal",
+              "path": "game.config.planner.months.0.grade.concept",
+              "concept": "D04.02",
+              "part": "planner"
+            },
+            {
+              "id": "plan_low",
+              "path": "game.config.planner.months.1.grade.concept",
+              "concept": "D02.07",
+              "part": "planner"
+            },
+            {
+              "id": "plan_prices",
+              "path": "game.config.planner.months.2.grade.concept",
+              "concept": "D08.08",
+              "part": "planner"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

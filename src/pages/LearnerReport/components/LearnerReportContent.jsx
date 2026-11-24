@@ -10,11 +10,12 @@ const SUMMARY_LABELS = {
   GENERATING: "Hệ thống đang tổng hợp báo cáo…",
 };
 const BAND_LABELS = { NO_DATA: "Chưa có dữ liệu", PRACTICE: "Cần luyện thêm", FAMILIAR: "Đã làm quen", GOOD: "Nắm vững" };
+const FINAL_STATUS_LABELS = { PARTIAL: "Tạm thời (còn chương chờ hậu trắc)", COMPLETE: "Đầy đủ" };
 const ratio = (value) => `${Number(value?.correct) || 0}/${Number(value?.total) || 0}`;
 const choiceText = (item) => {
-  if (item == null) return "Chưa có nội dung lựa chọn.";
+  if (item == null) return "Lựa chọn trong truyện";
   if (typeof item !== "object") return String(item);
-  return item.label || item.text || item.question || item.itemLabel || "Chưa có nội dung lựa chọn.";
+  return item.label || item.text || item.question || item.itemLabel || "Lựa chọn trong truyện";
 };
 
 function Summary({ summary, final = false }) {
@@ -30,9 +31,16 @@ function Summary({ summary, final = false }) {
 function ChapterResult({ title, result, postTest = false }) {
   const Icon = postTest ? ClipboardCheck : Gamepad2;
   const hasResult = result && (Number(result.total) > 0 || result.status === "SUBMITTED");
+  const wrong = !postTest && Array.isArray(result?.wrong) ? result.wrong : [];
   return <section className={`learner-chapter-result ${postTest ? "is-post-test" : "is-mini-game"}`} aria-label={`Kết quả ${title}`}>
     <header><span className="learner-chapter-result-icon"><Icon size={20} aria-hidden="true" /></span><h3>{title}</h3></header>
     {hasResult ? <div className="learner-chapter-result-score"><strong>{ratio(result)}</strong><span>câu đúng</span></div> : <p className="learner-chapter-result-empty">{postTest ? "Chưa nộp" : "Chưa có kết quả"}</p>}
+    {wrong.length > 0 && <div className="learner-minigame-review"><h4>Câu cần xem lại</h4><ol>{wrong.map((item) => <li key={`${item.gameId}-${item.itemId}`}>
+      <strong>{item.label || "Câu hỏi mini-game"}</strong>
+      <p>Bé chọn: {item.chosenLabel ?? "Chưa có dữ liệu"}</p>
+      <p>Đáp án: {item.expectedLabel ?? "Chưa có dữ liệu"}</p>
+      {item.explanation && <p className="learner-minigame-explanation">{item.explanation}</p>}
+    </li>)}</ol></div>}
   </section>;
 }
 
@@ -51,7 +59,7 @@ function Chapter({ chapter, index }) {
         </div>
         <section className="learner-chapter-choices">
           <header><h3>Lựa chọn của trẻ trong câu chuyện</h3><span>{choices.length} lựa chọn</span></header>
-          {choices.length ? <ol>{choices.map((choice, choiceIndex) => <li key={choice?.id || choiceIndex}>
+          {choices.length ? <ol>{choices.map((choice, choiceIndex) => <li key={choice?.optionId ?? choiceIndex}>
             <span className="learner-choice-number" aria-hidden="true">{choiceIndex + 1}</span>
             <p>{choiceText(choice).replace(/^\s*[A-D][.)]\s+/i, "")}</p>
           </li>)}</ol> : <p className="learner-chapter-choices-empty">Chưa ghi nhận lựa chọn trong chương này.</p>}
@@ -114,8 +122,8 @@ export default function LearnerReportContent({ reportState }) {
       </div>
       {chapters.length ? <ol className="ws-chapter-timeline">{chapters.map((chapter, index) => <Chapter key={chapter.chapter ?? chapter.chapterNumber ?? index} chapter={chapter} index={index} />)}</ol> : <Empty>Chưa có dữ liệu chi tiết theo chương.</Empty>}
     </section>
-    <section className="ws-card"><h2>Mức độ hiểu khái niệm</h2>{concepts.length ? <div className="learner-concept-grid">{concepts.map((item, index) => <article key={item.concept || index}><header><strong>{knowledgeUnitName(item.concept)}</strong><span className={`concept-band is-${String(item.band || "NO_DATA").toLowerCase()}`}>{BAND_LABELS[item.band] || item.band}</span></header><div><span>Trong game <b>{ratio(item.game)}</b></span><span>Hậu trắc <b>{ratio(item.postTest)}</b></span></div><p>Tổng cộng <strong>{Number(item.correct) || 0}/{Number(item.total) || 0}</strong></p></article>)}</div> : <Empty>Chưa có dữ liệu khái niệm.</Empty>}</section>
-    {finalReport.status !== "NONE" && <section className="ws-card"><h2><CheckCircle2 size={20} /> Báo cáo cuối hành trình</h2><Summary summary={finalReport.summary} final /><p className="learner-final-status">Trạng thái: {finalReport.status}</p></section>}
+    <section className="ws-card"><h2>Mức độ hiểu khái niệm</h2>{concepts.length ? <div className="learner-concept-grid">{concepts.map((item, index) => <article key={item.concept || index}><header><strong>{item.name || knowledgeUnitName(item.concept)}</strong><span className={`concept-band is-${String(item.band || "NO_DATA").toLowerCase()}`}>{BAND_LABELS[item.band] || item.band}</span></header>{item.objective && <p className="learner-concept-objective">{item.objective}</p>}<div><span>Trong game <b>{ratio(item.game)}</b></span><span>Hậu trắc <b>{ratio(item.postTest)}</b></span></div><p>Tổng cộng <strong>{Number(item.correct) || 0}/{Number(item.total) || 0}</strong></p></article>)}</div> : <Empty>Chưa có dữ liệu khái niệm.</Empty>}</section>
+    {finalReport.status !== "NONE" && <section className="ws-card"><h2><CheckCircle2 size={20} /> Báo cáo cuối hành trình</h2><Summary summary={finalReport.summary} final /><p className="learner-final-status">Trạng thái: {FINAL_STATUS_LABELS[finalReport.status] || "Chưa xác định"}</p></section>}
     {report.progress?.lastPlayedAt && <footer className="ws-progress-meta">Hoạt động gần nhất {dateLabel(report.progress.lastPlayedAt)}</footer>}
   </div>;
 }

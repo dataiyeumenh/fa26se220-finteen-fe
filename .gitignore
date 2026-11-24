@@ -17,7 +17,9 @@ dist-ssr
 !/public/**/*.svg
 /output/
 /outputs/
-/docs/
+# Keep review documents in knowledge-base; other documentation stays local.
+/docs/*
+!/docs/knowledge-base/
 /tmp/
 /docx_qa/
 /docx_qa_word/
