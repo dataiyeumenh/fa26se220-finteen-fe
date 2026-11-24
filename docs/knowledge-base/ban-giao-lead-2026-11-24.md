@@ -8,8 +8,7 @@
 - Ba chỗ cá nhân hóa CH01 là có chủ ý: tiêu đề `CH01_SC02_A`, mô tả giao dịch phương án A trong `CH01_SC02_CHOICE`, và lời thoại `CH01_SC02_CHOICE_B_1`. Chúng đã có trong nháp, không sửa lại lần nữa. `{{item}}`/`{{Item}}` lấy món đồ theo sở thích.
 - Đã gọi Sinh giọng CH01. Backend trả `queued=0`, `ready=160`, không có câu thiếu, chờ hoặc lỗi. Riêng cảnh `CH01_SC02_CHOICE_B_1` đủ 18 bản đọc theo nội dung/giọng; backend có thể dùng lại bản ghi đúng nội dung dù cảnh không có `voiceUrl` tĩnh.
 - Sửa khóa câu sai thành `${item.gameId}-${item.itemId}` và cập nhật fixture báo cáo đúng hai trường BE trả về.
-- Bỏ hai dòng `/docs/` trong `.gitignore` để tài liệu mới có thể đưa vào git. Tài liệu bảng duyệt được migration liên kết là [báo cáo duyệt nội dung](bao-cao-duyet-noi-dung-2026-11-23.md).
-- Sửa [tài liệu đăng xuất](../auth-integration.md): BE chưa có API thu hồi phiên; FE hiện thử gọi endpoint chưa được hỗ trợ rồi vẫn dọn phiên cục bộ, không thể cam kết token server đã bị thu hồi.
+- Giới hạn tài liệu mới được đưa vào git ở `docs/knowledge-base/`; tài liệu và ảnh ngoài phạm vi giữ local. Tài liệu bảng duyệt được migration liên kết là [báo cáo duyệt nội dung](bao-cao-duyet-noi-dung-2026-11-23.md).
 
 [Audit thao tác Studio](../../scripts/content-migrations/lead-followup-2026-11-24.audit.json) ghi revision, thời điểm, trạng thái và kết quả giọng. Ghi chú dài ở lần gửi đầu bị backend trả HTTP 500/code 1000; rút ngắn xuống dưới 255 ký tự thì cả tám chương gửi thành công. Đây là quan sát, chưa xác minh giới hạn cột hoặc nguyên nhân trong BE.
 
@@ -55,7 +54,7 @@ Các điểm cần lead chú ý khi nhập: CH06 chỉ tìm hiểu gói B chưa 
 [Script tạo/kiểm CSV](../../scripts/content-migrations/choice-rules-2026-11-24.py) và [audit CSV](../../scripts/content-migrations/choice-rules-2026-11-24.audit.json) lưu mã băm nguồn và đầu ra. Chạy lại từ repo:
 
 ```powershell
-python scripts/content-migrations/choice-rules-2026-11-24.py 'C:\Users\HoanggLe\Downloads\bang-quy-tac-chi-so-98-lua-chon-2026-11-24.csv'
+python scripts/content-migrations/choice-rules-2026-11-24.py 'bang-quy-tac-chi-so-98-lua-chon-2026-11-24.csv'
 ```
 
-Các thay đổi code/tài liệu đang ở workspace; chưa commit, push PR hoặc triển khai FE. Các tài liệu cũ khác xuất hiện dạng untracked sau khi bỏ `/docs/` không thuộc lần bàn giao này; chỉ chọn đúng tệp liên quan khi commit.
+Dùng file CSV gốc làm đầu vào cho lệnh trên; tên file chỉ là ví dụ, không gắn với đường dẫn máy cá nhân. Trong PR, phần tài liệu mới chỉ gồm ba tài liệu Markdown và bảng CSV tại `docs/knowledge-base/`, cùng script/audit migration và các thay đổi code/kiểm thử liên quan. Các tài liệu ngoài phạm vi đã được gỡ khỏi PR và giữ bản local. Chưa triển khai FE hoặc phát hành nội dung.

@@ -1,6 +1,6 @@
 ﻿# Xác thực và cấu hình API
 
-Đối chiếu source ngày **20/11/2026**: `src/api/config.js`, `auth.api.js`, `auth.client.js`, `firebase.js` và `src/features/workspace/useWorkspace.js`.
+Đối chiếu source ngày **09/11/2026**: `src/api/config.js`, `auth.api.js`, `auth.client.js`, `firebase.js` và `src/features/workspace/useWorkspace.js`.
 
 ## Cấu hình
 
@@ -25,13 +25,11 @@ SLOT nhận thông tin hồ sơ từ API đăng nhập và tạo actor `role=kid
 
 ## Bộ nhớ và hạn dùng
 
-Mọi tab cùng origin và cùng hồ sơ trình duyệt dùng một phiên duy nhất, kể cả ACCOUNT/SLOT. Nguồn phiên chính là localStorage `finteen.session.v1:{baseUrl}`, chứa token và `expiresAt`. Các khóa ACCOUNT trong localStorage và SLOT trong sessionStorage chỉ giữ bản tương thích để chuyển đổi từ phiên bản cũ; bản dùng chung có quyền ưu tiên, kể cả giá trị đăng xuất `null`, nên dữ liệu cũ không thể khôi phục một tài khoản đã đăng xuất. Context parent/teacher nằm riêng trong localStorage. Đăng nhập tài khoản/hồ sơ mới thay phiên đang có ở mọi tab; trình duyệt, hồ sơ trình duyệt hoặc phiên ẩn danh độc lập vẫn có thể đăng nhập khác nhau.
+Token ACCOUNT/SLOT cùng `expiresAt` được lưu trong sessionStorage, theo API base URL. Context người lớn nằm riêng trong localStorage. Khi đăng nhập ACCOUNT thành công, client xóa phiên SLOT cũ.
 
-`startAuth` phục hồi ACCOUNT bằng `/api/auth/me`, tải lại hồ sơ khi cửa sổ được focus, đồng bộ khi có sự kiện `storage` và kiểm tra phiên mỗi giây. Request được kiểm tra với phiên dùng chung trước khi gửi; nếu vừa đổi tài khoản ở tab khác, request của màn hình cũ bị chặn để không gửi ID tài nguyên cũ bằng token mới. Các lần tải hồ sơ đồng thời dùng chung một request. Lỗi mạng tạm thời giữ actor còn hợp lệ; lần khởi động chưa có hồ sơ thì hiển thị lỗi/thử lại. Phản hồi logout hoặc hết hạn của token cũ không xóa phiên mới.
+`startAuth` phục hồi ACCOUNT bằng `/api/auth/me`, refresh khi cửa sổ được focus và kiểm tra hết hạn mỗi giây. Đây không phải cơ chế refresh token. `accountRequest` và `slotRequest` chọn đúng phiên, kiểm tra hạn dùng trước khi gọi API; request dùng `credentials: omit` và timeout 20 giây. Client chỉ nhận thành công khi HTTP thành công và `ApiResponse.code === 0`, trả về `result`.
 
-Đây không phải cơ chế refresh token: client vẫn tôn trọng `expiresIn` (giây), không kéo dài hạn token. Tài liệu API hiện chưa công bố endpoint refresh token; muốn duy trì đăng nhập sau hạn token cần backend cung cấp cơ chế gia hạn. `accountRequest` và `slotRequest` chọn đúng loại phiên; request dùng `credentials: omit` và timeout 20 giây. Client chỉ nhận thành công khi HTTP thành công và `ApiResponse.code === 0`, trả về `result`.
-
-Đăng xuất xóa phiên dùng chung ở phía trình duyệt; các tab còn lại đồng bộ đăng xuất. Backend hiện chưa có API đăng xuất/thu hồi phiên. `signOut()` trong FE hiện vẫn thử gọi `POST /api/auth/logout` và bỏ qua lỗi trước khi dọn phiên cục bộ; lời gọi này không phải hợp đồng API đã được backend hỗ trợ và không bảo đảm thu hồi token trên server. Lỗi phiên ACCOUNT 3003 và các lỗi phiên SLOT 3003/3007/3009 được xử lý theo từng loại và đúng token đang dùng. UI guards kiểm tra role/plan; backend vẫn cần thực thi quyền trên API. Khi chuyển tài khoản, dữ liệu actor, quyền gói và dashboard được xóa trước khi tải tài khoản mới.
+Đăng xuất phía frontend xóa phiên trong store/storage. Lỗi phiên ACCOUNT 3003 và các lỗi phiên SLOT 3003/3007/3009 được xử lý theo từng loại phiên. UI guards kiểm tra role/plan; backend vẫn cần thực thi quyền trên API.
 
 Google login tải động Firebase SDK, mở popup, lấy ID token rồi gửi đến `/api/auth/login/google` để nhận ACCOUNT. Firebase chỉ giữ phiên trong bộ nhớ và đăng xuất sau khi lấy token; ứng dụng không dùng Firestore để lưu dữ liệu nghiệp vụ.
 
@@ -49,7 +47,6 @@ Tham khảo: [OWASP Authentication Cheat Sheet — Authentication Responses](htt
 
 ```powershell
 npm run test:auth
-npm run test:auth-tabs:browser
 ```
 
 Đây là hướng dẫn chạy kiểm tra; không khẳng định đã kiểm thử đăng nhập production trong đợt dọn tài liệu. Luồng xác thực được minh họa trong [sơ đồ ACCOUNT/SLOT](diagrams/03-authentication.svg).
