@@ -166,7 +166,6 @@ export default function WorkspaceLayout({ children }) {
         setUnreadCount((count) => Math.max(0, count - 1));
       } catch (error) {
         setNotificationsError(error.message || "Chưa đánh dấu được thông báo.");
-        return;
       }
     }
     const target = notificationTarget(item.action);

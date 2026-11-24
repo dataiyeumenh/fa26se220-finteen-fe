@@ -29,6 +29,7 @@ const CONCEPT_SECTIONS = [
 
 function LearningOverview({ concepts, completed, total }) {
   const assessed = concepts.filter((item) => ["GOOD", "FAMILIAR", "PRACTICE"].includes(item.band));
+  const learnedUnrated = concepts.filter((item) => item.band === "NO_DATA");
   const hasAssessment = assessed.length > 0;
   return <section className="ws-card learner-learning-overview">
     <div className="learner-learning-heading"><div><span className="ws-eyebrow">TỔNG QUAN HỌC TẬP</span><h2>Những nội dung bé đã học</h2></div><p>Chi tiết bé làm tốt và cần luyện thêm nằm trong từng chương bên dưới.</p></div>
@@ -43,6 +44,13 @@ function LearningOverview({ concepts, completed, total }) {
         </article>;
       })}
     </div>
+    {learnedUnrated.length > 0 && <section className="learner-learning-unrated">
+      <header><div><h3>Bé đã học qua</h3><p>Chưa đủ bài để xếp mức</p></div><span>{learnedUnrated.length} nội dung</span></header>
+      <ul>{learnedUnrated.map((item, index) => <li key={item.concept || index}>
+        <div><strong>{conceptName(item)}</strong>{item.objective && <span>{item.objective}</span>}</div>
+        <em>{Number(item.correct) || 0}/{Number(item.total) || 0} câu đúng</em>
+      </li>)}</ul>
+    </section>}
     {!concepts.length && <aside className="learner-learning-no-data"><strong>Chưa có nội dung đã học</strong><p>Bé cần hoàn thành thêm trò chơi hoặc hậu trắc để hệ thống ghi nhận nội dung.</p></aside>}
   </section>;
 }
@@ -53,7 +61,7 @@ function Summary({ summary, final = false }) {
   const generating = summary.status === "GENERATING";
   const Icon = waiting ? AlertCircle : generating ? Clock3 : Sparkles;
   return <aside className={`learner-report-summary is-${String(summary.status || "fallback").toLowerCase()}`}>
-    <Icon size={20} /><div><strong>{final ? "Tổng kết hành trình" : "Bé đã học gì ở chương này?"}</strong><p>{summary.text || SUMMARY_LABELS[summary.status] || "Chưa có nhận xét."}</p>{generating && <small>Trang sẽ tự cập nhật sau mỗi 30 giây.</small>}</div>
+    <Icon size={20} /><div><strong>{final ? "Tổng kết hành trình" : "Nhận xét chương"}</strong><p>{summary.text || SUMMARY_LABELS[summary.status] || "Chưa có nhận xét."}</p>{generating && <small>Trang sẽ tự cập nhật sau mỗi 30 giây.</small>}</div>
   </aside>;
 }
 

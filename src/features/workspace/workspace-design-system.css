@@ -1138,6 +1138,17 @@
 .ws .learner-learning-group li span { color:#536475; font-size:14px; line-height:1.5; }
 .ws .learner-learning-group li em { flex:none; color:#536475; font-size:12px; font-style:normal; font-weight:750; }
 .ws .learner-learning-group > small { display:block; margin-top:15px; color:#73808e; }
+.ws .learner-learning-unrated { padding:16px 18px; border:1px solid #e1e6eb; border-radius:14px; background:#f5f7f9; }
+.ws .learner-learning-unrated > header { display:flex; align-items:center; justify-content:space-between; gap:16px; }
+.ws .learner-learning-unrated > header h3 { margin:0; color:#48586a; font-size:16px; }
+.ws .learner-learning-unrated > header p { margin:2px 0 0; color:#73808e; font-size:12px; }
+.ws .learner-learning-unrated > header > span { flex:none; color:#607080; font-size:11px; font-weight:750; }
+.ws .learner-learning-unrated ul { display:grid; gap:0; margin:12px 0 0; padding:0; list-style:none; }
+.ws .learner-learning-unrated li { display:flex; align-items:center; justify-content:space-between; gap:18px; padding:11px 0; border-top:1px solid #dde3e8; }
+.ws .learner-learning-unrated li > div { display:grid; gap:3px; min-width:0; }
+.ws .learner-learning-unrated li strong { color:#344457; font-size:14px; line-height:1.45; }
+.ws .learner-learning-unrated li span { color:#667587; font-size:13px; line-height:1.5; }
+.ws .learner-learning-unrated li em { flex:none; color:#536475; font-size:12px; font-style:normal; font-weight:750; }
 .ws .learner-learning-no-data { padding:15px 17px; border-radius:13px; background:#f3f5f7; color:#596777; }
 .ws .learner-learning-no-data p { margin:4px 0 0; font-size:12px; line-height:1.55; }
 .ws .learner-learning-no-data ul { display:grid; gap:8px; margin:10px 0 0; padding-left:18px; }
@@ -1168,6 +1179,7 @@
   .ws .learner-learning-heading p { max-width:none; overflow-wrap:anywhere; }
   .ws .learner-learning-group li { align-items:flex-start; flex-direction:column; gap:5px; }
   .ws .learner-learning-group li em { padding:3px 7px; border-radius:999px; background:rgba(255,255,255,.75); }
+  .ws .learner-learning-unrated li { align-items:flex-start; flex-direction:column; gap:5px; }
   .ws .learner-learning-no-data { overflow-wrap:anywhere; }
 }
 .ws .ws-progress-report-head {

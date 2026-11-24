@@ -73,9 +73,11 @@ try {
   assert(concepts.textContent.includes("Những nội dung bé đã học"), "Parent-friendly learning overview is missing");
   assert(concepts.textContent.includes("Bé đang làm quen"), "Assessment bands are not grouped into plain-language sections");
   assert(concepts.textContent.includes("Thu nhập trước và sau khấu trừ"), "Assessed concept name or legacy fallback missing");
-  assert(!concepts.textContent.includes("Bé đã học qua") && !concepts.textContent.includes("Phân biệt cần và muốn"), "Unrated learning content is duplicated in the overview");
+  assert(concepts.textContent.includes("Bé đã học qua") && concepts.textContent.includes("Chưa đủ bài để xếp mức"), "Unrated learning section is missing");
+  assert(concepts.textContent.includes("Phân biệt cần và muốn") && concepts.textContent.includes(report.concepts[0].objective), "Unrated concept name or objective is missing");
+  assert(concepts.textContent.includes("1/1 câu đúng"), "Unrated concept evidence count is missing");
   assert(!/D01\.02|D02\.02/.test(concepts.textContent), "Internal knowledge codes are still displayed");
-  assert(first.querySelector(".learner-report-summary strong").textContent.includes("Bé đã học gì ở chương này"), "Chapter learning summary is not clearly labelled");
+  assert(first.querySelector(".learner-report-summary strong").textContent.includes("Nhận xét chương"), "Chapter summary is not correctly labelled");
   assert(review.querySelector("h4").textContent.includes("Bé cần luyện thêm ở chương này"), "Practice guidance is not attached to its chapter");
   results.push("Knowledge units stay compact while learning and practice guidance appear in the relevant chapter");
   assert(document.querySelector(".learner-final-status").textContent === "Trạng thái: Tạm thời (còn chương chờ hậu trắc)", "PARTIAL status is not translated");
