@@ -4,6 +4,10 @@
 
 Trang `/dashboard/quiz-management` cho giáo viên chọn lớp, tạo/sửa đề, xem đề, phát hành, xóa bản nháp và xem kết quả.
 
+Phụ huynh cũng truy cập đường dẫn này, nhưng được chuyển tới `src/pages/Parent/Quiz/ParentQuizResults.jsx`: chỉ xem kết quả hậu trắc, điểm và chi tiết câu trả lời của các con. Màn hình lấy các nhóm `FAMILY` (bao gồm gia đình đã đóng), gọi danh sách quiz cho từng nhóm và chỉ hiển thị `kind: POST_TEST`. Phần kết quả dùng chung `QuizResults` với nhãn dành cho gia đình; không hiển thị hoặc gọi chức năng tạo, sửa, xóa, phát hành đề hay kho câu hỏi. Việc kiểm tra quyền sở hữu nhóm và bài làm do API thực hiện với ACCOUNT token.
+
+Kiểm thử trình duyệt: `npm run test:parent-quiz:browser` kiểm tra route, menu phụ huynh, phạm vi dữ liệu gia đình, điểm và chi tiết bài làm, trạng thái rỗng/lỗi và khả năng thử lại, đồng thời xác nhận giáo viên vẫn có đầy đủ chức năng.
+
 ## Cấu trúc
 
 ```text
