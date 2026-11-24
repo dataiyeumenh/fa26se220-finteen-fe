@@ -1,0 +1,26 @@
+flowchart LR
+    entry["SC-02<br/>Login"]
+    dashboard["SC-04<br/>Parent dashboard"]
+    plans["SC-05<br/>Plans"]
+    settings["SC-06<br/>Settings"]
+    learners["SC-07<br/>Parent learners"]
+    reports["SC-09<br/>Parent reports"]
+    detail["SC-08<br/>Learner report"]
+    payment(["QR payment"])
+    open(["Open family group"])
+    create(["Create child"])
+    pin(["Change PIN"])
+    giveback(["Return slot"])
+    wipe(["Delete identity"])
+    profile(["Profile"])
+    notifications(["Notifications"])
+    entry --> dashboard
+    dashboard --> plans & settings & learners & reports
+    dashboard --> profile & notifications
+    plans --> payment
+    learners --> open & create & pin & giveback & wipe
+    learners --> detail
+    reports --> detail
+    class dashboard,plans,settings,learners,reports,detail screen
+    class payment,open,create,pin,giveback,wipe,profile,notifications action
+    class entry screen

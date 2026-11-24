@@ -17,7 +17,6 @@ dist-ssr
 !/public/**/*.svg
 /output/
 /outputs/
-/docs/
 /tmp/
 /docx_qa/
 /docx_qa_word/
@@ -47,4 +46,3 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-/docs/

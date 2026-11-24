@@ -1,0 +1,46 @@
+sequenceDiagram
+    autonumber
+    actor Kid as Người chơi
+    participant Page as KidGames
+    participant Content as content.api.js
+    participant API as FinTeen API
+    participant Player as VisualNovelPlayer
+    participant Local as Bộ nhớ trình duyệt
+    participant Batch as playBatch / kidDashboardApi
+    Kid->>Page: Mở chương sau route guard
+    Page->>Content: getChapterContent(CHxx)
+    opt Chưa có currentRelease trong bộ nhớ
+        Content->>API: GET /api/content/current · công khai
+        API-->>Content: version + danh mục chương
+    end
+    Content->>API: GET /api/content/releases/{version}/chapters/{code}
+    API-->>Content: Dữ liệu chương
+    Content-->>Page: resolveContentImages(chapter)
+    Page->>Player: data → normalizeChapter
+    Player->>Local: Khôi phục checkpoint finteen:vn:{data.id}
+    Note over Player,Local: Theo chương, chưa tách theo người học. localStorage trước, sessionStorage dự phòng
+    Player->>Batch: flushPendingBatches() khi mount
+    Batch->>Local: Đọc lô đang chờ theo mã SLOT hiện tại
+    Note over Batch,API: Mỗi lô đang chờ được gửi lại qua cùng luồng submit bên dưới
+    loop Hội thoại / inspect / lựa chọn / mini-game
+        Kid->>Player: Tương tác
+        Player->>Player: Cập nhật scenePath, flags, choiceLedger, miniGameResults
+        Player->>Local: Lưu checkpoint, flush khi ẩn / rời trang
+    end
+    Player->>Batch: Tới ending → buildChapterBatch → submitChapterBatch
+    alt Không có mã SLOT hoặc thiếu releaseVersion / chapter
+        Batch-->>Player: skipped, không gửi API
+    else Có SLOT và metadata hợp lệ
+        Batch->>API: GET /api/play/state · Bearer SLOT
+        API-->>Batch: attemptIndex + chaptersDone + totalChapters
+        Batch->>Batch: Tính attemptIndex, tăng khi chơi lại chương 1 sau khi xong hết
+        Batch->>API: POST /api/play/chapter · Bearer SLOT<br/>choices + miniGames + releaseVersion + attemptIndex
+        alt Thành công
+            API-->>Batch: result
+            Batch->>Local: Xóa lô đang chờ tương ứng
+        else Lỗi mạng hoặc HTTP 5xx tại bước GET / POST
+            Batch->>Local: Giữ lô để gửi lại khi mở game
+        else Lỗi HTTP 4xx
+            Batch->>Local: Xóa lô, không giữ để gửi lại
+        end
+    end

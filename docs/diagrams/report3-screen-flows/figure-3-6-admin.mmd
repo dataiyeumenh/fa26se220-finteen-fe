@@ -1,0 +1,21 @@
+flowchart LR
+    entry["SC-26<br/>Studio login"]
+    console["SC-13<br/>Admin console"]
+        plans["SC-13.T01<br/>Plan prices"]
+        transactions["SC-13.T02<br/>Transactions"]
+        roles["SC-13.T03<br/>Roles"]
+        log["SC-13.T04<br/>Role log"]
+        grant["SC-13.T05<br/>Grant plan"]
+        keys["SC-13.T06<br/>AI keys"]
+    roleDialog(["Grant / revoke role"])
+    addKey(["Add AI key"])
+    deleteKey(["Delete AI key"])
+    studio["SC-14<br/>Studio chapters"]
+    entry --> console
+    console --> plans & transactions & roles & log & grant & keys
+    console -->|Content Studio| studio
+    roles --> roleDialog
+    keys --> addKey & deleteKey
+    class console,plans,transactions,roles,log,grant,keys screen
+    class roleDialog,addKey,deleteKey action
+    class entry,studio screen

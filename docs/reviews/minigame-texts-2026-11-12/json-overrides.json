@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "completed": [
+    "NEED_WANT: custom copy and full correct playthrough",
+    "BUDGET_BUILDER: JSON boardSafe/passSummary and full correct playthrough",
+    "CAREER_MATCH: JSON steps/name/finish and full correct playthrough",
+    "SAVINGS_RACE: custom coin/basket/goal/win/reset and successful catch",
+    "STUDIO: unsaved JSON heading TEST visible in 3 real mini-game frames; zero writes"
+  ],
+  "writes": [],
+  "errors": []
+}

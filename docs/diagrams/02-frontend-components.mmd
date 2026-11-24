@@ -1,0 +1,39 @@
+flowchart TB
+    entry["main.jsx<br/>startAuth + startScrollbars"] --> router["App.jsx / BrowserRouter"]
+    subgraph UI["Trình duyệt · React UI"]
+        router --> public["Homepage / Login / Register<br/>AuthForm / OtpForm"]
+        router --> guards["RequireAccount / ChapterGuard<br/>kind, role, plan, chương"]
+        guards --> workspace["WorkspaceLayout<br/>Parent / Teacher / Kid / Guest"]
+        router --> internal["InternalApp · lazy load<br/>hasInternalAccess"]
+        internal --> admin["AdminDashboard"]
+        internal --> studio["StudioWorkspace<br/>Editor / Review / Release / Libraries"]
+        workspace --> pages["Pages → hooks → feature API<br/>Dashboard / nhóm / quiz / báo cáo / gói"]
+        workspace --> games["KidGames → VisualNovelPlayer<br/>normalizeChapter / conditions / mini-games"]
+        studio --> studioClient["studioApi + permissions<br/>useStudioResource / useStudioAction"]
+    end
+    store["auth singleton · createAuthClient<br/>actor / phiên / entitlements / dashboard"]
+    subscription["useWorkspace<br/>useSyncExternalStore"] --> store
+    guards --> subscription
+    internal --> subscription
+    pages --> store
+    public --> store
+    admin --> store
+    studioClient -->|"accountRequest"| store
+    games --> content["content.api.js<br/>currentRelease cache trong bộ nhớ"]
+    games --> batch["playBatch → kidDashboardApi"]
+    batch -->|"slotRequest"| store
+    games --> checkpoint["visualNovelProgress<br/>localStorage; fallback sessionStorage"]
+    batch --> pending["localStorage<br/>Lô lỗi mạng / 5xx chờ gửi lại"]
+    store --> session["sessionStorage<br/>Token ACCOUNT / SLOT và hạn dùng"]
+    store --> context["localStorage<br/>Phạm vi parent / teacher"]
+    pages --> mock["Teacher quiz import<br/>createMockQuizApi → localStorage"]
+    store -->|"fetch / ApiResponse / Bearer"| api["FinTeen HTTP API · bên ngoài repo"]
+    content -->|"fetch công khai / versioned URL"| api
+    content --> images["resolveContentImages<br/>Đổi ảnh local đã biết sang WebP"]
+    studioClient --> images
+    classDef core fill:#dbeafe,stroke:#2563eb,color:#172554
+    classDef storage fill:#fef3c7,stroke:#b45309,color:#451a03
+    classDef external fill:#f1f5f9,stroke:#64748b,color:#0f172a
+    class router,store,games,studio core
+    class session,context,checkpoint,pending,mock storage
+    class api external

@@ -35,7 +35,7 @@ function ChapterResult({ title, result, postTest = false }) {
   return <section className={`learner-chapter-result ${postTest ? "is-post-test" : "is-mini-game"}`} aria-label={`Kết quả ${title}`}>
     <header><span className="learner-chapter-result-icon"><Icon size={20} aria-hidden="true" /></span><h3>{title}</h3></header>
     {hasResult ? <div className="learner-chapter-result-score"><strong>{ratio(result)}</strong><span>câu đúng</span></div> : <p className="learner-chapter-result-empty">{postTest ? "Chưa nộp" : "Chưa có kết quả"}</p>}
-    {wrong.length > 0 && <div className="learner-minigame-review"><h4>Câu cần xem lại</h4><ol>{wrong.map((item, index) => <li key={item.id ?? index}>
+    {wrong.length > 0 && <div className="learner-minigame-review"><h4>Câu cần xem lại</h4><ol>{wrong.map((item) => <li key={`${item.gameId}-${item.itemId}`}>
       <strong>{item.label || "Câu hỏi mini-game"}</strong>
       <p>Bé chọn: {item.chosenLabel ?? "Chưa có dữ liệu"}</p>
       <p>Đáp án: {item.expectedLabel ?? "Chưa có dữ liệu"}</p>

@@ -1,0 +1,29 @@
+flowchart TB
+    home["SC-01<br/>Homepage"]
+    login["SC-02<br/>Login"]
+    register["SC-03<br/>Register"]
+    demo(["Demo lesson"])
+    menu(["Mobile menu"])
+    adult(["Adult sign-in"])
+    learner(["Learner sign-in"])
+    reset(["Password reset"])
+    otp(["Email verification"])
+    google(["Google sign-in"])
+    dashboard["SC-04<br/>Adult dashboard"]
+    kid["SC-12<br/>Kid dashboard"]
+    guest["SC-25<br/>Guest demo"]
+    guestPlayer["SC-20<br/>Player · Demo"]
+    home --> login & register & demo & menu
+    login --> adult & learner
+    adult --> dashboard
+    adult --> reset & otp & google
+    register --> otp & google
+    otp --> dashboard
+    google --> dashboard
+    learner --> kid
+    dashboard -->|Guest| guest
+    guest --> guestPlayer
+    class home,login,register screen
+    class adult,learner,reset,otp action
+    class demo,menu,google action
+    class dashboard,kid,guest,guestPlayer screen

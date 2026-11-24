@@ -20,7 +20,7 @@ const report = {
     chapter: 1, title: "Tiền đầu tiên", reportStatus: "COMPLETE",
     summary: { status: "READY", text: summaryText },
     choices: [{ optionId: "one", label: "A. Để dành tiền mua sách", deliberate: true }, { optionId: "two", label: "B. Chờ đủ tiền rồi mới mua", deliberate: false }, { optionId: "three" }],
-    miniGames: { correct: 3, total: 6, wrong: [{ id: "internal-id", label: "Bộ màu vẽ cao cấp", chosenLabel: "Cần", expectedLabel: "Muốn", explanation: "Có thể hoãn mua để ưu tiên các khoản cần thiết." }] },
+    miniGames: { correct: 3, total: 6, wrong: [{ gameId: "NEED_WANT_CH01", itemId: "art-colors", label: "Bộ màu vẽ cao cấp", chosenLabel: "Cần", expectedLabel: "Muốn", explanation: "Có thể hoãn mua để ưu tiên các khoản cần thiết." }] },
     postTest: { status: "SUBMITTED", correct: 4, total: 6 },
   }, {
     chapter: 2, title: "Tháng đầu tiên và mục tiêu lớn", reportStatus: "PARTIAL",

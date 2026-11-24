@@ -1,0 +1,57 @@
+[
+  {
+    "case": "budget",
+    "identical": true,
+    "differenceBounds": null
+  },
+  {
+    "case": "career",
+    "identical": true,
+    "differenceBounds": null
+  },
+  {
+    "case": "cashflow",
+    "identical": true,
+    "differenceBounds": null
+  },
+  {
+    "case": "claims",
+    "identical": true,
+    "differenceBounds": null
+  },
+  {
+    "case": "compound",
+    "identical": true,
+    "differenceBounds": null
+  },
+  {
+    "case": "loan",
+    "identical": true,
+    "differenceBounds": null
+  },
+  {
+    "case": "need-want",
+    "identical": true,
+    "differenceBounds": null
+  },
+  {
+    "case": "plan-summary",
+    "identical": true,
+    "differenceBounds": null
+  },
+  {
+    "case": "planner",
+    "identical": true,
+    "differenceBounds": null
+  },
+  {
+    "case": "portfolio",
+    "identical": true,
+    "differenceBounds": null
+  },
+  {
+    "case": "savings",
+    "identical": true,
+    "differenceBounds": null
+  }
+]

@@ -1,0 +1,40 @@
+{
+  "engine": "Mermaid 11.12.0",
+  "diagrams": [
+    {
+      "file": "01-system-context.mmd",
+      "parsed": true,
+      "rendered": true,
+      "width": 1110.375,
+      "height": 496
+    },
+    {
+      "file": "02-frontend-components.mmd",
+      "parsed": true,
+      "rendered": true,
+      "width": 2615.71875,
+      "height": 1307.59375
+    },
+    {
+      "file": "03-authentication.mmd",
+      "parsed": true,
+      "rendered": true,
+      "width": 1287,
+      "height": 1600
+    },
+    {
+      "file": "04-game-content-and-progress.mmd",
+      "parsed": true,
+      "rendered": true,
+      "width": 1517,
+      "height": 1995.75
+    },
+    {
+      "file": "05-studio-and-publication.mmd",
+      "parsed": true,
+      "rendered": true,
+      "width": 1359.6875,
+      "height": 1212.796875
+    }
+  ]
+}

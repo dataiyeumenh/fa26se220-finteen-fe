@@ -1,0 +1,39 @@
+flowchart LR
+    entry["SC-02<br/>Login"]
+    dashboard["SC-04<br/>Teacher dashboard"]
+    plans["SC-05<br/>Plans"]
+    settings["SC-06<br/>Settings"]
+    learners["SC-07<br/>Class learners"]
+    groups["SC-10<br/>Groups"]
+    reports["SC-09<br/>Reports"]
+    quizzes["SC-11<br/>Quiz management"]
+    detail["SC-08<br/>Learner report"]
+    payment(["QR payment"])
+    create(["Create student"])
+    pin(["Change PIN"])
+    giveback(["Return slot"])
+    wipe(["Delete identity"])
+    open(["Open class"])
+    consent(["Parental consent"])
+    close(["End class"])
+    edit(["Create / edit quiz"])
+    importQuiz(["Import quiz (sample)"])
+    view(["View quiz"])
+    publish(["Publish quiz"])
+    deleteQuiz(["Delete draft"])
+    results(["Quiz results"])
+    submission(["Submission detail"])
+    entry --> dashboard
+    dashboard --> plans & settings & groups & learners & reports & quizzes
+    plans --> payment
+    groups --> open & consent & close
+    groups --> learners & quizzes & reports
+    learners --> create & pin & giveback & wipe
+    learners --> detail
+    reports --> detail
+    quizzes --> edit & importQuiz & view & publish & deleteQuiz & results
+    results --> submission
+    class dashboard,plans,settings,learners,groups,reports,quizzes,detail screen
+    class edit,submission action
+    class payment,create,pin,giveback,wipe,open,consent,close,importQuiz,view,publish,deleteQuiz,results action
+    class entry screen

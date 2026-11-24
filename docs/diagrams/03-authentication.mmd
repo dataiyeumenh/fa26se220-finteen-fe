@@ -1,0 +1,36 @@
+sequenceDiagram
+    autonumber
+    actor User as Người dùng
+    participant Form as AuthForm / màn xác thực
+    participant Auth as auth · createAuthClient
+    participant API as FinTeen API
+    participant Storage as sessionStorage
+    participant UI as useWorkspace / route guards
+    alt ACCOUNT · đăng nhập thường hoặc nội bộ
+        User->>Form: Email + mật khẩu
+        Form->>Auth: login / internalLogin
+        Auth->>API: POST /api/auth/login hoặc /api/auth/internal/login
+        API-->>Auth: accessToken + expiresIn
+        Auth->>Storage: Lưu ACCOUNT và xóa phiên SLOT
+        Auth->>API: GET /api/auth/me · Bearer ACCOUNT
+        API-->>Auth: Account + roles + plans
+        Auth->>Auth: Chọn context parent / teacher / guest
+        Note over Auth: Ưu tiên context đã lưu trong localStorage nếu hợp lệ
+    else SLOT · người học
+        User->>Form: Mã hồ sơ + PIN
+        Form->>Auth: slotLogin(code, pin)
+        Auth->>API: POST /api/slots/login
+        API-->>Auth: accessToken + expiresIn + slot
+        Auth->>Storage: Lưu SLOT
+        Auth->>Auth: FAMILY → child / parent, CLASS → student / teacher
+        Note over Auth: actor.role = kid, actor.kind = learner
+    end
+    Auth-->>UI: publish → useSyncExternalStore
+    UI-->>User: Hiện khu vực theo actor / roles / plan
+    Note over Auth,UI: ACCOUNT và SLOT có hàm request riêng, timer kiểm tra hết hạn mỗi giây
+    opt Người học mở dashboard
+        UI->>Auth: ensureLearnerDashboard()
+        Auth->>API: GET /api/learner/dashboard · Bearer SLOT
+        API-->>Auth: learner + progress + dữ liệu dashboard
+        Auth-->>UI: Cache và publish dashboard
+    end

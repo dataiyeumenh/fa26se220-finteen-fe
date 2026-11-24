@@ -1,0 +1,29 @@
+{
+  "source": "bang-quy-tac-chi-so-98-lua-chon-2026-11-24.csv",
+  "sourceSha256": "43cb6094ebc336489f4eb5e67f09ee6eca5068d008950939fdd13cba786a7dcf",
+  "rows": 98,
+  "columns": 15,
+  "originalColumnsUnchanged": 11,
+  "filledHAColumns": 4,
+  "missingICPByChapter": {
+    "CH03": 6,
+    "CH04": 32,
+    "CH05": 7,
+    "CH06": 2
+  },
+  "classification": {
+    "lựa chọn chính đã có điểm": 51,
+    "phản tư": 12,
+    "lựa chọn chính bổ sung": 8,
+    "điều hướng/giao dịch bắt buộc/sở thích": 27
+  },
+  "allowedMagnitudes": [
+    0,
+    2,
+    5,
+    10
+  ],
+  "studioApplied": false,
+  "published": false,
+  "outputSha256": "2b5c2041d0ff8243aeddf7ebc3eaf1be5ba6671ab6ea90eb5d879a09a5395a7e"
+}

@@ -1,5 +1,7 @@
 # Gắn mã mini-game và sửa báo cáo học tập — 24/11/2026
 
+**Cập nhật sau phản hồi lead:** CH01–CH08 đã được gửi duyệt (`SUBMITTED`); CH01 đã chạy Sinh giọng và đủ 160 bản đọc READY. Đã sửa khóa câu sai theo `gameId`/`itemId`. Xem [bàn giao và bảng 98 lựa chọn](../../docs/knowledge-base/ban-giao-lead-2026-11-24.md) cùng [audit gửi duyệt](lead-followup-2026-11-24.audit.json). Các trạng thái DRAFT bên dưới là tại thời điểm lưu migration; bản công khai hiện vẫn 2.7.2.
+
 Đã gắn mã theo Task 2 của [bảng đã duyệt](../../docs/knowledge-base/bao-cao-duyet-noi-dung-2026-11-23.md) vào bản nháp Studio thật của cả 8 chương. Đã đọc lại API sau từng lần lưu và kiểm tra đủ 13 mini-game, 63 câu đang được chấm; 101 vị trí `grade.concept` nếu tính cả cấu hình dùng chung giữa các cảnh.
 
 | Chương | Revision sau lưu | Trạng thái |

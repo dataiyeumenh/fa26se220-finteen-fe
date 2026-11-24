@@ -31,7 +31,7 @@ Mọi tab cùng origin và cùng hồ sơ trình duyệt dùng một phiên duy 
 
 Đây không phải cơ chế refresh token: client vẫn tôn trọng `expiresIn` (giây), không kéo dài hạn token. Tài liệu API hiện chưa công bố endpoint refresh token; muốn duy trì đăng nhập sau hạn token cần backend cung cấp cơ chế gia hạn. `accountRequest` và `slotRequest` chọn đúng loại phiên; request dùng `credentials: omit` và timeout 20 giây. Client chỉ nhận thành công khi HTTP thành công và `ApiResponse.code === 0`, trả về `result`.
 
-Đăng xuất gửi yêu cầu thu hồi phiên tới backend và xóa phiên dùng chung; các tab còn lại đồng bộ đăng xuất. Lỗi phiên ACCOUNT 3003 và các lỗi phiên SLOT 3003/3007/3009 được xử lý theo từng loại và đúng token đang dùng. UI guards kiểm tra role/plan; backend vẫn cần thực thi quyền trên API. Khi chuyển tài khoản, dữ liệu actor, quyền gói và dashboard được xóa trước khi tải tài khoản mới.
+Đăng xuất xóa phiên dùng chung ở phía trình duyệt; các tab còn lại đồng bộ đăng xuất. Backend hiện chưa có API đăng xuất/thu hồi phiên. `signOut()` trong FE hiện vẫn thử gọi `POST /api/auth/logout` và bỏ qua lỗi trước khi dọn phiên cục bộ; lời gọi này không phải hợp đồng API đã được backend hỗ trợ và không bảo đảm thu hồi token trên server. Lỗi phiên ACCOUNT 3003 và các lỗi phiên SLOT 3003/3007/3009 được xử lý theo từng loại và đúng token đang dùng. UI guards kiểm tra role/plan; backend vẫn cần thực thi quyền trên API. Khi chuyển tài khoản, dữ liệu actor, quyền gói và dashboard được xóa trước khi tải tài khoản mới.
 
 Google login tải động Firebase SDK, mở popup, lấy ID token rồi gửi đến `/api/auth/login/google` để nhận ACCOUNT. Firebase chỉ giữ phiên trong bộ nhớ và đăng xuất sau khi lấy token; ứng dụng không dùng Firestore để lưu dữ liệu nghiệp vụ.
 
