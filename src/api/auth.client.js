@@ -597,6 +597,26 @@ export function createAuthClient({
         authenticated: true,
         body: { provider: "GOOGLE", idToken },
       }),
+    async updateProfile(displayName) {
+      const account = await request("/api/auth/me", {
+        authenticated: true,
+        method: "PATCH",
+        body: { displayName: String(displayName || "").trim() },
+      });
+      if (account?.id !== state.actor?.id || !account?.displayName)
+        throw new ApiError("Máy chủ trả thông tin tài khoản không hợp lệ.");
+      publish({
+        actor: {
+          ...state.actor,
+          id: account.id,
+          email: account.email,
+          displayName: account.displayName,
+          name: account.displayName,
+          roles: Array.isArray(account.roles) ? account.roles : state.actor.roles,
+        },
+      });
+      return account;
+    },
     resend: (email) =>
       request(
         `/api/auth/verify/resend?email=${encodeURIComponent(email.trim())}`,

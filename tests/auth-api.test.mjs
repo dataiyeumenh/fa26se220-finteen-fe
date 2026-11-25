@@ -248,6 +248,24 @@ test("dual-plan context is selectable only from server plans", async () => {
     (error) => error.code === 3004,
   );
 });
+test("profile update trims the display name, uses PATCH me and updates the active actor", async () => {
+  const { auth, queue, calls } = setup();
+  queue.push(
+    { code: 0, result: token },
+    { code: 0, result: me },
+    { code: 0, result: { ...me, displayName: "Tên mới" } },
+  );
+  await auth.login("test@example.com", "password");
+  await auth.updateProfile("  Tên mới  ");
+  const call = calls.at(-1);
+  assert.ok(call.url.endsWith("/api/auth/me"));
+  assert.equal(call.method, "PATCH");
+  assert.deepEqual(JSON.parse(call.body), { displayName: "Tên mới" });
+  assert.equal(call.headers.Authorization, "Bearer account-token");
+  assert.equal(auth.getSnapshot().actor.displayName, "Tên mới");
+  assert.equal(auth.getSnapshot().actor.name, "Tên mới");
+  assert.equal(auth.getSnapshot().actor.role, "teacher");
+});
 test("wrong old password does not logout; change password immediately replaces bearer; 3003 clears it", async () => {
   const { auth, calls, queue } = setup();
   queue.push({ code: 0, result: token }, { code: 0, result: me });
@@ -736,13 +754,17 @@ test("report APIs use ACCOUNT authentication and encoded resource ids", async ()
   queue.push(
     { code: 0, result: { rows: [] } },
     { code: 0, result: { learner: {}, progress: {} } },
+    { code: 0, result: { paper: [] } },
   );
   await reportsApi.getGroupReport("group/one");
   await learnerApi.getSlotReport("slot/one");
+  await learnerApi.getQuizResult("quiz/one", "slot/one");
   assert.match(calls[2].url, /\/api\/groups\/group%2Fone\/report$/);
   assert.match(calls[3].url, /\/api\/slots\/slot%2Fone\/report$/);
+  assert.match(calls[4].url, /\/api\/quizzes\/quiz%2Fone\/results\/slot%2Fone$/);
   assert.equal(calls[2].headers.Authorization, "Bearer account-token");
   assert.equal(calls[3].headers.Authorization, "Bearer account-token");
+  assert.equal(calls[4].headers.Authorization, "Bearer account-token");
 });
 
 test("learner dashboard uses the SLOT bearer, caches the result and clears revoked SLOT sessions", async () => {

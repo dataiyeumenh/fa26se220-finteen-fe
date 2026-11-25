@@ -21,7 +21,7 @@ const report = {
     summary: { status: "READY", text: summaryText },
     choices: [{ optionId: "one", label: "A. Để dành tiền mua sách", deliberate: true }, { optionId: "two", label: "B. Chờ đủ tiền rồi mới mua", deliberate: false }, { optionId: "three" }],
     miniGames: { correct: 3, total: 6, wrong: [{ gameId: "NEED_WANT_CH01", itemId: "art-colors", label: "Bộ màu vẽ cao cấp", chosenLabel: "Cần", expectedLabel: "Muốn", explanation: "Có thể hoãn mua để ưu tiên các khoản cần thiết." }] },
-    postTest: { status: "SUBMITTED", correct: 4, total: 6 },
+    postTest: { quizId: "quiz-one", status: "SUBMITTED", correct: 4, total: 6 },
   }, {
     chapter: 2, title: "Tháng đầu tiên và mục tiêu lớn", reportStatus: "PARTIAL",
     summary: { status: "WAITING_POST_TEST" }, choices: [], miniGames: null, postTest: null,
@@ -31,9 +31,9 @@ const report = {
   ],
   finalReport: { status: "PARTIAL", summary: { status: "WAITING_POST_TEST" } },
 };
-async function mount(value = report) {
+async function mount(value = report, extraState = {}) {
   root.render(<MemoryRouter initialEntries={["/dashboard/learners/report-test"]}>
-    <WorkspaceLayout><LearnerReportContent reportState={{ report: value, loading: false, refresh() {} }} /></WorkspaceLayout>
+    <WorkspaceLayout><LearnerReportContent reportState={{ report: value, loading: false, refresh() {}, ...extraState }} /></WorkspaceLayout>
   </MemoryRouter>);
   await wait();
   document.querySelectorAll(".learner-report-chapter").forEach((node) => { node.open = true; });
@@ -41,6 +41,14 @@ async function mount(value = report) {
 }
 try {
   await mount();
+  const notificationButton = document.querySelector(".ws-notification-button");
+  notificationButton.click();
+  await wait();
+  assert(document.querySelector(".ws-notification-dropdown"), "Notification dropdown did not open");
+  document.body.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true }));
+  await wait();
+  assert(!document.querySelector(".ws-notification-dropdown"), "Notification dropdown did not close after an outside click");
+  results.push("Notification dropdown closes when the user clicks outside it");
   const progressCards = document.querySelector(".ws-progress-summary");
   assert(progressCards.querySelector(".is-completed strong").textContent.includes("2 / 8"), "Completed chapters do not match progress data");
   assert(progressCards.querySelector(".is-next strong").textContent === "Chương 3", "Continue chapter does not match progress data");
@@ -59,22 +67,36 @@ try {
   const postTest = first.querySelector(".is-post-test");
   assert(miniGame.querySelector("strong").textContent === "3/6", "Mini-game count changed");
   assert(postTest.querySelector("strong").textContent === "4/6", "Post-test count changed");
+  assert(postTest.querySelector(".learner-post-test-button")?.textContent.includes("Xem bài hậu trắc"), "Submitted post-test does not expose its detail action");
   const review = miniGame.querySelector(".learner-minigame-review");
   assert(review?.textContent.includes("Bộ màu vẽ cao cấp"), "Wrong mini-game question is missing");
   assert(review.textContent.includes("Bé chọn: Cần") && review.textContent.includes("Đáp án: Muốn"), "Chosen and expected answers are missing");
   assert(review.textContent.includes(report.chapters[0].miniGames.wrong[0].explanation), "Wrong-answer explanation is missing");
   assert(!postTest.querySelector(".learner-minigame-review"), "Mini-game review appears on post-test card");
   results.push("Mini-game scores and wrong answers include the chosen answer, expected answer and explanation");
+  await mount(report, { postTestResults: { "quiz-one": { paper: [] } } });
+  const postTestDetails = document.querySelector(".learner-post-test-paper");
+  assert(postTestDetails?.open, "Loaded post-test detail does not open initially");
+  postTestDetails.open = false;
+  assert(!postTestDetails.open, "Loaded post-test detail cannot be collapsed");
+  results.push("Post-test detail opens after loading and can be collapsed");
+  await mount();
   const empty = document.querySelectorAll(".learner-report-chapter-body")[1];
   assert(empty.textContent.includes("Chưa có kết quả") && empty.textContent.includes("Chưa nộp") && empty.textContent.includes("Chưa ghi nhận lựa chọn"), "Missing data is not explained");
   assert(!empty.textContent.includes("0/0"), "Missing data is incorrectly represented as a score");
+  assert(!empty.querySelector(".learner-post-test-button"), "Pending post-test incorrectly exposes a detail action");
   results.push("Missing mini-game, post-test and choice data have explicit empty states");
-  const concepts = document.querySelector(".learner-concept-grid");
-  assert(concepts.textContent.includes("Phân biệt cần và muốn") && concepts.textContent.includes("Thu nhập trước và sau khấu trừ"), "Backend concept name or legacy fallback missing");
-  assert(concepts.textContent.includes(report.concepts[0].objective), "Concept objective missing");
+  const concepts = document.querySelector(".learner-learning-overview");
+  assert(concepts.textContent.includes("Những nội dung bé đã học"), "Parent-friendly learning overview is missing");
+  assert(concepts.textContent.includes("Bé đang làm quen"), "Assessment bands are not grouped into plain-language sections");
+  assert(concepts.textContent.includes("Thu nhập trước và sau khấu trừ"), "Assessed concept name or legacy fallback missing");
+  assert(concepts.textContent.includes("Bé đã học qua") && concepts.textContent.includes("Chưa đủ bài để xếp mức"), "Unrated learning section is missing");
+  assert(concepts.textContent.includes("Phân biệt cần và muốn") && concepts.textContent.includes(report.concepts[0].objective), "Unrated concept name or objective is missing");
+  assert(concepts.textContent.includes("1/1 câu đúng"), "Unrated concept evidence count is missing");
   assert(!/D01\.02|D02\.02/.test(concepts.textContent), "Internal knowledge codes are still displayed");
-  assert(concepts.textContent.includes("1/1") && concepts.textContent.includes("4/6"), "Concept scores changed");
-  results.push("Knowledge units show Vietnamese names while preserving scores and assessment bands");
+  assert(first.querySelector(".learner-report-summary strong").textContent.includes("Nhận xét chương"), "Chapter summary is not correctly labelled");
+  assert(review.querySelector("h4").textContent.includes("Bé cần luyện thêm ở chương này"), "Practice guidance is not attached to its chapter");
+  results.push("Knowledge units stay compact while learning and practice guidance appear in the relevant chapter");
   assert(document.querySelector(".learner-final-status").textContent === "Trạng thái: Tạm thời (còn chương chờ hậu trắc)", "PARTIAL status is not translated");
   await mount({ ...report, finalReport: { status: "COMPLETE", summary: { status: "READY", text: "Đã hoàn thành." } } });
   assert(document.querySelector(".learner-final-status").textContent === "Trạng thái: Đầy đủ", "COMPLETE status is not translated");
