@@ -181,13 +181,6 @@ function EndingReport({ report }) {
           <strong>{format(report.money.end)} đ</strong>
           <span>Ban đầu {format(report.money.start)} đ</span>
         </div>
-        {report.learningScore !== null && (
-          <div className="vn-report-card">
-            <small>Điểm học chương</small>
-            <strong>{report.learningScore}/100</strong>
-            <span>{report.bandLabel}</span>
-          </div>
-        )}
       </div>
       <ul className="vn-report-metrics">
         {report.choicePercent !== null && (

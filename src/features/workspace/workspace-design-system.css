@@ -2447,3 +2447,11 @@
     grid-template-columns: 1fr;
   }
 }
+.ws .learner-note-sections { display: grid; gap: 12px; margin-top: 8px; }
+.ws .learner-note-overview { margin: 0; line-height: 1.6; }
+.ws .learner-note-block { padding: 12px 14px; border-radius: 12px; background: #fff; border: 1px solid #e2ece6; }
+.ws .learner-note-block h4 { margin: 0 0 8px; font-size: 14px; }
+.ws .learner-note-block ul { margin: 0; padding-left: 18px; display: grid; gap: 6px; }
+.ws .learner-note-block li strong { display: block; }
+.ws .learner-note-block li em { font-style: normal; font-weight: 500; opacity: .7; margin-left: 4px; }
+.ws .learner-note-block li span { display: block; line-height: 1.5; }
