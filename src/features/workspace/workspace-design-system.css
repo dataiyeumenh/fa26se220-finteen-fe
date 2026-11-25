@@ -1102,7 +1102,12 @@
 .ws .learner-post-test-button { width:100%; margin-top:16px; }
 .ws .learner-post-test-error { margin:10px 0 0; color:#a33d3d; font-size:12px; }
 .ws .learner-post-test-paper { margin-top:16px; padding-top:14px; border-top:1px solid #e1e7ed; }
-.ws .learner-post-test-paper h4 { margin:0 0 10px; font-size:15px; }
+.ws .learner-post-test-paper > summary { display:flex; align-items:center; justify-content:space-between; gap:10px; cursor:pointer; list-style:none; }
+.ws .learner-post-test-paper > summary::-webkit-details-marker { display:none; }
+.ws .learner-post-test-paper > summary h4 { margin:0; font-size:15px; }
+.ws .learner-post-test-paper > summary svg { flex:none; transition:transform .18s ease; }
+.ws .learner-post-test-paper:not([open]) > summary svg { transform:rotate(-90deg); }
+.ws .learner-post-test-paper > div { margin-top:12px; }
 .ws .learner-post-test-paper ol { display:grid; gap:12px; margin:0; padding-left:20px; }
 .ws .learner-post-test-paper li { padding-left:3px; }
 .ws .learner-post-test-paper li > strong { font-size:13px; line-height:1.5; }

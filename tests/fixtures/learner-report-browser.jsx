@@ -31,9 +31,9 @@ const report = {
   ],
   finalReport: { status: "PARTIAL", summary: { status: "WAITING_POST_TEST" } },
 };
-async function mount(value = report) {
+async function mount(value = report, extraState = {}) {
   root.render(<MemoryRouter initialEntries={["/dashboard/learners/report-test"]}>
-    <WorkspaceLayout><LearnerReportContent reportState={{ report: value, loading: false, refresh() {} }} /></WorkspaceLayout>
+    <WorkspaceLayout><LearnerReportContent reportState={{ report: value, loading: false, refresh() {}, ...extraState }} /></WorkspaceLayout>
   </MemoryRouter>);
   await wait();
   document.querySelectorAll(".learner-report-chapter").forEach((node) => { node.open = true; });
@@ -66,6 +66,13 @@ try {
   assert(review.textContent.includes(report.chapters[0].miniGames.wrong[0].explanation), "Wrong-answer explanation is missing");
   assert(!postTest.querySelector(".learner-minigame-review"), "Mini-game review appears on post-test card");
   results.push("Mini-game scores and wrong answers include the chosen answer, expected answer and explanation");
+  await mount(report, { postTestResults: { "quiz-one": { paper: [] } } });
+  const postTestDetails = document.querySelector(".learner-post-test-paper");
+  assert(postTestDetails?.open, "Loaded post-test detail does not open initially");
+  postTestDetails.open = false;
+  assert(!postTestDetails.open, "Loaded post-test detail cannot be collapsed");
+  results.push("Post-test detail opens after loading and can be collapsed");
+  await mount();
   const empty = document.querySelectorAll(".learner-report-chapter-body")[1];
   assert(empty.textContent.includes("Chưa có kết quả") && empty.textContent.includes("Chưa nộp") && empty.textContent.includes("Chưa ghi nhận lựa chọn"), "Missing data is not explained");
   assert(!empty.textContent.includes("0/0"), "Missing data is incorrectly represented as a score");

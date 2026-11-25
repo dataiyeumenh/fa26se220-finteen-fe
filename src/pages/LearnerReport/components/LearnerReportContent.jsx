@@ -74,12 +74,12 @@ function ChapterResult({ title, result, postTest = false, postTestResult, postTe
     {hasResult ? <div className="learner-chapter-result-score"><strong>{ratio(result)}</strong><span>câu đúng</span></div> : <p className="learner-chapter-result-empty">{postTest ? "Chưa nộp" : "Chưa có kết quả"}</p>}
     {postTest && result?.status === "SUBMITTED" && result?.quizId && !postTestResult && <button type="button" className="ws-btn learner-post-test-button" disabled={postTestLoading} onClick={onViewPostTest}><Eye size={16} />{postTestLoading ? "Đang tải bài…" : "Xem bài hậu trắc"}</button>}
     {postTest && postTestError && <p className="learner-post-test-error" role="alert">{postTestError}</p>}
-    {postTest && postTestResult && <div className="learner-post-test-paper"><h4>Chi tiết bài hậu trắc</h4>{(postTestResult.paper || postTestResult.answers || []).length ? <ol>{(postTestResult.paper || postTestResult.answers).map((answer, index) => {
+    {postTest && postTestResult && <details className="learner-post-test-paper" open><summary><h4>Chi tiết bài hậu trắc</h4><ChevronDown size={17} /></summary><div>{(postTestResult.paper || postTestResult.answers || []).length ? <ol>{(postTestResult.paper || postTestResult.answers).map((answer, index) => {
       const options = answer.options || [];
       const chosen = answer.chosen ?? answer.chosenIndex;
       const correctIndex = answer.correctPos ?? answer.correctIndex;
       return <li key={answer.questionId || answer.pos || index}><strong>{answer.stem || answer.question || `Câu ${index + 1}`}</strong><p>Bé chọn: {Number.isInteger(chosen) && chosen >= 0 ? `${String.fromCharCode(65 + chosen)}. ${options[chosen] ?? "Không có nội dung"}` : "Chưa trả lời"}</p>{answer.correct === false && Number.isInteger(correctIndex) && correctIndex >= 0 && options[correctIndex] != null && <p>Đáp án: {String.fromCharCode(65 + correctIndex)}. {options[correctIndex]}</p>}</li>;
-    })}</ol> : <p>Chưa có nội dung bài làm để hiển thị.</p>}</div>}
+    })}</ol> : <p>Chưa có nội dung bài làm để hiển thị.</p>}</div></details>}
     {wrong.length > 0 && <div className="learner-minigame-review"><h4>Bé cần luyện thêm ở chương này</h4><ol>{wrong.map((item) => <li key={`${item.gameId}-${item.itemId}`}>
       <strong>{item.label || "Câu hỏi mini-game"}</strong>
       <p>Bé chọn: {item.chosenLabel ?? "Chưa có dữ liệu"}</p>
