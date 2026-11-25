@@ -1,4 +1,5 @@
-import { BarChart3, CheckCircle2, ClipboardList, MapPinned, RefreshCw } from "lucide-react";
+import { useEffect, useState } from "react";
+import { AlertCircle, BarChart3, CheckCircle2, ChevronDown, ClipboardList, Clock3, History, MapPinned, RefreshCw } from "lucide-react";
 import { Link } from "react-router-dom";
 import { dateLabel } from "../../../../features/workspace/format";
 import {
@@ -29,6 +30,88 @@ const indicatorText = (indicators) =>
         .join(" · ")
     : "Chưa có dữ liệu";
 
+const chapterStateCopy = {
+  WAITING: "Chưa có nhận xét. Lớp nộp thêm bài sau chương thì sẽ có nhận xét. Số liệu bên dưới đã xem được.",
+  PREPARING: "Nhận xét mới đang được chuẩn bị, đợi tí nhé!",
+  BASIC: "Bản tóm tắt nhanh từ số liệu của lớp.",
+};
+const conceptBand = {
+  GOOD: "Lớp làm tốt",
+  FAMILIAR: "Đang làm quen",
+  PRACTICE: "Cần ôn lại",
+  NO_DATA: "Chưa đủ câu",
+};
+
+function LearnerLinks({ learners, empty = "Không có học sinh trong danh sách này." }) {
+  if (!learners?.length) return <p className="class-report-empty-inline">{empty}</p>;
+  return <div className="class-report-learners">{learners.map((learner, index) => learner?.slotId
+    ? <Link key={learner.slotId} to={`/dashboard/learners/${encodeURIComponent(learner.slotId)}`}>{learner.displayName || "Học sinh"}</Link>
+    : <span key={index}>{learner?.displayName || "Học sinh đã xoá"}</span>)}</div>;
+}
+
+function ClassComment({ chapter }) {
+  const comment = chapter.comment || { state: "WAITING" };
+  const state = comment.state || "WAITING";
+  const preparingWithPrevious = state === "PREPARING" && Boolean(comment.text);
+  return <section className={`class-report-comment is-${state.toLowerCase()}`}>
+    <div className="class-report-comment-head">
+      <div><h3>Nhận xét chương</h3>{comment.basedOn != null && <span>Nhận xét lúc {comment.basedOn}/{chapter.active || 0} em{comment.at ? ` · ${dateLabel(comment.at)}` : ""}</span>}</div>
+      {state === "PREPARING" ? <Clock3 aria-hidden="true" /> : state === "WAITING" ? <AlertCircle aria-hidden="true" /> : <CheckCircle2 aria-hidden="true" />}
+    </div>
+    {state !== "READY" && <p className="class-report-state-copy">{chapterStateCopy[state] || chapterStateCopy.WAITING}</p>}
+    {comment.text && <div className="class-report-comment-text">{preparingWithPrevious && <strong>Nhận xét hiện có</strong>}<p>{comment.text}</p></div>}
+    {chapter.history?.length > 0 && <details className="class-report-history"><summary><History size={16} /> Bản trước ({chapter.history.length}) <ChevronDown size={16} /></summary><ol>{chapter.history.map((item, index) => <li key={`${item.at || "history"}-${index}`}><span>Nhận xét lúc {item.basedOn ?? "—"}/{chapter.active || 0} em{item.at ? ` · ${dateLabel(item.at)}` : ""}</span><p>{item.text || "Không có nội dung."}</p></li>)}</ol></details>}
+  </section>;
+}
+
+function ConceptList({ concepts = [] }) {
+  return <section className="class-report-section"><header><div><h3>Nội dung trong chương</h3><p>Nội dung cần hỗ trợ được xếp trước.</p></div></header>{concepts.length ? <div className="class-report-concepts">{concepts.map((concept, index) => {
+    const total = Number(concept.total) || 0;
+    const correct = Number(concept.correct) || 0;
+    const percent = total > 0 ? Math.min(100, Math.round(correct / total * 100)) : 0;
+    return <details key={`${concept.name || "concept"}-${index}`} className={`class-report-concept is-${String(concept.band || "NO_DATA").toLowerCase()}`}>
+      <summary><span className="class-report-rank">{index + 1}</span><div className="class-report-concept-name"><strong>{concept.name || "Nội dung học tập"}</strong>{concept.objective && <span>{concept.objective}</span>}</div><span className="class-report-band">{conceptBand[concept.band] || conceptBand.NO_DATA}</span><span className="class-report-ratio">{correct}/{total}</span><span className="class-report-concept-bar"><i style={{ width: `${percent}%` }} /></span><ChevronDown size={17} /></summary>
+      <div className="class-report-concept-detail"><strong>{concept.wrongLearners?.length || 0} em sai ít nhất 1 câu</strong><LearnerLinks learners={concept.wrongLearners} empty="Chưa ghi nhận em nào cần xem lại nội dung này." /></div>
+    </details>;
+  })}</div> : <p className="class-report-empty-inline">Chưa có dữ liệu nội dung cho chương này.</p>}</section>;
+}
+
+function DecisionList({ decisions = [] }) {
+  return <section className="class-report-section"><header><div><h3>Lựa chọn trong câu chuyện</h3><p>Phân bố lựa chọn của lớp, không đánh giá đúng hay sai.</p></div></header>{decisions.length ? <div className="class-report-decisions">{decisions.map((decision, decisionIndex) => {
+    const total = (decision.options || []).reduce((sum, option) => sum + (Number(option.count) || 0), 0);
+    return <article key={`${decision.question || "decision"}-${decisionIndex}`}><h4>{decision.question || `Tình huống ${decisionIndex + 1}`}</h4><div>{(decision.options || []).map((option, optionIndex) => {
+      const count = Number(option.count) || 0;
+      const percent = total > 0 ? Math.round(count / total * 100) : 0;
+      return <details key={`${option.label || "option"}-${optionIndex}`}><summary><span>{option.label || `Lựa chọn ${optionIndex + 1}`}</span><i><b style={{ width: `${percent}%` }} /></i><strong>{count} em</strong><ChevronDown size={16} /></summary><LearnerLinks learners={option.learners} /></details>;
+    })}</div></article>;
+  })}</div> : <p className="class-report-empty-inline">Chưa có lựa chọn trong câu chuyện để tổng hợp.</p>}</section>;
+}
+
+function ClassChapterReport({ report, refreshGroup }) {
+  const chapters = Array.isArray(report.chapters) ? report.chapters : [];
+  const [selectedChapter, setSelectedChapter] = useState(chapters[0]?.chapter ?? null);
+  const chapter = chapters.find((item) => item.chapter === selectedChapter) || chapters[0];
+  useEffect(() => {
+    if (!chapter || chapter.comment?.state !== "PREPARING") return undefined;
+    const update = () => { if (document.visibilityState === "visible") void refreshGroup(report.group.id); };
+    const timer = window.setInterval(update, 60_000);
+    document.addEventListener("visibilitychange", update);
+    return () => { window.clearInterval(timer); document.removeEventListener("visibilitychange", update); };
+  }, [chapter, refreshGroup, report.group.id]);
+  if (!chapter) return <section className="ws-card class-report-empty"><strong>Chưa có báo cáo theo chương</strong><p>Khi lớp bắt đầu học và nộp bài sau chương, số liệu sẽ xuất hiện tại đây.</p></section>;
+  const active = Number(chapter.active) || 0;
+  const submitted = Number(chapter.submitted) || 0;
+  const submittedPercent = active > 0 ? Math.min(100, Math.round(submitted / active * 100)) : 0;
+  return <section className="ws-card class-report-chapters">
+    <div className="class-report-chapter-tabs" role="tablist" aria-label="Chọn chương">{chapters.map((item) => <button type="button" role="tab" aria-selected={item.chapter === chapter.chapter} className={item.chapter === chapter.chapter ? "is-active" : ""} key={item.chapter} onClick={() => setSelectedChapter(item.chapter)}>Chương {item.chapter}<small>{item.title}</small></button>)}</div>
+    <div className="class-report-progress"><div><strong>Chương {chapter.chapter}: {chapter.title}</strong><span>{submitted}/{active} em đã nộp bài sau chương</span></div><div role="progressbar" aria-label="Tiến độ nộp bài sau chương" aria-valuemin="0" aria-valuemax={active} aria-valuenow={submitted}><i style={{ width: `${submittedPercent}%` }} /></div></div>
+    <ClassComment chapter={chapter} />
+    <ConceptList concepts={chapter.concepts} />
+    <DecisionList decisions={chapter.decisions} />
+    <section className="class-report-section class-report-follow-up"><header><div><h3>Theo dõi thêm</h3><p>Bấm tên học sinh để mở báo cáo chi tiết.</p></div></header><div><article><strong>Chưa xong chương</strong><LearnerLinks learners={chapter.notFinished} /></article><article><strong>Chưa nộp bài sau chương</strong><LearnerLinks learners={chapter.notSubmitted} /></article></div></section>
+  </section>;
+}
+
 export default function TeacherReportsContent({ reportState }) {
   const {
     reports,
@@ -41,6 +124,7 @@ export default function TeacherReportsContent({ reportState }) {
     error,
     warning,
     refresh,
+    refreshGroup,
   } = reportState;
   const quizAverage = report?.summary?.averageScore == null
     ? "—"
@@ -130,6 +214,7 @@ export default function TeacherReportsContent({ reportState }) {
           In / Lưu PDF
         </button>
       </div>
+      <ClassChapterReport report={report} refreshGroup={refreshGroup} />
       <section className="ws-card ws-print-report">
         <h2>{report.group.name}</h2>
         <p>

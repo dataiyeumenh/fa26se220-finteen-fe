@@ -1,4 +1,4 @@
-import { AlertCircle, ArrowLeft, CheckCircle2, ChevronDown, ClipboardCheck, Clock3, Gamepad2, PlayCircle, RefreshCw, RotateCcw, Sparkles } from "lucide-react";
+import { AlertCircle, ArrowLeft, CheckCircle2, ChevronDown, ClipboardCheck, Clock3, Eye, Gamepad2, PlayCircle, RefreshCw, RotateCcw, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import { dateLabel } from "../../../features/workspace/format";
 import { Empty } from "../../../features/workspace/ui";
@@ -65,13 +65,21 @@ function Summary({ summary, final = false }) {
   </aside>;
 }
 
-function ChapterResult({ title, result, postTest = false }) {
+function ChapterResult({ title, result, postTest = false, postTestResult, postTestLoading, postTestError, onViewPostTest }) {
   const Icon = postTest ? ClipboardCheck : Gamepad2;
   const hasResult = result && (Number(result.total) > 0 || result.status === "SUBMITTED");
   const wrong = !postTest && Array.isArray(result?.wrong) ? result.wrong : [];
   return <section className={`learner-chapter-result ${postTest ? "is-post-test" : "is-mini-game"}`} aria-label={`Kết quả ${title}`}>
     <header><span className="learner-chapter-result-icon"><Icon size={20} aria-hidden="true" /></span><h3>{title}</h3></header>
     {hasResult ? <div className="learner-chapter-result-score"><strong>{ratio(result)}</strong><span>câu đúng</span></div> : <p className="learner-chapter-result-empty">{postTest ? "Chưa nộp" : "Chưa có kết quả"}</p>}
+    {postTest && result?.status === "SUBMITTED" && result?.quizId && !postTestResult && <button type="button" className="ws-btn learner-post-test-button" disabled={postTestLoading} onClick={onViewPostTest}><Eye size={16} />{postTestLoading ? "Đang tải bài…" : "Xem bài hậu trắc"}</button>}
+    {postTest && postTestError && <p className="learner-post-test-error" role="alert">{postTestError}</p>}
+    {postTest && postTestResult && <div className="learner-post-test-paper"><h4>Chi tiết bài hậu trắc</h4>{(postTestResult.paper || postTestResult.answers || []).length ? <ol>{(postTestResult.paper || postTestResult.answers).map((answer, index) => {
+      const options = answer.options || [];
+      const chosen = answer.chosen ?? answer.chosenIndex;
+      const correctIndex = answer.correctPos ?? answer.correctIndex;
+      return <li key={answer.questionId || answer.pos || index}><strong>{answer.stem || answer.question || `Câu ${index + 1}`}</strong><p>Bé chọn: {Number.isInteger(chosen) && chosen >= 0 ? `${String.fromCharCode(65 + chosen)}. ${options[chosen] ?? "Không có nội dung"}` : "Chưa trả lời"}</p>{answer.correct === false && Number.isInteger(correctIndex) && correctIndex >= 0 && options[correctIndex] != null && <p>Đáp án: {String.fromCharCode(65 + correctIndex)}. {options[correctIndex]}</p>}</li>;
+    })}</ol> : <p>Chưa có nội dung bài làm để hiển thị.</p>}</div>}
     {wrong.length > 0 && <div className="learner-minigame-review"><h4>Bé cần luyện thêm ở chương này</h4><ol>{wrong.map((item) => <li key={`${item.gameId}-${item.itemId}`}>
       <strong>{item.label || "Câu hỏi mini-game"}</strong>
       <p>Bé chọn: {item.chosenLabel ?? "Chưa có dữ liệu"}</p>
@@ -81,7 +89,7 @@ function ChapterResult({ title, result, postTest = false }) {
   </section>;
 }
 
-function Chapter({ chapter, index }) {
+function Chapter({ chapter, index, reportState }) {
   const number = chapter.chapter ?? chapter.chapterNumber ?? index + 1;
   const choices = Array.isArray(chapter.choices) ? chapter.choices : Array.isArray(chapter.deliberate) ? chapter.deliberate : [];
   return <li className="is-done">
@@ -92,7 +100,7 @@ function Chapter({ chapter, index }) {
         <Summary summary={chapter.summary} />
         <div className="learner-report-metrics">
           <ChapterResult title="Mini-game" result={chapter.miniGames} />
-          <ChapterResult title="Hậu trắc" result={chapter.postTest} postTest />
+          <ChapterResult title="Hậu trắc" result={chapter.postTest} postTest postTestResult={chapter.postTest?.quizId ? reportState.postTestResults?.[chapter.postTest.quizId] : null} postTestLoading={String(chapter.postTest?.quizId) === reportState.postTestLoading} postTestError={reportState.postTestError} onViewPostTest={() => void reportState.loadPostTest?.(chapter.postTest?.quizId)} />
         </div>
         <section className="learner-chapter-choices">
           <header><h3>Lựa chọn của trẻ trong câu chuyện</h3><span>{choices.length} lựa chọn</span></header>
@@ -159,7 +167,7 @@ export default function LearnerReportContent({ reportState }) {
           <div className="ws-progress-stat-content"><span>Lượt trải nghiệm</span><strong>{progress.attemptIndex != null ? `Lần ${progress.attemptIndex}` : "Chưa xác định"}</strong><p>Lượt chơi toàn bộ hành trình</p></div>
         </div>
       </div>
-      {chapters.length ? <ol className="ws-chapter-timeline">{chapters.map((chapter, index) => <Chapter key={chapter.chapter ?? chapter.chapterNumber ?? index} chapter={chapter} index={index} />)}</ol> : <Empty>Chưa có dữ liệu chi tiết theo chương.</Empty>}
+      {chapters.length ? <ol className="ws-chapter-timeline">{chapters.map((chapter, index) => <Chapter key={chapter.chapter ?? chapter.chapterNumber ?? index} chapter={chapter} index={index} reportState={reportState} />)}</ol> : <Empty>Chưa có dữ liệu chi tiết theo chương.</Empty>}
     </section>
     {finalReport.status !== "NONE" && <section className="ws-card"><h2><CheckCircle2 size={20} /> Báo cáo cuối hành trình</h2><Summary summary={finalReport.summary} final /><p className="learner-final-status">Trạng thái: {FINAL_STATUS_LABELS[finalReport.status] || "Chưa xác định"}</p></section>}
     {report.progress?.lastPlayedAt && <footer className="ws-progress-meta">Hoạt động gần nhất {dateLabel(report.progress.lastPlayedAt)}</footer>}

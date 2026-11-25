@@ -21,7 +21,7 @@ const report = {
     summary: { status: "READY", text: summaryText },
     choices: [{ optionId: "one", label: "A. Để dành tiền mua sách", deliberate: true }, { optionId: "two", label: "B. Chờ đủ tiền rồi mới mua", deliberate: false }, { optionId: "three" }],
     miniGames: { correct: 3, total: 6, wrong: [{ gameId: "NEED_WANT_CH01", itemId: "art-colors", label: "Bộ màu vẽ cao cấp", chosenLabel: "Cần", expectedLabel: "Muốn", explanation: "Có thể hoãn mua để ưu tiên các khoản cần thiết." }] },
-    postTest: { status: "SUBMITTED", correct: 4, total: 6 },
+    postTest: { quizId: "quiz-one", status: "SUBMITTED", correct: 4, total: 6 },
   }, {
     chapter: 2, title: "Tháng đầu tiên và mục tiêu lớn", reportStatus: "PARTIAL",
     summary: { status: "WAITING_POST_TEST" }, choices: [], miniGames: null, postTest: null,
@@ -59,6 +59,7 @@ try {
   const postTest = first.querySelector(".is-post-test");
   assert(miniGame.querySelector("strong").textContent === "3/6", "Mini-game count changed");
   assert(postTest.querySelector("strong").textContent === "4/6", "Post-test count changed");
+  assert(postTest.querySelector(".learner-post-test-button")?.textContent.includes("Xem bài hậu trắc"), "Submitted post-test does not expose its detail action");
   const review = miniGame.querySelector(".learner-minigame-review");
   assert(review?.textContent.includes("Bộ màu vẽ cao cấp"), "Wrong mini-game question is missing");
   assert(review.textContent.includes("Bé chọn: Cần") && review.textContent.includes("Đáp án: Muốn"), "Chosen and expected answers are missing");
@@ -68,6 +69,7 @@ try {
   const empty = document.querySelectorAll(".learner-report-chapter-body")[1];
   assert(empty.textContent.includes("Chưa có kết quả") && empty.textContent.includes("Chưa nộp") && empty.textContent.includes("Chưa ghi nhận lựa chọn"), "Missing data is not explained");
   assert(!empty.textContent.includes("0/0"), "Missing data is incorrectly represented as a score");
+  assert(!empty.querySelector(".learner-post-test-button"), "Pending post-test incorrectly exposes a detail action");
   results.push("Missing mini-game, post-test and choice data have explicit empty states");
   const concepts = document.querySelector(".learner-learning-overview");
   assert(concepts.textContent.includes("Những nội dung bé đã học"), "Parent-friendly learning overview is missing");

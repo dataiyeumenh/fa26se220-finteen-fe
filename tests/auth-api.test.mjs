@@ -754,13 +754,17 @@ test("report APIs use ACCOUNT authentication and encoded resource ids", async ()
   queue.push(
     { code: 0, result: { rows: [] } },
     { code: 0, result: { learner: {}, progress: {} } },
+    { code: 0, result: { paper: [] } },
   );
   await reportsApi.getGroupReport("group/one");
   await learnerApi.getSlotReport("slot/one");
+  await learnerApi.getQuizResult("quiz/one", "slot/one");
   assert.match(calls[2].url, /\/api\/groups\/group%2Fone\/report$/);
   assert.match(calls[3].url, /\/api\/slots\/slot%2Fone\/report$/);
+  assert.match(calls[4].url, /\/api\/quizzes\/quiz%2Fone\/results\/slot%2Fone$/);
   assert.equal(calls[2].headers.Authorization, "Bearer account-token");
   assert.equal(calls[3].headers.Authorization, "Bearer account-token");
+  assert.equal(calls[4].headers.Authorization, "Bearer account-token");
 });
 
 test("learner dashboard uses the SLOT bearer, caches the result and clears revoked SLOT sessions", async () => {
