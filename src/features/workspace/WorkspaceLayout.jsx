@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { NavLink, Link, useLocation, useNavigate } from "react-router-dom";
 import {
   Home,
@@ -37,6 +37,11 @@ import {
   PLAN_LIMIT,
   PLAN_NAME,
 } from "./entitlements";
+import { notificationTarget, notificationsApi } from "./api/notificationsApi.js";
+
+const notificationTime = (value) => value
+  ? new Date(value).toLocaleString("vi-VN", { dateStyle: "short", timeStyle: "short" })
+  : "";
 
 export default function WorkspaceLayout({ children }) {
   const { actor, entitlements, entitlementsLoading, learnerDashboard } =
@@ -57,10 +62,61 @@ export default function WorkspaceLayout({ children }) {
   const expiringEntitlements = [];
   const [profileOpen, setProfileOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [notificationsLoading, setNotificationsLoading] = useState(false);
+  const [notificationsError, setNotificationsError] = useState("");
+  const notificationMenuRef = useRef(null);
+  const notificationsEnabled = !learner && ["parent", "teacher"].includes(actor?.role);
+  const refreshUnreadCount = useCallback(async () => {
+    if (!notificationsEnabled) return;
+    try {
+      const result = await notificationsApi.unreadCount();
+      setUnreadCount(Math.max(0, Number(result?.unreadCount) || 0));
+    } catch {
+      // Keep the last known badge during a transient polling failure.
+    }
+  }, [notificationsEnabled]);
+  const loadNotifications = useCallback(async () => {
+    if (!notificationsEnabled) return;
+    setNotificationsLoading(true);
+    setNotificationsError("");
+    try {
+      const result = await notificationsApi.list();
+      setNotifications(Array.isArray(result?.items) ? result.items : []);
+      setUnreadCount(Math.max(0, Number(result?.unreadCount) || 0));
+    } catch (error) {
+      setNotificationsError(error.message || "Không tải được thông báo.");
+    } finally {
+      setNotificationsLoading(false);
+    }
+  }, [notificationsEnabled]);
   useEffect(() => {
     if (learner) void auth.ensureLearnerDashboard().catch(() => {});
     else void auth.ensureEntitlements().catch(() => {});
   }, [learner]);
+  useEffect(() => {
+    if (!notificationsEnabled) return undefined;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    void refreshUnreadCount();
+    const poll = () => {
+      if (document.visibilityState === "visible") void refreshUnreadCount();
+    };
+    const timer = window.setInterval(poll, 60_000);
+    document.addEventListener("visibilitychange", poll);
+    return () => {
+      window.clearInterval(timer);
+      document.removeEventListener("visibilitychange", poll);
+    };
+  }, [notificationsEnabled, refreshUnreadCount]);
+  useEffect(() => {
+    if (!notificationsOpen) return undefined;
+    const closeOnOutsidePointer = (event) => {
+      if (!notificationMenuRef.current?.contains(event.target)) setNotificationsOpen(false);
+    };
+    document.addEventListener("pointerdown", closeOnOutsidePointer);
+    return () => document.removeEventListener("pointerdown", closeOnOutsidePointer);
+  }, [notificationsOpen]);
   const learnerType =
     actor?.learnerRole === "student" ? "Học sinh" : "Con trong gia đình";
   const learnerGroup = learnerDashboard?.learner?.groupName;
@@ -107,6 +163,34 @@ export default function WorkspaceLayout({ children }) {
   const closeMenus = () => {
     setProfileOpen(false);
     setNotificationsOpen(false);
+  };
+  const openNotification = async (item) => {
+    setNotificationsError("");
+    if (!item.read) {
+      try {
+        const result = await notificationsApi.markRead(item.id);
+        setNotifications((rows) => rows.map((row) => row.id === item.id
+          ? { ...row, read: true, readAt: result?.readAt || row.readAt }
+          : row));
+        setUnreadCount((count) => Math.max(0, count - 1));
+      } catch (error) {
+        setNotificationsError(error.message || "Chưa đánh dấu được thông báo.");
+      }
+    }
+    const target = notificationTarget(item.action);
+    closeMenus();
+    if (target) navigate(target);
+  };
+  const markAllNotificationsRead = async () => {
+    setNotificationsError("");
+    try {
+      const result = await notificationsApi.markAllRead();
+      const readAt = new Date().toISOString();
+      setNotifications((rows) => rows.map((row) => row.read ? row : { ...row, read: true, readAt }));
+      setUnreadCount(Math.max(0, Number(result?.unreadCount) || 0));
+    } catch (error) {
+      setNotificationsError(error.message || "Chưa đánh dấu được tất cả thông báo.");
+    }
   };
   const pageTheme = navigationPath.includes("/plans")
     ? "packages"
@@ -234,49 +318,52 @@ export default function WorkspaceLayout({ children }) {
             </div>
           )}
           <div className="ws-top-actions">
-            <div className="ws-header-menu">
+            {notificationsEnabled && <div className="ws-header-menu" ref={notificationMenuRef}>
               <button
                 className="ws-notification-button"
                 type="button"
                 aria-label="Thông báo"
                 aria-expanded={notificationsOpen}
                 onClick={() => {
-                  setNotificationsOpen((value) => !value);
+                  const opening = !notificationsOpen;
+                  setNotificationsOpen(opening);
                   setProfileOpen(false);
+                  if (opening) void loadNotifications();
                 }}
               >
                 <Bell size={20} />
-                {expiringEntitlements.length > 0 && (
-                  <span>{expiringEntitlements.length}</span>
+                {unreadCount > 0 && (
+                  <span>{unreadCount > 99 ? "99+" : unreadCount}</span>
                 )}
               </button>
               {notificationsOpen && (
                 <div className="ws-header-dropdown ws-notification-dropdown">
                   <div className="ws-dropdown-heading">
                     <strong>Thông báo</strong>
-                    <span>{expiringEntitlements.length || 0} mới</span>
+                    <div className="ws-notification-heading-actions">
+                      <span>{unreadCount} mới</span>
+                      {unreadCount > 0 && <button type="button" onClick={() => void markAllNotificationsRead()}>Đọc tất cả</button>}
+                    </div>
                   </div>
-                  {expiringEntitlements.length ? (
-                    expiringEntitlements.map((item) => (
-                      <Link
-                        to="/dashboard/plans"
-                        onClick={closeMenus}
-                        className="ws-notification-item"
+                  {notificationsLoading ? (
+                    <div className="ws-notification-state">Đang tải thông báo…</div>
+                  ) : notificationsError ? (
+                    <div className="ws-notification-state error"><span>{notificationsError}</span><button type="button" onClick={() => void loadNotifications()}>Thử lại</button></div>
+                  ) : notifications.length ? (
+                    notifications.map((item) => (
+                      <button
+                        type="button"
+                        onClick={() => void openNotification(item)}
+                        className={`ws-notification-item ${item.read ? "is-read" : "is-unread"}`}
                         key={item.id}
                       >
-                        <AlertTriangle size={18} />
+                        <span className="ws-notification-dot" aria-hidden="true" />
                         <div>
-                          <strong>
-                            {PLAN_NAME[item.kind] || item.kind} sắp hết hạn
-                          </strong>
-                          <small>
-                            {item.daysLeft === 0
-                              ? "Hết hạn hôm nay"
-                              : `Còn ${item.daysLeft} ngày`}{" "}
-                            · đến {formatPlanDate(item.expiresOn)}
-                          </small>
+                          <strong>{item.title}</strong>
+                          <p>{item.message}</p>
+                          <small>{notificationTime(item.updatedAt || item.createdAt)}</small>
                         </div>
-                      </Link>
+                      </button>
                     ))
                   ) : (
                     <div className="ws-notification-empty">
@@ -287,7 +374,7 @@ export default function WorkspaceLayout({ children }) {
                   )}
                 </div>
               )}
-            </div>
+            </div>}
             <div className="ws-header-menu">
               <button
                 className="ws-profile-trigger"

@@ -8,10 +8,10 @@ const capacityFree = (value) => {
   return Number.isFinite(Number(candidate)) ? Number(candidate) : null;
 };
 
-export default function useTeacherGroups() {
+export default function useTeacherGroups({ requestedGroupId = "" } = {}) {
   const [group, setGroup] = useState(null);
   const [groups, setGroups] = useState([]);
-  const [selectedGroupId, setSelectedGroupId] = useState("");
+  const [selectedGroupId, setSelectedGroupId] = useState(requestedGroupId);
   const [slots, setSlots] = useState([]);
   const [capacity, setCapacity] = useState(null);
   const [quota, setQuota] = useState(null);
@@ -33,7 +33,7 @@ export default function useTeacherGroups() {
       const quotaList = Array.isArray(quotaRows) ? quotaRows : quotaRows?.items || quotaRows?.quotas || [];
       const teacherQuota = quotaList.find((item) => item.context === "CLASS" || item.plan === "TEACHER") || null;
       setQuota(teacherQuota);
-      const openGroup = classGroups.find((item) => !item.closedAt && item.id === selectedGroupId)
+      const openGroup = classGroups.find((item) => item.id === selectedGroupId)
         || classGroups.find((item) => !item.closedAt)
         || null;
       setGroups(classGroups);

@@ -26,7 +26,7 @@ const quizError = (error) => {
   "Không thể hoàn thành yêu cầu.";
 };
 
-export default function useTeacherQuizzes() {
+export default function useTeacherQuizzes({ requestedQuizId = "" } = {}) {
   const [groups, setGroups] = useState([]);
   const [groupId, setGroupId] = useState("");
   const [quizzes, setQuizzes] = useState([]);
@@ -36,18 +36,22 @@ export default function useTeacherQuizzes() {
 
   const loadGroups = useCallback(async () => {
     try {
-      const rows = ((await auth.listGroups()) || []).filter(
+      const [groupRows, requestedQuiz] = await Promise.all([
+        auth.listGroups(),
+        requestedQuizId ? auth.getQuiz(requestedQuizId) : Promise.resolve(null),
+      ]);
+      const rows = (groupRows || []).filter(
         (item) => item.context === "CLASS",
       );
       setGroups(rows);
       setGroupId(
         (old) =>
-          old || rows.find((item) => !item.closedAt)?.id || rows[0]?.id || "",
+          requestedQuiz?.groupId || old || rows.find((item) => !item.closedAt)?.id || rows[0]?.id || "",
       );
     } catch (value) {
       setError(quizError(value));
     }
-  }, []);
+  }, [requestedQuizId]);
 
   const loadQuizzes = useCallback(async () => {
     if (!groupId) {
@@ -115,6 +119,7 @@ export default function useTeacherQuizzes() {
     loading,
     message,
     error,
+    requestedQuizId,
     refresh,
     reload: () => {
       void loadGroups();

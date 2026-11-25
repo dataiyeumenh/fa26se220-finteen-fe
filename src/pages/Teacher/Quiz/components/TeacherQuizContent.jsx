@@ -10,7 +10,7 @@ import {
   Trash2,
   XCircle,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import QuestionFileImport from "../../../../components/public/QuestionFileImport.jsx";
 import QuestionSetPicker from "./QuestionSetPicker.jsx";
 import MyQuestionBank from "./MyQuestionBank.jsx";
@@ -65,9 +65,20 @@ export default function TeacherQuizContent({ quizState }) {
     refresh,
     publishQuiz,
     deleteQuiz,
+    requestedQuizId,
   } = quizState;
   const [modal, setModal] = useState(null);
   const [view, setView] = useState("overview");
+  const openedRequestedQuiz = useRef("");
+  useEffect(() => {
+    if (!requestedQuizId || openedRequestedQuiz.current === requestedQuizId) return;
+    const quiz = quizzes.find((item) => String(item.id) === String(requestedQuizId));
+    if (!quiz) return;
+    openedRequestedQuiz.current = requestedQuizId;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setView("results");
+    setModal({ type: "results", quiz });
+  }, [quizzes, requestedQuizId]);
   const done = async (text) => {
     setModal(null);
     await refresh(text);

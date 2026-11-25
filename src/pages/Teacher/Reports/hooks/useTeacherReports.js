@@ -52,6 +52,18 @@ export default function useTeacherReports(options = {}) {
     }
   }, [requestedGroupId]);
 
+  const refreshGroup = useCallback(async (targetGroupId) => {
+    if (!targetGroupId) return;
+    try {
+      const value = await auth.getGroupReport(targetGroupId);
+      if (!value) return;
+      setReports((current) => current.map((item) => item.group.id === targetGroupId ? value : item));
+      setWarning("");
+    } catch (loadError) {
+      setWarning(loadError.message || "Chưa cập nhật được báo cáo mới nhất.");
+    }
+  }, []);
+
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     void refresh();
@@ -75,5 +87,6 @@ export default function useTeacherReports(options = {}) {
     error,
     warning,
     refresh,
+    refreshGroup,
   };
 }
