@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { NavLink, Link, useLocation, useNavigate } from "react-router-dom";
 import {
   Home,
@@ -66,6 +66,7 @@ export default function WorkspaceLayout({ children }) {
   const [unreadCount, setUnreadCount] = useState(0);
   const [notificationsLoading, setNotificationsLoading] = useState(false);
   const [notificationsError, setNotificationsError] = useState("");
+  const notificationMenuRef = useRef(null);
   const notificationsEnabled = !learner && ["parent", "teacher"].includes(actor?.role);
   const refreshUnreadCount = useCallback(async () => {
     if (!notificationsEnabled) return;
@@ -108,6 +109,14 @@ export default function WorkspaceLayout({ children }) {
       document.removeEventListener("visibilitychange", poll);
     };
   }, [notificationsEnabled, refreshUnreadCount]);
+  useEffect(() => {
+    if (!notificationsOpen) return undefined;
+    const closeOnOutsidePointer = (event) => {
+      if (!notificationMenuRef.current?.contains(event.target)) setNotificationsOpen(false);
+    };
+    document.addEventListener("pointerdown", closeOnOutsidePointer);
+    return () => document.removeEventListener("pointerdown", closeOnOutsidePointer);
+  }, [notificationsOpen]);
   const learnerType =
     actor?.learnerRole === "student" ? "Học sinh" : "Con trong gia đình";
   const learnerGroup = learnerDashboard?.learner?.groupName;
@@ -309,7 +318,7 @@ export default function WorkspaceLayout({ children }) {
             </div>
           )}
           <div className="ws-top-actions">
-            {notificationsEnabled && <div className="ws-header-menu">
+            {notificationsEnabled && <div className="ws-header-menu" ref={notificationMenuRef}>
               <button
                 className="ws-notification-button"
                 type="button"

@@ -41,6 +41,14 @@ async function mount(value = report, extraState = {}) {
 }
 try {
   await mount();
+  const notificationButton = document.querySelector(".ws-notification-button");
+  notificationButton.click();
+  await wait();
+  assert(document.querySelector(".ws-notification-dropdown"), "Notification dropdown did not open");
+  document.body.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true }));
+  await wait();
+  assert(!document.querySelector(".ws-notification-dropdown"), "Notification dropdown did not close after an outside click");
+  results.push("Notification dropdown closes when the user clicks outside it");
   const progressCards = document.querySelector(".ws-progress-summary");
   assert(progressCards.querySelector(".is-completed strong").textContent.includes("2 / 8"), "Completed chapters do not match progress data");
   assert(progressCards.querySelector(".is-next strong").textContent === "Chương 3", "Continue chapter does not match progress data");
