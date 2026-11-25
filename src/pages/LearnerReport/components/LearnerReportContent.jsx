@@ -55,26 +55,13 @@ function LearningOverview({ concepts, completed, total }) {
   </section>;
 }
 
-const noteList = (title, items, render) => Array.isArray(items) && items.length > 0 && <section className="learner-note-block"><h4>{title}</h4><ul>{items.map((item, index) => <li key={item.concept || item.option || index}>{render(item)}</li>)}</ul></section>;
-
-function Sections({ sections }) {
-  return <div className="learner-note-sections">
-    {sections.overview && <p className="learner-note-overview">{sections.overview}</p>}
-    {noteList("Quyết định trong truyện", sections.decisions, (d) => <><strong>{d.option}</strong>{d.text && <span>{d.text}</span>}</>)}
-    {noteList("Bé làm tốt", sections.doingWell, (c) => <><strong>{c.name || conceptName(c)} <em>{c.correct}/{c.total}</em></strong>{c.text && <span>{c.text}</span>}</>)}
-    {noteList("Cần luyện thêm", sections.needsPractice, (c) => <><strong>{c.name || conceptName(c)} <em>{c.correct}/{c.total}</em></strong>{c.text && <span>{c.text}</span>}</>)}
-    {noteList("Gợi ý cho phụ huynh", sections.tips, (t) => <><strong>{t.name || conceptName(t)}</strong>{t.text && <span>{t.text}</span>}</>)}
-    {noteList("Chưa đủ bài để đánh giá", sections.notEnough, (c) => <><strong>{c.name || conceptName(c)}</strong><span>{c.correct}/{c.total} câu đúng</span></>)}
-  </div>;
-}
-
 function Summary({ summary, final = false }) {
   if (!summary) return null;
   const waiting = summary.status === "WAITING_POST_TEST";
   const generating = summary.status === "GENERATING";
   const Icon = waiting ? AlertCircle : generating ? Clock3 : Sparkles;
   return <aside className={`learner-report-summary is-${String(summary.status || "fallback").toLowerCase()}`}>
-    <Icon size={20} /><div><strong>{final ? "Tổng kết hành trình" : "Nhận xét chương"}</strong>{summary.sections ? <Sections sections={summary.sections} /> : <p>{summary.text || SUMMARY_LABELS[summary.status] || "Chưa có nhận xét."}</p>}{generating && <small>Nhận xét đang được hoàn thiện, trang tự cập nhật sau mỗi 30 giây.</small>}</div>
+    <Icon size={20} /><div><strong>{final ? "Tổng kết hành trình" : "Nhận xét chương"}</strong><p>{summary.text || SUMMARY_LABELS[summary.status] || "Chưa có nhận xét."}</p>{generating && <small>Trang sẽ tự cập nhật sau mỗi 30 giây.</small>}</div>
   </aside>;
 }
 
