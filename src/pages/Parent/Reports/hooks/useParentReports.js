@@ -21,16 +21,40 @@ export default function useParentReports(options = {}) {
           (a, b) => Number(Boolean(a.closedAt)) - Number(Boolean(b.closedAt)),
         );
       const settled = await Promise.allSettled(
-        groups.map((group) => auth.getGroupReport(group.id)),
+        groups.map(async (group) => {
+          const [legacyResult, courseResult] = await Promise.allSettled([
+            auth.getGroupReport(group.id),
+            auth.getCourseReport(group.id),
+          ]);
+          if (legacyResult.status === "rejected") throw legacyResult.reason;
+          return {
+            ...legacyResult.value,
+            course:
+              courseResult.status === "fulfilled" ? courseResult.value : null,
+            courseUnavailable: courseResult.status === "rejected",
+          };
+        }),
       );
       const values = settled
         .filter((item) => item.status === "fulfilled")
         .map((item) => item.value)
         .filter(Boolean);
       const failed = settled.length - values.length;
-      if (failed)
+      const courseUnavailable = values.filter(
+        (item) => item.courseUnavailable,
+      ).length;
+      if (failed || courseUnavailable)
         setWarning(
-          `${failed} nhóm chưa tải được báo cáo. Các nhóm còn lại vẫn được hiển thị.`,
+          [
+            failed
+              ? `${failed} nhóm chưa tải được báo cáo.`
+              : "",
+            courseUnavailable
+              ? `${courseUnavailable} nhóm chưa tải được biểu đồ tổng hợp; dữ liệu cơ bản vẫn được hiển thị.`
+              : "",
+          ]
+            .filter(Boolean)
+            .join(" "),
         );
       if (!values.length && failed)
         throw (

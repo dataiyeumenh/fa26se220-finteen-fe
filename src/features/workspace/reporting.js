@@ -77,14 +77,23 @@ const excelCsv = (data) =>
     `${data.map((row) => row.map(csvCell).join(CSV_SEPARATOR)).join("\r\n")}`,
   );
 
-const csvDateTime = (value) =>
-  value
-    ? new Intl.DateTimeFormat("vi-VN", {
-        dateStyle: "short",
-        timeStyle: "short",
-        timeZone: "Asia/Ho_Chi_Minh",
-      }).format(new Date(value))
-    : "";
+const csvDateTime = (value) => {
+  if (!value) return "";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  const parts = Object.fromEntries(new Intl.DateTimeFormat("en-GB", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
+    timeZone: "Asia/Ho_Chi_Minh",
+  }).formatToParts(date).map((part) => [part.type, part.value]));
+  // The middle dot and `h` deliberately keep Excel from coercing this text
+  // into a date serial, which renders as ####### when a CSV column is narrow.
+  return `${parts.day}/${parts.month}/${parts.year} · ${parts.hour}h${parts.minute}`;
+};
 
 const csvStatus = (status) =>
   ({

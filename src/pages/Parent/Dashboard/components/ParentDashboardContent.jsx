@@ -126,7 +126,7 @@ export default function ParentDashboardContent({ actor, dashboardState }) {
               <div>
                 <small>BÀI ÔN TẬP SAU CHƯƠNG</small>
                 <strong>{summary?.quizAssigned ?? 0}</strong>
-                <p>Còn gọi là hậu trắc</p>
+                <p>Bài làm sau khi hoàn thành chương</p>
               </div>
             </Link>
             <Link to="/dashboard/reports">

@@ -172,7 +172,7 @@ function App() {
                 element={<Navigate to="/dashboard/kid/lessons" replace />}
               />
 
-              {/* QUIZ CỦA KID — học sinh làm đề được giao; trẻ gia đình làm hậu trắc. */}
+              {/* QUIZ CỦA KID — học sinh làm đề được giao; trẻ gia đình làm bài trắc nghiệm sau chương. */}
               <Route element={<RequireAccount plans={["teacher", "parent"]} />}>
                 <Route path="/dashboard/kid/quiz" element={<KidQuiz />} />
                 <Route

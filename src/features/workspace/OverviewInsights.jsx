@@ -17,7 +17,7 @@ const quickActions = {
   parent: [
     ["/dashboard/learners", "Quản lý hồ sơ", "Tạo mã, đổi PIN và quản lý các con", UserPlus],
     ["/dashboard/reports", "Xem báo cáo", "Theo dõi tiến độ và xu hướng lựa chọn tài chính", BarChart3],
-    ["/dashboard/quiz-management", "Kết quả Quiz", "Xem kết quả hậu trắc của các con", ClipboardList],
+    ["/dashboard/quiz-management", "Kết quả Quiz", "Xem kết quả bài trắc nghiệm sau chương của các con", ClipboardList],
     ["/dashboard/plans", "Gói học tập", "Kiểm tra thời hạn và quyền lợi", BookOpenCheck],
   ],
   teacher: [

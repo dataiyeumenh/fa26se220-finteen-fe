@@ -29,7 +29,7 @@ export default function ParentQuizResults() {
       } catch (value) {
         if (active) {
           setQuizzes([]);
-          setError(value.message || "Không thể tải kết quả hậu trắc. Vui lòng thử lại.");
+          setError(value.message || "Không thể tải kết quả bài trắc nghiệm sau chương. Vui lòng thử lại.");
         }
       } finally {
         if (active) setLoading(false);
@@ -40,24 +40,24 @@ export default function ParentQuizResults() {
   }, [revision]);
 
   return <>
-    <Heading title="Quản lý Quiz" description="Xem kết quả hậu trắc và bài làm của các con trong gia đình.">
+    <Heading title="Quản lý Quiz" description="Xem kết quả bài trắc nghiệm sau chương và bài làm của các con trong gia đình.">
       <button className="ws-btn" disabled={loading} onClick={() => setRevision((value) => value + 1)}>
         <RefreshCw size={16} /> Làm mới
       </button>
     </Heading>
     <Notice text={error} />
-    {loading ? <Empty>Đang tải danh sách hậu trắc…</Empty> : !error && (
+    {loading ? <Empty>Đang tải danh sách bài trắc nghiệm sau chương…</Empty> : !error && (
       <section className="ws-card ws-quiz-result-list">
-        <header><h2>Kết quả hậu trắc</h2><p>Chọn một bài hậu trắc để xem điểm và chi tiết câu trả lời của trẻ.</p></header>
+        <header><h2>Kết quả bài trắc nghiệm sau chương</h2><p>Chọn một bài trắc nghiệm sau chương để xem điểm và chi tiết câu trả lời của trẻ.</p></header>
         {quizzes.length ? <div className="ws-table-wrap"><table>
-          <thead><tr><th>Bài hậu trắc</th><th>Gia đình</th><th>Đã nộp</th><th><span className="sr-only">Thao tác</span></th></tr></thead>
+          <thead><tr><th>Bài trắc nghiệm sau chương</th><th>Gia đình</th><th>Đã nộp</th><th><span className="sr-only">Thao tác</span></th></tr></thead>
           <tbody>{quizzes.map((quiz) => <tr key={quiz.id}>
             <td><strong>{quiz.title}</strong></td>
             <td>{quiz.familyName || "Gia đình"}</td>
             <td>{quiz.submittedCount ?? "—"}</td>
             <td><button className="ws-btn compact" onClick={() => setSelectedQuiz(quiz)}><Eye size={15} /> Xem kết quả</button></td>
           </tr>)}</tbody>
-        </table></div> : <Empty>Chưa có bài hậu trắc. Bài hậu trắc sẽ xuất hiện theo tiến trình học của các con.</Empty>}
+        </table></div> : <Empty>Chưa có bài trắc nghiệm sau chương. Bài sẽ xuất hiện theo tiến trình học của các con.</Empty>}
       </section>
     )}
     {selectedQuiz && <QuizResults key={selectedQuiz.id} quiz={selectedQuiz} family onClose={() => setSelectedQuiz(null)} />}

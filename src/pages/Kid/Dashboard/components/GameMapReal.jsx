@@ -72,7 +72,7 @@ function ChapterPoint({ chapter, point, onSelect }) {
           )}
         </span>
         <span className="atlas-stop-action">
-          {locked ? (chapter.lockReason === "post-test" ? "Làm hậu trắc" : "Chưa mở") : current ? "Tiếp tục" : completed ? "Chơi lại" : "Khám phá"}{" "}
+          {locked ? (chapter.lockReason === "post-test" ? "Làm bài trắc nghiệm sau chương" : "Chưa mở") : current ? "Tiếp tục" : completed ? "Chơi lại" : "Khám phá"}{" "}
           {locked ? <LockKeyhole size={14} /> : <ArrowRight size={14} />}
         </span>
       </button>
@@ -86,7 +86,7 @@ function ChapterPoint({ chapter, point, onSelect }) {
         <span>CHƯƠNG {chapter.id}</span>
         <strong>{chapter.subtitle}</strong>
         <small>
-          {locked ? (chapter.lockReason === "post-test" ? "Hoàn thành hậu trắc chương trước" : "Hoàn thành chương trước") : completed
+          {locked ? (chapter.lockReason === "post-test" ? "Hoàn thành bài trắc nghiệm sau chương trước" : "Hoàn thành chương trước") : completed
             ? "✓ Đã hoàn thành"
             : `${chapter.lessonsCompleted}/${chapter.totalLessons} bài · ${chapter.progress || 0}%`}
         </small>
