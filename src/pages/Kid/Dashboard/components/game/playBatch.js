@@ -22,8 +22,8 @@ export function chapterNumberOf(data) {
   return match ? Number(match[1]) : null;
 }
 
-/** Lô của một chương: choices theo nhóm câu hỏi, miniGames theo ô nhập (giá trị JSON). */
-export function buildChapterBatch(data, choiceLedger, miniGameResults) {
+/** Lô của một chương: lựa chọn, dữ kiện đã mở, phản tư và ô nhập mini-game. */
+export function buildChapterBatch(data, choiceLedger, miniGameResults, inspectedIds = {}) {
   const scenes = data.scenes || [];
   const choices = Object.entries(choiceLedger || {})
     .map(([group, entry]) => {
@@ -38,6 +38,8 @@ export function buildChapterBatch(data, choiceLedger, miniGameResults) {
             sceneId: scene.id,
             optionId: entry.optionId,
             chosenAt: entry.chosenAt,
+            firstOptionId: entry.firstOptionId || entry.optionId,
+            revised: Boolean(entry.revised),
           }
         : null;
     })
@@ -52,11 +54,29 @@ export function buildChapterBatch(data, choiceLedger, miniGameResults) {
         playedAt: r.playedAt,
       })),
     );
+  const inspected = [...new Set([
+    ...Object.entries(inspectedIds || {}).filter(([, opened]) => Boolean(opened)).map(([id]) => id),
+    ...Object.values(miniGameResults || {}).flatMap((result) => [
+      ...(Array.isArray(result?.inspected) ? result.inspected : []),
+      ...(Array.isArray(result?.inspectedItems) ? result.inspectedItems : []),
+      ...(Array.isArray(result?.ui?.inspected) ? result.ui.inspected : []),
+    ]),
+  ].filter(Boolean))];
+  const reflections = Object.entries(choiceLedger || {}).flatMap(([group, entry]) => {
+    const scene = scenes.find((item) => item.type === "reflection" && (item.choiceGroup || item.id) === group);
+    if (!scene || !entry?.answer) return [];
+    const answer = scene.activity === "reflection1"
+      ? { selected: entry.answer.selected || [], method: entry.answer.method || "" }
+      : { action: entry.answer.action || "", date: entry.answer.date || "" };
+    return [{ sceneId: scene.id, answer }];
+  });
   return {
     chapter: chapterNumberOf(data),
     releaseVersion: data.releaseVersion || null,
     choices,
     miniGames,
+    ...(inspected.length ? { inspected } : {}),
+    ...(reflections.length ? { reflections } : {}),
     finishedAt: new Date().toISOString(),
   };
 }

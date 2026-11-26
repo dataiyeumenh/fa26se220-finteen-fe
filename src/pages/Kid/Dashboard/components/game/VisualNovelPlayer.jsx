@@ -506,7 +506,7 @@ export function VisualNovelPlayer({ data: rawData, progressOwner = null, learner
   useEffect(() => {
     if (scene?.type !== "ending" || isReviewing || batchSentRef.current) return;
     batchSentRef.current = true;
-    const batch = buildChapterBatch(data, choiceLedger, miniGameResults);
+    const batch = buildChapterBatch(data, choiceLedger, miniGameResults, inspectedIds);
     if (import.meta.env.DEV) window.__finteenLastBatch = batch;
     void submitChapterBatch(batch, learnerCode).then(async (outcome) => {
       if (import.meta.env.DEV) window.__finteenLastSubmit = outcome;
@@ -524,7 +524,7 @@ export function VisualNovelPlayer({ data: rawData, progressOwner = null, learner
           outcome.failed,
         );
     });
-  }, [scene?.type, isReviewing, data, choiceLedger, miniGameResults, learnerCode, navigate]);
+  }, [scene?.type, isReviewing, data, choiceLedger, miniGameResults, inspectedIds, learnerCode, navigate]);
 
   const miniGameKind =
     scene?.type === "minigame" ? miniGameKindOf(scene.game) : undefined;
