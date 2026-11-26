@@ -51,6 +51,15 @@ function LearnerList({ title, learners = [] }) {
   );
 }
 
+function ChartHelp({ children }) {
+  return (
+    <details className="class-report-chart-help">
+      <summary aria-label="Xem giải thích biểu đồ">?</summary>
+      <p>{children}</p>
+    </details>
+  );
+}
+
 export function CourseOverviewCharts({ report }) {
   const chapters = useMemo(() => report?.chapters || [], [report?.chapters]);
   const distribution = useMemo(
@@ -143,7 +152,13 @@ export function CourseOverviewCharts({ report }) {
       </article>
       <article>
         <header>
-          <h3>Hoàn thành theo chương</h3>
+          <div className="class-report-chart-title">
+            <h3>Hoàn thành theo chương</h3>
+            <ChartHelp>
+              Mỗi chương có hai cột. Khoảng cách giữa hai cột cho biết còn bao
+              nhiêu em đã học xong nhưng chưa nộp bài.
+            </ChartHelp>
+          </div>
           <p>
             So sánh số em đã xong chương với số em đã nộp bài trắc nghiệm sau
             chương.
@@ -221,15 +236,17 @@ export function CourseOverviewCharts({ report }) {
             Đã nộp bài trắc nghiệm sau chương
           </span>
         </div>
-        <p className="class-report-chart-explainer">
-          Mỗi chương có hai cột. Khoảng cách giữa hai cột cho biết còn bao nhiêu
-          em đã học xong nhưng chưa nộp bài.
-        </p>
       </article>
       {(topics.length > 0 || waitingTopics.length > 0) && (
         <article className="is-wide">
           <header>
-            <h3>Kết quả theo chủ đề</h3>
+            <div className="class-report-chart-title">
+              <h3>Kết quả theo chủ đề</h3>
+              <ChartHelp>
+                Thanh càng dài, lớp làm đúng chủ đề đó càng nhiều. Chủ đề có tỷ
+                lệ thấp được ưu tiên ôn lại.
+              </ChartHelp>
+            </div>
             <p>
               Tổng hợp từ tất cả chương · Chủ đề cần xem lại được xếp trước.
             </p>
@@ -277,10 +294,6 @@ export function CourseOverviewCharts({ report }) {
                 </BarChart>
               </ResponsiveContainer>
             </div>
-            <p className="class-report-chart-explainer">
-              Thanh càng dài, lớp làm đúng chủ đề đó càng nhiều. Chủ đề có tỷ lệ
-              thấp nên được ưu tiên ôn lại.
-            </p>
           </>}
           {waitingTopics.length > 0 && (
             <p className="class-report-concept-waiting">
