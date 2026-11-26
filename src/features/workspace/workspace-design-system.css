@@ -2124,7 +2124,8 @@
 .ws .class-report-story-copy strong { color:#34473e; font-size:13px; line-height:1.5; }
 .ws .class-report-story-options > button.is-top .class-report-story-copy strong { font-weight:850; }
 .ws .class-report-story-copy small { overflow:hidden; color:#8a958f; font-size:11px; text-overflow:ellipsis; white-space:nowrap; }
-.ws .class-report-story-mini-chart { display:block; height:16px; margin-left:24px; background:transparent; }
+.ws .class-report-story-mini-chart { display:block; height:8px; margin-left:24px; overflow:hidden; border-radius:999px; background:var(--role-soft,#edf1ee); }
+.ws .class-report-story-mini-chart > i { display:block; height:100%; border-radius:inherit; background:var(--report-green,#2f7d5b); transition:width .2s ease; }
 .ws .class-report-story-count { color:#34473e; font-size:12px; font-weight:800; text-align:right; }
 .ws .class-report-story-options > button.is-zero .class-report-story-copy,
 .ws .class-report-story-options > button.is-zero .class-report-story-count { color:#8b9690; }

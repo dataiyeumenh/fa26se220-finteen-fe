@@ -1,11 +1,9 @@
 import { lazy, Suspense, useEffect, useState } from "react";
-import { ChevronDown, Download, History, MapPinned, Printer } from "lucide-react";
+import { ChevronDown, Download, MapPinned, Printer } from "lucide-react";
 import { Link } from "react-router-dom";
-import { dateLabel } from "../../../../features/workspace/format";
 import { download, groupReportCsv } from "../../../../features/workspace/reporting";
 import { Empty, Heading } from "../../../../features/workspace/ui";
 import { ContentSkeleton } from "@/components/feedback/LoadingState";
-import StructuredReportSections from "@/features/workspace/StructuredReportSections";
 
 const StoryChoiceChart = lazy(() => import("./TeacherReportCharts").then((module) => ({ default: module.StoryChoiceChart })));
 const CourseOverviewCharts = lazy(() => import("./TeacherReportCharts").then((module) => ({ default: module.CourseOverviewCharts })));
@@ -27,13 +25,15 @@ function LearnerLinks({ learners, empty = "Không có học sinh trong danh sác
 function ClassComment({ chapter }) {
   const comment = chapter.comment || { state: "WAITING" };
   const state = comment.state || "WAITING";
-  if (state !== "READY" || (!comment.sections && !comment.text)) return null;
+  const canShowComment = state === "READY" || state === "BASIC";
+  if (!canShowComment || (!comment.sections && !comment.text)) {
+    return <section className="class-report-note-section is-pending"><header><div><h2>Nhận xét cho tiết sau</h2><p>Nhận xét sẽ có khi đủ em nộp bài.</p></div></header></section>;
+  }
   const sections = comment.sections || {};
   return <section className="class-report-note-section">
     <header><div><h2>Nhận xét cho tiết sau</h2><p>Dựa trên {comment.basedOn || chapter.progress?.submitted?.count || 0}/{chapter.classSize || 0} em đã nộp{comment.at ? ` · cập nhật ${shortDateTime(comment.at)}` : ""}</p></div></header>
     {(sections.overview || comment.text) && <p className="class-report-note-overview">{sections.overview || comment.text}</p>}
     <div className="class-report-note-grid">{sections.doingWell?.length > 0 && <article className="is-good"><h3>Lớp làm tốt</h3>{sections.doingWell.map((item, index) => <p key={index}><strong>{item.name}</strong>{item.text ? ` · ${item.text}` : ""}</p>)}</article>}{sections.needsPractice?.length > 0 && <article className="is-weak"><h3>Cần ôn lại</h3>{sections.needsPractice.map((item, index) => <p key={index}><strong>{item.name}</strong>{item.text ? ` · ${item.text}` : ""}</p>)}</article>}{sections.tips?.length > 0 && <article className="is-tip"><h3>Gợi ý hoạt động</h3>{sections.tips.map((item, index) => <p key={index}>{item.text || item.name}</p>)}</article>}</div>
-    {chapter.history?.length > 0 && <details className="class-report-history"><summary><History size={16} /> Bản trước ({chapter.history.length}) <ChevronDown size={16} /></summary><ol>{chapter.history.map((item, index) => <li key={`${item.at || "history"}-${index}`}><span>{item.at ? dateLabel(item.at) : "Bản trước"}</span><StructuredReportSections sections={item.sections} fallbackText={item.text || "Không có nội dung."} /></li>)}</ol></details>}
   </section>;
 }
 
@@ -46,7 +46,7 @@ function ConceptList({ concepts = [] }) {
     const hasData = Boolean(concept.hasEnoughData) && level !== "NO_DATA";
     const learners = concept.learnersNeedingReview || [];
     return <details key={`${concept.name || "concept"}-${index}`} className={`class-report-concept-chart is-${String(level).toLowerCase()}`}>
-      <summary><div className="class-report-concept-chart-head"><strong>{concept.name || "Nội dung học tập"}</strong><span>{conceptBand[level] || conceptBand.NO_DATA}</span></div><div className="class-report-concept-chart-track"><i style={{ width: `${hasData ? percent : 100}%` }} /></div><div className="class-report-concept-chart-values"><strong>{hasData ? `${percent}%` : "—"}</strong><span>{hasData ? `${correct}/${total} câu` : "Chưa đủ bài"}</span><ChevronDown size={16} /></div></summary>
+      <summary><div className="class-report-concept-chart-head"><strong>{concept.name || "Nội dung học tập"}</strong><span>{conceptBand[level] || conceptBand.NO_DATA}</span></div><div className="class-report-concept-chart-track"><i style={{ width: `${hasData ? percent : 0}%` }} /></div><div className="class-report-concept-chart-values"><strong>{hasData ? `${percent}%` : "—"}</strong><span>{hasData ? `${correct}/${total} câu` : "Chưa đủ bài"}</span><ChevronDown size={16} /></div></summary>
       <div className="class-report-concept-detail"><div className="class-report-concept-evidence"><span>{conceptBand[level] || conceptBand.NO_DATA}</span>{hasData && <span>{percent}% câu trả lời đúng</span>}<span>{learners.length} em cần xem lại</span></div>{concept.objective && <p>{concept.objective}</p>}<LearnerLinks learners={learners} empty="Không có em nào cần xem lại nội dung này." /></div>
     </details>;
   };

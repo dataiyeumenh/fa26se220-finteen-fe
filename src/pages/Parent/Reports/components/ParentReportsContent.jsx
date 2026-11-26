@@ -54,8 +54,15 @@ export default function ParentReportsContent({ reportState }) {
   const activeRows = allRows.filter((row) => row.status === "ACTIVE");
   const removedCount = allRows.length - activeRows.length;
   const courseChapters = report.course?.chapters || [];
+  const activeLearnerCount =
+    Number(report.course?.classSize) ||
+    report.course?.learners?.length ||
+    activeRows.length;
   const totalChapters =
-    Number(report.summary.totalChapters) || courseChapters.length || 8;
+    Number(report.course?.totalChapters) ||
+    courseChapters.length ||
+    Number(report.summary.totalChapters) ||
+    8;
   const chaptersFinished = courseChapters.reduce(
     (sum, chapter) => sum + (Number(chapter.finished) || 0),
     0,
@@ -64,7 +71,7 @@ export default function ParentReportsContent({ reportState }) {
     (sum, chapter) => sum + (Number(chapter.submitted) || 0),
     0,
   );
-  const familyChapterTotal = activeRows.length * totalChapters;
+  const familyChapterTotal = activeLearnerCount * totalChapters;
   const chapterProgress = familyChapterTotal
     ? Math.min(100, Math.round((chaptersFinished / familyChapterTotal) * 100))
     : 0;
@@ -118,10 +125,10 @@ export default function ParentReportsContent({ reportState }) {
             </span>
             <div>
               <h2>Tiến độ chung của các bé</h2>
-              <p>Tổng hợp từ {activeRows.length} bé đang hoạt động</p>
+              <p>Tổng hợp từ {activeLearnerCount} bé đang hoạt động</p>
             </div>
           </div>
-          <strong>{activeRows.length} bé</strong>
+          <strong>{activeLearnerCount} bé</strong>
         </header>
         <div className="family-report-overview-metrics">
           <article>

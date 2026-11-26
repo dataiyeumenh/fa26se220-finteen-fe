@@ -57,10 +57,20 @@ export function CourseOverviewCharts({ report }) {
     () => report?.postTest?.distribution || [],
     [report?.postTest?.distribution],
   );
-  const topics = useMemo(
-    () => (report?.topics || []).filter((topic) => topic.hasEnoughData),
-    [report?.topics],
-  );
+  const { topics, waitingTopics } = useMemo(() => {
+    const allTopics = report?.topics || [];
+    return {
+      topics: allTopics
+        .filter((topic) => topic.hasEnoughData)
+        .slice()
+        .sort(
+          (left, right) =>
+            (Number(left.correctRate) || 0) -
+            (Number(right.correctRate) || 0),
+        ),
+      waitingTopics: allTopics.filter((topic) => !topic.hasEnoughData),
+    };
+  }, [report?.topics]);
   const chapterData = useMemo(
     () =>
       chapters.map((chapter) => ({
@@ -216,7 +226,7 @@ export function CourseOverviewCharts({ report }) {
           em đã học xong nhưng chưa nộp bài.
         </p>
       </article>
-      {topics.length > 0 && (
+      {(topics.length > 0 || waitingTopics.length > 0) && (
         <article className="is-wide">
           <header>
             <h3>Kết quả theo chủ đề</h3>
@@ -224,52 +234,60 @@ export function CourseOverviewCharts({ report }) {
               Tổng hợp từ tất cả chương · Chủ đề cần xem lại được xếp trước.
             </p>
           </header>
-          <div className="class-report-chart-axis-note">
-            <span>Tên bên trái: Chủ đề học</span>
-            <span>Số bên phải: Tỷ lệ câu làm đúng</span>
-          </div>
-          <div className="class-report-rechart-canvas is-topics">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                layout="vertical"
-                data={topics}
-                margin={{ top: 4, right: 34, left: 8, bottom: 0 }}
-              >
-                <XAxis type="number" domain={[0, 100]} hide />
-                <YAxis
-                  type="category"
-                  dataKey="name"
-                  width={170}
-                  tickLine={false}
-                  axisLine={false}
-                  tick={{ fill: "#53645b", fontSize: 10 }}
-                />
-                <Tooltip
-                  formatter={(value) => [`${value}%`, "Câu đúng"]}
-                  cursor={{ fill: "var(--role-soft, #f2f5f3)" }}
-                />
-                <Bar
-                  dataKey="correctRate"
-                  name="Câu đúng"
-                  fill="var(--report-green, #246b4f)"
-                  radius={[0, 5, 5, 0]}
-                  maxBarSize={16}
+          {topics.length > 0 && <>
+            <div className="class-report-chart-axis-note">
+              <span>Tên bên trái: Chủ đề học</span>
+              <span>Số bên phải: Tỷ lệ câu làm đúng</span>
+            </div>
+            <div className="class-report-rechart-canvas is-topics">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  layout="vertical"
+                  data={topics}
+                  margin={{ top: 4, right: 34, left: 8, bottom: 0 }}
                 >
-                  <LabelList
-                    dataKey="correctRate"
-                    position="right"
-                    formatter={(value) => `${value}%`}
-                    fill="#53645b"
-                    fontSize={10}
+                  <XAxis type="number" domain={[0, 100]} hide />
+                  <YAxis
+                    type="category"
+                    dataKey="name"
+                    width={170}
+                    tickLine={false}
+                    axisLine={false}
+                    tick={{ fill: "#53645b", fontSize: 10 }}
                   />
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-          <p className="class-report-chart-explainer">
-            Thanh càng dài, lớp làm đúng chủ đề đó càng nhiều. Chủ đề có tỷ lệ
-            thấp nên được ưu tiên ôn lại.
-          </p>
+                  <Tooltip
+                    formatter={(value) => [`${value}%`, "Câu đúng"]}
+                    cursor={{ fill: "var(--role-soft, #f2f5f3)" }}
+                  />
+                  <Bar
+                    dataKey="correctRate"
+                    name="Câu đúng"
+                    fill="var(--report-green, #246b4f)"
+                    radius={[0, 5, 5, 0]}
+                    maxBarSize={16}
+                  >
+                    <LabelList
+                      dataKey="correctRate"
+                      position="right"
+                      formatter={(value) => `${value}%`}
+                      fill="#53645b"
+                      fontSize={10}
+                    />
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+            <p className="class-report-chart-explainer">
+              Thanh càng dài, lớp làm đúng chủ đề đó càng nhiều. Chủ đề có tỷ lệ
+              thấp nên được ưu tiên ôn lại.
+            </p>
+          </>}
+          {waitingTopics.length > 0 && (
+            <p className="class-report-concept-waiting">
+              <strong>Chưa đủ dữ liệu:</strong>{" "}
+              {waitingTopics.map((topic) => topic.name || "Chủ đề học").join(", ")}.
+            </p>
+          )}
         </article>
       )}
     </section>
@@ -340,31 +358,8 @@ export function StoryChoiceChart({ decisions = [], active = 0 }) {
                           : "Chưa có em nào"}
                       </small>
                     </span>
-                    <span className="class-report-story-mini-chart">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <BarChart
-                          layout="vertical"
-                          data={[{ value: count }]}
-                          margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
-                        >
-                          <XAxis
-                            type="number"
-                            domain={[0, Math.max(1, total)]}
-                            hide
-                          />
-                          <YAxis type="category" hide />
-                          <Bar
-                            dataKey="value"
-                            barSize={8}
-                            fill="var(--report-green, #2f7d5b)"
-                            background={{
-                              fill: "var(--role-soft, #edf1ee)",
-                              radius: 4,
-                            }}
-                            radius={[4, 4, 4, 4]}
-                          />
-                        </BarChart>
-                      </ResponsiveContainer>
+                    <span className="class-report-story-mini-chart" aria-hidden="true">
+                      <i style={{ width: `${total > 0 ? Math.min(100, (count / total) * 100) : 0}%` }} />
                     </span>
                     <span className="class-report-story-count">
                       {count} em
