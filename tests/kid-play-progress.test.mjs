@@ -2,6 +2,31 @@
 import test from 'node:test';
 import fs from 'node:fs/promises';
 import { canPlayJourneyChapter, isJourneyPlayState, journeyChapterProgress, resumeJourneyChapter } from '../src/pages/Kid/Dashboard/api/kidJourneyProgress.js';
+import { buildChapterBatch } from '../src/pages/Kid/Dashboard/components/game/playBatch.js';
+
+test('chapter batch keeps first choices, opened information and raw CH05 reflections', () => {
+  const data = { metadata: { chapterNumber: 5 }, releaseVersion: 'v5', scenes: [
+    { id: 'CH03_DECISION', type: 'choice', options: [{ id: 'A' }, { id: 'B' }] },
+    { id: 'CH05_R1', type: 'reflection', activity: 'reflection1' },
+    { id: 'CH05_R2', type: 'reflection', activity: 'reflection2' },
+  ] };
+  const ledger = {
+    CH03_DECISION: { optionId: 'B', firstOptionId: 'A', revised: true, chosenAt: '2026-11-26T00:00:00.000Z' },
+    CH05_R1: { answer: { selected: ['deadline', 'fees'], method: 'net', accountB: true }, reflectionScore: 6 },
+    CH05_R2: { answer: { action: 'keepB', date: 'month1', verified: true }, reflectionEvidenceScores: { I: 2 } },
+  };
+  const games = {
+    one: { completed: true, gameId: 'GAME', inputs: { q1: 'x' }, inspected: ['mini-card'], ui: { inspected: ['mini-card-2'] } },
+  };
+  const batch = buildChapterBatch(data, ledger, games, { 'story-card': true, closed: false });
+  assert.deepEqual(batch.choices, [{ sceneId: 'CH03_DECISION', optionId: 'B', chosenAt: '2026-11-26T00:00:00.000Z', firstOptionId: 'A', revised: true }]);
+  assert.deepEqual(batch.inspected, ['story-card', 'mini-card', 'mini-card-2']);
+  assert.deepEqual(batch.reflections, [
+    { sceneId: 'CH05_R1', answer: { selected: ['deadline', 'fees'], method: 'net' } },
+    { sceneId: 'CH05_R2', answer: { action: 'keepB', date: 'month1' } },
+  ]);
+  assert.equal('reflectionScore' in batch.reflections[0], false);
+});
 
 test('empty server progress never completes demo chapters', () => {
   const state = { chaptersDone: [], totalChapters: 8, attemptIndex: 1 };
