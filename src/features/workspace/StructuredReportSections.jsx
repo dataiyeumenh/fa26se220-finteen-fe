@@ -3,7 +3,7 @@ const sectionTitle = {
   doingWell: "Làm tốt",
   needsPractice: "Cần luyện thêm",
   tips: "Gợi ý tiếp theo",
-  notEnough: "Chưa đủ bài để nhận xét",
+  notEnough: "Mới làm ít câu ở các nội dung này",
 };
 
 const evidence = (item) => Number(item?.total) > 0

@@ -22,7 +22,7 @@ const report = {
       overview: "Bé đã hoàn thành chương Tiền đầu tiên.",
       decisions: [{ option: "Để dành tiền mua sách", deliberate: true, text: "Bé đã cân nhắc trước khi lựa chọn." }],
       doingWell: [{ concept: "D01.02", name: "Phân biệt cần và muốn", correct: 5, total: 6, text: "Bé nhận biết tốt các khoản cần thiết." }],
-      needsPractice: [], tips: [], notEnough: [],
+      needsPractice: [], tips: [], notEnough: [{ concept: "D01.04", name: "Chi phí cơ hội", correct: 1, total: 1 }],
     } },
     choices: [{ optionId: "one", label: "A. Để dành tiền mua sách", deliberate: true }, { optionId: "two", label: "B. Chờ đủ tiền rồi mới mua", deliberate: false }, { optionId: "three" }],
     miniGames: { correct: 3, total: 6, wrong: [{ gameId: "NEED_WANT_CH01", itemId: "art-colors", label: "Bộ màu vẽ cao cấp", chosenLabel: "Cần", expectedLabel: "Muốn", explanation: "Có thể hoãn mua để ưu tiên các khoản cần thiết." }] },
@@ -57,6 +57,16 @@ try {
   assert(document.querySelector(".ws-progress-score strong").textContent.includes("2/8"), "Completed chapters do not match progress data");
   assert(document.querySelector(".learner-progress-meta").textContent.includes("Học tiếp từ Chương 3"), "Continue chapter does not match progress data");
   assert(document.querySelector(".learner-progress-meta").textContent.includes("Lượt trải nghiệm: Lần 1"), "Attempt index does not match progress data");
+  await mount({ ...report, chapters: [{ ...report.chapters[0], title: "" }] });
+  assert(document.querySelector(".learner-report-chapter summary strong").textContent.includes("Chương 1 · Tiền đầu tiên"), "Missing chapter title does not use the canonical fallback");
+  results.push("Missing chapter titles use the canonical course title");
+  await mount();
+  const chapterPreview = document.querySelector(".learner-chapter-summary-preview");
+  assert(chapterPreview?.textContent.includes("Lựa chọn") && chapterPreview.textContent.includes("1/1") && chapterPreview.textContent.includes("Mini-game") && chapterPreview.textContent.includes("3/6") && chapterPreview.textContent.includes("Trắc nghiệm sau chương") && chapterPreview.textContent.includes("4/6"), "Chapter summary preview does not expose the key metrics");
+  assert(chapterPreview.textContent.includes("Mới làm ít câu ở các nội dung này") && chapterPreview.textContent.includes("Chi phí cơ hội") && chapterPreview.textContent.includes("đúng 1/1 câu"), "Sparse concept evidence is not explained with its real score");
+  assert(chapterPreview.querySelector(".learner-chapter-preview-concepts .is-correct"), "Correct concept evidence is not visually highlighted");
+  assert(!chapterPreview.textContent.includes(summaryText), "Chapter summary preview still renders the long narrative paragraph");
+  results.push("Chapter rows show scannable key metrics instead of a long narrative preview");
   const first = document.querySelector(".learner-report-chapter-body");
   const summary = first.querySelector(".learner-report-summary");
   assert(summary.textContent.includes("Bé đã hoàn thành chương Tiền đầu tiên.") && summary.textContent.includes("Phân biệt cần và muốn") && summary.textContent.includes("5/6 câu đúng"), "Structured backend summary is missing");

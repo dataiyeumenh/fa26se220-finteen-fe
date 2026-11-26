@@ -1,11 +1,11 @@
 import { lazy, Suspense, useEffect, useState } from "react";
-import { ChevronDown, Download, MapPinned, Printer } from "lucide-react";
+import { BookOpenCheck, ChevronDown, ClipboardCheck, Download, MapPinned, Printer, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 import { download, groupReportCsv } from "../../../../features/workspace/reporting";
 import { Empty, Heading } from "../../../../features/workspace/ui";
 import { ContentSkeleton } from "@/components/feedback/LoadingState";
+import useMediaQuery from "@/hooks/useMediaQuery";
 
-const StoryChoiceChart = lazy(() => import("./TeacherReportCharts").then((module) => ({ default: module.StoryChoiceChart })));
 const CourseOverviewCharts = lazy(() => import("./TeacherReportCharts").then((module) => ({ default: module.CourseOverviewCharts })));
 const shortDateTime = (value) => value ? new Intl.DateTimeFormat("vi-VN", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit", hour12: false }).format(new Date(value)) : "Chưa chơi";
 const conceptBand = {
@@ -57,10 +57,6 @@ function ConceptList({ concepts = [] }) {
   return <section className="class-report-section"><header><div><h3>Kết quả theo nội dung</h3>{measured.length > 0 && <p>Thanh dài hơn nghĩa là lớp trả lời đúng nhiều hơn · Nội dung cần ôn được đặt lên trước.</p>}</div></header>{concepts.length ? <div className="class-report-concept-chart-list">{visible.map(renderConcept)}{remaining.length > 0 && <details className="class-report-concept-more"><summary>Xem thêm {remaining.length} nội dung <ChevronDown size={16} /></summary><div>{remaining.map((concept, index) => renderConcept(concept, index + 5))}</div></details>}{waiting.length > 0 && <p className="class-report-concept-waiting"><strong>Chưa đủ bài để thống kê:</strong> {waiting.map((concept) => concept.name || "Nội dung học tập").join(", ")}.</p>}</div> : <div className="class-report-chart-empty"><strong>Chưa đủ bài làm</strong><span>Chưa đủ bài làm để thống kê theo nội dung.</span></div>}</section>;
 }
 
-function DecisionList({ decisions = [], active = 0 }) {
-  return <section className="class-report-section"><header><div><h3>Lựa chọn trong cốt truyện</h3><p>Thanh dài hơn nghĩa là có nhiều em chọn phương án đó hơn · Các lựa chọn không có đúng hoặc sai.</p></div></header>{decisions.length ? <Suspense fallback={<div className="class-report-chart-loading">Đang tải biểu đồ…</div>}><StoryChoiceChart decisions={decisions} active={active} /></Suspense> : <p className="class-report-empty-inline">Chưa có lựa chọn trong cốt truyện.</p>}</section>;
-}
-
 function ChapterProgress({ chapter }) {
   const [selected, setSelected] = useState(null);
   const progress = chapter.progress || {};
@@ -88,23 +84,51 @@ function ClassChapterReport({ chapter, refreshChapter }) {
   const classSize = Number(chapter.classSize) || 0;
   return <section className="class-report-chapters">
     <div className="class-report-chapter-sheet">
-      <header className="class-report-chapter-heading"><div><h1>Chương {chapter.chapter.number} · {chapter.chapter.title}</h1><p>Theo dõi tiến độ, kết quả nội dung và lựa chọn của lớp.</p></div><div><strong>{submitted}/{classSize}</strong><span>em đã nộp bài sau chương</span></div></header>
+      <header className="class-report-chapter-heading"><div><h1>Chương {chapter.chapter.number} · {chapter.chapter.title}</h1><p>Theo dõi tiến độ và kết quả nội dung của lớp.</p></div><div><strong>{submitted}/{classSize}</strong><span>em đã nộp bài sau chương</span></div></header>
       <ChapterProgress chapter={chapter} />
       <ClassComment chapter={chapter} />
       <ConceptList concepts={chapter.concepts} />
-      <DecisionList decisions={chapter.storyDecisions} active={classSize} />
     </div>
   </section>;
 }
 
-function CourseOverview({ report }) {
+function CourseMobileOverview({ report, rows, sortedRows, totalChapters }) {
+  const chapters = report.chapters || [];
+  const chaptersFinished = chapters.reduce((sum, chapter) => sum + (Number(chapter.finished) || 0), 0);
+  const testsSubmitted = chapters.reduce((sum, chapter) => sum + (Number(chapter.submitted) || 0), 0);
+  const possible = rows.length * totalChapters;
+  const average = report.postTest?.average;
+  return <div className="class-report-mobile-course">
+    <section className="class-report-mobile-summary">
+      <header><div><h1>Tổng quan cả lớp</h1><p>Các số liệu quan trọng, cập nhật từ báo cáo trên web.</p></div><span>{rows.length} em</span></header>
+      <div>
+        <article><Users size={18} /><span>Học sinh</span><strong>{rows.length}</strong></article>
+        <article><BookOpenCheck size={18} /><span>Chương hoàn thành</span><strong>{chaptersFinished}<small>/{possible || 0}</small></strong></article>
+        <article><ClipboardCheck size={18} /><span>Bài sau chương</span><strong>{testsSubmitted}<small>/{possible || 0}</small></strong></article>
+      </div>
+      <p>{average ? `Trung bình lớp: ${average.correct}/${average.total} câu đúng.` : "Chưa có đủ bài nộp để tính kết quả trung bình."}</p>
+    </section>
+    <section className="class-report-mobile-chapters">
+      <header><h2>Tiến độ từng chương</h2><p>So sánh nhanh số em đã học xong và đã nộp bài.</p></header>
+      <div>{chapters.map((chapter) => <article key={chapter.number}><span>Chương {chapter.number}</span><strong>{chapter.title}</strong><div><span>{chapter.finished || 0} em học xong</span><span>{chapter.submitted || 0} em đã nộp</span></div></article>)}</div>
+    </section>
+    <section className="class-report-mobile-learners">
+      <header><h2>Học sinh cần theo dõi</h2><p>Em chưa chơi hoặc chưa nộp được đưa lên trước.</p></header>
+      <div>{sortedRows.map((row) => <article key={row.slotId}><div><strong>{row.displayName || "Học sinh"}</strong><small>{row.code || "—"} · {shortDateTime(row.lastActiveAt)}</small></div><dl><div><dt>Đã xong</dt><dd>{row.chaptersDone || 0}/{totalChapters} chương</dd></div><div><dt>Đã nộp</dt><dd>{row.postTestsSubmitted || 0} bài</dd></div><div><dt>Câu đúng</dt><dd>{row.postTestTotal ? `${row.postTestCorrect || 0}/${row.postTestTotal}` : "Chưa có"}</dd></div></dl><Link to={`/dashboard/learners/${row.slotId}`}>Xem báo cáo <MapPinned size={15} /></Link></article>)}</div>
+    </section>
+  </div>;
+}
+
+function CourseOverview({ report, isMobile }) {
   const rows = report.learners || [];
   const totalChapters = report.chapters?.length || 8;
   const sortedRows = [...rows].sort((a, b) => Number(a.postTestsSubmitted > 0) - Number(b.postTestsSubmitted > 0) || Number(a.chaptersDone) - Number(b.chaptersDone) || String(a.displayName || "").localeCompare(String(b.displayName || ""), "vi"));
+  if (isMobile) return <CourseMobileOverview report={report} rows={rows} sortedRows={sortedRows} totalChapters={totalChapters} />;
   return <div className="class-report-course-view"><Suspense fallback={<div className="class-report-chart-loading">Đang tải biểu đồ cả lớp…</div>}><CourseOverviewCharts report={report} /></Suspense><section className="ws-card class-report-course-roster"><header><div><h2>Danh sách lớp</h2><p>{rows.length} học sinh đang hoạt động · Ưu tiên em chưa chơi hoặc chưa nộp</p></div></header>{rows.length ? <div className="ws-table-wrap"><table><thead><tr><th>Học sinh</th><th>Đã xong</th><th>Bài trắc nghiệm sau chương đã nộp</th><th>Kết quả bài trắc nghiệm sau chương</th><th>Hoạt động gần nhất</th><th>Báo cáo</th></tr></thead><tbody>{sortedRows.map((row) => <tr key={row.slotId}><td><strong>{row.displayName || "Học sinh"}</strong><small>{row.code || "—"}</small></td><td>{row.chaptersDone || 0}/{totalChapters} chương</td><td>{row.postTestsSubmitted || 0}</td><td>{row.postTestTotal ? `${row.postTestCorrect || 0}/${row.postTestTotal} câu` : "—"}</td><td>{shortDateTime(row.lastActiveAt)}</td><td><Link className="ws-report-detail-button" to={`/dashboard/learners/${row.slotId}`}><MapPinned /> Xem báo cáo</Link></td></tr>)}</tbody></table></div> : <Empty>Chưa có học sinh đang hoạt động.</Empty>}</section></div>;
 }
 
 export default function TeacherReportsContent({ reportState }) {
+  const isMobile = useMediaQuery("(max-width: 760px)");
   const [view, setView] = useState("chapter");
   const [selectedChapter, setSelectedChapter] = useState(null);
   const {
@@ -184,7 +208,7 @@ export default function TeacherReportsContent({ reportState }) {
           {warning}
         </p>
       )}
-      {updating && !chapterReport && view === "chapter" ? <ContentSkeleton variant="cards" label={`Đang tải báo cáo chương ${activeChapter || ""}…`} /> : view === "chapter" ? <ClassChapterReport chapter={chapterReport} refreshChapter={refreshChapter} /> : <CourseOverview report={courseReport} group={selectedGroup} />}
+      {updating && !chapterReport && view === "chapter" ? <ContentSkeleton variant="cards" label={`Đang tải báo cáo chương ${activeChapter || ""}…`} /> : view === "chapter" ? <ClassChapterReport chapter={chapterReport} refreshChapter={refreshChapter} /> : <CourseOverview report={courseReport} group={selectedGroup} isMobile={isMobile} />}
     </>
   );
 }
