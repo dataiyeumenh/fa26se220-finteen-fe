@@ -1,134 +1,140 @@
-import { useEffect, useState } from "react";
-import { AlertCircle, BarChart3, CheckCircle2, ChevronDown, ClipboardList, Clock3, History, MapPinned, RefreshCw } from "lucide-react";
+import { lazy, Suspense, useEffect, useState } from "react";
+import { ChevronDown, Download, History, MapPinned, Printer } from "lucide-react";
 import { Link } from "react-router-dom";
 import { dateLabel } from "../../../../features/workspace/format";
-import {
-  download,
-  groupReportCsv,
-} from "../../../../features/workspace/reporting";
+import { download, groupReportCsv } from "../../../../features/workspace/reporting";
 import { Empty, Heading } from "../../../../features/workspace/ui";
 import { ContentSkeleton } from "@/components/feedback/LoadingState";
-import ReportIndicatorHelp from "@/features/workspace/ReportIndicatorHelp";
+import StructuredReportSections from "@/features/workspace/StructuredReportSections";
 
-const statusLabel = (status) =>
-  ({ ACTIVE: "Hoạt động", ARCHIVED: "Đã thu hồi", WIPED: "Đã xoá" })[status] ||
-  (status ? "Không xác định" : "—");
-const indicatorLabels = {
-  wealth: "Tài sản",
-  saving: "Tiết kiệm",
-  happiness: "Hạnh phúc",
-  risk: "Rủi ro",
-  goal: "Mục tiêu",
-};
-const indicatorText = (indicators) =>
-  indicators
-    ? Object.entries(indicators)
-        .map(
-          ([key, value]) =>
-            `${indicatorLabels[key] || key}: ${value < 34 ? "thấp" : value < 67 ? "vừa" : "cao"}`,
-        )
-        .join(" · ")
-    : "Chưa có dữ liệu";
-
-const chapterStateCopy = {
-  WAITING: "Chưa có nhận xét. Lớp nộp thêm bài sau chương thì sẽ có nhận xét. Số liệu bên dưới đã xem được.",
-  PREPARING: "Nhận xét mới đang được chuẩn bị, đợi tí nhé!",
-  BASIC: "Bản tóm tắt nhanh từ số liệu của lớp.",
-};
+const StoryChoiceChart = lazy(() => import("./TeacherReportCharts").then((module) => ({ default: module.StoryChoiceChart })));
+const CourseOverviewCharts = lazy(() => import("./TeacherReportCharts").then((module) => ({ default: module.CourseOverviewCharts })));
+const shortDateTime = (value) => value ? new Intl.DateTimeFormat("vi-VN", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit", hour12: false }).format(new Date(value)) : "Chưa chơi";
 const conceptBand = {
   GOOD: "Lớp làm tốt",
   FAMILIAR: "Đang làm quen",
   PRACTICE: "Cần ôn lại",
-  NO_DATA: "Chưa đủ câu",
+  NO_DATA: "Chưa đủ dữ liệu",
 };
 
-function LearnerLinks({ learners, empty = "Không có học sinh trong danh sách này." }) {
+function LearnerLinks({ learners, empty = "Không có học sinh trong danh sách này.", getTo }) {
   if (!learners?.length) return <p className="class-report-empty-inline">{empty}</p>;
   return <div className="class-report-learners">{learners.map((learner, index) => learner?.slotId
-    ? <Link key={learner.slotId} to={`/dashboard/learners/${encodeURIComponent(learner.slotId)}`}>{learner.displayName || "Học sinh"}</Link>
+    ? <Link key={learner.slotId} to={getTo?.(learner) || `/dashboard/learners/${encodeURIComponent(learner.slotId)}`}>{learner.displayName || "Học sinh"}</Link>
     : <span key={index}>{learner?.displayName || "Học sinh đã xoá"}</span>)}</div>;
 }
 
 function ClassComment({ chapter }) {
   const comment = chapter.comment || { state: "WAITING" };
   const state = comment.state || "WAITING";
-  const preparingWithPrevious = state === "PREPARING" && Boolean(comment.text);
-  return <section className={`class-report-comment is-${state.toLowerCase()}`}>
-    <div className="class-report-comment-head">
-      <div><h3>Nhận xét chương</h3>{comment.basedOn != null && <span>Nhận xét lúc {comment.basedOn}/{chapter.active || 0} em{comment.at ? ` · ${dateLabel(comment.at)}` : ""}</span>}</div>
-      {state === "PREPARING" ? <Clock3 aria-hidden="true" /> : state === "WAITING" ? <AlertCircle aria-hidden="true" /> : <CheckCircle2 aria-hidden="true" />}
-    </div>
-    {state !== "READY" && <p className="class-report-state-copy">{chapterStateCopy[state] || chapterStateCopy.WAITING}</p>}
-    {comment.text && <div className="class-report-comment-text">{preparingWithPrevious && <strong>Nhận xét hiện có</strong>}<p>{comment.text}</p></div>}
-    {chapter.history?.length > 0 && <details className="class-report-history"><summary><History size={16} /> Bản trước ({chapter.history.length}) <ChevronDown size={16} /></summary><ol>{chapter.history.map((item, index) => <li key={`${item.at || "history"}-${index}`}><span>Nhận xét lúc {item.basedOn ?? "—"}/{chapter.active || 0} em{item.at ? ` · ${dateLabel(item.at)}` : ""}</span><p>{item.text || "Không có nội dung."}</p></li>)}</ol></details>}
+  if (state !== "READY" || (!comment.sections && !comment.text)) return null;
+  const sections = comment.sections || {};
+  return <section className="class-report-note-section">
+    <header><div><h2>Nhận xét cho tiết sau</h2><p>Dựa trên {comment.basedOn || chapter.progress?.submitted?.count || 0}/{chapter.classSize || 0} em đã nộp{comment.at ? ` · cập nhật ${shortDateTime(comment.at)}` : ""}</p></div></header>
+    {(sections.overview || comment.text) && <p className="class-report-note-overview">{sections.overview || comment.text}</p>}
+    <div className="class-report-note-grid">{sections.doingWell?.length > 0 && <article className="is-good"><h3>Lớp làm tốt</h3>{sections.doingWell.map((item, index) => <p key={index}><strong>{item.name}</strong>{item.text ? ` · ${item.text}` : ""}</p>)}</article>}{sections.needsPractice?.length > 0 && <article className="is-weak"><h3>Cần ôn lại</h3>{sections.needsPractice.map((item, index) => <p key={index}><strong>{item.name}</strong>{item.text ? ` · ${item.text}` : ""}</p>)}</article>}{sections.tips?.length > 0 && <article className="is-tip"><h3>Gợi ý hoạt động</h3>{sections.tips.map((item, index) => <p key={index}>{item.text || item.name}</p>)}</article>}</div>
+    {chapter.history?.length > 0 && <details className="class-report-history"><summary><History size={16} /> Bản trước ({chapter.history.length}) <ChevronDown size={16} /></summary><ol>{chapter.history.map((item, index) => <li key={`${item.at || "history"}-${index}`}><span>{item.at ? dateLabel(item.at) : "Bản trước"}</span><StructuredReportSections sections={item.sections} fallbackText={item.text || "Không có nội dung."} /></li>)}</ol></details>}
   </section>;
 }
 
 function ConceptList({ concepts = [] }) {
-  return <section className="class-report-section"><header><div><h3>Nội dung trong chương</h3><p>Nội dung cần hỗ trợ được xếp trước.</p></div></header>{concepts.length ? <div className="class-report-concepts">{concepts.map((concept, index) => {
+  const renderConcept = (concept, index) => {
     const total = Number(concept.total) || 0;
     const correct = Number(concept.correct) || 0;
-    const percent = total > 0 ? Math.min(100, Math.round(correct / total * 100)) : 0;
-    return <details key={`${concept.name || "concept"}-${index}`} className={`class-report-concept is-${String(concept.band || "NO_DATA").toLowerCase()}`}>
-      <summary><span className="class-report-rank">{index + 1}</span><div className="class-report-concept-name"><strong>{concept.name || "Nội dung học tập"}</strong>{concept.objective && <span>{concept.objective}</span>}</div><span className="class-report-band">{conceptBand[concept.band] || conceptBand.NO_DATA}</span><span className="class-report-ratio">{correct}/{total}</span><span className="class-report-concept-bar"><i style={{ width: `${percent}%` }} /></span><ChevronDown size={17} /></summary>
-      <div className="class-report-concept-detail"><strong>{concept.wrongLearners?.length || 0} em sai ít nhất 1 câu</strong><LearnerLinks learners={concept.wrongLearners} empty="Chưa ghi nhận em nào cần xem lại nội dung này." /></div>
+    const level = concept.level || "NO_DATA";
+    const percent = Number(concept.correctRate) || 0;
+    const hasData = Boolean(concept.hasEnoughData) && level !== "NO_DATA";
+    const learners = concept.learnersNeedingReview || [];
+    return <details key={`${concept.name || "concept"}-${index}`} className={`class-report-concept-chart is-${String(level).toLowerCase()}`}>
+      <summary><div className="class-report-concept-chart-head"><strong>{concept.name || "Nội dung học tập"}</strong><span>{conceptBand[level] || conceptBand.NO_DATA}</span></div><div className="class-report-concept-chart-track"><i style={{ width: `${hasData ? percent : 100}%` }} /></div><div className="class-report-concept-chart-values"><strong>{hasData ? `${percent}%` : "—"}</strong><span>{hasData ? `${correct}/${total} câu` : "Chưa đủ bài"}</span><ChevronDown size={16} /></div></summary>
+      <div className="class-report-concept-detail"><div className="class-report-concept-evidence"><span>{conceptBand[level] || conceptBand.NO_DATA}</span>{hasData && <span>{percent}% câu trả lời đúng</span>}<span>{learners.length} em cần xem lại</span></div>{concept.objective && <p>{concept.objective}</p>}<LearnerLinks learners={learners} empty="Không có em nào cần xem lại nội dung này." /></div>
     </details>;
-  })}</div> : <p className="class-report-empty-inline">Chưa có dữ liệu nội dung cho chương này.</p>}</section>;
+  };
+  const measured = concepts.filter((concept) => concept.hasEnoughData && concept.level !== "NO_DATA");
+  const waiting = concepts.filter((concept) => !concept.hasEnoughData || concept.level === "NO_DATA");
+  const visible = measured.slice(0, 5);
+  const remaining = measured.slice(5);
+  return <section className="class-report-section"><header><div><h3>Kết quả theo nội dung</h3>{measured.length > 0 && <p>Thanh dài hơn nghĩa là lớp trả lời đúng nhiều hơn · Nội dung cần ôn được đặt lên trước.</p>}</div></header>{concepts.length ? <div className="class-report-concept-chart-list">{visible.map(renderConcept)}{remaining.length > 0 && <details className="class-report-concept-more"><summary>Xem thêm {remaining.length} nội dung <ChevronDown size={16} /></summary><div>{remaining.map((concept, index) => renderConcept(concept, index + 5))}</div></details>}{waiting.length > 0 && <p className="class-report-concept-waiting"><strong>Chưa đủ bài để thống kê:</strong> {waiting.map((concept) => concept.name || "Nội dung học tập").join(", ")}.</p>}</div> : <div className="class-report-chart-empty"><strong>Chưa đủ bài làm</strong><span>Chưa đủ bài làm để thống kê theo nội dung.</span></div>}</section>;
 }
 
-function DecisionList({ decisions = [] }) {
-  return <section className="class-report-section"><header><div><h3>Lựa chọn trong câu chuyện</h3><p>Phân bố lựa chọn của lớp, không đánh giá đúng hay sai.</p></div></header>{decisions.length ? <div className="class-report-decisions">{decisions.map((decision, decisionIndex) => {
-    const total = (decision.options || []).reduce((sum, option) => sum + (Number(option.count) || 0), 0);
-    return <article key={`${decision.question || "decision"}-${decisionIndex}`}><h4>{decision.question || `Tình huống ${decisionIndex + 1}`}</h4><div>{(decision.options || []).map((option, optionIndex) => {
-      const count = Number(option.count) || 0;
-      const percent = total > 0 ? Math.round(count / total * 100) : 0;
-      return <details key={`${option.label || "option"}-${optionIndex}`}><summary><span>{option.label || `Lựa chọn ${optionIndex + 1}`}</span><i><b style={{ width: `${percent}%` }} /></i><strong>{count} em</strong><ChevronDown size={16} /></summary><LearnerLinks learners={option.learners} /></details>;
-    })}</div></article>;
-  })}</div> : <p className="class-report-empty-inline">Chưa có lựa chọn trong câu chuyện để tổng hợp.</p>}</section>;
+function DecisionList({ decisions = [], active = 0 }) {
+  return <section className="class-report-section"><header><div><h3>Lựa chọn trong cốt truyện</h3><p>Thanh dài hơn nghĩa là có nhiều em chọn phương án đó hơn · Các lựa chọn không có đúng hoặc sai.</p></div></header>{decisions.length ? <Suspense fallback={<div className="class-report-chart-loading">Đang tải biểu đồ…</div>}><StoryChoiceChart decisions={decisions} active={active} /></Suspense> : <p className="class-report-empty-inline">Chưa có lựa chọn trong cốt truyện.</p>}</section>;
 }
 
-function ClassChapterReport({ report, refreshGroup }) {
-  const chapters = Array.isArray(report.chapters) ? report.chapters : [];
-  const [selectedChapter, setSelectedChapter] = useState(chapters[0]?.chapter ?? null);
-  const chapter = chapters.find((item) => item.chapter === selectedChapter) || chapters[0];
+function ChapterProgress({ chapter }) {
+  const [selected, setSelected] = useState(null);
+  const progress = chapter.progress || {};
+  const items = [
+    { key: "submitted", label: "Đã nộp", tone: "submitted" },
+    { key: "finishedNotSubmitted", label: "Xong, chưa nộp", tone: "waiting" },
+    { key: "inProgress", label: "Đang học chương này", tone: "playing" },
+    { key: "notStarted", label: "Chưa tới chương", tone: "not-started" },
+  ];
+  const selectedItem = items.find((item) => item.key === selected);
+  const preview = (list) => list?.length ? `${list.slice(0, 3).map((item) => item.displayName || "Học sinh").join(", ")}${list.length > 3 ? `, +${list.length - 3}` : ""}` : "Không có em nào";
+  return <section className="class-report-section class-report-progress-chart"><header><div><h2>Tiến độ chương</h2><p>Mỗi em chỉ nằm trong một nhóm · Các nhóm cộng lại bằng sĩ số lớp · Bấm để xem tên.</p></div></header><div className="class-report-progress-stats">{items.map((item) => <button type="button" key={item.key} className={`is-${item.tone}`} aria-pressed={selected === item.key} onClick={() => setSelected(selected === item.key ? null : item.key)}><strong>{progress[item.key]?.count || 0}</strong><span><i />{item.label}</span><small>{preview(progress[item.key]?.learners)}</small></button>)}</div><div className="class-report-progress-stack" role="img" aria-label={items.map((item) => `${progress[item.key]?.count || 0} ${item.label.toLowerCase()}`).join(", ")}>{items.map((item) => Number(progress[item.key]?.count) > 0 && <i key={item.key} className={`is-${item.tone}`} style={{ flex: progress[item.key].count }} />)}</div>{selectedItem && <div className="class-report-progress-detail"><strong>{selectedItem.label}</strong><LearnerLinks learners={progress[selectedItem.key]?.learners} empty="Chưa có học sinh trong nhóm này." /></div>}</section>;
+}
+
+function ClassChapterReport({ chapter, refreshChapter }) {
   useEffect(() => {
     if (!chapter || chapter.comment?.state !== "PREPARING") return undefined;
-    const update = () => { if (document.visibilityState === "visible") void refreshGroup(report.group.id); };
+    const update = () => { if (document.visibilityState === "visible") void refreshChapter(chapter.chapter.number); };
     const timer = window.setInterval(update, 60_000);
     document.addEventListener("visibilitychange", update);
     return () => { window.clearInterval(timer); document.removeEventListener("visibilitychange", update); };
-  }, [chapter, refreshGroup, report.group.id]);
-  if (!chapter) return <section className="ws-card class-report-empty"><strong>Chưa có báo cáo theo chương</strong><p>Khi lớp bắt đầu học và nộp bài sau chương, số liệu sẽ xuất hiện tại đây.</p></section>;
-  const active = Number(chapter.active) || 0;
-  const submitted = Number(chapter.submitted) || 0;
-  const submittedPercent = active > 0 ? Math.min(100, Math.round(submitted / active * 100)) : 0;
-  return <section className="ws-card class-report-chapters">
-    <div className="class-report-chapter-tabs" role="tablist" aria-label="Chọn chương">{chapters.map((item) => <button type="button" role="tab" aria-selected={item.chapter === chapter.chapter} className={item.chapter === chapter.chapter ? "is-active" : ""} key={item.chapter} onClick={() => setSelectedChapter(item.chapter)}>Chương {item.chapter}<small>{item.title}</small></button>)}</div>
-    <div className="class-report-progress"><div><strong>Chương {chapter.chapter}: {chapter.title}</strong><span>{submitted}/{active} em đã nộp bài sau chương</span></div><div role="progressbar" aria-label="Tiến độ nộp bài sau chương" aria-valuemin="0" aria-valuemax={active} aria-valuenow={submitted}><i style={{ width: `${submittedPercent}%` }} /></div></div>
-    <ClassComment chapter={chapter} />
-    <ConceptList concepts={chapter.concepts} />
-    <DecisionList decisions={chapter.decisions} />
-    <section className="class-report-section class-report-follow-up"><header><div><h3>Theo dõi thêm</h3><p>Bấm tên học sinh để mở báo cáo chi tiết.</p></div></header><div><article><strong>Chưa xong chương</strong><LearnerLinks learners={chapter.notFinished} /></article><article><strong>Chưa nộp bài sau chương</strong><LearnerLinks learners={chapter.notSubmitted} /></article></div></section>
+  }, [chapter, refreshChapter]);
+  if (!chapter) return <section className="ws-card class-report-empty"><strong>Chưa có báo cáo theo chương</strong><p>Khi học sinh bắt đầu học và nộp bài trắc nghiệm, kết quả sẽ xuất hiện tại đây.</p></section>;
+  const submitted = Number(chapter.progress?.submitted?.count) || 0;
+  const classSize = Number(chapter.classSize) || 0;
+  return <section className="class-report-chapters">
+    <div className="class-report-chapter-sheet">
+      <header className="class-report-chapter-heading"><div><h1>Chương {chapter.chapter.number} · {chapter.chapter.title}</h1><p>Theo dõi tiến độ, kết quả nội dung và lựa chọn của lớp.</p></div><div><strong>{submitted}/{classSize}</strong><span>em đã nộp bài sau chương</span></div></header>
+      <ChapterProgress chapter={chapter} />
+      <ClassComment chapter={chapter} />
+      <ConceptList concepts={chapter.concepts} />
+      <DecisionList decisions={chapter.storyDecisions} active={classSize} />
+    </div>
   </section>;
 }
 
+function CourseOverview({ report }) {
+  const rows = report.learners || [];
+  const totalChapters = report.chapters?.length || 8;
+  const sortedRows = [...rows].sort((a, b) => Number(a.postTestsSubmitted > 0) - Number(b.postTestsSubmitted > 0) || Number(a.chaptersDone) - Number(b.chaptersDone) || String(a.displayName || "").localeCompare(String(b.displayName || ""), "vi"));
+  return <div className="class-report-course-view"><Suspense fallback={<div className="class-report-chart-loading">Đang tải biểu đồ cả lớp…</div>}><CourseOverviewCharts report={report} /></Suspense><section className="ws-card class-report-course-roster"><header><div><h2>Danh sách lớp</h2><p>{rows.length} học sinh đang hoạt động · Ưu tiên em chưa chơi hoặc chưa nộp</p></div></header>{rows.length ? <div className="ws-table-wrap"><table><thead><tr><th>Học sinh</th><th>Đã xong</th><th>Bài trắc nghiệm sau chương đã nộp</th><th>Kết quả bài trắc nghiệm sau chương</th><th>Hoạt động gần nhất</th><th>Báo cáo</th></tr></thead><tbody>{sortedRows.map((row) => <tr key={row.slotId}><td><strong>{row.displayName || "Học sinh"}</strong><small>{row.code || "—"}</small></td><td>{row.chaptersDone || 0}/{totalChapters} chương</td><td>{row.postTestsSubmitted || 0}</td><td>{row.postTestTotal ? `${row.postTestCorrect || 0}/${row.postTestTotal} câu` : "—"}</td><td>{shortDateTime(row.lastActiveAt)}</td><td><Link className="ws-report-detail-button" to={`/dashboard/learners/${row.slotId}`}><MapPinned /> Xem báo cáo</Link></td></tr>)}</tbody></table></div> : <Empty>Chưa có học sinh đang hoạt động.</Empty>}</section></div>;
+}
+
 export default function TeacherReportsContent({ reportState }) {
+  const [view, setView] = useState("chapter");
+  const [selectedChapter, setSelectedChapter] = useState(null);
   const {
-    reports,
-    report,
-    rows,
-    status,
-    setStatus,
+    groups,
+    selectedGroup,
+    groupId,
     setGroupId,
+    courseReport,
+    getChapterReport,
+    loadChapter,
     loading,
+    updating,
     error,
     warning,
     refresh,
-    refreshGroup,
+    refreshChapter,
   } = reportState;
-  const quizAverage = report?.summary?.averageScore == null
-    ? "—"
-    : new Intl.NumberFormat("vi-VN", { maximumFractionDigits: 1 }).format(report.summary.averageScore);
+  const chapters = Array.isArray(courseReport?.chapters) ? courseReport.chapters : [];
+  const activeChapter = chapters.some((chapter) => chapter.number === selectedChapter) ? selectedChapter : chapters[0]?.number ?? null;
+  const chapterReport = activeChapter ? getChapterReport(activeChapter) : null;
+  const exportRows = (courseReport?.learners || []).map((row) => ({
+    ...row,
+    status: "ACTIVE",
+    completedChapters: row.chaptersDone,
+    quizSubmitted: row.postTestsSubmitted,
+    averageScore: row.postTestTotal ? `${row.postTestCorrect || 0}/${row.postTestTotal}` : "",
+  }));
+  useEffect(() => {
+    if (groupId && activeChapter) void loadChapter(groupId, activeChapter);
+  }, [activeChapter, groupId, loadChapter]);
   if (loading) return <ContentSkeleton variant="table" label="Đang tải báo cáo lớp học…" />;
   if (error)
     return (
@@ -139,7 +145,7 @@ export default function TeacherReportsContent({ reportState }) {
         </button>
       </Empty>
     );
-  if (!report)
+  if (!courseReport)
     return (
       <>
         <Heading
@@ -151,136 +157,34 @@ export default function TeacherReportsContent({ reportState }) {
     );
   return (
     <>
-      <Heading
-        title="Báo cáo lớp học"
-        description="Theo dõi tiến độ và hoạt động của từng học sinh."
-      >
-        <button className="ws-btn" onClick={() => void refresh()}>
-          <RefreshCw size={16} /> Làm mới
-        </button>
-      </Heading>
+      <div className="class-report-controlbar">
+        <div className="class-report-controlbar-top">
+          <div className="class-report-context-controls">
+            <label>
+              <span>Lớp</span>
+              <select value={groupId} disabled={updating} onChange={(event) => setGroupId(event.target.value)}>
+                {groups.map((group) => <option key={group.id} value={group.id}>{group.name}{group.closedAt ? " · Đã kết thúc" : ""}</option>)}
+              </select>
+            </label>
+            <nav className="class-report-view-tabs" aria-label="Phạm vi báo cáo">
+              <button type="button" aria-pressed={view === "chapter"} onClick={() => setView("chapter")}>
+                <strong>Theo chương</strong>
+              </button>
+              <button type="button" aria-pressed={view === "course"} onClick={() => setView("course")}>
+                <strong>Cả lớp</strong>
+              </button>
+            </nav>
+          </div>
+          <div className="class-report-export-actions"><button type="button" disabled={!exportRows.length} onClick={() => download(groupReportCsv(exportRows), `finteen-class-${new Date().toISOString().slice(0, 10)}.csv`, "text/csv;charset=utf-16le")}><Download size={15} /> Tải dữ liệu</button><button type="button" onClick={() => window.print()}><Printer size={15} /> In / Lưu PDF</button></div>
+        </div>
+        {view === "chapter" && <div className="class-report-chapter-tabs" role="tablist" aria-label="Chọn chương">{chapters.map((item) => <button type="button" role="tab" title={item.title} aria-selected={item.number === activeChapter} className={item.number === activeChapter ? "is-active" : ""} key={item.number} onClick={() => setSelectedChapter(item.number)}><span>{item.number}</span><span><strong>{item.title}</strong></span></button>)}</div>}
+      </div>
       {warning && (
         <p className="ws-notice" role="status">
           {warning}
         </p>
       )}
-      <div className="ws-toolbar ws-report-filters">
-        <label>
-          Lớp học
-          <select
-            value={report.group.id}
-            onChange={(event) => setGroupId(event.target.value)}
-          >
-            {reports.map((item) => (
-              <option key={item.group.id} value={item.group.id}>
-                {item.group.name}
-                {item.group.closedAt ? " · Đã kết thúc" : ""}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label>
-          Trạng thái
-          <select
-            value={status}
-            onChange={(event) => setStatus(event.target.value)}
-          >
-            <option value="">Tất cả</option>
-            <option value="ACTIVE">Hoạt động</option>
-            <option value="ARCHIVED">Đã thu hồi</option>
-            <option value="WIPED">Đã xoá</option>
-          </select>
-        </label>
-      </div>
-      <div className="ws-actions ws-export">
-        <button
-          disabled={!rows.length}
-          className="ws-btn"
-          onClick={() =>
-            download(
-              groupReportCsv(rows),
-              `finteen-class-${new Date().toISOString().slice(0, 10)}.csv`,
-              "text/csv;charset=utf-16le",
-            )
-          }
-        >
-          Tải bảng dữ liệu
-        </button>
-        <button
-          disabled={!rows.length}
-          className="ws-btn primary"
-          onClick={() => window.print()}
-        >
-          In / Lưu PDF
-        </button>
-      </div>
-      <ClassChapterReport report={report} refreshGroup={refreshGroup} />
-      <section className="ws-card ws-print-report">
-        <h2>{report.group.name}</h2>
-        <p>
-          {report.summary.learners} học sinh · {report.summary.active} đang hoạt
-          động · {report.summary.activeLast7Days} hoạt động trong 7 ngày
-        </p>
-        <p className="ws-muted">
-          Đã hoàn thành {report.summary.chaptersCompleted} chương
-          {report.frozenAt
-            ? ` · Báo cáo đã được chốt ${dateLabel(report.frozenAt)}`
-            : " · Tự động cập nhật theo hoạt động mới nhất"}
-          .
-        </p>
-        <div className="ws-grid three" aria-label="Kết quả Quiz của lớp">
-          <article><ClipboardList /><strong>{report.summary.quizAssigned ?? 0}</strong><p>Quiz đã giao</p></article>
-          <article><CheckCircle2 /><strong>{report.summary.quizSubmitted ?? 0}</strong><p>Lượt học sinh đã nộp</p></article>
-          <article><BarChart3 /><strong>{quizAverage}</strong><p>{report.summary.averageScore == null ? "Chưa có bài đã chấm" : "Số câu đúng trung bình mỗi lượt"}</p></article>
-        </div>
-        {rows.length ? (
-          <div className="ws-table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Học sinh</th>
-                  <th>Trạng thái</th>
-                  <th>Tiến độ</th>
-                  <th><span className="ws-indicator-heading">5 chỉ số <ReportIndicatorHelp /></span></th>
-                  <th>Hoạt động gần nhất</th>
-                  <th>Chi tiết</th>
-                </tr>
-              </thead>
-              <tbody>
-                {rows.map((row) => (
-                  <tr key={row.slotId}>
-                    <td>
-                      <strong>{row.displayName || "Đã xoá"}</strong>
-                      <small>{row.code || "—"}</small>
-                    </td>
-                    <td>{statusLabel(row.status)}</td>
-                    <td>
-                      {row.completedChapters}/{report.summary.totalChapters}{" "}
-                      chương
-                    </td>
-                    <td>{indicatorText(row.indicators)}</td>
-                    <td>
-                      {row.lastActiveAt
-                        ? dateLabel(row.lastActiveAt)
-                        : "Chưa chơi"}
-                    </td>
-                    <td>
-                      <Link
-                        className="ws-report-detail-button"
-                        to={`/dashboard/learners/${row.slotId}`}
-                      >
-                        <MapPinned /> Xem hành trình
-                      </Link>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        ) : (
-          <Empty>Không có học sinh phù hợp bộ lọc.</Empty>
-        )}
-      </section>
+      {updating && !chapterReport && view === "chapter" ? <ContentSkeleton variant="cards" label={`Đang tải báo cáo chương ${activeChapter || ""}…`} /> : view === "chapter" ? <ClassChapterReport chapter={chapterReport} refreshChapter={refreshChapter} /> : <CourseOverview report={courseReport} group={selectedGroup} />}
     </>
   );
 }

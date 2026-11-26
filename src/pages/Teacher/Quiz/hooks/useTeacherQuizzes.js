@@ -14,7 +14,7 @@ const quizError = (error) => {
     3004: "Bạn không có quyền thao tác với lớp hoặc đề này.",
     3005: "Cần mua gói giáo viên trước khi tạo, sửa hoặc phát hành đề.",
     8001: "Không tìm thấy đề phù hợp.",
-    8002: "Đề đã phát hành hoặc là hậu trắc nên không thể thay đổi.",
+    8002: "Đề đã phát hành hoặc là bài trắc nghiệm sau chương nên không thể thay đổi.",
     8003: "Học sinh này chưa nộp bài.",
     8004: "Bài kiểm tra đã quá hạn nộp.",
     8005: "Bạn đã nộp bài này rồi.",
@@ -26,7 +26,7 @@ const quizError = (error) => {
   "Không thể hoàn thành yêu cầu.";
 };
 
-export default function useTeacherQuizzes({ requestedQuizId = "" } = {}) {
+export default function useTeacherQuizzes({ requestedQuizId = "", requestedSlotId = "" } = {}) {
   const [groups, setGroups] = useState([]);
   const [groupId, setGroupId] = useState("");
   const [quizzes, setQuizzes] = useState([]);
@@ -120,6 +120,7 @@ export default function useTeacherQuizzes({ requestedQuizId = "" } = {}) {
     message,
     error,
     requestedQuizId,
+    requestedSlotId,
     refresh,
     reload: () => {
       void loadGroups();
@@ -210,7 +211,7 @@ export function useTeacherQuizResults(quizId) {
       active = false;
     };
   }, [quizId]);
-  const viewSlot = async (slotId) => {
+  const viewSlot = useCallback(async (slotId) => {
     setError("");
     setViewingSlotId(slotId);
     try {
@@ -220,6 +221,6 @@ export function useTeacherQuizResults(quizId) {
     } finally {
       setViewingSlotId("");
     }
-  };
+  }, [quizId]);
   return { data, slotResult, setSlotResult, viewingSlotId, error, viewSlot };
 }

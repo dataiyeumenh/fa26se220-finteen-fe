@@ -30,7 +30,7 @@ import {
 
 const kindLabel = (quiz) =>
   quiz.kind === "POST_TEST"
-    ? `Hậu trắc chương ${quiz.chapter}`
+    ? `Bài trắc nghiệm sau chương ${quiz.chapter}`
     : "Đề giáo viên";
 const dateTime = (value) =>
   value ? new Date(value).toLocaleString("vi-VN") : "Không có hạn";
@@ -66,6 +66,7 @@ export default function TeacherQuizContent({ quizState }) {
     publishQuiz,
     deleteQuiz,
     requestedQuizId,
+    requestedSlotId,
   } = quizState;
   const [modal, setModal] = useState(null);
   const [view, setView] = useState("overview");
@@ -77,8 +78,8 @@ export default function TeacherQuizContent({ quizState }) {
     openedRequestedQuiz.current = requestedQuizId;
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setView("results");
-    setModal({ type: "results", quiz });
-  }, [quizzes, requestedQuizId]);
+    setModal({ type: "results", quiz, slotId: requestedSlotId });
+  }, [quizzes, requestedQuizId, requestedSlotId]);
   const done = async (text) => {
     setModal(null);
     await refresh(text);
@@ -214,7 +215,7 @@ export default function TeacherQuizContent({ quizState }) {
         <QuizDetail quiz={modal.quiz} onClose={() => setModal(null)} />
       )}{" "}
       {modal?.type === "results" && (
-        <QuizResults quiz={modal.quiz} onClose={() => setModal(null)} />
+        <QuizResults quiz={modal.quiz} requestedSlotId={modal.slotId} onClose={() => setModal(null)} />
       )}{" "}
       {["publish", "delete"].includes(modal?.type) && (
         <Modal
@@ -484,11 +485,17 @@ function QuizDetail({ quiz, onClose }) {
     </Modal>
   );
 }
-export function QuizResults({ quiz, onClose, family = false }) {
+export function QuizResults({ quiz, onClose, family = false, requestedSlotId = "" }) {
   const learnerLabel = family ? "trẻ" : "học sinh";
   const { data, slotResult, setSlotResult, viewingSlotId, error, viewSlot } =
     useTeacherQuizResults(quiz.id);
   const { detail } = useTeacherQuizDetail(quiz.id);
+  const openedRequestedSlot = useRef("");
+  useEffect(() => {
+    if (!requestedSlotId || openedRequestedSlot.current === requestedSlotId) return;
+    openedRequestedSlot.current = requestedSlotId;
+    void viewSlot(requestedSlotId);
+  }, [requestedSlotId, viewSlot]);
   const questionsById = new Map((detail?.questions || []).map((question) => [question.id, question]));
   const rows = data?.rows || [];
   const submitted = rows.filter((row) => row.attempted || row.state === "SUBMITTED");

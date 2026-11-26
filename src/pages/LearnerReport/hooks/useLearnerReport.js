@@ -52,7 +52,7 @@ export default function useLearnerReport(id) {
       const value = await auth.getQuizResult(quizId, id);
       setPostTestResults((current) => ({ ...current, [quizId]: value }));
     } catch (loadError) {
-      setPostTestError(loadError?.message || "Không thể tải bài hậu trắc.");
+      setPostTestError(loadError?.message || "Không thể tải bài trắc nghiệm sau chương.");
     } finally {
       setPostTestLoading("");
     }

@@ -38,10 +38,38 @@ import {
   PLAN_NAME,
 } from "./entitlements";
 import { notificationTarget, notificationsApi } from "./api/notificationsApi.js";
+import { kidQuizApi } from "@/pages/Kid/Quiz/api/kidQuizApi";
 
 const notificationTime = (value) => value
   ? new Date(value).toLocaleString("vi-VN", { dateStyle: "short", timeStyle: "short" })
   : "";
+
+const preloadDashboardRoute = (path, role) => {
+  let request;
+  if (path === "/dashboard") {
+    request = role === "teacher"
+      ? import("@/pages/Teacher/Dashboard/TeacherDashboard")
+      : import("@/pages/Parent/Dashboard/ParentDashboard");
+  } else if (path === "/dashboard/learners") {
+    request = role === "teacher"
+      ? import("@/pages/Teacher/Groups/TeacherGroups")
+      : import("@/pages/Parent/Learners/ParentLearners");
+  } else if (path === "/dashboard/reports") {
+    request = role === "teacher"
+      ? Promise.all([
+          import("@/pages/Teacher/Reports/TeacherReports"),
+          import("@/pages/Teacher/Reports/components/TeacherReportCharts"),
+        ])
+      : import("@/pages/Parent/Reports/ParentReports");
+  } else if (path === "/dashboard/groups") {
+    request = import("@/pages/Teacher/Groups/TeacherGroups");
+  } else if (path === "/dashboard/quiz-management") {
+    request = role === "teacher"
+      ? import("@/pages/Teacher/Quiz/TeacherQuizManagement")
+      : import("@/pages/Parent/Quiz/ParentQuizResults");
+  }
+  if (request) void request.catch(() => {});
+};
 
 export default function WorkspaceLayout({ children }) {
   const { actor, entitlements, entitlementsLoading, learnerDashboard } =
@@ -66,6 +94,7 @@ export default function WorkspaceLayout({ children }) {
   const [unreadCount, setUnreadCount] = useState(0);
   const [notificationsLoading, setNotificationsLoading] = useState(false);
   const [notificationsError, setNotificationsError] = useState("");
+  const [pendingQuizCount, setPendingQuizCount] = useState(0);
   const notificationMenuRef = useRef(null);
   const notificationsEnabled = !learner && ["parent", "teacher"].includes(actor?.role);
   const refreshUnreadCount = useCallback(async () => {
@@ -95,6 +124,29 @@ export default function WorkspaceLayout({ children }) {
     if (learner) void auth.ensureLearnerDashboard().catch(() => {});
     else void auth.ensureEntitlements().catch(() => {});
   }, [learner]);
+  useEffect(() => {
+    if (!learner) return undefined;
+    let active = true;
+    void kidQuizApi.listLearnerQuizzes()
+      .then((value) => {
+        if (active) setPendingQuizCount(Array.isArray(value?.pending) ? value.pending.length : 0);
+      })
+      .catch(() => {});
+    return () => { active = false; };
+  }, [learner, location.pathname]);
+  useEffect(() => {
+    if (learner) return undefined;
+    const paths = teacher
+      ? ["/dashboard", "/dashboard/learners", "/dashboard/reports", "/dashboard/groups", "/dashboard/quiz-management"]
+      : ["/dashboard", "/dashboard/learners", "/dashboard/reports", "/dashboard/quiz-management"];
+    const warmSidebarPages = () => paths.forEach((path) => preloadDashboardRoute(path, actor?.role));
+    if ("requestIdleCallback" in window) {
+      const idleId = window.requestIdleCallback(warmSidebarPages, { timeout: 2500 });
+      return () => window.cancelIdleCallback(idleId);
+    }
+    const timer = window.setTimeout(warmSidebarPages, 900);
+    return () => window.clearTimeout(timer);
+  }, [actor?.role, learner, teacher]);
   useEffect(() => {
     if (!notificationsEnabled) return undefined;
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -132,7 +184,7 @@ export default function WorkspaceLayout({ children }) {
         ["/dashboard/kid", "Trang chủ", Home],
         ["/dashboard/kid/lessons", "Hành trình", MapPinned],
         ["/dashboard/kid/games", "Trò chơi", Gamepad2],
-        ["/dashboard/kid/quiz", familyChild ? "Hậu trắc" : "Quiz", ClipboardList],
+        ["/dashboard/kid/quiz", familyChild ? "Bài sau chương" : "Quiz", ClipboardList],
         ["/dashboard/kid/achievements", "Thành tích", Award],
       ]
     : [
@@ -274,6 +326,8 @@ export default function WorkspaceLayout({ children }) {
                 to={to}
                 className={navigationPath === to ? "active" : undefined}
                 aria-current={navigationPath === to ? "page" : undefined}
+                onPointerEnter={() => preloadDashboardRoute(to, actor?.role)}
+                onFocus={() => preloadDashboardRoute(to, actor?.role)}
               >
                 <Icon size={19} />
                 {text}
@@ -302,7 +356,8 @@ export default function WorkspaceLayout({ children }) {
                 {links.map(([to, text, Icon]) => (
                   <NavLink end key={to} to={to}>
                     <Icon size={18} />
-                    {text}
+                    <span>{text}</span>
+                    {to === "/dashboard/kid/quiz" && pendingQuizCount > 0 && <span className="ws-nav-notification" aria-label={`${pendingQuizCount} bài chưa làm`}>{pendingQuizCount > 99 ? "99+" : pendingQuizCount}</span>}
                   </NavLink>
                 ))}
               </nav>
@@ -494,6 +549,7 @@ export default function WorkspaceLayout({ children }) {
             <NavLink end key={to} to={to}>
               <Icon size={20} />
               <span>{text}</span>
+              {to === "/dashboard/kid/quiz" && pendingQuizCount > 0 && <span className="ws-nav-notification" aria-label={`${pendingQuizCount} bài chưa làm`}>{pendingQuizCount > 99 ? "99+" : pendingQuizCount}</span>}
             </NavLink>
           ))}
         </nav>

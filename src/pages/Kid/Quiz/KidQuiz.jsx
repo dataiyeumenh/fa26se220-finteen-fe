@@ -25,10 +25,10 @@ export default function KidQuiz() {
   return (
     <div className="ws-kid-quiz">
       <Heading
-        title={familyChild ? "Hậu trắc của em" : "Quiz của bạn"}
+        title={familyChild ? "Bài trắc nghiệm sau chương" : "Quiz của bạn"}
         description={familyChild
-          ? "Hoàn thành hậu trắc sau mỗi chương để ghi nhận kết quả vào báo cáo học tập của em."
-          : "Hoàn thành bài luyện tập, bài kiểm tra của lớp và hậu trắc được giao."}
+          ? "Hoàn thành bài trắc nghiệm sau mỗi chương để ghi nhận kết quả vào báo cáo học tập của em."
+          : "Hoàn thành bài luyện tập, bài kiểm tra của lớp và bài trắc nghiệm sau chương được giao."}
       >
         <button className="ws-btn" onClick={() => void refresh()}>
           <RefreshCw size={16} /> Làm mới
@@ -47,7 +47,7 @@ export default function KidQuiz() {
             <article>
               <ClipboardList />
               <strong>{familyChild ? pendingPostTests.length : pending.length}</strong>
-              <p>{familyChild ? "Hậu trắc chờ làm" : "Bài chờ làm"}</p>
+              <p>{familyChild ? "Bài sau chương chờ làm" : "Bài chờ làm"}</p>
             </article>
             <article>
               <CheckCircle2 />
@@ -56,14 +56,14 @@ export default function KidQuiz() {
             </article>
           </section>
           <section className="ws-kid-quiz-section">
-            <h2>{familyChild ? "Hậu trắc chờ làm" : "Chờ làm bài"}</h2>
+            <h2>{familyChild ? "Bài trắc nghiệm sau chương chờ làm" : "Chờ làm bài"}</h2>
             {pending.length ? (
               <div className="ws-kid-quiz-grid">
                 {pending.map((quiz) => (
                   <article className="ws-kid-quiz-card pending" key={quiz.id}>
                     <span className="ws-pill">
                       {quiz.kind === "POST_TEST"
-                        ? `Hậu trắc chương ${quiz.chapter}`
+                        ? `Bài trắc nghiệm sau chương ${quiz.chapter}`
                         : "Đề giáo viên"}
                     </span>
                     <h3>{quiz.title || "Bài Quiz"}</h3>
@@ -85,7 +85,7 @@ export default function KidQuiz() {
                 ))}
               </div>
             ) : (
-              <Empty>{familyChild ? "Hiện chưa có hậu trắc cần hoàn thành." : "Không còn bài đang chờ."}</Empty>
+              <Empty>{familyChild ? "Hiện chưa có bài trắc nghiệm sau chương cần hoàn thành." : "Không còn bài đang chờ."}</Empty>
             )}
           </section>
           <section className="ws-kid-quiz-section">
@@ -106,7 +106,7 @@ export default function KidQuiz() {
                 ))}
               </div>
             ) : (
-              <Empty>{familyChild ? "Em chưa hoàn thành hậu trắc nào." : "Chưa có bài đã hoàn thành."}</Empty>
+              <Empty>{familyChild ? "Em chưa hoàn thành bài trắc nghiệm sau chương nào." : "Chưa có bài đã hoàn thành."}</Empty>
             )}
           </section>
         </>

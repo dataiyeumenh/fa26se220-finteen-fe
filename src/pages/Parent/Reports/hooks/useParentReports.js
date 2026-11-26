@@ -21,7 +21,13 @@ export default function useParentReports(options = {}) {
           (a, b) => Number(Boolean(a.closedAt)) - Number(Boolean(b.closedAt)),
         );
       const settled = await Promise.allSettled(
-        groups.map((group) => auth.getGroupReport(group.id)),
+        groups.map(async (group) => {
+          const [legacy, course] = await Promise.all([
+            auth.getGroupReport(group.id),
+            auth.getCourseReport(group.id),
+          ]);
+          return { ...legacy, course };
+        }),
       );
       const values = settled
         .filter((item) => item.status === "fulfilled")

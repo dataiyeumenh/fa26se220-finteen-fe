@@ -6,6 +6,7 @@ export default function TeacherQuizManagement() {
   const [searchParams] = useSearchParams();
   const quizState = useTeacherQuizzes({
     requestedQuizId: searchParams.get("quiz") || "",
+    requestedSlotId: searchParams.get("slot") || "",
   });
   return <TeacherQuizContent quizState={quizState} />;
 }

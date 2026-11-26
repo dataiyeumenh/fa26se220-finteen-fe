@@ -4,6 +4,7 @@
   useLocation,
   useSearchParams,
 } from "react-router-dom";
+import { Suspense } from "react";
 import { useWorkspace } from "./useWorkspace";
 import { canAccessChapter } from "./model";
 import WorkspaceLayout from "./WorkspaceLayout";
@@ -45,7 +46,9 @@ export function RequireAccount({ kind, roles, plans }) {
 export function Shell() {
   return (
     <WorkspaceLayout>
-      <Outlet />
+      <Suspense fallback={<PageLoader compact label="Đang mở nội dung…" />}>
+        <Outlet />
+      </Suspense>
     </WorkspaceLayout>
   );
 }
