@@ -6,6 +6,7 @@ import {
   ClipboardList,
   BarChart3,
   Users,
+  UserPlus,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Heading } from "../../../../features/workspace/ui";
@@ -147,6 +148,16 @@ export default function ParentDashboardContent({ actor, dashboardState }) {
                 <small>KẾT QUẢ TRUNG BÌNH</small>
                 <strong>{quizAverage}</strong>
                 <p>{summary?.averageScore == null ? "Chưa có bài đã chấm" : "Số câu đúng trung bình mỗi lượt"}</p>
+              </div>
+            </Link>
+            <Link to="/dashboard/learners">
+              <span>
+                <UserPlus />
+              </span>
+              <div>
+                <small>SLOT KHẢ DỤNG</small>
+                <strong>{dashboard.quota?.free ?? "—"}</strong>
+                <p>{dashboard.quota?.free == null ? "Chưa có dữ liệu slot" : "Số chỗ còn lại để tạo hồ sơ con"}</p>
               </div>
             </Link>
           </div>

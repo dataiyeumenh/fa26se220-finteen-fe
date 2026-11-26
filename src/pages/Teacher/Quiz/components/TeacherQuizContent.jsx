@@ -146,7 +146,7 @@ export default function TeacherQuizContent({ quizState }) {
           ) : view === "results" ? (
             <QuizResultsList quizzes={quizzes.filter((quiz) => quiz.publishedAt)} onOpen={(quiz) => setModal({ type: "results", quiz })} />
           ) : quizzes.length ? (
-            <div className="ws-grid two">
+            <div className="ws-grid two ws-quiz-card-list">
               {quizzes.map((quiz) => (
                 <article className="ws-card" key={quiz.id}>
                   <div className="ws-row">

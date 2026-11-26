@@ -94,14 +94,20 @@ export default function KidQuiz() {
               <div className="ws-kid-quiz-completed">
                 {completed.map((quiz) => (
                   <article key={quiz.id}>
-                    <strong>{quiz.mode === "PRACTICE" ? `Lần đầu: ${scoreLabel(quiz)}` : scoreLabel(quiz)}</strong>
-                    <div>
+                    <strong className="ws-kid-completed-score">
+                      <CheckCircle2 size={18} aria-hidden="true" />
+                      <span>{quiz.mode === "PRACTICE" ? `Lần đầu: ${scoreLabel(quiz)}` : scoreLabel(quiz)}</span>
+                    </strong>
+                    <div className="ws-kid-completed-copy">
                       <h3>{quiz.title || "Bài Quiz"}</h3>
                       <p>{quiz.submittedAt ? `Nộp ${dateLabel(quiz.submittedAt)}` : "Đã nộp bài"}</p>
                       {quiz.mode === "PRACTICE" && quiz.bestScore != null && <p>Điểm cao nhất: {scoreOnTen(quiz.bestScore, quizTotal(quiz))}</p>}
                     </div>
-                    {canRetryPractice(quiz) && <Link className="ws-btn primary" to={`/dashboard/kid/quiz/${quiz.id}`} state={{ quiz }} >Làm lại</Link>}
-                    {quiz.mode === "PRACTICE" && !canRetryPractice(quiz) && <span className="ws-pill">Đã hết hạn luyện tập</span>}
+                    {quiz.mode === "PRACTICE" && <div className="ws-kid-completed-actions">
+                      {canRetryPractice(quiz)
+                        ? <Link className="ws-btn primary" to={`/dashboard/kid/quiz/${quiz.id}`} state={{ quiz }} >Làm lại</Link>
+                        : <span className="ws-pill">Đã hết hạn luyện tập</span>}
+                    </div>}
                   </article>
                 ))}
               </div>

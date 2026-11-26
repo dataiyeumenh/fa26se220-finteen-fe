@@ -246,6 +246,7 @@ export function VisualNovelPlayer({ data: rawData, progressOwner = null, learner
   const gameContainerRef = useRef(null);
   const menuDetailsRef = useRef(null);
   const batchSentRef = useRef(false); // lô cuối chương đã gửi trong lần chơi này
+  const [postTestNotice, setPostTestNotice] = useState(null);
   const stageRef = useRef(null);
   const dialogueRef = useRef(null);
   const pendingTransitionRef = useRef(null);
@@ -509,13 +510,13 @@ export function VisualNovelPlayer({ data: rawData, progressOwner = null, learner
     if (import.meta.env.DEV) window.__finteenLastBatch = batch;
     void submitChapterBatch(batch, learnerCode).then(async (outcome) => {
       if (import.meta.env.DEV) window.__finteenLastSubmit = outcome;
-      if (outcome.code === 7004) {
+      if (outcome.sent || outcome.code === 7004) {
         const { auth } = await import("@/api/auth.api");
         const dashboard = await auth.ensureLearnerDashboard({ force: true }).catch(() => null);
         const required = dashboard?.progress?.postTestRequired;
-        if (required?.quizId) navigate(`/dashboard/kid/quiz/${required.quizId}`, { state: { quiz: { id: required.quizId, chapter: required.chapter, kind: "POST_TEST" } } });
-        else navigate("/dashboard/kid/quiz");
-        return;
+        if (required?.quizId) setPostTestNotice(required);
+        else if (outcome.code === 7004) navigate("/dashboard/kid/quiz");
+        if (outcome.code === 7004) return;
       }
       if (outcome.failed)
         console.warn(
@@ -896,6 +897,7 @@ export function VisualNovelPlayer({ data: rawData, progressOwner = null, learner
     setFlags({});
     setChoiceLedger({});
     batchSentRef.current = false;
+    setPostTestNotice(null);
     setFirstChoiceScores({});
     setInspectedIds({});
     setMoneyEventsApplied({});
@@ -1516,6 +1518,11 @@ export function VisualNovelPlayer({ data: rawData, progressOwner = null, learner
                 </div>
               </header>
               <EndingReport report={buildEndingReport()} />
+              {postTestNotice?.quizId && <aside className="vn-post-test-notice" role="status">
+                <strong>Hoàn thành hậu trắc chương {postTestNotice.chapter}</strong>
+                <p>Em hãy nộp bài hậu trắc để tiếp tục hành trình nhé!</p>
+                <Link to={`/dashboard/kid/quiz/${postTestNotice.quizId}`} state={{ quiz: { id: postTestNotice.quizId, chapter: postTestNotice.chapter, kind: "POST_TEST" } }} className="vn-ending-exit">Làm hậu trắc ngay</Link>
+              </aside>}
               {data.endingReport?.reviewSceneId && (
                 <button
                   className="vn-choice-option"

@@ -5,9 +5,13 @@ import GameMap from "./components/GameMapReal";
 
 export default function KidLessons() {
   const navigate = useNavigate();
-  const { chapters, loading, error, retry } = useKidLessons();
+  const { chapters, loading, error, retry, postTestRequired } = useKidLessons();
 
   const handleChapterClick = (chapter) => {
+    if (chapter.lockReason === "post-test" && chapter.postTestRequired?.quizId) {
+      navigate(`/dashboard/kid/quiz/${chapter.postTestRequired.quizId}`, { state: { quiz: { id: chapter.postTestRequired.quizId, chapter: chapter.postTestRequired.chapter, kind: "POST_TEST" } } });
+      return;
+    }
     navigate(`/dashboard/kid/play?chapter=${chapter.id}`);
   };
 
@@ -91,6 +95,10 @@ export default function KidLessons() {
           </div>
         </div>
         {/* ADVENTURE MAP */}
+        {postTestRequired?.quizId && <aside className="journey-post-test-notice" role="status">
+          <div><strong>Còn một bước để mở chương tiếp theo!</strong><p>Em cần hoàn thành hậu trắc chương {postTestRequired.chapter} để tiếp tục hành trình.</p></div>
+          <button type="button" className="ws-btn primary" onClick={() => navigate(`/dashboard/kid/quiz/${postTestRequired.quizId}`, { state: { quiz: { id: postTestRequired.quizId, chapter: postTestRequired.chapter, kind: "POST_TEST" } } })}>Làm hậu trắc chương {postTestRequired.chapter}</button>
+        </aside>}
         <GameMap chapters={chapters} onChapterClick={handleChapterClick} />
       </div>
     </>

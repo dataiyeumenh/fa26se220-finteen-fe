@@ -11,7 +11,7 @@ import { nextSceneId } from './sceneEditing'
 import { TYPE_LABEL, duplicateLinked, insertLinked, isLinear, removeLinked, storyIssues } from './storyOps'
 import MinigameDialog from './MinigameDialog'
 import { TokensDialog } from './PersonalizationPanel'
-import { previewPersonalization, pruneEmptyVariants, setCharacterAppearance } from './variantOps.js'
+import { previewPersonalization, pruneEmptyVariants, setCharacterAppearance, VOICES } from './variantOps.js'
 import { AddSceneDialog, CharacterDialog, ConditionDialog, EffectDialog, PlayDialog, ScenePickerDialog } from './SceneDialogs'
 import { prepareDraftV2, parseCondition } from './draftV2'
 import { AssetPicker } from './AssetsPage'
@@ -82,6 +82,7 @@ function VoiceRenderList({ voice, batch, scenes, onOpen, onClose }) {
     <Btn onClick={onClose}>Đóng</Btn>
   </>}>
     <p role="status">{ready === items.length ? `Đã sinh xong ${ready} câu trong lần này. Bấm phát để nghe thử.` : `Lần sinh này: ${ready}/${items.length} câu đã xong${failed ? `, ${failed} câu lỗi` : ''}.`}</p>
+    <p className="studio-muted">Danh sách gồm các giọng của những bản cá nhân hóa. Bảng sửa và chơi thử dùng giọng của bản đang chọn.</p>
     <ul className="studio-voice-items">{items.map((item, index) => {
       const source = scenes.find(scene => scene.id === item.sceneId)
       const sameReading = items.filter(other => other.sceneId === item.sceneId && normalizeVoiceReading(other.readText) === normalizeVoiceReading(item.readText))
@@ -98,7 +99,7 @@ function VoiceRenderList({ voice, batch, scenes, onOpen, onClose }) {
         <span className={`studio-voice-status font-semibold ${VOICE_TONE[item.status] || ''}`}>{VOICE_LABEL[item.status] || item.status}</span>
       </div>
       <p className="mt-1 text-sm">{item.readText}</p>
-      <p className="text-xs text-slate-500">Giọng: {item.profile}{item.error ? ` · ${item.error}` : ''}</p>
+      <p className="text-xs text-slate-500">Giọng: {VOICES.find(([id]) => id === item.profile)?.[1] || item.profile}{item.error ? ` · ${item.error}` : ''}</p>
       {item.status === 'READY' && playback.voiceUrl && <audio controls preload="none" src={playback.voiceUrl} aria-label={`Nghe giọng cảnh ${number(item.sceneId)} — ${item.profile || 'mặc định'}`} />}
       {item.status === 'READY' && !playback.voiceUrl && <p className="studio-muted">Đã sinh giọng nhưng phản hồi thiếu mã tệp audio hợp lệ.</p>}
     </li>})}</ul>
@@ -151,22 +152,23 @@ export default function EditorPage({ notify, code, onNavigationStateChange }) {
   useEffect(() => { if (meta?.revision) loadVoice() }, [meta?.revision, loadVoice])
   useEffect(() => {
     if (!voice?.pending) return
-    // Máy sinh (GitHub Actions) đang chạy: hỏi lại mỗi 4 giây; xong thì tải lại nháp để có voiceUrl mới.
-    const timer = setTimeout(async () => {
+    // Keep retrying transient failures; READY items link directly to the local
+    // draft, including unsaved edits, without replacing it with a server copy.
+    let active = true
+    let timer
+    const poll = async () => {
       const next = await studioApi.get(`/api/studio/chapters/${encodeURIComponent(code)}/voice`).catch(() => null)
-      if (!next) return
+      if (!active) return
+      if (!next) { timer = setTimeout(poll, 4000); return }
       setVoice(next)
       if (!next.pending) {
         if (next.failed) notify(`Xong giọng — ${next.failed} câu lỗi, bấm Sinh giọng để thử lại`)
         else notify('Đã sinh xong giọng đọc', true)
-        if (!dirty) {
-          const fresh = await studioApi.get(`/api/studio/chapters/${encodeURIComponent(code)}/draft`).catch(() => null)
-          if (fresh) setContent(prepareDraftV2(fresh.content))
-        }
       }
-    }, 4000)
-    return () => clearTimeout(timer)
-  }, [voice, code, dirty, notify])
+    }
+    timer = setTimeout(poll, 4000)
+    return () => { active = false; clearTimeout(timer) }
+  }, [voice, code, notify])
   useEffect(() => {
     if (!dirty) return
     // Closing/reloading a browser tab requires the native warning; in-app navigation uses a popup.
@@ -375,7 +377,7 @@ export default function EditorPage({ notify, code, onNavigationStateChange }) {
       if (!preview || !Array.isArray(preview.scenes) || !preview.scenes.length)
         throw new Error('Nội dung JSON cần có ít nhất một cảnh để chơi thử.')
       const currentIndex = preview.scenes.findIndex(item => item.id === scene?.id)
-      setDialog({ kind: 'play', content: withSceneVoicePlayback(prepareDraftV2(answers ? previewPersonalization(preview, answers) : preview), voice?.items), startIndex: currentIndex >= 0 ? currentIndex : 0 })
+      setDialog({ kind: 'play', content: prepareDraftV2(answers ? previewPersonalization(preview, answers) : preview), startIndex: currentIndex >= 0 ? currentIndex : 0 })
     } catch (error) { notify(formatError(error)) }
   }
   return <>
@@ -411,6 +413,6 @@ export default function EditorPage({ notify, code, onNavigationStateChange }) {
     {dialog?.kind === 'tokens' && <TokensDialog content={content} onClose={close} onSave={next => { commit(next); close(); notify('Đã cập nhật từ thay theo bé.', true) }} />}
     {dialog?.kind === 'minigame' && <MinigameDialog game={scene.game} tokens={content.personalization?.tokens} initialTab={dialog.initialTab} interest={dialog.interest} kind={schemaQuery.data?.minigameKinds?.[scene.game?.kind]} onClose={close}
       onPickImage={apply => setPicking(() => apply)} onSave={game => { update({ game }); close(); notify('Đã cập nhật mini-game.', true) }} />}
-    {dialog?.kind === 'play' && <PlayDialog content={dialog.content} startIndex={dialog.startIndex} stats={stats} onClose={close} onEdit={index => { setIdx(index); close() }} />}
+    {dialog?.kind === 'play' && <PlayDialog content={withSceneVoicePlayback(dialog.content, voice?.items, scenes)} startIndex={dialog.startIndex} stats={stats} onClose={close} onEdit={index => { setIdx(index); close() }} />}
   </>
 }

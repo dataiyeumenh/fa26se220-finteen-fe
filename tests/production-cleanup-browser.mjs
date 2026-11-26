@@ -11,15 +11,16 @@ const learnerReport = process.argv[2] === "learner-report";
 const classReport = process.argv[2] === "class-report";
 const authTabs = process.argv[2] === "auth-tabs";
 const confirm = process.argv[2] === "confirm";
-const folder = path.resolve(confirm ? "output/confirm" : authTabs ? "output/auth-tabs" : classReport ? "output/class-report" : learnerReport ? "output/learner-report" : parentQuiz ? "output/parent-quiz" : payment ? "output/payment" : endingReport ? "output/ending-report" : "output/pr3");
-const fixture = confirm ? "confirm-browser.html" : authTabs ? "auth-tabs-browser.html" : classReport ? "class-report-browser.html" : learnerReport ? "learner-report-browser.html" : parentQuiz ? "parent-quiz-browser.html" : payment ? "payment-browser.html" : endingReport ? "ending-report-browser.html" : "production-cleanup-browser.html";
+const kidPostTest = process.argv[2] === "kid-post-test";
+const folder = path.resolve(kidPostTest ? "output/kid-post-test" : confirm ? "output/confirm" : authTabs ? "output/auth-tabs" : classReport ? "output/class-report" : learnerReport ? "output/learner-report" : parentQuiz ? "output/parent-quiz" : payment ? "output/payment" : endingReport ? "output/ending-report" : "output/pr3");
+const fixture = kidPostTest ? "kid-post-test-browser.html" : confirm ? "confirm-browser.html" : authTabs ? "auth-tabs-browser.html" : classReport ? "class-report-browser.html" : learnerReport ? "learner-report-browser.html" : parentQuiz ? "parent-quiz-browser.html" : payment ? "payment-browser.html" : endingReport ? "ending-report-browser.html" : "production-cleanup-browser.html";
 mkdirSync(folder, { recursive: true });
 const server = await createServer({ server: { host: "127.0.0.1", port: 5197, strictPort: true, hmr: false, watch: null } });
 await server.listen();
 try {
   const child = spawn(process.env.BROWSER_EXECUTABLE || "C:/Program Files/Google/Chrome/Application/chrome.exe", [
     "--headless=new", "--disable-gpu", "--no-first-run", "--no-default-browser-check", "--disable-extensions",
-    `--user-data-dir=${path.join(folder, `profile-${process.pid}`)}`, "--window-size=390,844", "--virtual-time-budget=60000", "--dump-dom",
+    `--user-data-dir=${path.join(folder, `profile-${process.pid}`)}`, `--window-size=${process.env.BROWSER_WINDOW_SIZE || "390,844"}`, "--virtual-time-budget=60000", "--dump-dom",
     `http://127.0.0.1:5197/tests/fixtures/${fixture}`,
   ], { windowsHide: true });
   let html = "", stderr = "";

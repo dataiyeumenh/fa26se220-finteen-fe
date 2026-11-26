@@ -2,7 +2,6 @@ import { useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth as authSession } from "@/api/auth.api";
 import { useWorkspace } from "@/features/workspace/useWorkspace";
-import { resolveAchievements } from "../api/kidAchievements.js";
 import { useCurrentRelease } from "../../../../hooks/useCurrentRelease.js";
 
 export default function useKidDashboard() {
@@ -31,14 +30,13 @@ export default function useKidDashboard() {
     void refresh();
   }, [refresh]);
   const progress = learnerDashboard?.progress;
-  const achievementData = resolveAchievements(learnerDashboard?.achievements);
   return {
     user: {
       ...actor,
       name: learnerDashboard?.learner?.displayName || actor?.name,
     },
     dashboard: learnerDashboard,
-    loading: learnerDashboardLoading || release.loading,
+    loading: (!learnerDashboard && learnerDashboardLoading) || release.loading,
     error: learnerDashboardError || release.error,
     refresh: () => { release.retry(); return refresh(true); },
     streak: progress?.streak || 0,
@@ -58,16 +56,5 @@ export default function useKidDashboard() {
           },
         ]
       : [],
-    achievementSource: achievementData.source,
-    achievementCatalog: achievementData.items,
-    achievements: achievementData.items.filter((item) => item.unlocked).slice(0, 8).map((item) => ({
-      ...item,
-      id: `${item.code}-${item.earnedAt}`,
-      title: item.title || item.code,
-      desc: item.source === "mock" ? "Đã mở · Dữ liệu mẫu" : item.earnedAt
-        ? new Date(item.earnedAt).toLocaleDateString("vi-VN")
-        : "",
-      emoji: item.emoji || "🏆",
-    })),
   };
 }

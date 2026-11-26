@@ -205,7 +205,20 @@ export default function KidQuizTake() {
           </div>
         </Modal>
       )}
-      {result && (
+      {result && (quiz.kind === "POST_TEST" ? (
+        <Modal
+          className="ws-quiz-submitted-modal"
+          title="Đã nộp bài"
+          description="Bài hậu trắc của em đã được ghi nhận."
+          onClose={() => navigate("/dashboard/kid/quiz")}
+        >
+          <div className="ws-quiz-submit-actions">
+            <button type="button" className="ws-btn primary" onClick={() => navigate("/dashboard/kid/quiz")}>
+              Đóng
+            </button>
+          </div>
+        </Modal>
+      ) : (
         <Modal
           className="ws-quiz-result-modal"
           title="Kết quả bài làm"
@@ -255,7 +268,7 @@ export default function KidQuizTake() {
             Hoàn tất
           </button>
         </Modal>
-      )}
+      ))}
     </div>
   );
 }

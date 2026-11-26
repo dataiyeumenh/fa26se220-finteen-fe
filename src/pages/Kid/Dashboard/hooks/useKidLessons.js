@@ -24,6 +24,7 @@ export function useKidLessons() {
   return {
     chapters,
     source: "api",
+    postTestRequired: state?.postTestRequired || null,
     loading,
     error,
     retry,

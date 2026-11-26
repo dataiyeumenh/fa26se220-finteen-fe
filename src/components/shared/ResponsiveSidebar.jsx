@@ -32,7 +32,7 @@ export default function ResponsiveSidebar({ children, className, scopeClass, tit
               <Menu size={20} aria-hidden="true" /><span>Menu</span>
             </button>
           </DialogTrigger>
-          <DialogContent className={`${scopeClass} ft-sidebar-drawer`} data-ws-role={role}>
+          <DialogContent layout="drawer" className={`${scopeClass} ft-sidebar-drawer`} data-ws-role={role}>
             <DialogTitle className="sr-only">{title}</DialogTitle>
             <DialogDescription className="sr-only">Chọn một mục để chuyển trang trong không gian làm việc.</DialogDescription>
             <aside className={`${className} ft-sidebar ft-sidebar--drawer`} onClick={closeAfterNavigation}>{children}</aside>

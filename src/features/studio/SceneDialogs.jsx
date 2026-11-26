@@ -55,7 +55,7 @@ const TYPE_ICON = {
   ending: Flag,
 };
 
-function StudioDialog({ title, onClose, wide, children }) {
+function StudioDialog({ title, onClose, wide, play, children }) {
   return (
     <Dialog
       open
@@ -64,7 +64,8 @@ function StudioDialog({ title, onClose, wide, children }) {
       }}
     >
       <DialogContent
-        className={`studio-dialog ${wide ? "max-w-4xl" : "max-w-xl"} max-h-[88vh] overflow-auto sm:rounded-xl`}
+        layout={play ? "studio-play" : "popup"}
+        className={`studio-dialog ${play ? "studio-play-dialog" : wide ? "max-w-4xl" : "max-w-xl"} max-h-[88vh] overflow-auto sm:rounded-xl`}
         aria-describedby={undefined}
       >
         <DialogTitle className="studio-dialog-title">{title}</DialogTitle>
@@ -962,7 +963,7 @@ export function PlayDialog({ content, startIndex, stats, onEdit, onClose }) {
     <StudioDialog
       title={`Chơi thử từ cảnh ${startIndex + 1}`}
       onClose={onClose}
-      wide
+      play
     >
       <div className="studio-hud" aria-live="polite">
         <span>

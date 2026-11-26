@@ -1,8 +1,6 @@
 import {
   Home,
   BookOpen,
-  Gamepad2,
-  Trophy,
   MessageCircle,
   User as UserIcon,
 } from "lucide-react";
@@ -30,13 +28,6 @@ const navItems = [
     to: "/dashboard/user/lessons",
     badge: "5 mới",
   },
-  {
-    icon: Gamepad2,
-    label: "Trò chơi",
-    to: "/dashboard/user/games",
-    badge: "3",
-  },
-  { icon: Trophy, label: "Thành tích", to: "/dashboard/user/achievements" },
   { icon: MessageCircle, label: "Trợ lý AI", to: "/dashboard/user/ai" },
   { icon: UserIcon, label: "Hồ sơ", to: "/dashboard/user/profile" },
 ];

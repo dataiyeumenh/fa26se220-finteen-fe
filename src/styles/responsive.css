@@ -22,7 +22,6 @@ button, input, select, textarea { font: inherit; }
   -webkit-overflow-scrolling: touch;
 }
 :where(.ws-modal, .sp-dialog, .studio-dialog) {
-  max-width: calc(100vw - 24px);
   max-height: calc(100dvh - 24px);
   overflow-y: auto;
   overscroll-behavior: contain;

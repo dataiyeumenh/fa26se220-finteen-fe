@@ -9,6 +9,7 @@ import '/src/features/studio/studio-pages.css';
 const originalText = 'Tai nghe đang giảm giá còn 250.000đ!';
 const customText = 'Giày thể thao đang giảm còn 250.000đ!';
 const serverReadText = customText.replace('250.000đ', '250.000 đồng');
+const previousSpokenText = 'Giày cũ còn hai trăm năm mươi nghìn đồng!';
 const originalImage = '/images/c1/ti/c1_ti_neutral.webp';
 const customImage = '/images/c1/teo/c1_teo_neutral.webp';
 const originalInspectText = 'Bạn nhận 500.000đ. Đóng học phí ngày 28.';
@@ -28,6 +29,8 @@ let saved = { id: 'CH01', title: 'Kiểm thử Editor cá nhân hóa', initialSt
   { id: 'END', type: 'ending', title: 'Kết thúc' },
 ] };
 let writes = 0;
+saved.scenes[0].voiceUrl = `${apiConfig.baseUrl}/assets/v/previously_ready_clip.mp3`;
+saved.scenes[0].variants = { 'interest:SPORT': { text: 'Giày cũ còn 250.000đ!', spokenText: previousSpokenText } };
 let warningMode = false;
 let generated = false, voicePolls = 0, voiceRequests = 0;
 const errors = [];
@@ -41,10 +44,14 @@ auth.accountRequest = async (path, options = {}) => {
   if (options.method && options.method !== 'GET') throw Error(`Unexpected write: ${path}`);
   if (path.endsWith('/draft')) return { draft: { status: 'DRAFT', revision: writes + 1 }, content: structuredClone(saved) };
   if (path.endsWith('/voice')) {
+    const variant = saved.scenes[0].variants?.['interest:SPORT'];
+    const readText = (variant?.spokenText || variant?.text || originalText).replace('250.000đ', '250.000 đồng');
     const ready = generated && ++voicePolls > 1;
+    if (generated && voicePolls === 2) throw Error('Transient voice status failure');
     return { items: [
       { sceneId: 'S1', speakerId: 'MINH', readText: originalText, profile: 'adam', status: 'READY', key: 'previously_ready_clip' },
-      { sceneId: 'S1', speakerId: 'MINH', readText: serverReadText, profile: 'adam', status: ready ? 'READY' : generated ? 'PENDING' : 'MISSING', key: generatedKey },
+      { sceneId: 'S1', speakerId: 'MINH', readText: serverReadText, profile: 'ngoc-huyen', status: 'READY', key: 'other_gender_clip' },
+      { sceneId: 'S1', speakerId: 'MINH', readText, profile: 'adam', status: readText === previousSpokenText ? 'READY' : ready ? 'READY' : generated ? 'PENDING' : 'MISSING', key: ready ? generatedKey : undefined },
     ], ready: ready ? 2 : 1, missing: generated ? 0 : 1, failed: 0, pending: generated && !ready ? 1 : 0 };
   }
   if (path.endsWith('/scene-schema')) return {};
@@ -144,16 +151,26 @@ async function run() {
   await click(button('Lời thoại', document.querySelector('.personalization-tabs')));
   await click(button('Chơi thử từ cảnh này'));
   assert(document.querySelector('[role="dialog"]').textContent.includes(customText), 'Play used base dialogue');
+  const playBounds = document.querySelector('[role="dialog"]').getBoundingClientRect();
+  assert(playBounds.width <= window.innerWidth && playBounds.height <= window.innerHeight, 'Play dialog exceeded the viewport');
+  if (testWidth > 1000) assert(playBounds.width > 1000, 'Editor play dialog still uses the small shared popup width');
+  const stageBounds = document.querySelector('.studio-play-stage').getBoundingClientRect();
+  assert(Math.abs(stageBounds.width / stageBounds.height - 16 / 9) < 0.02, 'Enlarged play stage distorted its aspect ratio');
   await click(button('Đóng', document.querySelector('[role="dialog"]')));
   await click(button('Lưu nháp'));
   assert(writes === 1, 'Draft was not saved');
   assert(saved.scenes[0].text === originalText && saved.scenes[0].nextSceneId === 'S2', 'Personalization overwrote base or routing');
   assert(saved.scenes[0].variants['interest:SPORT'].text === customText, 'Saved interest content missing');
+  assert(saved.scenes[0].variants['interest:SPORT'].spokenText === customText, 'Saving changed dialogue retained the old reading, so generation would reuse old audio');
   assert(saved.scenes[0].speaker === 'Minh' && saved.scenes[0].variants['gender:FEMALE'].speaker === 'Mai', 'Personalized name overwrote base');
   assert(saved.scenes[0].title === 'Tiêu đề dùng chung', 'Common title not saved');
   await click(button('Sinh giọng đọc'));
   assert(voiceRequests === 1, 'Generate required an extra confirmation or sent duplicate requests');
-  for (let i = 0; i < 120 && !document.querySelector('.scene-voice-row audio'); i++) await wait();
+  await click(button('Chơi thử từ cảnh này'));
+  assert(!document.querySelector('[aria-label="Nghe giọng đọc cảnh đang chơi thử"]'), 'Pending preview exposed an old recording');
+  for (let i = 0; i < 180 && !document.querySelector('.scene-voice-row audio'); i++) await wait();
+  assert(document.querySelector('[aria-label="Nghe giọng đọc cảnh đang chơi thử"]')?.getAttribute('src') === generatedAudio, 'Open play dialog did not receive the completed recording');
+  await click(button('Đóng', document.querySelector('[role="dialog"]')));
   assert(document.querySelector('.scene-voice-row audio')?.getAttribute('src') === generatedAudio, 'Generated personalized voice not playable in sidebar');
   assert(document.querySelectorAll('.scene-inspector audio').length === 1 && document.querySelector('.scene-current-voice audio')?.getAttribute('src') === generatedAudio, 'Inspector did not show exactly one player for the selected scene');
   assert(!document.querySelector('.scene-current-voice').textContent.includes('cần bấm Sinh giọng'), 'Selected-scene player still claimed the completed recording was missing');

@@ -141,6 +141,24 @@ test('chapter results survive recoverable errors and are discarded for invalid, 
   }
 });
 
+test('background dashboard refresh keeps the game mounted while initial loads still wait', async () => {
+  const source = await fs.readFile(new URL('../src/pages/Kid/Dashboard/hooks/useKidDashboard.js', import.meta.url), 'utf8');
+  const createHook = new Function('useCallback', 'useEffect', 'useNavigate', 'authSession', 'useWorkspace', 'useCurrentRelease',
+    source.replace(/^import .*;\r?\n/gm, '').replace('export default function', 'function') + '\nreturn useKidDashboard;');
+  let workspace = { learnerDashboard: null, learnerDashboardLoading: true };
+  let release = { chapters: [], loading: false };
+  const useKidDashboard = createHook(
+    callback => callback, () => {}, () => () => {}, {}, () => workspace,
+    () => release,
+  );
+  assert.equal(useKidDashboard().loading, true, 'Initial dashboard fetch should wait');
+  workspace = { learnerDashboard: { progress: { completedChapters: 4 } }, learnerDashboardLoading: true };
+  assert.equal(useKidDashboard().loading, false, 'Refreshing progress must not unmount the ending and submit the chapter again');
+  assert.equal(useKidDashboard().completedChapters, 4, 'Existing progress remains available during refresh');
+  release = { chapters: [], loading: true };
+  assert.equal(useKidDashboard().loading, true, 'Initial release fetch should still wait');
+});
+
 test('dashboard waits for pending chapter results before loading progress', async () => {
   const source = await fs.readFile(new URL('../src/pages/Kid/Dashboard/hooks/useKidPlayState.js', import.meta.url), 'utf8');
   let effect;
