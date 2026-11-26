@@ -45,12 +45,13 @@ function ChapterPoint({ chapter, point, onSelect }) {
   const current = chapter.status === "current";
   const completed = chapter.status === "completed";
   const locked = chapter.status === "locked";
+  const canOpenPostTest = locked && chapter.lockReason === "post-test" && Boolean(chapter.postTestRequired?.quizId);
   const status = locked ? "locked" : current ? "current" : completed ? "complete" : "available";
   return (
     <>
       <button
         type="button"
-        disabled={locked}
+        disabled={locked && !canOpenPostTest}
         className={`atlas-stop ${status}`}
         style={{ left: `${point.x}%`, top: `${point.y}%` }}
         onClick={() => onSelect?.(chapter)}
@@ -79,7 +80,7 @@ function ChapterPoint({ chapter, point, onSelect }) {
       <button
         type="button"
         className={`atlas-label ${status}`}
-        disabled={locked}
+        disabled={locked && !canOpenPostTest}
         style={{ left: `${point.x}%`, top: `${point.labelY}%` }}
         onClick={() => onSelect?.(chapter)}
       >
@@ -99,8 +100,9 @@ function ChapterPoint({ chapter, point, onSelect }) {
 }
 
 export default function GameMap({ chapters = [], onChapterClick }) {
+  const waitingForPostTest = chapters.find((chapter) => chapter.lockReason === "post-test" && chapter.postTestRequired?.quizId);
   const current =
-    chapters.find((chapter) => chapter.status === "current") || chapters[0];
+    waitingForPostTest || chapters.find((chapter) => chapter.status === "current") || chapters[0];
   const regions = Array.from({ length: Math.max(1, Math.ceil(chapters.length / 2)) }, (_, index) => ({
     ...REGIONS[Math.min(index, REGIONS.length - 1)],
     title: REGIONS[index]?.title || "Hành trình tiếp nối",
@@ -144,7 +146,7 @@ export default function GameMap({ chapters = [], onChapterClick }) {
             className="atlas-resume"
             onClick={() => onChapterClick?.(current)}
           >
-            <Play size={16} /> Tiếp tục chương {current.id}
+            <Play size={16} /> {waitingForPostTest ? `Làm hậu trắc chương ${waitingForPostTest.postTestRequired.chapter}` : `Tiếp tục chương ${current.id}`}
           </button>
         )}
       </div>

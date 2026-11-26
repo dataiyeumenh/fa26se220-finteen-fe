@@ -110,6 +110,9 @@ export function Plans() {
   const [paymentPage, setPaymentPage] = useState(0);
   const [paymentsLoading, setPaymentsLoading] = useState(true);
   const [hasMorePayments, setHasMorePayments] = useState(false);
+  const workspacePlan = actor.role === "parent" || actor.role === "teacher" ? actor.role : null;
+  const visiblePlans = plans.filter((plan) => !workspacePlan || String(plan.kind).toLowerCase() === workspacePlan);
+  const visibleOwnedPlans = actor.plans.filter((plan) => !workspacePlan || plan === workspacePlan);
   const visibleQuotas = quotas.filter((quota) => quotaBelongsToRole(quota, actor.role));
   const load = async () => {
     setLoading(true);
@@ -189,22 +192,38 @@ export function Plans() {
         <div>
           <strong>Gói đang có</strong>
           <p>
-            {actor.plans.map((p) => PLANS[p].name).join(" + ") ||
+            {visibleOwnedPlans.map((p) => PLANS[p].name).join(" + ") ||
               "Tài khoản của bạn hiện chưa có gói học tập."}
           </p>
         </div>
-        {actor.plans.length > 0 && (
+        {visibleOwnedPlans.length > 0 && (
           <span className="ws-plan-validity">Quyền sử dụng vĩnh viễn</span>
         )}
       </section>
       {visibleQuotas.length > 0 && (
         <section className="ws-card ws-slot-wallet-section">
           <div className="ws-slot-wallet-heading">
-            <div><span className="ws-slot-wallet-icon"><WalletCards /></span><div><h2>Ví slot {actor.role === "teacher" ? "giáo viên" : "gia đình"}</h2><p>Quản lý số chỗ có thể cấp cho {actor.role === "teacher" ? "học sinh và lớp học" : "các hồ sơ con"}.</p></div></div>
+            <div><span className="ws-slot-wallet-icon"><WalletCards /></span><div><h2>{actor.role === "parent" ? "Ví slot gia đình" : "Ví slot giáo viên"}</h2><p>{actor.role === "parent" ? "Mỗi hồ sơ con sử dụng 1 slot trong gói Gia đình." : "Quản lý số chỗ có thể cấp cho học sinh và lớp học."}</p></div></div>
             <span className="ws-pill">Sử dụng vĩnh viễn</span>
           </div>
           <div className="ws-slot-wallet-list">
-            {visibleQuotas.map((quota) => (
+            {visibleQuotas.map((quota) => actor.role === "parent" ? (
+              <article className="ws-family-capacity" key={quota.context || quota.plan}>
+                <div className="ws-family-capacity-available">
+                  <span>Có thể tạo thêm</span>
+                  <strong>{quota.free ?? "—"}<small>hồ sơ con</small></strong>
+                  <p>{quota.free == null ? "Chưa có dữ liệu slot khả dụng." : Number(quota.free) > 0 ? "Bạn có thể tạo hồ sơ mới tại mục Các con." : "Đã hết slot khả dụng. Mua thêm slot bên dưới để tạo hồ sơ mới."}</p>
+                </div>
+                <div className="ws-family-capacity-details">
+                  <dl>
+                    <div><dt>Slot đã mua</dt><dd>{quota.limit ?? "—"}</dd><small>Slot từ gói và mua thêm</small></div>
+                    <div><dt>Slot đã sử dụng</dt><dd>{quota.used ?? "—"}</dd><small>Gồm cả hồ sơ đã xóa</small></div>
+                    <div><dt>Hồ sơ đã xóa</dt><dd>{quota.wiped ?? "—"}</dd><small>Vẫn tính là slot đã sử dụng</small></div>
+                  </dl>
+                  <p>Gói Gia đình: <b>{quota.base ?? "—"} slot</b><span aria-hidden="true"> · </span>Đã mua thêm: <b>{quota.extra ?? "—"} slot</b></p>
+                </div>
+              </article>
+            ) : (
               <article className="ws-slot-wallet-card" key={quota.context || quota.plan}>
                 <div className="ws-slot-wallet-total"><span>Tổng sức chứa</span><strong>{quota.limit ?? 0}</strong><small>slot đã sở hữu</small></div>
                 <div className="ws-slot-wallet-stats">
@@ -216,7 +235,11 @@ export function Plans() {
               </article>
             ))}
           </div>
-          <p className="ws-slot-wallet-note">Slot đã xóa vẫn được tính là đã sử dụng và không được hoàn lại.</p>
+          {actor.role === "parent" ? (
+            <p className="ws-slot-wallet-note"><span className="ws-family-capacity-note-label">Lưu ý:</span> Xóa hồ sơ con không hoàn lại slot. Hồ sơ đã xóa vẫn được tính vào số slot đã sử dụng.</p>
+          ) : (
+            <p className="ws-slot-wallet-note">Slot đã xóa vẫn được tính là đã sử dụng và không được hoàn lại.</p>
+          )}
         </section>
       )}
       {error && (
@@ -226,9 +249,9 @@ export function Plans() {
       )}
       {loading ? (
         <Empty>Đang tải bảng giá…</Empty>
-      ) : plans.length ? (
-        <div className="ws-grid two ws-public-plans">
-          {plans.map((plan) => {
+      ) : visiblePlans.length ? (
+        <div className={`ws-grid ws-public-plans ${visiblePlans.length === 1 ? "ws-public-plans--single" : "two"}`}>
+          {visiblePlans.map((plan) => {
             const copy = PLAN_COPY[plan.kind] || {
               name: plan.kind,
               description: "Gói học tập FinTeen.",
@@ -241,12 +264,20 @@ export function Plans() {
                 className={`ws-card ws-plan ws-plan-${String(plan.kind).toLowerCase()} ${plan.kind === "TEACHER" ? "featured" : ""}`}
                 key={plan.kind}
               >
+                <div className="ws-plan-info">
                 <div className="ws-row">
                   <span className="ws-pill">{plan.kind}</span>
                   {owned && <span className="ws-owned-plan">Đang sử dụng</span>}
                 </div>
                 <h2>{copy.name}</h2>
                 <p>{copy.description}</p>
+                <ul>
+                  {copy.benefits.map((benefit) => (
+                    <li key={benefit}>{benefit}</li>
+                  ))}
+                </ul>
+                </div>
+                <div className="ws-plan-purchase">
                 <div className="ws-plan-number">
                   {money(owned && plan.addonPrice != null ? plan.addonPrice : plan.price)}{" "}
                   <span>
@@ -275,11 +306,6 @@ export function Plans() {
                     </p>
                   </div>
                 )}
-                <ul>
-                  {copy.benefits.map((benefit) => (
-                    <li key={benefit}>{benefit}</li>
-                  ))}
-                </ul>
                 <button
                   className="ws-btn primary"
                   disabled={Boolean(buying) || (owned && plan.addonPrice == null)}
@@ -294,6 +320,7 @@ export function Plans() {
                 <small className="ws-plan-note">
                   Mã VietQR và thông tin chuyển khoản sẽ hiển thị ngay tại đây.
                 </small>
+                </div>
               </article>
             );
           })}

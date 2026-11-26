@@ -51,8 +51,8 @@ export const numbersOf = (text) =>
 
 /**
  * Đặt (hoặc bỏ khi value rỗng) một trường của biến thể. Trả object MỚI. Biến thể rỗng → xoá khoá; hết biến thể → xoá `variants`.
- * Đổi `text` mà câu gốc có `spokenText` (cách đọc riêng): tự đặt `spokenText` của biến thể = chữ mới — thiếu nó thì giọng đọc
- * câu GỐC (lỗi CH01 2.3.0). Người soạn vẫn sửa lại cách đọc được.
+ * Đổi lời thoại: đặt lại cách đọc riêng theo chữ mới để không dùng lại bản ghi
+ * của câu cũ. Người soạn có thể chỉnh cách đọc sau khi sửa lời thoại.
  */
 export function setVariantField(obj, label, field, value) {
   const variants = { ...(obj.variants || {}) };
@@ -60,11 +60,10 @@ export function setVariantField(obj, label, field, value) {
   if (['text', 'prompt', 'spokenText', 'speaker', 'voice'].includes(field) && value !== variant[field]) delete variant.voiceUrl;
   if (value === "" || value == null) delete variant[field];
   else variant[field] = value;
-  if (field === "text" && obj.spokenText) {
-    const autoFilled = variants[label]?.spokenText === variants[label]?.text;
+  if (['text', 'prompt'].includes(field) && value !== variants[label]?.[field]) {
     if (value === "" || value == null) {
-      if (autoFilled) delete variant.spokenText;
-    } else if (!variant.spokenText || autoFilled) {
+      delete variant.spokenText;
+    } else if (obj.spokenText || variants[label]?.spokenText) {
       variant.spokenText = value;
     }
   }

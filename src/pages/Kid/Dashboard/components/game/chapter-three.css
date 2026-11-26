@@ -136,6 +136,9 @@
   filter: brightness(1.08);
 }
 
+.vn-post-test-notice { margin-top:18px; padding:16px; border:1px solid #e1bf71; border-radius:12px; background:#fff8e7; color:#62491f; }
+.vn-post-test-notice p { margin:6px 0 0; font-size:14px; line-height:1.6; }
+
 .vn-report {
   display: flex;
   flex-direction: column;

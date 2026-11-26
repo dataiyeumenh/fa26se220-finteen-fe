@@ -409,9 +409,7 @@ export function ChapterFiveReflection({ scene, flags, onComplete }) {
         </>
       )}
       <p>
-        Phần phản tư chỉ ảnh hưởng điểm học tập và điều kiện Ending; Money và
-        stats không đổi. Câu trả lời này không sửa quyết định tài khoản đã ghi
-        nhận.
+        Hãy nhìn lại dữ kiện và chọn một bước bạn muốn làm tốt hơn ở lần sau.
       </p>
       <button disabled={!ready} onClick={finish}>
         Ghi nhận và tiếp tục

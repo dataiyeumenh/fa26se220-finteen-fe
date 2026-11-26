@@ -12,7 +12,8 @@ export function sceneReadText(scene) {
   return [scene?.spokenText, scene?.text, scene?.prompt].find(value => typeof value === 'string' && value.trim()) || '';
 }
 
-export const voiceLineIdentity = item => JSON.stringify([item.sceneId, item.key || null, item.profile, item.readText]);
+// The asset key can be assigned/replaced by the renderer after enqueueing.
+export const voiceLineIdentity = item => JSON.stringify([item.sceneId, item.speakerId || null, item.profile, normalizeVoiceReading(item.readText)]);
 
 export function pendingVoiceBatch(voice) {
   return (voice?.items || []).filter(item => ['MISSING', 'FAILED', 'PENDING'].includes(item.status)).map(item => ({ ...item }));
@@ -45,22 +46,39 @@ export function patchSceneVoice(scene, patch) {
   return next;
 }
 
+/** Infer the server's character default from linked base recordings, never
+ * from the first personalized result (which may use another gender's voice). */
+export function defaultSceneVoice(scene, items = [], baseScenes = []) {
+  const sources = baseScenes.filter(source => !source.voice && source.voiceUrl
+    && (scene.speakerId ? source.speakerId === scene.speakerId : source.id === scene.id));
+  const profilesFor = sources => new Set(sources.flatMap(source => items.filter(item =>
+    item.sceneId === source.id && item.speakerId === source.speakerId
+    && normalizeVoiceReading(item.readText) === normalizeVoiceReading(sceneReadText(source))
+    && voiceClipUrl(item) === source.voiceUrl).map(item => item.profile)).filter(Boolean));
+  const own = profilesFor(sources.filter(source => source.id === scene.id));
+  if (own.size === 1) return [...own][0];
+  const profiles = profilesFor(sources);
+  return profiles.size === 1 ? [...profiles][0] : undefined;
+}
+
 /** Never substitute a base/other variant recording just because its scene ID matches. */
-export function sceneVoicePlayback(scene, items = []) {
+export function sceneVoicePlayback(scene, items = [], baseScenes = []) {
   if (!scene || scene.voice === 'off') return { status: 'OFF' };
+  const profile = scene.voice || defaultSceneVoice(scene, items, baseScenes);
   const readText = normalizeVoiceReading(sceneReadText(scene));
   const matches = items.filter(item => item.sceneId === scene.id && readText && normalizeVoiceReading(item.readText) === readText
     && (!item.speakerId || !scene.speakerId || item.speakerId === scene.speakerId)
-    && (!scene.voice || item.profile === scene.voice));
+    && (!profile || item.profile === profile));
   const profiles = new Set(matches.map(item => item.profile));
   const match = profiles.size <= 1 ? matches.find(item => voiceClipUrl(item)) || matches[0] : null;
+  if (voiceClipUrl(match)) return { ...match, voiceUrl: voiceClipUrl(match) };
   if (scene.voiceUrl) return { ...match, status: 'READY', voiceUrl: scene.voiceUrl };
   return match ? { ...match, voiceUrl: voiceClipUrl(match) } : { status: 'MISSING' };
 }
 
-export function withSceneVoicePlayback(content, items = []) {
+export function withSceneVoicePlayback(content, items = [], baseScenes = content.scenes || []) {
   return { ...content, scenes: (content.scenes || []).map(scene => {
-    const playback = sceneVoicePlayback(scene, items);
+    const playback = sceneVoicePlayback(scene, items, baseScenes);
     return playback.status === 'READY' && playback.voiceUrl ? { ...scene, voiceUrl: playback.voiceUrl } : scene;
   }) };
 }

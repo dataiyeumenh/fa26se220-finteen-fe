@@ -437,3 +437,8 @@
     transition: none;
   }
 }
+
+.journey-post-test-notice { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px; padding:18px 20px; border:1px solid #e7cc8b; border-left:4px solid #c69229; border-radius:12px; background:#fff9eb; color:#694e20; }
+.journey-post-test-notice strong { font-size:16px; }
+.journey-post-test-notice p { margin:5px 0 0; font-size:14px; line-height:1.6; }
+.journey-post-test-notice .ws-btn { flex-shrink:0; }

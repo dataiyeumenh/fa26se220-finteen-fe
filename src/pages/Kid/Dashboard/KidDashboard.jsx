@@ -1,4 +1,4 @@
-import { ArrowRight, BookOpen, Check, CircleDollarSign, Flame, Gamepad2, Lightbulb, LockKeyhole, Map, Play, ShieldCheck, Target, Trophy, WalletCards } from "lucide-react";
+import { ArrowRight, BookOpen, Check, CircleDollarSign, Flame, Gamepad2, Lightbulb, LockKeyhole, Map, Play, ShieldCheck, Target, WalletCards } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import useKidDashboard from "./hooks/useKidDashboard.js";
 import "./kid-home.css";
@@ -37,9 +37,6 @@ export default function KidDashboard() {
   const navigate = useNavigate();
   const activeChapter = chapterNumber(dashboard.continueChapter);
   const progress = dashboard.totalChapters ? Math.round((dashboard.completedChapters / dashboard.totalChapters) * 100) : 0;
-  const achievementMock = dashboard.achievementSource === "mock";
-  const achievementCount = Array.isArray(dashboard.dashboard?.achievements) ? dashboard.dashboard.achievements.length : 0;
-  const newestAchievement = dashboard.achievements[0];
   const knowledge = knowledgeByChapter[activeChapter - 1];
   const requiredPostTest = dashboard.postTestRequired;
   const playChapter = (chapter = activeChapter) => navigate(`/dashboard/kid/play?chapter=${chapter}`);
@@ -71,7 +68,6 @@ export default function KidDashboard() {
         <div className="kid-home-progress-item"><span><BookOpen /></span><div><strong>{dashboard.completedChapters}/{dashboard.totalChapters || 8} chương</strong><small>{progress}% hành trình</small></div></div>
         <div className="kid-home-progress-bar"><i style={{ width: `${progress}%` }} /></div>
         <div className="kid-home-progress-item"><span className="is-fire"><Flame /></span><div><strong>{dashboard.streak} ngày liên tiếp</strong><small>Giữ nhịp học đều nhé</small></div></div>
-        <div className="kid-home-progress-item"><span className="is-trophy"><Trophy /></span><div><strong>{achievementCount} thành tựu</strong><small>Những cột mốc em đã đạt</small></div></div>
       </aside>
     </section>
     <section className="kid-home-journey" aria-labelledby="journey-title">
@@ -85,10 +81,6 @@ export default function KidDashboard() {
       </div>
     </section>
     <section className="kid-home-lower">
-      <article className="kid-home-achievement">
-        <div className="kid-home-lower-title"><Trophy /><h2>Thành tựu mới</h2></div>
-        {newestAchievement ? <div className="kid-home-achievement-row"><span>{newestAchievement.emoji || "🏆"}</span><div>{achievementMock && <small className="kid-home-mock-label">Dữ liệu mock · Đang phát triển</small>}<strong>{newestAchievement.title}</strong><p>{newestAchievement.desc || "Một cột mốc mới trên hành trình của em."}</p></div><button type="button" aria-label="Xem thành tích" onClick={() => navigate("/dashboard/kid/achievements")}><ArrowRight /></button></div> : <p>Hoàn thành chương đầu tiên để mở thành tựu nhé!</p>}
-      </article>
       <article className="kid-home-tip"><div className="kid-home-lower-title"><Lightbulb /><h2>Gợi ý cho em</h2></div><div className="kid-home-tip-copy"><span><CircleDollarSign /></span><p>Tiếp tục chương “{chapterNames[activeChapter - 1]}” để mở thêm một kỹ năng tài chính mới nhé!</p></div></article>
     </section>
     <section className="kid-home-knowledge" aria-labelledby="knowledge-title">

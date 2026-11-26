@@ -10,9 +10,7 @@ import {
   Settings,
   LogOut,
   Package,
-  Gamepad2,
   MapPinned,
-  Award,
   Play,
   AlertTriangle,
   Bell,
@@ -183,9 +181,7 @@ export default function WorkspaceLayout({ children }) {
     ? [
         ["/dashboard/kid", "Trang chủ", Home],
         ["/dashboard/kid/lessons", "Hành trình", MapPinned],
-        ["/dashboard/kid/games", "Trò chơi", Gamepad2],
         ["/dashboard/kid/quiz", familyChild ? "Bài sau chương" : "Quiz", ClipboardList],
-        ["/dashboard/kid/achievements", "Thành tích", Award],
       ]
     : [
         ["/dashboard", "Tổng quan", Home],
@@ -201,7 +197,7 @@ export default function WorkspaceLayout({ children }) {
                 Users,
               ],
               ["/dashboard/reports", "Tiến độ & báo cáo", BarChart3],
-              ...(!teacher ? [["/dashboard/quiz-management", "Quản lý Quiz", ClipboardList]] : []),
+              ...(!teacher ? [["/dashboard/quiz-management", "Quản lý trắc nghiệm", ClipboardList]] : []),
             ]
           : []),
         ...(teacher

@@ -39,7 +39,6 @@ const LearnerReport = lazy(() => import("@/pages/LearnerReport/LearnerReport"));
 const KidDashboard = lazy(() => import("@/pages/Kid/Dashboard/KidDashboard"));
 const KidLessons = lazy(() => import("@/pages/Kid/Dashboard/KidLessons"));
 const KidGamesPage = lazy(() => import("@/pages/Kid/Dashboard/KidGames"));
-const KidAchievements = lazy(() => import("@/pages/Kid/Dashboard/KidAchievements"));
 const KidPersonalization = lazy(() => import("@/pages/Kid/Dashboard/KidPersonalization"));
 import { GuestDemo } from "@/features/workspace/KidPages";
 
@@ -154,10 +153,6 @@ function App() {
               <Route path="/dashboard/kid" element={<KidDashboard />} />
               <Route path="/dashboard/kid/games" element={<ChapterGuard><KidGamesPage /></ChapterGuard>} />
               <Route path="/dashboard/kid/personalization" element={<KidPersonalization />} />
-              <Route
-                path="/dashboard/kid/achievements"
-                element={<KidAchievements />}
-              />
               <Route path="/dashboard/kid/lessons" element={<KidLessons />} />
               <Route
                 path="/dashboard/kid/play"

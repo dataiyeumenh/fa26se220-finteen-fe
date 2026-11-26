@@ -2,16 +2,16 @@ import { useNavigate } from "react-router-dom";
 import { MapPinned } from "lucide-react";
 import { useKidLessons } from "./hooks/useKidLessons";
 import GameMap from "./components/GameMapReal";
-import { Modal } from "@/features/workspace/ui";
-import { useState } from "react";
-import MockChapterReport from "./components/game/MockChapterReport.jsx";
 
 export default function KidLessons() {
   const navigate = useNavigate();
-  const [reportOpen, setReportOpen] = useState(false);
-  const { chapters, loading, error, retry } = useKidLessons();
+  const { chapters, loading, error, retry, postTestRequired } = useKidLessons();
 
   const handleChapterClick = (chapter) => {
+    if (chapter.lockReason === "post-test" && chapter.postTestRequired?.quizId) {
+      navigate(`/dashboard/kid/quiz/${chapter.postTestRequired.quizId}`, { state: { quiz: { id: chapter.postTestRequired.quizId, chapter: chapter.postTestRequired.chapter, kind: "POST_TEST" } } });
+      return;
+    }
     navigate(`/dashboard/kid/play?chapter=${chapter.id}`);
   };
 
@@ -62,8 +62,6 @@ export default function KidLessons() {
   return (
     <>
       <div className="space-y-4">
-        <button className="ws-btn" onClick={() => setReportOpen(true)}>Xem báo cáo cuối chương mẫu · Đang phát triển</button>
-        {reportOpen && <Modal title="Báo cáo cuối chương mẫu" onClose={() => setReportOpen(false)}><MockChapterReport /></Modal>}
         {/* Compact Header */}
         <div className="flex items-center justify-between gap-3 flex-wrap">
           <div className="flex items-center gap-3">
@@ -97,6 +95,10 @@ export default function KidLessons() {
           </div>
         </div>
         {/* ADVENTURE MAP */}
+        {postTestRequired?.quizId && <aside className="journey-post-test-notice" role="status">
+          <div><strong>Còn một bước để mở chương tiếp theo!</strong><p>Em cần hoàn thành hậu trắc chương {postTestRequired.chapter} để tiếp tục hành trình.</p></div>
+          <button type="button" className="ws-btn primary" onClick={() => navigate(`/dashboard/kid/quiz/${postTestRequired.quizId}`, { state: { quiz: { id: postTestRequired.quizId, chapter: postTestRequired.chapter, kind: "POST_TEST" } } })}>Làm hậu trắc chương {postTestRequired.chapter}</button>
+        </aside>}
         <GameMap chapters={chapters} onChapterClick={handleChapterClick} />
       </div>
     </>

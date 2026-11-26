@@ -1,8 +1,39 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { normalizeVoiceReading, patchSceneVoice, pendingVoiceBatch, sceneVoicePlayback, voiceBatchItems, voiceClipUrl, withSceneVoicePlayback } from "../src/features/studio/sceneVoice.js";
+import { defaultSceneVoice, normalizeVoiceReading, patchSceneVoice, pendingVoiceBatch, sceneVoicePlayback, voiceBatchItems, voiceClipUrl, withSceneVoicePlayback } from "../src/features/studio/sceneVoice.js";
 
 const scene = { text: "Old dialogue", spokenText: "Old reading", voiceUrl: "old.mp3", speakerId: "AN" };
+
+test('character default links edited dialogue when male and female recordings both exist', () => {
+  const base = { id: 'S1', speakerId: 'AN', text: 'Base', voiceUrl: 'base.mp3' };
+  const edited = { id: 'S1', speakerId: 'AN', text: 'Edited' };
+  const items = [
+    { sceneId: 'S1', speakerId: 'AN', readText: 'Edited', profile: 'ngoc-huyen', status: 'READY', voiceUrl: 'female.mp3' },
+    { sceneId: 'S1', speakerId: 'AN', readText: 'Base', profile: 'adam', status: 'READY', voiceUrl: 'base.mp3' },
+    { sceneId: 'S1', speakerId: 'AN', readText: 'Edited', profile: 'adam', status: 'READY', voiceUrl: 'male.mp3' },
+  ];
+  assert.equal(defaultSceneVoice(edited, items, [base]), 'adam');
+  assert.equal(sceneVoicePlayback(edited, items, [base]).voiceUrl, 'male.mp3');
+  assert.equal(sceneVoicePlayback({ ...edited, voice: 'ngoc-huyen' }, items, [base]).voiceUrl, 'female.mp3');
+  assert.equal(sceneVoicePlayback({ ...edited, voice: 'pham-tuyen' }, items, [base]).voiceUrl, undefined);
+  assert.equal(withSceneVoicePlayback({ scenes: [edited] }, items, [base]).scenes[0].voiceUrl, 'male.mp3');
+  assert.equal(edited.voice, undefined);
+  const pending = items.map(item => item.voiceUrl === 'male.mp3' ? { ...item, status: 'PENDING' } : item);
+  assert.equal(sceneVoicePlayback(edited, pending, [base]).status, 'PENDING');
+  assert.equal(sceneVoicePlayback(edited, pending, [base]).voiceUrl, undefined);
+});
+
+test('default can be learned from another base scene of the same speaker, without guessing conflicting defaults', () => {
+  const selected = { id: 'S1', speakerId: 'AN', text: 'Edited' };
+  const bases = [{ id: 'S2', speakerId: 'AN', text: 'Base', voiceUrl: 'base.mp3' }];
+  const items = [{ sceneId: 'S2', speakerId: 'AN', readText: 'Base', profile: 'adam', status: 'READY', voiceUrl: 'base.mp3' }];
+  assert.equal(defaultSceneVoice(selected, items, bases), 'adam');
+  assert.equal(defaultSceneVoice({ ...selected, speakerId: 'MINH' }, items, bases), undefined);
+  assert.equal(defaultSceneVoice(selected, items, [{ ...bases[0], voice: 'adam' }]), undefined);
+  bases.push({ id: 'S3', speakerId: 'AN', text: 'Other', voiceUrl: 'other.mp3' });
+  items.push({ sceneId: 'S3', speakerId: 'AN', readText: 'Other', profile: 'ngoc-huyen', status: 'READY', voiceUrl: 'other.mp3' });
+  assert.equal(defaultSceneVoice(selected, items, bases), undefined);
+});
 
 test('selected scene finds generated audio when server expands currency shorthand', () => {
   const text = 'Skin trong game đang giảm giá còn 250.000đ nè An ơi! Nhóm mình mua chung để tối nay leo rank nhé!';
@@ -50,6 +81,13 @@ test('batch identity distinguishes different readings and profiles of the same s
   const batch = pendingVoiceBatch({ items: [first, second] });
   assert.deepEqual(voiceBatchItems(batch, { items: [{ ...second, status: 'READY' }, { ...first, status: 'READY' }] }).map(item => item.key), ['one', 'two']);
   assert.deepEqual(voiceBatchItems(batch, null), batch);
+});
+
+test('completed render follows a line whose asset key and currency notation changed', () => {
+  const pending = { sceneId: 'S1', speakerId: 'AN', profile: 'adam', readText: 'Giá 500.000đ', status: 'PENDING' };
+  const ready = { ...pending, readText: 'Giá 500.000 đồng', key: 'rendered_clip', status: 'READY' };
+  assert.deepEqual(voiceBatchItems([pending], { items: [ready] }), [ready]);
+  assert.equal(sceneVoicePlayback({ id: 'S1', text: pending.readText, voiceUrl: 'outdated.mp3' }, [ready]).voiceUrl, voiceClipUrl(ready));
 });
 
 test('real LineStatus contract maps READY key to the public mp3 under the API prefix', () => {

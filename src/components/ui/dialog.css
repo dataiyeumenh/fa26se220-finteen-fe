@@ -1,0 +1,24 @@
+/* One size for centered popups, including legacy modal width overrides.
+   Navigation drawers keep their separate edge-aligned layout. */
+[data-dialog-layout="popup"] {
+  box-sizing: border-box;
+  width: min(560px, calc(100vw - 32px)) !important;
+  max-width: 560px !important;
+  max-height: calc(100dvh - 32px) !important;
+  padding: 28px !important;
+  gap: 16px;
+  border-radius: 20px;
+  overflow-y: auto !important;
+  overscroll-behavior: contain;
+  overflow-wrap: anywhere;
+}
+
+[data-dialog-layout="popup"] > * {
+  min-width: 0;
+}
+
+@media (max-width: 480px) {
+  [data-dialog-layout="popup"] {
+    padding: 24px !important;
+  }
+}

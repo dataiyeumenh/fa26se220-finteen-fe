@@ -7,6 +7,8 @@ import { auth } from "/src/api/auth.api.js";
 import { teacherQuizApi } from "/src/pages/Teacher/Quiz/api/teacherQuizApi.js";
 import { workspaceApi } from "/src/features/workspace/api/workspaceApi.js";
 import { studioApi } from "/src/features/studio/studioClient.js";
+import { StudioDialog } from "/src/features/studio/ui.jsx";
+import { Dialog, DialogContent, DialogTitle } from "/src/components/ui/dialog.jsx";
 import "/src/index.css";
 import "/src/features/workspace/workspace.css";
 
@@ -44,6 +46,8 @@ try {
   await until(() => button("Xóa"), "question list");
   button("Xóa").click();
   await until(dialog, "delete confirmation");
+  const standardWidth = parseFloat(getComputedStyle(dialog()).width);
+  assert(Math.abs(standardWidth - Math.min(560, innerWidth - 32)) < 1, "Reference confirmation has the wrong width");
   assert(deleteCalls === 0, "Question deleted before confirmation");
   assert(dialog().textContent.includes("Nhu cầu thiết yếu"), "Confirmation does not identify the question");
   assert(document.activeElement.textContent === "Hủy", "Safe cancel action is not initially focused");
@@ -98,6 +102,28 @@ try {
   button("Bỏ thay đổi và rời đi", dialog()).click();
   await until(() => !document.querySelector(".scene-editor-back") && !dialog(), "returned to chapter list");
   results.push("Leaving the editor asks in-app; cancel preserves edits and confirmation returns to the chapter list");
+  const assertPopupSize = () => {
+    const panel = document.querySelector('[data-dialog-layout="popup"]');
+    const style = getComputedStyle(panel);
+    assert(Math.abs(parseFloat(style.width) - standardWidth) < 1, "Popup width differs from teacher question deletion");
+    assert(parseFloat(style.maxHeight) <= innerHeight - 32, "Popup exceeds available viewport height");
+    assert(panel.scrollWidth <= panel.clientWidth + 1, "Popup content overflows horizontally");
+    return panel;
+  };
+  await mount(<StudioDialog title="Chấm Đạt cho Chương 1" onClose={() => {}} wide>
+    <form className="sp-dialog-body"><p>Chương sẽ vào hàng chờ phát hành.</p><textarea aria-label="Nhận xét" />
+      {Array.from({ length: 40 }, (_, index) => <p key={index}>Nội dung nhận xét chương {index + 1}</p>)}
+      <button type="button">Chấm Đạt</button>
+    </form>
+  </StudioDialog>);
+  const approval = assertPopupSize();
+  approval.scrollTop = approval.scrollHeight;
+  assert(approval.scrollTop > 0, "Long approval popup cannot scroll to its actions");
+  await mount(<Dialog open><DialogContent className="ws-modal ws-question-set-modal" aria-describedby={undefined}>
+    <DialogTitle>Popup bộ câu hỏi</DialogTitle><p>Kiểm tra kích thước dùng chung.</p>
+  </DialogContent></Dialog>);
+  assertPopupSize();
+  results.push("Studio approval and workspace popups match teacher delete confirmation width; long content scrolls within the viewport");
   assert(nativeCalls === 0, "A native browser dialog was used");
   document.body.insertAdjacentHTML("beforeend", '<pre id="production-result"></pre>');
   document.getElementById("production-result").textContent = JSON.stringify({ status: "PASS", results });

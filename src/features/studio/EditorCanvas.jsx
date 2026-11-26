@@ -96,6 +96,7 @@ function VoiceFields({ scene, update, status, write, busy, showProfile }) {
           }
           placeholder="Ví dụ: năm trăm nghìn đồng"
         />
+        <small>Đổi lời thoại sẽ đặt lại cách đọc theo câu mới. Chỉnh cách đọc riêng sau khi sửa lời thoại.</small>
       </label>
       <div className="scene-voice-row">
         <VoicePreview scene={scene} status={status} />
@@ -468,7 +469,7 @@ export default function EditorCanvas(props) {
   const updateCurrent = patch => update(personalizing ? personalizedScenePatch(scene, answers, patch) : patch);
   const updateInspect = patch => update({ inspect: patchInspect(scene.inspect, patch, personalizing ? answers : null) });
   const updateOptionText = (index, text) => update({ options: scene.options.map((option, i) => i === index ? patchChoiceText(option, text, personalizing ? answers.interest : null) : option) });
-  const playback = sceneVoicePlayback(previewScene, voice?.items);
+  const playback = sceneVoicePlayback(previewScene, voice?.items, scenes);
   const voiceSection = (typeof previewScene?.text === 'string' || typeof previewScene?.prompt === 'string') && (
     <section className="inspector-group scene-current-voice" aria-labelledby="group-voice">
       <h3 id="group-voice">Giọng đọc</h3>

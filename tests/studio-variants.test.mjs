@@ -215,12 +215,28 @@ test("base spokenText: variant text auto-fills the variant spokenText (CH01 2.3.
   assert.ok(variantProblems(typed).some((p) => p.includes("cách đọc phải giữ số")));
   const spelled = setVariantField(typed, SPORT, "spokenText", "Giày còn hai trăm năm mươi nghìn đồng");
   assert.deepEqual(variantProblems(spelled), []);
-  // a hand-written reading is not overwritten by later text edits
+  // Editing dialogue must invalidate a hand-written reading of the old line.
   const again = setVariantField(spelled, SPORT, "text", "Giày mới còn 250.000đ");
-  assert.equal(again.variants[SPORT].spokenText, "Giày còn hai trăm năm mươi nghìn đồng");
+  assert.equal(again.variants[SPORT].spokenText, "Giày mới còn 250.000đ");
   // text without any reading when the base has one → warned
   const bare = { ...scene, variants: { [SPORT]: { text: "Giày còn 250.000đ" } } };
   assert.ok(variantProblems(bare).some((p) => p.includes("điền \"Cách đọc\"")));
+});
+
+test('editing existing personalized dialogue replaces stale reading even when the base has no reading', () => {
+  const old = { text: 'Giày còn 250.000đ', spokenText: 'Giày còn hai trăm năm mươi nghìn đồng', voiceUrl: 'old.mp3' };
+  const scene = { id: 'S1', text: 'Gốc', variants: { [SPORT]: old } };
+  const unchanged = setVariantField(scene, SPORT, 'text', old.text);
+  assert.equal(unchanged.variants[SPORT].spokenText, old.spokenText);
+  assert.equal(unchanged.variants[SPORT].voiceUrl, 'old.mp3');
+  const updated = setVariantField(scene, SPORT, 'text', `${old.text}. Tôi thử cảnh này`);
+  assert.equal(updated.variants[SPORT].spokenText, `${old.text}. Tôi thử cảnh này`);
+  assert.equal(updated.variants[SPORT].voiceUrl, undefined);
+  assert.equal(old.spokenText, 'Giày còn hai trăm năm mươi nghìn đồng');
+  const cleared = setVariantField(updated, SPORT, 'text', '');
+  assert.equal(cleared.variants, undefined);
+  const prompt = { prompt: 'Câu gốc', variants: { [SPORT]: { prompt: 'Câu cũ', spokenText: 'Đọc câu cũ' } } };
+  assert.equal(setVariantField(prompt, SPORT, 'prompt', 'Câu mới').variants[SPORT].spokenText, 'Câu mới');
 });
 
 test("numbers must match the base like Personalizer; images and voices are not checked", () => {

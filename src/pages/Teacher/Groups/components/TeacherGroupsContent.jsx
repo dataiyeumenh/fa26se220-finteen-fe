@@ -15,7 +15,6 @@ export default function TeacherGroupsContent({ learnerState, groupsOnly }) {
     group,
     groups,
     slots,
-    active,
     available,
     quotaFree,
     loading,
@@ -23,7 +22,6 @@ export default function TeacherGroupsContent({ learnerState, groupsOnly }) {
     error,
     refresh,
     actions,
-    selectGroup,
   } = learnerState;
   const [modal, setModal] = useState(null);
   const finish = (promise) =>
@@ -88,28 +86,18 @@ export default function TeacherGroupsContent({ learnerState, groupsOnly }) {
       </>
     );
   if (!groupsOnly) return <TeacherLearnerList learnerState={learnerState} />;
-  const closed = groups.filter((item) => item.closedAt);
+  const targetGroup = modal?.group || group;
   const createdSlotCount = Math.max(
-    Number(group.slotUsed) || 0,
-    slots.length,
+    Number(targetGroup.slotUsed) || 0,
+    targetGroup.id === group.id ? slots.length : 0,
   );
   return (
     <>
       <Heading
         title="Quản lý lớp học"
-        description={`${group.name} · ${active.length}/${group.slotLimit} học sinh.`}
+        description={`${groups.length} lớp học · ${groups.filter((item) => !item.closedAt).length} đang mở · ${groups.filter((item) => item.closedAt).length} đã kết thúc.`}
       >
         <div className="ws-actions teacher-groups-heading-actions">
-          {groups.filter((item) => !item.closedAt).length > 1 && (
-            <label>
-              <span className="sr-only">Chọn lớp đang quản lý</span>
-              <select value={group.id} onChange={(event) => selectGroup(event.target.value)}>
-                {groups.filter((item) => !item.closedAt).map((item) => (
-                  <option value={item.id} key={item.id}>{item.name}</option>
-                ))}
-              </select>
-            </label>
-          )}
           <button
             className="ws-btn primary"
             disabled={quotaFree < 5}
@@ -127,62 +115,35 @@ export default function TeacherGroupsContent({ learnerState, groupsOnly }) {
           {error || message}
         </div>
       )}
-      <section className="ws-card">
-        <Users />
-        <h2>{group.name}</h2>
-        <p>
-          {group.consentConfirmed
-            ? "Đã xác nhận đồng ý của phụ huynh."
-            : "Chưa xác nhận đồng ý của phụ huynh."}
-        </p>
-        <p>
-          {available} chỗ trống trong lớp trên tổng sĩ số {group.slotLimit}.
-        </p>
-        <div className="ws-actions">
-          {!group.consentConfirmed && (
-            <button
-              className="ws-btn primary"
-              onClick={() => setModal({ type: "consent" })}
-            >
-              <ShieldCheck size={16} /> Xác nhận đồng ý
-            </button>
-          )}
-          <Link className="ws-btn" to="/dashboard/learners">
-            Quản lý học sinh
-          </Link>
-          <Link className="ws-btn" to="/dashboard/quiz-management">
-            Quản lý Quiz
-          </Link>
-          <button
-            className="ws-btn"
-            onClick={() => setModal({ type: "size" })}
-          >
-            Sửa sĩ số
-          </button>
-          <button
-            className="ws-btn danger"
-            onClick={() => setModal({ type: "close" })}
-          >
-            <XCircle size={16} /> Kết thúc lớp
-          </button>
-        </div>
-      </section>
-      {closed.length > 0 && (
-        <section className="ws-card">
-          <h2>Lớp đã kết thúc</h2>
-          {closed.map((item) => (
-            <div className="ws-list-row" key={item.id}>
-              <strong>{item.name}</strong>
-              <Link
-                className="ws-btn"
-                to={`/dashboard/reports?group=${item.id}`}
-              >
-                Xem báo cáo
-              </Link>
+      <div className="teacher-class-list">
+        {groups.map((item) => (
+          <article className={`ws-card teacher-class-card${item.closedAt ? " is-closed" : ""}`} key={item.id}>
+            <div className="teacher-class-card-heading">
+              <div className="teacher-class-card-identity">
+                <span className="teacher-class-card-icon"><Users size={22} aria-hidden="true" /></span>
+                <div><h2>{item.name}</h2><p>{item.slotLimit} slot{item.slotUsed != null ? ` · ${item.slotUsed} slot đã sử dụng` : ""}</p></div>
+              </div>
+              <span className={`teacher-class-status ${item.closedAt ? "is-closed" : "is-open"}`}>
+                {item.closedAt ? <XCircle size={16} aria-hidden="true" /> : <ShieldCheck size={16} aria-hidden="true" />}
+                {item.closedAt ? "Đã kết thúc" : "Đang mở"}
+              </span>
             </div>
-          ))}
-        </section>
-      )}
+            <p className="teacher-class-card-description">{item.closedAt
+              ? "Lớp đã kết thúc. Bạn vẫn có thể xem học sinh và báo cáo của lớp."
+              : item.consentConfirmed ? "Đã xác nhận sự đồng ý của phụ huynh." : "Chưa xác nhận sự đồng ý của phụ huynh."}</p>
+            <div className="ws-actions">
+              <Link className="ws-btn" to={`/dashboard/learners?group=${encodeURIComponent(item.id)}`}>{item.closedAt ? "Xem học sinh" : "Quản lý học sinh"}</Link>
+              <Link className="ws-btn" to={`/dashboard/reports?group=${encodeURIComponent(item.id)}`}>Xem báo cáo</Link>
+              {!item.closedAt && <>
+                <Link className="ws-btn" to={`/dashboard/quiz-management?group=${encodeURIComponent(item.id)}`}>Quản lý Quiz</Link>
+                {!item.consentConfirmed && <button className="ws-btn" onClick={() => setModal({ type: "consent", group: item })}><ShieldCheck size={16} /> Xác nhận đồng ý</button>}
+                <button className="ws-btn" onClick={() => setModal({ type: "size", group: item })}>Sửa sĩ số</button>
+                <button className="ws-btn danger" onClick={() => setModal({ type: "close", group: item })}><XCircle size={16} /> Kết thúc lớp</button>
+              </>}
+            </div>
+          </article>
+        ))}
+      </div>
       {modal && (
         <Modal
           title={
@@ -194,7 +155,7 @@ export default function TeacherGroupsContent({ learnerState, groupsOnly }) {
                   ? "Xác nhận sự đồng ý"
                   : "Kết thúc lớp"
           }
-          description={modal.type === "group" ? `Ví còn ${quotaFree} slot; mỗi lớp cần ít nhất 5.` : undefined}
+          description={modal.type === "group" ? `Ví còn ${quotaFree} slot; mỗi lớp cần ít nhất 5.` : `Lớp: ${targetGroup.name}`}
           onClose={() => setModal(null)}
         >
           <ActionForm
@@ -203,10 +164,10 @@ export default function TeacherGroupsContent({ learnerState, groupsOnly }) {
               modal.type === "group"
                 ? actions.openGroup(form.get("name"), form.get("plannedSize"))
                 : modal.type === "size"
-                  ? actions.updatePlannedSize(form.get("plannedSize"))
+                  ? actions.updatePlannedSize(form.get("plannedSize"), targetGroup.id)
                   : modal.type === "consent"
-                    ? actions.confirmConsent()
-                    : actions.closeGroup(),
+                    ? actions.confirmConsent(targetGroup.id)
+                    : actions.closeGroup(targetGroup.id),
             )}
           >
             {modal.type === "group" && (
@@ -228,8 +189,8 @@ export default function TeacherGroupsContent({ learnerState, groupsOnly }) {
                   name="plannedSize"
                   type="number"
                   min={Math.max(5, createdSlotCount)}
-                  max={Number(group.slotLimit) + quotaFree}
-                  defaultValue={group.slotLimit}
+                  max={Number(targetGroup.slotLimit) + quotaFree}
+                  defaultValue={targetGroup.slotLimit}
                   required
                 />
               </label>
@@ -247,9 +208,20 @@ export default function TeacherGroupsContent({ learnerState, groupsOnly }) {
   );
 }
 
+function ClassSelect({ groups, group, selectGroup }) {
+  return <label>
+    <span className="sr-only">Chọn lớp đang quản lý</span>
+    <select className="ws-btn" value={group.id} onChange={(event) => void selectGroup(event.target.value)}>
+      {groups.map((item) => <option value={item.id} key={item.id}>{item.name}{item.closedAt ? " (đã kết thúc)" : ""}</option>)}
+    </select>
+  </label>;
+}
+
 function TeacherLearnerList({ learnerState }) {
   const {
     group,
+    groups,
+    selectGroup,
     active,
     inactive,
     available,
@@ -271,12 +243,16 @@ function TeacherLearnerList({ learnerState }) {
     <>
       <Heading
         title="Học sinh và hồ sơ đăng nhập"
-        description={`${active.length}/${group.slotLimit} đang hoạt động · ${available} chỗ trống trong lớp.`}
+        description={`${group.name} · ${active.length}/${group.slotLimit} đang hoạt động · ${available ?? "Chưa xác định số"} slot trống trong lớp.`}
       >
-        <button className="ws-btn" onClick={() => void refresh()}>
-          <RefreshCw size={16} /> Làm mới
-        </button>
+        <div className="ws-actions teacher-learners-heading-actions">
+          <ClassSelect groups={groups} group={group} selectGroup={selectGroup} />
+          <button className="ws-btn" onClick={() => void refresh()}>
+            <RefreshCw size={16} /> Làm mới
+          </button>
+        </div>
       </Heading>
+      {group.closedAt && <p className="ws-notice">Lớp đã kết thúc. Danh sách dưới đây được giữ để tra cứu; không thể tạo hoặc sửa hồ sơ trong lớp này.</p>}
       {(error || message) && (
         <div className={`ws-toast ${error ? "error" : "success"}`}>
           {error || message}
@@ -299,16 +275,16 @@ function TeacherLearnerList({ learnerState }) {
         </div>
         <button
           className="ws-btn primary"
-          disabled={available === 0}
+          disabled={group.closedAt || available == null || available === 0}
           aria-describedby={available === 0 ? "teacher-capacity-notice" : undefined}
           onClick={() => setModal({ type: "create" })}
         >
           <Plus size={16} /> Tạo học sinh
         </button>
       </div>
-      {available === 0 && (
+      {available === 0 && !group.closedAt && (
         <p className="ws-notice" id="teacher-capacity-notice" role="status">
-          Ví slot đã hết chỗ trống. Hãy mua thêm slot để tiếp tục.
+          Lớp đã hết slot trống. Vào mục Nhóm học sinh để kiểm tra và tăng sĩ số nếu ví còn slot khả dụng.
         </p>
       )}
       {rows.length ? (
@@ -320,7 +296,7 @@ function TeacherLearnerList({ learnerState }) {
             >
               <Users className="ws-slot-icon" />
               <h2>{slot.displayName || "Đã xóa dữ liệu"}</h2>
-              {slot.status !== "WIPED" && <SlotPersonalization slot={slot} />}
+              {!group.closedAt && slot.status !== "WIPED" && <SlotPersonalization slot={slot} />}
               {slot.code && (
                 <div className="ws-code">
                   <code>{slot.code}</code>
@@ -343,7 +319,7 @@ function TeacherLearnerList({ learnerState }) {
                 <Link className="ws-btn" to={`/dashboard/learners/${slot.id}`}>
                   Xem tiến độ
                 </Link>
-                {slot.status === "ACTIVE" && (
+                {!group.closedAt && slot.status === "ACTIVE" && (
                   <>
                     <button
                       className="ws-btn"
@@ -353,7 +329,7 @@ function TeacherLearnerList({ learnerState }) {
                     </button>
                   </>
                 )}{" "}
-                {slot.status !== "WIPED" && (
+                {!group.closedAt && slot.status !== "WIPED" && (
                   <button
                     className="ws-btn danger"
                     onClick={() => setModal({ type: "wipe", slot })}
