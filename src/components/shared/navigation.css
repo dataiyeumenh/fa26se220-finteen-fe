@@ -110,6 +110,7 @@
 .ft-learner-header > .ws-top-actions { grid-column: 3; justify-self: end; margin-left: 0; flex-shrink: 0; gap: 10px; }
 .ws .ft-learner-nav { display: flex; align-items: center; gap: 4px; min-width: 0; }
 .ws .ft-learner-nav a {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -126,6 +127,8 @@
   white-space: nowrap;
   flex: 0 0 auto;
 }
+.ws .ws-nav-notification { display:grid; place-items:center; min-width:18px; height:18px; padding:0 5px; border:2px solid #fff; border-radius:999px; background:#dc2626; color:#fff; font-size:9px; font-weight:850; line-height:1; box-shadow:0 2px 6px #7f1d1d33; }
+.ws .ft-learner-nav .ws-nav-notification { position:absolute; top:-5px; right:-4px; }
 .ws .ft-learner-nav a svg { flex-shrink: 0; color: inherit; }
 .ws.ws-kid .ft-learner-nav a:hover { background: #fff8df; color: #765500; }
 .ws.ws-kid .ft-learner-nav a[aria-current="page"] {
@@ -193,6 +196,8 @@
   .ws .ft-learner-nav { display: none; }
   .ws.ws-kid header.ft-learner-header { padding: 10px 16px; }
   .ws.ws-kid .ws-kid-bottom-nav { padding-bottom: max(6px, env(safe-area-inset-bottom)); }
+  .ws .ws-kid-bottom-nav a { position:relative; }
+  .ws .ws-kid-bottom-nav .ws-nav-notification { position:absolute; top:3px; right:calc(50% - 24px); }
 }
 
 /* Portalled navigation reuses the same sidebar contents, with focus trapping and Escape. */

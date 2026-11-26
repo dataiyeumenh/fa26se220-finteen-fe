@@ -107,9 +107,9 @@ export default function KidGames() {
 
       {!loading && !error && blockedByPostTest && (
         <div className="mx-auto max-w-2xl rounded-3xl border border-amber-200 bg-white p-8 text-center">
-          <h1 className="text-2xl font-bold text-gray-800">Hoàn thành hậu trắc để mở chương tiếp theo</h1>
-          <p className="mt-3 text-gray-600">Em cần nộp bài hậu trắc chương {requiredPostTest.chapter} trước khi tiếp tục hành trình.</p>
-          <Link className="ws-btn primary mt-5" to={`/dashboard/kid/quiz/${requiredPostTest.quizId}`} state={{ quiz: { id: requiredPostTest.quizId, chapter: requiredPostTest.chapter, kind: "POST_TEST" } }}>Làm bài hậu trắc</Link>
+          <h1 className="text-2xl font-bold text-gray-800">Hoàn thành bài trắc nghiệm sau chương để mở chương tiếp theo</h1>
+          <p className="mt-3 text-gray-600">Em cần nộp bài trắc nghiệm sau chương {requiredPostTest.chapter} trước khi tiếp tục hành trình.</p>
+          <Link className="ws-btn primary mt-5" to={`/dashboard/kid/quiz/${requiredPostTest.quizId}`} state={{ quiz: { id: requiredPostTest.quizId, chapter: requiredPostTest.chapter, kind: "POST_TEST" } }}>Làm bài trắc nghiệm sau chương</Link>
         </div>
       )}
 

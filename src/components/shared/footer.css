@@ -102,9 +102,25 @@ footer.ft-site-footer h2 {
   flex-direction: column;
 }
 
+/* Keep learner pages stable while lazy routes are still loading. */
+.ws-kid .ws-main:has(> .ft-site-footer) {
+  min-height: 100dvh;
+}
+
 .ws-main:has(> .ft-site-footer) > .ws-content {
   width: 100%;
   flex: 1;
+}
+
+.ws-kid .ws-main:has(> .ft-site-footer) > .ws-content:has(> .ft-page-loader.is-compact) {
+  display: grid;
+  place-items: center;
+  margin-block: 0;
+}
+
+.ws-kid .ws-content > .ft-page-loader.is-compact {
+  width: 100%;
+  min-height: 100%;
 }
 
 .internal-auth:has(> .ft-site-footer) > .internal-auth-main {

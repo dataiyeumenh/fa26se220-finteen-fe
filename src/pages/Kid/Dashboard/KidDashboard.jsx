@@ -62,7 +62,7 @@ export default function KidDashboard() {
             <div><strong>Chương {activeChapter} · {chapterNames[activeChapter - 1]}</strong><p>Bài tiếp theo: Khám phá thử thách mới</p></div>
           </div>
           <div className="kid-home-actions">
-            <button className="kid-home-primary" type="button" onClick={continueJourney}><Play /> {requiredPostTest ? `Làm hậu trắc chương ${requiredPostTest.chapter}` : "Học tiếp"}</button>
+            <button className="kid-home-primary" type="button" onClick={continueJourney}><Play /> {requiredPostTest ? `Làm bài trắc nghiệm sau chương ${requiredPostTest.chapter}` : "Học tiếp"}</button>
             <button className="kid-home-secondary" type="button" onClick={() => navigate("/dashboard/kid/lessons")}><Map /> Xem hành trình</button>
           </div>
         </div>

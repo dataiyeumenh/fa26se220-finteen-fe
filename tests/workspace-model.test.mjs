@@ -414,5 +414,6 @@ test("report CSV opens in Vietnamese Excel with separate columns and readable va
   const csv = new TextDecoder("utf-16le").decode(bytes);
   assert.ok(csv.startsWith('"Học sinh"\t"Mã đăng nhập"\t"Trạng thái"'));
   assert.match(csv, /"Bé An"\t"ABC123"\t"Hoạt động"/);
-  assert.match(csv, /28\/10\/26/);
+  assert.match(csv, /28\/10\/26 · 10h30/);
+  assert.doesNotMatch(csv, /AM|PM|SA|CH/);
 });
