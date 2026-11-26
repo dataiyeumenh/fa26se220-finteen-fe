@@ -24,6 +24,16 @@ const FINAL_STATUS_LABELS = {
   PARTIAL: "Tạm thời (còn chương chờ trắc nghiệm)",
   COMPLETE: "Đầy đủ",
 };
+const CHAPTER_TITLES = [
+  "Tiền đầu tiên",
+  "Tháng đầu tiên và mục tiêu lớn",
+  "Công việc đầu tiên",
+  "Mua thông minh",
+  "Ngân hàng và lãi",
+  "Mượn tiền có dễ không?",
+  "Biến cố bất ngờ",
+  "Tiền sinh tiền và kế hoạch 18 tuổi",
+];
 const ratio = (value) =>
   `${Number(value?.correct) || 0}/${Number(value?.total) || 0}`;
 const choiceText = (item) => {
@@ -210,8 +220,40 @@ function ChapterResult({
   );
 }
 
+function ChapterSummaryPreview({ chapter, choices }) {
+  const sections = chapter.summary?.sections || {};
+  const decisions = Array.isArray(sections.decisions) ? sections.decisions : choices;
+  const deliberate = decisions.filter((item) => item?.deliberate === true).length;
+  const needsPractice = Array.isArray(sections.needsPractice) ? sections.needsPractice : [];
+  const notEnough = Array.isArray(sections.notEnough) ? sections.notEnough : [];
+  const hasMetrics = decisions.length || Number(chapter.miniGames?.total) > 0 || Number(chapter.postTest?.total) > 0;
+  const itemEvidence = (items) => <span className="learner-chapter-preview-concepts">{items.map((item, index) => {
+    const name = item?.name || item?.concept || "Nội dung học tập";
+    const total = Number(item?.total) || 0;
+    const correct = Number(item?.correct) || 0;
+    return <span key={`${item?.concept || name}-${index}`} className={total > 0 && correct === total ? "is-correct" : "is-review"}>
+      <b>{name}</b>
+      {total > 0 && <em>đúng {correct}/{total} câu</em>}
+    </span>;
+  })}</span>;
+  if (!hasMetrics && !needsPractice.length && !notEnough.length) {
+    const fallback = chapter.summary?.sections?.overview || chapter.summary?.text;
+    return fallback ? <p className="learner-chapter-summary-preview">{fallback}</p> : null;
+  }
+  return <div className="learner-chapter-summary-preview" aria-label="Tóm tắt kết quả chương">
+    <div className="learner-chapter-preview-metrics">
+      {decisions.length > 0 && <span><small>Lựa chọn</small><strong>{deliberate}/{decisions.length}</strong><em>có cân nhắc</em></span>}
+      {Number(chapter.miniGames?.total) > 0 && <span><small>Mini-game</small><strong>{ratio(chapter.miniGames)}</strong><em>câu đúng</em></span>}
+      {Number(chapter.postTest?.total) > 0 && <span><small>Trắc nghiệm sau chương</small><strong>{ratio(chapter.postTest)}</strong><em>câu đúng</em></span>}
+    </div>
+    {needsPractice.length > 0 && <p><strong>Cần luyện thêm</strong>{itemEvidence(needsPractice)}</p>}
+    {notEnough.length > 0 && <p><strong>Mới làm ít câu ở các nội dung này</strong>{itemEvidence(notEnough)}</p>}
+  </div>;
+}
+
 function Chapter({ chapter, index, reportState }) {
   const number = chapter.chapter ?? chapter.chapterNumber ?? index + 1;
+  const title = String(chapter.title || "").trim() || CHAPTER_TITLES[Number(number) - 1] || "Chưa có tên chương";
   const choices = Array.isArray(chapter.choices)
     ? chapter.choices
     : Array.isArray(chapter.deliberate)
@@ -226,13 +268,9 @@ function Chapter({ chapter, index, reportState }) {
         <summary className="ws-chapter-card">
           <div>
             <strong>
-              Chương {number} · {chapter.title || "Chưa có tên chương"}
+              Chương {number} · {title}
             </strong>
-            {(chapter.summary?.sections?.overview || chapter.summary?.text) && (
-              <p className="learner-chapter-summary-preview">
-                {chapter.summary?.sections?.overview || chapter.summary?.text}
-              </p>
-            )}
+            <ChapterSummaryPreview chapter={chapter} choices={choices} />
           </div>
           <span className="learner-chapter-summary-status">
             <span

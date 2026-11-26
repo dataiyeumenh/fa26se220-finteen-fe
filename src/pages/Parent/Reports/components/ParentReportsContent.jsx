@@ -16,6 +16,7 @@ import {
 } from "../../../../features/workspace/reporting";
 import { Empty } from "../../../../features/workspace/ui";
 import { ContentSkeleton } from "@/components/feedback/LoadingState";
+import useMediaQuery from "@/hooks/useMediaQuery";
 
 const ParentCourseProgressChart = lazy(() => import("./ParentReportCharts"));
 const activityLabel = (value) =>
@@ -33,6 +34,7 @@ const activityLabel = (value) =>
     : "Chưa chơi";
 
 export default function ParentReportsContent({ reportState }) {
+  const isMobile = useMediaQuery("(max-width: 760px)");
   const { reports, report, setGroupId, loading, error, warning, refresh } =
     reportState;
   if (loading)
@@ -164,13 +166,15 @@ export default function ParentReportsContent({ reportState }) {
         </div>
       </section>
 
-      <Suspense
-        fallback={
-          <ContentSkeleton variant="cards" label="Đang tải biểu đồ tiến độ…" />
-        }
-      >
-        <ParentCourseProgressChart chapters={courseChapters} />
-      </Suspense>
+      {!isMobile && (
+        <Suspense
+          fallback={
+            <ContentSkeleton variant="cards" label="Đang tải biểu đồ tiến độ…" />
+          }
+        >
+          <ParentCourseProgressChart chapters={courseChapters} />
+        </Suspense>
+      )}
 
       <section className="family-report-roster family-report-child-cards">
         <header>
