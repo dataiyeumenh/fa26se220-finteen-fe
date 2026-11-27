@@ -176,7 +176,7 @@ test('chapter results survive recoverable errors and are discarded for invalid, 
 test('schema 2 keeps 400/413 batches without automatically retrying them', async () => {
   const source = await fs.readFile(new URL('../src/pages/Kid/Dashboard/components/game/playBatch.js', import.meta.url), 'utf8');
   const instrumented = source.replace('return (await import("../../api/kidDashboardApi")).kidDashboardApi;', 'return globalThis.__playV2Api;');
-  const { submitChapterBatch, flushPendingBatches } = await import(`data:text/javascript;base64,${Buffer.from(instrumented).toString('base64')}`);
+  const { clearPendingChapterBatch, submitChapterBatch, flushPendingBatches } = await import(`data:text/javascript;base64,${Buffer.from(instrumented).toString('base64')}`);
   const previousStorage = globalThis.localStorage;
   const storage = {};
   Object.defineProperties(storage, {
@@ -196,15 +196,24 @@ test('schema 2 keeps 400/413 batches without automatically retrying them', async
   };
   try {
     for (status of [400, 413]) {
+      clearPendingChapterBatch('child-v2', batch);
+      const beforeSubmit = calls;
       const result = await submitChapterBatch(batch, 'child-v2');
+      assert.equal(calls, beforeSubmit + 1);
       assert.equal(result.retry, false);
       assert.equal(result.retained, true);
       assert.deepEqual(JSON.parse(storage.getItem(key)), batch);
       assert.equal(storage.getItem(`${key}:blocked`), '1');
-      const beforeFlush = calls;
+      const beforeBlockedSubmit = calls;
+      const blocked = await submitChapterBatch(batch, 'child-v2');
+      assert.equal(blocked.retained, true);
+      assert.equal(calls, beforeBlockedSubmit, 'ending effect must not POST a blocked batch');
       await flushPendingBatches('child-v2');
-      assert.equal(calls, beforeFlush);
+      assert.equal(calls, beforeBlockedSubmit, 'background flush must not POST a blocked batch');
     }
+    assert.equal(clearPendingChapterBatch('child-v2', batch), true);
+    assert.equal(storage.getItem(key), null);
+    assert.equal(storage.getItem(`${key}:blocked`), null);
   } finally {
     globalThis.localStorage = previousStorage;
     delete globalThis.__playV2Api;
@@ -217,6 +226,7 @@ test('accepted chapter progress cannot be restored by checkpoint effects or page
   assert.match(source, /if \(pendingEffects \|\| progressClearedRef\.current\) return;/);
   assert.match(source, /const flush = \(\) => \{\s*if \(progressClearedRef\.current\) return;\s*saveBrowserNovelProgress/);
   assert.match(source, /const restart = \(\) => \{[\s\S]*?progressClearedRef\.current = false;[\s\S]*?saveBrowserNovelProgress\(data, initial, progressOwner\);/);
+  assert.match(source, /const restart = \(\) => \{[\s\S]*?clearPendingChapterBatch\(learnerCode,/);
 });
 
 test('background dashboard refresh keeps the game mounted while initial loads still wait', async () => {

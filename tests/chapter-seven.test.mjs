@@ -449,10 +449,17 @@ test("chapter-seven checkpoint preserves drafts and decisions; chapter requires 
       setItem: (key, value) => memory.set(key, value),
     };
   const snapshot = {
+    releaseVersion: data.releaseVersion || null,
     scenePath: [0],
     stats: data.initialStats,
     money: 1200000,
     committedDecisions: ["CH07_SC02"],
+    playLog: {
+      releaseVersion: data.releaseVersion || null,
+      nextSeq: 1,
+      picks: [],
+      inspections: [],
+    },
   };
   for (const key of [
     "flags",

@@ -53,6 +53,8 @@ import {
 } from "./miniGameRules";
 import {
   buildChapterBatch,
+  chapterNumberOf,
+  clearPendingChapterBatch,
   flushPendingBatches,
   submitChapterBatch,
 } from "./playBatch.js";
@@ -927,6 +929,10 @@ export function VisualNovelPlayer({ data: rawData, progressOwner = null, learner
   const restart = () => {
     const initial = initialNovelProgress(data, resolveNavigableSceneIndex(0));
     progressClearedRef.current = false;
+    clearPendingChapterBatch(learnerCode, {
+      chapter: chapterNumberOf(data),
+      releaseVersion: playLog.releaseVersion || data.releaseVersion,
+    });
     clearBrowserNovelProgress(data, progressOwner);
     checkpointRef.current = initial;
     saveBrowserNovelProgress(data, initial, progressOwner);

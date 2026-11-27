@@ -51,6 +51,18 @@ const slotCodeOf = (auth) => auth?.getSnapshot?.().actor?.code;
 const pendingKey = (code, batch) =>
   `${PENDING_PREFIX}${code}:${batch.chapter}:${batch.releaseVersion}`;
 
+export function clearPendingChapterBatch(code, batch) {
+  if (!code || !batch?.chapter || !batch?.releaseVersion) return false;
+  try {
+    const key = pendingKey(code, batch);
+    localStorage.removeItem(key);
+    localStorage.removeItem(`${key}:blocked`);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export async function submitChapterBatch(batch, expectedCode) {
   const auth = await authClient();
   const code = slotCodeOf(auth);
@@ -59,6 +71,17 @@ export async function submitChapterBatch(batch, expectedCode) {
     return { skipped: "phiên học đã thay đổi" };
   if (!batch.releaseVersion || !batch.chapter)
     return { skipped: "chương không đến từ API (không có releaseVersion)" };
+  try {
+    if (batch.schema === 2 && localStorage.getItem(`${pendingKey(code, batch)}:blocked`)) {
+      return {
+        failed: "Lô kết quả không hợp lệ đang được giữ để kiểm tra",
+        retry: false,
+        retained: true,
+      };
+    }
+  } catch {
+    /* browser storage unavailable; continue with the normal request */
+  }
   try {
     const state = await auth.getPlayState();
     if (slotCodeOf(auth) !== code) return { skipped: "phiên học đã thay đổi" };

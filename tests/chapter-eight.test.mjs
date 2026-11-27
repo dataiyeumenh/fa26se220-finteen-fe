@@ -709,10 +709,17 @@ test("checkpoint saves allocation drafts and one-time settlement without changin
     },
   );
   const snapshot = {
+    releaseVersion: data.releaseVersion || null,
     scenePath: [0],
     money: 9780000,
     stats: data.initialStats,
     committedDecisions: ["CH08_SC02"],
+    playLog: {
+      releaseVersion: data.releaseVersion || null,
+      nextSeq: 1,
+      picks: [],
+      inspections: [],
+    },
   };
   for (const key of [
     "flags",

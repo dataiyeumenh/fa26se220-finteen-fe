@@ -657,10 +657,17 @@ test("checkpoint round trips and rejects invalid/old snapshots; unavailable stor
     setItem: (k, v) => memory.set(k, v),
   };
   const snapshot = {
+    releaseVersion: data.releaseVersion || null,
     scenePath: [0, 1, 2],
     stats: data.initialStats,
     money: 0,
     committedDecisions: ["CH06_SC02"],
+    playLog: {
+      releaseVersion: data.releaseVersion || null,
+      nextSeq: 1,
+      picks: [],
+      inspections: [],
+    },
   };
   for (const key of [
     "flags",
