@@ -16,6 +16,9 @@ export function readNovelProgress(storage, data, owner) {
     );
     if (!saved || !Array.isArray(saved.scenePath) || !saved.scenePath.length)
       return null;
+    // A play log must never cross release boundaries: BE interprets IDs against
+    // the exact frozen release the learner started with.
+    if (saved.releaseVersion !== (data.releaseVersion || null)) return null;
     // Backend variants preserve scene IDs, scoring and structure. Resume decisions
     // against the newly loaded text/images instead of discarding progress.
     let scenePath = saved.scenePath;
@@ -47,6 +50,7 @@ export function readNovelProgress(storage, data, owner) {
       "miniGameResults",
       "miniGameDoneByScene",
       "sceneActionApplied",
+      "playLog",
     ];
     if (
       !maps.every(
@@ -81,6 +85,7 @@ export function saveNovelProgress(storage, data, snapshot, owner) {
       JSON.stringify({
         ...snapshot,
         version: data.version,
+        releaseVersion: data.releaseVersion || null,
         ...(data.variantKey != null ? { variantKey: data.variantKey } : {}),
         sceneIds: snapshot.scenePath.map((index) => data.scenes[index].id),
       }),
@@ -133,6 +138,7 @@ export function clearBrowserNovelProgress(data, owner) {
 }
 export function initialNovelProgress(data, sceneIndex = 0) {
   return {
+    releaseVersion: data.releaseVersion || null,
     scenePath: [sceneIndex],
     miniGameDoneByScene: {},
     sceneActionApplied: {},
@@ -146,6 +152,12 @@ export function initialNovelProgress(data, sceneIndex = 0) {
     budgetAllocations: {},
     miniGameCompleted: false,
     miniGameResults: {},
+    playLog: {
+      releaseVersion: data.releaseVersion || null,
+      nextSeq: 1,
+      picks: [],
+      inspections: [],
+    },
     money: data.initialMoney || 0,
     committedDecisions: [],
   };

@@ -247,6 +247,7 @@ export function VisualNovelPlayer({ data: rawData, progressOwner = null, learner
   const menuDetailsRef = useRef(null);
   const batchSentRef = useRef(false); // lô cuối chương đã gửi trong lần chơi này
   const [postTestNotice, setPostTestNotice] = useState(null);
+  const [submitError, setSubmitError] = useState("");
   const stageRef = useRef(null);
   const dialogueRef = useRef(null);
   const pendingTransitionRef = useRef(null);
@@ -295,6 +296,28 @@ export function VisualNovelPlayer({ data: rawData, progressOwner = null, learner
   const [inspectedIds, setInspectedIds] = useState(
     savedProgress?.inspectedIds || {},
   );
+  const [playLog, setPlayLog] = useState(
+    savedProgress?.playLog || initialNovelProgress(data).playLog,
+  );
+  const playLogRef = useRef(playLog);
+  const updatePlayLog = (change) => {
+    const next = change(playLogRef.current);
+    playLogRef.current = next;
+    setPlayLog(next);
+  };
+  const allocatePlaySeq = () => {
+    const seq = playLogRef.current.nextSeq;
+    updatePlayLog((current) => ({ ...current, nextSeq: seq + 1 }));
+    return seq;
+  };
+  const recordPlayEvent = (collection, row) => {
+    const seq = playLogRef.current.nextSeq;
+    updatePlayLog((current) => ({
+      ...current,
+      nextSeq: seq + 1,
+      [collection]: [...current[collection], { seq, ...row }],
+    }));
+  };
   const [moneyEventsApplied, setMoneyEventsApplied] = useState(
     savedProgress?.moneyEventsApplied || {},
   );
@@ -506,10 +529,12 @@ export function VisualNovelPlayer({ data: rawData, progressOwner = null, learner
   useEffect(() => {
     if (scene?.type !== "ending" || isReviewing || batchSentRef.current) return;
     batchSentRef.current = true;
-    const batch = buildChapterBatch(data, choiceLedger, miniGameResults, inspectedIds);
+    const batch = buildChapterBatch(data, playLog, miniGameResults);
     if (import.meta.env.DEV) window.__finteenLastBatch = batch;
     void submitChapterBatch(batch, learnerCode).then(async (outcome) => {
       if (import.meta.env.DEV) window.__finteenLastSubmit = outcome;
+      if (outcome.sent) clearBrowserNovelProgress(data, progressOwner);
+      if (outcome.retained) setSubmitError("Không lưu được kết quả. Vui lòng báo người hỗ trợ.");
       if (outcome.sent || outcome.code === 7004) {
         const { auth } = await import("@/api/auth.api");
         const dashboard = await auth.ensureLearnerDashboard({ force: true }).catch(() => null);
@@ -524,7 +549,7 @@ export function VisualNovelPlayer({ data: rawData, progressOwner = null, learner
           outcome.failed,
         );
     });
-  }, [scene?.type, isReviewing, data, choiceLedger, miniGameResults, inspectedIds, learnerCode, navigate]);
+  }, [scene?.type, isReviewing, data, playLog, miniGameResults, learnerCode, navigate, progressOwner]);
 
   const miniGameKind =
     scene?.type === "minigame" ? miniGameKindOf(scene.game) : undefined;
@@ -645,6 +670,13 @@ export function VisualNovelPlayer({ data: rawData, progressOwner = null, learner
   };
 
   const openInspect = (inspect) => {
+    if (!isReviewing && inspect?.id && scene.inspect?.id === inspect.id) {
+      recordPlayEvent("inspections", {
+        sceneId: scene.id,
+        inspectId: inspect.id,
+        at: new Date().toISOString(),
+      });
+    }
     if (!isReviewing && inspect.id && !inspect.cards)
       setInspectedIds((prev) => ({ ...prev, [inspect.id]: true }));
     setInspectPopup(
@@ -709,6 +741,13 @@ export function VisualNovelPlayer({ data: rawData, progressOwner = null, learner
     )
       return;
     choiceSelectionRef.current = true;
+    if (scene.type === "choice") {
+      recordPlayEvent("picks", {
+        sceneId: scene.id,
+        optionId: option.id,
+        at: new Date().toISOString(),
+      });
+    }
     if (option.deferLedger) {
       const nextIndex = sceneIndexById[option.nextSceneId];
       if (typeof nextIndex === "number") goToSceneIndex(nextIndex);
@@ -822,6 +861,7 @@ export function VisualNovelPlayer({ data: rawData, progressOwner = null, learner
 
   const handleMiniGameComplete = (result) => {
     if (isReviewing) return;
+    const playSeq = miniGameResults[scene.id]?.playSeq || allocatePlaySeq();
     // Cờ lấy từ bảng dự kiến năm: tên cờ do JSON khai (config.planner.projectionFlags), không gán theo id.
     const projectionFlags = scene.game?.config?.planner?.projectionFlags;
     if (
@@ -854,6 +894,7 @@ export function VisualNovelPlayer({ data: rawData, progressOwner = null, learner
         },
         {
           ...(result || {}),
+          playSeq,
           firstScore: firstMiniGameScore(scene.game, previous[scene.id]) ?? firstMiniGameScore(scene.game, result),
           playedAt: new Date().toISOString(),
         },
@@ -898,8 +939,11 @@ export function VisualNovelPlayer({ data: rawData, progressOwner = null, learner
     setChoiceLedger({});
     batchSentRef.current = false;
     setPostTestNotice(null);
+    setSubmitError("");
     setFirstChoiceScores({});
     setInspectedIds({});
+    playLogRef.current = initial.playLog;
+    setPlayLog(initial.playLog);
     setMoneyEventsApplied({});
     setBudgetAllocations({});
     setMiniGameCompleted(false);
@@ -966,6 +1010,7 @@ export function VisualNovelPlayer({ data: rawData, progressOwner = null, learner
       choiceLedger,
       firstChoiceScores,
       inspectedIds,
+      playLog,
       moneyEventsApplied,
       budgetAllocations,
       miniGameCompleted,
@@ -988,6 +1033,7 @@ export function VisualNovelPlayer({ data: rawData, progressOwner = null, learner
     choiceLedger,
     firstChoiceScores,
     inspectedIds,
+    playLog,
     moneyEventsApplied,
     budgetAllocations,
     miniGameCompleted,
@@ -1518,6 +1564,7 @@ export function VisualNovelPlayer({ data: rawData, progressOwner = null, learner
                 </div>
               </header>
               <EndingReport report={buildEndingReport()} />
+              {submitError && <p role="alert" className="vn-ending-story">{submitError}</p>}
               {postTestNotice?.quizId && <aside className="vn-post-test-notice" role="status">
                 <strong>Hoàn thành hậu trắc chương {postTestNotice.chapter}</strong>
                 <p>Em hãy nộp bài hậu trắc để tiếp tục hành trình nhé!</p>

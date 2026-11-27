@@ -4,28 +4,35 @@ import fs from 'node:fs/promises';
 import { canPlayJourneyChapter, isJourneyPlayState, journeyChapterProgress, resumeJourneyChapter } from '../src/pages/Kid/Dashboard/api/kidJourneyProgress.js';
 import { buildChapterBatch } from '../src/pages/Kid/Dashboard/components/game/playBatch.js';
 
-test('chapter batch keeps first choices, opened information and raw CH05 reflections', () => {
-  const data = { metadata: { chapterNumber: 5 }, releaseVersion: 'v5', scenes: [
-    { id: 'CH03_DECISION', type: 'choice', options: [{ id: 'A' }, { id: 'B' }] },
-    { id: 'CH05_R1', type: 'reflection', activity: 'reflection1' },
-    { id: 'CH05_R2', type: 'reflection', activity: 'reflection2' },
-  ] };
-  const ledger = {
-    CH03_DECISION: { optionId: 'B', firstOptionId: 'A', revised: true, chosenAt: '2026-11-26T00:00:00.000Z' },
-    CH05_R1: { answer: { selected: ['deadline', 'fees'], method: 'net', accountB: true }, reflectionScore: 6 },
-    CH05_R2: { answer: { action: 'keepB', date: 'month1', verified: true }, reflectionEvidenceScores: { I: 2 } },
+test('chapter batch uses schema 2 phase A event rows and keeps valid falsy mini-game values', () => {
+  const data = { metadata: { chapterNumber: 5 }, releaseVersion: '2.7.4' };
+  const playLog = {
+    releaseVersion: '2.7.4', nextSeq: 7,
+    picks: [
+      { seq: 1, sceneId: 'CH03_DECISION', optionId: 'A' },
+      { seq: 2, sceneId: 'CH03_DECISION', optionId: 'B' },
+    ],
+    inspections: [
+      { seq: 3, sceneId: 'CH05_SC01_INSPECT', inspectId: 'accounts' },
+      { seq: 4, sceneId: 'CH05_SC01_INSPECT', inspectId: 'accounts' },
+    ],
   };
-  const games = {
-    one: { completed: true, gameId: 'GAME', inputs: { q1: 'x' }, inspected: ['mini-card'], ui: { inspected: ['mini-card-2'] } },
-  };
-  const batch = buildChapterBatch(data, ledger, games, { 'story-card': true, closed: false });
-  assert.deepEqual(batch.choices, [{ sceneId: 'CH03_DECISION', optionId: 'B', chosenAt: '2026-11-26T00:00:00.000Z', firstOptionId: 'A', revised: true }]);
-  assert.deepEqual(batch.inspected, ['story-card', 'mini-card', 'mini-card-2']);
-  assert.deepEqual(batch.reflections, [
-    { sceneId: 'CH05_R1', answer: { selected: ['deadline', 'fees'], method: 'net' } },
-    { sceneId: 'CH05_R2', answer: { action: 'keepB', date: 'month1' } },
+  const games = { one: {
+    completed: true, gameId: 'GAME', playSeq: 5,
+    inputs: { emptyArray: [], no: false, zero: 0, blank: '', spaces: '   ', missing: null },
+  } };
+  const batch = buildChapterBatch(data, playLog, games);
+  assert.equal(batch.schema, 2);
+  assert.deepEqual(batch.picks, playLog.picks);
+  assert.deepEqual(batch.inspections, playLog.inspections);
+  assert.deepEqual(batch.miniGames, [
+    { seq: 5, gameId: 'GAME', itemId: 'emptyArray', chosen: [] },
+    { seq: 5, gameId: 'GAME', itemId: 'no', chosen: false },
+    { seq: 5, gameId: 'GAME', itemId: 'zero', chosen: 0 },
   ]);
-  assert.equal('reflectionScore' in batch.reflections[0], false);
+  assert.deepEqual(batch.reflections, []);
+  assert.equal('choices' in batch, false);
+  assert.equal('inspected' in batch, false);
 });
 
 test('empty server progress never completes demo chapters', () => {
@@ -163,6 +170,44 @@ test('chapter results survive recoverable errors and are discarded for invalid, 
   } finally {
     globalThis.localStorage = previousStorage;
     delete globalThis.__playRetryApi;
+  }
+});
+
+test('schema 2 keeps 400/413 batches without automatically retrying them', async () => {
+  const source = await fs.readFile(new URL('../src/pages/Kid/Dashboard/components/game/playBatch.js', import.meta.url), 'utf8');
+  const instrumented = source.replace('return (await import("../../api/kidDashboardApi")).kidDashboardApi;', 'return globalThis.__playV2Api;');
+  const { submitChapterBatch, flushPendingBatches } = await import(`data:text/javascript;base64,${Buffer.from(instrumented).toString('base64')}`);
+  const previousStorage = globalThis.localStorage;
+  const storage = {};
+  Object.defineProperties(storage, {
+    getItem: { value: (key) => storage[key] ?? null },
+    setItem: { value: (key, value) => { storage[key] = value; } },
+    removeItem: { value: (key) => { delete storage[key]; } },
+  });
+  globalThis.localStorage = storage;
+  const batch = { schema: 2, chapter: 3, releaseVersion: '2.7.4', picks: [], inspections: [], miniGames: [], reflections: [] };
+  const key = 'finteen:play:pending:child-v2:3:2.7.4';
+  let status = 400;
+  let calls = 0;
+  globalThis.__playV2Api = {
+    getSnapshot: () => ({ actor: { code: 'child-v2' } }),
+    getPlayState: async () => ({ chaptersDone: [1, 2], totalChapters: 8, attemptIndex: 1 }),
+    submitChapterBatch: async () => { calls++; throw Object.assign(new Error('invalid row picks[3].optionId'), { status, code: 1001 }); },
+  };
+  try {
+    for (status of [400, 413]) {
+      const result = await submitChapterBatch(batch, 'child-v2');
+      assert.equal(result.retry, false);
+      assert.equal(result.retained, true);
+      assert.deepEqual(JSON.parse(storage.getItem(key)), batch);
+      assert.equal(storage.getItem(`${key}:blocked`), '1');
+      const beforeFlush = calls;
+      await flushPendingBatches('child-v2');
+      assert.equal(calls, beforeFlush);
+    }
+  } finally {
+    globalThis.localStorage = previousStorage;
+    delete globalThis.__playV2Api;
   }
 });
 
