@@ -246,6 +246,7 @@ export function VisualNovelPlayer({ data: rawData, progressOwner = null, learner
   const gameContainerRef = useRef(null);
   const menuDetailsRef = useRef(null);
   const batchSentRef = useRef(false); // lô cuối chương đã gửi trong lần chơi này
+  const progressClearedRef = useRef(false);
   const [postTestNotice, setPostTestNotice] = useState(null);
   const [submitError, setSubmitError] = useState("");
   const stageRef = useRef(null);
@@ -533,7 +534,10 @@ export function VisualNovelPlayer({ data: rawData, progressOwner = null, learner
     if (import.meta.env.DEV) window.__finteenLastBatch = batch;
     void submitChapterBatch(batch, learnerCode).then(async (outcome) => {
       if (import.meta.env.DEV) window.__finteenLastSubmit = outcome;
-      if (outcome.sent) clearBrowserNovelProgress(data, progressOwner);
+      if (outcome.sent) {
+        progressClearedRef.current = true;
+        clearBrowserNovelProgress(data, progressOwner);
+      }
       if (outcome.retained) setSubmitError("Không lưu được kết quả. Vui lòng báo người hỗ trợ.");
       if (outcome.sent || outcome.code === 7004) {
         const { auth } = await import("@/api/auth.api");
@@ -922,6 +926,7 @@ export function VisualNovelPlayer({ data: rawData, progressOwner = null, learner
 
   const restart = () => {
     const initial = initialNovelProgress(data, resolveNavigableSceneIndex(0));
+    progressClearedRef.current = false;
     clearBrowserNovelProgress(data, progressOwner);
     checkpointRef.current = initial;
     saveBrowserNovelProgress(data, initial, progressOwner);
@@ -999,7 +1004,7 @@ export function VisualNovelPlayer({ data: rawData, progressOwner = null, learner
   useEffect(() => {
     // A choice with a stats popup commits atomically after the player acknowledges it.
     // Until then keep the previous checkpoint, so reload cannot omit its delta.
-    if (pendingEffects) return;
+    if (pendingEffects || progressClearedRef.current) return;
     const checkpoint = {
       scenePath,
       miniGameDoneByScene,
@@ -1042,7 +1047,10 @@ export function VisualNovelPlayer({ data: rawData, progressOwner = null, learner
   ]);
 
   useEffect(() => {
-    const flush = () => saveBrowserNovelProgress(data, checkpointRef.current, progressOwner);
+    const flush = () => {
+      if (progressClearedRef.current) return;
+      saveBrowserNovelProgress(data, checkpointRef.current, progressOwner);
+    };
     const onVisibilityChange = () => {
       if (document.visibilityState === "hidden") flush();
     };

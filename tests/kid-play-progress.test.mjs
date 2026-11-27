@@ -211,6 +211,14 @@ test('schema 2 keeps 400/413 batches without automatically retrying them', async
   }
 });
 
+test('accepted chapter progress cannot be restored by checkpoint effects or page lifecycle flushes', async () => {
+  const source = await fs.readFile(new URL('../src/pages/Kid/Dashboard/components/game/VisualNovelPlayer.jsx', import.meta.url), 'utf8');
+  assert.match(source, /if \(outcome\.sent\) \{\s*progressClearedRef\.current = true;\s*clearBrowserNovelProgress\(data, progressOwner\);/);
+  assert.match(source, /if \(pendingEffects \|\| progressClearedRef\.current\) return;/);
+  assert.match(source, /const flush = \(\) => \{\s*if \(progressClearedRef\.current\) return;\s*saveBrowserNovelProgress/);
+  assert.match(source, /const restart = \(\) => \{[\s\S]*?progressClearedRef\.current = false;[\s\S]*?saveBrowserNovelProgress\(data, initial, progressOwner\);/);
+});
+
 test('background dashboard refresh keeps the game mounted while initial loads still wait', async () => {
   const source = await fs.readFile(new URL('../src/pages/Kid/Dashboard/hooks/useKidDashboard.js', import.meta.url), 'utf8');
   const createHook = new Function('useCallback', 'useEffect', 'useNavigate', 'authSession', 'useWorkspace', 'useCurrentRelease',
