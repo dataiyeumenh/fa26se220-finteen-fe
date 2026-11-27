@@ -115,6 +115,31 @@ async function run() {
   await choose('Sở thích', 'TECH');
   assert(stageText() === originalText, 'Unset interest did not fall back to base text');
   await choose('Sở thích', 'SPORT');
+  const baseBackground = saved.scenes[0].background;
+  const hasBackground = url => document.querySelector('.stage-frame').style.backgroundImage.includes(url);
+  await choose('Giới tính', 'FEMALE');
+  await choose('Tuổi', '11_14');
+  await click(button('Đổi ảnh nền'));
+  for (let i = 0; i < 60 && !document.querySelector('.sp-asset'); i++) await wait();
+  await click(document.querySelector('.sp-asset'));
+  assert(hasBackground(customImage), 'Personalized background was not previewed');
+  await choose('Tuổi', '8_10');
+  assert(hasBackground(baseBackground), 'Background leaked to another age');
+  await choose('Tuổi', '11_14');
+  await choose('Giới tính', 'MALE');
+  assert(hasBackground(baseBackground), 'Background leaked to another gender');
+  await choose('Giới tính', 'FEMALE');
+  await choose('Sở thích', 'MUSIC');
+  assert(hasBackground(customImage), 'Interest changed the selected background');
+  await choose('Sở thích', 'SPORT');
+  await click(button('Dùng ảnh nền dự phòng / bản gốc'));
+  assert(hasBackground(baseBackground), 'Background reset failed');
+  await click(document.querySelector('[aria-label="Hoàn tác"]'));
+  assert(hasBackground(customImage), 'Undo did not restore background');
+  await click(button('Bản gốc'));
+  assert(hasBackground(baseBackground), 'Personalized background overwrote the base');
+  await click(button('Cá nhân hóa'));
+  assert(hasBackground(customImage), 'Switching modes lost background');
   await click(button('Nhân vật'));
   const assertDialogueTabHidden = () => {
     const sidebar = document.querySelector('.scene-inspector');
@@ -151,6 +176,7 @@ async function run() {
   await click(button('Lời thoại', document.querySelector('.personalization-tabs')));
   await click(button('Chơi thử từ cảnh này'));
   assert(document.querySelector('[role="dialog"]').textContent.includes(customText), 'Play used base dialogue');
+  assert(document.querySelector('.studio-play-stage').style.backgroundImage.includes(customImage), 'Play did not use the personalized background');
   const playBounds = document.querySelector('[role="dialog"]').getBoundingClientRect();
   assert(playBounds.width <= window.innerWidth && playBounds.height <= window.innerHeight, 'Play dialog exceeded the viewport');
   if (testWidth > 1000) assert(playBounds.width > 1000, 'Editor play dialog still uses the small shared popup width');
@@ -159,6 +185,7 @@ async function run() {
   await click(button('Đóng', document.querySelector('[role="dialog"]')));
   await click(button('Lưu nháp'));
   assert(writes === 1, 'Draft was not saved');
+  assert(saved.scenes[0].background === baseBackground && saved.scenes[0].variants['gender:FEMALE'].background.startsWith('{{studioBackground_'), 'Draft lost the personalized background or overwrote the base');
   assert(saved.scenes[0].text === originalText && saved.scenes[0].nextSceneId === 'S2', 'Personalization overwrote base or routing');
   assert(saved.scenes[0].variants['interest:SPORT'].text === customText, 'Saved interest content missing');
   assert(saved.scenes[0].variants['interest:SPORT'].spokenText === customText, 'Saving changed dialogue retained the old reading, so generation would reuse old audio');
@@ -235,13 +262,20 @@ async function run() {
   await choose('Giới tính', 'FEMALE'); await choose('Tuổi', '11_14');
   assert(stageText() === customText, 'Reload lost personalized text');
   assert(stageImage() === customImage, 'Reload lost character appearance');
+  assert(hasBackground(customImage), 'Reload lost personalized background');
   assert(document.querySelector('.stage-dialogue .stage-speaker').value === 'Mai', 'Reload lost personalized name');
   warningMode = true;
   await choose('Sở thích', 'MUSIC');
   await setValue(document.querySelector('textarea.stage-text'), 'Mình thích nghe nhạc!');
   await click(button('Lưu nháp'));
   const warningPanel = document.querySelector('.scene-draft-warnings');
+  assert(warningPanel && !warningPanel.open, 'Warnings automatically expanded after saving');
   assert(warningPanel?.querySelector('summary').textContent.includes('Cảnh báo cần kiểm tra (1)'), 'Warnings with the same cause were not grouped');
+  await click(warningPanel.querySelector('summary'));
+  assert(warningPanel.open, 'Clicking the warning header did not expand it');
+  await click(button('Lưu nháp'));
+  assert(!warningPanel.open, 'A new save did not collapse previously opened warnings');
+  await click(warningPanel.querySelector('summary'));
   assert(warningPanel.querySelectorAll('.draft-warning-card').length === 1, 'Duplicate warning cards remained');
   const card = warningPanel.querySelector('.draft-warning-card');
   assert(card.innerText.includes('bỏ mất số “250.000”') && card.innerText.includes('Cách sửa:'), 'Warning did not explain the problem and fix');
@@ -303,4 +337,11 @@ async function run() {
   assert(errors.length === 0, errors.join('; '));
   document.getElementById('result').textContent = JSON.stringify({ status: 'PASS', writes, checks: ['readable grouped warnings and direct scene/label navigation', 'selected-scene dialogue and playback', 'render panel only after generate', 'new render batch excludes old READY clips', 'all-ready generates nothing', 'shared scene tools', 'personalized names', 'live preview', 'interest fallback', 'gender + age appearance', 'undo/redo', 'key-only READY audio in sidebar/list/play', 'save/reload', 'mini-game asset and scoring'], errors });
 }
-run().catch(error => { document.getElementById('result').textContent = JSON.stringify({ status: 'FAIL', message: error.message, errors }); });
+async function previewWarnings() {
+  mount(1);
+  for (let i = 0; i < 80 && !button('Lưu nháp'); i++) await wait();
+  warningMode = true;
+  await click(button('Lưu nháp'));
+}
+const start = new URLSearchParams(location.search).has('warnings') ? previewWarnings : run;
+start().catch(error => { document.getElementById('result').textContent = JSON.stringify({ status: 'FAIL', message: error.message, errors }); });

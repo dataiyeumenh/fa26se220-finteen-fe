@@ -29,7 +29,7 @@ import ChoiceConditions from "./ChoiceConditions";
 import StoryMap from "./StoryMap";
 import { ChoicePanel, InspectPanel } from "./ScenePanels";
 import { CharacterPersonalization, PersonalizationControls } from "./PersonalizationPanel";
-import { CATALOG, labelText, patchChoiceText, patchInspect, personalizedScenePatch, previewPersonalization, VOICES } from './variantOps.js';
+import { backgroundAppearanceDefinition, CATALOG, labelText, patchChoiceText, patchInspect, personalizedScenePatch, previewPersonalization, VOICES } from './variantOps.js';
 import { sceneVoicePlayback } from './sceneVoice.js';
 import { SceneThumb } from "./SceneDialogs";
 import {
@@ -128,6 +128,7 @@ function SceneStage({
   write,
   update,
   onBackground,
+  onResetBackground,
   onAddCharacter,
   onOpenLock,
   personalized = false,
@@ -195,6 +196,7 @@ function SceneStage({
             <ImagePlus size={16} />
             Đổi ảnh nền
           </button>
+          {onResetBackground && <button type="button" title="Dùng ảnh nền dự phòng / bản gốc" onClick={onResetBackground}><Undo2 size={16} /> Dùng ảnh nền dự phòng / bản gốc</button>}
           <button type="button" onClick={onAddCharacter}>
             <UserPlus size={16} />
             Thêm nhân vật
@@ -457,11 +459,13 @@ export default function EditorCanvas(props) {
     onPickImage,
     onOpenTokens,
     onCharacterAppearance,
+    onBackgroundAppearance,
   } = props;
   const trackRef = useRef(null);
   const [panel, setPanel] = useState(true);
   const [view, setView] = useState("frame"); // khung hình | bản đồ truyện
   const [personalizing, setPersonalizing] = useState(false);
+  const [expandedWarnings, setExpandedWarnings] = useState(null);
   const [answers, setAnswers] = useState({ gender: 'MALE', age: '8_10', interest: 'SPORT' });
   const [personalTab, setPersonalTab] = useState('dialogue');
   const preview = useMemo(() => personalizing ? previewPersonalization(content, answers) : content, [content, answers, personalizing]);
@@ -683,20 +687,24 @@ export default function EditorCanvas(props) {
         </div>
       )}
       {!!warnings.length && (
-        <details open className="scene-draft-warnings" aria-live="polite">
-          <summary><ChevronRight className="draft-warning-chevron" size={16} aria-hidden="true" />Cảnh báo cần kiểm tra ({warnings.length})<span className="draft-warning-when-closed">Mở</span><span className="draft-warning-when-open">Thu gọn</span></summary>
-          <p>Bản nháp vẫn được lưu. Sửa các mục này trước khi gửi duyệt.</p>
+        <details className="scene-draft-warnings" open={expandedWarnings === warnings} onToggle={event => setExpandedWarnings(event.currentTarget.open ? warnings : null)}>
+          <summary>
+            <span className="draft-warning-icon"><AlertTriangle size={19} aria-hidden="true" /></span>
+            <span className="draft-warning-summary-copy"><strong>Cảnh báo cần kiểm tra ({warnings.length})</strong><small>Đã lưu bản nháp · Kiểm tra các mục này trước khi gửi duyệt.</small></span>
+            <span className="draft-warning-when-closed">Xem chi tiết</span><span className="draft-warning-when-open">Thu gọn</span>
+            <ChevronRight className="draft-warning-chevron" size={18} aria-hidden="true" />
+          </summary>
           <ul className="draft-warning-list">
             {warnings.map((warning, index) => {
               const currentIndex = warning.sceneId ? scenes.findIndex(item => item.id === warning.sceneId) : -1;
               return <li key={index} className="draft-warning-card">
                 <div className="draft-warning-heading">
-                  <strong>{warning.sceneIndex == null ? 'Nội dung chương' : `Cảnh ${(currentIndex >= 0 ? currentIndex : warning.sceneIndex) + 1}${warning.sceneTitle ? ` — ${warning.sceneTitle}` : ''}`} · {warning.fieldName}</strong>
-                  {currentIndex >= 0 && <button type="button" className="scene-primary" disabled={busy} onClick={() => openWarning(warning)}>Mở cảnh {currentIndex + 1} để sửa<ChevronRight size={16} aria-hidden="true" /></button>}
+                  <div className="draft-warning-location"><span>{warning.fieldName}</span><strong>{warning.sceneIndex == null ? 'Nội dung chương' : `Cảnh ${(currentIndex >= 0 ? currentIndex : warning.sceneIndex) + 1}${warning.sceneTitle ? ` — ${warning.sceneTitle}` : ''}`}</strong></div>
+                  {currentIndex >= 0 && <button type="button" className="draft-warning-edit" disabled={busy} onClick={() => openWarning(warning)}>Mở cảnh {currentIndex + 1} để sửa<ChevronRight size={16} aria-hidden="true" /></button>}
                 </div>
-                {warning.scopeText && <p className="draft-warning-scope">{warning.scopeText}</p>}
+                {warning.scopeText && <div className="draft-warning-scope">{warning.scopeText.split('; ').map(scope => <span key={scope}>{scope}</span>)}</div>}
                 <p>{warning.description}</p>
-                <p><b>Cách sửa:</b> {warning.action}</p>
+                <p className="draft-warning-action"><b>Cách sửa:</b> {warning.action}</p>
                 {warning.sourceText && <details className="draft-warning-reference"><summary><ChevronRight className="draft-warning-chevron" size={16} aria-hidden="true" />Xem nội dung gốc để đối chiếu<span className="draft-warning-when-closed">Mở</span><span className="draft-warning-when-open">Thu gọn</span></summary><p>{warning.sourceText}</p></details>}
                 <details className="draft-warning-technical"><summary><ChevronRight className="draft-warning-chevron" size={16} aria-hidden="true" />Chi tiết dành cho kỹ thuật<span className="draft-warning-when-closed">Mở</span><span className="draft-warning-when-open">Thu gọn</span></summary><ul>{warning.rawMessages.map((raw, i) => <li key={i}>{raw}</li>)}</ul></details>
               </li>;
@@ -850,7 +858,9 @@ export default function EditorCanvas(props) {
                       }}
                       onCharacterRemove={index => update({ characters: scene.characters.filter((_, i) => i !== index) })}
                       onOptionText={updateOptionText}
-                      onBackground={onPickBackground}
+                      onBackground={personalizing ? () => onPickImage(url => onBackgroundAppearance(answers.gender, answers.age, url)) : onPickBackground}
+                      onResetBackground={personalizing && backgroundAppearanceDefinition(scene, answers.gender, content.personalization?.tokens)?.def[`age:${answers.age}`]
+                        ? () => onBackgroundAppearance(answers.gender, answers.age, '') : undefined}
                       onAddCharacter={onAddCharacter}
                       onOpenLock={(index) =>
                         openDialog({ kind: "lock", index })
@@ -1105,9 +1115,9 @@ export default function EditorCanvas(props) {
                       <label>
                         Ảnh nền (đường dẫn)
                         <input
-                          value={scene.background || ""}
+                          value={previewScene.background || ""}
                           onChange={(event) =>
-                            update({ background: event.target.value })
+                            personalizing ? onBackgroundAppearance(answers.gender, answers.age, event.target.value) : update({ background: event.target.value })
                           }
                           placeholder="URL hoặc ref ảnh"
                         />

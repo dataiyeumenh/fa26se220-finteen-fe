@@ -1,5 +1,4 @@
 import { createRoot } from "react-dom/client";
-import App from "/src/App.jsx";
 import { auth } from "/src/api/auth.api.js";
 import { teacherQuizApi as api } from "/src/pages/Teacher/Quiz/api/teacherQuizApi.js";
 
@@ -19,7 +18,10 @@ const snapshot = { actor: { id: "owner", kind: "adult", name: "Phụ huynh", rol
 auth.getSnapshot = () => snapshot;
 auth.ensureEntitlements = async () => [];
 let forbiddenCalls = 0;
-auth.accountRequest = async () => { forbiddenCalls++; throw new Error("Unexpected API call"); };
+auth.accountRequest = async (path, options = {}) => {
+  if (path === '/api/notifications/unread-count' && (!options.method || options.method === 'GET')) return { count: 0 };
+  forbiddenCalls++; throw new Error("Unexpected API call");
+};
 const requestedGroups = [];
 let noFamily = false, fail = false;
 api.listGroups = async () => {
@@ -36,11 +38,12 @@ api.listQuizzes = async (id) => {
 api.getQuiz = async () => ({ questions: [] });
 api.getQuizResults = async () => ({ rows: [{ slotId: "child", displayName: "Bé An", attempted: true, score: 1, totalQuestions: 2 }] });
 api.getQuizSlotResult = async () => ({ paper: [{ questionId: "q1", stem: "Em nên tiết kiệm thế nào?", options: ["Để dành", "Tiêu hết"], chosen: 0, correctPos: 0, correct: true }] });
-let root;
+let root, App;
 async function mount() {
   root?.unmount();
   root = createRoot(document.getElementById("root"));
   history.replaceState(null, "", "/dashboard/quiz-management");
+  App ??= (await import('/src/App.jsx')).default;
   root.render(<App />);
   await wait();
 }
@@ -63,14 +66,14 @@ try {
 
   noFamily = true;
   await mount();
-  await until(() => text().includes("Chưa có bài hậu trắc"));
+  await until(() => text().includes("Chưa có bài trắc nghiệm sau chương"));
   results.push("No family shows a useful empty state");
   fail = true;
   await mount();
   await until(() => text().includes("Không thể kết nối"));
   fail = false;
   button("Làm mới").click();
-  await until(() => text().includes("Chưa có bài hậu trắc"));
+  await until(() => text().includes("Chưa có bài trắc nghiệm sau chương"));
   results.push("Load errors are visible and refresh retries successfully");
 
   snapshot.actor = { ...snapshot.actor, role: "teacher" };

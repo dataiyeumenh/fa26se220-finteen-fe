@@ -1,6 +1,6 @@
 // Soạn chương + chơi thử (bản demo). Nội dung đúng hình dạng chapterNV2GameData; GET …/draft trả URL ảnh thật, lưu lại
 // nguyên vậy BE tự đổi về {{ASSET_BASE}}. Sửa nhanh các trường hay đổi; trường khác sửa ở chế độ JSON.
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { auth } from '../../api/auth.api'
 import { canEdit } from './permissions'
@@ -11,7 +11,7 @@ import { nextSceneId } from './sceneEditing'
 import { TYPE_LABEL, duplicateLinked, insertLinked, isLinear, removeLinked, storyIssues } from './storyOps'
 import MinigameDialog from './MinigameDialog'
 import { TokensDialog } from './PersonalizationPanel'
-import { previewPersonalization, pruneEmptyVariants, setCharacterAppearance, VOICES } from './variantOps.js'
+import { previewPersonalization, pruneEmptyVariants, setBackgroundAppearance, setCharacterAppearance, VOICES } from './variantOps.js'
 import { AddSceneDialog, CharacterDialog, ConditionDialog, EffectDialog, PlayDialog, ScenePickerDialog } from './SceneDialogs'
 import { prepareDraftV2, parseCondition } from './draftV2'
 import { AssetPicker } from './AssetsPage'
@@ -106,7 +106,7 @@ function VoiceRenderList({ voice, batch, scenes, onOpen, onClose }) {
   </Panel>
 }
 
-export default function EditorPage({ notify, code, onNavigationStateChange }) {
+export default function EditorPage({ notify, code, onNavigationStateChange, saveRef }) {
   const [search, setSearch] = useSearchParams()
   const [meta, setMeta] = useState(null)
   const [content, setContent] = useState(null)
@@ -114,7 +114,9 @@ export default function EditorPage({ notify, code, onNavigationStateChange }) {
   const [json, setJson] = useState(null) // chuỗi khi đang ở chế độ JSON
   const [picking, setPicking] = useState(false)
   const [loadError, setLoadError] = useState('')
-  const [dirty, setDirty] = useState(false)
+  const [dirty, setDirtyState] = useState(false)
+  const dirtyRef = useRef(false)
+  const setDirty = useCallback(value => { dirtyRef.current = value; setDirtyState(value) }, [])
   const [attempt, setAttempt] = useState(0)
   const [warnings, setWarnings] = useState([])
   const [refreshError, setRefreshError] = useState('')
@@ -135,6 +137,7 @@ export default function EditorPage({ notify, code, onNavigationStateChange }) {
     return () => onNavigationStateChange?.({ dirty: false, busy: false })
   }, [dirty, busy, onNavigationStateChange])
   const write = canEdit(auth.getSnapshot().actor) && meta?.status !== 'SUBMITTED'
+  const pendingForm = Boolean(write && dialog && dialog.kind !== 'play')
   const schemaLoader = useCallback(() => studioApi.get('/api/studio/scene-schema'), [])
   const schemaQuery = useStudioResource(schemaLoader)
 
@@ -170,12 +173,12 @@ export default function EditorPage({ notify, code, onNavigationStateChange }) {
     return () => { active = false; clearTimeout(timer) }
   }, [voice, code, notify])
   useEffect(() => {
-    if (!dirty) return
+    if (!dirty && !pendingForm) return
     // Closing/reloading a browser tab requires the native warning; in-app navigation uses a popup.
     const warn = event => { event.preventDefault(); event.returnValue = '' }
     window.addEventListener('beforeunload', warn)
     return () => window.removeEventListener('beforeunload', warn)
-  }, [dirty])
+  }, [dirty, pendingForm])
 
   const scenes = content?.scenes || []
   const scene = scenes[idx] || scenes[0]
@@ -270,12 +273,14 @@ export default function EditorPage({ notify, code, onNavigationStateChange }) {
     else setIdx(i)
   }
 
-  const save = async () => {
-    if (!write || busy) return
+  const save = useCallback(async ({ leaving = false } = {}) => {
+    if (!write || busy) return { saved: false, error: busy ? 'Đang xử lý bản nháp. Vui lòng chờ.' : 'Bạn không có quyền lưu bản nháp này.' }
+    const invalid = message => { notify(message); return { saved: false, error: message } }
+    if (pendingForm) return invalid('Hoàn tất hoặc đóng cửa sổ đang mở trước khi lưu nháp. Thay đổi trong cửa sổ đó chưa được áp dụng vào bản soạn.')
     if (json === null) {
       for (const [key, raw] of Object.entries(conditionDrafts)) {
-        if (!scenes.some(scene => key.startsWith(`${scene.id}/`))) continue
-        try { parseCondition(raw) } catch (error) { return notify(`Điều kiện ${key}: ${formatError(error)}`) }
+        if (!(content?.scenes || []).some(scene => key.startsWith(`${scene.id}/`))) continue
+        try { parseCondition(raw) } catch (error) { return invalid(`Điều kiện ${key}: ${formatError(error)}`) }
       }
     }
     let body = content
@@ -283,25 +288,30 @@ export default function EditorPage({ notify, code, onNavigationStateChange }) {
       try {
         body = JSON.parse(json)
       } catch (e) {
-        return notify(formatError(e))
+        return invalid(formatError(e))
       }
     }
-    if (!body || typeof body !== 'object' || Array.isArray(body) || !Array.isArray(body.scenes) || !body.scenes.length) return notify('Nội dung phải là đối tượng JSON có ít nhất một scene.')
+    if (!body || typeof body !== 'object' || Array.isArray(body) || !Array.isArray(body.scenes) || !body.scenes.length) return invalid('Nội dung phải là đối tượng JSON có ít nhất một scene.')
     body = pruneEmptyVariants(prepareDraftV2(body))
-    await run(async () => {
-      const saved = await studioApi.put(`/api/studio/chapters/${encodeURIComponent(code)}/draft`, body)
+    let failure = ''
+    let didRefresh = false
+    const saved = await run(async () => {
+      const saved = await studioApi.put(`/api/studio/chapters/${encodeURIComponent(code)}/draft`, body).catch(error => { failure = formatError(error); throw error })
       try {
         const refreshed = await studioApi.get(`/api/studio/chapters/${encodeURIComponent(code)}/draft`)
         return { saved, refreshed }
       } catch (error) { return { saved, refreshError: formatError(error) } }
     }, 'Đã lưu nháp ' + code, result => {
+      didRefresh = Boolean(result.refreshed)
       if (result.refreshed) setMeta(result.refreshed.draft)
       setContent(prepareDraftV2(result.refreshed?.content || body)); setJson(null); setHistory({ past: [], future: [] }); setDirty(false); setConditionDrafts({})
       setWarnings(describeDraftWarnings(result.saved?.warnings || [], body.scenes))
       setRefreshError(result.refreshError || '')
-      if (search.has('new') && result.refreshed) setSearch({}, { replace: true })
     })
-  }
+    if (saved && didRefresh && search.has('new') && !leaving) setSearch({}, { replace: true })
+    return { saved, error: saved ? '' : failure || 'Chưa lưu được bản nháp. Vui lòng thử lại.' }
+  }, [write, busy, pendingForm, json, conditionDrafts, notify, content, code, run, setDirty, search, setSearch])
+  useImperativeHandle(saveRef, () => ({ save, get dirty() { return dirtyRef.current || pendingForm } }), [save, pendingForm])
 
   /* chèn / xoá / nhân đôi không làm đứt mạch: câu hỏi mới thì mọi lựa chọn về cảnh kế cũ, xoá thì cảnh trước nối sang cảnh sau */
   const addScene = (type, gameKind) => {
@@ -383,6 +393,7 @@ export default function EditorPage({ notify, code, onNavigationStateChange }) {
   return <>
     <EditorCanvas code={code} content={content} meta={meta} scenes={scenes} scene={scene} idx={idx} setIdx={setIdx}
       onCharacterAppearance={(index, gender, age, url) => commit(setCharacterAppearance(content, scene.id, index, gender, age, url))}
+      onBackgroundAppearance={(gender, age, url) => commit(setBackgroundAppearance(content, scene.id, gender, age, url))}
       write={write} busy={busy} dirty={dirty} json={json}
       setJson={value => { setJson(value); setDirty(true) }} toggleJson={toggleJson} save={save} update={update} schemaQuery={schemaQuery}
       warnings={warnings} refreshError={refreshError} conditionDrafts={conditionDrafts} editCondition={editCondition} onSuggestVoice={suggestVoice} onRenderVoice={renderVoice} voice={voice}

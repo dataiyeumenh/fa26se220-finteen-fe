@@ -15,7 +15,11 @@ export default function ResponsiveSidebar({ children, className, scopeClass, tit
   }, []);
 
   const closeAfterNavigation = (event) => {
-    if (!event.defaultPrevented && event.target.closest("a[href], [data-navigation-item]")) setOpen(false);
+    // Router links prevent the browser's default navigation, including when a
+    // pending editor transition opens a confirmation. Close the drawer so the
+    // confirmation and destination page remain visible.
+    if (event.button === 0 && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey
+      && event.target.closest("a[href], [data-navigation-item]")) setOpen(false);
   };
 
   return (

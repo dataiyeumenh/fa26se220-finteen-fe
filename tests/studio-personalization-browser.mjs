@@ -78,7 +78,7 @@ async function browserCheck(width) {
     const { sessionId } = await call('Target.attachToTarget', { targetId, flatten: true });
     await call('Emulation.setDeviceMetricsOverride', { width, height: 1000, deviceScaleFactor: 1, mobile: width < 600 }, sessionId);
     await call('Page.navigate', { url: `http://127.0.0.1:5197/tests/fixtures/studio-personalization-browser.html?width=${width}` }, sessionId);
-    const deadline = Date.now() + 60000;
+    const deadline = Date.now() + 90000;
     let result;
     while (Date.now() < deadline) {
       const value = await call('Runtime.evaluate', { expression: 'document.getElementById("result")?.textContent', returnByValue: true }, sessionId);
@@ -89,7 +89,7 @@ async function browserCheck(width) {
     writeFileSync(path.join(folder, `${width}.html`), html.result.value);
     const screenshot = await call('Page.captureScreenshot', { format: 'png' }, sessionId);
     writeFileSync(path.join(folder, `${width}.png`), Buffer.from(screenshot.data, 'base64'));
-    assert.ok(result, 'Browser acceptance did not finish within 60 seconds');
+    assert.ok(result, 'Browser acceptance did not finish within 90 seconds');
     console.log(JSON.stringify({ width, ...result }, null, 2));
     assert.equal(result.status, 'PASS');
   } finally {

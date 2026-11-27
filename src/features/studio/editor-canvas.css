@@ -44,24 +44,46 @@
 .scene-draft-warnings summary, .scene-issues summary { cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; }
 .scene-issues summary small { font-weight: 400; }
 .scene-draft-warnings ul { list-style: disc; padding-left: 20px; white-space: pre-wrap; overflow-wrap: anywhere; }
-.scene-draft-warnings { max-height: min(50dvh, 480px); }
-.scene-draft-warnings .draft-warning-list { display: grid; gap: 10px; list-style: none; padding: 0; margin: 10px 0; white-space: normal; }
-.draft-warning-card { padding: 12px; border: 1px solid #e5cf9c; border-radius: 8px; background: #fffdf6; }
+.scene-draft-warnings { max-height: none; overflow: visible; background: #fff; padding: 12px 20px; color: var(--ink); border-bottom: 1px solid var(--line); }
+.scene-draft-warnings .draft-warning-list { display: grid; gap: 12px; list-style: none; padding: 2px 8px 2px 2px; margin: 14px 0 2px; white-space: normal; max-height: min(46dvh, 420px); overflow-y: auto; overscroll-behavior: contain; }
+.draft-warning-card { padding: 16px; border: 1px solid #e3e8e5; border-left: 3px solid #dfad49; border-radius: 10px; background: #fff; }
 .draft-warning-heading { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
-.draft-warning-card p { margin: 6px 0; }
-.draft-warning-scope { font-weight: 600; }
+.draft-warning-card p { margin: 10px 0; line-height: 1.7; color: #46554e; }
+.draft-warning-location { display: grid; gap: 5px; min-width: 0; }
+.draft-warning-location > span { color: #856224; font-size: 11px; font-weight: 500; }
+.draft-warning-location strong { color: #253d32; font-size: 14px; }
+.scene-editor .draft-warning-edit { color: var(--accent-strong); border-color: #cddfd6; background: #f7fbf9; white-space: nowrap; }
+.draft-warning-scope { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.draft-warning-scope > span { padding: 3px 8px; border-radius: 6px; background: #f1f4f3; color: #596960; font-size: 11px; }
+.draft-warning-card .draft-warning-action { padding: 10px 12px; border-radius: 8px; background: #f5f8f6; color: #365646; }
 .draft-warning-reference, .draft-warning-technical { margin-top: 8px; }
 .draft-warning-reference > summary, .draft-warning-technical > summary { font-size: 12px; }
-.scene-draft-warnings > summary { width: fit-content; max-width: 100%; padding: 8px 10px; border: 1px solid #e5cf9c; border-radius: 6px; background: #fff9ed; }
-.draft-warning-reference > summary, .draft-warning-technical > summary { padding: 10px 12px; border: 1px solid #bcd7cb; border-radius: 6px; color: var(--accent-strong); background: #edf7f2; }
-.draft-warning-reference > summary:hover, .draft-warning-technical > summary:hover { background: #e0f0e7; border-color: var(--accent); }
+.scene-draft-warnings > summary { width: 100%; padding: 12px 14px; border: 1px solid #eddfbf; border-radius: 10px; background: #fffbf2; gap: 12px; list-style: none; }
+.scene-draft-warnings summary::-webkit-details-marker { display: none; }
+.scene-draft-warnings > summary:hover { background: #fff7e6; border-color: #d9bc7f; }
+.draft-warning-icon { display: grid; place-items: center; width: 36px; height: 36px; flex-shrink: 0; border-radius: 10px; background: #fff0cc; color: #a36b12; }
+.draft-warning-summary-copy { display: grid; gap: 3px; min-width: 0; }
+.draft-warning-summary-copy strong { font-size: 13px; font-weight: 600; color: #78541d; }
+.draft-warning-summary-copy small { color: #7c7566; font-size: 12px; font-weight: 400; }
+.draft-warning-reference > summary, .draft-warning-technical > summary { padding: 9px 0; border-bottom: 1px solid #edf0ee; color: var(--accent-strong); background: transparent; font-weight: 500; }
+.draft-warning-technical > summary { color: #6b766f; }
+.draft-warning-reference > summary:hover, .draft-warning-technical > summary:hover { color: var(--accent); }
 .scene-draft-warnings summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .draft-warning-chevron { flex-shrink: 0; }
 .scene-draft-warnings details[open] > summary > .draft-warning-chevron, .scene-draft-warnings[open] > summary > .draft-warning-chevron { transform: rotate(90deg); }
 .scene-draft-warnings summary > .draft-warning-when-open, .scene-draft-warnings details[open] > summary > .draft-warning-when-closed, .scene-draft-warnings[open] > summary > .draft-warning-when-closed { display: none; }
 .scene-draft-warnings details[open] > summary > .draft-warning-when-open, .scene-draft-warnings[open] > summary > .draft-warning-when-open { display: inline; }
 .draft-warning-when-open, .draft-warning-when-closed { margin-left: auto; padding-left: 8px; font-size: 11px; white-space: nowrap; font-weight: 500; }
+.scene-draft-warnings > summary > .draft-warning-chevron { color: #91713e; }
 .draft-warning-reference > p, .draft-warning-technical > ul { padding: 10px 12px; background: #fff; border-left: 3px solid #bcd7cb; }
+@media (max-width: 600px) {
+  .scene-draft-warnings { padding: 10px 12px; }
+  .scene-draft-warnings > summary { padding: 10px; gap: 8px; }
+  .scene-draft-warnings > summary > .draft-warning-when-closed, .scene-draft-warnings > summary > .draft-warning-when-open { display: none; }
+  .scene-draft-warnings > summary > .draft-warning-chevron { margin-left: auto; }
+  .draft-warning-card { padding: 12px; }
+  .draft-warning-heading { align-items: flex-start; }
+}
 .scene-issues ul { display: grid; gap: 4px; margin: 8px 0 4px; padding: 0; list-style: none; }
 .scene-issues li { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .scene-issues li button { min-height: 30px; padding: 2px 10px; flex-shrink: 0; }
