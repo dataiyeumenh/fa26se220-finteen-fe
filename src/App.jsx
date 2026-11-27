@@ -1,4 +1,4 @@
-﻿import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+﻿import { createBrowserRouter, RouterProvider, Routes, Route, Navigate } from "react-router-dom";
 
 import { lazy, Suspense } from "react";
 import "./styles/responsive.css";
@@ -78,9 +78,9 @@ function AdultDashboard() {
   return <SharedDashboard />;
 }
 
-function App() {
+function AppRoutes() {
   return (
-    <BrowserRouter>
+
       <Suspense fallback={<PageLoader label="Đang tải trang…" />}>
       <Routes>
         <Route
@@ -219,8 +219,12 @@ function App() {
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
       </Suspense>
-    </BrowserRouter>
+
   );
 }
 
-export default App;
+const router = createBrowserRouter([{ path: "*", element: <AppRoutes /> }]);
+
+export default function App() {
+  return <RouterProvider router={router} />;
+}

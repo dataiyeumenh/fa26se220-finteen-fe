@@ -1,5 +1,5 @@
 import { createRoot } from "react-dom/client";
-import { MemoryRouter } from "react-router-dom";
+import { createMemoryRouter, RouterProvider } from "react-router-dom";
 import MyQuestionBank from "/src/pages/Teacher/Quiz/components/MyQuestionBank.jsx";
 import PaymentResult from "/src/features/workspace/PaymentResult.jsx";
 import StudioWorkspace from "/src/features/internal/StudioWorkspace.jsx";
@@ -39,7 +39,7 @@ teacherQuizApi.deleteMyQuestion = async (id) => {
 };
 async function mount(content, route = "/dashboard/quiz-management") {
   root.render(<div />); await wait();
-  root.render(<MemoryRouter initialEntries={[route]}>{content}</MemoryRouter>); await wait();
+  root.render(<RouterProvider router={createMemoryRouter([{ path: '*', element: content }], { initialEntries: [route] })} />); await wait();
 }
 try {
   await mount(<div className="ws"><MyQuestionBank /></div>);
@@ -99,7 +99,7 @@ try {
   button("Ở lại chỉnh sửa", dialog()).click(); await wait();
   assert(document.querySelector('textarea[aria-label="Lời thoại"]').value === "Lời thoại đã sửa chưa lưu", "Cancel discarded unsaved changes");
   document.querySelector(".scene-editor-back").click(); await wait();
-  button("Bỏ thay đổi và rời đi", dialog()).click();
+  button("Không lưu và rời đi", dialog()).click();
   await until(() => !document.querySelector(".scene-editor-back") && !dialog(), "returned to chapter list");
   results.push("Leaving the editor asks in-app; cancel preserves edits and confirmation returns to the chapter list");
   const assertPopupSize = () => {

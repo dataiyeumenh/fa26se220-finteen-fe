@@ -17,6 +17,11 @@
 .ft-confirm-actions button:hover:not(:disabled) { background:#f1f5f9; }
 .ft-confirm-actions button.is-danger { border-color:#dc2626; background:#dc2626; color:#fff; }
 .ft-confirm-actions button.is-danger:hover:not(:disabled) { border-color:#b91c1c; background:#b91c1c; }
+.ft-leave-editor-confirm .ft-confirm-actions { flex-wrap:wrap; }
+.ft-leave-editor-confirm .ft-confirm-actions button { padding:10px 12px; font-size:12px; }
+.ft-confirm-actions button.is-primary { border-color:#0f7a5c; background:#0f7a5c; color:#fff; }
+.ft-confirm-actions button.is-primary:hover:not(:disabled) { background:#0b5e47; }
+.ft-confirm-actions button.is-discard { color:#a43e35; }
 .ft-confirm-actions button:disabled { opacity:.6; cursor:wait; }
 .ft-confirm-actions button:focus-visible { outline:2px solid #64748b; outline-offset:3px; }
 .ft-confirm-spinner { animation:ft-confirm-spin 1s linear infinite; }

@@ -15,12 +15,61 @@ import {
   previewPersonalization,
   setCharacterAppearance,
   characterAppearanceDefinition,
+  setBackgroundAppearance,
+  backgroundAppearanceDefinition,
   personalizedScenePatch,
   patchInspect,
   patchChoiceText,
 } from "../src/features/studio/variantOps.js";
 
 const SPORT = "interest:SPORT";
+
+test('backgrounds compose all gender and age pairs independently of interest and survive saving', () => {
+  const original = { scenes: [{ id: 'S1', background: 'base.webp', text: 'Gốc', nextSceneId: 'S2', voiceUrl: 'base.mp3' }] };
+  let content = original;
+  for (const gender of ['MALE', 'FEMALE']) for (const age of ['8_10', '11_14', '15_18']) {
+    content = setBackgroundAppearance(content, 'S1', gender, age, `${gender}-${age}.webp`);
+  }
+  content = JSON.parse(JSON.stringify(pruneEmptyVariants(content)));
+  for (const gender of ['MALE', 'FEMALE']) for (const age of ['8_10', '11_14', '15_18']) for (const interest of ['SPORT', 'MUSIC']) {
+    const scene = previewPersonalization(content, { gender, age, interest }).scenes[0];
+    assert.equal(scene.background, `${gender}-${age}.webp`);
+    assert.equal(scene.nextSceneId, 'S2');
+    assert.equal(scene.voiceUrl, 'base.mp3');
+    assert.equal(scene.text, 'Gốc');
+  }
+  assert.equal(original.scenes[0].variants, undefined);
+  assert.equal(content.scenes[0].background, 'base.webp');
+  assert.deepEqual(variantProblems(content.scenes[0], content.personalization.tokens), []);
+  assert.deepEqual(tokenProblems(content), []);
+});
+
+test('background fallback and reset preserve sibling ages, other fields and existing gender defaults', () => {
+  for (const variants of [undefined, { 'gender:FEMALE': { background: 'female.webp', speaker: 'Lan' } }]) {
+    const original = { scenes: [{ id: 'S1', background: 'base.webp', ...(variants ? { variants } : {}) }] };
+    let content = setBackgroundAppearance(original, 'S1', 'FEMALE', '8_10', 'young.webp');
+    content = setBackgroundAppearance(content, 'S1', 'FEMALE', '11_14', 'teen.webp');
+    const render = (gender, age) => previewPersonalization(content, { gender, age }).scenes[0].background;
+    assert.equal(render('MALE', '8_10'), 'base.webp');
+    assert.equal(render('FEMALE', '15_18'), variants ? 'female.webp' : 'base.webp');
+    content = setBackgroundAppearance(content, 'S1', 'FEMALE', '8_10', '');
+    assert.equal(render('FEMALE', '8_10'), variants ? 'female.webp' : 'base.webp');
+    assert.equal(render('FEMALE', '11_14'), 'teen.webp');
+    assert.ok(backgroundAppearanceDefinition(content.scenes[0], 'FEMALE', content.personalization.tokens));
+    content = setBackgroundAppearance(content, 'S1', 'FEMALE', '11_14', '');
+    assert.deepEqual(content, original);
+  }
+});
+
+test('background edits and reset on a duplicated scene do not change the original scene', () => {
+  let content = setBackgroundAppearance({ scenes: [{ id: 'S1', background: 'base.webp' }] }, 'S1', 'MALE', '8_10', 'first.webp');
+  content.scenes.push({ ...structuredClone(content.scenes[0]), id: 'S2' });
+  content = setBackgroundAppearance(content, 'S2', 'MALE', '8_10', 'second.webp');
+  assert.deepEqual(previewPersonalization(content, { gender: 'MALE', age: '8_10' }).scenes.map(scene => scene.background), ['first.webp', 'second.webp']);
+  content = setBackgroundAppearance(content, 'S2', 'MALE', '8_10', '');
+  assert.deepEqual(previewPersonalization(content, { gender: 'MALE', age: '8_10' }).scenes.map(scene => scene.background), ['first.webp', 'base.webp']);
+  assert.deepEqual(tokenProblems(content), []);
+});
 
 test('choice wording follows interest while base labels, destinations, scoring and locks stay intact', () => {
   const original = { id: 'A', text: 'Mua tai nghe 250.000đ', label: 'Mua tai nghe 250.000đ', nextSceneId: 'S2', deltaStats: { SAVING: -10 }, condition: { flag: 'READY' }, lockedReason: 'Chưa đủ điều kiện' };

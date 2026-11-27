@@ -1,6 +1,6 @@
 // Browser-only layout fixture: actual components, deterministic local data, no API writes.
 import { createRoot } from 'react-dom/client';
-import { MemoryRouter, Routes, Route } from 'react-router-dom';
+import { createMemoryRouter, RouterProvider, Routes, Route } from 'react-router-dom';
 import '../src/index.css';
 import '../src/styles/responsive.css';
 import Homepage from '../src/pages/Homepage.jsx';
@@ -100,7 +100,7 @@ else if (name === 'game' || name.startsWith('game-') || name.startsWith('minigam
   view = <VisualNovelPlayer data={data} progressOwner="responsive-fixture" />;
 }
 else view = <WorkspaceLayout>{name.startsWith('kid') ? <GameMap chapters={chapters} /> : name === 'quiz' || name === 'quiz-preview' ? <TeacherQuizContent quizState={quizState} /> : name === 'parent' ? <ParentDashboardContent actor={actor} dashboardState={dashboardState} /> : <TeacherDashboardContent actor={actor} dashboardState={dashboardState} />}</WorkspaceLayout>;
-createRoot(document.getElementById('root')).render(<MemoryRouter initialEntries={[route]}>{view}</MemoryRouter>);
+createRoot(document.getElementById('root')).render(<RouterProvider router={createMemoryRouter([{ path: '*', element: view }], { initialEntries: [route] })} />);
 
 function clickText(text) { [...document.querySelectorAll('button')].find(button => button.textContent.trim() === text)?.click(); }
 function activeNavigationContrast() {

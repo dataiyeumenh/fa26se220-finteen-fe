@@ -292,6 +292,42 @@ export function characterAppearanceDefinition(character, gender, tokens = {}) {
   return name && tokens[name] ? { name, def: tokens[name] } : null;
 }
 
+/** A gender variant selects an age token, using the same server contract as characters. */
+export function backgroundAppearanceDefinition(scene, gender, tokens = {}) {
+  const background = scene.variants?.[`gender:${gender}`]?.background;
+  const name = typeof background === 'string' ? /^\{\{(studioBackground_[A-Za-z0-9_]+)\}\}$/.exec(background)?.[1] : null;
+  return name && tokens[name] ? { name, def: tokens[name] } : null;
+}
+
+export function setBackgroundAppearance(content, sceneId, gender, age, url) {
+  if (!CATALOG.gender.includes(gender) || !CATALOG.age.includes(age)) return content;
+  const scene = content.scenes.find(item => item.id === sceneId);
+  if (!scene) return content;
+  const label = `gender:${gender}`;
+  const tokens = { ...tokensOf(content) };
+  const existing = backgroundAppearanceDefinition(scene, gender, tokens);
+  if (!url && !existing) return content;
+  const uses = existing ? JSON.stringify(content.scenes).split(`{{${existing.name}}}`).length - 1 : 0;
+  const encoded = Array.from(String(sceneId), char => char.codePointAt(0).toString(16)).join('_');
+  let name = existing && uses === 1 ? existing.name : `studioBackground_${encoded}_${gender}`;
+  if (!existing || uses > 1) {
+    const stem = name;
+    for (let suffix = 2; tokens[name]; suffix++) name = `${stem}_${suffix}`;
+  }
+  const def = { ...(existing?.def || { default: scene.variants?.[label]?.background || scene.background || '' }) };
+  if (url) def[`age:${age}`] = url;
+  else delete def[`age:${age}`];
+  let next;
+  if (Object.keys(def).some(key => key !== 'default')) {
+    tokens[name] = def;
+    next = setVariantField(scene, label, 'background', `{{${name}}}`);
+  } else {
+    delete tokens[name];
+    next = setVariantField(scene, label, 'background', def.default === scene.background ? '' : def.default);
+  }
+  return withTokens({ ...content, scenes: content.scenes.map(item => item.id === sceneId ? next : item) }, tokens);
+}
+
 export function setCharacterAppearance(content, sceneId, index, gender, age, url) {
   if (!CATALOG.gender.includes(gender) || !CATALOG.age.includes(age)) return content;
   const scene = content.scenes.find(item => item.id === sceneId);

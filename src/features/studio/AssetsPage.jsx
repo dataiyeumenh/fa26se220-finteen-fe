@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { ArrowDownWideNarrow, CheckCircle2, Copy, FolderOpen, ImageOff, Images, ListFilter, Music, Search, Upload, X } from 'lucide-react'
 import { auth } from '../../api/auth.api'
 import { canWriteLibrary } from './permissions'
@@ -8,6 +8,8 @@ import { useStudioAction, useStudioResource } from './useStudioResource'
 import { Btn, ConfirmDialog, PageHeader, StateBox, StudioDialog, Tag } from './ui'
 import Pagination from './Pagination'
 import { assetDisplayName } from './assetNames.js'
+import { assetChapters, filterPickerAssets } from './assetPickerFilters.js'
+import './asset-picker.css'
 
 const STATUS = {
   IN_USE: ['Đang dùng', 'Có trong bản game đang chạy.'],
@@ -21,25 +23,30 @@ const fileNameOf = asset => (asset.ref || asset.url || '').split('?')[0].split('
 // Chương gắn tay, nếu không có thì lấy từ nơi đang dùng.
 const chapterOf = asset => asset.chapterCode || [...new Set((asset.usage || []).map(usage => usage.chapterCode).filter(Boolean))].join(', ')
 
-function AssetCard({ asset, onPick }) {
+function AssetCard({ asset, onPick, picking }) {
   const [broken, setBroken] = useState(false)
   const name = nameOf(asset)
   return <button type="button" className={`sp-asset${asset.kind === 'AUDIO' ? ' is-audio' : ''}`} onClick={() => onPick(asset)} aria-label={`${name || fileNameOf(asset)}${chapterOf(asset) ? `, ${chapterOf(asset)}` : ''}, ${STATUS[asset.status]?.[0] || ''}`}>
-    <span className="sp-asset-img">{asset.kind === 'AUDIO' ? <span className="sp-asset-audio-art"><Music size={34} aria-hidden="true" /><span aria-hidden="true">▂ ▅ ▃ ▇ ▄ ▆ ▂ ▅ ▃</span></span> : broken ? <ImageOff size={32} aria-hidden="true" /> : <img src={asset.thumbUrl ?? asset.url} alt="" loading="lazy" onError={() => setBroken(true)} />}<span className="sp-asset-kind">{asset.kind === 'AUDIO' ? 'Âm thanh' : 'Ảnh'}</span><span className="sp-asset-open">{asset.kind === 'AUDIO' ? 'Nghe và xem chi tiết' : 'Xem chi tiết'}</span></span>
+    <span className="sp-asset-img">{asset.kind === 'AUDIO' ? <span className="sp-asset-audio-art"><Music size={34} aria-hidden="true" /><span aria-hidden="true">▂ ▅ ▃ ▇ ▄ ▆ ▂ ▅ ▃</span></span> : broken ? <ImageOff size={32} aria-hidden="true" /> : <img src={asset.thumbUrl ?? asset.url} alt="" loading="lazy" onError={() => setBroken(true)} />}<span className="sp-asset-kind">{asset.kind === 'AUDIO' ? 'Âm thanh' : 'Ảnh'}</span><span className="sp-asset-open">{picking ? 'Chọn ảnh này' : asset.kind === 'AUDIO' ? 'Nghe và xem chi tiết' : 'Xem chi tiết'}</span></span>
     <span className="sp-asset-info"><strong title={name || fileNameOf(asset)}>{name || fileNameOf(asset)}</strong>
       <span className="sp-asset-file-meta">{asset.kind === 'AUDIO' ? 'Bản ghi âm thanh' : asset.width && asset.height ? `${asset.width} × ${asset.height}` : 'Hình ảnh'}{asset.sizeBytes ? ` · ${Math.max(1, Math.round(asset.sizeBytes / 1024))} KB` : ''}</span>
       <span><span className="sp-asset-chapter">{chapterOf(asset) || 'Chưa gắn chương'}</span>{asset.status && <Tag tone={asset.status}>{STATUS[asset.status]?.[0] || asset.status}</Tag>}</span></span>
   </button>
 }
 
-function AssetGrid({ rows, onPick, empty }) {
+function AssetGrid({ rows, onPick, empty, picking = false }) {
   if (!rows.length) return empty
-  return <div className="sp-asset-grid">{rows.map(asset => <AssetCard key={asset.id || asset.ref} asset={asset} onPick={onPick} />)}</div>
+  return <div className="sp-asset-grid">{rows.map(asset => <AssetCard key={asset.id || asset.ref} asset={asset} onPick={onPick} picking={picking} />)}</div>
 }
 
 function UploadForm({ notify, chapter = '', onDone, onCancel }) {
   const { busy, run } = useStudioAction(notify)
   const [files, setFiles] = useState([])
+  const mounted = useRef(false)
+  useEffect(() => {
+    mounted.current = true
+    return () => { mounted.current = false }
+  }, [])
   return <form className="sp-dialog-body" onSubmit={event => {
     event.preventDefault()
     const form = event.currentTarget
@@ -47,7 +54,7 @@ function UploadForm({ notify, chapter = '', onDone, onCancel }) {
     void run(async () => {
       const assets = await uploadFiles(fields.getAll('file'), { label: fields.get('label'), chapterCode: fields.get('chapterCode') }, notify)
       if (!assets.length) throw new Error('Chưa tải lên được ảnh nào. Xem thông báo lỗi của từng tệp rồi thử lại.')
-      form.reset(); setFiles([]); onDone(assets)
+      if (mounted.current) { form.reset(); setFiles([]); onDone(assets) }
       return assets
     }, result => `Đã xong ${result.length} ảnh.`)
   }}><fieldset disabled={busy} className="sp-dialog-body">
@@ -65,17 +72,53 @@ function UploadForm({ notify, chapter = '', onDone, onCancel }) {
 
 /** Dùng trong trình soạn: chọn ảnh cho cảnh. Giữ nguyên API (chapter, onPick, onClose, notify). */
 export function AssetPicker({ chapter, onPick, onClose, notify }) {
-  const [all, setAll] = useState(false)
-  const loader = useCallback(() => fetchAssets({ kind: 'IMAGE', chapter: all ? '' : chapter }), [all, chapter])
+  const defaults = { q: '', chapter: chapter || '', status: '', shape: '', gender: '', age: '', sort: 'newest' }
+  const [filters, setFilters] = useState(defaults)
+  const [page, setPage] = useState(0)
+  const [size, setSize] = useState(24)
+  const galleryRef = useRef(null)
+  const active = useRef(true)
+  useEffect(() => {
+    active.current = true
+    return () => { active.current = false }
+  }, [])
+  const close = () => { active.current = false; onClose() }
+  const pick = asset => {
+    if (!active.current) return
+    active.current = false
+    onPick(asset)
+  }
+  const loader = useCallback(() => fetchAssets({ kind: 'IMAGE' }), [])
   const query = useStudioResource(loader)
   const write = canWriteLibrary(auth.getSnapshot().actor)
-  return <StudioDialog title={`Chọn ảnh cho ${chapter}`} onClose={onClose} wide>
-    <div className="sp-dialog-body">
-      <label className="sp-check"><input type="checkbox" checked={all} onChange={event => setAll(event.target.checked)} />Hiện ảnh của mọi chương</label>
-      {write && <details className="sp-more"><summary>Tải ảnh mới lên</summary><UploadForm notify={notify} chapter={chapter} onDone={assets => onPick(assets[0])} /></details>}
+  const assets = query.data || []
+  const chapters = [...new Set([chapter, ...assets.flatMap(assetChapters)].filter(Boolean))].sort((a, b) => a.localeCompare(b, 'vi', { numeric: true }))
+  const rows = filterPickerAssets(assets, filters)
+  const activePage = Math.min(page, Math.max(0, Math.ceil(rows.length / size) - 1))
+  const toPage = value => { setPage(value); galleryRef.current?.scrollTo({ top: 0 }) }
+  const filter = patch => { setFilters(value => ({ ...value, ...patch })); toPage(0) }
+  const reset = () => { setFilters({ ...defaults, chapter: '' }); toPage(0) }
+  return <StudioDialog title={chapter ? `Chọn ảnh cho ${chapter}` : 'Chọn ảnh từ kho'} onClose={close} className="sp-asset-picker" wide>
+    <div className="sp-picker-body">
+      <section className="sp-picker-filters" aria-label="Bộ lọc ảnh">
+        <label className="sp-picker-search"><Search size={19} aria-hidden="true" /><input autoFocus type="search" aria-label="Tìm ảnh" placeholder="Tìm tên ảnh, tên tệp… (có thể gõ không dấu)" value={filters.q} onChange={event => filter({ q: event.target.value })} /></label>
+        <div className="sp-picker-filter-grid">
+          <label className="sp-field">Chương<select className="sp-input" value={filters.chapter} onChange={event => filter({ chapter: event.target.value })}><option value="">Mọi chương</option>{chapters.map(code => <option key={code} value={code}>{code}</option>)}</select></label>
+          <label className="sp-field">Trạng thái<select className="sp-input" value={filters.status} onChange={event => filter({ status: event.target.value })}><option value="">Mọi trạng thái</option>{Object.entries(STATUS).map(([value, [label]]) => <option key={value} value={value}>{label}</option>)}</select></label>
+          <label className="sp-field">Dáng ảnh<select className="sp-input" value={filters.shape} onChange={event => filter({ shape: event.target.value })}><option value="">Mọi dáng ảnh</option><option value="landscape">Ảnh ngang</option><option value="portrait">Ảnh dọc</option><option value="square">Ảnh vuông</option></select></label>
+          <label className="sp-field">Giới tính<select className="sp-input" value={filters.gender} onChange={event => filter({ gender: event.target.value })}><option value="">Tất cả</option><option value="nam">Nam</option><option value="nu">Nữ</option></select></label>
+          <label className="sp-field">Độ tuổi<select className="sp-input" value={filters.age} onChange={event => filter({ age: event.target.value })}><option value="">Tất cả</option><option value="1">Cấp 1</option><option value="2">Cấp 2</option><option value="3">Cấp 3</option></select></label>
+        </div>
+        <div className="sp-picker-filter-note"><small>Giới tính và độ tuổi lọc theo tên ảnh có “nam / nữ”, “cấp 1 / 2 / 3”.</small><Btn tone="quiet" onClick={reset}><X size={14} aria-hidden="true" />Xóa bộ lọc</Btn></div>
+      </section>
+      <div className="sp-picker-gallery" role="region" aria-label="Ảnh trong kho" tabIndex={0} ref={galleryRef}>
+      {write && <details className="sp-more sp-picker-upload"><summary><Upload size={16} aria-hidden="true" />Tải ảnh mới lên</summary><UploadForm notify={notify} chapter={chapter} onDone={uploaded => pick(uploaded[0])} /></details>}
+      <div className="sp-picker-results"><span role="status">{query.loading ? 'Đang tải ảnh…' : `${rows.length} / ${assets.length} ảnh`}</span><label><ArrowDownWideNarrow size={16} aria-hidden="true" /><select aria-label="Sắp xếp ảnh" value={filters.sort} onChange={event => filter({ sort: event.target.value })}><option value="newest">Mới nhất trước</option><option value="name">Tên A → Z</option><option value="size">Dung lượng lớn nhất</option><option value="resolution">Độ phân giải cao nhất</option></select></label></div>
       {query.loading ? <StateBox kind="loading">Đang tải ảnh…</StateBox>
         : query.error ? <StateBox kind="error" title="Chưa tải được ảnh" actions={<Btn onClick={query.reload}>Thử lại</Btn>}>{query.error}</StateBox>
-        : <AssetGrid rows={query.data || []} onPick={onPick} empty={<StateBox title={`Chưa có ảnh nào của ${chapter}`} actions={!all && <Btn onClick={() => setAll(true)}>Xem ảnh mọi chương</Btn>}>Bật "Hiện ảnh của mọi chương" hoặc tải ảnh mới lên.</StateBox>} />}
+        : <AssetGrid picking rows={rows.slice(activePage * size, (activePage + 1) * size)} onPick={pick} empty={<StateBox title="Không có ảnh khớp bộ lọc" actions={<Btn onClick={reset}>Xem tất cả ảnh</Btn>}>Thử từ khóa khác hoặc bỏ bớt điều kiện lọc.</StateBox>} />}
+      </div>
+      {!query.loading && !query.error && rows.length > 0 && <Pagination total={rows.length} page={activePage} size={size} sizes={[24, 48, 96]} onPage={toPage} onSize={value => { setSize(value); toPage(0) }} noun="ảnh" />}
     </div>
   </StudioDialog>
 }

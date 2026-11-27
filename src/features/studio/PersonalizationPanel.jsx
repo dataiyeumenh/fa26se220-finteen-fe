@@ -148,12 +148,12 @@ export function PersonalizationControls({ active, onActive, answers, onAnswers }
     </div>
     {active ? <>
       <div className="personalization-answers">{Object.entries(CATALOG).map(([dim, values]) => <label key={dim}>
-        <span>{DIMENSION_LABELS[dim]} <small>{dim === 'gender' ? 'Nhân vật nam / nữ' : dim === 'age' ? 'Style nhân vật' : 'Lời thoại & asset mini-game'}</small></span>
+        <span>{DIMENSION_LABELS[dim]} <small>{dim === 'gender' ? 'Nhân vật & ảnh nền' : dim === 'age' ? 'Style nhân vật & ảnh nền' : 'Lời thoại & asset mini-game'}</small></span>
         <select aria-label={DIMENSION_LABELS[dim]} title={CHILD_QUESTIONS[dim]} value={answers[dim]} onChange={event => onAnswers({ ...answers, [dim]: event.target.value })}>
           {values.map(value => <option key={value} value={value}>{VALUE_LABELS[value]}</option>)}
         </select>
       </label>)}</div>
-      <p>Khung cảnh hiển thị theo 3 nhãn đang chọn. Nội dung chưa chỉnh sẽ dùng bản gốc.</p>
+      <p>Ảnh nền và nhân vật theo giới tính, độ tuổi đang chọn; lời thoại và mini-game theo sở thích. Nội dung chưa chỉnh sẽ dùng bản gốc.</p>
     </> : <p>Chỉnh nội dung chung tại khung cảnh. Chọn “Cá nhân hóa” để soạn theo giới tính, tuổi và sở thích.</p>}
   </section>;
 }
