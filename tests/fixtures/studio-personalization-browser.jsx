@@ -67,6 +67,7 @@ const testWidth = Number(new URLSearchParams(location.search).get('width')) || w
 document.body.style.maxWidth = `${testWidth}px`;
 const mount = key => root.render(<MemoryRouter key={key}><div style={{ padding: 16 }}><EditorPage code="CH01" notify={() => {}} /></div></MemoryRouter>);
 const wait = (ms = 80) => new Promise(resolve => setTimeout(resolve, ms));
+const waitForPlayer = async () => { for (let i = 0; i < 500 && !document.querySelector('.vn-player'); i++) await wait(); assert(document.querySelector('.vn-player'), 'Real player did not mount'); };
 const assert = (ok, message) => { if (!ok) throw Error(message); };
 const button = (text, scope = document) => [...scope.querySelectorAll('button')].find(el => el.textContent.trim() === text);
 const click = async el => { assert(el && !el.disabled, 'Missing enabled control'); el.click(); await wait(); };
@@ -89,6 +90,14 @@ async function run() {
   assert(!baseInspector.querySelector('[aria-label="Chọn giọng đọc"]'), 'Personalized voice selector leaked into base sidebar');
   assert(baseInspector.querySelector('#group-voice').textContent === 'Giọng đọc', 'Base voice heading changed');
   assert(!baseInspector.querySelector('.personalization-tabs'), 'Personalization tabs changed the original base sidebar');
+  baseInspector.querySelector('.scene-advanced').open = true;
+  assert(baseInspector.querySelector('.scene-background-picker img') && ![...baseInspector.querySelectorAll('label')].some(label => label.textContent.includes('Ảnh nền (đường dẫn)')), 'Base background should use an image picker instead of a URL input');
+  await click(button('Chọn ảnh nền', baseInspector));
+  for (let i = 0; i < 60 && !document.querySelector('.sp-asset'); i++) await wait();
+  await click(document.querySelector('.sp-asset'));
+  assert(document.querySelector('.stage-frame').style.backgroundImage.includes(customImage), 'Base sidebar picker did not apply its background');
+  await click(document.querySelector('[aria-label="Hoàn tác"]'));
+  assert(document.querySelector('.stage-frame').style.backgroundImage.includes(saved.scenes[0].background), 'Undo did not restore the base background');
   await click(button('Cá nhân hóa'));
   assert(document.querySelector('.scene-inspector-heading').nextElementSibling === document.querySelector('.scene-inspector-tabs'), 'Tabs are not immediately below the scene heading');
   assert(!document.querySelector('.studio-voice-panel--render'), 'Generation panel opened before clicking generate');
@@ -104,11 +113,11 @@ async function run() {
   assert(readingField.compareDocumentPosition(voiceSection.querySelector('.scene-voice-row')) & Node.DOCUMENT_POSITION_FOLLOWING, 'Reading/audio order no longer matches base sidebar');
   assert(document.querySelectorAll('.scene-inspector [aria-label="Cách đọc cho giọng"]').length === 1, 'Reading field duplicated');
   assert(document.querySelectorAll('.stage-dialogue .stage-speaker').length === 1 && document.querySelector('.stage-dialogue .stage-speaker').tagName === 'SELECT', 'Chat did not keep exactly the upper name selector');
-  assert(button('Gợi ý cách đọc (AI)', document.querySelector('.scene-editor-toolbar')) && !button('Gợi ý cách đọc (AI)', document.querySelector('.scene-inspector')), 'AI suggestion is not exclusively in the toolbar');
+  assert(button('Gợi ý cách đọc (AI)', document.querySelector('.scene-editor-tools')) && !button('Gợi ý cách đọc (AI)', document.querySelector('.scene-inspector')), 'AI suggestion is not exclusively in the tools bar');
   assert(!button('Cập nhật giọng'), 'Removed refresh button remained');
   assert(!document.querySelector('.studio-voice-panel--render') && voiceRequests === 0, 'Changing modes opened generation panel or generated clips');
   assert(button('Nhân đôi cảnh') && button('Xóa cảnh') && button('Đổi ảnh nền') && button('Thêm nhân vật'), 'Base scene actions missing in personalized mode');
-  assert(document.querySelector('.scene-target') && document.querySelector('.scene-advanced'), 'Routing or advanced settings missing');
+  assert(document.querySelector('.scene-target') && !document.querySelector('.scene-advanced'), 'Routing should remain and advanced settings should be hidden in personalized mode');
   await setValue([...document.querySelectorAll('.scene-inspector label')].find(el => el.textContent.includes('Tiêu đề cảnh')).querySelector('input'), 'Tiêu đề dùng chung');
   await setValue(document.querySelector('textarea.stage-text'), customText);
   assert(stageText() === customText, 'Preview did not reflect unsaved personalized text');
@@ -152,7 +161,7 @@ async function run() {
   assertDialogueTabHidden();
   assert(!document.querySelector('[aria-label="Tên nhân vật theo nhãn"]'), 'Character inputs leaked into mini-game tab');
   await click(button('Lời thoại', document.querySelector('.personalization-tabs')));
-  assert(document.querySelector('.scene-current-voice') && document.querySelector('.scene-inspector-actions') && document.querySelector('.scene-advanced'), 'Dialogue controls were not restored after tab switch');
+  assert(document.querySelector('.scene-current-voice') && document.querySelector('.scene-inspector-actions') && !document.querySelector('.scene-advanced'), 'Dialogue controls should return without advanced settings after a personalized tab switch');
   assert(stageText() === customText, 'Tab switch discarded the dialogue edit');
   await click(button('Nhân vật', document.querySelector('.personalization-tabs')));
   await choose('Giới tính', 'FEMALE');
@@ -174,15 +183,14 @@ async function run() {
   await click(document.querySelector('[aria-label="Làm lại"]'));
   assert(stageImage() === customImage, 'Redo did not restore custom appearance');
   await click(button('Lời thoại', document.querySelector('.personalization-tabs')));
-  await click(button('Chơi thử từ cảnh này'));
+  await click(button('Chơi thử từ cảnh này')); await waitForPlayer();
   assert(document.querySelector('[role="dialog"]').textContent.includes(customText), 'Play used base dialogue');
-  assert(document.querySelector('.studio-play-stage').style.backgroundImage.includes(customImage), 'Play did not use the personalized background');
+  assert(document.querySelector('.vn-stage img[alt="Ảnh nền cảnh"]')?.getAttribute('src') === customImage, 'Play did not use the personalized background');
   const playBounds = document.querySelector('[role="dialog"]').getBoundingClientRect();
   assert(playBounds.width <= window.innerWidth && playBounds.height <= window.innerHeight, 'Play dialog exceeded the viewport');
   if (testWidth > 1000) assert(playBounds.width > 1000, 'Editor play dialog still uses the small shared popup width');
-  const stageBounds = document.querySelector('.studio-play-stage').getBoundingClientRect();
-  assert(Math.abs(stageBounds.width / stageBounds.height - 16 / 9) < 0.02, 'Enlarged play stage distorted its aspect ratio');
-  await click(button('Đóng', document.querySelector('[role="dialog"]')));
+  assert(getComputedStyle(document.querySelector('.vn-stage img[alt="Ảnh nền cảnh"]')).objectFit === 'contain', 'Real player distorted its background');
+  await click(document.querySelector('.vn-player [aria-label="Quay lại trình soạn"]'));
   await click(button('Lưu nháp'));
   assert(writes === 1, 'Draft was not saved');
   assert(saved.scenes[0].background === baseBackground && saved.scenes[0].variants['gender:FEMALE'].background.startsWith('{{studioBackground_'), 'Draft lost the personalized background or overwrote the base');
@@ -193,11 +201,11 @@ async function run() {
   assert(saved.scenes[0].title === 'Tiêu đề dùng chung', 'Common title not saved');
   await click(button('Sinh giọng đọc'));
   assert(voiceRequests === 1, 'Generate required an extra confirmation or sent duplicate requests');
-  await click(button('Chơi thử từ cảnh này'));
-  assert(!document.querySelector('[aria-label="Nghe giọng đọc cảnh đang chơi thử"]'), 'Pending preview exposed an old recording');
+  await click(button('Chơi thử từ cảnh này')); await waitForPlayer();
+  assert(!document.querySelector('[aria-label="Giọng đọc của cảnh"]'), 'Pending preview exposed an old recording');
   for (let i = 0; i < 180 && !document.querySelector('.scene-voice-row audio'); i++) await wait();
-  assert(document.querySelector('[aria-label="Nghe giọng đọc cảnh đang chơi thử"]')?.getAttribute('src') === generatedAudio, 'Open play dialog did not receive the completed recording');
-  await click(button('Đóng', document.querySelector('[role="dialog"]')));
+  assert(document.querySelector('[aria-label="Giọng đọc của cảnh"]')?.getAttribute('src') === generatedAudio, 'Open play dialog did not receive the completed recording');
+  await click(document.querySelector('.vn-player [aria-label="Quay lại trình soạn"]'));
   assert(document.querySelector('.scene-voice-row audio')?.getAttribute('src') === generatedAudio, 'Generated personalized voice not playable in sidebar');
   assert(document.querySelectorAll('.scene-inspector audio').length === 1 && document.querySelector('.scene-current-voice audio')?.getAttribute('src') === generatedAudio, 'Inspector did not show exactly one player for the selected scene');
   assert(!document.querySelector('.scene-current-voice').textContent.includes('cần bấm Sinh giọng'), 'Selected-scene player still claimed the completed recording was missing');
@@ -208,9 +216,9 @@ async function run() {
   assert(document.querySelector('.studio-voice-item audio')?.getAttribute('src') === generatedAudio, 'Ready voice disappeared from generation list');
   assert(document.querySelectorAll('.studio-voice-panel--render .studio-voice-item').length === 1, 'Previously READY recordings leaked into the new batch');
   assert(!document.querySelector('.studio-voice-panel--render').textContent.includes(originalText), 'Old dialogue appeared in the render results');
-  await click(button('Chơi thử từ cảnh này'));
-  assert(document.querySelector('[aria-label="Nghe giọng đọc cảnh đang chơi thử"]')?.getAttribute('src') === generatedAudio, 'Play dialog did not expose generated recording');
-  await click(button('Đóng', document.querySelector('[role="dialog"]')));
+  await click(button('Chơi thử từ cảnh này')); await waitForPlayer();
+  assert(document.querySelector('[aria-label="Giọng đọc của cảnh"]')?.getAttribute('src') === generatedAudio, 'Play dialog did not expose generated recording');
+  await click(document.querySelector('.vn-player [aria-label="Quay lại trình soạn"]'));
   await click(button('Đóng', document.querySelector('.studio-voice-panel--render')));
   assert(!document.querySelector('.studio-voice-panel--render') && document.querySelector('.scene-current-voice audio'), 'Closing render results removed selected-scene playback');
   await click(button('Sinh giọng đọc'));
@@ -251,11 +259,11 @@ async function run() {
   await click(button('Lưu nháp'));
   await click(button('Cá nhân hóa'));
   assert(document.querySelector('[aria-label="Nội dung khi bấm xem"]').value === personalizedInspectText, 'Editing the base discarded an inspect variant');
-  await click(button('Chơi thử từ cảnh này'));
-  await click(button('Xem phí học thể thao', document.querySelector('[role="dialog"]')));
+  await click(button('Chơi thử từ cảnh này')); await waitForPlayer();
+  await click(document.querySelector('.vn-inspect-button'));
   assert(document.querySelector('[role="dialog"]').textContent.includes(personalizedInspectText), 'Inspect play preview used base text');
-  assert(document.querySelector('.studio-play-inspect-images img')?.getAttribute('src') === customImage, 'Inspect play preview used base image');
-  await click(button('Đóng', document.querySelector('[role="dialog"]')));
+  assert(document.querySelector('.vn-inspect-modal img')?.getAttribute('src') === customImage, 'Inspect play preview used base image');
+  await click(document.querySelector('.vn-player [aria-label="Quay lại trình soạn"]'));
   mount(2); await wait(200);
   await click(button('Cá nhân hóa'));
   assert(!document.querySelector('.studio-voice-panel--render'), 'Reload automatically showed old render results');
@@ -322,10 +330,11 @@ async function run() {
   await click(document.querySelector('[aria-label="Đưa lựa chọn 1 xuống"]'));
   assert(document.querySelector('[aria-label="Chữ lựa chọn 1"]').value === 'Tiết kiệm để mua bóng', 'Reordering lost choice variants');
   await click(document.querySelector('[aria-label="Đưa lựa chọn 2 lên"]'));
-  await click(button('Chơi thử từ cảnh này'));
-  await click(button('Mua giày thể thao', document.querySelector('[role="dialog"]')));
-  assert(document.querySelector('[role="dialog"]').textContent.includes('Đang ở cảnh 5'), 'Personalized choice changed the destination');
-  await click(button('Đóng', document.querySelector('[role="dialog"]')));
+  await click(button('Chơi thử từ cảnh này')); await waitForPlayer();
+  await click([...document.querySelectorAll('.vn-choice-copy')].find(el => el.textContent.trim() === 'Mua giày thể thao')?.closest('button'));
+  if (button('Đã hiểu', document.querySelector('.vn-player'))) await click(button('Đã hiểu', document.querySelector('.vn-player')));
+  assert(document.querySelector('.vn-player')?.dataset.sceneId === 'END', 'Personalized choice changed the destination');
+  await click(document.querySelector('.vn-player [aria-label="Quay lại trình soạn"]'));
   mount(3); await wait(200);
   await click(document.querySelector('[aria-label="Cảnh 4: Mua sắm"]'));
   await click(button('Cá nhân hóa'));
@@ -334,8 +343,43 @@ async function run() {
   assert(document.querySelector('[aria-label="Chữ lựa chọn 1"]').value === 'Mua đồ dùng', 'Unedited interest did not inherit the updated base choice');
   assert(document.querySelector('.scene-editor').getBoundingClientRect().right <= testWidth + 1, 'Editor overflowed the requested width');
   assert(document.documentElement.scrollWidth <= window.innerWidth + 1, 'Editor overflowed the viewport horizontally');
+  await verifyLegacyDirectEditing();
   assert(errors.length === 0, errors.join('; '));
   document.getElementById('result').textContent = JSON.stringify({ status: 'PASS', writes, checks: ['readable grouped warnings and direct scene/label navigation', 'selected-scene dialogue and playback', 'render panel only after generate', 'new render batch excludes old READY clips', 'all-ready generates nothing', 'shared scene tools', 'personalized names', 'live preview', 'interest fallback', 'gender + age appearance', 'undo/redo', 'key-only READY audio in sidebar/list/play', 'save/reload', 'mini-game asset and scoring'], errors });
+}
+async function verifyLegacyDirectEditing() {
+  warningMode = false;
+  saved.personalization = { ...saved.personalization, tokens: { ...saved.personalization?.tokens,
+    legacyDialogue: { default: originalText }, legacySport: { default: customText },
+    legacyItem: { default: 'Tai nghe' }, legacySportItem: { default: 'Giày thể thao' }, legacyItemImage: { default: originalImage },
+  } };
+  saved.scenes[0].text = '{{legacyDialogue}}';
+  saved.scenes[0].variants = { ...saved.scenes[0].variants, 'interest:SPORT': { ...saved.scenes[0].variants?.['interest:SPORT'], text: '{{legacySport}}' } };
+  saved.scenes[1].game.items[0].label = '{{legacyItem}}';
+  saved.scenes[1].game.items[0].image = '{{legacyItemImage}}';
+  saved.scenes[1].game.items[0].variants = { ...saved.scenes[1].game.items[0].variants, 'interest:SPORT': { ...saved.scenes[1].game.items[0].variants?.['interest:SPORT'], label: '{{legacySportItem}}' } };
+  mount(4); await wait(250);
+  assert(!button('Từ thay theo bé'), 'Removed shared-value editor is still exposed');
+  assert(stageText() === originalText, 'Base editor exposed a legacy reference instead of readable text');
+  await click(button('Cá nhân hóa'));
+  assert(stageText() === customText, 'Personalization did not resolve the legacy value');
+  await setValue(document.querySelector('textarea.stage-text'), 'Bóng thể thao giá 250.000đ!');
+  await click(button('Lưu nháp'));
+  assert(saved.scenes[0].text === '{{legacyDialogue}}' && saved.scenes[0].variants['interest:SPORT'].text === 'Bóng thể thao giá 250.000đ!', 'Direct edit changed the legacy base or failed to save a plain variant');
+  await choose('Sở thích', 'TECH');
+  assert(stageText() === originalText, 'Direct editing changed another interest');
+  await choose('Sở thích', 'SPORT');
+  await click(document.querySelector('[aria-label="Cảnh 2: Phân loại"]'));
+  await click(button('Mini-game', document.querySelector('.personalization-tabs')));
+  await click(button('Chỉnh mini-game theo sở thích'));
+  const field = [...document.querySelectorAll('.studio-variant textarea')].find(el => el.value === 'Giày thể thao');
+  assert(field, 'Minigame personalization exposed a legacy reference instead of editable text');
+  assert(document.querySelector('.studio-variant-image img[alt="Ảnh gốc"]')?.getAttribute('src') === originalImage, 'Legacy image was not resolved for direct editing');
+  await setValue(field, 'Bóng đá');
+  await click(button('Xong', document.querySelector('[role="dialog"]')));
+  await click(button('Lưu nháp'));
+  assert(saved.scenes[1].game.items[0].variants['interest:SPORT'].label === 'Bóng đá', 'Direct minigame text was not saved');
+  assert(saved.personalization.tokens.legacyItem.default === 'Tai nghe', 'Editing a scene changed the shared definitions');
 }
 async function previewWarnings() {
   mount(1);

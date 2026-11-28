@@ -6,6 +6,8 @@ import {
   ArrowDown,
   ArrowUp,
   Copy,
+  ChevronDown,
+  FileSearch,
   GripVertical,
   ImagePlus,
   Lock,
@@ -15,7 +17,7 @@ import {
 } from "lucide-react";
 import { SceneThumb } from "./SceneDialogs";
 import { conditionSentence, isStructured, sceneLabel, vnd } from "./storyOps";
-import { patchChoiceText, patchInspect } from './variantOps.js';
+import { INSPECT_CONTENT_GROUPS, INSPECT_CONTENT_LABELS, patchChoiceText, patchInspect } from './variantOps.js';
 
 function optionProblems(option, scenes) {
   const out = [];
@@ -318,32 +320,72 @@ export function ChoicePanel({
   );
 }
 
-/** cảnh Bấm để xem: chữ và ảnh hiện ra khi trẻ bấm nút — trước đây không sửa được ở chế độ đơn giản */
+function InspectContentFields({ value, onChange, write, onPickImage, personalized }) {
+  if (typeof value === 'string') return <label className="inspect-text">
+    Nội dung
+    <textarea aria-label="Nội dung" rows={2} disabled={!write || personalized} value={value} onChange={event => onChange(event.target.value)} />
+    {personalized && <small>Nội dung dùng chung. Chuyển sang Bản gốc để sửa dòng này.</small>}
+  </label>;
+  if (Array.isArray(value)) return <div className="inspect-content-list">{value.map((item, index) => <details key={index} className="inspect-content-item" open={index === 0}>
+    <summary>
+      <span className="inspect-item-number">{index + 1}</span>
+      {(item?.src || item?.image) && <img className="inspect-item-thumbnail" src={item.src || item.image} alt="" />}
+      <span className="inspect-item-heading"><strong>{item?.caption || item?.label || item?.title || (Array.isArray(item) ? item[0] : null) || 'Nội dung'}</strong><small>{item?.description || item?.text || 'Bấm để chỉnh nội dung'}</small></span>
+      <ChevronDown size={17} className="inspect-item-chevron" aria-hidden="true" />
+    </summary>
+    <InspectContentFields value={item} personalized={personalized} write={write} onPickImage={onPickImage}
+      onChange={patch => { const partial = []; partial[index] = patch; onChange(partial); }} />
+  </details>)}</div>;
+  if (!value || typeof value !== 'object') return null;
+  const mediaKeys = ['src', 'image', 'popupImage'].filter(key => typeof value[key] === 'string');
+  const textKeys = Object.keys(INSPECT_CONTENT_LABELS).filter(key => !mediaKeys.includes(key) && typeof value[key] === 'string');
+  return <div className={`inspect-content-fields ${mediaKeys.length ? 'has-media' : ''}`}>
+    {!!mediaKeys.length && <div className="inspect-content-media">{mediaKeys.map(key => <figure className="inspect-image" key={key}>
+          {value[key] ? <img src={value[key]} alt={value.caption || value.label || 'Ảnh khi mở thông tin'} /> : <span>Chưa có ảnh</span>}
+          <button type="button" disabled={!write} onClick={() => onPickImage(url => onChange({ [key]: url }))}><ImagePlus size={16} /> {value[key] ? 'Đổi ảnh' : 'Chọn ảnh'}</button>
+        </figure>)}</div>}
+    {!!textKeys.length && <div className="inspect-content-copy">{textKeys.map(key => <label className="inspect-text" key={key}>{INSPECT_CONTENT_LABELS[key]}
+          <textarea aria-label={INSPECT_CONTENT_LABELS[key]} rows={key === 'text' || key === 'description' || key === 'message' ? 3 : 2} disabled={!write} value={value[key]} onChange={event => onChange({ [key]: event.target.value })} />
+        </label>)}</div>}
+    {Object.entries(INSPECT_CONTENT_GROUPS).filter(([key]) => key !== 'popupImages' && value[key] != null).map(([key, label]) => <section className="inspect-content-group" key={key} aria-label={label}>
+      <h3>{label}</h3>
+      <InspectContentFields value={value[key]} personalized={personalized} write={write} onPickImage={onPickImage} onChange={patch => onChange({ [key]: patch })} />
+    </section>)}
+  </div>;
+}
+
+/** Nội dung mở ra từ inspect được gắn vào mọi loại cảnh, kể cả lời thoại và câu hỏi. */
 export function InspectPanel({ scene, write, update, onPickImage, onChange, scopeLabel }) {
   const inspect = scene.inspect || {};
-  const image = inspect.popupImage || inspect.popupImages?.[0]?.src;
+  const image = inspect.popupImage;
   const set = (patch) => onChange ? onChange(patch) : update({ inspect: patchInspect(inspect, patch) });
   return (
-    <section className="content-panel" aria-labelledby="inspect-panel-title">
+    <section className="content-panel inspect-panel" aria-labelledby="inspect-panel-title">
       <header className="content-panel-head">
+        <span className="inspect-panel-icon" aria-hidden="true"><FileSearch size={22} /></span>
+        <div>
+        <span className="inspect-panel-eyebrow">NỘI DUNG MỞ RA KHI BẤM</span>
         <h2 id="inspect-panel-title">
           Khi trẻ bấm “{inspect.buttonText || "Bấm để xem"}” sẽ thấy
         </h2>
+        <p>Sửa chữ trên nút, thông tin và ảnh trẻ sẽ thấy trong cửa sổ mở ra.</p>
+        </div>
       </header>
       {scopeLabel && <p className="inspect-personalization-hint">{scopeLabel} · Ảnh, chữ trên nút và nội dung hiện ra được chỉnh riêng cho nhãn này.</p>}
-      <div className="inspect-body">
-        <figure className="inspect-image">
+      <div className="inspect-overview">
+      <label className="inspect-text inspect-trigger-field">Chữ trên nút mở thông tin
+        <input aria-label="Tên nút mở thông tin" disabled={!write} value={inspect.buttonText || ''} onChange={event => set({ buttonText: event.target.value })} />
+        <small>Đây là nút nằm dưới lời thoại trong khung cảnh.</small>
+      </label>
+      <div className={`inspect-body ${image || (!inspect.popupImages?.length && !inspect.cards?.length) ? 'has-image' : ''}`}>
+        {(image || (!inspect.popupImages?.length && !inspect.cards?.length)) && <figure className="inspect-image">
           {image ? <img src={image} alt="" /> : <span>Chưa có ảnh</span>}
           {write && (
             <button
               type="button"
               onClick={() =>
                 onPickImage((url) =>
-                  inspect.popupImages?.length && !inspect.popupImage
-                    ? set({
-                        popupImages: [{ src: url }],
-                      })
-                    : set({ popupImage: url }),
+                  set({ popupImage: url }),
                 )
               }
             >
@@ -351,12 +393,12 @@ export function InspectPanel({ scene, write, update, onPickImage, onChange, scop
               {image ? "Đổi ảnh" : "Chọn ảnh"}
             </button>
           )}
-        </figure>
+        </figure>}
         <label className="inspect-text">
           Chữ hiện ra
           <textarea
             aria-label="Nội dung khi bấm xem"
-            rows={4}
+            rows={3}
             disabled={!write}
             value={inspect.dataText || ""}
             placeholder="Thông tin trẻ đọc khi bấm xem"
@@ -364,6 +406,13 @@ export function InspectPanel({ scene, write, update, onPickImage, onChange, scop
           />
         </label>
       </div>
+      </div>
+      {!!inspect.popupImages?.length && <section className="inspect-content-group" aria-label="Các ảnh khi mở">
+        <h3>Các ảnh khi mở ({inspect.popupImages.length})</h3>
+        <InspectContentFields value={inspect.popupImages} write={write} personalized={!!scopeLabel} onPickImage={onPickImage} onChange={popupImages => set({ popupImages })} />
+      </section>}
+      <InspectContentFields value={Object.fromEntries(Object.entries(inspect).filter(([key]) => !['buttonText', 'dataText', 'popupImage', 'popupImages'].includes(key)))}
+        write={write} personalized={!!scopeLabel} onPickImage={onPickImage} onChange={set} />
     </section>
   );
 }

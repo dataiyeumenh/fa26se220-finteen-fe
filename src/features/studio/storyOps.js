@@ -15,7 +15,7 @@ export const TYPE_LABEL = {
   choice: "Câu hỏi lựa chọn",
   inspect: "Bấm để xem",
   minigame: "Mini-game",
-  conditional: "Rẽ nhánh tự động",
+  conditional: "Chọn cảnh theo hành động",
   reflection: "Câu hỏi suy ngẫm",
   summary: "Tổng kết",
   cutscene: "Cảnh chuyển",
@@ -37,7 +37,7 @@ export const sceneLabel = (scene) =>
 export const isLinear = (scene) =>
   !["choice", "conditional", "ending"].includes(typeOf(scene));
 export const nextKeyOf = (scene) =>
-  scene.onPassSceneId && !scene.nextSceneId ? "onPassSceneId" : "nextSceneId";
+  scene.onPassSceneId !== undefined && !scene.nextSceneId ? "onPassSceneId" : "nextSceneId";
 
 export function exitsOf(scene) {
   const type = typeOf(scene);
@@ -134,6 +134,50 @@ export function insertLinked(scenes, index, scene) {
   setOut(fresh, base.id);
   copy.splice(index, 0, fresh);
   return { scenes: copy, index };
+}
+
+/** Chèn đúng khe được chọn, trước cảnh position; cuối danh sách không phụ thuộc cảnh đang mở. */
+export function insertAtPosition(scenes, position, scene) {
+  const copy = cloneScenes(scenes);
+  const index = Math.max(0, Math.min(position, copy.length));
+  const fresh = { ...scene };
+  const target = copy[index];
+  if (target) {
+    relink(copy, target.id, fresh.id);
+    setOut(fresh, target.id);
+  } else {
+    const previous = copy.at(-1);
+    // An ending remains an ending, and a branch keeps its chosen destinations.
+    if (previous && isLinear(previous) && !previous[nextKeyOf(previous)])
+      previous[nextKeyOf(previous)] = fresh.id;
+    setOut(fresh, null);
+  }
+  copy.splice(index, 0, fresh);
+  return { scenes: copy, index };
+}
+
+/** A straight chapter can follow its page order. Explicit branches/jumps keep their destinations. */
+export function followsPageOrder(scenes) {
+  return scenes.every((scene, index) => {
+    if (!isLinear(scene)) return typeOf(scene) === 'ending';
+    return (scene[nextKeyOf(scene)] || null) === (scenes[index + 1]?.id || null);
+  });
+}
+
+/** position is a gap in the ORIGINAL list (0..length), including its final gap. */
+export function moveScene(scenes, from, position) {
+  if (!scenes[from]) return { scenes, index: 0, linked: false };
+  const gap = Math.max(0, Math.min(position, scenes.length));
+  const index = gap > from ? gap - 1 : gap;
+  if (index === from) return { scenes, index, linked: false };
+  const linked = followsPageOrder(scenes);
+  const copy = cloneScenes(scenes);
+  const [moved] = copy.splice(from, 1);
+  copy.splice(index, 0, moved);
+  if (linked) copy.forEach((scene, i) => {
+    if (isLinear(scene)) scene[nextKeyOf(scene)] = copy[i + 1]?.id || null;
+  });
+  return { scenes: copy, index, linked };
 }
 
 /** xoá cảnh: mọi chỗ dẫn tới nó nối thẳng sang cảnh đi tiếp; xoá cảnh đầu thì cảnh đi tiếp lên đầu */
@@ -306,6 +350,70 @@ export function questionsOf(scenes) {
   return groups;
 }
 
+/** Tên hành động lấy từ nơi thực sự bật cờ; không đoán ý nghĩa từ mã tiếng Anh. */
+export function conditionActions(scenes) {
+  const catalog = new Map();
+  const resettable = new Set();
+  const add = (name, source) => {
+    if (!catalog.has(name)) catalog.set(name, { var: name, label: source.label, location: source.location, sources: [] });
+    const item = catalog.get(name);
+    if (!item.sources.some(s => s.label === source.label && s.location === source.location)) item.sources.push(source);
+  };
+  scenes.forEach((scene, index) => {
+    const location = `Cảnh ${index + 1}: ${sceneLabel(scene)}`;
+    const record = (flags, label) => {
+      const entries = Array.isArray(flags) ? flags.map(key => [key, true]) : Object.entries(flags || {});
+      for (const [key, value] of entries) {
+        if (value === true) add(`flag:${key}`, { label, location });
+        else resettable.add(`flag:${key}`);
+      }
+    };
+    record(scene.setFlags, `Xem cảnh “${sceneLabel(scene)}”`);
+    if (scene.inspect) {
+      const label = `Bấm “${scene.inspect.buttonText || 'Xem thông tin'}”`;
+      if (scene.inspect.id) add(`inspected:${scene.inspect.id}`, { label, location });
+      record(scene.inspect.setFlags, label);
+    }
+    for (const option of scene.options || []) {
+      const label = `Chọn “${option.text || option.label || 'câu trả lời chưa có nội dung'}”`;
+      // setFlags được áp dụng sau option.flag trong bộ chơi.
+      record({ ...(option.flag ? { [option.flag]: true } : {}), ...option.setFlags }, label);
+      if (option.flag) resettable.add(`flag:${option.flag}`);
+    }
+    record(scene.game?.onComplete?.setFlags, `Hoàn thành trò chơi “${scene.game?.title || sceneLabel(scene)}”`);
+  });
+  return [...catalog.values()].map(item => ({ ...item, resettable: resettable.has(item.var) }));
+}
+
+/** Hai cách ghi nhận cùng một lần mở thông tin chỉ cần một mục trong danh sách.
+ * Giữ mã đang được soạn; cờ có thể bị xoá không được gộp với lịch sử mở thẻ. */
+export function conditionActionChoices(actions, currentVar) {
+  const signature = item => item.resettable ? item.var : JSON.stringify(item.sources.map(s => [s.label, s.location]).sort());
+  const current = actions.find(item => item.var === currentVar);
+  const seen = new Set();
+  return actions.filter(item => {
+    const key = signature(item);
+    if (current && signature(current) === key) return item.var === currentVar;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+export function conditionOutcomeLabels(condition) {
+  const group = condition?.all || condition?.any;
+  if (group?.length === 1) return conditionOutcomeLabels(group[0]);
+  if (group?.length === 0) return condition.all
+    ? { yes: 'Luôn xem cảnh này', no: 'Không sử dụng' }
+    : { yes: 'Không sử dụng', no: 'Luôn xem cảnh này' };
+  if (/^(flag|inspected):/.test(condition?.var)) {
+    const positive = (condition.value !== false) !== (condition.op === '!=');
+    return positive ? { yes: 'Nếu trẻ đã làm', no: 'Nếu trẻ chưa làm' }
+      : { yes: 'Nếu trẻ chưa làm', no: 'Nếu trẻ đã làm' };
+  }
+  return { yes: 'Nếu đáp ứng yêu cầu', no: 'Nếu không đáp ứng' };
+}
+
 export function conditionSentence(condition, scenes, statLabels = {}) {
   if (!condition) return "luôn luôn";
   if (!isStructured(condition))
@@ -314,13 +422,21 @@ export function conditionSentence(condition, scenes, statLabels = {}) {
   if (group)
     return (
       group
-        .map((item) => conditionSentence(item, scenes, statLabels))
-        .join(condition.all ? " và " : " hoặc ") || "luôn luôn"
+        .map((item) => {
+          const text = conditionSentence(item, scenes, statLabels);
+          return item.all || item.any ? `(${text})` : text;
+        })
+        .join(condition.all ? " và " : " hoặc ") || (condition.all ? "luôn luôn" : "không bao giờ")
     );
   const name = String(condition.var);
   const yes = (condition.value === false) === (condition.op === "!=");
-  if (name.startsWith("flag:"))
-    return `${yes ? "đã" : "chưa"} “${name.slice(5).replace(/_/g, " ")}”`;
+  if (name.startsWith("flag:")) {
+    const action = conditionActions(scenes).find(item => item.var === name);
+    const labels = [...new Set(action?.sources.map(source => source.label) || [])];
+    if (labels.length > 1) return `Trẻ ${yes ? 'đã thực hiện ít nhất một' : 'chưa thực hiện các'} việc sau: ${labels.join('; ')}`;
+    const label = action?.label || 'Hoàn thành việc chưa có mô tả';
+    return `Trẻ ${yes ? "đã" : "chưa"} ${label.charAt(0).toLowerCase() + label.slice(1)}`;
+  }
   if (name.startsWith("inspected:")) {
     const card = scenes.find((scene) => scene.inspect?.id === name.slice(10));
     return `${yes ? "đã" : "chưa"} mở “${card?.inspect?.buttonText || name.slice(10)}”`;

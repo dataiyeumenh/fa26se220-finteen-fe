@@ -1,7 +1,7 @@
 // Hộp thoại của trình soạn: chọn cảnh bằng ảnh, thêm cảnh theo loại, ảnh hưởng, khoá / điều kiện, chơi thử.
 // Ảnh hưởng và khoá làm trên BẢN SAO — chỉ ghi khi bấm Xong; đóng hộp thoại là không đổi gì.
 import { useState } from "react";
-import { MINI_GAME_FRAMES, miniGameKindOf } from "../../pages/Kid/Dashboard/components/game/miniGameFrames.js";
+import ConditionFields from "./ConditionFields";
 import {
   Clapperboard,
   Flag,
@@ -11,7 +11,6 @@ import {
   ListChecks,
   MessageSquare,
   Plus,
-  RotateCcw,
   Search,
   Split,
   SquareMousePointer,
@@ -21,14 +20,11 @@ import { Dialog, DialogContent, DialogTitle } from "../../components/ui/dialog";
 import {
   TYPE_LABEL,
   conditionSentence,
-  evalCondition,
+  conditionOutcomeLabels,
   isStructured,
-  nextKeyOf,
   questionsOf,
   sceneLabel,
   typeOf,
-  vnd,
-  OP_LABEL,
 } from "./storyOps";
 
 const TYPE_HELP = {
@@ -122,7 +118,7 @@ export function ScenePickerDialog({
           autoFocus
           value={query}
           onChange={(event) => setQuery(event.target.value)}
-          placeholder="Tìm theo chữ hoặc mã cảnh"
+          placeholder="Tìm theo tên hoặc nội dung cảnh"
           aria-label="Tìm cảnh"
         />
       </label>
@@ -138,7 +134,7 @@ export function ScenePickerDialog({
             <span>
               <b>Cảnh {index + 1}</b> {sceneLabel(scene)}
             </span>
-            <small>{scene.id}</small>
+            <small>{TYPE_LABEL[typeOf(scene)] || 'Cảnh trong câu chuyện'}</small>
           </button>
         ))}
       </div>
@@ -150,7 +146,7 @@ export function ScenePickerDialog({
 }
 
 /** thêm cảnh: loại lấy từ khuôn BE (sceneTypes); mini-game chọn loại ở bước 2 */
-export function AddSceneDialog({ schema, linear, number, onAdd, onClose }) {
+export function AddSceneDialog({ schema, position, scenes, onAdd, onClose }) {
   const [gamePick, setGamePick] = useState(false);
   const types = Object.keys(schema?.sceneTypes || TYPE_LABEL);
   if (gamePick)
@@ -176,17 +172,17 @@ export function AddSceneDialog({ schema, linear, number, onAdd, onClose }) {
   return (
     <StudioDialog
       title={
-        linear
-          ? `Thêm cảnh sau cảnh ${number}`
-          : `Thêm cảnh trước cảnh ${number}`
+        !scenes.length ? 'Thêm cảnh đầu tiên'
+          : position === scenes.length ? 'Thêm cảnh vào cuối chương'
+          : position === 0 ? 'Thêm cảnh vào đầu chương'
+          : `Thêm cảnh giữa cảnh ${position} và ${position + 1}`
       }
       onClose={onClose}
       wide
     >
-      {!linear && (
+      {scenes[position - 1]?.type === 'ending' && (
         <p className="studio-muted">
-          Cảnh {number} là câu hỏi hoặc rẽ nhánh nên cảnh mới đứng ngay trước
-          nó, không cắt nhánh nào.
+          Cảnh mới nằm sau cảnh Kết chương. Để trẻ chơi tới đây, hãy chỉnh đường đi trong Bản đồ truyện hoặc chuyển cảnh Kết chương xuống cuối.
         </p>
       )}
       <div className="studio-kind-grid">
@@ -329,19 +325,6 @@ export function EffectDialog({ option, stats, onSave, onClose }) {
   );
 }
 
-const KINDS = [
-  ["money", "Tiền của An"],
-  ["miniGameScore", "Điểm mini-game"],
-  ["choice:", "Câu hỏi đã chọn"],
-  ["inspected:", "Đã mở thẻ / vật"],
-  ["flag:", "Đã xảy ra việc"],
-];
-const kindOf = (name) =>
-  String(name).includes(":")
-    ? String(name).slice(0, String(name).indexOf(":") + 1)
-    : name;
-
-/** chỉ câu hỏi đứng TRƯỚC chỗ đặt điều kiện — câu phía sau không bao giờ "đã chọn" được */
 function questionsBefore(scenes, contextId) {
   const all = questionsOf(scenes);
   if (!contextId) return all;
@@ -370,671 +353,53 @@ function questionsBefore(scenes, contextId) {
   );
 }
 
-/** điều kiện bằng form (một tầng all / any); có câu nhắn khi dùng làm khoá */
-export function ConditionDialog({
-  title,
-  value,
-  reason,
-  withReason,
-  scenes,
-  stats,
-  contextId,
-  onSave,
-  onRemove,
-  onClose,
-}) {
-  const start = !value
-    ? { all: [] }
-    : value.var
-      ? { all: [value] }
-      : structuredClone(value);
-  const [cond, setCond] = useState(start);
+/** Soạn yêu cầu theo hành động; giữ các nhóm lồng nhau khi chỉnh sửa. */
+export function ConditionDialog({ title, value, reason, withReason, scenes, stats = [], contextId, outcomes, onSave, onRemove, onClose }) {
+  const [cond, setCond] = useState(() => !value ? { all: [] } : value.var ? { all: [structuredClone(value)] } : structuredClone(value));
   const [message, setMessage] = useState(reason || "");
   const [error, setError] = useState("");
-  const nested =
-    (value && !isStructured(value)) ||
-    (start.all || start.any || []).some((item) => item.all || item.any);
-  const mode = cond.any ? "any" : "all",
-    list = cond[mode] || [];
   const questions = questionsBefore(scenes, contextId);
-  const inspects = Object.fromEntries(
-    scenes
-      .filter((scene) => scene.inspect?.id)
-      .map((scene) => [
-        scene.inspect.id,
-        scene.inspect.buttonText || scene.inspect.id,
-      ]),
-  );
-  const flags = [
-    ...new Set(
-      scenes.flatMap((scene) => [
-        ...Object.keys(scene.setFlags || {}),
-        ...(scene.options || []).flatMap((option) =>
-          Object.keys(option.setFlags || {}),
-        ),
-      ]),
-    ),
-  ];
-  const kinds = [
-    ...KINDS.slice(0, 2),
-    ...stats.map((stat) => [stat.key, stat.label]),
-    ...KINDS.slice(2),
-  ];
-  const setList = (next) => setCond({ [mode]: next });
-  const setLeaf = (index, patch) =>
-    setList(
-      list.map((leaf, k) => (k === index ? { ...leaf, ...patch } : leaf)),
-    );
-  const changeKind = (index, kind) => {
-    if (kind === "choice:") {
-      const group = Object.keys(questions)[0] || "";
-      setLeaf(index, {
-        var: `choice:${group}`,
-        op: "==",
-        value: questions[group]?.options[0]?.id,
-      });
-    } else if (kind === "inspected:")
-      setLeaf(index, {
-        var: `inspected:${Object.keys(inspects)[0] || ""}`,
-        op: "==",
-        value: true,
-      });
-    else if (kind === "flag:")
-      setLeaf(index, { var: `flag:${flags[0] || ""}`, op: "==", value: true });
-    else setLeaf(index, { var: kind, op: ">=", value: 0 });
+  const legacy = value && !isStructured(value);
+  const empty = !cond.var && !(cond.all || cond.any || []).length;
+  const sentence = conditionSentence(cond, scenes, Object.fromEntries(stats.map(s => [s.key, s.label])));
+  const outcomeLabels = conditionOutcomeLabels(cond);
+  const valid = c => {
+    if (Array.isArray(c.all) || Array.isArray(c.any)) return (c.all || c.any).every(valid);
+    return typeof c.var === 'string' && c.var.length > 0 && c.value !== '' && c.value !== undefined
+      && (!['money', 'miniGameScore', ...stats.map(s => s.key)].includes(c.var) || (typeof c.value === 'number' && Number.isFinite(c.value)));
   };
   const save = () => {
-    if (!list.length) return onRemove();
-    if (withReason && !message.trim())
-      return setError("Viết câu nhắn trẻ sẽ thấy khi lựa chọn còn khoá.");
+    if (!valid(cond)) return setError('Hãy chọn đầy đủ việc cần kiểm tra, câu trả lời hoặc số điểm.');
+    if (empty && withReason && cond.all) return onRemove();
+    if (withReason && !message.trim()) return setError('Viết lời nhắn giải thích cho trẻ khi chưa được chọn câu trả lời này.');
     onSave(cond, message.trim());
   };
-  if (nested)
-    return (
-      <StudioDialog title={title} onClose={onClose}>
-        <p>
-          Điều kiện này: <b>{conditionSentence(value, scenes)}</b>.
-        </p>
-        <p className="studio-muted">
-          Nó có nhiều tầng hoặc viết kiểu cũ, chỉ sửa được ở phần Nâng cao
-          (JSON).
-        </p>
-        <div className="studio-dialog-actions">
-          <button type="button" onClick={onClose}>
-            Đóng
-          </button>
-        </div>
-      </StudioDialog>
-    );
-  return (
-    <StudioDialog title={title} onClose={onClose} wide>
-      <label className="studio-inline-field">
-        Cần{" "}
-        <select
-          value={mode}
-          onChange={(event) => setCond({ [event.target.value]: list })}
-        >
-          <option value="all">tất cả các điều sau</option>
-          <option value="any">chỉ một trong các điều sau</option>
-        </select>
-      </label>
-      <ul className="studio-cond-list">
-        {list.map((leaf, index) => {
-          const kind = kindOf(leaf.var),
-            name = String(leaf.var).slice(kind.length),
-            known = kinds.some(([key]) => key === kind);
-          return (
-            <li key={index}>
-              {known ? (
-                <select
-                  aria-label={`Loại điều kiện ${index + 1}`}
-                  value={kind}
-                  onChange={(event) => changeKind(index, event.target.value)}
-                >
-                  {kinds.map(([key, label]) => (
-                    <option key={key} value={key}>
-                      {label}
-                    </option>
-                  ))}
-                </select>
-              ) : (
-                <span>
-                  {conditionSentence(leaf, scenes)} (biến chưa có trong khuôn)
-                </span>
-              )}
-              {kind === "choice:" && (
-                <>
-                  <select
-                    aria-label="Câu hỏi"
-                    value={name}
-                    onChange={(event) =>
-                      setLeaf(index, {
-                        var: `choice:${event.target.value}`,
-                        value: questions[event.target.value]?.options[0]?.id,
-                      })
-                    }
-                  >
-                    {Object.entries(questions).map(([group, item]) => (
-                      <option key={group} value={group}>
-                        {String(
-                          item.scene.text || item.scene.title || group,
-                        ).slice(0, 50)}
-                      </option>
-                    ))}
-                    {name && !questions[name] && (
-                      <option value={name}>
-                        Câu đứng sau chỗ này — không bao giờ đúng
-                      </option>
-                    )}
-                  </select>
-                  <select
-                    aria-label="Đã chọn hay không"
-                    value={leaf.op === "!=" ? "!=" : "=="}
-                    onChange={(event) =>
-                      setLeaf(index, { op: event.target.value })
-                    }
-                  >
-                    <option value="==">đã chọn</option>
-                    <option value="!=">không chọn</option>
-                  </select>
-                  <select
-                    aria-label="Lựa chọn"
-                    value={leaf.value ?? ""}
-                    onChange={(event) =>
-                      setLeaf(index, { value: event.target.value })
-                    }
-                  >
-                    {(questions[name]?.options || []).map((option) => (
-                      <option key={option.id} value={option.id}>
-                        {String(option.text || option.label || option.id).slice(
-                          0,
-                          50,
-                        )}
-                      </option>
-                    ))}
-                  </select>
-                </>
-              )}
-              {(kind === "inspected:" || kind === "flag:") && (
-                <>
-                  <select
-                    aria-label={kind === "flag:" ? "Việc" : "Thẻ"}
-                    value={name}
-                    onChange={(event) =>
-                      setLeaf(index, { var: kind + event.target.value })
-                    }
-                  >
-                    {(kind === "flag:"
-                      ? flags.map((flag) => [flag, flag.replace(/_/g, " ")])
-                      : Object.entries(inspects)
-                    )
-                      .concat(
-                        name &&
-                          !(kind === "flag:"
-                            ? flags.includes(name)
-                            : inspects[name])
-                          ? [[name, name]]
-                          : [],
-                      )
-                      .map(([key, label]) => (
-                        <option key={key} value={key}>
-                          {String(label).slice(0, 50)}
-                        </option>
-                      ))}
-                  </select>
-                  <select
-                    aria-label="Trạng thái"
-                    value={String(
-                      (leaf.value !== false) !== (leaf.op === "!="),
-                    )}
-                    onChange={(event) =>
-                      setLeaf(index, {
-                        op: "==",
-                        value: event.target.value === "true",
-                      })
-                    }
-                  >
-                    <option value="true">
-                      {kind === "flag:" ? "đã xảy ra" : "đã mở"}
-                    </option>
-                    <option value="false">
-                      {kind === "flag:" ? "chưa xảy ra" : "chưa mở"}
-                    </option>
-                  </select>
-                </>
-              )}
-              {known && !["choice:", "inspected:", "flag:"].includes(kind) && (
-                <>
-                  <select
-                    aria-label="Phép so sánh"
-                    value={leaf.op}
-                    onChange={(event) =>
-                      setLeaf(index, { op: event.target.value })
-                    }
-                  >
-                    {Object.entries(OP_LABEL).map(([op, label]) => (
-                      <option key={op} value={op}>
-                        {label}
-                      </option>
-                    ))}
-                  </select>
-                  <input
-                    aria-label="Giá trị"
-                    type="number"
-                    value={leaf.value ?? 0}
-                    onChange={(event) =>
-                      setLeaf(index, { value: Number(event.target.value) })
-                    }
-                  />
-                  {kind === "money" && <span>đ</span>}
-                </>
-              )}
-              <button
-                type="button"
-                className="studio-icon-button"
-                aria-label={`Bỏ điều kiện ${index + 1}`}
-                onClick={() => setList(list.filter((_, k) => k !== index))}
-              >
-                <Trash2 size={16} />
-              </button>
-            </li>
-          );
-        })}
-      </ul>
-      {!list.length && (
-        <p className="studio-muted">
-          Chưa có điều kiện nào.{" "}
-          {withReason ? "Bấm Xong lúc này là bỏ khoá." : ""}
-        </p>
-      )}
-      <button
-        type="button"
-        className="studio-link-button"
-        onClick={() => setList([...list, { var: "money", op: ">=", value: 0 }])}
-      >
-        <Plus size={16} />
-        Thêm điều kiện
-      </button>
-      {withReason && (
-        <label className="studio-block-field">
-          Câu nhắn trẻ thấy khi lựa chọn còn khoá
-          <textarea
-            rows={2}
-            value={message}
-            onChange={(event) => {
-              setMessage(event.target.value);
-              setError("");
-            }}
-            placeholder="Ví dụ: Chưa đủ tiền — xem lại kế hoạch trước khi mua."
-          />
-        </label>
-      )}
-      {error && (
-        <p role="alert" className="studio-error">
-          {error}
-        </p>
-      )}
+  return <StudioDialog title={withReason ? title : 'Khi nào cho trẻ xem cảnh tiếp theo?'} onClose={onClose} wide>
+    {legacy ? <>
+      <p>Yêu cầu này đang dùng cách thiết lập cũ. Bạn có thể xem và sửa trong phần Nâng cao của chương.</p>
+      <div className="studio-dialog-actions"><button type="button" onClick={onClose}>Đóng</button></div>
+    </> : <>
+      <p className="condition-intro">{withReason ? 'Chọn việc trẻ cần làm trước khi được chọn câu trả lời này.' : 'Chọn một việc trong câu chuyện. Trò chơi sẽ nhớ trẻ đã làm việc đó hay chưa để chọn cảnh tiếp theo.'}</p>
+      <ConditionFields condition={cond} onChange={next => { setCond(next); setError(''); }} scenes={scenes} stats={stats} questions={questions} />
+      <div className="condition-preview" aria-live="polite">
+        <strong>{withReason ? 'Trẻ được chọn khi' : 'Câu chuyện sẽ diễn ra như sau'}</strong>
+        <p>{!valid(cond) ? 'Chọn đầy đủ yêu cầu để xem trước câu chuyện.' : empty ? (cond.any ? 'Không có yêu cầu nào có thể đáp ứng.' : 'Không cần làm gì trước.') : sentence}</p>
+        {outcomes && valid(cond) && <ul><li><b>{outcomeLabels.yes}:</b> {outcomes.yes}</li><li><b>{outcomeLabels.no}:</b> {outcomes.no}</li></ul>}
+      </div>
+      {withReason && <label className="condition-field">Lời nhắn khi trẻ chưa được chọn<textarea rows={2} value={message} onChange={e => { setMessage(e.target.value); setError(''); }} placeholder="Ví dụ: Hãy xem bảng công việc trước khi chọn nhé." /></label>}
+      {error && <p role="alert" className="studio-error">{error}</p>}
       <div className="studio-dialog-actions">
-        {value && (
-          <button type="button" className="is-danger" onClick={onRemove}>
-            {withReason ? "Bỏ khoá" : "Bỏ điều kiện"}
-          </button>
-        )}
+        {value && <button type="button" className="is-danger" onClick={withReason ? onRemove : () => { setCond({ all: [] }); setError(''); }}>{withReason ? 'Bỏ giới hạn lựa chọn' : 'Không cần yêu cầu trước'}</button>}
         <span />
-        <button type="button" onClick={onClose}>
-          Thôi
-        </button>
-        <button type="button" className="is-primary" onClick={save}>
-          Xong
-        </button>
+        <button type="button" onClick={onClose}>Hủy</button>
+        <button type="button" className="is-primary" onClick={save}>Áp dụng</button>
       </div>
-    </StudioDialog>
-  );
+    </>}
+  </StudioDialog>;
 }
 
-/* ---------- chơi thử từ cảnh đang xem: tiền, chỉ số, khoá, rẽ nhánh, báo ra kết ---------- */
-function freshState(content, stats) {
-  return {
-    money: content.initialMoney ?? 0,
-    score: 0,
-    stats: Object.fromEntries(
-      stats.map((stat) => [
-        stat.key,
-        content.initialStats?.[stat.key] ?? stat.initial ?? 50,
-      ]),
-    ),
-    flags: {},
-    choices: {},
-    inspected: {},
-  };
-}
-const applyFlags = (state, flags) => {
-  if (Array.isArray(flags))
-    flags.forEach((flag) => {
-      state.flags[flag] = true;
-    });
-  else
-    Object.entries(flags || {}).forEach(([key, value]) => {
-      state.flags[key] = !!value;
-    });
-};
+export { default as PlayDialog } from './GamePreview'
 
-export function PlayDialog({ content, startIndex, stats, onEdit, onClose }) {
-  const scenes = content.scenes || [];
-  const [playthrough, setPlaythrough] = useState(0);
-  const [run, setRun] = useState(() => ({
-    index: startIndex,
-    state: freshState(content, stats),
-    steps: 0,
-    changed: "",
-    opened: null,
-  }));
-  const scene = scenes[run.index];
-  const statLabels = Object.fromEntries(
-    stats.map((stat) => [stat.key, stat.label]),
-  );
-  const goTo = (id, mutate, changed = "") => {
-    const index = scenes.findIndex((item) => item.id === id);
-    const state = structuredClone(run.state);
-    mutate?.(state);
-    if (index < 0)
-      return setRun({
-        ...run,
-        state,
-        dead: id
-          ? "dẫn tới một cảnh không còn"
-          : "chưa chọn đi tiếp tới cảnh nào",
-      });
-    applyFlags(state, scenes[index].setFlags);
-    setRun({ index, state, steps: run.steps + 1, changed, opened: null });
-  };
-  const restart = () => {
-    setPlaythrough((value) => value + 1);
-    setRun({
-      index: startIndex,
-      state: freshState(content, stats),
-      steps: 0,
-      changed: "",
-      opened: null,
-    });
-  };
-  const type = typeOf(scene);
-  const PreviewGame = MINI_GAME_FRAMES[miniGameKindOf(scene?.game)];
-  let controls = null,
-    note = null;
-  if (run.dead)
-    note = (
-      <p role="alert" className="studio-error">
-        Hết đường: cảnh {run.index + 1} {run.dead}.
-      </p>
-    );
-  else if (type === "choice")
-    controls = (scene.options || []).map((option) => {
-      const open = evalCondition(option.condition, run.state);
-      return (
-        <div key={option.id} className="studio-play-option">
-          <button
-            type="button"
-            disabled={open === false}
-            onClick={() =>
-              goTo(
-                option.nextSceneId,
-                (state) => {
-                  Object.entries(option.deltaStats || {}).forEach(
-                    ([key, value]) => {
-                      if (key in state.stats)
-                        state.stats[key] = Math.max(
-                          0,
-                          Math.min(100, state.stats[key] + value),
-                        );
-                    },
-                  );
-                  (option.moneyEvents || []).forEach((event) => {
-                    state.money += Number(event.amount) || 0;
-                  });
-                  applyFlags(state, option.setFlags);
-                  state.choices[scene.choiceGroup || scene.id] = option.id;
-                },
-                [
-                  ...Object.entries(option.deltaStats || {}).map(
-                    ([key, value]) =>
-                      `${statLabels[key] || key} ${value > 0 ? "+" : ""}${value}`,
-                  ),
-                  ...(option.moneyEvents || []).map(
-                    (event) =>
-                      `Tiền ${event.amount > 0 ? "+" : ""}${vnd(event.amount)}`,
-                  ),
-                ].join(", "),
-              )
-            }
-          >
-            {option.text || option.label}
-          </button>
-          {open === false && (
-            <small>
-              Đang khoá: {option.lockedReason || "chưa đủ điều kiện"}
-            </small>
-          )}
-        </div>
-      );
-    });
-  else if (type === "conditional") {
-    const result = evalCondition(scene.condition, run.state);
-    note = (
-      <p className="studio-muted">
-        Rẽ tự động khi {conditionSentence(scene.condition, scenes, statLabels)}:{" "}
-        {result === undefined
-          ? "không tính được, chọn giả sử"
-          : result
-            ? "đúng"
-            : "sai"}
-        .
-      </p>
-    );
-    controls =
-      result === undefined ? (
-        <>
-          <button type="button" onClick={() => goTo(scene.ifTrueSceneId)}>
-            Giả sử đúng
-          </button>
-          <button type="button" onClick={() => goTo(scene.ifFalseSceneId)}>
-            Giả sử sai
-          </button>
-        </>
-      ) : (
-        <button
-          type="button"
-          className="is-primary"
-          onClick={() =>
-            goTo(result ? scene.ifTrueSceneId : scene.ifFalseSceneId)
-          }
-        >
-          Tiếp
-        </button>
-      );
-  } else if (type === "minigame")
-    controls = PreviewGame ? (
-      <PreviewGame
-        key={`${playthrough}:${scene.id}:${run.steps}`}
-        game={scene.game}
-        onComplete={(result) => goTo(
-          scene.nextSceneId || scene.onPassSceneId,
-          (state) => {
-            state.score = result.score ?? 0;
-            applyFlags(state, scene.game?.onComplete?.setFlags);
-          },
-          `Điểm mini-game ${result.score ?? 0}`,
-        )}
-      />
-    ) : (
-      <form
-        onSubmit={(event) => {
-          event.preventDefault();
-          const score =
-            Number(new FormData(event.currentTarget).get("score")) || 0;
-          goTo(
-            scene.nextSceneId || scene.onPassSceneId,
-            (state) => {
-              state.score = score;
-              applyFlags(state, scene.game?.onComplete?.setFlags);
-            },
-            `Điểm mini-game ${score}`,
-          );
-        }}
-      >
-        <label className="studio-inline-field">
-          Giả lập điểm mini-game{" "}
-          <input
-            name="score"
-            type="number"
-            defaultValue={scene.game?.passScore ?? 5}
-          />
-        </label>
-        <button type="submit" className="is-primary">
-          Chơi xong
-        </button>
-      </form>
-    );
-  else if (type === "ending") {
-    const rules = content.endingRules || {},
-      endings = rules.endings || [];
-    const ordered = (rules.priorityOrder || [])
-      .map((id) => endings.find((ending) => ending.id === id))
-      .filter(Boolean);
-    let hit = null;
-    const unknown = [];
-    for (const ending of ordered.length ? ordered : endings) {
-      const result = evalCondition(ending.condition, run.state);
-      if (result === undefined) unknown.push(ending.title);
-      else if (result) {
-        hit = ending;
-        break;
-      }
-    }
-    note =
-      hit && !unknown.length ? (
-        <div className="studio-play-ending">
-          <b>Ra kết: {hit.title}</b>
-          <p>{hit.storyText}</p>
-        </div>
-      ) : (
-        <p className="studio-muted">
-          {hit
-            ? `Bỏ qua các kết chưa tính được thì ra: ${hit.title}. `
-            : "Chưa xác định được kết. "}
-          {unknown.length
-            ? `Chưa tính được điều kiện của: ${unknown.join(", ")} (điều kiện kiểu cũ hoặc biến chưa có trong khuôn).`
-            : ""}
-        </p>
-      );
-  } else {
-    if (type === "inspect" && scene.inspect)
-      controls = (
-        <button
-          type="button"
-          onClick={() =>
-            setRun({
-              ...run,
-              opened: scene.inspect,
-              state: {
-                ...run.state,
-                inspected: { ...run.state.inspected, [scene.inspect.id]: true },
-              },
-            })
-          }
-        >
-          {scene.inspect.buttonText || "Bấm để xem"}
-        </button>
-      );
-    controls = (
-      <>
-        {controls}
-        <button
-          type="button"
-          className="is-primary"
-          onClick={() => goTo(scene[nextKeyOf(scene)])}
-        >
-          Tiếp
-        </button>
-      </>
-    );
-  }
-  return (
-    <StudioDialog
-      title={`Chơi thử từ cảnh ${startIndex + 1}`}
-      onClose={onClose}
-      play
-    >
-      <div className="studio-hud" aria-live="polite">
-        <span>
-          Tiền <b>{vnd(run.state.money)}</b>
-        </span>
-        {stats.map((stat) => (
-          <span key={stat.key}>
-            {stat.label} <b>{run.state.stats[stat.key]}</b>
-          </span>
-        ))}
-        <span>
-          Điểm mini-game <b>{run.state.score}</b>
-        </span>
-      </div>
-      {run.changed && (
-        <p className="studio-play-change">Vừa thay đổi: {run.changed}</p>
-      )}
-      {type !== "minigame" && <div
-        className="studio-play-stage"
-        style={{
-          backgroundImage: scene?.background
-            ? `url(${JSON.stringify(scene.background)})`
-            : undefined,
-        }}
-      >
-        {(scene?.characters || []).map(
-          (character, index) =>
-            character.src && (
-              <img
-                key={index}
-                src={character.src}
-                alt=""
-                className={`pos-${String(character.position || "center").toLowerCase()}`}
-              />
-            ),
-        )}
-        {scene && type !== "conditional" && (
-          <div className="studio-play-text">
-            {scene.speaker && <b>{scene.speaker}</b>}
-            <p>{scene.text || scene.prompt || ""}</p>
-            {run.opened && (
-              <p className="studio-play-opened">{run.opened.dataText}</p>
-            )}
-          </div>
-        )}
-      </div>}
-      {run.opened && (run.opened.popupImage || run.opened.popupImages?.length > 0) && <div className="studio-play-inspect-images" aria-label="Ảnh khi bấm xem">
-        {run.opened.popupImage && <img src={run.opened.popupImage} alt={run.opened.buttonText || 'Ảnh khi bấm xem'} />}
-        {run.opened.popupImages?.map((image, index) => <figure key={index}><img src={image.src} alt={image.caption || 'Ảnh khi bấm xem'} />{image.caption && <figcaption>{image.caption}</figcaption>}{image.description && <p>{image.description}</p>}</figure>)}
-      </div>}
-      {note}
-      {scene?.voice !== 'off' && scene?.voiceUrl && <audio key={`${scene.id}-${scene.voiceUrl}`} controls preload="none" src={scene.voiceUrl} aria-label="Nghe giọng đọc cảnh đang chơi thử" />}
-      {controls && <div className="studio-play-controls">{controls}</div>}
-      <div className="studio-dialog-actions">
-        <span className="studio-muted">
-          Đang ở cảnh {run.index + 1}, đã đi {run.steps} cảnh
-        </span>
-        <span />
-        <button type="button" onClick={restart}>
-          <RotateCcw size={16} />
-          Chơi lại
-        </button>
-        <button type="button" onClick={() => onEdit(run.index)}>
-          Sửa cảnh này
-        </button>
-      </div>
-    </StudioDialog>
-  );
-}
-
-/** thêm nhân vật: chọn từ dàn nhân vật của chương (sprites); nhân vật mới thì lấy ảnh từ kho */
 export function CharacterDialog({
   sprites,
   present,

@@ -5,7 +5,6 @@ import {
   Code2,
   Copy,
   ImagePlus,
-  Languages,
   Layers3,
   Lock,
   Mic,
@@ -13,7 +12,6 @@ import {
   PanelRightClose,
   PanelRightOpen,
   Play,
-  Plus,
   Redo2,
   Save,
   Trash2,
@@ -27,6 +25,8 @@ import { Tag } from "./ui";
 import SchemaFields from "./SchemaFields";
 import ChoiceConditions from "./ChoiceConditions";
 import StoryMap from "./StoryMap";
+import SceneTimeline from "./SceneTimeline";
+import ConditionalFlow from "./ConditionalFlow";
 import { ChoicePanel, InspectPanel } from "./ScenePanels";
 import { CharacterPersonalization, PersonalizationControls } from "./PersonalizationPanel";
 import { backgroundAppearanceDefinition, CATALOG, labelText, patchChoiceText, patchInspect, personalizedScenePatch, previewPersonalization, VOICES } from './variantOps.js';
@@ -35,7 +35,6 @@ import { SceneThumb } from "./SceneDialogs";
 import {
   TYPE_LABEL,
   branchSummary,
-  conditionSentence,
   isLinear,
   nextKeyOf,
   sceneLabel,
@@ -324,7 +323,7 @@ function SceneStage({
               {scene[textKey] || scene.inspect?.dataText}
             </p>
           )}
-          {type === "inspect" && scene.inspect && (
+          {scene.inspect && (
             <div className="stage-option">
               <span className="stage-option-mark">Nút</span>
               {write ? (
@@ -448,6 +447,7 @@ export default function EditorCanvas(props) {
     notice,
     issues,
     onAdd,
+    onReorder,
     onDuplicate,
     onDelete,
     onPickBackground,
@@ -457,7 +457,6 @@ export default function EditorCanvas(props) {
     onBranch,
     onLaneEnd,
     onPickImage,
-    onOpenTokens,
     onCharacterAppearance,
     onBackgroundAppearance,
   } = props;
@@ -468,7 +467,7 @@ export default function EditorCanvas(props) {
   const [expandedWarnings, setExpandedWarnings] = useState(null);
   const [answers, setAnswers] = useState({ gender: 'MALE', age: '8_10', interest: 'SPORT' });
   const [personalTab, setPersonalTab] = useState('dialogue');
-  const preview = useMemo(() => personalizing ? previewPersonalization(content, answers) : content, [content, answers, personalizing]);
+  const preview = useMemo(() => previewPersonalization(content, personalizing ? answers : {}), [content, answers, personalizing]);
   const previewScene = preview.scenes[idx];
   const updateCurrent = patch => update(personalizing ? personalizedScenePatch(scene, answers, patch) : patch);
   const updateInspect = patch => update({ inspect: patchInspect(scene.inspect, patch, personalizing ? answers : null) });
@@ -570,9 +569,9 @@ export default function EditorCanvas(props) {
             </span>
           </p>
         </div>
-        <div className="scene-editor-document-actions">
+        <div className="scene-editor-primary-actions">
           {write && visualMode && (
-            <>
+            <div className="scene-editor-history" role="group" aria-label="Lịch sử chỉnh sửa">
               <button
                 type="button"
                 className="scene-icon-button"
@@ -593,14 +592,36 @@ export default function EditorCanvas(props) {
               >
                 <Redo2 size={18} />
               </button>
-            </>
+            </div>
+          )}
+          {write && (
+            <button type="button" className="scene-primary" disabled={busy} onClick={save}>
+              <Save size={16} />{busy ? 'Đang lưu…' : 'Lưu nháp'}
+            </button>
+          )}
+        </div>
+      </header>
+      <div className="scene-editor-tools" aria-label="Công cụ soạn chương">
+        {scene && <div className="scene-editor-tool-group" role="group" aria-label="Chơi thử">
+          <span className="scene-editor-tool-label">Chơi thử</span>
+          <div className="scene-editor-tool-buttons">
+          {scene && (
+            <button type="button" disabled={busy} onClick={() => onPlay(personalizing ? answers : null, true)}>
+              <Play size={16} />
+              Chơi thử từ đầu
+            </button>
           )}
           {scene && (
-            <button type="button" disabled={busy} onClick={() => onPlay(personalizing ? answers : null)}>
+            <button type="button" disabled={busy} title="Bắt đầu ở cảnh đang chọn với trạng thái mới. Chơi từ đầu để kiểm tra đầy đủ các lựa chọn trước đó." onClick={() => onPlay(personalizing ? answers : null)}>
               <Play size={16} />
               Chơi thử từ cảnh này
             </button>
           )}
+          </div>
+        </div>}
+        {write && (onSuggestVoice || onRenderVoice) && <div className="scene-editor-tool-group" role="group" aria-label="Giọng đọc">
+          <span className="scene-editor-tool-label">Giọng đọc</span>
+          <div className="scene-editor-tool-buttons">
           {write && onSuggestVoice && <button type="button" className="scene-quiet" disabled={busy || dirty}
             title={dirty ? 'Lưu nháp trước để AI đọc bản mới nhất' : 'AI đề xuất cách đọc cho câu có số, ký hiệu, chữ viết tắt'} onClick={onSuggestVoice}>
             <Mic size={16} />Gợi ý cách đọc (AI)
@@ -625,18 +646,11 @@ export default function EditorCanvas(props) {
                 : 'Sinh giọng đọc'}
             </button>
           )}
-          {write && visualMode && onOpenTokens && (
-            <button
-              type="button"
-              className="scene-quiet"
-              disabled={busy}
-              title="Từ đổi theo giới tính / tuổi / sở thích của bé, dùng lại ở nhiều câu"
-              onClick={onOpenTokens}
-            >
-              <Languages size={16} />
-              Từ thay theo bé
-            </button>
-          )}
+          </div>
+        </div>}
+        <div className="scene-editor-tool-group" role="group" aria-label="Nâng cao">
+          <span className="scene-editor-tool-label">Nâng cao</span>
+          <div className="scene-editor-tool-buttons">
           <button
             type="button"
             className="scene-quiet"
@@ -646,19 +660,9 @@ export default function EditorCanvas(props) {
             <Code2 size={16} />
             {json === null ? "JSON" : "Theo cảnh / Chơi thử"}
           </button>
-          {write && (
-            <button
-              type="button"
-              className="scene-primary"
-              disabled={busy}
-              onClick={save}
-            >
-              <Save size={16} />
-              {busy ? "Đang lưu…" : "Lưu nháp"}
-            </button>
-          )}
+          </div>
         </div>
-      </header>
+      </div>
       {meta?.status === "SUBMITTED" && (
         <p className="scene-editor-notice">
           Nháp đang chờ duyệt. Người biên tập cần rút nháp trước khi chỉnh sửa.
@@ -679,7 +683,7 @@ export default function EditorCanvas(props) {
         <div className="scene-undo-bar" role="status">
           <span>{notice.text}</span>
           {notice.undo && (
-            <button type="button" onClick={notice.undo}>
+            <button type="button" disabled={busy || !history.canUndo} onClick={history.undo}>
               <Undo2 size={15} />
               Hoàn tác
             </button>
@@ -757,7 +761,7 @@ export default function EditorCanvas(props) {
           className={`scene-editor-body${panel && view === "frame" ? "" : " is-wide"}`}
         >
           <div
-            className={`scene-editor-workbench${view === "map" ? " is-map" : ""}${view === "frame" && (type === "choice" || (type === "inspect" && scene?.inspect)) ? " has-panel" : ""}`}
+            className={`scene-editor-workbench${view === "map" ? " is-map" : ""}${view === "frame" && (type === "choice" || scene?.inspect) ? " has-panel" : ""}`}
           >
             <div className="stage-well">
               <div className="scene-editor-canvas-heading">
@@ -840,7 +844,13 @@ export default function EditorCanvas(props) {
                 />
               ) : (
                 <div className="scene-editor-canvas">
-                  {scene ? (
+                  {scene && type === 'conditional' ? (
+                    <ConditionalFlow scene={scene} scenes={scenes} statLabels={statLabels} write={write && !busy}
+                      onCondition={() => openDialog({ kind: 'condition' })}
+                      onTarget={(key, title) => pickTarget(`${title}: trẻ sẽ xem cảnh nào?`, scene[key], id => update({ [key]: id }))}
+                      onGo={id => setIdx(scenes.findIndex(item => item.id === id))}
+                      onMap={() => setView('map')} />
+                  ) : scene ? (
                     <SceneStage
                       key={`${scene.id}-${personalizing}`}
                       scene={previewScene}
@@ -874,6 +884,8 @@ export default function EditorCanvas(props) {
                 </div>
               )}
             </div>
+          </div>
+          {view === 'frame' && scene && (type === 'choice' || scene.inspect) && <div className="scene-content-area" aria-label="Soạn nội dung tương tác">
             {view === "frame" && scene && type === "choice" && (
               <ChoicePanel
                 scene={scene}
@@ -890,7 +902,6 @@ export default function EditorCanvas(props) {
             )}
             {view === "frame" &&
               scene &&
-              type === "inspect" &&
               scene.inspect && (
                 <InspectPanel
                   scene={previewScene}
@@ -901,9 +912,10 @@ export default function EditorCanvas(props) {
                   onPickImage={onPickImage}
                 />
               )}
-          </div>
+          </div>}
           {panel && view === "frame" && (
             <aside className="scene-inspector" aria-label="Thuộc tính cảnh">
+              <div className="scene-inspector-scroll">
               {scene ? (
                 <>
                   <div className="scene-inspector-heading">
@@ -937,24 +949,11 @@ export default function EditorCanvas(props) {
                       className="inspector-group"
                       aria-labelledby="group-cond"
                     >
-                      <h3 id="group-cond">Điều kiện rẽ</h3>
-                      <div className="scene-target">
-                        <span>Game đi hướng “đúng” khi</span>
-                        <button
-                          type="button"
-                          disabled={!write || busy}
-                          onClick={() => openDialog({ kind: "condition" })}
-                        >
-                          {conditionSentence(
-                            scene.condition,
-                            scenes,
-                            statLabels,
-                          )}
-                        </button>
-                      </div>
+                      <h3 id="group-cond">Cách chuyển cảnh</h3>
+                      <p className="scene-hint">Chọn việc cần kiểm tra và cảnh trẻ sẽ xem ngay trong khung bên trái.</p>
                     </section>
                   )}
-                  <section
+                  {type !== 'conditional' && <section
                     className="inspector-group"
                     aria-labelledby="group-next"
                   >
@@ -1016,42 +1015,12 @@ export default function EditorCanvas(props) {
                           </div>
                         );
                       })()}
-                    {type === "conditional" && (
-                      <>
-                        <TargetButton
-                          label="Nếu đúng thì sang"
-                          targetId={scene.ifTrueSceneId}
-                          scenes={scenes}
-                          write={write && !busy}
-                          onOpen={() =>
-                            pickTarget(
-                              "Nếu đúng thì sang cảnh nào?",
-                              scene.ifTrueSceneId,
-                              (id) => update({ ifTrueSceneId: id }),
-                            )
-                          }
-                        />
-                        <TargetButton
-                          label="Nếu không thì sang"
-                          targetId={scene.ifFalseSceneId}
-                          scenes={scenes}
-                          write={write && !busy}
-                          onOpen={() =>
-                            pickTarget(
-                              "Nếu không thì sang cảnh nào?",
-                              scene.ifFalseSceneId,
-                              (id) => update({ ifFalseSceneId: id }),
-                            )
-                          }
-                        />
-                      </>
-                    )}
                     {type === "ending" && (
                       <p className="scene-hint">
                         Hết chương. Game chọn kết theo kết quả chơi của trẻ.
                       </p>
                     )}
-                  </section>
+                  </section>}
                   {type === "minigame" && (
                     <section
                       className="inspector-group"
@@ -1099,7 +1068,7 @@ export default function EditorCanvas(props) {
                       </button>
                     </div>
                   )}
-                  <details className="scene-advanced">
+                  {!personalizing && <details className="scene-advanced">
                     <summary>Nâng cao</summary>
                     <fieldset disabled={!write || busy}>
                       <label>
@@ -1112,16 +1081,13 @@ export default function EditorCanvas(props) {
                           placeholder="Ví dụ: An"
                         />
                       </label>
-                      <label>
-                        Ảnh nền (đường dẫn)
-                        <input
-                          value={previewScene.background || ""}
-                          onChange={(event) =>
-                            personalizing ? onBackgroundAppearance(answers.gender, answers.age, event.target.value) : update({ background: event.target.value })
-                          }
-                          placeholder="URL hoặc ref ảnh"
-                        />
-                      </label>
+                      <div className="scene-background-picker">
+                        <span>Ảnh nền</span>
+                        {previewScene.background ? <img src={previewScene.background} alt="Ảnh nền hiện tại" /> : <small>Chưa chọn ảnh nền</small>}
+                        <button type="button" onClick={onPickBackground}>
+                          <ImagePlus size={16} /> Chọn ảnh nền
+                        </button>
+                      </div>
                       {type === "choice" &&
                         scene.options?.map((option, index) => (
                           <ChoiceConditions
@@ -1155,7 +1121,7 @@ export default function EditorCanvas(props) {
                         disabled={!write || busy}
                       />
                     )}
-                  </details>
+                  </details>}
                   </>}
                   {personalizing && personalTab !== 'dialogue' && <section className="inspector-group personalization-editing">
                     {personalTab === 'characters' && <>
@@ -1173,58 +1139,12 @@ export default function EditorCanvas(props) {
                   Thêm cảnh đầu tiên để bắt đầu biên tập.
                 </p>
               )}
+              </div>
             </aside>
           )}
-          <section
-            className="scene-timeline"
-            aria-label="Các cảnh trong chương"
-          >
-            <div className="scene-timeline-heading">
-              <span>
-                Các cảnh <b>{scenes.length}</b>
-              </span>
-              {write && (
-                <button type="button" disabled={busy} onClick={onAdd}>
-                  <Plus size={15} /> Thêm cảnh
-                </button>
-              )}
-            </div>
-            <div className="scene-timeline-track" ref={trackRef}>
-              {scenes.map((item, index) => (
-                <button
-                  type="button"
-                  className={`scene-thumbnail ${index === idx ? "selected" : ""}`}
-                  key={item.id}
-                  aria-label={`Cảnh ${index + 1}: ${item.title || item.id}`}
-                  aria-pressed={index === idx}
-                  onClick={() => setIdx(index)}
-                >
-                  <span className="scene-thumbnail-index">{index + 1}</span>
-                  {issueScenes.has(index) && (
-                    <span
-                      className="scene-thumbnail-alert"
-                      title="Cảnh này còn chỗ cần sửa"
-                    />
-                  )}
-                  <Thumbnail scene={preview.scenes[index] || item} />
-                  <span className="scene-thumbnail-label">
-                    {sceneLabel(item)}
-                  </span>
-                </button>
-              ))}
-              {write && (
-                <button
-                  type="button"
-                  className="scene-add-page"
-                  disabled={busy}
-                  onClick={onAdd}
-                  aria-label="Thêm cảnh sau cảnh đang chọn"
-                >
-                  <Plus size={22} />
-                </button>
-              )}
-            </div>
-          </section>
+          <SceneTimeline scenes={scenes} previewScenes={preview.scenes} idx={idx} setIdx={setIdx}
+            write={write} busy={busy} onAdd={onAdd} onReorder={onReorder} issueScenes={issueScenes}
+            trackRef={trackRef} renderThumbnail={item => <Thumbnail scene={item} />} />
         </div>
         </>
       )}

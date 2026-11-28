@@ -113,15 +113,14 @@ try {
     const dialog = await dialogPromise; assert.equal(dialog.type(), 'beforeunload'); await dialog.dismiss(); await reloading;
     assert.equal(await speech(page).inputValue(), 'Do not reload');
   });
-  await check('Uncommitted dialog edits require completing the form before save and leave', async page => {
-    await page.getByRole('button', { name: 'Từ thay theo bé', exact: true }).click();
-    await page.getByRole('button', { name: 'Thêm từ', exact: true }).click();
-    await page.getByRole('textbox', { name: 'Tên từ', exact: true }).fill('unsavedToken');
+  await check('An open scene dialog must be completed before save and leave', async page => {
+    await page.getByRole('button', { name: 'Thêm cảnh', exact: true }).click();
+    await page.locator('.studio-kind-grid').waitFor();
     await page.evaluate(() => history.back()); await modal(page).waitFor();
     await modal(page).getByRole('button', { name: 'Lưu nháp và rời đi' }).click();
     await modal(page).getByRole('alert').waitFor(); assert.equal(await page.evaluate(() => window.studioNavigation.putCalls), 0);
     await modal(page).getByRole('button', { name: 'Ở lại chỉnh sửa' }).click();
-    assert.equal(await page.getByRole('textbox', { name: 'Tên từ', exact: true }).inputValue(), 'unsavedToken');
+    assert.equal(await page.locator('.studio-kind-grid').isVisible(), true);
   });
   await check('Clean editor leaves without popup', async page => { await goAssets(page); await page.waitForURL('**/internal/assets'); assert.equal(await modal(page).count(), 0); });
   await check('Mobile drawer navigation saves before leaving', async page => {

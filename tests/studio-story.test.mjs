@@ -2,6 +2,8 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   insertLinked,
+  insertAtPosition,
+  moveScene,
   removeLinked,
   duplicateLinked,
   continuation,
@@ -26,6 +28,74 @@ const line = () => [
   { id: "d", type: "dialogue", text: "D", nextSceneId: "end" },
   { id: "end", type: "ending" },
 ];
+
+test('explicit gaps insert at the start, between branching scenes, and after the final ending', () => {
+  const source = line();
+  const snapshot = structuredClone(source);
+  const fresh = { id: 'new', type: 'dialogue', text: 'New' };
+  const start = insertAtPosition(source, 0, fresh);
+  assert.equal(start.index, 0);
+  assert.equal(start.scenes[0].nextSceneId, 'a');
+  const middle = insertAtPosition(source, 2, fresh);
+  assert.deepEqual(middle.scenes.map(scene => scene.id), ['a', 'q', 'new', 'b', 'c', 'd', 'end']);
+  assert.equal(middle.scenes[1].options[0].nextSceneId, 'new');
+  assert.equal(middle.scenes[1].options[1].nextSceneId, 'c');
+  assert.equal(middle.scenes[2].nextSceneId, 'b');
+  const end = insertAtPosition(source, source.length, fresh);
+  assert.equal(end.index, source.length);
+  assert.equal(end.scenes.at(-1).id, 'new');
+  assert.equal(end.scenes.at(-2).type, 'ending');
+  assert.equal(end.scenes.at(-2).nextSceneId, undefined);
+  assert.deepEqual(source, snapshot, 'input including choice options is unchanged');
+  assert.deepEqual(insertAtPosition([], 0, fresh).scenes, [{ ...fresh, nextSceneId: null }]);
+});
+
+test('page reordering updates a straight story and preserves mini-game pass links', () => {
+  const scenes = [
+    { id: 'a', type: 'dialogue', nextSceneId: 'b' },
+    { id: 'b', type: 'minigame', onPassSceneId: 'c' },
+    { id: 'c', type: 'dialogue', nextSceneId: 'end' },
+    { id: 'end', type: 'ending' },
+  ];
+  const snapshot = structuredClone(scenes);
+  const result = moveScene(scenes, 2, 1);
+  assert.equal(result.linked, true);
+  assert.deepEqual(result.scenes.map(scene => scene.id), ['a', 'c', 'b', 'end']);
+  assert.equal(result.scenes[0].nextSceneId, 'c');
+  assert.equal(result.scenes[1].nextSceneId, 'b');
+  assert.equal(result.scenes[2].onPassSceneId, 'end');
+  assert.equal(result.scenes[2].nextSceneId, undefined);
+  assert.deepEqual(scenes, snapshot);
+  assert.equal(moveScene(scenes, 1, 1).scenes, scenes);
+  assert.equal(moveScene(scenes, 1, 2).scenes, scenes);
+  assert.equal(moveScene(scenes, 0, 4).index, 3);
+  const last = moveScene(scenes, 1, 4);
+  assert.equal(last.scenes.at(-1).onPassSceneId, null);
+  const back = moveScene(last.scenes, 3, 1);
+  assert.equal(back.scenes[1].onPassSceneId, 'c');
+  assert.equal(back.scenes[1].nextSceneId, undefined);
+});
+
+test('moving an ending after an appended page reconnects the straight sequence', () => {
+  const scenes = [{ id: 'a', type: 'dialogue', nextSceneId: 'end' }, { id: 'end', type: 'ending' }];
+  const added = insertAtPosition(scenes, 2, { id: 'new', type: 'dialogue' });
+  const moved = moveScene(added.scenes, 1, 3);
+  assert.equal(moved.linked, true);
+  assert.deepEqual(moved.scenes.map(scene => scene.id), ['a', 'new', 'end']);
+  assert.equal(moved.scenes[0].nextSceneId, 'new');
+  assert.equal(moved.scenes[1].nextSceneId, 'end');
+});
+
+test('reordering branches changes page placement without rewriting explicit routes or payloads', () => {
+  const scenes = line();
+  const result = moveScene(scenes, 2, 5);
+  assert.equal(result.linked, false);
+  assert.deepEqual(result.scenes.map(scene => scene.id), ['a', 'q', 'c', 'd', 'b', 'end']);
+  for (const scene of scenes) assert.deepEqual(result.scenes.find(item => item.id === scene.id), scene);
+  const conditional = [{ id: 'q', type: 'conditional', ifTrueSceneId: 'a', ifFalseSceneId: 'end' }, ...scenes.filter(scene => scene.id !== 'q')];
+  const conditionalMove = moveScene(conditional, 0, conditional.length);
+  assert.deepEqual(conditionalMove.scenes.at(-1), conditional[0]);
+});
 
 test("a new question after a dialogue sends every option to the old next scene (branch and rejoin)", () => {
   const scenes = line();

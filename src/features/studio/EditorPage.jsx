@@ -8,9 +8,8 @@ import { studioApi, formatError } from './studioClient'
 import { useStudioAction, useStudioResource } from './useStudioResource'
 import EditorCanvas from './EditorCanvas'
 import { nextSceneId } from './sceneEditing'
-import { TYPE_LABEL, duplicateLinked, insertLinked, isLinear, removeLinked, storyIssues } from './storyOps'
+import { TYPE_LABEL, duplicateLinked, insertLinked, insertAtPosition, moveScene, removeLinked, sceneLabel, storyIssues } from './storyOps'
 import MinigameDialog from './MinigameDialog'
-import { TokensDialog } from './PersonalizationPanel'
 import { previewPersonalization, pruneEmptyVariants, setBackgroundAppearance, setCharacterAppearance, VOICES } from './variantOps.js'
 import { AddSceneDialog, CharacterDialog, ConditionDialog, EffectDialog, PlayDialog, ScenePickerDialog } from './SceneDialogs'
 import { prepareDraftV2, parseCondition } from './draftV2'
@@ -202,7 +201,7 @@ export default function EditorPage({ notify, code, onNavigationStateChange, save
   }
   const undo = () => step('past', 'future')
   const redo = () => step('future', 'past')
-  const announce = text => setNotice({ text, undo: () => { undo(); setNotice(null) } })
+  const announce = text => setNotice({ text, undo: true })
   useEffect(() => {
     const onKey = event => {
       if (!(event.ctrlKey || event.metaKey) || !['z', 'y'].includes(event.key.toLowerCase()) || json !== null) return
@@ -315,8 +314,10 @@ export default function EditorPage({ notify, code, onNavigationStateChange, save
 
   /* chèn / xoá / nhân đôi không làm đứt mạch: câu hỏi mới thì mọi lựa chọn về cảnh kế cũ, xoá thì cảnh trước nối sang cảnh sau */
   const addScene = (type, gameKind) => {
+    const position = dialog?.position ?? scenes.length;
+    const source = scenes[position - 1] || scenes[position];
     const id = nextSceneId(code, scenes)
-    const fresh = { id, type, title: '', background: scene?.background || '', characters: structuredClone(scene?.characters || []) }
+    const fresh = { id, type, title: '', background: source?.background || '', characters: structuredClone(source?.characters || []) }
     if (['dialogue', 'summary', 'cutscene', 'ending', 'choice', 'inspect'].includes(type)) fresh.text = ''
     if (type === 'reflection') fresh.prompt = ''
     if (type === 'choice') fresh.options = [{ id: `${id}_OPT1`, text: '' }, { id: `${id}_OPT2`, text: '' }]
@@ -326,10 +327,17 @@ export default function EditorPage({ notify, code, onNavigationStateChange, save
       const sample = scenes.find(s => s.game?.kind === gameKind)?.game
       fresh.game = { ...(sample ? structuredClone(sample) : { title: schemaQuery.data?.minigameKinds?.[gameKind]?.label || 'Mini-game' }), id: `${id}_GAME`, kind: gameKind }
     }
-    const result = insertLinked(scenes, idx, fresh)
+    const result = insertAtPosition(scenes, position, fresh)
     commit({ ...content, scenes: result.scenes }, result.index)
     setDialog(null)
     announce(type === 'choice' ? 'Đã thêm câu hỏi. Mọi lựa chọn tạm đi về cảnh kế cũ; đổi “Bấm xong thì sang” để tạo nhánh riêng.' : `Đã thêm ${(TYPE_LABEL[type] || 'cảnh').toLowerCase()} ở cảnh ${result.index + 1}.`)
+  }
+  const reorderScene = (from, position) => {
+    if (!canChange) return;
+    const result = moveScene(scenes, from, position);
+    if (result.scenes === scenes) return;
+    commit({ ...content, scenes: result.scenes }, result.index);
+    announce(`Đã chuyển cảnh ${from + 1} đến vị trí ${result.index + 1}. ${result.linked ? 'Thứ tự chơi đã cập nhật theo các cảnh.' : 'Các liên kết đường chơi được giữ nguyên; xem trong Bản đồ truyện.'}`);
   }
   const duplicateScene = () => {
     if (!scene) return
@@ -381,13 +389,13 @@ export default function EditorPage({ notify, code, onNavigationStateChange, save
   if (!content) return <p role="status">Đang tải {code}…</p>
   const option = dialog?.index != null ? scene?.options?.[dialog.index] : null
   const close = () => setDialog(null)
-  const playDraft = (answers) => {
+  const playDraft = (answers, fromStart = false) => {
     try {
       const preview = json === null ? content : JSON.parse(json)
       if (!preview || !Array.isArray(preview.scenes) || !preview.scenes.length)
         throw new Error('Nội dung JSON cần có ít nhất một cảnh để chơi thử.')
       const currentIndex = preview.scenes.findIndex(item => item.id === scene?.id)
-      setDialog({ kind: 'play', content: prepareDraftV2(answers ? previewPersonalization(preview, answers) : preview), startIndex: currentIndex >= 0 ? currentIndex : 0 })
+      setDialog({ kind: 'play', content: prepareDraftV2(previewPersonalization(preview, answers || {})), startIndex: fromStart ? 0 : Math.max(0, currentIndex) })
     } catch (error) { notify(formatError(error)) }
   }
   return <>
@@ -398,8 +406,8 @@ export default function EditorPage({ notify, code, onNavigationStateChange, save
       setJson={value => { setJson(value); setDirty(true) }} toggleJson={toggleJson} save={save} update={update} schemaQuery={schemaQuery}
       warnings={warnings} refreshError={refreshError} conditionDrafts={conditionDrafts} editCondition={editCondition} onSuggestVoice={suggestVoice} onRenderVoice={renderVoice} voice={voice}
       history={{ undo, redo, canUndo: history.past.length > 0, canRedo: history.future.length > 0 }} notice={notice} issues={storyIssues(scenes)}
-      onAdd={() => setDialog({ kind: 'add' })} onDuplicate={duplicateScene} onDelete={deleteScene} onPickBackground={() => setPicking('background')}
-      onAddCharacter={() => setDialog({ kind: 'character' })} onPlay={playDraft} openDialog={setDialog} onBranch={createBranch} onLaneEnd={addLaneEnd} onPickImage={apply => setPicking(() => apply)} onOpenTokens={() => setDialog({ kind: 'tokens' })} />
+      onAdd={(position = scenes.length) => { if (canChange) setDialog({ kind: 'add', position }) }} onReorder={reorderScene} onDuplicate={duplicateScene} onDelete={deleteScene} onPickBackground={() => setPicking('background')}
+      onAddCharacter={() => setDialog({ kind: 'character' })} onPlay={playDraft} openDialog={setDialog} onBranch={createBranch} onLaneEnd={addLaneEnd} onPickImage={apply => setPicking(() => apply)} />
     {((voiceList && voiceBatch?.code === code) || voiceHints) && <div className="studio-voice-tools" ref={voiceToolsRef}>
       {voiceList && voiceBatch?.code === code && <VoiceRenderList voice={voice} batch={voiceBatch.items} scenes={scenes} onOpen={id => go(id)} onClose={() => setVoiceList(false)} />}
       {voiceHints && <VoiceHints hints={voiceHints} scenes={scenes} write={write} onAccept={acceptHint} onDrop={dropHint} onOpen={id => go(id)} onClose={() => setVoiceHints(null)} />}
@@ -410,20 +418,20 @@ export default function EditorPage({ notify, code, onNavigationStateChange, save
       else update({ background: asset.url })
       setPicking(false)
     }} />}
-    {dialog?.kind === 'add' && <AddSceneDialog schema={schemaQuery.data} linear={!scene || isLinear(scene)} number={idx + 1} onAdd={addScene} onClose={close} />}
+    {dialog?.kind === 'add' && <AddSceneDialog schema={schemaQuery.data} position={dialog.position} scenes={scenes} onAdd={addScene} onClose={close} />}
     {dialog?.kind === 'target' && <ScenePickerDialog title={dialog.title} scenes={scenes} currentId={dialog.currentId} onClose={close} onPick={id => { dialog.apply(id); close() }} />}
     {dialog?.kind === 'effect' && option && <EffectDialog option={option} stats={stats} onClose={close} onSave={patch => { setOption(dialog.index, patch); close(); notify('Đã cập nhật ảnh hưởng của lựa chọn.', true) }} />}
     {dialog?.kind === 'lock' && option && <ConditionDialog title={`Khoá lựa chọn “${String(option.text || option.label || '').slice(0, 50)}”`} withReason value={option.condition} reason={option.lockedReason} scenes={scenes} stats={stats} contextId={scene.id}
       onClose={close} onRemove={() => { setOption(dialog.index, { condition: undefined, lockedReason: undefined }); close() }}
       onSave={(condition, lockedReason) => { setOption(dialog.index, { condition, lockedReason }); close(); notify('Đã khoá lựa chọn.', true) }} />}
     {dialog?.kind === 'condition' && <ConditionDialog title="Điều kiện rẽ nhánh" value={scene.condition} scenes={scenes} stats={stats} contextId={scene.id}
+      outcomes={{ yes: sceneLabel(scenes.find(s => s.id === scene.ifTrueSceneId)), no: sceneLabel(scenes.find(s => s.id === scene.ifFalseSceneId)) }}
       onClose={close} onRemove={() => { update({ condition: { all: [] } }); close() }} onSave={condition => { update({ condition }); close() }} />}
     {dialog?.kind === 'character' && <CharacterDialog sprites={content.sprites} present={(scene.characters || []).map(item => item.id)} onClose={close}
       onLibrary={() => { close(); setPicking('character') }}
       onPick={(id, src, expression) => { const used = new Set((scene.characters || []).map(item => String(item.position).toLowerCase())); update({ characters: [...(scene.characters || []), { id, expression, src, position: ['center', 'right', 'left'].find(p => !used.has(p)) || 'right' }] }); close() }} />}
-    {dialog?.kind === 'tokens' && <TokensDialog content={content} onClose={close} onSave={next => { commit(next); close(); notify('Đã cập nhật từ thay theo bé.', true) }} />}
     {dialog?.kind === 'minigame' && <MinigameDialog game={scene.game} tokens={content.personalization?.tokens} initialTab={dialog.initialTab} interest={dialog.interest} kind={schemaQuery.data?.minigameKinds?.[scene.game?.kind]} onClose={close}
       onPickImage={apply => setPicking(() => apply)} onSave={game => { update({ game }); close(); notify('Đã cập nhật mini-game.', true) }} />}
-    {dialog?.kind === 'play' && <PlayDialog content={withSceneVoicePlayback(dialog.content, voice?.items, scenes)} startIndex={dialog.startIndex} stats={stats} onClose={close} onEdit={index => { setIdx(index); close() }} />}
+    {dialog?.kind === 'play' && <PlayDialog code={code} content={withSceneVoicePlayback(dialog.content, voice?.items, scenes)} startIndex={dialog.startIndex} onClose={close} onEdit={index => { setIdx(index); close() }} />}
   </>
 }
