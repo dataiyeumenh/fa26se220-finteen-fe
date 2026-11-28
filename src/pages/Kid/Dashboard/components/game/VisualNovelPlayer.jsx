@@ -59,6 +59,7 @@ import {
 import { normalizeChapter } from "./chapterShape.js";
 import { buildChildChapterReport, firstMiniGameScore } from "./chapterReport.js";
 import SceneVoice from "./SceneVoice.jsx";
+import { initialPreviewProgress } from "./visualNovelPreview.js";
 
 // Khung mini-game theo `game.kind` (bộ khuôn BE: scene-schema.json → minigameKinds). Dữ liệu cũ chưa có kind (bản 1.1.0)
 // tra theo id cũ (legacyIds của khuôn). Kind lạ → báo chưa có khung, không rơi im lặng vào Cần / Muốn.
@@ -221,7 +222,7 @@ function EndingReport({ report }) {
   );
 }
 
-export function VisualNovelPlayer({ data: rawData, progressOwner = null, learnerCode = null }) {
+export function VisualNovelPlayer({ data: rawData, progressOwner = null, learnerCode = null, preview = false, startSceneId, portalContainer, onExit, onEditScene }) {
   const navigate = useNavigate();
   const data = useMemo(() => normalizeChapter(rawData), [rawData]);
   // Cấu hình mini-game FUTURE_PLAN của chương (nếu có): settlement / bảng kế hoạch cấp chương đọc số liệu từ đây.
@@ -232,6 +233,7 @@ export function VisualNovelPlayer({ data: rawData, progressOwner = null, learner
     [data],
   );
   const [savedProgress] = useState(() => {
+    if (preview) return initialPreviewProgress(data, startSceneId);
     return loadBrowserNovelProgress(data, progressOwner);
   });
   const checkpointRef = useRef(savedProgress || initialNovelProgress(data));
@@ -268,6 +270,7 @@ export function VisualNovelPlayer({ data: rawData, progressOwner = null, learner
   const preloadingImageRef = useRef(new Map());
 
   const [voiceEnabled, setVoiceEnabled] = useState(() => {
+    if (preview) return true;
     try { return localStorage.getItem("finteen:voice-enabled") !== "false"; }
     catch { return true; }
   });
@@ -525,9 +528,11 @@ export function VisualNovelPlayer({ data: rawData, progressOwner = null, learner
 
   // Tới cảnh kết → gửi lô lên BE (POST /api/play/chapter); mở game → gửi bù lô còn treo. Không chặn trẻ chơi tiếp.
   useEffect(() => {
+    if (preview) return;
     void flushPendingBatches(learnerCode);
-  }, [learnerCode]);
+  }, [learnerCode, preview]);
   useEffect(() => {
+    if (preview) return;
     if (scene?.type !== "ending" || isReviewing || batchSentRef.current) return;
     batchSentRef.current = true;
     const batch = buildChapterBatch(data, playLog, miniGameResults);
@@ -553,7 +558,7 @@ export function VisualNovelPlayer({ data: rawData, progressOwner = null, learner
           outcome.failed,
         );
     });
-  }, [scene?.type, isReviewing, data, playLog, miniGameResults, learnerCode, navigate, progressOwner]);
+  }, [scene?.type, isReviewing, data, playLog, miniGameResults, learnerCode, navigate, progressOwner, preview]);
 
   const miniGameKind =
     scene?.type === "minigame" ? miniGameKindOf(scene.game) : undefined;
@@ -925,14 +930,15 @@ export function VisualNovelPlayer({ data: rawData, progressOwner = null, learner
   };
 
   const restart = () => {
-    const initial = initialNovelProgress(data, resolveNavigableSceneIndex(0));
+    const initial = preview ? initialPreviewProgress(data, data.scenes[0]?.id)
+      : initialNovelProgress(data, resolveNavigableSceneIndex(0));
     progressClearedRef.current = false;
-    clearBrowserNovelProgress(data, progressOwner);
+    if (!preview) clearBrowserNovelProgress(data, progressOwner);
     checkpointRef.current = initial;
-    saveBrowserNovelProgress(data, initial, progressOwner);
+    if (!preview) saveBrowserNovelProgress(data, initial, progressOwner);
     committedDecisionsRef.current.clear();
     marketSettlementAppliedRef.current = false;
-    setScenePath([resolveNavigableSceneIndex(0)]);
+    setScenePath(initial.scenePath);
     setMiniGameDoneByScene({});
     setSceneActionApplied({});
     setStats(data.initialStats || {});
@@ -1004,6 +1010,7 @@ export function VisualNovelPlayer({ data: rawData, progressOwner = null, learner
   useEffect(() => {
     // A choice with a stats popup commits atomically after the player acknowledges it.
     // Until then keep the previous checkpoint, so reload cannot omit its delta.
+    if (preview) return;
     if (pendingEffects || progressClearedRef.current) return;
     const checkpoint = {
       scenePath,
@@ -1027,6 +1034,7 @@ export function VisualNovelPlayer({ data: rawData, progressOwner = null, learner
     saveBrowserNovelProgress(data, checkpoint, progressOwner);
   }, [
     data,
+    preview,
     progressOwner,
     pendingEffects,
     scenePath,
@@ -1047,6 +1055,7 @@ export function VisualNovelPlayer({ data: rawData, progressOwner = null, learner
   ]);
 
   useEffect(() => {
+    if (preview) return;
     const flush = () => {
       if (progressClearedRef.current) return;
       saveBrowserNovelProgress(data, checkpointRef.current, progressOwner);
@@ -1061,7 +1070,7 @@ export function VisualNovelPlayer({ data: rawData, progressOwner = null, learner
       window.removeEventListener("pagehide", flush);
       document.removeEventListener("visibilitychange", onVisibilityChange);
     };
-  }, [data, progressOwner]);
+  }, [data, progressOwner, preview]);
 
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;
@@ -1169,6 +1178,7 @@ export function VisualNovelPlayer({ data: rawData, progressOwner = null, learner
       ref={gameContainerRef}
       className="vn-player"
       data-scene-id={scene.id}
+      data-preview={preview || undefined}
       onPointerDownCapture={collapseMenuOnGameClick}
     >
       <header className="vn-toolbar">
@@ -1176,6 +1186,9 @@ export function VisualNovelPlayer({ data: rawData, progressOwner = null, learner
           <SceneVoice key={`${scene.id}:${scene.voiceUrl}`} src={scene.voiceUrl} />
         )}
         <div className="vn-toolbar-left">
+          {preview && <button type="button" className="vn-icon-button" onClick={onExit} aria-label="Quay lại trình soạn">
+            <ArrowLeft size={18} /><span className="vn-control-label">Về trình soạn</span>
+          </button>}
           <details ref={menuDetailsRef} className="vn-details vn-menu">
             <summary
               className="vn-icon-button vn-menu-trigger"
@@ -1211,20 +1224,20 @@ export function VisualNovelPlayer({ data: rawData, progressOwner = null, learner
                   onClick={() => {
                     const enabled = !voiceEnabled;
                     setVoiceEnabled(enabled);
-                    try { localStorage.setItem("finteen:voice-enabled", String(enabled)); }
+                    try { if (!preview) localStorage.setItem("finteen:voice-enabled", String(enabled)); }
                     catch { /* Keep preference for this game session. */ }
                   }}
                 >
                   Giọng đọc: {voiceEnabled ? "Bật" : "Tắt"}
                 </button>
-                <Link
+                {preview ? <button type="button" className="vn-icon-button" onClick={() => onEditScene?.(scene.id)}>Sửa cảnh này</button> : <Link
                   to="/dashboard/kid/lessons"
                   className="vn-icon-button"
                   aria-label="Về bản đồ chương"
                   title="Về bản đồ chương"
                 >
                   <ArrowLeft size={18} />
-                </Link>
+                </Link>}
                 <button
                   type="button"
                   onClick={toggleFullscreen}
@@ -1590,9 +1603,9 @@ export function VisualNovelPlayer({ data: rawData, progressOwner = null, learner
                   Xem lại và sửa kế hoạch
                 </button>
               )}
-              <Link to="/dashboard/kid/lessons" className="vn-ending-exit">
+              {preview ? <button type="button" className="vn-ending-exit" onClick={onExit}>Quay lại trình soạn</button> : <Link to="/dashboard/kid/lessons" className="vn-ending-exit">
                 Quay lại bản đồ chương
-              </Link>
+              </Link>}
             </section>
           </div>
         ) : (
@@ -1747,6 +1760,6 @@ export function VisualNovelPlayer({ data: rawData, progressOwner = null, learner
         </div>
       )}
     </div>,
-    document.body,
+    portalContainer || document.body,
   );
 }

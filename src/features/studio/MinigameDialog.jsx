@@ -1,6 +1,6 @@
 // Soạn nội dung mini-game ở chế độ đơn giản: chữ theo vùng, đáp án tích chọn, con số và ảnh; JSON để ở Nâng cao.
 // Làm trên BẢN SAO của game — chỉ ghi vào cảnh khi bấm Xong.
-import { useState } from "react";
+import { useId, useMemo, useRef, useState } from "react";
 import { ImagePlus } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle } from "../../components/ui/dialog";
 import { vietnameseError } from "../../lib/vietnameseMessages.js";
@@ -13,6 +13,8 @@ import {
   textGroups,
 } from "./minigameOps";
 import { MinigamePersonalization } from "./PersonalizationPanel";
+import { personalizationDisplay } from './variantOps.js';
+import './minigame-dialog.css';
 
 const TABS = [
   ["texts", "Chữ trên màn chơi"],
@@ -21,6 +23,13 @@ const TABS = [
   ["variants", "Theo bé"],
   ["json", "Nâng cao (JSON)"],
 ];
+const TAB_HELP = {
+  texts: ['Nội dung trẻ sẽ đọc', 'Mở từng nhóm để sửa tiêu đề, hướng dẫn và nội dung trên màn chơi.'],
+  answers: ['Chọn đáp án đúng', 'Đáp án được dùng để chấm kết quả khi trẻ chơi mini-game.'],
+  settings: ['Thiết lập màn chơi', 'Điều chỉnh các con số và thay hình ảnh dùng chung cho mọi bé.'],
+  variants: ['Nội dung theo sở thích của bé', 'Chọn sở thích, rồi mở nội dung muốn thay. Phần để trống sẽ dùng bản gốc.'],
+  json: ['Chỉnh dữ liệu JSON', 'Dành cho chỉnh sửa nâng cao. Dữ liệu cần đúng định dạng trước khi chuyển tab hoặc bấm Xong.'],
+};
 
 export default function MinigameDialog({
   game,
@@ -36,15 +45,19 @@ export default function MinigameDialog({
   const [tab, setTab] = useState(initialTab);
   const [json, setJson] = useState(null);
   const [error, setError] = useState("");
+  const [selectedInterest, setSelectedInterest] = useState(interest || 'SPORT');
+  const tabId = useId();
+  const bodyRef = useRef(null);
   const edit = (path, value) => {
     if (!path.length) { setDraft(value); return; }
     const next = structuredClone(draft);
     setAt(next, path, value);
     setDraft(next);
   };
-  const groups = textGroups(draft),
+  const displayed = useMemo(() => personalizationDisplay(draft, tokens), [draft, tokens]);
+  const groups = textGroups(displayed),
     answers = gradeItems(draft),
-    { numbers, images } = settingFields(draft);
+    { numbers, images } = settingFields(displayed);
   const missing = Object.entries(kind?.fields || {})
     .filter(([key, field]) => field.required && draft[key] == null)
     .map(([key]) => key);
@@ -55,10 +68,13 @@ export default function MinigameDialog({
         setJson(null);
         setError("");
       } catch (problem) {
-        return setError(vietnameseError(problem));
+        setError(vietnameseError(problem));
+        return false;
       }
     }
     setTab(next);
+    bodyRef.current?.scrollTo({ top: 0 });
+    return true;
   };
   const save = () => {
     if (tab === "json" && json !== null) {
@@ -78,9 +94,12 @@ export default function MinigameDialog({
       }}
     >
       <DialogContent
-        className="studio-dialog max-w-4xl max-h-[88vh] overflow-auto sm:rounded-xl"
+        layout="studio-minigame"
+        className="studio-dialog studio-minigame-dialog"
         aria-describedby={undefined}
       >
+        <header className="studio-mg-header">
+        <span className="studio-mg-eyebrow">TRÌNH SOẠN MINI-GAME</span>
         <DialogTitle className="studio-dialog-title">
           Soạn mini-game “{draft.title || kind?.label || "Mini-game"}”
         </DialogTitle>
@@ -91,21 +110,35 @@ export default function MinigameDialog({
               ? ". Có chấm điểm."
               : ". Luyện tập, không chấm điểm."
             : ""}{" "}
-          Thay đổi chỉ ghi vào cảnh khi bấm Xong.
         </p>
+        </header>
+        <nav className="studio-mg-navigation" aria-label="Các phần soạn mini-game">
         {!!missing.length && (
           <p className="studio-error">
             Khuôn yêu cầu thêm: {missing.join(", ")}. Bổ sung ở Nâng cao (JSON).
           </p>
         )}
-        <div className="studio-tabs" role="tablist">
+        <div className="studio-tabs" role="tablist" aria-label="Nội dung mini-game">
           {TABS.map(([key, label]) => (
             <button
               type="button"
               role="tab"
               key={key}
+              id={`${tabId}-${key}`}
+              aria-controls={`${tabId}-panel`}
               aria-selected={tab === key}
+              tabIndex={tab === key ? 0 : -1}
               onClick={() => switchTab(key)}
+              onKeyDown={(event) => {
+                const index = TABS.findIndex(([value]) => value === key);
+                const next = event.key === 'ArrowRight' ? (index + 1) % TABS.length
+                  : event.key === 'ArrowLeft' ? (index + TABS.length - 1) % TABS.length
+                  : event.key === 'Home' ? 0 : event.key === 'End' ? TABS.length - 1 : null;
+                if (next === null) return;
+                event.preventDefault();
+                if (switchTab(TABS[next][0]))
+                  document.getElementById(`${tabId}-${TABS[next][0]}`)?.focus();
+              }}
             >
               {label}
               {key === "answers" && answers.length
@@ -113,6 +146,12 @@ export default function MinigameDialog({
                 : ""}
             </button>
           ))}
+        </div>
+        </nav>
+        <div className="studio-mg-body" ref={bodyRef} role="tabpanel" id={`${tabId}-panel`} aria-labelledby={`${tabId}-${tab}`} tabIndex={0}>
+        <div className="studio-mg-intro">
+          <h3>{TAB_HELP[tab][0]}</h3>
+          <p>{TAB_HELP[tab][1]}</p>
         </div>
 
         {tab === "texts" && (
@@ -138,8 +177,8 @@ export default function MinigameDialog({
                   >
                     {field.label}
                     <textarea
-                      rows={field.value.length > 90 ? 3 : 1}
-                      value={getAt(draft, field.path) ?? ""}
+                      rows={field.value.length > 90 ? 3 : 2}
+                      value={getAt(displayed, field.path) ?? ""}
                       onChange={(event) => edit(field.path, event.target.value)}
                     />
                   </label>
@@ -269,7 +308,7 @@ export default function MinigameDialog({
               <div className="studio-mg-images">
                 {images.map((field) => (
                   <figure key={field.path.join(".")}>
-                    <img src={getAt(draft, field.path)} alt="" />
+                    <img src={getAt(displayed, field.path)} alt="" />
                     <figcaption>{field.label}</figcaption>
                     <button
                       type="button"
@@ -294,7 +333,8 @@ export default function MinigameDialog({
 
         {tab === "variants" && (
           <MinigamePersonalization
-            initialInterest={interest}
+            interest={selectedInterest}
+            onInterestChange={setSelectedInterest}
             draft={draft}
             tokens={tokens}
             onPickImage={onPickImage}
@@ -317,14 +357,16 @@ export default function MinigameDialog({
             />
           </label>
         )}
+        </div>
 
+        <footer className="studio-mg-footer">
         {error && (
           <p role="alert" className="studio-error">
             {error}
           </p>
         )}
         <div className="studio-dialog-actions">
-          <span />
+          <span className="studio-mg-save-hint">Bấm <strong>Xong</strong> để áp dụng vào cảnh.<br />Sau đó bấm <strong>Lưu nháp</strong> để lưu chương.</span>
           <button type="button" onClick={onClose}>
             Thôi
           </button>
@@ -332,6 +374,7 @@ export default function MinigameDialog({
             Xong
           </button>
         </div>
+        </footer>
       </DialogContent>
     </Dialog>
   );

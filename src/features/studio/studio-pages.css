@@ -516,6 +516,3 @@ textarea.sp-input { min-height: 88px; resize: vertical; line-height: 1.5; }
 .studio-variant-add { display: flex; gap: 6px; }
 .studio-variant-add select { flex: 1; min-width: 0; }
 .studio-variant-problems { margin: 0; padding-left: 18px; color: #b42318; font-size: 12px; }
-.studio-token { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 6px 10px; border: 1px solid #e2d9c6; border-radius: 10px; padding: 8px 10px; margin-bottom: 10px; }
-.studio-token legend { display: flex; align-items: center; gap: 8px; }
-.studio-token label { display: grid; gap: 2px; font-size: 12px; }

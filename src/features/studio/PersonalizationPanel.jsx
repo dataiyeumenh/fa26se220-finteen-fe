@@ -1,8 +1,6 @@
-// Soạn cá nhân hoá không cần JSON: "bản theo bé" của từng cảnh / lựa chọn / thẻ mini-game, và "Từ thay theo bé" cấp chương.
-// Dữ liệu và luật ở variantOps.js (khớp BE Personalizer). Mỗi ô hiện kèm chữ GỐC để người soạn so song song.
+// Soạn trực tiếp nội dung và hình ảnh theo nhóm trẻ tại từng cảnh.
 import { useState } from "react";
-import { Copy, ImagePlus, Plus, Trash2 } from "lucide-react";
-import { Dialog, DialogContent, DialogTitle } from "../../components/ui/dialog";
+import { ImagePlus, Trash2 } from "lucide-react";
 import { CHILD_QUESTIONS, DIMENSION_LABELS, VALUE_LABELS } from "../personalization/model.js";
 import {
   CATALOG,
@@ -10,15 +8,11 @@ import {
   characterAppearanceDefinition,
   dimOf,
   labelText,
+  personalizationDisplay,
   removeVariant,
-  renameTokens,
   setVariantField,
   surfaceFields,
-  tokenProblems,
-  tokenUsage,
-  tokensOf,
   variantProblems,
-  withTokens,
 } from "./variantOps.js";
 
 const FIELD_LABELS = {
@@ -47,6 +41,9 @@ const IMAGE_FIELDS = new Set(["image", "src", "popupImage", "icon", "goalImage",
 export function VariantEditor({ title, obj, fields, onChange, write, tokens, onPickImage, selectedLabel }) {
   const [interest, setInterest] = useState("SPORT");
   const label = selectedLabel || `interest:${interest}`;
+  const [dimension, selectedValue] = label.split(':');
+  const base = personalizationDisplay(obj, tokens);
+  const displayed = personalizationDisplay(obj, tokens, { [dimension]: selectedValue });
   const problems = variantProblems(obj, tokens);
   return (
     <div className="studio-variant-block">
@@ -67,7 +64,7 @@ export function VariantEditor({ title, obj, fields, onChange, write, tokens, onP
           {fields
             .filter((key) => key !== "voice" || dimOf(label) === "gender")
             .map((key) => {
-              const value = obj.variants?.[label]?.[key] ?? "";
+              const value = obj.variants?.[label]?.[key] ? displayed[key] ?? '' : '';
               const set = (next) => onChange(setVariantField(obj, label, key, next));
               if (key === "voice")
                 return (
@@ -87,7 +84,7 @@ export function VariantEditor({ title, obj, fields, onChange, write, tokens, onP
                 return (
                   <div key={key} className="studio-variant-image">
                     <span>{FIELD_LABELS[key] || key}</span>
-                    {obj[key] && <img src={obj[key]} alt="Ảnh gốc" title="Ảnh gốc" />}
+                    {base[key] && <img src={base[key]} alt="Ảnh gốc" title="Ảnh gốc" />}
                     <span aria-hidden>→</span>
                     {value ? <img src={value} alt="Ảnh theo bé" /> : <small>như gốc</small>}
                     <button type="button" onClick={() => onPickImage?.((url) => set(url))}>
@@ -103,9 +100,9 @@ export function VariantEditor({ title, obj, fields, onChange, write, tokens, onP
               return (
                 <label key={key}>
                   {FIELD_LABELS[key] || key}
-                  <small className="studio-variant-base">Gốc: {obj[key] || "—"}</small>
+                  <small className="studio-variant-base">Gốc: {base[key] || "—"}</small>
                   <textarea
-                    rows={String(value || obj[key] || "").length > 80 ? 3 : 2}
+                    rows={String(value || base[key] || "").length > 80 ? 3 : 2}
                     value={value}
                     placeholder="Để trống = giữ như gốc"
                     onChange={(event) => set(event.target.value)}
@@ -153,7 +150,7 @@ export function PersonalizationControls({ active, onActive, answers, onAnswers }
           {values.map(value => <option key={value} value={value}>{VALUE_LABELS[value]}</option>)}
         </select>
       </label>)}</div>
-      <p>Ảnh nền và nhân vật theo giới tính, độ tuổi đang chọn; lời thoại và mini-game theo sở thích. Nội dung chưa chỉnh sẽ dùng bản gốc.</p>
+      <p>Sửa lời thoại ngay trong khung cảnh; chọn tab Nhân vật hoặc Mini-game để chỉnh phần tương ứng. Ảnh theo giới tính, độ tuổi; lời thoại và mini-game theo sở thích. Nội dung chưa chỉnh sẽ dùng bản gốc.</p>
     </> : <p>Chỉnh nội dung chung tại khung cảnh. Chọn “Cá nhân hóa” để soạn theo giới tính, tuổi và sở thích.</p>}
   </section>;
 }
@@ -175,8 +172,7 @@ export function CharacterPersonalization({ scene, preview, answers, tokens, writ
 }
 
 /** Tab "Theo bé" của MinigameDialog: mọi object có `id` trong game (thẻ, câu hỏi, phương án…). */
-export function MinigamePersonalization({ draft, onChange, tokens, onPickImage, initialInterest = 'SPORT' }) {
-  const [interest, setInterest] = useState(initialInterest);
+export function MinigamePersonalization({ draft, onChange, tokens, onPickImage, interest = 'SPORT', onInterestChange }) {
   const targets = [];
   const walk = (node, path) => {
     if (Array.isArray(node)) node.forEach((v, i) => walk(v, [...path, i]));
@@ -190,14 +186,20 @@ export function MinigamePersonalization({ draft, onChange, tokens, onPickImage, 
   if (!targets.length) return <p className="studio-muted">Mini-game này không có thẻ / câu nào có chữ riêng.</p>;
   return (
     <div className="studio-personalization">
-      <label>Sở thích áp dụng<select value={interest} onChange={event => setInterest(event.target.value)}>{CATALOG.interest.map(value => <option key={value} value={value}>{VALUE_LABELS[value]}</option>)}</select></label>
+      <div className="studio-mg-interest">
+      <label>Sở thích áp dụng<select value={interest} onChange={event => onInterestChange(event.target.value)}>{CATALOG.interest.map(value => <option key={value} value={value}>{VALUE_LABELS[value]}</option>)}</select></label>
       <p className="studio-muted">
         Chỉ đổi chữ và ảnh. Đáp án (Cần / Muốn, đúng / sai, số) giữ nguyên cho mọi bé.
       </p>
-      {targets.map(({ path, node }) => (
+      </div>
+      <p className="studio-mg-list-label">{targets.length} mục có thể chỉnh · Bấm vào từng mục để mở</p>
+      {targets.map(({ path, node }, index) => {
+        const shown = personalizationDisplay(node, tokens, { interest });
+        const title = shown.label || shown.title || shown.text || node.id;
+        const customized = Object.keys(node.variants?.[`interest:${interest}`] || {}).length > 0;
+        return <details className="studio-mg-variant-card" key={path.join('.')} open={index === 0}>
+          <summary><span className="studio-mg-item-number" aria-hidden="true">{index + 1}</span><span className="studio-mg-item-title">{title}</span><small className={customized ? 'is-customized' : ''}>{customized ? 'Đã có bản riêng' : 'Dùng bản gốc'}</small></summary>
         <VariantEditor
-          key={path.join(".")}
-          title={node.label || node.title || node.text || node.id}
           obj={node}
           selectedLabel={`interest:${interest}`}
           fields={editable(node, Object.keys(node).filter((k) => IMAGE_FIELDS.has(k)))}
@@ -206,118 +208,8 @@ export function MinigamePersonalization({ draft, onChange, tokens, onPickImage, 
           onPickImage={onPickImage}
           onChange={(next) => onChange(path, next)}
         />
-      ))}
+        </details>;
+      })}
     </div>
-  );
-}
-
-/** "Từ thay theo bé" (personalization.tokens): một từ, chữ mặc định, giá trị theo MỘT chiều. */
-export function TokensDialog({ content, onSave, onClose }) {
-  const [rows, setRows] = useState(() =>
-    Object.entries(tokensOf(content)).map(([name, def]) => ({
-      orig: name,
-      name,
-      def: { ...def },
-      dim: dimOf(Object.keys(def).find((k) => k !== "default") || "interest:"),
-    })),
-  );
-  const [copied, setCopied] = useState("");
-  const build = () => {
-    const next = renameTokens(content, Object.fromEntries(rows.filter((row) => row.orig && row.orig !== row.name).map((row) => [row.orig, row.name])));
-    const tokens = {};
-    for (const row of rows) {
-      const def = { default: row.def.default || "" };
-      for (const [k, v] of Object.entries(row.def)) if (k !== "default" && dimOf(k) === row.dim && v) def[k] = v;
-      tokens[row.name] = def;
-    }
-    return withTokens(next, tokens);
-  };
-  const preview = build();
-  const duplicateNames = rows.filter((row, index) => rows.findIndex((other) => other.name === row.name) !== index).map((row) => row.name);
-  const invalidNames = rows.some((row) => !/^[A-Za-z][A-Za-z0-9_]*$/.test(row.name) || row.name === "ASSET_BASE");
-  const problems = [...tokenProblems(preview), ...new Set(duplicateNames.map((name) => `Tên "${name}" bị trùng. Hãy đặt tên riêng để không ghi đè từ khác.`))];
-  const usage = tokenUsage(preview);
-  const setRow = (index, patch) => setRows(rows.map((row, k) => (k === index ? { ...row, ...patch } : row)));
-  return (
-    <Dialog open onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="studio-dialog max-w-3xl max-h-[88vh] overflow-auto sm:rounded-xl" aria-describedby={undefined}>
-        <DialogTitle className="studio-dialog-title">Từ thay theo bé</DialogTitle>
-        <p className="studio-muted">
-          Dùng khi một từ lặp ở nhiều câu (ví dụ "tai nghe"). Gõ <code>{"{{tên}}"}</code> vào lời thoại, bé thuộc nhóm nào sẽ
-          thấy chữ của nhóm đó; bé khác thấy chữ mặc định. Mỗi từ chỉ theo một chiều.
-        </p>
-        {rows.map((row, index) => (
-          <fieldset key={index} className="studio-token">
-            <legend>
-              <input
-                aria-label="Tên từ"
-                value={row.name}
-                onChange={(event) => setRow(index, { name: event.target.value.trim() })}
-                placeholder="tenTu"
-              />
-              <small>{usage[row.name] ? `dùng ở ${usage[row.name]} chỗ` : "chưa dùng"}</small>
-              <button
-                type="button"
-                onClick={() => {
-                  navigator.clipboard?.writeText(`{{${row.name}}}`);
-                  setCopied(row.name);
-                }}
-              >
-                <Copy size={14} /> {copied === row.name ? "Đã chép" : `Chép {{${row.name}}}`}
-              </button>
-              <button type="button" aria-label="Xoá từ" onClick={() => setRows(rows.filter((_, k) => k !== index))}>
-                <Trash2 size={14} />
-              </button>
-            </legend>
-            <label>
-              Mặc định
-              <input value={row.def.default || ""} onChange={(event) => setRow(index, { def: { ...row.def, default: event.target.value } })} />
-            </label>
-            <label>
-              Thay theo
-              <select value={row.dim} onChange={(event) => setRow(index, { dim: event.target.value })}>
-                {Object.keys(CATALOG).map((dim) => (
-                  <option key={dim} value={dim}>
-                    {DIMENSION_LABELS[dim]}
-                  </option>
-                ))}
-              </select>
-            </label>
-            {(CATALOG[row.dim] || []).map((value) => {
-              const key = `${row.dim}:${value}`;
-              return (
-                <label key={key}>
-                  {VALUE_LABELS[value] || value}
-                  <input
-                    value={row.def[key] || ""}
-                    placeholder="để trống = như mặc định"
-                    onChange={(event) => setRow(index, { def: { ...row.def, [key]: event.target.value } })}
-                  />
-                </label>
-              );
-            })}
-          </fieldset>
-        ))}
-        <button type="button" onClick={() => setRows([...rows, { orig: "", name: `tu${rows.length + 1}`, def: { default: "" }, dim: "interest" }])}>
-          <Plus size={14} /> Thêm từ
-        </button>
-        {!!problems.length && (
-          <ul className="studio-variant-problems" role="alert">
-            {problems.map((problem) => (
-              <li key={problem}>{problem}</li>
-            ))}
-          </ul>
-        )}
-        <div className="studio-dialog-actions">
-          <span />
-          <button type="button" onClick={onClose}>
-            Thôi
-          </button>
-          <button type="button" className="is-primary" disabled={invalidNames || duplicateNames.length > 0} onClick={() => onSave(preview)}>
-            Xong
-          </button>
-        </div>
-      </DialogContent>
-    </Dialog>
   );
 }

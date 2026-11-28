@@ -13,6 +13,7 @@ import {
   variantProblems,
   withTokens,
   previewPersonalization,
+  personalizationDisplay,
   setCharacterAppearance,
   characterAppearanceDefinition,
   setBackgroundAppearance,
@@ -23,6 +24,25 @@ import {
 } from "../src/features/studio/variantOps.js";
 
 const SPORT = "interest:SPORT";
+
+test('older shared text and images display as direct values without flattening saved definitions', () => {
+  const tokens = { text: { default: 'Giá 250.000đ' }, sport: { default: 'Giày 250.000đ' }, image: { default: 'base.webp', [SPORT]: 'sport.webp' } };
+  const item = { id: 'item', text: '{{text}}', image: '{{image}}', variants: { [SPORT]: { text: '{{sport}}' } } };
+  const before = structuredClone({ item, tokens });
+  assert.equal(personalizationDisplay(item, tokens).text, 'Giá 250.000đ');
+  assert.equal(personalizationDisplay(item, tokens, { interest: 'SPORT' }).text, 'Giày 250.000đ');
+  assert.equal(personalizationDisplay(item, tokens, { interest: 'SPORT' }).image, 'sport.webp');
+  const edited = setVariantField(item, SPORT, 'text', 'Bóng 250.000đ');
+  assert.equal(personalizationDisplay(edited, tokens, { interest: 'SPORT' }).text, 'Bóng 250.000đ');
+  assert.equal(personalizationDisplay(edited, tokens, { interest: 'MUSIC' }).text, 'Giá 250.000đ');
+  assert.deepEqual({ item, tokens }, before);
+});
+
+test('direct edits validate numbers against resolved legacy text and keep missing-value diagnostics actionable', () => {
+  const item = { text: '{{oldText}}', variants: { [SPORT]: { text: 'Giày 250.000đ' } } };
+  assert.deepEqual(variantProblems(item, { oldText: { default: 'Đồ dùng 250.000đ' } }), []);
+  assert.ok(variantProblems(item, { oldText: { default: 'Đồ dùng 200.000đ' } }).some(problem => problem.includes('200.000')));
+});
 
 test('backgrounds compose all gender and age pairs independently of interest and survive saving', () => {
   const original = { scenes: [{ id: 'S1', background: 'base.webp', text: 'Gốc', nextSceneId: 'S2', voiceUrl: 'base.mp3' }] };
@@ -148,6 +168,30 @@ test('inspect gallery edits preserve captions, sibling images and existing varia
   assert.equal(baseEdit.popupImages[0].src, 'base-new.webp');
   assert.equal(baseEdit.popupImages[0].variants['interest:SPORT'].src, 'sport.webp');
   assert.equal(baseEdit.popupImages[1], next.popupImages[1]);
+  const captions = patchInspect(next, { popupImages: [{ caption: 'Ảnh bóng đá 1', description: 'Thông tin thể thao 1' }] }, { interest: 'SPORT' });
+  const shown = previewPersonalization({ scenes: [{ inspect: captions }] }, { interest: 'SPORT' }).scenes[0].inspect;
+  assert.equal(shown.popupImages[0].caption, 'Ảnh bóng đá 1');
+  assert.equal(shown.popupImages[0].description, 'Thông tin thể thao 1');
+  assert.equal(captions.popupImages[0].caption, 'Ảnh 1');
+  assert.equal(captions.popupImages[1], next.popupImages[1]);
+});
+
+test('inspect cards and contacts edit visible content while protecting IDs and flags', () => {
+  const inspect = { id: 'cards', setFlags: { read: true }, autoNextSceneOnClose: true, cards: [{ id: 'card', label: 'Gốc', image: 'base.webp', sections: [{ label: 'Phí', items: ['Phí 200.000đ', 'Lãi 3%'] }], contacts: [{ id: 'contact', name: 'Tên gốc', detail: 'Thông tin gốc' }] }] };
+  const next = patchInspect(inspect, { id: 'wrong', setFlags: { read: false }, cards: [{ id: 'wrong', label: 'Riêng', image: 'sport.webp', contacts: [{ name: 'Tên riêng', id: 'wrong' }] }] }, { interest: 'SPORT' });
+  const shown = previewPersonalization({ scenes: [{ inspect: next }] }, { interest: 'SPORT' }).scenes[0].inspect;
+  assert.equal(shown.cards[0].label, 'Riêng');
+  assert.equal(shown.cards[0].image, 'sport.webp');
+  assert.equal(shown.cards[0].contacts[0].name, 'Tên riêng');
+  assert.equal(shown.cards[0].contacts[0].id, 'contact');
+  assert.equal(next.id, 'cards');
+  assert.equal(next.cards[0].id, 'card');
+  assert.equal(next.cards[0].label, 'Gốc');
+  assert.deepEqual(next.setFlags, { read: true });
+  assert.equal(next.autoNextSceneOnClose, true);
+  const base = patchInspect(inspect, { cards: [{ sections: [{ items: ['Phí 100.000đ'] }] }] });
+  assert.deepEqual(base.cards[0].sections[0].items, ['Phí 100.000đ', 'Lãi 3%']);
+  assert.deepEqual(inspect.cards[0].sections[0].items, ['Phí 200.000đ', 'Lãi 3%']);
 });
 
 test("set and remove variant fields; empty variant and empty variants are dropped", () => {

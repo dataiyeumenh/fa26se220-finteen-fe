@@ -89,22 +89,33 @@ function personalizedFieldsPatch(scene, answers, patch, dimensions) {
   return next === scene ? shared : { ...shared, variants: next.variants };
 }
 
-/** Inspect appearance changes only; IDs, flags, rewards and gallery structure
- * remain shared. Gallery image patches are partial and preserve other images. */
+/** Visible inspect content can be edited; IDs, flags, rewards and collection structure stay shared.
+ * Array patches are partial. Plain string arrays are shared content edited in the base version. */
+export const INSPECT_CONTENT_LABELS = {
+  buttonText: 'Chữ trên nút', dataText: 'Nội dung khi mở', popupImage: 'Ảnh', src: 'Ảnh', image: 'Ảnh',
+  caption: 'Chú thích ảnh', description: 'Mô tả', label: 'Tiêu đề', title: 'Tiêu đề', text: 'Nội dung',
+  note: 'Ghi chú', context: 'Bối cảnh', sender: 'Người gửi', senderNote: 'Thông tin người gửi',
+  message: 'Tin nhắn', name: 'Tên', detail: 'Thông tin', eyebrow: 'Dòng mở đầu', subtitle: 'Hướng dẫn', takeaway: 'Nhận xét',
+};
+export const INSPECT_CONTENT_GROUPS = {
+  popupImages: 'Các ảnh khi mở', cards: 'Các thẻ thông tin', shared: 'Thông tin chung',
+  sections: 'Các mục nội dung', items: 'Các dòng thông tin', facts: 'Các dữ kiện', contacts: 'Danh bạ',
+};
+
 export function patchInspect(inspect, patch, answers = null) {
-  const fields = { buttonText: 'interest', dataText: 'interest', popupImage: 'interest' };
+  const fields = Object.fromEntries(Object.keys(INSPECT_CONTENT_LABELS).map(field => [field, 'interest']));
   const surface = Object.fromEntries(Object.entries(patch).filter(([field]) => Object.hasOwn(fields, field)));
   const next = { ...inspect, ...(answers ? personalizedFieldsPatch(inspect, answers, surface, fields) : surface) };
   if (!next.variants) delete next.variants;
-  if (Array.isArray(inspect.popupImages) && Array.isArray(patch.popupImages)) {
-    next.popupImages = inspect.popupImages.map((image, index) => {
-      const imagePatch = patch.popupImages[index];
-      if (!imagePatch || !Object.hasOwn(imagePatch, 'src')) return image;
-      const surface = { src: imagePatch.src };
-      const nextImage = { ...image, ...(answers ? personalizedFieldsPatch(image, answers, surface, { src: 'interest' }) : surface) };
-      if (!nextImage.variants) delete nextImage.variants;
-      return nextImage;
-    });
+  const patchContent = (base, change) => {
+    if (change == null) return base;
+    if (Array.isArray(base)) return base.map((item, index) => patchContent(item, change[index]));
+    if (typeof base === 'string') return !answers && typeof change === 'string' ? change : base;
+    if (base && typeof base === 'object') return patchInspect(base, change, answers);
+    return base;
+  };
+  for (const key of Object.keys(INSPECT_CONTENT_GROUPS)) {
+    if (inspect[key] != null && patch[key] != null) next[key] = patchContent(inspect[key], patch[key]);
   }
   return next;
 }
@@ -163,7 +174,10 @@ export function addableLabels(obj) {
 export function variantProblems(obj, tokens = {}) {
   const problems = [];
   const fieldDim = {};
+  const base = personalizationDisplay(obj, tokens);
   for (const [label, variant] of Object.entries(obj.variants || {})) {
+    const [dim, selectedValue] = label.split(':');
+    const displayed = personalizationDisplay(obj, tokens, { [dim]: selectedValue });
     if (!allLabels().includes(label)) problems.push(`Nhãn "${label}" không có trong danh mục.`);
     for (const [field, value] of Object.entries(variant || {})) {
       const where = `${labelText(label)} · ${field}`;
@@ -172,14 +186,14 @@ export function variantProblems(obj, tokens = {}) {
       const prev = fieldDim[field];
       if (prev && prev !== dimOf(label)) problems.push(`Trường "${field}" bị hai chiều cùng đổi (${prev}, ${dimOf(label)}).`);
       fieldDim[field] ??= dimOf(label);
-      if (isReadable(field, value) && numbersOf(value).join("|") !== numbersOf(obj[field]).join("|"))
+      if (isReadable(field, value) && numbersOf(displayed[field]).join("|") !== numbersOf(base[field]).join("|"))
         problems.push(
           field === "spokenText"
-            ? `${where}: cách đọc phải giữ số như cách đọc gốc (${numbersOf(obj[field]).join(", ") || "viết số bằng chữ, không dùng chữ số"}).`
-            : `${where}: phải giữ đúng các con số của câu gốc (${numbersOf(obj[field]).join(", ") || "không có số"}).`,
+            ? `${where}: cách đọc phải giữ số như cách đọc gốc (${numbersOf(base[field]).join(", ") || "viết số bằng chữ, không dùng chữ số"}).`
+            : `${where}: phải giữ đúng các con số của câu gốc (${numbersOf(base[field]).join(", ") || "không có số"}).`,
         );
       for (const name of tokensIn(value))
-        if (!tokens[name]) problems.push(`${where}: từ {{${name}}} chưa khai báo ở "Từ thay theo bé".`);
+        if (!tokens[name]) problems.push(`${where}: {{${name}}} chưa có giá trị. Nhập lại chữ hoặc chọn lại ảnh trực tiếp tại Cá nhân hóa.`);
     }
     if (obj.spokenText && variant?.text && !variant.spokenText)
       problems.push(`${labelText(label)}: câu gốc có cách đọc riêng — điền "Cách đọc" cho bản này, nếu không giọng sẽ đọc câu gốc.`);
@@ -277,6 +291,11 @@ export function previewPersonalization(content, answers = {}) {
     return resolved;
   };
   return walk(content);
+}
+
+/** Resolve older shared values for direct editing without changing their source definitions. */
+export function personalizationDisplay(obj, tokens = {}, answers = {}) {
+  return previewPersonalization({ personalization: { tokens }, value: obj }, answers).value;
 }
 
 // A gender variant selects an age token. This composes both dimensions without

@@ -290,7 +290,7 @@ try {
     .click();
   await editor.page
     .getByRole("button", {
-      name: "Cảnh 3: Cảnh vừa thêm (bản sao)",
+      name: "Cảnh 4: Cảnh vừa thêm (bản sao)",
       exact: true,
     })
     .waitFor();
